@@ -1,12 +1,8 @@
 import React from "react";
-import { UserProvider } from "./contexts/userContext";
+import { Container } from "@material-ui/core";
 
 function App() {
-	return (
-		<UserProvider>
-			<div>Fund Impact</div>
-		</UserProvider>
-	);
+	return <Container>Fund Impact</Container>;
 }
 
 export default App;

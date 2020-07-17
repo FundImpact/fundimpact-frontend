@@ -7,6 +7,9 @@ const defaultUserState: IUserDataContext = {};
 const UserDataContext = createContext<IUserDataContext | undefined>(undefined);
 const UserDispatchContext = createContext(userReducer);
 
+UserDataContext.displayName = "UserData";
+UserDispatchContext.displayName = "UserDispatcher";
+
 interface IUserProviderProps {
 	children: React.ReactNode;
 }
