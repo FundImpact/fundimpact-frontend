@@ -11,14 +11,14 @@ function LandingPage() {
 
 	return (
 		<Grid container>
-			<Grid item xs={12} md={4}>
+			<Grid item xs={12} component={Box} md={4}>
 				<Box
 					display={{ xs: "flex" }}
-					px={3}
+					p={3}
 					justifyContent={"space-evenly"}
-					flexDirection={{ md: "column" }}
+					flexDirection={{ xs: "column" }}
 					alignItems={"space between"}
-					height={"100vh"}
+					height={{ md: "100vh" }}
 					bgcolor="secondary.main"
 				>
 					<Box color={"white"}>
