@@ -1,0 +1,4 @@
+.multiline-button .MuiButton-label {
+	display: flex !important;
+	justify-content: flex-start;
+}
