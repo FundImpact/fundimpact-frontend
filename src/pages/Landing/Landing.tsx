@@ -1,14 +1,52 @@
 import React from "react";
-import { Container, Grid, Box, Typography, Button } from "@material-ui/core";
+import { Grid, Box, Typography, Button } from "@material-ui/core";
 
 import "./index.css";
-import { matchPath, matchRoutes, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
+import useSignUpStep from "../../hooks/useSignupStep";
+import { ISignUpStep } from "../../models";
+import { getSteps } from "../../utils/signup.util";
+
+function ActionDescription({ stepNumber }: { stepNumber: number | undefined }) {
+	const steps = getSteps();
+	const selectedStep: ISignUpStep | undefined = steps.find((s) => s.step === stepNumber);
+	if (!selectedStep) {
+		return (
+			<Box color={"white"}>
+				<Typography component="h4" variant="h4">
+					<Box m={1}>Login</Box>
+				</Typography>
+				<Typography component="div">
+					<Box fontSize="" m={1}>
+						Get started in few minutes and start analyzing your funds or some more lines
+						to make user confident.
+					</Box>
+				</Typography>
+			</Box>
+		);
+	} else {
+		return (
+			<Box color={"white"}>
+				<Typography component="h4" variant="h4">
+					<Box m={1}>{selectedStep.label}</Box>
+				</Typography>
+				<Typography component="div">
+					<Box fontSize="" m={1}>
+						{selectedStep.description}
+					</Box>
+				</Typography>
+			</Box>
+		);
+	}
+}
 
 function LandingPage() {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 	const loginPathMatch = matchPath("login", pathname);
-
+	const location = useLocation();
+	const signUpPathMatch = matchPath("signup/:id", location.pathname);
+	const { currentStep } = useSignUpStep(signUpPathMatch ? signUpPathMatch.params.id : undefined);
 	return (
 		<Grid container>
 			<Grid item xs={12} component={Box} md={4}>
@@ -21,17 +59,7 @@ function LandingPage() {
 					height={{ md: "100vh" }}
 					bgcolor="secondary.main"
 				>
-					<Box color={"white"}>
-						<Typography component="h4" variant="h4">
-							<Box m={1}>Login</Box>
-						</Typography>
-						<Typography component="div">
-							<Box fontSize="" m={1}>
-								Get started in few minutes and start analyzing your funds or some
-								more lines to make user confident.
-							</Box>
-						</Typography>
-					</Box>
+					<ActionDescription stepNumber={signUpPathMatch ? currentStep : undefined} />
 					<Box>
 						<Typography component="h6">
 							<Box>
@@ -60,7 +88,7 @@ function LandingPage() {
 					</Box>
 				</Box>
 			</Grid>
-			<Grid item xs={12} md={8}>
+			<Grid item xs={12} md={8} style={{ display: "flex" }}>
 				<Outlet />
 			</Grid>
 		</Grid>
