@@ -1,8 +1,8 @@
 import React from "react";
-import { Container } from "@material-ui/core";
+import AppRoutes from "./config/routes";
 
 function App() {
-	return <Container>Fund Impact</Container>;
+	return <AppRoutes />;
 }
 
 export default App;
