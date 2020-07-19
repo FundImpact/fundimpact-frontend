@@ -5,6 +5,15 @@ export interface ISignUpStep {
 	description?: string;
 }
 
+export interface IOrganisation {
+	orgName: string;
+	streetAdd: string;
+	city: string;
+	state: string;
+	country: string;
+	zipCode: number | null;
+}
+
 export interface IBasicInformation {
 	firstName: string;
 	lastName: string;

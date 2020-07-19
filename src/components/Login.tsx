@@ -10,8 +10,6 @@ const useStyles = makeStyles((theme: Theme) =>
 		root: {
 			display: "flex",
 			flexDirection: "column",
-			height: "100%",
-			justifyContent: "center",
 			"& .MuiTextField-root,": {
 				margin: theme.spacing(1),
 			},
@@ -43,11 +41,11 @@ function Login() {
 	}
 
 	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
-		console.log(values);
+		console.log(values, formikHelpers);
 	}
 
 	return (
-		<Box m="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
+		<Box mx="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
 			<Formik
 				validateOnBlur
 				initialValues={initialValues}
