@@ -1,16 +1,15 @@
 import React from "react";
-import { Box, Button, createStyles, Paper, TextField, Theme, Typography } from "@material-ui/core";
+import { Box, Button, createStyles, TextField, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { Link } from "react-router-dom";
+import { ILoginForm } from "../models";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			display: "flex",
 			flexDirection: "column",
-			height: "100%",
-			justifyContent: "center",
 			"& .MuiTextField-root,": {
 				margin: theme.spacing(1),
 			},
@@ -23,34 +22,36 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-interface ILoginForm {
-	userName?: String;
-	password?: String;
-}
-
 function Login() {
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
 		userName: "",
 		password: "",
 	};
+
+	function validate(values: ILoginForm) {
+		let errors: ILoginForm = {};
+		if (!values.userName) {
+			errors.userName = "User name is required";
+		}
+		if (!values.password) {
+			errors.password = "Password is required";
+		}
+		return errors;
+	}
+
+	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
+		console.log(values, formikHelpers);
+	}
+
 	return (
-		<Box m="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
+		<Box mx="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
 			<Formik
 				validateOnBlur
 				initialValues={initialValues}
 				enableReinitialize
-				validate={(values) => {
-					let errors: ILoginForm = {};
-					if (!values.userName) {
-						errors.userName = "User name is required";
-					}
-					if (!values.password) {
-						errors.password = "Password is required";
-					}
-					return errors;
-				}}
-				onSubmit={(values, formikHelpers) => console.log(values)}
+				validate={validate}
+				onSubmit={onSubmit}
 			>
 				{(formik) => {
 					return (

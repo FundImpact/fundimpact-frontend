@@ -34,6 +34,6 @@ export default function useSignUpStep(
 					navigate(`/signup/${SignUpSteps.SET_BASIC_INFO}`);
 			}
 		}
-	}, [id]);
+	}, [signUpPathMatch, location.pathname, navigate, id]);
 	return { currentStep: step, setStep };
 }

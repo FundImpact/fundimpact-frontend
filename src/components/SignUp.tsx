@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { getSteps } from "../utils/signup.util";
 import { grey } from "@material-ui/core/colors";
 import useSignUpStep from "../hooks/useSignupStep";
+import BasicDetailsForm from "./BasicDetailsForm";
+import OrganisationForm from "./OrganisationForm";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -32,16 +34,32 @@ const useStyles = makeStyles((theme: Theme) =>
 				},
 			},
 		},
+		form: {
+			display: "flex",
+			"& .MuiTextField-root": {
+				margin: theme.spacing(1),
+				spacing: 1,
+			},
+		},
 	})
 );
+
+function SignUpForms({ step }: { step: number }) {
+	if (step === 0) return <BasicDetailsForm />;
+	if (step === 1) return <OrganisationForm />;
+	if (step === 2) return <OrganisationForm />;
+	if (step === 3) return <OrganisationForm />;
+
+	return null;
+}
 
 function SignUp() {
 	const classes = useStyles();
 	const steps = getSteps();
 	const { id } = useParams();
-	const { currentStep, setStep } = useSignUpStep(id);
+	const { currentStep } = useSignUpStep(id);
 	return (
-		<Box m="auto" width={{ xs: "100%", md: "75%", lg: "50%" }}>
+		<Box mx="auto" width={{ xs: "100%", md: "75%", lg: "75%" }}>
 			<Stepper className={classes.stepContainer} activeStep={currentStep} alternativeLabel>
 				{steps.map(({ label, id }) => {
 					return (
@@ -51,6 +69,9 @@ function SignUp() {
 					);
 				})}
 			</Stepper>
+			<Box mt={5}>
+				<SignUpForms step={currentStep} />
+			</Box>
 		</Box>
 	);
 }

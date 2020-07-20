@@ -89,7 +89,18 @@ function LandingPage() {
 				</Box>
 			</Grid>
 			<Grid item xs={12} md={8} style={{ display: "flex" }}>
-				<Outlet />
+				<Grid container>
+					<Grid
+						item
+						xs={12}
+						style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+					>
+						<img src={require("../../assets/images/logo-landing.png")} alt="" />
+					</Grid>
+					<Grid item xs={12} style={{ display: "flex" }}>
+						<Outlet />
+					</Grid>
+				</Grid>
 			</Grid>
 		</Grid>
 	);
