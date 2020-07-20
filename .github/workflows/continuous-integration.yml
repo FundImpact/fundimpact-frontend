@@ -1,0 +1,23 @@
+name: Continuous Integration
+
+on:
+    push:
+      branches: [ master ]
+    pull_request:
+      branches: [ master ]
+
+jobs:
+  test:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Run test and generate coverage report
+        run: yarn test --coverage --watchAll=false
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
