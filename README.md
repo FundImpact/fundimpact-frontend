@@ -1,5 +1,6 @@
 # FundImpact - Measuring Social Impact Made Easy
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+![Continuous Integration](https://github.com/FundImpact/fundimpact-frontend/workflows/Continuous%20Integration/badge.svg)
 
 The FundImpact Platform will support NGOs in their most crucial operations of managing project funds, donor relations and tracking project's operations and impact on a single platform. It aims to streamline workflows and help adopt a good practice, thereby saving time, efforts and money.
 
