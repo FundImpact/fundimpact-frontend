@@ -13,6 +13,7 @@ function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | n
 		return <Route children={children} {...rest} />;
 	} else return <Navigate to="/login" state={{ redirectedFrom: rest.path }} />;
 }
+
 function AppRoutes() {
 	return (
 		<BrowserRouter>
