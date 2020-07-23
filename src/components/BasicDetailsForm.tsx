@@ -1,10 +1,21 @@
-import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core";
+import {
+	Button,
+	createStyles,
+	Grid,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+	Theme,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 
 import { useSignupNewUser } from "../hooks/signupUser";
+import { useOrganisationTypes } from "../hooks/useOrganisationType";
 import { IBasicInformation } from "../models";
+import { getDefaultBasicInformation } from "../utils/signup.util";
 import GlobalLoader from "./commons/GlobalLoader";
 
 // import { useNavigate } from 'react-router-dom';
@@ -21,18 +32,14 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function BasicDetailsForm() {
-	const initialValues: IBasicInformation = {
-		confirmPassword: "",
-		email: "",
-		firstName: "",
-		lastName: "",
-		password: "",
-	};
+const BasicDetailsForm = () => {
+	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
-	// console.log("BasicDetailsForm rendering");
+
+	// console.log(`initialValues`, initialValues);
 
 	const { error, loading, setPayload } = useSignupNewUser(null, []);
+	const { error: OrganisationError, data: organisationTypes } = useOrganisationTypes();
 
 	const OnSubmit = (
 		values: IBasicInformation,
@@ -50,10 +57,36 @@ export default function BasicDetailsForm() {
 			{(formik) => {
 				return (
 					<Form className={classes.form}>
-						{/* {error ? `have error` + error : "No Error"}
-						{loading ? `have loading` + loading : "No loading"}
-						{data ? `have data` + data : "No data"} */}
 						<Grid container spacing={4} justify={"center"}>
+							<Grid item xs={12} md={6}>
+								<TextField
+									style={{ width: "100%" }}
+									error={!!formik.errors.username}
+									helperText={formik.touched.username && formik.errors.username}
+									onChange={formik.handleChange}
+									label="Username"
+									required
+									fullWidth
+									name="username"
+									variant="outlined"
+									type={"text"}
+								/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									style={{ width: "100%" }}
+									error={!!formik.errors.email}
+									helperText={formik.touched.email && formik.errors.email}
+									onChange={formik.handleChange}
+									label="Email"
+									required
+									fullWidth
+									name="email"
+									variant="outlined"
+									type={"email"}
+								/>
+							</Grid>
+
 							<Grid item xs={12} md={6}>
 								<TextField
 									error={!!formik.errors.firstName}
@@ -76,20 +109,6 @@ export default function BasicDetailsForm() {
 									fullWidth
 									name="lastName"
 									variant="outlined"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									error={!!formik.errors.email}
-									helperText={formik.touched.email && formik.errors.email}
-									onChange={formik.handleChange}
-									label="email"
-									required
-									fullWidth
-									name="email"
-									variant="outlined"
-									type={"email"}
 								/>
 							</Grid>
 							<Grid item xs={6}>
@@ -123,6 +142,110 @@ export default function BasicDetailsForm() {
 									type="password"
 								/>
 							</Grid>
+
+							<Grid item xs={12}>
+								<div className="text-center divider">
+									{" "}
+									<span>Organisation</span>{" "}
+								</div>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									error={!!formik.errors.organisation?.name}
+									helperText={
+										formik.touched.organisation?.name &&
+										formik.errors.organisation?.name
+									}
+									onChange={formik.handleChange}
+									label="Name"
+									required
+									fullWidth
+									name="organisation.name"
+									variant="outlined"
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
+								<InputLabel id="demo-simple-select-label" className={classes.form}>
+									Type
+								</InputLabel>
+								<Select
+									labelId="demo-simple-select-label"
+									id="demo-simple-select"
+									onChange={formik.handleChange}
+									required
+									fullWidth
+									name="organisation.type"
+									variant="outlined"
+									value={formik.values.organisation.type}
+								>
+									{organisationTypes ? (
+										organisationTypes.map((type) => (
+											<MenuItem key={type.id} value={type.id}>
+												{type.reg_type}
+											</MenuItem>
+										))
+									) : (
+										<MenuItem value={""} disabled>
+											No Data Available
+										</MenuItem>
+									)}
+
+									{OrganisationError ? (
+										<MenuItem value={""} disabled>
+											No Data Available
+										</MenuItem>
+									) : null}
+								</Select>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
+								<TextField
+									error={!!formik.errors.organisation?.short_name}
+									helperText={
+										formik.touched.organisation?.short_name &&
+										formik.errors.organisation?.short_name
+									}
+									onChange={formik.handleChange}
+									label="Short Name"
+									required
+									fullWidth
+									name="organisation.short_name"
+									variant="outlined"
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
+								<TextField
+									error={!!formik.errors.organisation?.legal_name}
+									helperText={
+										formik.touched.organisation?.legal_name &&
+										formik.errors.organisation?.legal_name
+									}
+									onChange={formik.handleChange}
+									label="Legal Name"
+									required
+									fullWidth
+									name="organisation.legal_name"
+									variant="outlined"
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={12}>
+								<TextField
+									error={!!formik.errors.organisation?.description}
+									helperText={
+										formik.touched.organisation?.description &&
+										formik.errors.organisation?.description
+									}
+									onChange={formik.handleChange}
+									label="Description"
+									fullWidth
+									name="organisation.description"
+									variant="outlined"
+								/>
+							</Grid>
+
 							<Grid item xs={12}>
 								<Button
 									fullWidth
@@ -144,4 +267,6 @@ export default function BasicDetailsForm() {
 			}}
 		</Formik>
 	);
-}
+};
+
+export const Persistent = React.forwardRef((props, ref) => <BasicDetailsForm />);

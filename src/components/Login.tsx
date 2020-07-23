@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function Login() {
-	const { data, loading, error: apiError, setPayload } = useLogin(null, []);
+	const { data, loading, error: apiError, setPayload } = useLogin(null);
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
 		identifier: "",

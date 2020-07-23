@@ -1,36 +1,30 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { ILoginForm, IUserSignUp } from "../models";
+import { IOrganisationType } from "../models/organisation/types";
 
-export const useLogin = (
-	body: ILoginForm | null,
-	url = "https://api.fundimpact.org/auth/local"
+export const useOrganisationTypes = (
+	url = "https://api.fundimpact.org/organisation-registration-types"
 ) => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [data, setData] = useState(null);
-	const [payload, setPayload] = useState(body);
+	const [data, setData] = useState<IOrganisationType[]>();
 
 	useEffect(() => {
-		postSignupData(payload as IUserSignUp, url, setLoading, setData, setError);
-	}, [payload, url]);
+		getOrganisationTypes(url, setLoading, setData, setError);
+	}, [url]);
 
-	return { error, loading, data, setPayload };
+	return { error, loading, data };
 };
 
-const postSignupData = async (
-	payload: IUserSignUp,
+const getOrganisationTypes = async (
 	url: string,
 	setLoading: Dispatch<SetStateAction<any>>,
 	setData: Dispatch<SetStateAction<any>>,
 	setError: Dispatch<SetStateAction<any>>
 ) => {
-	if (!payload) {
-		return;
-	}
 	setLoading(true);
 	try {
-		let response = await sendPostRequest(url, payload);
+		let response = await getRequest(url);
 		setLoading(false);
 		if (response.status !== 200) {
 			setResponseError(await response.json(), setData, setError);
@@ -38,7 +32,7 @@ const postSignupData = async (
 		}
 		const data = await response.json();
 
-		console.log(`data `, data);
+		console.log(`organisation Types `, data);
 
 		setData(data);
 	} catch (e) {
@@ -48,14 +42,13 @@ const postSignupData = async (
 	}
 };
 
-const sendPostRequest = async (url: string, payload: IUserSignUp) => {
+const getRequest = async (url: string) => {
 	const headers = new Headers({
 		"Content-Type": "application/json; charset=utf-8",
 	});
 	let response: any = await fetch(`${url}`, {
-		method: "POST",
+		method: "GET",
 		headers,
-		body: JSON.stringify(payload),
 	});
 
 	return response;

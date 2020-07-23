@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { IUserSignUp } from "../models";
+import { IUserSignupResponse } from "../models/signup/userSignUpResponse";
 
 export const useSignupNewUser = (body: IUserSignUp | null, dependency: any[]) => {
-	console.log("body", body);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [data, setData] = useState(null);
+	const [data, setData] = useState<IUserSignupResponse | null>(null);
 	const [payload, setPayload] = useState(body);
 
 	useEffect(() => {
@@ -21,7 +21,7 @@ const postSignupData = async (
 	payload: IUserSignUp,
 	url: string,
 	setLoading: Dispatch<SetStateAction<any>>,
-	setData: Dispatch<SetStateAction<any>>,
+	setData: Dispatch<SetStateAction<IUserSignupResponse | null>>,
 	setError: Dispatch<SetStateAction<any>>
 ) => {
 	if (!payload) {
@@ -31,14 +31,17 @@ const postSignupData = async (
 	try {
 		let response: any = await sendPostRequest(url, payload);
 		setLoading(false);
+		console.log(`response`, response);
 
-		if (response.status !== 200) {
+		if (response?.status !== 200) {
 			setResponseError(response, setData, setError);
 			return;
 		}
 
-		if (response.success) {
-			setData(response.data);
+		console.log(`response`);
+
+		if (response) {
+			setData(response);
 		} else setError(response);
 	} catch (e) {
 		setData(null);
@@ -61,7 +64,7 @@ const sendPostRequest = async (url: string, payload: IUserSignUp) => {
 
 const setResponseError = (
 	response: any,
-	setData: Dispatch<SetStateAction<null>>,
+	setData: Dispatch<SetStateAction<any>>,
 	setError: Dispatch<SetStateAction<string | null>>
 ) => {
 	const message =

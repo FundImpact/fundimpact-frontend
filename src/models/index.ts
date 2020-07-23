@@ -22,11 +22,20 @@ export interface IOrganisation {
 }
 
 export interface IBasicInformation {
+	username: string;
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
+	provider: "local";
+	organisation: {
+		name: string;
+		short_name: string;
+		legal_name: string;
+		description: string;
+		type: string;
+	};
 }
 
 export interface ILoginForm {
