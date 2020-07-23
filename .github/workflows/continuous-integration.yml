@@ -2,7 +2,10 @@ name: Continuous Integration
 
 on:
     push:
-      branches: [ master ]
+      branches:  
+      - master
+      - automation/CI
+    
     pull_request:
       branches: [ master ]
 
@@ -24,3 +27,7 @@ jobs:
         
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.3
+        env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
+        with: 
+            projectBaseDir: .
