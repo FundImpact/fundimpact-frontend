@@ -1,10 +1,13 @@
-import { IBasicInformation } from "../models";
-import { useNavigate } from "react-router-dom";
-import { Form, Formik, FormikHelpers } from "formik";
-import { SignUpSteps } from "../utils/signup.util";
 import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core";
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Form, Formik, FormikHelpers } from "formik";
+import React from "react";
+
+import { useSignupNewUser } from "../hooks/signupUser";
+import { IBasicInformation } from "../models";
+import GlobalLoader from "./commons/GlobalLoader";
+
+// import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -27,18 +30,29 @@ export default function BasicDetailsForm() {
 		password: "",
 	};
 	const classes = useStyles();
-	const navigate = useNavigate();
+	// console.log("BasicDetailsForm rendering");
 
-	function onSubmit(values: IBasicInformation, formikHelpers: FormikHelpers<IBasicInformation>) {
+	const { error, loading, setPayload } = useSignupNewUser(null, []);
+
+	const OnSubmit = (
+		values: IBasicInformation,
+		formikHelpers: FormikHelpers<IBasicInformation>
+	) => {
 		console.log(values, formikHelpers);
-		navigate(`/signup/${SignUpSteps.SET_ORG}`);
-	}
+		console.log(`settting payload`);
+		setPayload(values);
+
+		// navigate(`/signup/${SignUpSteps.SET_ORG}`);
+	};
 
 	return (
-		<Formik initialValues={initialValues} onSubmit={onSubmit}>
+		<Formik initialValues={initialValues} onSubmit={OnSubmit}>
 			{(formik) => {
 				return (
 					<Form className={classes.form}>
+						{/* {error ? `have error` + error : "No Error"}
+						{loading ? `have loading` + loading : "No loading"}
+						{data ? `have data` + data : "No data"} */}
 						<Grid container spacing={4} justify={"center"}>
 							<Grid item xs={12} md={6}>
 								<TextField
@@ -119,6 +133,10 @@ export default function BasicDetailsForm() {
 								>
 									Submit
 								</Button>
+
+								{loading ? <GlobalLoader /> : null}
+
+								{error ? <p className="error-message"> {error} </p> : null}
 							</Grid>
 						</Grid>
 					</Form>
