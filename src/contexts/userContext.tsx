@@ -24,4 +24,12 @@ function UserProvider({ children }: IUserProviderProps) {
 	);
 }
 
-export { UserProvider };
+function useAuth() {
+	const context = React.useContext(UserDataContext);
+	if (!context) {
+		throw new Error("useAuth must be used within a UserProvider");
+	}
+	return context;
+}
+
+export { UserProvider, useAuth };
