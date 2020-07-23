@@ -1,9 +1,12 @@
-import React from "react";
 import { Box, Button, createStyles, TextField, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
+import React from "react";
 import { Link } from "react-router-dom";
+
+import { useLogin } from "../hooks/useLogin";
 import { ILoginForm } from "../models";
+import GlobalLoader from "./commons/GlobalLoader";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -23,16 +26,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function Login() {
+	const { data, loading, error: apiError, setPayload } = useLogin(null, []);
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
-		userName: "",
+		identifier: "",
 		password: "",
 	};
 
 	function validate(values: ILoginForm) {
 		let errors: ILoginForm = {};
-		if (!values.userName) {
-			errors.userName = "User name is required";
+		if (!values.identifier) {
+			errors.identifier = "User name is required";
 		}
 		if (!values.password) {
 			errors.password = "Password is required";
@@ -42,6 +46,7 @@ function Login() {
 
 	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
 		console.log(values, formikHelpers);
+		setPayload(values);
 	}
 
 	return (
@@ -57,12 +62,12 @@ function Login() {
 					return (
 						<Form className={classes.root} autoComplete="off">
 							<TextField
-								error={!!formik.errors.userName}
-								helperText={formik.touched.userName && formik.errors.userName}
+								error={!!formik.errors.identifier}
+								helperText={formik.touched.identifier && formik.errors.identifier}
 								onChange={formik.handleChange}
-								label="Username"
+								label="identifier"
 								required
-								name="userName"
+								name="identifier"
 								variant="outlined"
 							/>
 
@@ -91,6 +96,10 @@ function Login() {
 									Forgot Password
 								</Link>
 							</Box>
+
+							{loading ? <GlobalLoader /> : null}
+							{apiError ? <p className="error-message"> {apiError} </p> : null}
+							{data ? <p> Login Successs </p> : null}
 						</Form>
 					);
 				}}
