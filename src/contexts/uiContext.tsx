@@ -5,10 +5,10 @@ function getMuiTheme(): ThemeOptions {
 	return createMuiTheme({
 		palette: {
 			primary: {
-				main: "#212945",
+				main: "#5567FF",
 			},
 			secondary: {
-				main: "#5567ff",
+				main: "#14BB4C",
 			},
 		},
 	});
