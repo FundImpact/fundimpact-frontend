@@ -31,7 +31,7 @@ const intiatePostRequest = async (
 		let response: any = await sendPostRequest(url, payload);
 		setLoading(false);
 
-		if (response.status && response.status !== 200) {
+		if (response.statusCode && response.statusCode !== 200) {
 			setResponseError(response, setData, setError);
 			return;
 		}

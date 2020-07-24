@@ -12,9 +12,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 
-import { useSignupNewUser } from "../hooks/signupUser";
-import { useOrganisationTypes } from "../hooks/useOrganisationType";
+import { useGetFetch } from "../hooks/useFetch";
+import { usePostFetch } from "../hooks/usePostFetch";
 import { IBasicInformation } from "../models";
+import { IOrganisationType } from "../models/organisation/types";
+import { IUserSignupResponse } from "../models/signup/userSignUpResponse";
 import { getDefaultBasicInformation } from "../utils/signup.util";
 import GlobalLoader from "./commons/GlobalLoader";
 
@@ -35,19 +37,20 @@ const useStyles = makeStyles((theme: Theme) =>
 const BasicDetailsForm = () => {
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
-	console.log(`styles`, classes);
+	const singupURL = "https://api.fundimpact.org/auth/local/register";
+	const organisationTypesURL = "https://api.fundimpact.org/organisation-registration-types";
 
-	// console.log(`initialValues`, initialValues);
-
-	const { error, loading, data: singupSuccessfulResponse, setPayload } = useSignupNewUser();
-	const { error: OrganisationError, data: organisationTypes } = useOrganisationTypes();
+	const { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
+		IUserSignupResponse
+	>({ body: null, url: singupURL });
+	const { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
+		url: organisationTypesURL,
+	});
 
 	const OnSubmit = (
 		values: IBasicInformation,
 		formikHelpers: FormikHelpers<IBasicInformation>
 	) => {
-		console.log(values, formikHelpers);
-		console.log(`settting payload`);
 		setPayload(values);
 
 		// navigate(`/signup/${SignUpSteps.SET_ORG}`);

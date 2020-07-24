@@ -4,7 +4,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useLogin } from "../hooks/useLogin";
+import { usePostFetch } from "../hooks/usePostFetch";
 import { ILoginForm } from "../models";
 import GlobalLoader from "./commons/GlobalLoader";
 
@@ -26,12 +26,16 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function Login() {
-	const { data, loading, error: apiError, setPayload } = useLogin(null);
+	const loginURL = "https://api.fundimpact.org/auth/local";
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
 		identifier: "",
 		password: "",
 	};
+	const { data, loading, error: apiError, setPayload } = usePostFetch<any>({
+		url: loginURL,
+		body: null,
+	});
 
 	function validate(values: ILoginForm) {
 		let errors: ILoginForm = {};
