@@ -32,13 +32,13 @@ const postSignupData = async (
 	try {
 		let response = await sendPostRequest(url, payload);
 		setLoading(false);
-		if (response.status !== 200) {
+		if (response.status && response.status !== 200) {
 			setResponseError(await response.json(), setData, setError);
 			return;
 		}
 		const data = await response.json();
 
-		console.log(`data `, data);
+		console.log(`loginData `, data);
 
 		setData(data);
 	} catch (e) {

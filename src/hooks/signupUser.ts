@@ -31,19 +31,17 @@ const postSignupData = async (
 	try {
 		let response: any = await sendPostRequest(url, payload);
 		setLoading(false);
-		console.log(`response`, response);
 
-		if (response?.status !== 200) {
+		if (response.status && response.status !== 200) {
 			setResponseError(response, setData, setError);
 			return;
 		}
-
-		console.log(`response`);
 
 		if (response) {
 			setData(response);
 		} else setError(response);
 	} catch (e) {
+		console.error(e);
 		setData(null);
 		setError(e);
 		setLoading(false);

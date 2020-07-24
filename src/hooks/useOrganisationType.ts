@@ -32,12 +32,10 @@ const getOrganisationTypes = async (
 		}
 		const data = await response.json();
 
-		console.log(`organisation Types `, data);
-
 		setData(data);
 	} catch (e) {
 		setData(null);
-		setError(`Server Error. Failed to authenticate.`);
+		setError(`Server Error.`);
 		setLoading(false);
 	}
 };
@@ -62,7 +60,7 @@ const setResponseError = (
 	const message =
 		response.message[0] && response.message[0].messages[0]
 			? response.message[0].messages[0].message
-			: "Failed to create user";
+			: "Failed to fetch organisation list";
 	setData(null);
 	setError(`${message}`);
 };
