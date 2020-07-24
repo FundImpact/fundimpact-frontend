@@ -1,9 +1,10 @@
-import React, { createContext } from "react";
-import userReducer, { Action } from "../reducers/userReducer";
+import React, { createContext, Dispatch } from "react";
+import userReducer from "../reducers/userReducer";
 import { IUserDataContext } from "../models/userProvider";
 
 const getDefaultUserState = (): IUserDataContext => {
 	let localData = localStorage.getItem("user");
+
 	if (localData) {
 		try {
 			return JSON.parse(localData);
@@ -15,7 +16,7 @@ const getDefaultUserState = (): IUserDataContext => {
 };
 
 const UserDataContext = createContext<IUserDataContext | undefined>(undefined);
-const UserDispatchContext = createContext<any | undefined>(undefined);
+const UserDispatchContext = createContext<Dispatch<any> | undefined>(undefined);
 
 UserDataContext.displayName = "UserData";
 UserDispatchContext.displayName = "UserDispatcher";
@@ -28,7 +29,7 @@ function UserProvider({ children }: IUserProviderProps) {
 	const [state, reducer] = React.useReducer(userReducer, getDefaultUserState());
 	return (
 		<UserDataContext.Provider value={state}>
-			l<UserDispatchContext.Provider value={reducer}>{children}</UserDispatchContext.Provider>
+			<UserDispatchContext.Provider value={reducer}>{children}</UserDispatchContext.Provider>
 		</UserDataContext.Provider>
 	);
 }

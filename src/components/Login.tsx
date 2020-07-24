@@ -4,7 +4,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth, UserDispatchContext } from "../contexts/userContext";
+import { UserDispatchContext } from "../contexts/userContext";
 import { usePostFetch } from "../hooks/usePostFetch";
 import { ILoginForm } from "../models";
 import { setUser } from "../reducers/userReducer";
@@ -35,7 +35,6 @@ function Login() {
 		password: "amresh9797",
 	};
 
-	const user = useAuth();
 	const userDispatch = React.useContext(UserDispatchContext);
 
 	const { data, loading, error: apiError, setPayload } = usePostFetch<any>({
@@ -44,8 +43,11 @@ function Login() {
 	});
 
 	React.useEffect(() => {
-		if (data) userDispatch(setUser(data));
-	}, [data]);
+		if (data)
+			if (userDispatch) {
+				userDispatch(setUser(data));
+			}
+	}, [userDispatch, data]);
 
 	function validate(values: ILoginForm) {
 		let errors: ILoginForm = {};
