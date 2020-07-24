@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const BasicDetailsForm = () => {
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
+	console.log(`styles`, classes);
 
 	// console.log(`initialValues`, initialValues);
 

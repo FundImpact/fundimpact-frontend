@@ -16,17 +16,6 @@ code {
 	text-align: center;
 }
 
-.global-loader {
-	position: fixed;
-	display: block;
-	width: 100vw;
-	height: 100vh;
-	top: 0px;
-	left: 0px;
-	background: rgba(126, 126, 126, 0.376);
-	z-index: 1;
-}
-
 .divider {
 	position: relative;
 	display: block;
