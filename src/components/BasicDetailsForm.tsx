@@ -19,6 +19,9 @@ import { IOrganisationType } from "../models/organisation/types";
 import { IUserSignupResponse } from "../models/signup/userSignUpResponse";
 import { getDefaultBasicInformation } from "../utils/signup.util";
 import GlobalLoader from "./commons/GlobalLoader";
+import { setUser } from "../reducers/userReducer";
+import useRouteResolver from "../hooks/useRouteResolver";
+import { UserDispatchContext } from "../contexts/userContext";
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -42,10 +45,22 @@ const BasicDetailsForm = () => {
 
 	const { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
-	>({ body: null, url: singupURL });
+	>({
+		body: null,
+		url: singupURL,
+	});
 	const { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
 		url: organisationTypesURL,
 	});
+	const userDispatch = React.useContext(UserDispatchContext);
+
+	useRouteResolver();
+	React.useEffect(() => {
+		if (singupSuccessfulResponse)
+			if (userDispatch) {
+				userDispatch(setUser(singupSuccessfulResponse));
+			}
+	}, [singupSuccessfulResponse]);
 
 	const OnSubmit = (
 		values: IBasicInformation,

@@ -7,8 +7,9 @@ export default function useRouteResolver() {
 	const navigate = useNavigate();
 	const { jwt } = useAuth();
 	React.useEffect(() => {
+		console.log("here", pathname, jwt);
 		if (jwt) {
 			navigate("/dashboard");
 		}
-	}, [jwt]);
+	}, [jwt, pathname]);
 }

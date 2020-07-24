@@ -34,7 +34,6 @@ function Login() {
 		password: "amresh9797",
 	};
 
-	const user = useAuth();
 	const userDispatch = React.useContext(UserDispatchContext);
 
 	const { data, loading, error: apiError, setPayload } = usePostFetch<any>({
@@ -43,7 +42,10 @@ function Login() {
 	});
 
 	React.useEffect(() => {
-		if (data) userDispatch(setUser(data));
+		if (data)
+			if (userDispatch) {
+				userDispatch(setUser(data));
+			}
 	}, [data]);
 
 	function validate(values: ILoginForm) {
