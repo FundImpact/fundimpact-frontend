@@ -17,6 +17,7 @@ import { usePostFetch } from "../hooks/usePostFetch";
 import { IBasicInformation } from "../models";
 import { IOrganisationType } from "../models/organisation/types";
 import { IUserSignupResponse } from "../models/signup/userSignUpResponse";
+import { ORGANISATION_TYPES_API, SIGNUP_API } from "../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../utils/signup.util";
 import GlobalLoader from "./commons/GlobalLoader";
 
@@ -37,14 +38,12 @@ const useStyles = makeStyles((theme: Theme) =>
 const BasicDetailsForm = () => {
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
-	const singupURL = "https://api.fundimpact.org/auth/local/register";
-	const organisationTypesURL = "https://api.fundimpact.org/organisation-registration-types";
 
 	const { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
-	>({ body: null, url: singupURL });
+	>({ body: null, url: SIGNUP_API });
 	const { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
-		url: organisationTypesURL,
+		url: ORGANISATION_TYPES_API,
 	});
 
 	const OnSubmit = (
