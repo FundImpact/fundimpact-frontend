@@ -8,8 +8,8 @@ const SignUp = React.lazy(() => import("../components/SignUp"));
 const Login = React.lazy(() => import("../components/Login"));
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
-	const { token } = useAuth();
-	if (token) {
+	const { jwt } = useAuth();
+	if (jwt) {
 		return <Route children={children} {...rest} />;
 	} else return <Navigate to="/login" state={{ redirectedFrom: rest.path }} />;
 }

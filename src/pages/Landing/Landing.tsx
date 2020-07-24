@@ -6,6 +6,7 @@ import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
 import useSignUpStep from "../../hooks/useSignupStep";
 import { ISignUpStep } from "../../models";
 import { getSteps } from "../../utils/signup.util";
+import useRouteResolver from "../../hooks/useRouteResolver";
 
 function ActionDescription({ stepNumber }: { stepNumber: number | undefined }) {
 	const steps = getSteps();
@@ -47,6 +48,7 @@ function LandingPage() {
 	const location = useLocation();
 	const signUpPathMatch = matchPath("signup/:id", location.pathname);
 	const { currentStep } = useSignUpStep(signUpPathMatch ? signUpPathMatch.params.id : undefined);
+	useRouteResolver();
 	return (
 		<Grid container>
 			<Grid item xs={12} component={Box} md={4}>

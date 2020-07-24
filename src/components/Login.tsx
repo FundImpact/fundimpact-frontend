@@ -3,10 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
-
 import { usePostFetch } from "../hooks/usePostFetch";
 import { ILoginForm } from "../models";
 import GlobalLoader from "./commons/GlobalLoader";
+import { useAuth, UserDispatchContext, UserProvider } from "../contexts/userContext";
+import { setUser } from "../reducers/userReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -29,13 +30,21 @@ function Login() {
 	const loginURL = "https://api.fundimpact.org/auth/local";
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
-		identifier: "",
-		password: "",
+		identifier: "amresh114",
+		password: "amresh9797",
 	};
+
+	const user = useAuth();
+	const userDispatch = React.useContext(UserDispatchContext);
+
 	const { data, loading, error: apiError, setPayload } = usePostFetch<any>({
 		url: loginURL,
 		body: null,
 	});
+
+	React.useEffect(() => {
+		if (data) userDispatch(setUser(data));
+	}, [data]);
 
 	function validate(values: ILoginForm) {
 		let errors: ILoginForm = {};
@@ -49,7 +58,6 @@ function Login() {
 	}
 
 	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
-		console.log(values, formikHelpers);
 		setPayload(values);
 	}
 
@@ -66,6 +74,7 @@ function Login() {
 					return (
 						<Form className={classes.root} autoComplete="off">
 							<TextField
+								value={formik.values.identifier}
 								error={!!formik.errors.identifier}
 								helperText={formik.touched.identifier && formik.errors.identifier}
 								onChange={formik.handleChange}
@@ -76,6 +85,7 @@ function Login() {
 							/>
 
 							<TextField
+								value={formik.values.password}
 								error={!!formik.errors.password}
 								onChange={formik.handleChange}
 								label="Password"
