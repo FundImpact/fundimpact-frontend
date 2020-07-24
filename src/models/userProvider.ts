@@ -1,3 +1,4 @@
 export interface IUserDataContext {
-	token?: string;
+	jwt?: string;
+	user?: any;
 }

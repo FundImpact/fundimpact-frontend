@@ -6,6 +6,7 @@ import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
 import useSignUpStep from "../../hooks/useSignupStep";
 import { ISignUpStep } from "../../models";
 import { getSteps } from "../../utils/signup.util";
+import useRouteResolver from "../../hooks/useRouteResolver";
 
 function ActionDescription({ stepNumber }: { stepNumber: number | undefined }) {
 	const steps = getSteps();
@@ -47,6 +48,7 @@ function LandingPage() {
 	const location = useLocation();
 	const signUpPathMatch = matchPath("signup/:id", location.pathname);
 	const { currentStep } = useSignUpStep(signUpPathMatch ? signUpPathMatch.params.id : undefined);
+	useRouteResolver();
 	return (
 		<Grid container>
 			<Grid item xs={12} component={Box} md={4}>
@@ -57,7 +59,7 @@ function LandingPage() {
 					flexDirection={{ xs: "column" }}
 					alignItems={"space between"}
 					height={{ md: "100vh" }}
-					bgcolor="secondary.main"
+					bgcolor="primary.main"
 				>
 					<ActionDescription stepNumber={signUpPathMatch ? currentStep : undefined} />
 					<Box>
@@ -72,7 +74,7 @@ function LandingPage() {
 							<Button
 								onClick={() => navigate("/signup")}
 								variant={"contained"}
-								color="primary"
+								color="secondary"
 							>
 								Sign Up
 							</Button>
@@ -80,7 +82,7 @@ function LandingPage() {
 							<Button
 								onClick={() => navigate("/login")}
 								variant={"contained"}
-								color="primary"
+								color="secondary"
 							>
 								Login
 							</Button>
@@ -95,7 +97,7 @@ function LandingPage() {
 						xs={12}
 						style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
 					>
-						<img src={require("../../assets/images/logo-landing.png")} alt="" />
+						<img src={require("../../assets/images/logo.svg")} alt="" />
 					</Grid>
 					<Grid item xs={12} style={{ display: "flex" }}>
 						<Outlet />

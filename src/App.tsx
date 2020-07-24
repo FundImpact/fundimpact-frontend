@@ -1,8 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import AppRoutes from "./config/routes";
+import { FullScreenLoader } from "./components/Loader";
 
 function App() {
-	return <AppRoutes />;
+	return (
+		<Suspense fallback={<FullScreenLoader />}>
+			<AppRoutes />
+		</Suspense>
+	);
 }
 
 export default App;
