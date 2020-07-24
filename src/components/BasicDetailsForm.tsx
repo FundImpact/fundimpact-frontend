@@ -44,19 +44,23 @@ const BasicDetailsForm = () => {
 
 	const { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
-	>({ body: null, url: SIGNUP_API });
+	>({
+		body: null,
+		url: SIGNUP_API,
+	});
 	const { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
 		url: ORGANISATION_TYPES_API,
 	});
 	const userDispatch = React.useContext(UserDispatchContext);
 
 	useRouteResolver();
+
 	React.useEffect(() => {
 		if (singupSuccessfulResponse)
 			if (userDispatch) {
 				userDispatch(setUser(singupSuccessfulResponse));
 			}
-	}, [singupSuccessfulResponse]);
+	}, [singupSuccessfulResponse, userDispatch]);
 
 	const OnSubmit = (
 		values: IBasicInformation,

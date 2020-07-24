@@ -4,7 +4,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth, UserDispatchContext } from "../contexts/userContext";
+import { UserDispatchContext } from "../contexts/userContext";
 import { usePostFetch } from "../hooks/usePostFetch";
 import { ILoginForm } from "../models";
 import { setUser } from "../reducers/userReducer";
@@ -47,7 +47,7 @@ function Login() {
 			if (userDispatch) {
 				userDispatch(setUser(data));
 			}
-	}, [data]);
+	}, [userDispatch, data]);
 
 	function validate(values: ILoginForm) {
 		let errors: ILoginForm = {};

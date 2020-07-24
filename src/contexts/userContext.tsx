@@ -1,5 +1,5 @@
 import React, { createContext, Dispatch } from "react";
-import userReducer, { Action } from "../reducers/userReducer";
+import userReducer from "../reducers/userReducer";
 import { IUserDataContext } from "../models/userProvider";
 
 const getDefaultUserState = (): IUserDataContext => {
@@ -29,7 +29,7 @@ function UserProvider({ children }: IUserProviderProps) {
 	const [state, reducer] = React.useReducer(userReducer, getDefaultUserState());
 	return (
 		<UserDataContext.Provider value={state}>
-			l<UserDispatchContext.Provider value={reducer}>{children}</UserDispatchContext.Provider>
+			<UserDispatchContext.Provider value={reducer}>{children}</UserDispatchContext.Provider>
 		</UserDataContext.Provider>
 	);
 }
