@@ -38,7 +38,10 @@ const BasicDetailsForm = () => {
 
 	// console.log(`initialValues`, initialValues);
 
-	const { error, loading, setPayload } = useSignupNewUser(null, []);
+	const { error, loading, data: singupSuccessfulResponse, setPayload } = useSignupNewUser(
+		null,
+		[]
+	);
 	const { error: OrganisationError, data: organisationTypes } = useOrganisationTypes();
 
 	const OnSubmit = (
@@ -258,6 +261,9 @@ const BasicDetailsForm = () => {
 								</Button>
 
 								{loading ? <GlobalLoader /> : null}
+								{singupSuccessfulResponse ? (
+									<p className="text-center"> Singgup Successfull </p>
+								) : null}
 
 								{error ? <p className="error-message"> {error} </p> : null}
 							</Grid>
