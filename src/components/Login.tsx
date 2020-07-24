@@ -3,11 +3,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
+
+import { useAuth, UserDispatchContext } from "../contexts/userContext";
 import { usePostFetch } from "../hooks/usePostFetch";
 import { ILoginForm } from "../models";
-import GlobalLoader from "./commons/GlobalLoader";
-import { useAuth, UserDispatchContext, UserProvider } from "../contexts/userContext";
 import { setUser } from "../reducers/userReducer";
+import { LOGIN_API } from "../utils/endpoints.util";
+import GlobalLoader from "./commons/GlobalLoader";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -27,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function Login() {
-	const loginURL = "https://api.fundimpact.org/auth/local";
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
 		identifier: "amresh114",
@@ -37,7 +38,7 @@ function Login() {
 	const userDispatch = React.useContext(UserDispatchContext);
 
 	const { data, loading, error: apiError, setPayload } = usePostFetch<any>({
-		url: loginURL,
+		url: LOGIN_API,
 		body: null,
 	});
 
