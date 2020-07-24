@@ -38,10 +38,7 @@ const BasicDetailsForm = () => {
 
 	// console.log(`initialValues`, initialValues);
 
-	const { error, loading, data: singupSuccessfulResponse, setPayload } = useSignupNewUser(
-		null,
-		[]
-	);
+	const { error, loading, data: singupSuccessfulResponse, setPayload } = useSignupNewUser();
 	const { error: OrganisationError, data: organisationTypes } = useOrganisationTypes();
 
 	const OnSubmit = (
