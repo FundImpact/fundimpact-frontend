@@ -1,19 +1,19 @@
+import "./index.css";
+
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+
 import App from "./App";
-import * as serviceWorker from "./serviceWorker";
 import { UIProvider } from "./contexts/uiContext";
 import { UserProvider } from "./contexts/userContext";
+import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-	<React.StrictMode>
-		<UIProvider>
-			<UserProvider>
-				<App />
-			</UserProvider>
-		</UIProvider>
-	</React.StrictMode>,
+	<UIProvider>
+		<UserProvider>
+			<App />
+		</UserProvider>
+	</UIProvider>,
 	document.getElementById("root")
 );
 

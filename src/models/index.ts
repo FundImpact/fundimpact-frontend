@@ -5,6 +5,13 @@ export interface ISignUpStep {
 	description?: string;
 }
 
+export interface IUserSignUp {
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+}
+
 export interface IOrganisation {
 	orgName: string;
 	streetAdd: string;
@@ -15,14 +22,23 @@ export interface IOrganisation {
 }
 
 export interface IBasicInformation {
+	username: string;
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
+	provider: "local";
+	organisation: {
+		name: string;
+		short_name: string;
+		legal_name: string;
+		description: string;
+		type: string;
+	};
 }
 
 export interface ILoginForm {
-	userName?: String;
+	identifier?: String;
 	password?: String;
 }

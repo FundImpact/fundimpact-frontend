@@ -1,4 +1,4 @@
-import { ISignUpStep } from "../models";
+import { IBasicInformation, ISignUpStep } from "../models";
 
 export enum SignUpSteps {
 	SET_BASIC_INFO = "basicInfo",
@@ -25,3 +25,22 @@ export function getSteps(): ISignUpStep[] {
 		{ label: "Setup Project", step: 3, id: SignUpSteps.SET_PROJECT },
 	];
 }
+
+export const getDefaultBasicInformation = (): IBasicInformation => {
+	return {
+		username: "",
+		confirmPassword: "",
+		email: "",
+		firstName: "",
+		lastName: "",
+		password: "",
+		provider: "local",
+		organisation: {
+			name: "",
+			legal_name: "",
+			short_name: "",
+			description: "",
+			type: "",
+		},
+	};
+};
