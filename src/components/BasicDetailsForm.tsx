@@ -3,11 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 
+import { UserDispatchContext } from "../contexts/userContext";
 import { useGetFetch } from "../hooks/useFetch";
 import { usePostFetch } from "../hooks/usePostFetch";
+import useRouteResolver from "../hooks/useRouteResolver";
 import { IBasicInformation } from "../models";
 import { IOrganisationType } from "../models/organisation/types";
 import { IUserSignupResponse } from "../models/signup/userSignUpResponse";
+import { setUser } from "../reducers/userReducer";
 import { ORGANISATION_TYPES_API, SIGNUP_API } from "../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../utils/signup.util";
 import GlobalLoader from "./commons/GlobalLoader";
@@ -36,6 +39,16 @@ const BasicDetailsForm = () => {
 	const { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
 		url: ORGANISATION_TYPES_API,
 	});
+	const userDispatch = React.useContext(UserDispatchContext);
+
+	useRouteResolver();
+
+	React.useEffect(() => {
+		if (singupSuccessfulResponse)
+			if (userDispatch) {
+				userDispatch(setUser(singupSuccessfulResponse));
+			}
+	}, [singupSuccessfulResponse, userDispatch]);
 
 	const OnSubmit = (
 		values: IBasicInformation,
