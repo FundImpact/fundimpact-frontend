@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function Login() {
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
-		identifier: "amresh114",
+		email: "amresh114",
 		password: "amresh9797",
 	};
 
@@ -49,8 +49,8 @@ function Login() {
 
 	function validate(values: ILoginForm) {
 		let errors: ILoginForm = {};
-		if (!values.identifier) {
-			errors.identifier = "User name is required";
+		if (!values.email) {
+			errors.email = "User name is required";
 		}
 		if (!values.password) {
 			errors.password = "Password is required";
@@ -75,13 +75,13 @@ function Login() {
 					return (
 						<Form className={classes.root} autoComplete="off">
 							<TextField
-								value={formik.values.identifier}
-								error={!!formik.errors.identifier}
-								helperText={formik.touched.identifier && formik.errors.identifier}
+								value={formik.values.email}
+								error={!!formik.errors.email}
+								helperText={formik.touched.email && formik.errors.email}
 								onChange={formik.handleChange}
-								label="identifier"
+								label="Email"
 								required
-								name="identifier"
+								name="email"
 								variant="outlined"
 							/>
 

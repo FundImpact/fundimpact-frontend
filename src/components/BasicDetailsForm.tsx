@@ -1,13 +1,4 @@
-import {
-	Button,
-	createStyles,
-	Grid,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
-	Theme,
-} from "@material-ui/core";
+import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
@@ -61,7 +52,7 @@ const BasicDetailsForm = () => {
 				return (
 					<Form className={classes.form}>
 						<Grid container spacing={4} justify={"center"}>
-							<Grid item xs={12} md={6}>
+							{/* <Grid item xs={12} md={6}>
 								<TextField
 									style={{ width: "100%" }}
 									error={!!formik.errors.username}
@@ -74,8 +65,8 @@ const BasicDetailsForm = () => {
 									variant="outlined"
 									type={"text"}
 								/>
-							</Grid>
-							<Grid item xs={12} md={6}>
+							</Grid> */}
+							<Grid item xs={12} md={12}>
 								<TextField
 									style={{ width: "100%" }}
 									error={!!formik.errors.email}
@@ -90,7 +81,7 @@ const BasicDetailsForm = () => {
 								/>
 							</Grid>
 
-							<Grid item xs={12} md={6}>
+							{/* <Grid item xs={12} md={6}>
 								<TextField
 									error={!!formik.errors.firstName}
 									helperText={formik.touched.firstName && formik.errors.firstName}
@@ -113,7 +104,7 @@ const BasicDetailsForm = () => {
 									name="lastName"
 									variant="outlined"
 								/>
-							</Grid>
+							</Grid> */}
 							<Grid item xs={6}>
 								<TextField
 									style={{ width: "100%" }}
@@ -152,7 +143,7 @@ const BasicDetailsForm = () => {
 									<span>Organisation</span>{" "}
 								</div>
 							</Grid>
-							<Grid item xs={12} md={6}>
+							<Grid item xs={12} md={12}>
 								<TextField
 									error={!!formik.errors.organisation?.name}
 									helperText={
@@ -168,7 +159,7 @@ const BasicDetailsForm = () => {
 								/>
 							</Grid>
 
-							<Grid item xs={12} md={6}>
+							{/* <Grid item xs={12} md={6}>
 								<InputLabel id="demo-simple-select-label" className={classes.form}>
 									Type
 								</InputLabel>
@@ -247,7 +238,7 @@ const BasicDetailsForm = () => {
 									name="organisation.description"
 									variant="outlined"
 								/>
-							</Grid>
+							</Grid> */}
 
 							<Grid item xs={12}>
 								<Button
