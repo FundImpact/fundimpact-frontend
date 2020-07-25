@@ -3,7 +3,7 @@ import LandingPage from "../pages/Landing/Landing";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RouteProps } from "react-router";
 import { useAuth } from "../contexts/userContext";
-import DashboardContainer from "../pages/Dashboard/DasboardContainer";
+import DashboardContainer, { LeftPanel } from "../pages/Dashboard/DasboardContainer";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./grapql";
 
