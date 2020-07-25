@@ -1,5 +1,6 @@
 import React from "react";
 import {
+	AppBar,
 	Avatar,
 	Box,
 	Container,
@@ -8,6 +9,7 @@ import {
 	List,
 	ListItem,
 	Theme,
+	Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -56,22 +58,40 @@ const useStyles = makeStyles((theme: Theme) =>
 			height: "100%",
 			padding: theme.spacing(1),
 		},
+		sidePanel: {
+			padding: theme.spacing(2),
+		},
 	})
 );
+
+function SideBar({ children }: { children: React.ReactElement }) {
+	return children;
+}
 
 export default function DashboardContainer({ left, main, top }: IDashboardContainer) {
 	const classes = useStyles();
 	return (
-		<Container className={classes.root} maxWidth={"xl"}>
-			<Grid style={{ height: "100%" }} container>
-				<Grid className={classes.leftPanel} xs={1} direction="column" item container>
-					<Box bgcolor="primary.main" className={classes.leftPanelContent}>
-						<LeftPanel />
-					</Box>
-				</Grid>
-				<Grid xs={11} item container direction="column">
-					{top && <Grid xs={1}>{top} </Grid>}
-					<Grid xs>MAIN </Grid>
+		<Container component={Grid} container className={classes.root} maxWidth={"xl"}>
+			<Grid className={classes.leftPanel} xs={1} direction="column" item container>
+				<Box bgcolor="primary.main" className={classes.leftPanelContent}>
+					<LeftPanel />
+				</Box>
+			</Grid>
+			<Grid xs item container direction="column">
+				{top && <Grid item>{top} </Grid>}
+				<Grid item xs container>
+					<Grid item xs={2}>
+						<SideBar>
+							<Grid container wrap="nowrap" className={classes.sidePanel}>
+								<Grid item zeroMinWidth>
+									<Typography variant="h4" gutterBottom noWrap={true}>
+										<Box color="primary.main">Fund Impact</Box>
+									</Typography>
+								</Grid>
+							</Grid>
+						</SideBar>
+					</Grid>
+					<Grid item xs={10}></Grid>
 				</Grid>
 			</Grid>
 		</Container>
