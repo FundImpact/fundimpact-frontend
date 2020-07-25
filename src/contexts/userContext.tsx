@@ -1,6 +1,7 @@
 import React, { createContext, Dispatch } from "react";
-import userReducer from "../reducers/userReducer";
+
 import { IUserDataContext } from "../models/userProvider";
+import userReducer from "../reducers/userReducer";
 
 const getDefaultUserState = (): IUserDataContext => {
 	let localData = localStorage.getItem("user");
