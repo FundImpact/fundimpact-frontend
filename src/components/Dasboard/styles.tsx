@@ -14,5 +14,9 @@ export const useStyles = makeStyles((theme: Theme) =>
 			height: "100%",
 			background: theme.palette.background.paper,
 		},
+		card: {
+			boxShadow: "none",
+			margin: theme.spacing(0, 2),
+		},
 	})
 );

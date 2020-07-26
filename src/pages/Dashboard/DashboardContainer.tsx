@@ -3,10 +3,7 @@ import { Box, Container, Grid, Typography } from "@material-ui/core";
 import { useStyles } from "../../components/Dasboard/styles";
 import SideBar from "../../components/Dasboard/SideBar";
 import LeftPanel from "../../components/Dasboard/LeftPanel";
-import { useQuery } from "@apollo/client";
-import { GET_ORGANISATIONS } from "../../graphql/queries";
-import { Skeleton } from "@material-ui/lab";
-import { useAuth } from "../../contexts/userContext";
+import DashboardCard from "../../components/Dasboard/DasboardCards";
 
 interface IDashboardContainer {
 	left: React.ReactNode;
@@ -16,17 +13,6 @@ interface IDashboardContainer {
 
 export default function DashboardContainer({ left, main, top }: IDashboardContainer) {
 	const classes = useStyles();
-	const [showSideBar, setShowSideBar] = React.useState(false);
-	const { user } = useAuth();
-	const { loading, error, data } = useQuery(GET_ORGANISATIONS, {
-		variables: {
-			id: user?.id,
-		},
-	});
-	React.useEffect(() => {
-		setTimeout(() => setShowSideBar(true), 1000);
-	});
-
 	return (
 		<Container
 			component={Grid}
@@ -41,24 +27,61 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 				</Grid>
 				<Grid item xs={10}>
 					<SideBar>
-						<Grid item>
-							<Typography variant="h4" gutterBottom noWrap={true}>
-								{loading ? (
-									<Skeleton variant="text" />
-								) : (
-									<Box color="primary.main"> {""}</Box>
-								)}
-							</Typography>
-						</Grid>
+						{(
+							organisation: { name: string; id: string | null },
+							workspaces: { name: string; id: string | number }[]
+						) => {
+							return (
+								<Grid container direction="column">
+									<Grid item>
+										<Typography variant="h5" gutterBottom noWrap={true}>
+											<Box color="primary.main">{organisation.name}</Box>
+										</Typography>
+									</Grid>
+									<Grid item>
+										<Box mt={5}>
+											{workspaces.map((workspace) => {
+												return (
+													<Typography
+														key={workspace.id}
+														variant="subtitle1"
+														gutterBottom
+														noWrap={true}
+													>
+														<Box color="primary.main">
+															{workspace.name}
+														</Box>
+													</Typography>
+												);
+											})}
+										</Box>
+									</Grid>
+								</Grid>
+							);
+						}}
 					</SideBar>
 				</Grid>
 			</Grid>
 
-			<Grid item xs md={9} container>
-				<Grid item xs={12}>
-					Top Content
+			<Grid item xs md={9} container direction="column">
+				<Grid item>
+					<Box m={2}>
+						<Typography variant={"h5"}>Project One</Typography>
+					</Box>
 				</Grid>
-				<Grid item xs={12}>
+
+				<Grid item container style={{ flex: 1 }}>
+					<Grid item md={4}>
+						<DashboardCard title={"FUND STATUS"} />
+					</Grid>
+					<Grid item md={4}>
+						<DashboardCard title={"ACHIEVEMENTS"} />
+					</Grid>
+					<Grid item md={4}>
+						<DashboardCard title={"IMPACT"} />
+					</Grid>
+				</Grid>
+				<Grid item style={{ flex: 4 }}>
 					<Box ml={1}>{main}</Box>
 				</Grid>
 			</Grid>
