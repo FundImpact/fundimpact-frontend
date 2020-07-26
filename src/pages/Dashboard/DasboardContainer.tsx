@@ -8,8 +8,11 @@ import {
 	Grid,
 	List,
 	ListItem,
+	Paper,
+	Slide,
 	Theme,
 	Typography,
+	useTheme,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -19,80 +22,101 @@ interface IDashboardContainer {
 	top?: React.ReactNode;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		root: {
+			height: "100vh",
+		},
+		leftPanel: {
+			height: "100vh",
+			background: theme.palette.primary.main,
+		},
+		leftPanelContent: {},
+		sidePanel: {
+			height: "100%",
+			background: theme.palette.background.paper,
+		},
+	})
+);
+
 export function LeftPanel() {
+	const classes = useStyles();
+	const theme = useTheme();
+
 	return (
-		<Grid container style={{ height: "100%" }} direction="column">
+		<Grid component={Box} container className={classes.leftPanel} direction="column">
 			<Grid item xs={2}></Grid>
-			<Grid xs>
+			<Grid xs item>
 				<List component="nav">
-					<ListItem>
-						<Avatar src={require("../../assets/icons/dasboard.svg")} />
-					</ListItem>
-					<ListItem>
-						<Avatar src={require("../../assets/icons/dasboard.svg")} />
-					</ListItem>
-					<ListItem>
-						<Avatar src={require("../../assets/icons/dasboard.svg")} />
-					</ListItem>
+					{["dasboard", "briefcase", "star"].map((e) => (
+						<ListItem
+							key={e}
+							style={{ justifyContent: "center", margin: theme.spacing(3, 0) }}
+						>
+							<img
+								style={{ width: "2rem" }}
+								src={require(`../../assets/icons/${e}.svg`)}
+							/>
+						</ListItem>
+					))}
 				</List>
 			</Grid>
-			<Grid xs container direction={"column"} alignItems="center" justify="flex-end">
+			<Grid xs item container direction={"column"} alignItems="center" justify="flex-end">
 				<Avatar src={require("../../assets/icons/dummy-user.png")} />
 			</Grid>
 		</Grid>
 	);
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		root: {
-			height: "100vh",
-			width: "100vw",
-			padding: 0,
-		},
-		leftPanel: {
-			flexBasis: "5%",
-			height: "100%",
-		},
-		leftPanelContent: {
-			height: "100%",
-			padding: theme.spacing(1),
-		},
-		sidePanel: {
-			padding: theme.spacing(2),
-		},
-	})
-);
-
 function SideBar({ children }: { children: React.ReactElement }) {
-	return children;
+	const classes = useStyles();
+
+	return (
+		<Box className={classes.sidePanel} ml={2} mr={1} p={2}>
+			{children}
+		</Box>
+	);
 }
 
 export default function DashboardContainer({ left, main, top }: IDashboardContainer) {
 	const classes = useStyles();
+	const [showSideBar, setShowSideBar] = React.useState(false);
+
+	React.useEffect(() => {
+		setTimeout(() => setShowSideBar(true), 1000);
+	});
+
 	return (
-		<Container component={Grid} container className={classes.root} maxWidth={"xl"}>
-			<Grid className={classes.leftPanel} xs={1} direction="column" item container>
-				<Box bgcolor="primary.main" className={classes.leftPanelContent}>
+		<Container
+			component={Grid}
+			disableGutters
+			container
+			className={classes.root}
+			maxWidth={"xl"}
+		>
+			<Grid item xs={12} md={3} container>
+				<Grid item xs={2}>
 					<LeftPanel />
-				</Box>
-			</Grid>
-			<Grid xs item container direction="column">
-				{top && <Grid item>{top} </Grid>}
-				<Grid item xs container>
-					<Grid item xs={2}>
-						<SideBar>
-							<Grid container wrap="nowrap" className={classes.sidePanel}>
-								<Grid item zeroMinWidth>
-									<Typography variant="h4" gutterBottom noWrap={true}>
-										<Box color="primary.main">Fund Impact</Box>
-									</Typography>
-								</Grid>
-							</Grid>
-						</SideBar>
-					</Grid>
-					<Grid item xs={10}></Grid>
 				</Grid>
+				<Grid item xs={10}>
+					<SideBar>
+						<Grid item>
+							<Typography variant="h4" gutterBottom noWrap={true}>
+								<Box color="primary.main">Fund Impact</Box>
+							</Typography>
+						</Grid>
+					</SideBar>
+				</Grid>
+			</Grid>
+
+			<Grid item xs md={9} container>
+				<Grid item xs={12}>
+					Top Content
+				</Grid>
+				<Grid item xs={12}>
+					<Box ml={1}>{main}</Box>
+				</Grid>
+				{/*<Grid xs>{main}</Grid>*/}
 			</Grid>
 		</Container>
 	);
