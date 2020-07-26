@@ -41,8 +41,3 @@ code {
 	top: 50%;
 	z-index: -1;
 }
-
-td.MuiTableCell-root {
-	padding-top: 1px;
-	padding-bottom: 1px;
-}

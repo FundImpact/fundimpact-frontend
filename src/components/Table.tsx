@@ -20,6 +20,10 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 		th: { color: theme.palette.primary.main },
 		tbody: {
 			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& td.MuiTableCell-root": {
+				paddingTop: "1px",
+				paddingBottom: "1px",
+			},
 		},
 	})
 );
