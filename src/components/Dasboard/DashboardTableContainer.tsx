@@ -1,7 +1,7 @@
 import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 
-import DefaultTable from "./Table";
+import DefaultTable from "../Table";
 
 interface TabPanelProps {
 	children?: React.ReactNode;

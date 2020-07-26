@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function Login() {
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
-		email: "vntkumar92@gmail.com",
+		email: "vinitkumar12@gmail.com",
 		password: "vinit@123",
 	};
 
