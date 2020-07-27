@@ -65,12 +65,12 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 
 			<Grid item xs md={9} container direction="column">
 				<Grid item>
-					<Box m={2}>
+					<Box m={2} mb={1}>
 						<Typography variant={"h5"}>Project One</Typography>
 					</Box>
 				</Grid>
 
-				<Grid item container style={{ flex: 1 }}>
+				<Grid item container style={{ flex: 1.5 }}>
 					<Grid item md={4}>
 						<DashboardCard title={"FUND STATUS"} />
 					</Grid>

@@ -1,6 +1,9 @@
 import React from "react";
-import { Box, Card, CardContent, Typography } from "@material-ui/core";
-import { useStyles } from "./styles";
+import { Card, CardContent, Typography } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import FundStatus from "./FundStatus";
+import Achievement from "./Achievement";
+import Impact from "./Impact";
 
 export default function DashboardCard({
 	title,
@@ -9,6 +12,21 @@ export default function DashboardCard({
 	title: string | React.ReactElement;
 	children?: React.ReactElement;
 }) {
+	const useStyles = makeStyles((theme: Theme) => ({
+		root: {
+			width: "100%",
+			"& > * + *": {
+				marginTop: theme.spacing(2),
+			},
+		},
+		card: {
+			height: "90%",
+			maxHeight: "12rem",
+			margin: theme.spacing(1),
+			marginTop: theme.spacing(0),
+		},
+	}));
+
 	const classes = useStyles();
 
 	return (
@@ -17,6 +35,9 @@ export default function DashboardCard({
 				<Typography color="primary" gutterBottom>
 					{title}
 				</Typography>
+				{title === "FUND STATUS" && <FundStatus />}
+				{title === "ACHIEVEMENTS" && <Achievement />}
+				{title === "IMPACT" && <Impact />}
 			</CardContent>
 		</Card>
 	);

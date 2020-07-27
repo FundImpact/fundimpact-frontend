@@ -18,6 +18,7 @@ export default function LeftPanel() {
 							<img
 								style={{ width: "2rem" }}
 								src={require(`../../assets/icons/${e}.svg`)}
+								alt="none"
 							/>
 						</ListItem>
 					))}

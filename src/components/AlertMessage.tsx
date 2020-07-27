@@ -1,7 +1,6 @@
 import React from "react";
-import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { IAlertMsg } from "../models/index";
 
 function Alert(props: AlertProps) {
@@ -22,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function AlertMsg({ severity = "error", msg }: IAlertMsg) {
 	const classes = useStyles();
-	const theme = useTheme();
 	return (
 		<div className={classes.root}>
 			<Alert severity={severity} className={classes.alertmsg}>
