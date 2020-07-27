@@ -8,7 +8,6 @@ export default function LeftPanel() {
 
 	return (
 		<Grid component={Box} container className={classes.leftPanel} direction="column">
-			<Grid item xs={2}></Grid>
 			<Grid xs item>
 				<List component="nav">
 					{["dasboard", "briefcase", "star"].map((e) => (
@@ -24,7 +23,15 @@ export default function LeftPanel() {
 					))}
 				</List>
 			</Grid>
-			<Grid xs item container direction={"column"} alignItems="center" justify="flex-end">
+			<Grid
+				xs
+				item
+				container
+				direction={"column"}
+				alignItems="center"
+				justify="flex-end"
+				style={{ marginBottom: theme.spacing(2) }}
+			>
 				<Avatar src={require("../../assets/icons/dummy-user.png")} />
 			</Grid>
 		</Grid>
