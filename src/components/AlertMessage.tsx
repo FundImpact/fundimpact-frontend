@@ -1,7 +1,8 @@
 import React from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { IAlertMsg } from "../models/index";
 
 function Alert(props: AlertProps) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -14,31 +15,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 			marginTop: theme.spacing(2),
 		},
 	},
+	alertmsg: {
+		marginTop: theme.spacing(2),
+	},
 }));
 
-interface IError {
-	msg?: string;
-}
-
-export default function AlertMsg({ msg }: IError) {
+export default function AlertMsg({ severity = "error", msg }: IAlertMsg) {
 	const classes = useStyles();
-	const [open, setOpen] = React.useState(true);
-
-	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-		if (reason === "clickaway") {
-			return;
-		}
-
-		setOpen(false);
-	};
-
+	const theme = useTheme();
 	return (
 		<div className={classes.root}>
-			<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-				<Alert onClose={handleClose} severity={"error"}>
-					{msg}
-				</Alert>
-			</Snackbar>
+			<Alert severity={severity} className={classes.alertmsg}>
+				{msg}
+			</Alert>
 		</div>
 	);
 }

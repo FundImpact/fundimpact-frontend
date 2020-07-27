@@ -39,3 +39,8 @@ export interface ILoginForm {
 	email: String;
 	password: String;
 }
+
+export interface IAlertMsg {
+	severity?: "success" | "info" | "warning" | "error";
+	msg?: string;
+}
