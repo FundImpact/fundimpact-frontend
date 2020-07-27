@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
 function Login() {
 	const classes = useStyles();
 	const initialValues: ILoginForm = {
-		email: "amresh114",
-		password: "amresh9797",
+		email: "vinitkumar12@gmail.com",
+		password: "vinit@123",
 	};
 
 	const userDispatch = React.useContext(UserDispatchContext);

@@ -1,7 +1,7 @@
 import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 
-import DefaultTable from "./Table";
+import DefaultTable from "../Table";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -34,7 +34,7 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		flexGrow: 1,
+		//flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
 	},
 	contentHeading: {
@@ -65,7 +65,7 @@ export default function DashboardTableContainer() {
 	};
 
 	return (
-		<Box className={classes.root} width={{ xs: "100%", md: "75%", lg: "50%" }}>
+		<Box className={classes.root}>
 			<Tabs
 				value={value}
 				indicatorColor="primary"
@@ -90,7 +90,6 @@ export default function DashboardTableContainer() {
 				<TabContent key={index} value={value} index={index}>
 					<Box className={classes.contentHeading}>
 						<strong> Budget Tracker </strong>
-
 						<div>
 							<Button
 								disableElevation

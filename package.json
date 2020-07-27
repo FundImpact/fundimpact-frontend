@@ -3,8 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@apollo/client": "^3.0.2",
 		"@material-ui/core": "^4.11.0",
 		"@material-ui/icons": "^4.9.1",
+		"@material-ui/lab": "^4.0.0-alpha.56",
 		"@testing-library/jest-dom": "^4.2.4",
 		"@testing-library/react": "^9.3.2",
 		"@testing-library/user-event": "^7.1.2",
@@ -12,17 +14,18 @@
 		"@types/node": "^12.0.0",
 		"@types/react": "^16.9.0",
 		"@types/react-dom": "^16.9.0",
+		"formik": "^2.1.5",
+		"graphql": "^15.3.0",
+		"history": "^5.0.0",
 		"husky": "^4.2.5",
 		"lint-staged": "^10.2.11",
 		"prettier": "^2.0.5",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
-		"react-router-dom": "^6.0.0-beta.0",
-		"history": "^5.0.0",
 		"react-router": "^6.0.0-beta.0",
+		"react-router-dom": "^6.0.0-beta.0",
 		"react-scripts": "3.4.1",
-		"typescript": "~3.7.2",
-		"formik": "^2.1.5"
+		"typescript": "~3.7.2"
 	},
 	"devDependencies": {
 		"eslint": "6.8.0",
