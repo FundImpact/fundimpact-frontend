@@ -23,7 +23,6 @@ export default function SideBar({ children }: { children: Function }) {
 
 	return (
 		<Box className={classes.sidePanel} mr={1} p={2}>
-			<h2>Hey</h2>
 			{loading ? (
 				<Skeleton variant="text" />
 			) : (
