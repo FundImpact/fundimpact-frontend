@@ -15,11 +15,11 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 	const classes = useStyles();
 	return (
 		<Container
-			component={Grid}
 			disableGutters
 			container
 			className={classes.root}
 			maxWidth={"xl"}
+			component={Grid}
 		>
 			<Grid item xs={12} md={3} container>
 				<Grid item xs={2}>
