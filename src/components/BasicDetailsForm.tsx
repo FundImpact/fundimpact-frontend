@@ -4,9 +4,9 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 
 import { UserDispatchContext } from "../contexts/userContext";
-import { useGetFetch } from "../hooks/useFetch";
-import { usePostFetch } from "../hooks/usePostFetch";
-import useRouteResolver from "../hooks/useRouteResolver";
+import { useGetFetch } from "../hooks/fetch/useFetch";
+import { usePostFetch } from "../hooks/fetch/usePostFetch";
+import useRouteResolver from "../hooks/routes/useRouteResolver";
 import { IBasicInformation } from "../models";
 import { IOrganisationType } from "../models/organisation/types";
 import { IUserSignupResponse } from "../models/signup/userSignUpResponse";

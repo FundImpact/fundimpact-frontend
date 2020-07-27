@@ -2,7 +2,7 @@ import { Box } from "@material-ui/core";
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import useSignUpStep from "../hooks/useSignupStep";
+import useSignUpStep from "../hooks/signup/useSignupStep";
 import { Persistent } from "./BasicDetailsForm";
 import OrganisationForm from "./OrganisationForm";
 
