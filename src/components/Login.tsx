@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
+import AlertMsg from "./AlertMessage";
 
 import { UserDispatchContext } from "../contexts/userContext";
 import { usePostFetch } from "../hooks/fetch/usePostFetch";
@@ -37,7 +38,7 @@ function Login() {
 
 	const userDispatch = React.useContext(UserDispatchContext);
 
-	const { data, loading, error: apiError, setPayload } = usePostFetch<any>({
+	let { data, loading, error: apiError, setPayload } = usePostFetch<any>({
 		url: LOGIN_API,
 		body: null,
 	});
@@ -63,13 +64,20 @@ function Login() {
 	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
 		setPayload(values);
 	}
-
+	const clearErrors = () => {
+		if (apiError) apiError = "";
+	};
 	return (
-		<Box mx="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
+		<Box
+			mx="auto"
+			height={"100%"}
+			width={{ xs: "100%", md: "75%", lg: "50%" }}
+			onChange={clearErrors}
+		>
 			<Formik
 				validateOnBlur
 				initialValues={initialValues}
-				enableReinitialize
+				enableReinitialize={true}
 				validate={validate}
 				onSubmit={onSubmit}
 			>
@@ -98,7 +106,7 @@ function Login() {
 								variant="outlined"
 							/>
 							<Button
-								disabled={formik.isSubmitting || !formik.isValid}
+								disabled={!formik.isValid}
 								type="submit"
 								variant="contained"
 								color="primary"
@@ -115,7 +123,7 @@ function Login() {
 							</Box>
 
 							{loading ? <GlobalLoader /> : null}
-							{apiError ? <p className="error-message"> {apiError} </p> : null}
+							{apiError ? <AlertMsg severity="error" msg={apiError} /> : null}
 							{data ? <p> Login Successs </p> : null}
 						</Form>
 					);

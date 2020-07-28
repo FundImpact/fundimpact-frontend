@@ -2,6 +2,7 @@ import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
+import AlertMsg from "./AlertMessage";
 
 import { UserDispatchContext } from "../contexts/userContext";
 import { useGetFetch } from "../hooks/fetch/useFetch";
@@ -33,10 +34,10 @@ const BasicDetailsForm = () => {
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
 
-	const { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
+	let { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
 	>({ body: null, url: SIGNUP_API });
-	const { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
+	let { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
 		url: ORGANISATION_TYPES_API,
 	});
 	const userDispatch = React.useContext(UserDispatchContext);
@@ -58,14 +59,17 @@ const BasicDetailsForm = () => {
 
 		// navigate(`/signup/${SignUpSteps.SET_ORG}`);
 	};
-
+	const clearErrors = () => {
+		if (error) error = "";
+	};
 	return (
-		<Formik initialValues={initialValues} onSubmit={OnSubmit}>
-			{(formik) => {
-				return (
-					<Form className={classes.form}>
-						<Grid container spacing={4} justify={"center"}>
-							{/* <Grid item xs={12} md={6}>
+		<div onChange={clearErrors}>
+			<Formik initialValues={initialValues} onSubmit={OnSubmit}>
+				{(formik) => {
+					return (
+						<Form className={classes.form}>
+							<Grid container spacing={4} justify={"center"}>
+								{/* <Grid item xs={12} md={6}>
 								<TextField
 									style={{ width: "100%" }}
 									error={!!formik.errors.username}
@@ -79,22 +83,22 @@ const BasicDetailsForm = () => {
 									type={"text"}
 								/>
 							</Grid> */}
-							<Grid item xs={12} md={12}>
-								<TextField
-									style={{ width: "100%" }}
-									error={!!formik.errors.email}
-									helperText={formik.touched.email && formik.errors.email}
-									onChange={formik.handleChange}
-									label="Email"
-									required
-									fullWidth
-									name="email"
-									variant="outlined"
-									type={"email"}
-								/>
-							</Grid>
+								<Grid item xs={12} md={12}>
+									<TextField
+										style={{ width: "100%" }}
+										error={!!formik.errors.email}
+										helperText={formik.touched.email && formik.errors.email}
+										onChange={formik.handleChange}
+										label="Email"
+										required
+										fullWidth
+										name="email"
+										variant="outlined"
+										type={"email"}
+									/>
+								</Grid>
 
-							{/* <Grid item xs={12} md={6}>
+								{/* <Grid item xs={12} md={6}>
 								<TextField
 									error={!!formik.errors.firstName}
 									helperText={formik.touched.firstName && formik.errors.firstName}
@@ -118,61 +122,57 @@ const BasicDetailsForm = () => {
 									variant="outlined"
 								/>
 							</Grid> */}
-							<Grid item xs={6}>
-								<TextField
-									style={{ width: "100%" }}
-									error={!!formik.errors.password}
-									helperText={formik.touched.password && formik.errors.password}
-									onChange={formik.handleChange}
-									label="Password"
-									required
-									fullWidth
-									name="password"
-									variant="outlined"
-									type="password"
-								/>
-							</Grid>
-							<Grid item xs={6}>
-								<TextField
-									style={{ width: "100%" }}
-									error={!!formik.errors.confirmPassword}
-									helperText={
-										formik.touched.confirmPassword &&
-										formik.errors.confirmPassword
-									}
-									onChange={formik.handleChange}
-									label="Confirm Password"
-									required
-									fullWidth
-									name="confirmPassword"
-									variant="outlined"
-									type="password"
-								/>
-							</Grid>
+								<Grid item xs={6}>
+									<TextField
+										style={{ width: "100%" }}
+										error={!!formik.errors.password}
+										helperText={
+											formik.touched.password && formik.errors.password
+										}
+										onChange={formik.handleChange}
+										label="Password"
+										required
+										fullWidth
+										name="password"
+										variant="outlined"
+										type="password"
+									/>
+								</Grid>
+								<Grid item xs={6}>
+									<TextField
+										style={{ width: "100%" }}
+										error={!!formik.errors.confirmPassword}
+										helperText={
+											formik.touched.confirmPassword &&
+											formik.errors.confirmPassword
+										}
+										onChange={formik.handleChange}
+										label="Confirm Password"
+										required
+										fullWidth
+										name="confirmPassword"
+										variant="outlined"
+										type="password"
+									/>
+								</Grid>
 
-							<Grid item xs={12}>
-								<div className="text-center divider">
-									{" "}
-									<span>Organisation</span>{" "}
-								</div>
-							</Grid>
-							<Grid item xs={12} md={12}>
-								<TextField
-									error={!!formik.errors.organisation?.name}
-									helperText={
-										formik.touched.organisation?.name &&
-										formik.errors.organisation?.name
-									}
-									onChange={formik.handleChange}
-									label="Name"
-									required
-									fullWidth
-									name="organisation.name"
-									variant="outlined"
-								/>
-							</Grid>
+								<Grid item xs={12} md={12}>
+									<TextField
+										error={!!formik.errors.organisation?.name}
+										helperText={
+											formik.touched.organisation?.name &&
+											formik.errors.organisation?.name
+										}
+										onChange={formik.handleChange}
+										label="Organisation Name"
+										required
+										fullWidth
+										name="organisation.name"
+										variant="outlined"
+									/>
+								</Grid>
 
-							{/* <Grid item xs={12} md={6}>
+								{/* <Grid item xs={12} md={6}>
 								<InputLabel id="demo-simple-select-label" className={classes.form}>
 									Type
 								</InputLabel>
@@ -253,29 +253,30 @@ const BasicDetailsForm = () => {
 								/>
 							</Grid> */}
 
-							<Grid item xs={12}>
-								<Button
-									fullWidth
-									disabled={formik.isSubmitting || !formik.isValid}
-									type="submit"
-									variant="contained"
-									color="primary"
-								>
-									Submit
-								</Button>
+								<Grid item xs={12}>
+									<Button
+										fullWidth
+										disabled={!formik.isValid}
+										type="submit"
+										variant="contained"
+										color="primary"
+									>
+										Submit
+									</Button>
 
-								{loading ? <GlobalLoader /> : null}
-								{singupSuccessfulResponse ? (
-									<p className="text-center"> Singgup Successfull </p>
-								) : null}
+									{loading ? <GlobalLoader /> : null}
+									{singupSuccessfulResponse ? (
+										<p className="text-center"> Singgup Successfull </p>
+									) : null}
 
-								{error ? <p className="error-message"> {error} </p> : null}
+									{error ? <AlertMsg severity="error" msg={error} /> : null}
+								</Grid>
 							</Grid>
-						</Grid>
-					</Form>
-				);
-			}}
-		</Formik>
+						</Form>
+					);
+				}}
+			</Formik>
+		</div>
 	);
 };
 
