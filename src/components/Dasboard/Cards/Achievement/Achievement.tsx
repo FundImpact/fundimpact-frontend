@@ -35,9 +35,9 @@ export default function Achievement() {
 							{percentage[0].name}
 						</Typography>
 					</Box>
-					<Box mr={1}>
-						<Typography variant="subtitle1" gutterBottom>
-							{percentage[0].lastUpdated}
+					<Box mr={1} color="text.disabled">
+						<Typography variant="body2" gutterBottom>
+							{`Updated at ${percentage[0].lastUpdated}`}
 						</Typography>
 					</Box>
 				</Box>
@@ -54,9 +54,9 @@ export default function Achievement() {
 							{percentage[1].name}
 						</Typography>
 					</Box>
-					<Box mr={1}>
-						<Typography variant="subtitle1" gutterBottom>
-							{percentage[1].lastUpdated}
+					<Box mr={1} color="text.disabled">
+						<Typography variant="body2" gutterBottom>
+							{`Updated at ${percentage[1].lastUpdated}`}
 						</Typography>
 					</Box>
 				</Box>
