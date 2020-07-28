@@ -3,14 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
-import AlertMsg from "./AlertMessage";
 
-import { UserDispatchContext } from "../contexts/userContext";
-import { usePostFetch } from "../hooks/fetch/usePostFetch";
-import { ILoginForm } from "../models";
-import { setUser } from "../reducers/userReducer";
-import { LOGIN_API } from "../utils/endpoints.util";
-import GlobalLoader from "./commons/GlobalLoader";
+import AlertMsg from "../../components/AlertMessage";
+import GlobalLoader from "../../components/commons/GlobalLoader";
+import { UserDispatchContext } from "../../contexts/userContext";
+import { usePostFetch } from "../../hooks/fetch/usePostFetch";
+import { ILoginForm } from "../../models";
+import { setUser } from "../../reducers/userReducer";
+import { LOGIN_API } from "../../utils/endpoints.util";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -29,12 +29,25 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function Login() {
+function validate(values: ILoginForm) {
+	let errors: Partial<ILoginForm> = {};
+	if (!values.email) {
+		errors.email = "Email is required";
+	}
+	if (!values.password) {
+		errors.password = "Password is required";
+	}
+	return errors;
+}
+
+function Login(props: { intialFormValue?: ILoginForm }) {
 	const classes = useStyles();
-	const initialValues: ILoginForm = {
-		email: "vinitkumar12@gmail.com",
-		password: "vinit@123",
-	};
+	const initialValues: ILoginForm = props.intialFormValue
+		? props.intialFormValue
+		: {
+				email: "vinitkumar12@gmail.com",
+				password: "vinit@123",
+		  };
 
 	const userDispatch = React.useContext(UserDispatchContext);
 
@@ -50,20 +63,10 @@ function Login() {
 			}
 	}, [userDispatch, data]);
 
-	function validate(values: ILoginForm) {
-		let errors: Partial<ILoginForm> = {};
-		if (!values.email) {
-			errors.email = "User name is required";
-		}
-		if (!values.password) {
-			errors.password = "Password is required";
-		}
-		return errors;
-	}
-
 	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
 		setPayload(values);
 	}
+
 	const clearErrors = () => {
 		if (apiError) apiError = "";
 	};
@@ -83,7 +86,7 @@ function Login() {
 			>
 				{(formik) => {
 					return (
-						<Form className={classes.root} autoComplete="off">
+						<Form className={classes.root} autoComplete="off" data-testid="form">
 							<TextField
 								value={formik.values.email}
 								error={!!formik.errors.email}
@@ -92,6 +95,8 @@ function Login() {
 								label="Email"
 								required
 								name="email"
+								type="email"
+								data-testid="email"
 								variant="outlined"
 							/>
 
