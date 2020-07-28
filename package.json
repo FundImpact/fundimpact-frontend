@@ -41,7 +41,7 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
-		"buildCI": "CI=true react-scripts build",
+		"buildCI": "react-scripts build",
 		"testCI": "CI=true react-scripts test",
 		"test": "react-scripts test --coverage=true ",
 		"eject": "react-scripts eject"
