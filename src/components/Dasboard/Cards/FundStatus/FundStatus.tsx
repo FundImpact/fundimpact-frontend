@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Box, Typography, Grid } from "@material-ui/core";
-import PieCharts from "./PieChart";
+import PieCharts from "../../../Charts/Pie/PieChart";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {

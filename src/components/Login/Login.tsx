@@ -3,14 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
-import AlertMsg from "./AlertMessage";
+import AlertMsg from "../AlertMessage/AlertMessage";
 
-import { UserDispatchContext } from "../contexts/userContext";
-import { usePostFetch } from "../hooks/usePostFetch";
-import { ILoginForm } from "../models";
-import { setUser } from "../reducers/userReducer";
-import { LOGIN_API } from "../utils/endpoints.util";
-import GlobalLoader from "./commons/GlobalLoader";
+import { UserDispatchContext } from "../../contexts/userContext";
+import { usePostFetch } from "../../hooks/usePostFetch";
+import { ILoginForm } from "../../models";
+import { setUser } from "../../reducers/userReducer";
+import { LOGIN_API } from "../../utils/endpoints.util";
+import GlobalLoader from "../commons/GlobalLoader";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

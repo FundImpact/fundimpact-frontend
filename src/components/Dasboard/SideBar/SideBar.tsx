@@ -1,8 +1,8 @@
 import React from "react";
 import { Box } from "@material-ui/core";
-import { useStyles } from "./styles";
+import { useStyles } from "../styles";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { GET_ORGANISATIONS, GET_WORKSPACES_BY_ORG } from "../../graphql/queries";
+import { GET_ORGANISATIONS, GET_WORKSPACES_BY_ORG } from "../../../graphql/queries";
 import { Skeleton } from "@material-ui/lab";
 
 export default function SideBar({ children }: { children: Function }) {

@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import FundStatus from "./FundStatus";
-import Achievement from "./Achievement";
-import Impact from "./Impact";
+import FundStatus from "./FundStatus/FundStatus";
+import Achievement from "./Achievement/Achievement";
+import Impact from "./Impact/Impact";
 
 export default function DashboardCard({
 	title,

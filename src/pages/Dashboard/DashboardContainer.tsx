@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Container, Grid, Typography } from "@material-ui/core";
 import { useStyles } from "../../components/Dasboard/styles";
-import SideBar from "../../components/Dasboard/SideBar";
-import LeftPanel from "../../components/Dasboard/LeftPanel";
-import DashboardCard from "../../components/Dasboard/DasboardCards";
+import SideBar from "../../components/Dasboard/SideBar/SideBar";
+import LeftPanel from "../../components/Dasboard/LeftPanel/LeftPanel";
+import DashboardCard from "../../components/Dasboard/Cards/DasboardCards";
 
 interface IDashboardContainer {
 	left: React.ReactNode;

@@ -1,4 +1,4 @@
-import { useStyles } from "./styles";
+import { useStyles } from "../styles";
 import { Avatar, Box, Grid, List, ListItem, useTheme } from "@material-ui/core";
 import React from "react";
 
@@ -17,7 +17,7 @@ export default function LeftPanel() {
 						>
 							<img
 								style={{ width: "2rem" }}
-								src={require(`../../assets/icons/${e}.svg`)}
+								src={require(`../../../assets/icons/${e}.svg`)}
 								alt="none"
 							/>
 						</ListItem>
@@ -33,7 +33,7 @@ export default function LeftPanel() {
 				justify="flex-end"
 				style={{ marginBottom: theme.spacing(2) }}
 			>
-				<Avatar src={require("../../assets/icons/dummy-user.png")} />
+				<Avatar src={require("../../../assets/icons/dummy-user.png")} />
 			</Grid>
 		</Grid>
 	);
