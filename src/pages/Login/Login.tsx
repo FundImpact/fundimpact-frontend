@@ -1,33 +1,21 @@
-import { Box, Button, createStyles, TextField, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Box } from "@material-ui/core";
+import { FormikHelpers } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
 
 import AlertMsg from "../../components/AlertMessage";
 import GlobalLoader from "../../components/commons/GlobalLoader";
+import LoginForm from "../../components/Forms/Login/LoginForm";
 import { UserDispatchContext } from "../../contexts/userContext";
 import { usePostFetch } from "../../hooks/fetch/usePostFetch";
 import { ILoginForm } from "../../models";
 import { setUser } from "../../reducers/userReducer";
 import { LOGIN_API } from "../../utils/endpoints.util";
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		root: {
-			display: "flex",
-			flexDirection: "column",
-			"& .MuiTextField-root,": {
-				margin: theme.spacing(1),
-			},
-			"& .MuiButtonBase-root": {
-				marginTop: theme.spacing(4),
-				marginLeft: theme.spacing(1),
-				marginRight: theme.spacing(1),
-			},
-		},
-	})
-);
+// const useStyles = makeStyles((theme: Theme) =>
+// 	createStyles({
+// 		errorMessage: { width: "95%" },
+// 	})
+// );
 
 function validate(values: ILoginForm) {
 	let errors: Partial<ILoginForm> = {};
@@ -41,11 +29,11 @@ function validate(values: ILoginForm) {
 }
 
 function Login(props: { intialFormValue?: ILoginForm }) {
-	const classes = useStyles();
+	// const classes = useStyles();
 	const initialValues: ILoginForm = props.intialFormValue
 		? props.intialFormValue
 		: {
-				email: "vinitkumar12@gmail.com",
+				email: "",
 				password: "vinit@123",
 		  };
 
@@ -68,72 +56,15 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 	}
 
 	const clearErrors = () => {
-		if (apiError) apiError = "";
+		console.log("clearErors");
+		if (apiError) apiError = undefined;
 	};
 	return (
-		<Box
-			mx="auto"
-			height={"100%"}
-			width={{ xs: "100%", md: "75%", lg: "50%" }}
-			onChange={clearErrors}
-		>
-			<Formik
-				validateOnBlur
-				initialValues={initialValues}
-				enableReinitialize={true}
-				validate={validate}
-				onSubmit={onSubmit}
-			>
-				{(formik) => {
-					return (
-						<Form className={classes.root} autoComplete="off" data-testid="form">
-							<TextField
-								value={formik.values.email}
-								error={!!formik.errors.email}
-								helperText={formik.touched.email && formik.errors.email}
-								onChange={formik.handleChange}
-								label="Email"
-								required
-								name="email"
-								type="email"
-								data-testid="email"
-								variant="outlined"
-							/>
-
-							<TextField
-								value={formik.values.password}
-								error={!!formik.errors.password}
-								onChange={formik.handleChange}
-								label="Password"
-								required
-								name="password"
-								type="password"
-								variant="outlined"
-							/>
-							<Button
-								disabled={!formik.isValid}
-								type="submit"
-								variant="contained"
-								color="primary"
-							>
-								Submit
-							</Button>
-							<Box mt={4} textAlign="center">
-								<Link
-									className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-									to={"/forgotPassword"}
-								>
-									Forgot Password
-								</Link>
-							</Box>
-
-							{loading ? <GlobalLoader /> : null}
-							{apiError ? <AlertMsg severity="error" msg={apiError} /> : null}
-							{data ? <p> Login Successs </p> : null}
-						</Form>
-					);
-				}}
-			</Formik>
+		<Box mx="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
+			<LoginForm {...{ onSubmit, initialValues, clearErrors, validate }} />
+			{loading ? <GlobalLoader /> : null}
+			{apiError ? <AlertMsg severity="error" msg={apiError} /> : null}
+			{data ? <p> Login Successs </p> : null}
 		</Box>
 	);
 }
