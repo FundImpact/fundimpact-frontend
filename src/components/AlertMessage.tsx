@@ -1,8 +1,8 @@
-import React from "react";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { IAlertMsg } from "../models/index";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import React from "react";
+
+import { IAlertMsg } from "../models";
 
 function Alert(props: AlertProps) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -10,7 +10,8 @@ function Alert(props: AlertProps) {
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		width: "100%",
+		width: "95%",
+		margin: "auto",
 		"& > * + *": {
 			marginTop: theme.spacing(2),
 		},

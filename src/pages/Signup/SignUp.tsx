@@ -2,9 +2,9 @@ import { Box } from "@material-ui/core";
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import useSignUpStep from "../hooks/useSignupStep";
-import { Persistent } from "./BasicDetailsForm";
-import OrganisationForm from "./OrganisationForm";
+import useSignUpStep from "../../hooks/signup/useSignupStep";
+import { Persistent } from "../../components/BasicDetailsForm";
+import OrganisationForm from "../../components/OrganisationForm";
 
 // const useStyles = makeStyles((theme: Theme) =>
 // 	createStyles({
