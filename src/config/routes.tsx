@@ -1,11 +1,13 @@
+import { ApolloProvider } from "@apollo/client";
 import React from "react";
 import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import DashboardTableContainer from "../components/Dasboard/DashboardTableContainer";
+import Workspace from "../components/workspace/Workspace";
 import { useAuth } from "../contexts/userContext";
-import { ApolloProvider } from "@apollo/client";
-import { client } from "./grapql";
 import LandingPage from "../pages/Landing/Landing";
+import { client } from "./grapql";
 
 const SignUp = React.lazy(() => import("../components/SignUp"));
 const Login = React.lazy(() => import("../components/Login"));
@@ -30,6 +32,8 @@ function AppRoutes() {
 						</ApolloProvider>
 					}
 				/>
+				<Route path="workspace" element={<Workspace />} />
+
 				<Route path="" element={<LandingPage />}>
 					<Route path="login" element={<Login />} />
 					<Route path="signup/:id" element={<SignUp />} />
