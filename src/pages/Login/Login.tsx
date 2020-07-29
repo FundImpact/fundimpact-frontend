@@ -33,7 +33,7 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 	const initialValues: ILoginForm = props.intialFormValue
 		? props.intialFormValue
 		: {
-				email: "",
+				email: "vinitkumar12@gmail.com",
 				password: "vinit@123",
 		  };
 
