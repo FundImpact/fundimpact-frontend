@@ -1,4 +1,4 @@
-import { act, fireEvent, render, RenderResult, wait } from "@testing-library/react";
+import { act, fireEvent, queries, render, RenderResult, wait } from "@testing-library/react";
 import React from "react";
 
 import { ILoginForm } from "../../../models";
@@ -18,7 +18,7 @@ const validate = jest.fn((values: ILoginForm) => {
 	return errors;
 });
 
-let loginForm: RenderResult<typeof import("/mnt/c/Users/Shadab/Repositories/fundimpact-frontend/node_modules/@types/testing-library__dom/queries")>;
+let loginForm: RenderResult<typeof queries>;
 beforeEach(() => {
 	act(() => {
 		loginForm = render(

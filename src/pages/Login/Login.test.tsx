@@ -1,4 +1,4 @@
-import { render, RenderResult } from "@testing-library/react";
+import { queries, render, RenderResult } from "@testing-library/react";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const intialFormValue: ILoginForm = {
 	password: "sadas",
 };
 
-let loginPage: RenderResult<typeof import("/mnt/c/Users/Shadab/Repositories/fundimpact-frontend/node_modules/@types/testing-library__dom/queries")>;
+let loginPage: RenderResult<typeof queries>;
 beforeEach(() => {
 	loginPage = render(
 		<BrowserRouter>

@@ -1,10 +1,10 @@
-import { render, RenderResult } from "@testing-library/react";
+import { queries, render, RenderResult } from "@testing-library/react";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import { Persistent } from "../../components/BasicDetailsForm";
 
-let signupComponent: RenderResult<typeof import("/mnt/c/Users/Shadab/Repositories/fundimpact-frontend/node_modules/@types/testing-library__dom/queries")>;
+let signupComponent: RenderResult<typeof queries>;
 beforeEach(() => {
 	signupComponent = render(
 		<BrowserRouter>
