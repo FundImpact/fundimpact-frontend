@@ -1,27 +1,35 @@
-import { render, RenderResult } from "@testing-library/react";
+import { act, fireEvent, render, RenderResult, wait } from "@testing-library/react";
 import React from "react";
 
 import { ILoginForm } from "../../../models";
 import LoginForm from "./LoginForm";
 
 const intialFormValue: ILoginForm = {
-	email: "",
-	password: "sadas",
+	email: "deafult email",
+	password: "deafult",
 };
 const onSubmitMock = jest.fn();
 const clearError = jest.fn();
-const validate = jest.fn();
+const validate = jest.fn((values: ILoginForm) => {
+	const errors: { email?: string; password?: string } = !values.email
+		? { email: "emailErrorfromValidate" }
+		: {};
+	if (!values.password) errors["password"] = "password message";
+	return errors;
+});
 
 let loginForm: RenderResult<typeof import("/mnt/c/Users/Shadab/Repositories/fundimpact-frontend/node_modules/@types/testing-library__dom/queries")>;
 beforeEach(() => {
-	loginForm = render(
-		<LoginForm
-			onSubmit={onSubmitMock}
-			clearErrors={clearError}
-			validate={validate}
-			initialValues={{ ...intialFormValue }}
-		/>
-	);
+	act(() => {
+		loginForm = render(
+			<LoginForm
+				onSubmit={onSubmitMock}
+				clearErrors={clearError}
+				validate={validate}
+				initialValues={intialFormValue}
+			/>
+		);
+	});
 });
 
 describe("Login  Form", () => {
@@ -30,45 +38,64 @@ describe("Login  Form", () => {
 		expect(emailField).toBeInTheDocument();
 	});
 
-	test("should have Submit Button and enabled", async () => {
+	test("should have Password  Field", async () => {
+		let passwordField = await loginForm.findByDisplayValue(`${intialFormValue.password}`);
+		expect(passwordField).toBeInTheDocument();
+	});
+
+	test("should have Submit Button and enabled by default", async () => {
 		let submitButton = await loginForm.findByText("Submit");
 		expect(submitButton).toBeInTheDocument();
 		expect(submitButton).toBeEnabled();
+	});
+
+	test("should have set intialValues passed", async () => {
+		let emailField = (await loginForm.findByDisplayValue(
+			`${intialFormValue.email}`
+		)) as HTMLInputElement;
+		let passwordField = (await loginForm.findByDisplayValue(
+			`${intialFormValue.password}`
+		)) as HTMLInputElement;
+		expect(emailField.value).toBe(intialFormValue.email);
+		expect(passwordField.value).toBe(intialFormValue.password);
 	});
 
 	test("Submit Button should be disabled if email field is empty", async () => {
 		let emailField = (await loginForm.findByDisplayValue(
 			`${intialFormValue.email}`
 		)) as HTMLInputElement;
-		// act(() => {
-		// 	fireEvent.change(emailField, { persist: jest.fn(), target: { value: null } });
-		// });
-		// loginForm.debug();
-		// let submitButton = loginForm.container.querySelector("button[type='submit']");
-		// loginForm.debug();
-		// expect(emailField.value).toBe("");
-		// expect(submitButton).toBeDisabled();
+		let value = "";
 
-		// console.log(submitButton);
-		// await wait(() => fireEvent.change(emailField, { target: { value: "" } }));
+		act(() => {
+			fireEvent.change(emailField, { target: { value } });
+		});
+
+		expect(emailField.value).toBe(value);
+		let submitButton = await loginForm.findByTestId(`submit`);
+		expect(submitButton).toBeDisabled();
 	});
 
-	// test("Submit Button should be disabled if password field is empty", async () => {
-	// 	let passwordField = await loginForm.findByDisplayValue(`${intialFormValue.password}`);
-	// 	fireEvent.change(passwordField, { target: { value: "" } });
-	// 	let submitButton = await loginForm.findByText("Submit");
-	// 	expect(submitButton).toBeDisabled();
-	// });
+	test("Submit Button should be disabled if Password field is empty", async () => {
+		let passwordField = (await loginForm.findByDisplayValue(
+			`${intialFormValue.password}`
+		)) as HTMLInputElement;
+		let value = "";
 
-	// test("Submit Button should be clicked on valid inputs...", async () => {
-	// 	let submitButton = await loginForm.findByText("Submit");
-	// 	fireEvent.click(submitButton);
-	// 	expect(onSubmitMock).toHaveBeenCalledTimes(1);
-	// 	// const onSubmitFunction = jest.fn();
-	// 	// // let passwordField = await loginPage.findByDisplayValue(`${intialFormValue.password}`);
-	// 	// let submitButton = await loginPage.findByText("Submit");
-	// 	// // expect(submitButton).toBeDisabled();
-	// 	// const clicked = fireEvent.click(submitButton);
-	// 	// expect(clicked).toBeTruthy();
-	// });
+		act(() => {
+			fireEvent.change(passwordField, { target: { value } });
+		});
+
+		expect(passwordField.value).toBe(value);
+		let submitButton = await loginForm.findByTestId(`submit`);
+		expect(submitButton).toBeDisabled();
+	});
+
+	test("OnSubmit method should be called when User clicks on Submit button.", async () => {
+		let submitButton = loginForm.container.querySelector(
+			`button[type="submit"]`
+		) as HTMLElement;
+
+		await wait(() => fireEvent.click(submitButton));
+		expect(onSubmitMock).toHaveBeenCalledTimes(1);
+	});
 });

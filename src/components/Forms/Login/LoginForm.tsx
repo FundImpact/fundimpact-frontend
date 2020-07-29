@@ -31,10 +31,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 	const classes = useStyles();
+	const validateInitialValue = (initialValue: ILoginForm) => {
+		const errors = validate(initialValue) as object;
+		if (!errors) return true;
+		return Object.keys(errors).length ? false : true;
+	};
 	return (
 		<Formik
 			validateOnBlur
 			validateOnChange
+			isInitialValid={(props: any) => validateInitialValue(props.initialValues)}
 			initialValues={initialValues}
 			enableReinitialize={true}
 			validate={validate}
@@ -73,12 +79,17 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 						<Button
 							disabled={!formik.isValid}
 							type="submit"
+							data-testid="submit"
 							variant="contained"
 							color="primary"
 						>
 							Submit
 						</Button>
 						{"isValiud: " + formik.isValid}
+						<span data-testid="values">
+							Email: {formik.values.email}, Status: {formik.status} Errors:{" "}
+							{formik.errors.email}
+						</span>
 						{/* <button type="submit" disabled={formik.isValid}>
 							MySubmit
 						</button> */}

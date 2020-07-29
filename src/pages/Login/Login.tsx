@@ -25,6 +25,7 @@ function validate(values: ILoginForm) {
 	if (!values.password) {
 		errors.password = "Password is required";
 	}
+
 	return errors;
 }
 
@@ -33,7 +34,7 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 	const initialValues: ILoginForm = props.intialFormValue
 		? props.intialFormValue
 		: {
-				email: "vinitkumar12@gmail.com",
+				email: "",
 				password: "vinit@123",
 		  };
 
