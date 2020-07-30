@@ -42,7 +42,8 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"buildCI": "CI= react-scripts build",
-		"test": "react-scripts test",
+		"testCI": "CI=true react-scripts test",
+		"test": "react-scripts test --coverage=true ",
 		"eject": "react-scripts eject"
 	},
 	"husky": {

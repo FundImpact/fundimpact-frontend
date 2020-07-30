@@ -6,7 +6,7 @@ import React from "react";
 // });
 
 afterEach(cleanup);
-it("Empty Test ", () => {
+test("App component should render", () => {
 	// const root = document.createElement("div");
 	// ReactDOM.render(<App />, root);
 });

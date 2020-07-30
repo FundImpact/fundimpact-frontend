@@ -1,14 +1,15 @@
+import { ApolloProvider } from "@apollo/client";
 import React from "react";
 import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import DashboardTableContainer from "../components/Dasboard/DashboardTableContainer";
 import { useAuth } from "../contexts/userContext";
-import { ApolloProvider } from "@apollo/client";
-import { client } from "./grapql";
 import LandingPage from "../pages/Landing/Landing";
+import { client } from "./grapql";
 
-const SignUp = React.lazy(() => import("../components/SignUp"));
-const Login = React.lazy(() => import("../components/Login"));
+const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
+const Login = React.lazy(() => import("../pages/Login/Login"));
 const DashboardContainer = React.lazy(() => import("../pages/Dashboard/DashboardContainer"));
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
