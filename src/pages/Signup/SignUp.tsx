@@ -3,8 +3,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import useSignUpStep from "../../hooks/signup/useSignupStep";
-import { Persistent } from "../Forms/BasicDetailsForm/BasicDetailsForm";
-import OrganisationForm from "../Forms/OrganisationForm/OrganisationForm";
+import { Persistent } from "../../components/Forms/BasicDetailsForm/BasicDetailsForm";
+import OrganisationForm from "../../components/Forms/OrganisationForm/OrganisationForm";
 
 // const useStyles = makeStyles((theme: Theme) =>
 // 	createStyles({

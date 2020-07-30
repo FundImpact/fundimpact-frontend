@@ -43,10 +43,10 @@ export default function SimpleMenu({
 	anchorEl,
 	menuList,
 }: {
-	handleClose: any;
-	id: any;
+	handleClose: () => void;
+	id: string;
 	anchorEl: any;
-	menuList?: any;
+	menuList?: object[];
 }) {
 	const [open, setOpen] = React.useState<any>([]);
 	const handleModalOpen = (index: any) => {

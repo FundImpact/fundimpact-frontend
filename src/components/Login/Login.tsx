@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import AlertMsg from "../AlertMessage/AlertMessage";
 
 import { UserDispatchContext } from "../../contexts/userContext";
-import { usePostFetch } from "../../hooks/usePostFetch";
+import { usePostFetch } from "../../hooks/fetch/usePostFetch";
 import { ILoginForm } from "../../models";
 import { setUser } from "../../reducers/userReducer";
 import { LOGIN_API } from "../../utils/endpoints.util";

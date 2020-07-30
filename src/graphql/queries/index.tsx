@@ -13,6 +13,7 @@ export const GET_WORKSPACES_BY_ORG = gql`
 	query getWorkspaces($orgId: ID!) {
 		workspaces(where: { organisation: $orgId }) {
 			name
+			id
 			organisation {
 				name
 			}

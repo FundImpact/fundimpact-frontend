@@ -7,8 +7,10 @@ on:
       - automation/CI
     
     pull_request:
-      branches: [ master ]
-
+      branches: 
+         - master
+         - automation/CI
+         - development
 jobs:
   test:
     name: CI
@@ -17,10 +19,10 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run test and generate coverage report
-        run: yarn test --coverage --watchAll=false --passWithNoTests
+        run: npm run test
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
