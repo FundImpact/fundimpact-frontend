@@ -1,16 +1,13 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import FundStatus from "./FundStatus/FundStatus";
-import Achievement from "./Achievement/Achievement";
-import Impact from "./Impact/Impact";
 
 export default function DashboardCard({
 	title,
-	children,
+	Children,
 }: {
 	title: string | React.ReactElement;
-	children?: React.ReactElement;
+	Children?: React.ReactElement | any;
 }) {
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
@@ -35,9 +32,7 @@ export default function DashboardCard({
 				<Typography color="primary" gutterBottom>
 					{title}
 				</Typography>
-				{title === "FUND STATUS" && <FundStatus />}
-				{title === "ACHIEVEMENTS" && <Achievement />}
-				{title === "IMPACT" && <Impact />}
+				{Children && <Children />}
 			</CardContent>
 		</Card>
 	);

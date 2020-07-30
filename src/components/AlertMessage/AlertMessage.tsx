@@ -8,24 +8,16 @@ function Alert(props: AlertProps) {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		width: "100%",
-		"& > * + *": {
-			marginTop: theme.spacing(2),
-		},
-	},
 	alertmsg: {
-		marginTop: theme.spacing(2),
+		marginTop: theme.spacing(4),
 	},
 }));
 
 export default function AlertMsg({ severity = "error", msg }: IAlertMsg) {
 	const classes = useStyles();
 	return (
-		<div className={classes.root}>
-			<Alert severity={severity} className={classes.alertmsg}>
-				{msg}
-			</Alert>
-		</div>
+		<Alert severity={severity} className={classes.alertmsg}>
+			{msg}
+		</Alert>
 	);
 }

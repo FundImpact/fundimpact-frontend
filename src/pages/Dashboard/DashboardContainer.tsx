@@ -4,6 +4,9 @@ import { useStyles } from "../../components/Dasboard/styles";
 import SideBar from "../../components/Dasboard/SideBar/SideBar";
 import LeftPanel from "../../components/Dasboard/LeftPanel/LeftPanel";
 import DashboardCard from "../../components/Dasboard/Cards/DasboardCards";
+import FundStatus from "../../components/Dasboard/Cards/FundStatus/FundStatus";
+import Achievement from "../../components/Dasboard/Cards/Achievement/Achievement";
+import Impact from "../../components/Dasboard/Cards/Impact/Impact";
 
 interface IDashboardContainer {
 	left: React.ReactNode;
@@ -72,13 +75,13 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 
 				<Grid item container style={{ flex: 1.5 }}>
 					<Grid item md={4}>
-						<DashboardCard title={"FUND STATUS"} />
+						<DashboardCard title={"FUND STATUS"} Children={FundStatus} />
 					</Grid>
 					<Grid item md={4}>
-						<DashboardCard title={"ACHIEVEMENTS"} />
+						<DashboardCard title={"ACHIEVEMENTS"} Children={Achievement} />
 					</Grid>
 					<Grid item md={4}>
-						<DashboardCard title={"IMPACT"} />
+						<DashboardCard title={"IMPACT"} Children={Impact} />
 					</Grid>
 				</Grid>
 				<Grid item style={{ flex: 4 }}>
