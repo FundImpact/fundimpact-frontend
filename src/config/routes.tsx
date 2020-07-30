@@ -9,8 +9,8 @@ import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
 
-const SignUp = React.lazy(() => import("../components/SignUp"));
-const Login = React.lazy(() => import("../components/Login"));
+const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
+const Login = React.lazy(() => import("../pages/Login/Login"));
 const DashboardContainer = React.lazy(() => import("../pages/Dashboard/DashboardContainer"));
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {

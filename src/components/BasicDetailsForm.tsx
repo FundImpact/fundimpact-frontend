@@ -2,18 +2,18 @@ import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
-import AlertMsg from "./AlertMessage";
 
 import { UserDispatchContext } from "../contexts/userContext";
-import { useGetFetch } from "../hooks/useFetch";
-import { usePostFetch } from "../hooks/usePostFetch";
-import useRouteResolver from "../hooks/useRouteResolver";
+import { useGetFetch } from "../hooks/fetch/useFetch";
+import { usePostFetch } from "../hooks/fetch/usePostFetch";
+import useRouteResolver from "../hooks/routes/useRouteResolver";
 import { IBasicInformation } from "../models";
 import { IOrganisationType } from "../models/organisation/types";
 import { IUserSignupResponse } from "../models/signup/userSignUpResponse";
 import { setUser } from "../reducers/userReducer";
 import { ORGANISATION_TYPES_API, SIGNUP_API } from "../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../utils/signup.util";
+import AlertMsg from "./AlertMessage";
 import GlobalLoader from "./commons/GlobalLoader";
 
 // import { useNavigate } from 'react-router-dom';
@@ -95,6 +95,7 @@ const BasicDetailsForm = () => {
 										name="email"
 										variant="outlined"
 										type={"email"}
+										id="email"
 									/>
 								</Grid>
 
