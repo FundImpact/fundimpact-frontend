@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function WorkspaceList() {
+export default function WorkspaceList({ workSpaces }: { workSpaces: any }) {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
 
@@ -48,31 +48,13 @@ export default function WorkspaceList() {
 		array[index] = null;
 		setAnchorEl(array);
 	};
-	const workspaces = [
-		{
-			name: "WORKSPACE 1",
-			projects: ["Project One", "Another Project", "One another Project"],
-		},
-		{
-			name: "WORKSPACE 2",
-			projects: ["Project One", "Another Project", "One another Project"],
-		},
-		{
-			name: "WORKSPACE 3",
-			projects: ["Project One", "Another Project", "One another Project"],
-		},
-		{
-			name: "WORKSPACE 4",
-			projects: ["Project One", "Another Project", "One another Project"],
-		},
-	];
 	const menuList = [
 		{ listName: "Edit Workspace", children: <OrganisationForm /> },
 		{ listName: "Add / Edit Project", children: <CreateProject /> },
 	];
 	return (
 		<List>
-			{workspaces.map((workspace, index) => {
+			{workSpaces.map((workspace: any, index: number) => {
 				return (
 					<ListItem className={classes.workspaceList}>
 						<Box display="flex">
@@ -101,10 +83,10 @@ export default function WorkspaceList() {
 							</Box>
 						</Box>
 						<List>
-							{workspace.projects.map((project) => {
+							{workspace.projects.map((project: any) => {
 								return (
 									<ListItem button>
-										<ListItemText primary={project} />
+										<ListItemText primary={project.name} />
 									</ListItem>
 								);
 							})}

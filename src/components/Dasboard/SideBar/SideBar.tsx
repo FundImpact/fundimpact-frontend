@@ -1,31 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Divider } from "@material-ui/core";
 import { useStyles } from "../styles";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { GET_ORGANISATIONS, GET_WORKSPACES_BY_ORG } from "../../../graphql/queries";
+import { GET_ORGANISATIONS, GET_WORKSPACES, GET_PROJECTS } from "../../../graphql/queries";
 import { Skeleton } from "@material-ui/lab";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 import SimpleMenu from "../../Menu/Menu";
 import "./sidebar.css";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 export default function SideBar({ children }: { children: Function }) {
 	const classes = useStyles();
 	const { loading, error, data } = useQuery(GET_ORGANISATIONS);
 	const [getWorkSpaces, { loading: workSpaceLoading, data: workSpaces }] = useLazyQuery(
-		GET_WORKSPACES_BY_ORG
+		GET_WORKSPACES
 	);
+	const [getprojectsByWorkspace, { loading: projectloading, data: project }] = useLazyQuery(
+		GET_PROJECTS
+	);
+	const [organisation, setOrganisation] = useState({ name: "", workSpaces: [] });
+
 	React.useEffect(() => {
 		if (data) {
-			getWorkSpaces({
-				variables: {
-					orgId: 14,
-				},
-			});
+			getWorkSpaces({});
 		}
-		if (workSpaces) console.log(workSpaces);
-	}, [data, workSpaces]);
+		if (workSpaces) {
+			getprojectsByWorkspace();
+
+			if (project) {
+				let myOrganisation: any = {
+					name: data.organisationList[0].name,
+					id: data.organisationList[0].id,
+				};
+				myOrganisation.workSpaces = workSpaces.orgWorkspaces;
+				myOrganisation.workSpaces = myOrganisation.workSpaces.map((workspace: any) => {
+					let wsproject: any = [];
+					project.orgProject.forEach((project: any) => {
+						if (project.workspace.id === workspace.id) {
+							wsproject.push(project);
+						}
+					});
+					return { ...workspace, projects: wsproject };
+				});
+				setOrganisation(myOrganisation);
+			}
+		}
+	}, [data, workSpaces, project]);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -43,14 +65,19 @@ export default function SideBar({ children }: { children: Function }) {
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			{loading ? (
-				<Skeleton variant="text" />
+				<Box mt={6}>
+					<LinearProgress style={{ marginBottom: "3px" }} />
+					<LinearProgress color="secondary" />
+				</Box>
 			) : (
 				<div>
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1}>
-							<Typography color="primary" gutterBottom variant="h6">
-								Organisation Name
-							</Typography>
+							{
+								<Typography color="primary" gutterBottom variant="h6">
+									{organisation.name}
+								</Typography>
+							}
 						</Box>
 						<Box>
 							<IconButton
@@ -71,7 +98,7 @@ export default function SideBar({ children }: { children: Function }) {
 						</Box>
 					</Box>
 					<Divider />
-					<WorkspaceList />
+					<WorkspaceList workSpaces={organisation.workSpaces} />
 				</div>
 			)}
 		</Box>
