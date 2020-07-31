@@ -61,6 +61,7 @@ function WorkspaceForm({
 				>
 					<Formik
 						validateOnBlur
+						validateOnChange
 						initialValues={initialValues}
 						enableReinitialize={true}
 						validate={validate}
@@ -78,6 +79,7 @@ function WorkspaceForm({
 									autoComplete="off"
 								>
 									<TextField
+										data-testid="name"
 										value={formik.values.name}
 										error={!!formik.errors.name}
 										helperText={formik.touched.name && formik.errors.name}
@@ -90,6 +92,7 @@ function WorkspaceForm({
 									/>
 
 									<TextField
+										data-testid="short_name"
 										value={formik.values.short_name}
 										error={!!formik.errors.short_name}
 										onChange={formik.handleChange}
@@ -101,6 +104,7 @@ function WorkspaceForm({
 										fullWidth
 									/>
 									<TextField
+										data-testid="description"
 										value={formik.values.description}
 										error={!!formik.errors.description}
 										onChange={formik.handleChange}
@@ -129,7 +133,13 @@ function WorkspaceForm({
 				>
 					Cancel
 				</Button>
-				<Button form="workspace_form" type="submit" color="primary" variant="contained">
+				<Button
+					data-testid="submit"
+					form="workspace_form"
+					type="submit"
+					color="primary"
+					variant="contained"
+				>
 					{formState === WORKSPACE_ACTIONS.CREATE ? "Create" : "Update"}
 				</Button>
 			</DialogActions>
