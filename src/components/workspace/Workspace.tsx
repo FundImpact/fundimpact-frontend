@@ -32,7 +32,7 @@ function Workspace(props: WorkspaceProps) {
 
 	const onCreate = (value: IWorkspace) => {
 		console.log(`on Created is called with: `, value);
-		CreateWorkspace({ variables: { payload: value } });
+		// CreateWorkspace({ variables: { payload: value } });
 
 		console.log("seeting loading to true");
 	};
