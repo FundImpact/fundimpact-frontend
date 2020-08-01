@@ -11,11 +11,12 @@ export const GET_ORGANISATIONS = gql`
 `;
 
 export const GET_WORKSPACES_BY_ORG = gql`
-	query getWorkspaces($orgId: ID!) {
-		workspaces(where: { organisation: $orgId }) {
-			name
+	query getWorkspacesByOrganisation($filter: JSON) {
+		orgWorkspaces(where: $filter) {
 			id
+			name
 			organisation {
+				id
 				name
 			}
 		}
@@ -27,6 +28,19 @@ export const GET_WORKSPACES = gql`
 			id
 			name
 			organisation {
+				name
+			}
+		}
+	}
+`;
+
+export const GET_PROJECTS_BY_WORKSPACE = gql`
+	query getProjectsByWorkspace($filter: JSON) {
+		orgProject(where: $filter) {
+			id
+			name
+			workspace {
+				id
 				name
 			}
 		}

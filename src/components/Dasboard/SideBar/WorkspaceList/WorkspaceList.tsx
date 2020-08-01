@@ -6,26 +6,33 @@ import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { Box, Divider } from "@material-ui/core";
-import CreateProject from "../../../Forms/CreateProject/createProject";
-import OrganisationForm from "../../../Forms/OrganisationForm/OrganisationForm";
+import Project from "../../../Project/Project";
+import { useQuery } from "@apollo/client";
 import SimpleMenu from "../../../Menu/Menu";
+import FIModal from "../../../Modal/Modal";
+import { PROJECT_ACTIONS } from "../../../Project/constants";
+import ProjectList from "../ProjectList/ProjectList";
+import { GET_WORKSPACES_BY_ORG } from "../../../../graphql/queries/index";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		root: {
-			flexGrow: 1,
-			maxWidth: 752,
-		},
-		demo: {
-			backgroundColor: theme.palette.background.paper,
-		},
-		title: {
-			margin: theme.spacing(4, 0, 2),
+		workspace: {
+			"& :hover": {
+				"& $workspaceEditIcon": {
+					opacity: 1,
+				},
+			},
 		},
 		workspaceList: {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "initial",
+		},
+		"& .workspaceList:hover .workspaceEditIcon": {
+			opacity: 1,
+		},
+		workspaceEditIcon: {
+			opacity: 0,
 		},
 		workspaceListText: {
 			color: theme.palette.primary.main,
@@ -33,9 +40,42 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function WorkspaceList({ workSpaces }: { workSpaces: any }) {
+function AddProject() {
+	const [open, setOpen] = React.useState(false);
+	const handleModalOpen = () => {
+		setOpen(true);
+	};
+	const handleModalClose = () => {
+		setOpen(false);
+	};
+	return (
+		<div>
+			<IconButton onClick={handleModalOpen} size="small">
+				Add project
+			</IconButton>
+			{open && (
+				<FIModal
+					open={open}
+					handleClose={() => handleModalClose()}
+					header={"Create Project"}
+					children={<Project type={PROJECT_ACTIONS.CREATE} />}
+				/>
+			)}
+		</div>
+	);
+}
+
+export default function WorkspaceList({ organisation }: { organisation: any }) {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
+	const filter: any = { filter: organisation };
+	const { data, loading, error } = useQuery(GET_WORKSPACES_BY_ORG, filter);
+
+	React.useEffect(() => {
+		if (data) {
+			console.log(data);
+		}
+	}, [data]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: any) => {
 		let array = [...anchorEl];
@@ -48,53 +88,51 @@ export default function WorkspaceList({ workSpaces }: { workSpaces: any }) {
 		array[index] = null;
 		setAnchorEl(array);
 	};
+
 	const menuList = [
-		{ listName: "Edit Workspace", children: <OrganisationForm /> },
-		{ listName: "Add / Edit Project", children: <CreateProject /> },
+		{ children: <IconButton size="small">Edit Workspace</IconButton> },
+		{ children: <AddProject /> },
 	];
 	return (
-		<List>
-			{workSpaces.map((workspace: any, index: number) => {
-				return (
-					<ListItem className={classes.workspaceList}>
-						<Box display="flex">
-							<Box flexGrow={1}>
-								<ListItemText
-									primary={workspace.name}
-									className={classes.workspaceListText}
-								/>
+		<List className={classes.workspace}>
+			{data &&
+				data.orgWorkspaces &&
+				data.orgWorkspaces.map((workspace: any, index: number) => {
+					return (
+						<ListItem className={classes.workspaceList}>
+							<Box display="flex">
+								<Box flexGrow={1}>
+									<ListItemText
+										primary={workspace.name}
+										className={classes.workspaceListText}
+									/>
+								</Box>
+								<Box>
+									<IconButton
+										className={classes.workspaceEditIcon}
+										aria-controls={`projectmenu${index}`}
+										aria-haspopup="true"
+										onClick={(e) => {
+											handleClick(e, index);
+										}}
+									>
+										<EditOutlinedIcon fontSize="small" />
+									</IconButton>
+									<SimpleMenu
+										handleClose={() => handleClose(index)}
+										id={`projectmenu${index}`}
+										anchorEl={anchorEl[index]}
+										menuList={menuList}
+									/>
+								</Box>
 							</Box>
-							<Box>
-								<IconButton
-									aria-controls={`projectmenu${index}`}
-									aria-haspopup="true"
-									onClick={(e) => {
-										handleClick(e, index);
-									}}
-								>
-									<EditOutlinedIcon fontSize="small" />
-								</IconButton>
-								<SimpleMenu
-									handleClose={() => handleClose(index)}
-									id={`projectmenu${index}`}
-									anchorEl={anchorEl[index]}
-									menuList={menuList}
-								/>
-							</Box>
-						</Box>
-						<List>
-							{workspace.projects.map((project: any) => {
-								return (
-									<ListItem button>
-										<ListItemText primary={project.name} />
-									</ListItem>
-								);
-							})}
-						</List>
-						<Divider />
-					</ListItem>
-				);
-			})}
+							<List>
+								<ProjectList workspaceId={workspace.id} />
+							</List>
+							<Divider />
+						</ListItem>
+					);
+				})}
 		</List>
 	);
 }

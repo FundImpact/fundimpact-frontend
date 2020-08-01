@@ -8,23 +8,13 @@ import {
 	InputLabel,
 	Select,
 	Box,
-	Typography,
+	MenuItem,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
+import { IProjectFormProps } from "../../../models/project/ProjectForm";
+import { PROJECT_ACTIONS } from "../../Project/constants";
 import React from "react";
-import AlertMsg from "../../AlertMessage/AlertMessage";
-import { UserDispatchContext } from "../../../contexts/userContext";
-import { useGetFetch } from "../../../hooks/fetch/useFetch";
-import { usePostFetch } from "../../../hooks/fetch/usePostFetch";
-import useRouteResolver from "../../../hooks/routes/useRouteResolver";
-import { IBasicInformation } from "../../../models";
-import { IOrganisationType } from "../../../models/organisation/types";
-import { IUserSignupResponse } from "../../../models/signup/userSignUpResponse";
-import { setUser } from "../../../reducers/userReducer";
-import { ORGANISATION_TYPES_API, SIGNUP_API } from "../../../utils/endpoints.util";
-import { getDefaultBasicInformation } from "../../../utils/signup.util";
-import GlobalLoader from "../../commons/GlobalLoader";
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -36,133 +26,120 @@ const useStyles = makeStyles((theme: Theme) =>
 				margin: theme.spacing(1),
 				spacing: 1,
 			},
+			"& .MuiOutlinedInput-input": {
+				padding: theme.spacing(2),
+			},
 		},
 		formControl: {
 			margin: theme.spacing(1),
-			minWidth: 120,
+			width: "100%",
 		},
 	})
 );
 
-const CreateProject = () => {
-	const initialValues: IBasicInformation = getDefaultBasicInformation();
+function CreateProject({
+	clearErrors,
+	initialValues,
+	validate,
+	formState,
+	onCreate,
+	onUpdate,
+	children,
+}: IProjectFormProps & React.PropsWithChildren<IProjectFormProps>) {
 	const classes = useStyles();
-
-	let { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
-		IUserSignupResponse
-	>({ body: null, url: SIGNUP_API });
-	let { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
-		url: ORGANISATION_TYPES_API,
-	});
-	const userDispatch = React.useContext(UserDispatchContext);
-
-	useRouteResolver();
-
-	React.useEffect(() => {
-		if (singupSuccessfulResponse)
-			if (userDispatch) {
-				userDispatch(setUser(singupSuccessfulResponse));
-			}
-	}, [singupSuccessfulResponse, userDispatch]);
-
-	const OnSubmit = (
-		values: IBasicInformation,
-		formikHelpers: FormikHelpers<IBasicInformation>
-	) => {
-		setPayload(values);
-
-		// navigate(`/signup/${SignUpSteps.SET_ORG}`);
-	};
-	const clearErrors = () => {
-		if (error) error = "";
-	};
 	return (
 		<div onChange={clearErrors}>
-			<Formik initialValues={initialValues} onSubmit={OnSubmit}>
+			<Formik
+				initialValues={initialValues}
+				onSubmit={(values) =>
+					formState === PROJECT_ACTIONS.CREATE ? onCreate(values) : onUpdate(values)
+				}
+			>
 				{(formik) => {
 					return (
 						<Form className={classes.form}>
-							<Grid container spacing={4} justify={"center"}>
-								<Grid item xs={8} md={8}>
-									<Box>
-										<Typography component="h4" variant="h4">
-											<Box m={1}>Create Project</Box>
-										</Typography>
-									</Box>
-								</Grid>
-								<Grid item xs={8} md={8}>
+							<Grid container spacing={1} justify={"center"}>
+								<Grid item xs={6} md={6}>
 									<TextField
-										error={!!formik.errors.organisation?.name}
-										helperText={
-											formik.touched.organisation?.name &&
-											formik.errors.organisation?.name
-										}
+										error={!!formik.errors.name}
+										helperText={formik.touched.name && formik.errors.name}
 										onChange={formik.handleChange}
 										label="Project Name"
 										required
 										fullWidth
-										name="project.name"
+										name="name"
 										variant="outlined"
 									/>
 								</Grid>
-								<Grid item xs={8} md={8}>
+								<Grid item xs={6} md={6}>
 									<TextField
-										error={!!formik.errors.organisation?.name}
+										error={!!formik.errors.short_name}
 										helperText={
-											formik.touched.organisation?.name &&
-											formik.errors.organisation?.name
+											formik.touched.short_name && formik.errors.short_name
 										}
 										onChange={formik.handleChange}
 										label="Short Name"
 										required
 										fullWidth
-										name="project.shortName"
+										name="short_name"
 										variant="outlined"
 									/>
 								</Grid>
-								<Grid item xs={8} md={8}>
-									<FormControl
-										variant="outlined"
-										className={classes.formControl}
-										fullWidth
-									>
-										<InputLabel htmlFor="outlined-age-native-simple">
+								<Grid item xs={12} md={12}>
+									<FormControl variant="outlined" className={classes.formControl}>
+										<InputLabel id="demo-simple-select-outlined-label">
 											Choose Workspace
 										</InputLabel>
 										<Select
-											native
-											required
-											label="Choose Workspace"
-											name="workspaceId"
-											value={"Workspace 1"}
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											value={formik.values.workspace}
 											onChange={formik.handleChange}
-											inputProps={{
-												name: "workspace",
-											}}
+											label="Choose workspace"
+											name="workspace"
 										>
-											<option value={1}>Workspace 1</option>
-											<option value={2}>Workspace 2</option>
-											<option value={3}>Workspace 3</option>
+											<MenuItem key={1} value={5}>
+												Default
+											</MenuItem>
+											<MenuItem key={2} value={13}>
+												Education
+											</MenuItem>
+											<MenuItem key={3} value={14}>
+												Health
+											</MenuItem>
 										</Select>
 									</FormControl>
 								</Grid>
-								<Grid item xs={8}>
-									<Button
+								<Grid xs={12}>
+									<TextField
+										data-testid="description"
+										value={formik.values.description}
+										error={!!formik.errors.description}
+										onChange={formik.handleChange}
+										label="Description.. ( Optional )"
+										multiline
+										rows={3}
+										name="description"
+										type="text"
+										variant="outlined"
 										fullWidth
-										disabled={!formik.isValid}
-										type="submit"
-										variant="contained"
-										color="primary"
-									>
-										Submit
-									</Button>
-
-									{loading ? <GlobalLoader /> : null}
-									{singupSuccessfulResponse ? (
-										<p className="text-center"> Singgup Successfull </p>
-									) : null}
-
-									{error ? <AlertMsg severity="error" msg={error} /> : null}
+									/>
+								</Grid>
+								<Grid item container>
+									<Grid xs={8}></Grid>
+									<Grid xs={4}>
+										<Box mt={3}>
+											<Button
+												fullWidth
+												disabled={!formik.isValid}
+												type="submit"
+												variant="contained"
+												color="primary"
+											>
+												Submit
+											</Button>
+										</Box>
+									</Grid>
 								</Grid>
 							</Grid>
 						</Form>
@@ -171,6 +148,6 @@ const CreateProject = () => {
 			</Formik>
 		</div>
 	);
-};
+}
 
 export default CreateProject;

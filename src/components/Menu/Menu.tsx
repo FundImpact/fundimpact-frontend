@@ -1,10 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import FIModal from "../Modal/Modal";
-import CreateProject from "../Forms/CreateProject/createProject";
 
 const StyledMenu = withStyles({
 	paper: {
@@ -26,17 +23,6 @@ const StyledMenu = withStyles({
 	/>
 ));
 
-const StyledMenuItem = withStyles((theme) => ({
-	root: {
-		"&:focus": {
-			backgroundColor: theme.palette.primary.main,
-			"& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-				color: theme.palette.common.white,
-			},
-		},
-	},
-}))(MenuItem);
-
 export default function SimpleMenu({
 	handleClose,
 	id,
@@ -48,18 +34,6 @@ export default function SimpleMenu({
 	anchorEl: any;
 	menuList?: object[];
 }) {
-	const [open, setOpen] = React.useState<any>([]);
-	const handleModalOpen = (index: any) => {
-		let array = [...open];
-		array[index] = true;
-		setOpen(array);
-		handleClose();
-	};
-	const handleModalClose = (index: number) => {
-		let array = [...open];
-		array[index] = false;
-		setOpen(array);
-	};
 	return (
 		<div>
 			<StyledMenu
@@ -73,16 +47,7 @@ export default function SimpleMenu({
 					menuList.map((menu: any, index: any) => {
 						return (
 							<div>
-								<MenuItem onClick={() => handleModalOpen(index)}>
-									{menu.listName}
-								</MenuItem>
-								{open[index] && (
-									<FIModal
-										open={open[index]}
-										handleClose={() => handleModalClose(index)}
-										children={menu.children}
-									/>
-								)}
+								<MenuItem onClick={handleClose}>{menu.children}</MenuItem>
 							</div>
 						);
 					})}
