@@ -9,7 +9,7 @@ import { Box, Divider } from "@material-ui/core";
 import Project from "../../../Project/Project";
 import { useQuery } from "@apollo/client";
 import SimpleMenu from "../../../Menu/Menu";
-import FIModal from "../../../Modal/Modal";
+import FIDialog from "../../../Dialog/Dialoag";
 import { PROJECT_ACTIONS } from "../../../Project/constants";
 import ProjectList from "../ProjectList/ProjectList";
 import { GET_WORKSPACES_BY_ORG } from "../../../../graphql/queries/index";
@@ -54,7 +54,7 @@ function AddProject() {
 				Add project
 			</IconButton>
 			{open && (
-				<FIModal
+				<FIDialog
 					open={open}
 					handleClose={() => handleModalClose()}
 					header={"Create Project"}

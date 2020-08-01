@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function FIModal({
+export default function FIDialog({
 	open,
 	handleClose,
 	children,
@@ -50,12 +50,7 @@ export default function FIModal({
 					</IconButton>
 				</MuiDialogTitle>
 				<DialogContent>
-					{/* <Box m={0} ml={3}>
-						<DialogContentText>
-							Manage your funds , create a new project
-						</DialogContentText>
-					</Box> */}
-					<div className={classes.paper}>{children && children}</div>
+					{children && <div className={classes.paper}>{children}</div>}
 				</DialogContent>
 			</Dialog>
 		</div>
