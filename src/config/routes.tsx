@@ -2,8 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import React from "react";
 import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-
-import DashboardTableContainer from "../components/Dasboard/DashboardTableContainer";
+import DashboardTableContainer from "../components/Dasboard/Table/DashboardTableContainer";
 import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";

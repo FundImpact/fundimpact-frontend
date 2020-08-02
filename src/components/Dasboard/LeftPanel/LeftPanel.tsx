@@ -1,4 +1,4 @@
-import { useStyles } from "./styles";
+import { useStyles } from "../styles";
 import {
 	Avatar,
 	Box,
@@ -9,9 +9,16 @@ import {
 	Menu,
 	MenuItem,
 	useTheme,
+	Divider,
+	ListItemIcon,
+	IconButton,
 } from "@material-ui/core";
 import React from "react";
-import { UserDispatchContext } from "../../contexts/userContext";
+import { UserDispatchContext } from "../../../contexts/userContext";
+import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
+import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
+import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
+import MonetizationOnOutlinedIcon from "@material-ui/icons/MonetizationOnOutlined";
 
 export default function LeftPanel() {
 	const classes = useStyles();
@@ -28,19 +35,30 @@ export default function LeftPanel() {
 	return (
 		<Grid component={Box} container className={classes.leftPanel} direction="column">
 			<Grid xs item>
-				<List component="nav">
-					{["dasboard", "briefcase", "star"].map((e) => (
-						<ListItem
-							key={e}
-							style={{ justifyContent: "center", margin: theme.spacing(3, 0) }}
-						>
-							<img
-								style={{ width: "2rem" }}
-								src={require(`../../assets/icons/${e}.svg`)}
-							/>
+				<Box mb={1} mt={1}>
+					<IconButton>
+						<MonetizationOnOutlinedIcon
+							style={{ color: "white", fontSize: "2rem", margin: "5px" }}
+						/>
+					</IconButton>
+				</Box>
+				<Divider />
+				<List>
+					{[
+						{ name: "Dashboard", Icon: DashboardOutlinedIcon, color: "#fafafa" },
+						{ name: "Briefcase", Icon: BusinessCenterOutlinedIcon, color: "#bdbdbd" },
+						{ name: "Star", Icon: GradeOutlinedIcon, color: "#bdbdbd" },
+					].map((item, index) => (
+						<ListItem button key={item.name}>
+							<ListItemIcon>
+								<item.Icon
+									style={{ color: item.color, fontSize: "1.7rem", margin: "5px" }}
+								/>
+							</ListItemIcon>
 						</ListItem>
 					))}
 				</List>
+				<Divider />
 			</Grid>
 			<Grid
 				xs
@@ -52,7 +70,7 @@ export default function LeftPanel() {
 				style={{ marginBottom: theme.spacing(2) }}
 			>
 				<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-					<Avatar src={require("../../assets/icons/dummy-user.png")} />
+					<Avatar src={require("../../../assets/icons/dummy-user.png")} />
 				</Button>
 				<Menu
 					id="simple-menu"

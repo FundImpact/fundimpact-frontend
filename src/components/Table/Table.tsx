@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem, Table } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
-import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
+import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -59,7 +59,7 @@ const tableHeading = [
 ];
 
 export default function DefaultTable() {
-	let tt: TableCellProps;
+	// let tt: TableCellProps;
 	// tt.
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
