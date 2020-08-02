@@ -45,6 +45,7 @@ function CreateProject({
 	onCreate,
 	onUpdate,
 	children,
+	workspace,
 }: IProjectFormProps & React.PropsWithChildren<IProjectFormProps>) {
 	const classes = useStyles();
 	return (
@@ -90,24 +91,23 @@ function CreateProject({
 										<InputLabel id="demo-simple-select-outlined-label">
 											Choose Workspace
 										</InputLabel>
-										<Select
-											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
-											value={formik.values.workspace}
-											onChange={formik.handleChange}
-											label="Choose workspace"
-											name="workspace"
-										>
-											<MenuItem key={1} value={5}>
-												Default
-											</MenuItem>
-											<MenuItem key={2} value={13}>
-												Education
-											</MenuItem>
-											<MenuItem key={3} value={14}>
-												Health
-											</MenuItem>
-										</Select>
+										{workspace && (
+											<Select
+												labelId="demo-simple-select-outlined-label"
+												id="demo-simple-select-outlined"
+												value={formik.values.workspace}
+												onChange={formik.handleChange}
+												label="Choose workspace"
+												name="workspace"
+											>
+												{workspace &&
+													workspace.map((elem: any, index: number) => (
+														<MenuItem key={index} value={elem.id}>
+															{elem.name}
+														</MenuItem>
+													))}
+											</Select>
+										)}
 									</FormControl>
 								</Grid>
 								<Grid xs={12}>
