@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Divider, List } from "@material-ui/core";
+import { Box, Typography, Divider, List, MenuItem } from "@material-ui/core";
 import { useStyles } from "../styles";
 import { useQuery } from "@apollo/client";
 import { GET_ORGANISATIONS } from "../../../graphql/queries";
@@ -26,8 +26,8 @@ export default function SideBar({ children }: { children: Function }) {
 		setAnchorEl(null);
 	};
 	const menuList = [
-		{ children: <IconButton size="small">Edit Orgnisation</IconButton> },
-		{ children: <IconButton size="small">Add Workspace</IconButton> },
+		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
+		{ children: <MenuItem>Add Workspace</MenuItem> },
 	];
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>

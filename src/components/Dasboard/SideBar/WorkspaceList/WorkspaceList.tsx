@@ -5,7 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import { Box, Divider } from "@material-ui/core";
+import { Box, Divider, MenuItem } from "@material-ui/core";
 import Project from "../../../Project/Project";
 import { useQuery } from "@apollo/client";
 import SimpleMenu from "../../../Menu/Menu";
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function AddProject() {
+function AddProject({ workspace }: { workspace: any }) {
 	const [open, setOpen] = React.useState(false);
 	const handleModalOpen = () => {
 		setOpen(true);
@@ -50,15 +50,13 @@ function AddProject() {
 	};
 	return (
 		<div>
-			<IconButton onClick={handleModalOpen} size="small">
-				Add project
-			</IconButton>
+			<MenuItem onClick={handleModalOpen}>Add project</MenuItem>
 			{open && (
 				<FIDialog
 					open={open}
 					handleClose={() => handleModalClose()}
 					header={"Create Project"}
-					children={<Project type={PROJECT_ACTIONS.CREATE} />}
+					children={<Project type={PROJECT_ACTIONS.CREATE} workspace={workspace} />}
 				/>
 			)}
 		</div>
@@ -69,11 +67,15 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
 	const filter: any = { filter: organisation };
+	const [menuList, setMenuList] = React.useState<any>([
+		{ children: <MenuItem>Edit Workspace </MenuItem> },
+	]);
 	const { data, loading, error } = useQuery(GET_WORKSPACES_BY_ORG, filter);
-
 	React.useEffect(() => {
-		if (data) {
+		if (data && data.orgWorkspaces) {
 			console.log(data);
+			let array = [...menuList, { children: <AddProject workspace={data.orgWorkspaces} /> }];
+			setMenuList([...array]);
 		}
 	}, [data]);
 
@@ -89,10 +91,6 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 		setAnchorEl(array);
 	};
 
-	const menuList = [
-		{ children: <IconButton size="small">Edit Workspace</IconButton> },
-		{ children: <AddProject /> },
-	];
 	return (
 		<List className={classes.workspace}>
 			{data &&
@@ -118,12 +116,14 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 									>
 										<EditOutlinedIcon fontSize="small" />
 									</IconButton>
-									<SimpleMenu
-										handleClose={() => handleClose(index)}
-										id={`projectmenu${index}`}
-										anchorEl={anchorEl[index]}
-										menuList={menuList}
-									/>
+									{menuList && (
+										<SimpleMenu
+											handleClose={() => handleClose(index)}
+											id={`projectmenu${index}`}
+											anchorEl={anchorEl[index]}
+											menuList={menuList}
+										/>
+									)}
 								</Box>
 							</Box>
 							<List>

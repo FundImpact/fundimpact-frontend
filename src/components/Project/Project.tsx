@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
@@ -13,23 +13,24 @@ function getInitialValues(props: ProjectProps) {
 	return {
 		name: "Testing Project",
 		short_name: "testing short name",
-		description: "some description",
-		workspace: 5,
+		description: "",
+		workspace: props.workspace[0].id,
 	};
 }
 
 function Project(props: ProjectProps) {
 	let initialValues: IProject = getInitialValues(props);
-	const [createNewproject, { data: response, loading, error: createError }] = useMutation(
-		CREATE_PROJECT
-	);
-	// let [CreateNewProjects, { error: createError, data: response, loading }] = useLazyQuery<
-	// 	IProject,
-	// 	{ payload: Omit<IProject, "id"> | null }
-	// >(CREATE_PROJECT);
+
+	const [
+		createNewproject,
+		{ data: response, loading: createLoading, error: createError },
+	] = useMutation(CREATE_PROJECT);
 
 	useEffect(() => {
-		console.log(`Got response `, response);
+		if (response) {
+			console.log(`Got response `, response);
+			window.location.reload(false);
+		}
 	}, [response]);
 
 	const onCreate = (value: IProject) => {
@@ -39,20 +40,18 @@ function Project(props: ProjectProps) {
 		console.log("seeting loading to true");
 	};
 
-	let [
-		UpdateProject,
-		{ error: updateError, data: UpdateResponse, loading: updateLoading },
-	] = useLazyQuery<IProject, { payload: Omit<IProject, "id"> | null; projectID: number }>(
-		UPDATE_PROJECT
-	);
+	const [
+		updateProject,
+		{ data: updateResponse, loading: updateLoading, error: updateError },
+	] = useMutation(UPDATE_PROJECT);
 	useEffect(() => {
-		console.log(`Got update response `, UpdateResponse);
-	}, [UpdateResponse]);
+		console.log(`Got update response `, updateResponse);
+	}, [updateResponse]);
 
 	const onUpdate = (value: IProject) => {
 		console.log(`on Update is called`);
 		console.log("seeting loading to true");
-		UpdateProject({ variables: { payload: value, projectID: 4 } });
+		// updateProject({ variables: { payload: value, projectID: 4 } });
 	};
 
 	const clearErrors = (values: IProject) => {
@@ -64,12 +63,20 @@ function Project(props: ProjectProps) {
 	};
 
 	const formState = props.type;
-
+	const workspace = props.workspace ? props.workspace : null;
 	return (
 		<React.Fragment>
 			{!response && (
 				<CreateProject
-					{...{ initialValues, formState, onCreate, onUpdate, clearErrors, validate }}
+					{...{
+						initialValues,
+						formState,
+						onCreate,
+						onUpdate,
+						clearErrors,
+						validate,
+						workspace,
+					}}
 				>
 					{props.type === PROJECT_ACTIONS.CREATE && createError ? (
 						<AlertMsg severity="error" msg={"Create Failed"} />
@@ -80,7 +87,7 @@ function Project(props: ProjectProps) {
 				</CreateProject>
 			)}
 			{response && <AlertMsg severity="success" msg={"Successfully created"} />}
-			{loading ? <FullScreenLoader /> : null}
+			{createLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }
