@@ -1,0 +1,4 @@
+export enum PROJECT_ACTIONS {
+	CREATE = "CREATE",
+	UPDATE = "UPDATE",
+}

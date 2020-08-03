@@ -1,9 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core";
-import { IOrganisation } from "../models";
+import { IOrganisation } from "../../../models";
 import { useNavigate } from "react-router-dom";
 import { Form, Formik, FormikHelpers } from "formik";
-import { SignUpSteps } from "../utils/signup.util";
+import { SignUpSteps } from "../../../utils/signup.util";
 import React from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
