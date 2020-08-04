@@ -65,6 +65,7 @@ function CreateProject({
 										error={!!formik.errors.name}
 										helperText={formik.touched.name && formik.errors.name}
 										onChange={formik.handleChange}
+										data-testid="createProjectName"
 										label="Project Name"
 										required
 										fullWidth
@@ -79,6 +80,7 @@ function CreateProject({
 											formik.touched.short_name && formik.errors.short_name
 										}
 										onChange={formik.handleChange}
+										data-testid="createProjectShortName"
 										label="Short Name"
 										required
 										fullWidth
@@ -99,6 +101,7 @@ function CreateProject({
 												onChange={formik.handleChange}
 												label="Choose workspace"
 												name="workspace"
+												data-testid="createProjectWorkspace"
 											>
 												{workspace &&
 													workspace.map((elem: any, index: number) => (
@@ -110,9 +113,9 @@ function CreateProject({
 										)}
 									</FormControl>
 								</Grid>
-								<Grid xs={12}>
+								<Grid item xs={12}>
 									<TextField
-										data-testid="description"
+										data-testid="createProjectDescription"
 										value={formik.values.description}
 										error={!!formik.errors.description}
 										onChange={formik.handleChange}
@@ -125,9 +128,9 @@ function CreateProject({
 										fullWidth
 									/>
 								</Grid>
-								<Grid item container>
-									<Grid xs={8}></Grid>
-									<Grid xs={4}>
+								<Grid container>
+									<Grid item xs={8}></Grid>
+									<Grid item xs={4}>
 										<Box mt={3}>
 											<Button
 												fullWidth
@@ -135,6 +138,7 @@ function CreateProject({
 												type="submit"
 												variant="contained"
 												color="primary"
+												data-testid="createProjectSubmit"
 											>
 												Submit
 											</Button>

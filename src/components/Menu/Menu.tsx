@@ -45,11 +45,7 @@ export default function SimpleMenu({
 			>
 				{menuList &&
 					menuList.map((menu: any, index: any) => {
-						return (
-							<div>
-								<MenuItem onClick={handleClose}>{menu.children}</MenuItem>
-							</div>
-						);
+						return <div onClick={handleClose}>{menu.children}</div>;
 					})}
 			</StyledMenu>
 		</div>

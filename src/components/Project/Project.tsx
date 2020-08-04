@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import AlertMsg from "../AlertMessage";
+import AlertMsg from "../AlertMessage/AlertMessage";
 import CreateProject from "../Forms/CreateProject/createProject";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";

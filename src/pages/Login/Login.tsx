@@ -2,7 +2,7 @@ import { Box } from "@material-ui/core";
 import { FormikHelpers } from "formik";
 import React from "react";
 
-import AlertMsg from "../../components/AlertMessage";
+import AlertMsg from "../../components/AlertMessage/AlertMessage";
 import GlobalLoader from "../../components/commons/GlobalLoader";
 import LoginForm from "../../components/Forms/Login/LoginForm";
 import { UserDispatchContext } from "../../contexts/userContext";
