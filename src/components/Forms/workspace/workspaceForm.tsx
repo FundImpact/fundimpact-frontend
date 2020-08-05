@@ -1,4 +1,3 @@
-import classes from "*.module.css";
 import {
 	Box,
 	Button,
@@ -52,6 +51,7 @@ function WorkspaceForm({
 	return (
 		<Dialog fullWidth open={showForm} aria-labelledby="form-dialog-title">
 			<DialogTitle id="form-dialog-title">Workspace</DialogTitle>
+
 			<DialogContent>
 				<Box
 					mx="auto"
@@ -123,7 +123,6 @@ function WorkspaceForm({
 				</Box>
 			</DialogContent>
 			{children ? children : null}
-
 			<DialogActions>
 				<Button
 					color="secondary"

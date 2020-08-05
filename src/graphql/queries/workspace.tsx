@@ -1,12 +1,17 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_WORKSPACE = gql`
-	mutation CreateWorkspace($payload: Input) {
+	mutation CreateWorkspace($payload: createWorkspaceInput) {
 		createWorkspace(input: $payload) {
-			id
-			name
-			short_name
-			organisation
+			workspace {
+				id
+				name
+				short_name
+				organisation {
+					id
+					name
+				}
+			}
 		}
 	}
 `;

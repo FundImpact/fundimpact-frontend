@@ -1,11 +1,16 @@
-import { useLazyQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
 
+import { GET_WORKSPACES } from "../../graphql/queries";
 import { CREATE_WORKSPACE, UPDATE_WORKSPACE } from "../../graphql/queries/workspace";
-import { IWorkspace, WorkspaceProps } from "../../models/workspace/workspace";
+import {
+	IWorkspace,
+	IWorkspaceData as IWorkspacesData,
+	WorkspaceProps,
+} from "../../models/workspace/workspace";
 import AlertMsg from "../AlertMessage";
 import WorkspaceForm from "../Forms/workspace/workspaceForm";
-import { FullScreenLoader } from "../Loader";
+import { FullScreenLoader } from "../Loader/Loader";
 import { WORKSPACE_ACTIONS } from "./constants";
 
 function getInitialValues(props: WorkspaceProps) {
@@ -14,36 +19,58 @@ function getInitialValues(props: WorkspaceProps) {
 		name: "Testing Workspace",
 		short_name: "testing short name",
 		description: "some description",
-		organisation: 3,
+		organisation: 4,
 	};
 }
 
 function Workspace(props: WorkspaceProps) {
 	let initialValues: IWorkspace = getInitialValues(props);
 
-	let [CreateWorkspace, { error: createError, data: response, loading }] = useLazyQuery<
+	const client = useApolloClient();
+	useQuery(GET_WORKSPACES);
+	let cachedData = client.readQuery<IWorkspacesData>({ query: GET_WORKSPACES });
+
+	let [CreateWorkspace, { data: response, loading }] = useMutation<
 		IWorkspace,
-		{ payload: Omit<IWorkspace, "id"> | null }
+		{ payload: { data: Omit<IWorkspace, "id"> | null } }
 	>(CREATE_WORKSPACE);
 
+	/**
+	 *@summary Whenever a new workspace is created, we need to update the Apollo Cache also.
+	 * That logic is inside this hook.
+	 */
 	useEffect(() => {
-		console.log(`Got response `, response);
-	}, [response]);
+		const oldCachedData = client.readQuery<IWorkspacesData>({ query: GET_WORKSPACES });
+		const newWorkspace = response ? (response as any)["createWorkspace"]["workspace"] : null;
+		if (!newWorkspace) return;
+
+		const newCacheddata = oldCachedData
+			? { ...oldCachedData, workspaces: [...oldCachedData.workspaces, newWorkspace] }
+			: { workspaces: [newWorkspace] };
+
+		// Write to cache workspace list
+		console.log(`new cache data`, newCacheddata);
+		client.writeQuery({
+			query: GET_WORKSPACES,
+			data: newCacheddata,
+		});
+	}, [response, client]);
 
 	const onCreate = (value: IWorkspace) => {
 		console.log(`on Created is called with: `, value);
-		// CreateWorkspace({ variables: { payload: value } });
+		CreateWorkspace({
+			variables: { payload: { data: { ...value } } },
+		});
 
 		console.log("seeting loading to true");
 	};
 
-	let [
-		UpdateWorkspace,
-		{ error: updateError, data: UpdateResponse, loading: updateLoading },
-	] = useLazyQuery<IWorkspace, { payload: Omit<IWorkspace, "id"> | null; workspaceID: number }>(
-		UPDATE_WORKSPACE
-	);
+	let [UpdateWorkspace, { error: updateError, data: UpdateResponse }] = useLazyQuery<
+		IWorkspace,
+		{ payload: Omit<IWorkspace, "id"> | null; workspaceID: number }
+	>(UPDATE_WORKSPACE);
 	useEffect(() => {
+		if (!UpdateResponse) return;
 		console.log(`Got update response `, UpdateResponse);
 	}, [UpdateResponse]);
 
@@ -53,12 +80,12 @@ function Workspace(props: WorkspaceProps) {
 		UpdateWorkspace({ variables: { payload: value, workspaceID: 4 } });
 	};
 
-	const clearErrors = (values: IWorkspace) => {
-		console.log(`Clear Errors is called`);
+	const clearErrors = () => {
+		// console.log(`Clear Errors is called`);
 	};
 
-	const validate = (values: IWorkspace) => {
-		console.log(`validate is called`);
+	const validate = () => {
+		// console.log(`validate is called`);
 	};
 
 	const formState = props.type;
@@ -68,9 +95,8 @@ function Workspace(props: WorkspaceProps) {
 			<WorkspaceForm
 				{...{ initialValues, formState, onCreate, onUpdate, clearErrors, validate }}
 			>
-				{props.type === WORKSPACE_ACTIONS.CREATE && createError ? (
-					<AlertMsg severity="error" msg={"Create Failed"} />
-				) : null}
+				Total Wrokspaces:
+				{cachedData ? cachedData.workspaces.length : "No workpsace yet"}
 				{props.type === WORKSPACE_ACTIONS.UPDATE && updateError ? (
 					<AlertMsg severity="error" msg={"Update Failed"} />
 				) : null}
