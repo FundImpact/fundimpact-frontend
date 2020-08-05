@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import ReactDOM from "react-dom";
 import CreateProject from "./../createProject";
 import {
@@ -7,8 +7,8 @@ import {
 	queries,
 	render,
 	RenderResult,
-	wait,
-	cleanup,
+	within,
+	screen,
 } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import renderer from "react-test-renderer";
@@ -20,14 +20,27 @@ const intialFormValue: IProject = {
 	name: "Project1",
 	short_name: "P1",
 	description: "",
-	workspace: 2,
+	workspace: "2",
 };
 const onCreateMock = jest.fn();
 const onUpdateMock = jest.fn();
 const clearErrors = jest.fn();
-const validate = jest.fn();
-const formState = "CREATE";
-const workspace: any = [{ id: 2, name: "Default" }];
+const validate = jest.fn((values: IProject) => {
+	let errors: Partial<IProject> = {};
+	if (!values.name && !values.name.length) {
+		errors.name = "Name is required";
+	}
+	if (!values.workspace) {
+		errors.workspace = "workspace is required";
+	}
+	return errors;
+});
+
+const formState = PROJECT_ACTIONS.CREATE;
+const workspace: any = [
+	{ id: "2", name: "EDUCATION" },
+	{ id: "4", name: "HEALTH" },
+];
 
 let createForm: RenderResult<typeof queries>;
 
@@ -48,41 +61,64 @@ beforeEach(() => {
 });
 
 describe("Create project Form", () => {
-	test("should have a name field", async () => {
-		let nameField = await createForm.getByTestId("createProjectName");
+	test("should have a name field", () => {
+		let nameField = createForm.getByTestId("createProjectName");
 		expect(nameField).toBeInTheDocument();
 	});
-	test("should have a short-name field", async () => {
-		let shortNameField = await createForm.getByTestId("createProjectShortName");
+	test("should have a short-name field", () => {
+		let shortNameField = createForm.getByTestId("createProjectShortName");
 		expect(shortNameField).toBeInTheDocument();
 	});
-	test("should have a workspace field", async () => {
-		let workspacefield = await createForm.getByTestId("createProjectWorkspace");
+	test("should have a workspace field", () => {
+		let workspacefield = createForm.getByTestId("createProjectWorkspace");
 		expect(workspacefield).toBeInTheDocument();
 	});
-	test("should have a description field", async () => {
-		let descriptionField = await createForm.getByTestId("createProjectDescription");
+
+	// for (let i = 0; i < workspace.length; i++) {
+	// 	test("option should match", async () => {
+	// 		const myElem = fireEvent.click(createForm.getByLabelText(/Choose Workspace/i));
+	// 		let option = createForm.getByTestId(`createProjectSelectOption${workspace[i].id}`);
+	// 		expect(option).toBeInTheDocument();
+	// 	});
+	// }
+
+	test("should have a description field", () => {
+		let descriptionField = createForm.getByTestId("createProjectDescription");
 		expect(descriptionField).toBeInTheDocument();
 	});
-	test("should have a submit button", async () => {
-		let submitButton = await createForm.getByTestId("createProjectSubmit");
+	test("should have a submit button", () => {
+		let submitButton = createForm.getByTestId("createProjectSubmit");
 		expect(submitButton).toBeInTheDocument();
 	});
-});
 
-it("matches project form snapshot", () => {
-	const tree = renderer
-		.create(
-			<CreateProject
-				clearErrors={clearErrors}
-				initialValues={intialFormValue}
-				validate={validate}
-				formState={PROJECT_ACTIONS.CREATE}
-				onCreate={onCreateMock}
-				onUpdate={onUpdateMock}
-				workspace={workspace}
-			/>
-		)
-		.toJSON();
-	expect(tree).toMatchSnapshot();
+	test("should have initial values", () => {
+		let nameField = createForm.getByTestId("createProjectNameInput") as HTMLInputElement;
+		expect(nameField.value).toBe(intialFormValue.name);
+
+		let shortNameField = createForm.getByTestId(
+			"createProjectShortNameInput"
+		) as HTMLInputElement;
+		expect(shortNameField.value).toBe(intialFormValue.short_name);
+
+		let optionField = createForm.getByTestId(
+			"createProjectWorkspaceOption"
+		) as HTMLInputElement;
+		expect(optionField.value).toBe(workspace[0].id);
+
+		let descriptionField = createForm.getByTestId(
+			"createProjectDescriptionInput"
+		) as HTMLInputElement;
+		expect(descriptionField.value).toBe(intialFormValue.description);
+	});
+
+	test("Submit Button should be disabled if name field is empty", async () => {
+		let nameField = createForm.getByTestId("createProjectNameInput") as HTMLInputElement;
+		let value = "";
+		act(() => {
+			fireEvent.change(nameField, { target: { value } });
+		});
+		expect(nameField.value).toBe(value);
+		let submitButton = await createForm.findByTestId(`createProjectSubmit`);
+		expect(submitButton).toBeDisabled();
+	});
 });

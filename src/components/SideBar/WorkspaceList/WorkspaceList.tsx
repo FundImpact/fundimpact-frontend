@@ -6,13 +6,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { Box, Divider, MenuItem } from "@material-ui/core";
-import Project from "../../../Project/Project";
+import Project from "../../Project/Project";
 import { useQuery } from "@apollo/client";
-import SimpleMenu from "../../../Menu/Menu";
-import FIDialog from "../../../Dialog/Dialoag";
-import { PROJECT_ACTIONS } from "../../../Project/constants";
+import SimpleMenu from "../../Menu/Menu";
+import FIDialog from "../../Dialog/Dialog";
+import { PROJECT_ACTIONS } from "../../Project/constants";
 import ProjectList from "../ProjectList/ProjectList";
-import { GET_WORKSPACES_BY_ORG } from "../../../../graphql/queries/index";
+import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -66,7 +66,7 @@ function AddProject({ workspace }: { workspace: any }) {
 export default function WorkspaceList({ organisation }: { organisation: any }) {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
-	const filter: any = { filter: organisation };
+	const filter: any = { variables: { filter: { organisation } } };
 	const [menuList, setMenuList] = React.useState<any>([
 		{ children: <MenuItem>Edit Workspace </MenuItem> },
 	]);
@@ -75,17 +75,17 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 		if (data && data.orgWorkspaces) {
 			console.log(data);
 			let array = [...menuList, { children: <AddProject workspace={data.orgWorkspaces} /> }];
-			setMenuList([...array]);
+			setMenuList(array);
 		}
 	}, [data]);
 
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: any) => {
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
 		let array = [...anchorEl];
 		array[index] = event.currentTarget;
 		setAnchorEl(array);
 	};
 
-	const handleClose = (index: any) => {
+	const handleClose = (index: number) => {
 		let array = [...anchorEl];
 		array[index] = null;
 		setAnchorEl(array);
@@ -95,9 +95,9 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 		<List className={classes.workspace}>
 			{data &&
 				data.orgWorkspaces &&
-				data.orgWorkspaces.map((workspace: any, index: number) => {
+				data.orgWorkspaces.map((workspace: { id: number; name: string }, index: number) => {
 					return (
-						<ListItem className={classes.workspaceList}>
+						<ListItem className={classes.workspaceList} key={workspace.id}>
 							<Box display="flex">
 								<Box flexGrow={1}>
 									<ListItemText

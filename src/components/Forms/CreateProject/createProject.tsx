@@ -15,6 +15,7 @@ import { Form, Formik } from "formik";
 import { IProjectFormProps } from "../../../models/project/ProjectForm";
 import { PROJECT_ACTIONS } from "../../Project/constants";
 import React from "react";
+import { IProject } from "../../../models/project/project";
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -48,10 +49,17 @@ function CreateProject({
 	workspace,
 }: IProjectFormProps & React.PropsWithChildren<IProjectFormProps>) {
 	const classes = useStyles();
+	const validateInitialValue = (initialValue: IProject) => {
+		const errors = validate(initialValue) as object;
+		if (!errors) return true;
+		return Object.keys(errors).length ? false : true;
+	};
 	return (
 		<div onChange={clearErrors}>
 			<Formik
 				initialValues={initialValues}
+				validate={validate}
+				isInitialValid={(props: any) => validateInitialValue(props.initialValues)}
 				onSubmit={(values) =>
 					formState === PROJECT_ACTIONS.CREATE ? onCreate(values) : onUpdate(values)
 				}
@@ -62,11 +70,15 @@ function CreateProject({
 							<Grid container spacing={1} justify={"center"}>
 								<Grid item xs={6} md={6}>
 									<TextField
+										value={formik.values.name}
 										error={!!formik.errors.name}
 										helperText={formik.touched.name && formik.errors.name}
 										onChange={formik.handleChange}
 										data-testid="createProjectName"
 										label="Project Name"
+										inputProps={{
+											"data-testid": "createProjectNameInput",
+										}}
 										required
 										fullWidth
 										name="name"
@@ -75,14 +87,13 @@ function CreateProject({
 								</Grid>
 								<Grid item xs={6} md={6}>
 									<TextField
-										error={!!formik.errors.short_name}
-										helperText={
-											formik.touched.short_name && formik.errors.short_name
-										}
 										onChange={formik.handleChange}
 										data-testid="createProjectShortName"
+										inputProps={{
+											"data-testid": "createProjectShortNameInput",
+										}}
+										value={formik.values.short_name}
 										label="Short Name"
-										required
 										fullWidth
 										name="short_name"
 										variant="outlined"
@@ -97,18 +108,27 @@ function CreateProject({
 											<Select
 												labelId="demo-simple-select-outlined-label"
 												id="demo-simple-select-outlined"
+												error={!!formik.errors.workspace}
 												value={formik.values.workspace}
 												onChange={formik.handleChange}
 												label="Choose workspace"
 												name="workspace"
 												data-testid="createProjectWorkspace"
+												inputProps={{
+													"data-testid": "createProjectWorkspaceOption",
+												}}
 											>
 												{workspace &&
-													workspace.map((elem: any, index: number) => (
-														<MenuItem key={index} value={elem.id}>
-															{elem.name}
-														</MenuItem>
-													))}
+													workspace.map(
+														(
+															elem: { id: number; name: string },
+															index: number
+														) => (
+															<MenuItem key={index} value={elem.id}>
+																{elem.name}
+															</MenuItem>
+														)
+													)}
 											</Select>
 										)}
 									</FormControl>
@@ -117,8 +137,10 @@ function CreateProject({
 									<TextField
 										data-testid="createProjectDescription"
 										value={formik.values.description}
-										error={!!formik.errors.description}
 										onChange={formik.handleChange}
+										inputProps={{
+											"data-testid": "createProjectDescriptionInput",
+										}}
 										label="Description.. ( Optional )"
 										multiline
 										rows={3}

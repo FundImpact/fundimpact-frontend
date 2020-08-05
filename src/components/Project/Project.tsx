@@ -1,4 +1,4 @@
-import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
@@ -11,8 +11,8 @@ import { PROJECT_ACTIONS } from "./constants";
 function getInitialValues(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Testing Project",
-		short_name: "testing short name",
+		name: "",
+		short_name: "",
 		description: "",
 		workspace: props.workspace[0].id,
 	};
@@ -59,7 +59,14 @@ function Project(props: ProjectProps) {
 	};
 
 	const validate = (values: IProject) => {
-		console.log(`validate is called`);
+		let errors: Partial<IProject> = {};
+		if (!values.name && !values.name.length) {
+			errors.name = "Name is required";
+		}
+		if (!values.workspace) {
+			errors.workspace = "workspace is required";
+		}
+		return errors;
 	};
 
 	const formState = props.type;
