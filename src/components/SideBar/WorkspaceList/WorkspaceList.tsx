@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			flexDirection: "column",
 			alignItems: "initial",
 		},
-		"& .workspaceList:hover .workspaceEditIcon": {
-			opacity: 1,
-		},
 		workspaceEditIcon: {
 			opacity: 0,
 		},
