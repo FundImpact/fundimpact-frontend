@@ -10,7 +10,8 @@ function Alert(props: AlertProps) {
 
 const useStyles = makeStyles((theme: Theme) => ({
 	alertmsg: {
-		marginTop: theme.spacing(4),
+		marginTop: theme.spacing(1),
+		marginBottom: theme.spacing(1),
 	},
 }));
 
