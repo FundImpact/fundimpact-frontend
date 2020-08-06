@@ -12,8 +12,7 @@ type RenderApolloOptions = {
 	resolvers?: any;
 	[st: string]: any;
 };
-
-const renderApollo = (
+export const renderApollo = (
 	node: any,
 	{ mocks, addTypename, defaultOptions, cache, resolvers, ...options }: RenderApolloOptions = {}
 ) => {
@@ -30,6 +29,3 @@ const renderApollo = (
 		options
 	);
 };
-
-export * from "@testing-library/react";
-export { renderApollo };

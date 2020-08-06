@@ -37,7 +37,7 @@ const validate = jest.fn((values: IProject) => {
 });
 
 const formState = PROJECT_ACTIONS.CREATE;
-const workspace: any = [
+const workspaces: any = [
 	{ id: "2", name: "EDUCATION" },
 	{ id: "4", name: "HEALTH" },
 ];
@@ -54,7 +54,7 @@ beforeEach(() => {
 				formState={PROJECT_ACTIONS.CREATE}
 				onCreate={onCreateMock}
 				onUpdate={onUpdateMock}
-				workspace={workspace}
+				workspaces={workspaces}
 			/>
 		);
 	});
@@ -103,7 +103,7 @@ describe("Create project Form", () => {
 		let optionField = createForm.getByTestId(
 			"createProjectWorkspaceOption"
 		) as HTMLInputElement;
-		expect(optionField.value).toBe(workspace[0].id);
+		expect(optionField.value).toBe(workspaces[0].id);
 
 		let descriptionField = createForm.getByTestId(
 			"createProjectDescriptionInput"

@@ -46,7 +46,7 @@ function CreateProject({
 	onCreate,
 	onUpdate,
 	children,
-	workspace,
+	workspaces,
 }: IProjectFormProps & React.PropsWithChildren<IProjectFormProps>) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: IProject) => {
@@ -104,7 +104,7 @@ function CreateProject({
 										<InputLabel id="demo-simple-select-outlined-label">
 											Choose Workspace
 										</InputLabel>
-										{workspace && (
+										{workspaces && (
 											<Select
 												labelId="demo-simple-select-outlined-label"
 												id="demo-simple-select-outlined"
@@ -118,8 +118,8 @@ function CreateProject({
 													"data-testid": "createProjectWorkspaceOption",
 												}}
 											>
-												{workspace &&
-													workspace.map(
+												{workspaces &&
+													workspaces.map(
 														(
 															elem: { id: number; name: string },
 															index: number

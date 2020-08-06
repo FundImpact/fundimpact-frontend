@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function AddProject({ workspace }: { workspace: any }) {
+function AddProject({ workspaces }: { workspaces: { id: number; name: string }[] }) {
 	const [open, setOpen] = React.useState(false);
 	const handleModalOpen = () => {
 		setOpen(true);
@@ -56,7 +56,7 @@ function AddProject({ workspace }: { workspace: any }) {
 					open={open}
 					handleClose={() => handleModalClose()}
 					header={"Create Project"}
-					children={<Project type={PROJECT_ACTIONS.CREATE} workspace={workspace} />}
+					children={<Project type={PROJECT_ACTIONS.CREATE} workspaces={workspaces} />}
 				/>
 			)}
 		</div>
@@ -74,7 +74,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 	React.useEffect(() => {
 		if (data && data.orgWorkspaces) {
 			console.log(data);
-			let array = [...menuList, { children: <AddProject workspace={data.orgWorkspaces} /> }];
+			let array = [...menuList, { children: <AddProject workspaces={data.orgWorkspaces} /> }];
 			setMenuList(array);
 		}
 	}, [data]);

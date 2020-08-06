@@ -1,5 +1,6 @@
 import React from "react";
-import { renderApollo, cleanup, waitForElement } from "../../../utils/test.util";
+import { renderApollo } from "../../../utils/test.util";
+import { cleanup, waitForElement } from "@testing-library/react";
 import SideBar from "../SideBar";
 import { GET_ORGANISATIONS } from "../../../graphql/queries";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";

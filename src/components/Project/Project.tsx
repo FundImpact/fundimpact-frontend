@@ -14,7 +14,7 @@ function getInitialValues(props: ProjectProps) {
 		name: "",
 		short_name: "",
 		description: "",
-		workspace: props.workspace[0].id,
+		workspace: props.workspaces[0].id,
 	};
 }
 
@@ -70,7 +70,7 @@ function Project(props: ProjectProps) {
 	};
 
 	const formState = props.type;
-	const workspace = props.workspace ? props.workspace : null;
+	const workspaces = props.workspaces;
 	return (
 		<React.Fragment>
 			{!response && (
@@ -82,7 +82,7 @@ function Project(props: ProjectProps) {
 						onUpdate,
 						clearErrors,
 						validate,
-						workspace,
+						workspaces,
 					}}
 				>
 					{props.type === PROJECT_ACTIONS.CREATE && createError ? (
