@@ -8,4 +8,5 @@ export interface IWorkspaceFormProps {
 	clearErrors: any;
 	validate: any;
 	formState: WORKSPACE_ACTIONS.CREATE | WORKSPACE_ACTIONS.UPDATE;
+	Close: () => void;
 }

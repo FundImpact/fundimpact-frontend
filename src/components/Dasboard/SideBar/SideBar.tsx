@@ -1,13 +1,17 @@
-import React from "react";
-import { Box, Typography, Divider, List, MenuItem } from "@material-ui/core";
-import { useStyles } from "../styles";
-import { useQuery } from "@apollo/client";
-import { GET_ORGANISATIONS } from "../../../graphql/queries";
-import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import { ApolloProvider, useQuery } from "@apollo/client";
+import { Box, Divider, List, MenuItem, Typography } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import WorkspaceList from "./WorkspaceList/WorkspaceList";
-import SimpleMenu from "../../Menu/Menu";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import React from "react";
+
+import { client as ApolloClient } from "../../../config/grapql";
+import { GET_ORGANISATIONS } from "../../../graphql/queries";
+import SimpleMenu from "../../Menu/Menu";
+import { WORKSPACE_ACTIONS } from "../../workspace/constants";
+import Workspace from "../../workspace/Workspace";
+import { useStyles } from "../styles";
+import WorkspaceList from "./WorkspaceList/WorkspaceList";
 
 export default function SideBar({ children }: { children: Function }) {
 	const classes = useStyles();
@@ -17,6 +21,7 @@ export default function SideBar({ children }: { children: Function }) {
 	}, [data]);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const [viewWorkspace, setViewWorkspace] = React.useState<boolean>(false);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -25,9 +30,14 @@ export default function SideBar({ children }: { children: Function }) {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	const openWorkspaceComponent = () => {
+		setViewWorkspace(true);
+	};
+
 	const menuList = [
 		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
-		{ children: <MenuItem>Add Workspace</MenuItem> },
+		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
@@ -70,6 +80,14 @@ export default function SideBar({ children }: { children: Function }) {
 						<WorkspaceList organisation={data.organisationList[0].id} />
 					)}
 					<List></List>
+					<ApolloProvider client={ApolloClient}>
+						{viewWorkspace ? (
+							<Workspace
+								type={WORKSPACE_ACTIONS.CREATE}
+								close={() => setViewWorkspace(false)}
+							></Workspace>
+						) : null}
+					</ApolloProvider>
 				</div>
 			)}
 		</Box>

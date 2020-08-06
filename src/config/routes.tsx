@@ -31,7 +31,6 @@ function AppRoutes() {
 						</ApolloProvider>
 					}
 				/>
-				<Route path="workspace" element={<Workspace type={WORKSPACE_ACTIONS.CREATE} />} />
 
 				<Route path="" element={<LandingPage />}>
 					<Route path="login" element={<Login />} />

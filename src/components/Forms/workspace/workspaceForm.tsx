@@ -11,7 +11,7 @@ import {
 	Theme,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IWorkspaceFormProps } from "../../../models/workspace/workspaceForm";
 import { WORKSPACE_ACTIONS } from "../../workspace/constants";
@@ -44,9 +44,15 @@ function WorkspaceForm({
 	onCreate,
 	onUpdate,
 	children,
+	Close,
 }: IWorkspaceFormProps & React.PropsWithChildren<IWorkspaceFormProps>) {
 	const classes = useStyles();
 	const [showForm, setShowForm] = useState(true);
+	useEffect(() => {
+		if (!showForm) {
+			Close();
+		}
+	}, [showForm]);
 
 	return (
 		<Dialog fullWidth open={showForm} aria-labelledby="form-dialog-title">
