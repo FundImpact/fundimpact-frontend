@@ -1,12 +1,13 @@
 import React from "react";
 import { Box, Container, Grid, Typography } from "@material-ui/core";
 import { useStyles } from "../../components/Dasboard/styles";
-import SideBar from "../../components/Dasboard/SideBar/SideBar";
-import LeftPanel from "../../components/Dasboard/LeftPanel/LeftPanel";
+import SideBar from "../../components/SideBar/SideBar";
+import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import DashboardCard from "../../components/Dasboard/Cards/DasboardCards";
 import FundStatus from "../../components/Dasboard/Cards/FundStatus/FundStatus";
 import Achievement from "../../components/Dasboard/Cards/Achievement/Achievement";
 import Impact from "../../components/Dasboard/Cards/Impact/Impact";
+import ProjectName from "../../components/Dasboard/ProjectName/ProjectName";
 
 interface IDashboardContainer {
 	left: React.ReactNode;
@@ -68,9 +69,7 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 
 			<Grid item xs md={9} container direction="column">
 				<Grid item>
-					<Box m={2} mb={1}>
-						<Typography variant={"h5"}>Project One</Typography>
-					</Box>
+					<ProjectName />
 				</Grid>
 
 				<Grid item container style={{ flex: 1.5 }}>

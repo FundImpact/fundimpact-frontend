@@ -14,14 +14,25 @@ export const CREATE_PROJECT = gql`
 `;
 
 export const UPDATE_PROJECT = gql`
-	mutation createOrgProject($input: ProjectInput!) {
-		createOrgProject(input: $input) {
+	mutation updateOrgProject($id: ID!, $input: ProjectInput!) {
+		updateOrgProject(id: $id, input: $input) {
 			id
 			name
 			workspace {
 				id
 				name
 			}
+		}
+	}
+`;
+
+export const GET_PROJECT_BY_ID = gql`
+	query getProject($id: ID!) {
+		project(id: $id) {
+			id
+			name
+			short_name
+			description
 		}
 	}
 `;

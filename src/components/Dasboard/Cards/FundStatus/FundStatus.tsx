@@ -26,13 +26,13 @@ export default function FundStatus() {
 	return (
 		<Box mt={1} className={classes.root}>
 			<Grid container spacing={0} direction="row">
-				<Grid xs={5}>
+				<Grid item xs={5}>
 					{funds.map((fund, index) => {
 						if (index === 2) mycolor = theme.palette.secondary.main;
 						if (index === 1) mycolor = theme.palette.primary.main;
 						if (index === 0) mycolor = theme.palette.grey[200];
 						return (
-							<Box m={0} display="inline">
+							<Box m={0} display="inline" key={index}>
 								<Typography variant="subtitle1">
 									<FiberManualRecordIcon
 										className={classes.fundTextIcon}
@@ -44,7 +44,7 @@ export default function FundStatus() {
 						);
 					})}
 				</Grid>
-				<Grid xs={7}>
+				<Grid item xs={7}>
 					<PieCharts />
 				</Grid>
 			</Grid>

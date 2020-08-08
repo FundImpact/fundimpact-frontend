@@ -1,4 +1,4 @@
-import { useStyles } from "../styles";
+import { useStyles } from "../Dasboard/styles";
 import {
 	Avatar,
 	Box,
@@ -14,7 +14,7 @@ import {
 	IconButton,
 } from "@material-ui/core";
 import React from "react";
-import { UserDispatchContext } from "../../../contexts/userContext";
+import { UserDispatchContext } from "../../contexts/userContext";
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
 import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
@@ -70,7 +70,7 @@ export default function LeftPanel() {
 				style={{ marginBottom: theme.spacing(2) }}
 			>
 				<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-					<Avatar src={require("../../../assets/icons/dummy-user.png")} />
+					<Avatar src={require("../../assets/icons/dummy-user.png")} />
 				</Button>
 				<Menu
 					id="simple-menu"

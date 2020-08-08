@@ -9,5 +9,9 @@ export interface IProject {
 }
 
 export type ProjectProps =
-	| { type: PROJECT_ACTIONS.CREATE; workspace: any }
-	| { type: PROJECT_ACTIONS.UPDATE; data: IProject; workspace?: any };
+	| { type: PROJECT_ACTIONS.CREATE; workspaces: { id: number; name: string }[] }
+	| {
+			type: PROJECT_ACTIONS.UPDATE;
+			data: IProject;
+			workspaces: { id: number; name: string }[];
+	  };
