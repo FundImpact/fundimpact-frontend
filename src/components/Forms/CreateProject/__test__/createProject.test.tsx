@@ -11,7 +11,6 @@ import {
 	screen,
 } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import renderer from "react-test-renderer";
 import { IProject } from "../../../../models/project/project";
 import { PROJECT_ACTIONS } from "../../../Project/constants";
 
