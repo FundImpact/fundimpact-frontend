@@ -67,7 +67,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 	const [menuList, setMenuList] = React.useState<any>([
 		{ children: <MenuItem>Edit Workspace </MenuItem> },
 	]);
-	const { data, loading, error } = useQuery(GET_WORKSPACES_BY_ORG, filter);
+	const { data } = useQuery(GET_WORKSPACES_BY_ORG, filter);
 	React.useEffect(() => {
 		if (data && data.orgWorkspaces) {
 			console.log(data);
@@ -123,9 +123,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 									)}
 								</Box>
 							</Box>
-							<List>
-								<ProjectList workspaceId={workspace.id} />
-							</List>
+							<ProjectList workspaceId={workspace.id} />
 							<Divider />
 						</ListItem>
 					);

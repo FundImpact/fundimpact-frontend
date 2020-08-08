@@ -26,15 +26,13 @@ export const UPDATE_PROJECT = gql`
 	}
 `;
 
-export const GET_PROJECT = gql`
-	query {
-		orgProject {
+export const GET_PROJECT_BY_ID = gql`
+	query getProject($id: ID!) {
+		project(id: $id) {
 			id
 			name
-			workspace {
-				id
-				name
-			}
+			short_name
+			description
 		}
 	}
 `;
