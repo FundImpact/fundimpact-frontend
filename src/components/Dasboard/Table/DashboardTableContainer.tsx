@@ -1,5 +1,6 @@
 import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
+import AddButton from "../../Dasboard/AddButton";
 
 import DefaultTable from "../../Table/Table";
 
@@ -51,10 +52,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function DashboardTableContainer() {
 	const tabs = [
-		{ label: "Funds" },
-		{ label: "Deliverables" },
-		{ label: "Impact Indicators" },
-		{ label: "Documents" },
+		{
+			label: "Funds",
+			createButtons: [
+				{ text: "Create Budget" },
+				{ text: "Create Deliverables" },
+				{ text: "Create Impact Indicators" },
+				{ text: "Add Donor" },
+				{ text: "Create Budget Indicators" },
+				{ text: "Track Budget Spend" },
+				{ text: "Report Fund Receipt" },
+			],
+		},
+		{
+			label: "Deliverables",
+			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+		},
+		{
+			label: "Impact Indicators",
+			createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
+		},
+		{ label: "Documents", createButtons: [] },
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
@@ -110,6 +128,7 @@ export default function DashboardTableContainer() {
 						</div>
 					</Box>
 					<DefaultTable />
+					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
 		</Box>
