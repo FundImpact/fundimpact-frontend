@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import Dialog from "./../Dialog";
 import { queries, render, getNodeText, screen, act, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import renderer from "react-test-renderer";
 
 const handleClose = jest.fn();
 
