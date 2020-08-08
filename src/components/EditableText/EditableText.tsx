@@ -58,7 +58,7 @@ export default function EditableText({
 						</Box>
 					)}
 					<Box className={classes.EditIcon}>
-						<IconButton onClick={handleOpenInput}>
+						<IconButton onClick={handleOpenInput} data-testid="editable-edit">
 							<EditOutlinedIcon fontSize="small" />
 						</IconButton>
 					</Box>
@@ -73,18 +73,23 @@ export default function EditableText({
 								label="Enter Name"
 								value={text}
 								onChange={handleTextField}
+								inputProps={{
+									"data-testid": "editable-input",
+								}}
 							/>
 						</Box>
 						<Box display="flex">
 							<IconButton
 								onClick={handleMySubmit}
 								style={{ backgroundColor: "transparent" }}
+								data-testid="editable-save"
 							>
 								<DoneIcon />
 							</IconButton>
 							<IconButton
 								onClick={handleOpenInput}
 								style={{ backgroundColor: "transparent" }}
+								data-testid="editable-cancel"
 							>
 								<CloseIcon />
 							</IconButton>
