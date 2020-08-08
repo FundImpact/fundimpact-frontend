@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function AlertMsg({ severity = "error", msg }: IAlertMsg) {
 	const classes = useStyles();
 	return (
-		<Alert severity={severity} className={classes.alertmsg}>
+		<Alert data-testid="fi-alert" severity={severity} className={classes.alertmsg}>
 			{msg}
 		</Alert>
 	);

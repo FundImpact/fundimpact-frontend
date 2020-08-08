@@ -1,6 +1,6 @@
 import React from "react";
 import { ListItem, ListItemText, List } from "@material-ui/core";
-import { GET_PROJECTS_BY_WORKSPACE } from "../../../../graphql/queries/index";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
 import { useQuery } from "@apollo/client";
 
 export default function ProjectList({ workspaceId }: { workspaceId: any }) {
@@ -15,8 +15,8 @@ export default function ProjectList({ workspaceId }: { workspaceId: any }) {
 		<List>
 			{data &&
 				data.orgProject &&
-				data.orgProject.map((project: any) => (
-					<ListItem button>
+				data.orgProject.map((project: { id: number; name: string }) => (
+					<ListItem button key={project.id}>
 						<ListItemText primary={project.name} />
 					</ListItem>
 				))}

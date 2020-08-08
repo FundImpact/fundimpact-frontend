@@ -1,7 +1,6 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 
 const StyledMenu = withStyles({
 	paper: {
@@ -32,7 +31,7 @@ export default function SimpleMenu({
 	handleClose: () => void;
 	id: string;
 	anchorEl: any;
-	menuList?: object[];
+	menuList?: { children: ReactNode }[];
 }) {
 	return (
 		<div>
@@ -44,10 +43,10 @@ export default function SimpleMenu({
 				onClose={handleClose}
 			>
 				{menuList &&
-					menuList.map((menu: any, index: any) => {
+					menuList.map((menu, index: number) => {
 						return (
-							<div>
-								<MenuItem onClick={handleClose}>{menu.children}</MenuItem>
+							<div onClick={handleClose} key={index}>
+								{menu.children}
 							</div>
 						);
 					})}

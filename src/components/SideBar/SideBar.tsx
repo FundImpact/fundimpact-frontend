@@ -1,15 +1,15 @@
 import React from "react";
 import { Box, Typography, Divider, List, MenuItem } from "@material-ui/core";
-import { useStyles } from "../styles";
+import { useStyles } from "../Dasboard/styles";
 import { useQuery } from "@apollo/client";
-import { GET_ORGANISATIONS } from "../../../graphql/queries";
+import { GET_ORGANISATIONS } from "../../graphql/queries";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
-import SimpleMenu from "../../Menu/Menu";
+import SimpleMenu from "../Menu/Menu";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-export default function SideBar({ children }: { children: Function }) {
+export default function SideBar({ children }: { children?: Function }) {
 	const classes = useStyles();
 	const { loading, error, data } = useQuery(GET_ORGANISATIONS);
 	React.useEffect(() => {

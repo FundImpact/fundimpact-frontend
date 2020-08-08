@@ -1,9 +1,9 @@
-import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
-import React, { useEffect } from "react";
+import { useMutation } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import AlertMsg from "../AlertMessage";
+import Snackbar from "../Snackbar/Snackbar";
 import CreateProject from "../Forms/CreateProject/createProject";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
@@ -11,16 +11,15 @@ import { PROJECT_ACTIONS } from "./constants";
 function getInitialValues(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Testing Project",
-		short_name: "testing short name",
+		name: "",
+		short_name: "",
 		description: "",
-		workspace: props.workspace[0].id,
+		workspace: props.workspaces[0].id,
 	};
 }
 
 function Project(props: ProjectProps) {
 	let initialValues: IProject = getInitialValues(props);
-
 	const [
 		createNewproject,
 		{ data: response, loading: createLoading, error: createError },
@@ -29,7 +28,6 @@ function Project(props: ProjectProps) {
 	useEffect(() => {
 		if (response) {
 			console.log(`Got response `, response);
-			window.location.reload(false);
 		}
 	}, [response]);
 
@@ -44,6 +42,7 @@ function Project(props: ProjectProps) {
 		updateProject,
 		{ data: updateResponse, loading: updateLoading, error: updateError },
 	] = useMutation(UPDATE_PROJECT);
+
 	useEffect(() => {
 		console.log(`Got update response `, updateResponse);
 	}, [updateResponse]);
@@ -59,35 +58,43 @@ function Project(props: ProjectProps) {
 	};
 
 	const validate = (values: IProject) => {
-		console.log(`validate is called`);
+		let errors: Partial<IProject> = {};
+		if (!values.name && !values.name.length) {
+			errors.name = "Name is required";
+		}
+		if (!values.workspace) {
+			errors.workspace = "workspace is required";
+		}
+		return errors;
 	};
 
 	const formState = props.type;
-	const workspace = props.workspace ? props.workspace : null;
+	const workspaces = props.workspaces;
 	return (
 		<React.Fragment>
-			{!response && (
-				<CreateProject
-					{...{
-						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
-						validate,
-						workspace,
-					}}
-				>
-					{props.type === PROJECT_ACTIONS.CREATE && createError ? (
-						<AlertMsg severity="error" msg={"Create Failed"} />
-					) : null}
-					{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
-						<AlertMsg severity="error" msg={"Update Failed"} />
-					) : null}
-				</CreateProject>
+			<CreateProject
+				{...{
+					initialValues,
+					formState,
+					onCreate,
+					onUpdate,
+					clearErrors,
+					validate,
+					workspaces,
+				}}
+			>
+				{props.type === PROJECT_ACTIONS.CREATE && createError ? (
+					<Snackbar severity="error" msg={"Create Failed"} />
+				) : null}
+				{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
+					<Snackbar severity="error" msg={"Update Failed"} />
+				) : null}
+			</CreateProject>
+			{response && response.createOrgProject && response.createOrgProject.name && (
+				<Snackbar severity="success" msg={"Successfully created"} />
 			)}
-			{response && <AlertMsg severity="success" msg={"Successfully created"} />}
 			{createLoading ? <FullScreenLoader /> : null}
+			{updateLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }
