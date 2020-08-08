@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import AlertMsg from "../AlertMessage/AlertMessage";
+import Snackbar from "../Snackbar/Snackbar";
 import CreateProject from "../Forms/CreateProject/createProject";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
@@ -20,7 +20,6 @@ function getInitialValues(props: ProjectProps) {
 
 function Project(props: ProjectProps) {
 	let initialValues: IProject = getInitialValues(props);
-
 	const [
 		createNewproject,
 		{ data: response, loading: createLoading, error: createError },
@@ -29,7 +28,6 @@ function Project(props: ProjectProps) {
 	useEffect(() => {
 		if (response) {
 			console.log(`Got response `, response);
-			window.location.reload(false);
 		}
 	}, [response]);
 
@@ -44,6 +42,7 @@ function Project(props: ProjectProps) {
 		updateProject,
 		{ data: updateResponse, loading: updateLoading, error: updateError },
 	] = useMutation(UPDATE_PROJECT);
+
 	useEffect(() => {
 		console.log(`Got update response `, updateResponse);
 	}, [updateResponse]);
@@ -73,28 +72,29 @@ function Project(props: ProjectProps) {
 	const workspaces = props.workspaces;
 	return (
 		<React.Fragment>
-			{!response && (
-				<CreateProject
-					{...{
-						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
-						validate,
-						workspaces,
-					}}
-				>
-					{props.type === PROJECT_ACTIONS.CREATE && createError ? (
-						<AlertMsg severity="error" msg={"Create Failed"} />
-					) : null}
-					{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
-						<AlertMsg severity="error" msg={"Update Failed"} />
-					) : null}
-				</CreateProject>
+			<CreateProject
+				{...{
+					initialValues,
+					formState,
+					onCreate,
+					onUpdate,
+					clearErrors,
+					validate,
+					workspaces,
+				}}
+			>
+				{props.type === PROJECT_ACTIONS.CREATE && createError ? (
+					<Snackbar severity="error" msg={"Create Failed"} />
+				) : null}
+				{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
+					<Snackbar severity="error" msg={"Update Failed"} />
+				) : null}
+			</CreateProject>
+			{response && response.createOrgProject && response.createOrgProject.name && (
+				<Snackbar severity="success" msg={"Successfully created"} />
 			)}
-			{response && <AlertMsg severity="success" msg={"Successfully created"} />}
 			{createLoading ? <FullScreenLoader /> : null}
+			{updateLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }
