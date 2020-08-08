@@ -42,5 +42,5 @@ export interface ILoginForm {
 
 export interface IAlertMsg {
 	severity?: "success" | "info" | "warning" | "error";
-	msg?: string;
+	msg: string;
 }
