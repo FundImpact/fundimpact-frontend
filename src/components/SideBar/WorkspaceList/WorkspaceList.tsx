@@ -1,18 +1,20 @@
-import React from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { useApolloClient, useQuery } from "@apollo/client";
+import { Box, Divider, MenuItem } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import IconButton from "@material-ui/core/IconButton";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import { Box, Divider, MenuItem } from "@material-ui/core";
-import Project from "../../Project/Project";
-import { useQuery } from "@apollo/client";
-import SimpleMenu from "../../Menu/Menu";
+import React, { useEffect } from "react";
+
+import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries";
+import { IGET_WORKSPACES_BY_ORG } from "../../../models/workspace/queries";
 import FIDialog from "../../Dialog/Dialog";
+import SimpleMenu from "../../Menu/Menu";
 import { PROJECT_ACTIONS } from "../../Project/constants";
+import Project from "../../Project/Project";
 import ProjectList from "../ProjectList/ProjectList";
-import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -67,7 +69,20 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 	const [menuList, setMenuList] = React.useState<any>([
 		{ children: <MenuItem>Edit Workspace </MenuItem> },
 	]);
+	const apolloClient = useApolloClient();
 	const { data } = useQuery(GET_WORKSPACES_BY_ORG, filter);
+	let oldCachedData: IGET_WORKSPACES_BY_ORG | null = null;
+	try {
+		oldCachedData = apolloClient.readQuery<IGET_WORKSPACES_BY_ORG>({
+			query: GET_WORKSPACES_BY_ORG,
+			variables: { ...filter.variables },
+		});
+	} catch (error) {}
+
+	useEffect(() => {
+		console.log(`cache workspaces list`, oldCachedData);
+	}, [oldCachedData]);
+
 	React.useEffect(() => {
 		if (data && data.orgWorkspaces) {
 			console.log(data);
@@ -90,44 +105,46 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 
 	return (
 		<List className={classes.workspace}>
-			{data &&
-				data.orgWorkspaces &&
-				data.orgWorkspaces.map((workspace: { id: number; name: string }, index: number) => {
-					return (
-						<ListItem className={classes.workspaceList} key={workspace.id}>
-							<Box display="flex">
-								<Box flexGrow={1}>
-									<ListItemText
-										primary={workspace.name}
-										className={classes.workspaceListText}
-									/>
-								</Box>
-								<Box>
-									<IconButton
-										className={classes.workspaceEditIcon}
-										aria-controls={`projectmenu${index}`}
-										aria-haspopup="true"
-										onClick={(e) => {
-											handleClick(e, index);
-										}}
-									>
-										<EditOutlinedIcon fontSize="small" />
-									</IconButton>
-									{menuList && (
-										<SimpleMenu
-											handleClose={() => handleClose(index)}
-											id={`projectmenu${index}`}
-											anchorEl={anchorEl[index]}
-											menuList={menuList}
+			{oldCachedData &&
+				oldCachedData.orgWorkspaces &&
+				oldCachedData.orgWorkspaces.map(
+					(workspace: { id: number; name: string }, index: number) => {
+						return (
+							<ListItem className={classes.workspaceList} key={workspace.id}>
+								<Box display="flex">
+									<Box flexGrow={1}>
+										<ListItemText
+											primary={workspace.name}
+											className={classes.workspaceListText}
 										/>
-									)}
+									</Box>
+									<Box>
+										<IconButton
+											className={classes.workspaceEditIcon}
+											aria-controls={`projectmenu${index}`}
+											aria-haspopup="true"
+											onClick={(e) => {
+												handleClick(e, index);
+											}}
+										>
+											<EditOutlinedIcon fontSize="small" />
+										</IconButton>
+										{menuList && (
+											<SimpleMenu
+												handleClose={() => handleClose(index)}
+												id={`projectmenu${index}`}
+												anchorEl={anchorEl[index]}
+												menuList={menuList}
+											/>
+										)}
+									</Box>
 								</Box>
-							</Box>
-							<ProjectList workspaceId={workspace.id} />
-							<Divider />
-						</ListItem>
-					);
-				})}
+								<ProjectList workspaceId={workspace.id} />
+								<Divider />
+							</ListItem>
+						);
+					}
+				)}
 		</List>
 	);
 }

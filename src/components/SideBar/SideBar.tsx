@@ -1,16 +1,20 @@
-import { useQuery } from "@apollo/client";
+import { ApolloProvider, useApolloClient, useQuery } from "@apollo/client";
 import { Box, Divider, List, MenuItem, Typography } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React from "react";
+import React, { useEffect } from "react";
 
+import { client } from "../../config/grapql";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
 import { useStyles } from "../Dasboard/styles";
 import SimpleMenu from "../Menu/Menu";
+import { WORKSPACE_ACTIONS } from "../workspace/constants";
+import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 
 export default function SideBar({ children }: { children?: Function }) {
+	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const { loading, data } = useQuery(GET_ORGANISATIONS);
 	React.useEffect(() => {
@@ -74,17 +78,20 @@ export default function SideBar({ children }: { children?: Function }) {
 					<Divider />
 
 					{data && data.organisationList[0].id && (
-						<WorkspaceList organisation={data.organisationList[0].id} />
+						<ApolloProvider client={apolloClient}>
+							<WorkspaceList organisation={data.organisationList[0].id} />
+						</ApolloProvider>
 					)}
 					<List></List>
-					{/* <ApolloProvider client={ApolloClient}>
+					<ApolloProvider client={apolloClient}>
 						{viewWorkspace ? (
 							<Workspace
+								organisationId={data.organisationList[0].id}
 								type={WORKSPACE_ACTIONS.CREATE}
 								close={() => setViewWorkspace(false)}
 							></Workspace>
 						) : null}
-					</ApolloProvider> */}
+					</ApolloProvider>
 				</div>
 			)}
 		</Box>
