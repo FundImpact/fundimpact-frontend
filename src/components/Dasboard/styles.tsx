@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme: Theme) =>
 		sidePanel: {
 			height: "100vh",
 			background: theme.palette.background.paper,
-			overflow: "scroll",
+			overflowY: "scroll",
 		},
 		card: {
 			boxShadow: "none",

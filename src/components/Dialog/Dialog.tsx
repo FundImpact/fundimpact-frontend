@@ -43,14 +43,26 @@ export default function FIDialog({
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<MuiDialogTitle disableTypography className={classes.closeButton}>
 					<Box flexGrow={1}>
-						{header && <DialogTitle id="form-dialog-title">{header}</DialogTitle>}
+						{header && (
+							<DialogTitle id="form-dialog-title" data-testid="fi-dialog-header">
+								{header}
+							</DialogTitle>
+						)}
 					</Box>
-					<IconButton aria-label="close" onClick={handleClose}>
+					<IconButton
+						aria-label="close"
+						onClick={handleClose}
+						style={{ backgroundColor: "transparent" }}
+					>
 						<CloseIcon />
 					</IconButton>
 				</MuiDialogTitle>
 				<DialogContent>
-					{children && <div className={classes.paper}>{children}</div>}
+					{children && (
+						<div data-testid="fi-dialog-children" className={classes.paper}>
+							{children}
+						</div>
+					)}
 				</DialogContent>
 			</Dialog>
 		</div>
