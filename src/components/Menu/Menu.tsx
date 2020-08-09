@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import Menu, { MenuProps } from "@material-ui/core/Menu";
+import { withStyles } from "@material-ui/core/styles";
+import React, { ReactNode } from "react";
 
 const StyledMenu = withStyles({
 	paper: {
@@ -27,11 +27,13 @@ export default function SimpleMenu({
 	id,
 	anchorEl,
 	menuList,
+	children,
 }: {
 	handleClose: () => void;
 	id: string;
 	anchorEl: any;
 	menuList?: { children: ReactNode }[];
+	children?: any;
 }) {
 	return (
 		<div>
@@ -50,6 +52,7 @@ export default function SimpleMenu({
 							</div>
 						);
 					})}
+				{children ? children : null}
 			</StyledMenu>
 		</div>
 	);
