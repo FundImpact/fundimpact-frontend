@@ -8,7 +8,7 @@ import {
 	IGET_WORKSPACES_BY_ORG,
 	IOrganisationWorkspaces,
 	IUPDATE_WORKSPACE_Response,
-} from "../../models/workspace/queries";
+} from "../../models/workspace/query";
 import { IWorkspace, WorkspaceProps } from "../../models/workspace/workspace";
 import AlertMsg from "../AlertMessage/AlertMessage";
 import WorkspaceForm from "../Forms/workspace/workspaceForm";
