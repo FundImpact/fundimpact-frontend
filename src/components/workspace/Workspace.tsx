@@ -1,10 +1,14 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { client } from "../../config/grapql";
 import { GET_WORKSPACES_BY_ORG } from "../../graphql/queries";
 import { CREATE_WORKSPACE, UPDATE_WORKSPACE } from "../../graphql/queries/workspace";
-import { IGET_WORKSPACES_BY_ORG, IOrganisationWorkspaces } from "../../models/workspace/queries";
+import {
+	IGET_WORKSPACES_BY_ORG,
+	IOrganisationWorkspaces,
+	IUPDATE_WORKSPACE_Response,
+} from "../../models/workspace/queries";
 import { IWorkspace, WorkspaceProps } from "../../models/workspace/workspace";
 import AlertMsg from "../AlertMessage/AlertMessage";
 import WorkspaceForm from "../Forms/workspace/workspaceForm";
@@ -20,6 +24,8 @@ function getInitialValues(props: WorkspaceProps) {
 		organisation: 13, // TODO: Take the organiation id from Context provider
 	};
 }
+
+let formValue: IWorkspace & { __typename?: string };
 
 function Workspace(props: WorkspaceProps) {
 	const [initialValues, setinitialValues] = useState(getInitialValues(props));
@@ -43,8 +49,6 @@ function Workspace(props: WorkspaceProps) {
 	};
 
 	useEffect(() => {
-		console.log(`Created response`, response);
-
 		if (!response) return;
 		setinitialValues({ description: "", name: "", short_name: "", organisation: 1 });
 
@@ -61,15 +65,16 @@ function Workspace(props: WorkspaceProps) {
 	 *
 	 ******************************/
 
-	let [UpdateWorkspace, { error: updateError, data: UpdateResponse }] = useLazyQuery<
-		IWorkspace,
+	let [UpdateWorkspace, { error: updateError, data: UpdateResponse }] = useMutation<
+		IUPDATE_WORKSPACE_Response,
 		{ payload: Omit<IWorkspace, "id"> | null; workspaceID: number }
 	>(UPDATE_WORKSPACE);
 
 	useEffect(() => {
 		if (!UpdateResponse) return setsuccessMessage(undefined);
-		console.log(`workspace UpdateResponse `, UpdateResponse);
-		// return setsuccessMessage("Workspace Updated.");
+
+		updateOrganisationWorkspaceList((formValue as any) as IOrganisationWorkspaces, "UPDATE");
+		return setsuccessMessage("Workspace Updated.");
 	}, [UpdateResponse]);
 
 	useEffect(() => {
@@ -77,17 +82,20 @@ function Workspace(props: WorkspaceProps) {
 		return seterrorMessage("Workspace Updation Failed.");
 	}, [updateError]);
 
-	const onUpdate = (value: IWorkspace) => {
-		UpdateWorkspace({ variables: { payload: value, workspaceID: 4 } });
+	const onUpdate = (value: IWorkspace & { __typename?: string }) => {
+		formValue = { ...value };
+		delete value["__typename"];
+		const workspaceId = +(value.id as number);
+		delete value.id;
+		UpdateWorkspace({ variables: { payload: value, workspaceID: workspaceId } });
 	};
 
 	const clearErrors = () => {
-		console.log(`Clear Errors is called`);
+		if (!errorMessage) return;
+		seterrorMessage(undefined);
 	};
 
-	const validate = () => {
-		// console.log(`validate is called`);
-	};
+	const validate = () => {};
 
 	const formState = props.type;
 
@@ -98,27 +106,52 @@ function Workspace(props: WorkspaceProps) {
 	useEffect(() => {
 		const newWorkspace = response ? (response as any)["createWorkspace"]["workspace"] : null;
 		if (!newWorkspace) return;
-		updateOrganisationWorkspaceList(newWorkspace);
+		updateOrganisationWorkspaceList(newWorkspace, "INSERT");
 	}, [response, client]);
 
-	const updateOrganisationWorkspaceList = (newWorkspace: IOrganisationWorkspaces) => {
+	/**
+	 *
+	 * @description When a new workspace is created or an existing workspace is update,
+	 * this method will update the workspace list in the cache. To update the existing
+	 * workspace, pass action value as UPDATE, however, if the workpsace id is not found,
+	 * then no changes will be made to the cache.
+	 *
+	 */
+	const updateOrganisationWorkspaceList = (
+		newWorkspace: IOrganisationWorkspaces,
+		action: "UPDATE" | "INSERT"
+	) => {
 		// Get the old data from Apollo Cache.
 		const oldCachedData = client.readQuery<IGET_WORKSPACES_BY_ORG>({
 			query: GET_WORKSPACES_BY_ORG,
-			variables: { filter: { organisation: props.organisationId } },
+			variables: { filter: { organisation: props.organisationId.toString() } },
 		});
 
-		const newOrgWorkspaceList = oldCachedData
+		let updatedWorkspaces = oldCachedData
 			? {
 					...oldCachedData,
-					orgWorkspaces: [...oldCachedData.orgWorkspaces, newWorkspace],
+					orgWorkspaces: [...oldCachedData.orgWorkspaces],
 			  }
-			: { orgWorkspaces: [newWorkspace] };
+			: { orgWorkspaces: [] };
+
+		if (action === "UPDATE") {
+			const workspaceIndexFound = updatedWorkspaces.orgWorkspaces.findIndex(
+				(workspace) => workspace.id === newWorkspace.id
+			);
+			if (workspaceIndexFound > -1) {
+				updatedWorkspaces.orgWorkspaces[workspaceIndexFound] = { ...newWorkspace };
+			}
+		} else {
+			updatedWorkspaces = {
+				...updatedWorkspaces,
+				orgWorkspaces: [...updatedWorkspaces.orgWorkspaces, newWorkspace],
+			};
+		}
 
 		// Write new workspace list to cache.
-		client.writeQuery({
+		client.cache.writeQuery({
 			query: GET_WORKSPACES_BY_ORG,
-			data: newOrgWorkspaceList,
+			data: updatedWorkspaces,
 		});
 	};
 

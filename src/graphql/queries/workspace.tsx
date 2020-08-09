@@ -17,12 +17,16 @@ export const CREATE_WORKSPACE = gql`
 `;
 
 export const UPDATE_WORKSPACE = gql`
-	mutation UpdateWorkspace($workspaceID: ID, $payload: Input) {
-		createWorkspace(input: $payload) {
-			id
-			name
-			short_name
-			organisation
+	mutation UpdateWorkspace($workspaceID: ID!, $payload: editWorkspaceInput) {
+		updateWorkspace(input: { where: { id: $workspaceID }, data: $payload }) {
+			workspace {
+				id
+				name
+				organisation {
+					name
+					id
+				}
+			}
 		}
 	}
 `;
