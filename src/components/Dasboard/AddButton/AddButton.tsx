@@ -7,6 +7,13 @@ import SlidingButton from "./SlidingButton";
 
 interface CreateButton {
 	text: string;
+	dialog?: ({
+		open,
+		handleClose,
+	}: {
+		open: boolean;
+		handleClose: () => void;
+	}) => React.ReactNode | void;
 }
 
 function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
@@ -40,7 +47,14 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 					alignItems="flex-end"
 				>
 					{createButtons.map((createButton, index) => {
-						return <SlidingButton key={index}>{createButton.text}</SlidingButton>;
+						return (
+							<SlidingButton
+								dialog={createButton.dialog}
+								key={index}
+							>
+								{createButton.text}
+							</SlidingButton>
+						);
 					})}
 				</Grid>
 			</Slide>

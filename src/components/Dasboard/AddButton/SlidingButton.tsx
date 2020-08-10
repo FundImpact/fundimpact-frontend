@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, makeStyles, createStyles, Theme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -10,20 +10,45 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function SlidingButton({ children }: { children: React.ReactNode | null }) {
+function SlidingButton({
+	children,
+	dialog,
+}: {
+	children: React.ReactNode | null;
+	dialog?: ({
+		open,
+		handleClose,
+	}: {
+		open: boolean;
+		handleClose: () => void;
+	}) => React.ReactNode | void;
+}) {
 	const classes = useStyles();
+	const [openDialog, setOpenDialog] = useState(false);
 
 	return (
-		<Button
-			className={classes.button}
-			variant="contained"
-			size="small"
-			color="primary"
-			disableElevation
-			disableRipple
-		>
-			{children}
-		</Button>
+		<>
+			{dialog &&
+				dialog({
+					open: openDialog,
+					handleClose: () => {
+						setOpenDialog(false);
+					},
+				})}
+			<Button
+				className={classes.button}
+				variant="contained"
+				size="small"
+				color="primary"
+				disableElevation
+				disableRipple
+				onClick={() => {
+					setOpenDialog(true);
+				}}
+			>
+				{children}
+			</Button>
+		</>
 	);
 }
 
