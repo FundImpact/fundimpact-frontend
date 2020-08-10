@@ -10,6 +10,7 @@ export const GET_ORGANISATIONS = gql`
 	}
 `;
 
+// TODO: The fields for workspaces must match with the Create Workspace Mutation
 export const GET_WORKSPACES_BY_ORG = gql`
 	query getWorkspacesByOrganisation($filter: JSON) {
 		orgWorkspaces(where: $filter) {
