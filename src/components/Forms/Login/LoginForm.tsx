@@ -85,22 +85,6 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 						>
 							Submit
 						</Button>
-						{"isValiud: " + formik.isValid}
-						<span data-testid="values">
-							Email: {formik.values.email}, Status: {formik.status} Errors:{" "}
-							{formik.errors.email}
-						</span>
-						{/* <button type="submit" disabled={formik.isValid}>
-							MySubmit
-						</button> */}
-						{/* <Box mt={4} textAlign="center">
-								<Link
-									className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-									to={"/forgotPassword"}
-								>
-									Forgot Password
-								</Link>
-							</Box> */}
 					</Form>
 				);
 			}}
