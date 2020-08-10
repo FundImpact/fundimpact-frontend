@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import Slide from "@material-ui/core/Slide";
-import { Grid } from "@material-ui/core";
+import { Grid, ClickAwayListener } from "@material-ui/core";
 import SlidingButton from "./SlidingButton";
 
 interface CreateButton {
@@ -14,18 +14,21 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 
 	return (
 		<>
-			<Fab
-				style={{ position: "fixed", right: "0px", bottom: "10px" }}
-				color="primary"
-				aria-label="add"
-				onClick={() => {
-					setOpenSlider(true);
-				}}
-				disableRipple
-			>
-				<AddIcon />
-			</Fab>
-			<Slide direction="up" in={openSlider} mountOnEnter unmountOnExit>
+			<ClickAwayListener onClickAway={() => setOpenSlider(false)}>
+				<Fab
+					style={{ position: "fixed", right: "0px", bottom: "10px" }}
+					data-testid="add-button"
+					color="primary"
+					aria-label="add"
+					onClick={() => {
+						setOpenSlider((open) => !open);
+					}}
+					disableRipple
+				>
+					<AddIcon />
+				</Fab>
+			</ClickAwayListener>
+			<Slide direction="up" in={openSlider}>
 				<Grid
 					style={{
 						position: "fixed",
@@ -37,11 +40,7 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 					alignItems="flex-end"
 				>
 					{createButtons.map((createButton, index) => {
-						return (
-							<SlidingButton key={index} onClickAway={() => setOpenSlider(false)}>
-								{createButton.text}
-							</SlidingButton>
-						);
+						return <SlidingButton key={index}>{createButton.text}</SlidingButton>;
 					})}
 				</Grid>
 			</Slide>
