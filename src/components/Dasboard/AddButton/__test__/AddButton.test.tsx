@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	act,
-	fireEvent,
-	queries,
-	render,
-	RenderResult
-} from "@testing-library/react";
+import { act, fireEvent, queries, render, RenderResult, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import AddButton from "../AddButton";
 
@@ -52,5 +46,22 @@ describe("Add Button", () => {
 			let buttonFound = addButton.getByText(createButton.text);
 			expect(buttonFound).toBeVisible();
 		});
+	});
+
+	test("Various buttons should visible on clicking add button", async () => {
+		fireEvent.click(addButton.getByTestId("add-button"));
+		await wait(() => {
+			let slider = addButton.getByTestId("sliding-buttons");
+			expect(slider).toBeVisible();
+		});
+		fireEvent.click(addButton.getByTestId("add-button"));
+
+		await wait(() => {
+			let slider = addButton.getByTestId("sliding-buttons");
+			expect(slider).not.toBeVisible();
+		});
+
+		let slider = addButton.getByTestId("sliding-buttons");
+		expect(slider).not.toBeVisible();
 	});
 });

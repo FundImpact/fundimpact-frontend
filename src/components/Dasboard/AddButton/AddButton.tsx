@@ -28,7 +28,7 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 					<AddIcon />
 				</Fab>
 			</ClickAwayListener>
-			<Slide direction="up" in={openSlider}>
+			<Slide data-testid="sliding-buttons" direction="up" in={openSlider}>
 				<Grid
 					style={{
 						position: "fixed",
