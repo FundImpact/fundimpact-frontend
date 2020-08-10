@@ -35,6 +35,7 @@ export default function EditableText({
 	const [openInput, setOpenInput] = useState<boolean>(false);
 
 	const handleOpenInput = () => {
+		setText(textValue);
 		setOpenInput(!openInput);
 	};
 	const handleTextField = (event: any) => {
