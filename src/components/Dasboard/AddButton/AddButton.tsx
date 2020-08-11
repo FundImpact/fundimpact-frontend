@@ -7,6 +7,13 @@ import SlidingButton from "./SlidingButton";
 
 interface CreateButton {
 	text: string;
+	dialog?: ({
+		open,
+		handleClose,
+	}: {
+		open: boolean;
+		handleClose: () => void;
+	}) => React.ReactNode | void;
 }
 
 function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
@@ -16,7 +23,7 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 		<>
 			<ClickAwayListener onClickAway={() => setOpenSlider(false)}>
 				<Fab
-					style={{ position: "fixed", right: "0px", bottom: "10px" }}
+					style={{ position: "fixed", right: "10px", bottom: "10px" }}
 					data-testid="add-button"
 					color="primary"
 					aria-label="add"
@@ -32,7 +39,7 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 				<Grid
 					style={{
 						position: "fixed",
-						right: "0px",
+						right: "10px",
 						bottom: "77px",
 					}}
 					container
@@ -40,7 +47,14 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 					alignItems="flex-end"
 				>
 					{createButtons.map((createButton, index) => {
-						return <SlidingButton key={index}>{createButton.text}</SlidingButton>;
+						return (
+							<SlidingButton
+								dialog={createButton.dialog}
+								key={index}
+							>
+								{createButton.text}
+							</SlidingButton>
+						);
 					})}
 				</Grid>
 			</Slide>

@@ -1,6 +1,7 @@
 import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import AddButton from "../../Dasboard/AddButton";
+import CreateBudgetDialog from "../CreateBudgetDialog";
 
 import DefaultTable from "../../Table/Table";
 
@@ -55,7 +56,12 @@ export default function DashboardTableContainer() {
 		{
 			label: "Funds",
 			createButtons: [
-				{ text: "Create Budget" },
+				{
+					text: "Create Budget",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<CreateBudgetDialog open={open} handleClose={handleClose} />
+					),
+				},
 				{ text: "Create Deliverables" },
 				{ text: "Create Impact Indicators" },
 				{ text: "Add Donor" },
