@@ -4,7 +4,9 @@ import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
 import Deliverable from "../../Deliverable/Deliverable";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DefaultTable from "../../Table/Table";
+import FundsTable from "../../Table/Funds";
+import ImpactsTable from "../../Table/Impacts";
+import DeliverablesTable from "../../Table/Deliverable";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -56,6 +58,7 @@ export default function DashboardTableContainer() {
 	const tabs = [
 		{
 			label: "Funds",
+			table: <FundsTable />,
 			createButtons: [
 				{
 					text: "Create Budget",
@@ -83,10 +86,12 @@ export default function DashboardTableContainer() {
 		},
 		{
 			label: "Deliverables",
+			table: <DeliverablesTable />,
 			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
 		},
 		{
 			label: "Impact Indicators",
+			table: <ImpactsTable />,
 			createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
 		},
 		{ label: "Documents", createButtons: [] },
@@ -144,7 +149,7 @@ export default function DashboardTableContainer() {
 							</Button>
 						</div>
 					</Box>
-					<DefaultTable />
+					{tab.table && tab.table}
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}

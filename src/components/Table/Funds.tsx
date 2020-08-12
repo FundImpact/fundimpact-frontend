@@ -49,7 +49,7 @@ const rows = [
 
 const tableHeading = [
 	{ label: "S.no" },
-	{ label: "Particular" },
+	{ label: "Funds" },
 	{ label: "Head" },
 	{ label: "Sub Head" },
 	{ label: "Budget" },
@@ -58,7 +58,7 @@ const tableHeading = [
 	{ label: "" },
 ];
 
-export default function DefaultTable() {
+export default function FundsTable() {
 	// let tt: TableCellProps;
 	// tt.
 	const classes = useStyles();
