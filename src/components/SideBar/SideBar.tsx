@@ -29,7 +29,7 @@ export default function SideBar({ children }: { children?: Function }) {
 				dispatch(setOrganisation(organizationList[0]));
 			}
 		}
-	}, [data]);
+	}, [data, dispatch]);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [viewWorkspace, setViewWorkspace] = React.useState<boolean>(false);

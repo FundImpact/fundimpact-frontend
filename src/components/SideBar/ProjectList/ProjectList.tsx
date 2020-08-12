@@ -14,16 +14,22 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function ProjectList({ workspaceId }: { workspaceId: any }) {
+export default function ProjectList({
+	workspaceId,
+	projectIndex,
+}: {
+	workspaceId: any;
+	projectIndex: number;
+}) {
 	const classes = useStyles();
 	const dispatch = useDashboardDispatch();
 	const filter: any = { variables: { filter: { workspace: workspaceId } } };
 	const { data } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
 	React.useEffect(() => {
-		if (data) {
+		if (data && projectIndex === 0) {
 			dispatch(setProject(data.orgProject[0]));
 		}
-	}, [data]);
+	}, [data, dispatch, projectIndex]);
 	return (
 		<List>
 			{data &&

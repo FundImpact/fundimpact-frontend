@@ -98,6 +98,7 @@ export default function WorkspaceList({ organization }: { organization: any }) {
 		if (data && data.orgWorkspaces) {
 			let array = [...menuList, { children: <AddProject workspaces={data.orgWorkspaces} /> }];
 			setMenuList(array);
+			dispatch(setActiveWorkSpace(data.orgWorkspaces[0]));
 		}
 	}, [data]);
 
@@ -167,7 +168,7 @@ export default function WorkspaceList({ organization }: { organization: any }) {
 											)}
 										</Box>
 									</Box>
-									<ProjectList workspaceId={workspace.id} />
+									<ProjectList workspaceId={workspace.id} projectIndex={index} />
 									<Divider />
 								</ListItem>
 							);
