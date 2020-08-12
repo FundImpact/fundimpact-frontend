@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Snackbar from "./../Snackbar";
 import { render } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "../../Forms/Project/__test__/node_modules/@testing-library/jest-dom/extend-expect";
 
 it("renders without crashing", () => {
 	const div = document.createElement("div");

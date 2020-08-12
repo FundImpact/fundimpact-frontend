@@ -9,9 +9,11 @@ export interface IDeliverable {
 }
 
 export type DeliverableProps =
-	| { type: DELIVERABLE_ACTIONS.CREATE; project: number }
+	| { type: DELIVERABLE_ACTIONS.CREATE; project: number; open: boolean; handleClose: () => void }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverable;
 			project: number;
+			open: boolean;
+			handleClose: () => void;
 	  };

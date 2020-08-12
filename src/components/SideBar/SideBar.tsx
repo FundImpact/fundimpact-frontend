@@ -40,6 +40,7 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
+	console.log(data);
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			{loading ? (
@@ -51,11 +52,11 @@ export default function SideBar({ children }: { children?: Function }) {
 				<div>
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1}>
-							{
+							{data && data.organizationList[0].name && (
 								<Typography color="primary" gutterBottom variant="h6">
-									{data.organisationList[0].name}
+									{data.organizationList[0].name}
 								</Typography>
-							}
+							)}
 						</Box>
 						<Box>
 							<IconButton
@@ -77,16 +78,16 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
-					{data && data.organisationList[0].id && (
+					{data && data.organizationList[0].id && (
 						<ApolloProvider client={apolloClient}>
-							<WorkspaceList organisation={data.organisationList[0].id} />
+							<WorkspaceList organization={data.organizationList[0].id} />
 						</ApolloProvider>
 					)}
 					<List></List>
 					<ApolloProvider client={apolloClient}>
 						{viewWorkspace ? (
 							<Workspace
-								organisationId={data.organisationList[0].id}
+								organisationId={data.organizationList[0].id}
 								type={WORKSPACE_ACTIONS.CREATE}
 								close={() => setViewWorkspace(false)}
 							></Workspace>

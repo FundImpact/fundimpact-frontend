@@ -8,10 +8,16 @@ import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
 
 const OrgMock = [
 	{
-		__typename: "Organisation",
+		__typename: "OrganizationList",
 		id: "13",
 		name: "TSERIES",
-		short_name: null,
+		short_name: "TS",
+		organization_registration_type: {
+			__typename: "OrganizationRegistrationType",
+			id: "1",
+			reg_type: "Trusts",
+		},
+		account: { __typename: "Account", id: "2", name: "rahul@gmail.com" },
 	},
 ];
 
@@ -19,12 +25,12 @@ const WSMock = [
 	{
 		id: "5",
 		name: "INSTAGRAM",
-		organisation: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "OrganizationList", id: "13", name: "TSERIES" },
 	},
 	{
 		id: "13",
 		name: "FACEBOOK",
-		organisation: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "OrganizationList", id: "13", name: "TSERIES" },
 	},
 ];
 
@@ -47,12 +53,12 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 		const mocks = [
 			{
 				request: { query: GET_ORGANISATIONS },
-				result: { data: { organisationList: OrgMock } },
+				result: { data: { organizationList: OrgMock } },
 			},
 			{
 				request: {
 					query: GET_WORKSPACES_BY_ORG,
-					variables: { filter: { organisation: "13" } },
+					variables: { filter: { organization: "13" } },
 				},
 				result: { data: { orgWorkspaces: WSMock } },
 			},
@@ -71,7 +77,7 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 				result: { data: { orgProject: ProjectMockTwo } },
 			},
 		];
-		const { getByText } = await renderApollo(<SideBar />, {
+		const { getByText } = renderApollo(<SideBar />, {
 			mocks,
 			resolvers: {},
 		});

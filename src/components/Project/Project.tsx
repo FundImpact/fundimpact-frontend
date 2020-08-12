@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import Snackbar from "../Snackbar/Snackbar";
-import CreateProject from "../Forms/CreateProject/createProject";
+import CreateProject from "../Forms/Project/createProject";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
+import ProjectForm from "../Forms/Project/projectForm";
 
 function getInitialValues(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -20,6 +21,9 @@ function getInitialValues(props: ProjectProps) {
 
 function Project(props: ProjectProps) {
 	let initialValues: IProject = getInitialValues(props);
+	const [successMessage, setSuccessMessage] = useState<string>("");
+	const [errorMessage, setErrorMessage] = useState<string>("");
+
 	const [
 		createNewproject,
 		{ data: response, loading: createLoading, error: createError },
@@ -28,14 +32,14 @@ function Project(props: ProjectProps) {
 	useEffect(() => {
 		if (response) {
 			console.log(`Got response `, response);
+			setSuccessMessage("Project created successfully !");
 		}
 	}, [response]);
 
-	const onCreate = (value: IProject) => {
+	const onCreate = async (value: IProject) => {
 		console.log(`on Created is called with: `, value);
-		createNewproject({ variables: { input: value } });
-
-		console.log("seeting loading to true");
+		await createNewproject({ variables: { input: value } });
+		props.handleClose();
 	};
 
 	const [
@@ -70,9 +74,11 @@ function Project(props: ProjectProps) {
 
 	const formState = props.type;
 	const workspaces = props.workspaces;
+	const formIsOpen = props.open;
+	const handleFormOpen = props.handleClose;
 	return (
-		<React.Fragment>
-			<CreateProject
+		<>
+			<ProjectForm
 				{...{
 					initialValues,
 					formState,
@@ -80,6 +86,8 @@ function Project(props: ProjectProps) {
 					onUpdate,
 					clearErrors,
 					validate,
+					formIsOpen,
+					handleFormOpen,
 					workspaces,
 				}}
 			>
@@ -89,13 +97,11 @@ function Project(props: ProjectProps) {
 				{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
 					<Snackbar severity="error" msg={"Update Failed"} />
 				) : null}
-			</CreateProject>
-			{response && response.createOrgProject && response.createOrgProject.name && (
-				<Snackbar severity="success" msg={"Successfully created"} />
-			)}
+			</ProjectForm>
+			{successMessage ? <Snackbar severity="success" msg={successMessage} /> : null}
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
-		</React.Fragment>
+		</>
 	);
 }
 

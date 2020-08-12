@@ -7,7 +7,7 @@ export const CREATE_WORKSPACE = gql`
 				id
 				name
 				short_name
-				organisation {
+				organization {
 					id
 					name
 				}
@@ -22,7 +22,7 @@ export const UPDATE_WORKSPACE = gql`
 			workspace {
 				id
 				name
-				organisation {
+				organization {
 					name
 					id
 				}

@@ -7,8 +7,6 @@ import DashboardTableContainer from "../components/Dasboard/Table/DashboardTable
 import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
-import Deliverable from "../components/Deliverable/Deliverable";
-import { DELIVERABLE_ACTIONS } from "../components/Deliverable/constants";
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
 const Login = React.lazy(() => import("../pages/Login/Login"));
 const DashboardContainer = React.lazy(() => import("../pages/Dashboard/DashboardContainer"));
@@ -37,14 +35,6 @@ function AppRoutes() {
 					<Route path="login" element={<Login />} />
 					<Route path="signup/:id" element={<SignUp />} />
 					<Route path="signup" element={<SignUp />} />
-					<Route
-						path="deliverable"
-						element={
-							<div>
-								<Deliverable type={DELIVERABLE_ACTIONS.CREATE} project={4} />
-							</div>
-						}
-					/>
 				</Route>
 			</Routes>
 		</BrowserRouter>

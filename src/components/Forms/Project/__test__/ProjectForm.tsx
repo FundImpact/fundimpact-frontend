@@ -1,15 +1,6 @@
 import React, { Children } from "react";
-import ReactDOM from "react-dom";
-import CreateProject from "./../createProject";
-import {
-	act,
-	fireEvent,
-	queries,
-	render,
-	RenderResult,
-	within,
-	screen,
-} from "@testing-library/react";
+import ProjectForm from "../projectForm";
+import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { IProject } from "../../../../models/project/project";
 import { PROJECT_ACTIONS } from "../../../Project/constants";
@@ -24,6 +15,8 @@ const intialFormValue: IProject = {
 const onCreateMock = jest.fn();
 const onUpdateMock = jest.fn();
 const clearErrors = jest.fn();
+const handleFormOpen = jest.fn();
+const formIsOpen = true;
 const validate = jest.fn((values: IProject) => {
 	let errors: Partial<IProject> = {};
 	if (!values.name && !values.name.length) {
@@ -46,7 +39,7 @@ let createForm: RenderResult<typeof queries>;
 beforeEach(() => {
 	act(() => {
 		createForm = render(
-			<CreateProject
+			<ProjectForm
 				clearErrors={clearErrors}
 				initialValues={intialFormValue}
 				validate={validate}
@@ -54,6 +47,8 @@ beforeEach(() => {
 				onCreate={onCreateMock}
 				onUpdate={onUpdateMock}
 				workspaces={workspaces}
+				handleFormOpen={handleFormOpen}
+				formIsOpen={formIsOpen}
 			/>
 		);
 	});

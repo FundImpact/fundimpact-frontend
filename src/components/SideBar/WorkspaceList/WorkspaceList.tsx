@@ -42,36 +42,14 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function AddProject({ workspaces }: { workspaces: { id: number; name: string }[] }) {
-	const [open, setOpen] = React.useState(false);
-	const handleModalOpen = () => {
-		setOpen(true);
-	};
-	const handleModalClose = () => {
-		setOpen(false);
-	};
-	return (
-		<div>
-			<MenuItem onClick={handleModalOpen}>Add project</MenuItem>
-			{open && (
-				<FIDialog
-					open={open}
-					handleClose={() => handleModalClose()}
-					header={"Create Project"}
-					children={<Project type={PROJECT_ACTIONS.CREATE} workspaces={workspaces} />}
-				/>
-			)}
-		</div>
-	);
-}
-
-export default function WorkspaceList({ organisation }: { organisation: any }) {
+export default function WorkspaceList({ organization }: { organization: number }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
-	const filter: any = { variables: { filter: { organisation } } };
-	const [menuList, setMenuList] = React.useState<any>([]);
-
+	const filter: { variables: { filter: { organization: number } } } = {
+		variables: { filter: { organization } },
+	};
+	const [projectDialogOpen, setProjectDialogOpen] = useState<boolean>(false);
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
 
 	const { data } = useQuery(GET_WORKSPACES_BY_ORG, filter);
@@ -90,13 +68,6 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 			true
 		);
 	} catch (error) {}
-
-	React.useEffect(() => {
-		if (data && data.orgWorkspaces) {
-			let array = [...menuList, { children: <AddProject workspaces={data.orgWorkspaces} /> }];
-			setMenuList(array);
-		}
-	}, [data]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
 		let array = [...anchorEl];
@@ -140,30 +111,33 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 											>
 												<EditOutlinedIcon fontSize="small" />
 											</IconButton>
-											{menuList && (
-												<SimpleMenu
-													handleClose={() => handleClose(index)}
-													id={`projectmenu${index}`}
-													anchorEl={anchorEl[index]}
-													menuList={menuList}
+											<SimpleMenu
+												handleClose={() => handleClose(index)}
+												id={`projectmenu${index}`}
+												anchorEl={anchorEl[index]}
+											>
+												<MenuItem
+													onClick={() => {
+														const workpsaceToEdit = {
+															...workspace,
+															organization:
+																workspace["organization"]["id"],
+														};
+														seteditWorkspace(workpsaceToEdit as any);
+														handleClose(index);
+													}}
 												>
-													<MenuItem
-														onClick={() => {
-															const workpsaceToEdit = {
-																...workspace,
-																organisation:
-																	workspace["organisation"]["id"],
-															};
-															seteditWorkspace(
-																workpsaceToEdit as any
-															);
-															handleClose(index);
-														}}
-													>
-														Edit Workspace{" "}
-													</MenuItem>
-												</SimpleMenu>
-											)}
+													Edit Workspace{" "}
+												</MenuItem>
+												<MenuItem
+													onClick={() => {
+														setProjectDialogOpen(true);
+														handleClose(index);
+													}}
+												>
+													Add Project
+												</MenuItem>
+											</SimpleMenu>
 										</Box>
 									</Box>
 									<ProjectList workspaceId={workspace.id} />
@@ -173,7 +147,14 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 						}
 					)}
 			</List>
-
+			{projectDialogOpen && oldCachedData && oldCachedData.orgWorkspaces ? (
+				<Project
+					type={PROJECT_ACTIONS.CREATE}
+					workspaces={oldCachedData.orgWorkspaces}
+					open={projectDialogOpen}
+					handleClose={() => setProjectDialogOpen(false)}
+				/>
+			) : null}
 			<ApolloProvider client={apolloClient}>
 				{editWorkspace ? (
 					// TODO: Need to changed organisation id to dynamic

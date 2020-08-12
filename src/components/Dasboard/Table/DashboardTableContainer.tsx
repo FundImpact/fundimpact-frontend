@@ -2,7 +2,8 @@ import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
-
+import Deliverable from "../../Deliverable/Deliverable";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DefaultTable from "../../Table/Table";
 
 interface TabPanelProps {
@@ -62,7 +63,17 @@ export default function DashboardTableContainer() {
 						<CreateBudgetDialog open={open} handleClose={handleClose} />
 					),
 				},
-				{ text: "Create Deliverables" },
+				{
+					text: "Create Deliverables",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<Deliverable
+							type={DELIVERABLE_ACTIONS.CREATE}
+							project={1}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
 				{ text: "Create Impact Indicators" },
 				{ text: "Add Donor" },
 				{ text: "Create Budget Indicators" },

@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-// import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
 import Snackbar from "../Snackbar/Snackbar";
 import DeliverableForm from "../Forms/Deliverable/Deliverable";
@@ -47,7 +46,8 @@ function Deliverable(props: DeliverableProps) {
 
 	const formState = props.type;
 	const project = props.project;
-
+	const formIsOpen = props.open;
+	const handleFormOpen = props.handleClose;
 	return (
 		<React.Fragment>
 			<DeliverableForm
@@ -59,6 +59,8 @@ function Deliverable(props: DeliverableProps) {
 					clearErrors,
 					validate,
 					project,
+					formIsOpen,
+					handleFormOpen,
 				}}
 			>
 				{/* {props.type === DELIVERABLE_ACTIONS.CREATE && createError ? (

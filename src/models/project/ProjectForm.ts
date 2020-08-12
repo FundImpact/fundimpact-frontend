@@ -8,5 +8,7 @@ export interface IProjectFormProps {
 	clearErrors: any;
 	validate: any;
 	formState: PROJECT_ACTIONS.CREATE | PROJECT_ACTIONS.UPDATE;
+	handleFormOpen: () => void;
+	formIsOpen: boolean;
 	workspaces: { id: number; name: string }[];
 }

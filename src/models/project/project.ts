@@ -9,9 +9,16 @@ export interface IProject {
 }
 
 export type ProjectProps =
-	| { type: PROJECT_ACTIONS.CREATE; workspaces: { id: number; name: string }[] }
+	| {
+			type: PROJECT_ACTIONS.CREATE;
+			workspaces: { id: number; name: string }[];
+			open: boolean;
+			handleClose: () => void;
+	  }
 	| {
 			type: PROJECT_ACTIONS.UPDATE;
 			data: IProject;
 			workspaces: { id: number; name: string }[];
+			open: boolean;
+			handleClose: () => void;
 	  };

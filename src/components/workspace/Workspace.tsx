@@ -21,7 +21,7 @@ function getInitialValues(props: WorkspaceProps) {
 		name: "Testing Workspace",
 		short_name: "testing short name",
 		description: "some description",
-		organisation: 13, // TODO: Take the organiation id from Context provider
+		organization: 2, // TODO: Take the organiation id from Context provider
 	};
 }
 
@@ -50,7 +50,7 @@ function Workspace(props: WorkspaceProps) {
 
 	useEffect(() => {
 		if (!response) return;
-		setinitialValues({ description: "", name: "", short_name: "", organisation: 1 });
+		setinitialValues({ description: "", name: "", short_name: "", organization: 1 });
 
 		setsuccessMessage("Workspace Created.");
 	}, [response]);

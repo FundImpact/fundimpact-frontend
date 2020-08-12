@@ -12,8 +12,9 @@ import {
 	Card,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
-
+import React, { useState } from "react";
+import Slide from "@material-ui/core/Slide";
+import { TransitionProps } from "@material-ui/core/transitions";
 import { IDeliverableFormProps } from "../../../models/deliverable/deliverableForm";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 
@@ -37,12 +38,19 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		leftBox: {
 			width: "100%",
-			backgroundColor: "rgb(238, 238, 238)",
+			backgroundColor: "#e3f2fd",
 			height: "40%",
 			marginTop: theme.spacing(1),
 		},
 	})
 );
+
+const Transition = React.forwardRef(function Transition(
+	props: TransitionProps & { children?: React.ReactElement<any, any> },
+	ref: React.Ref<unknown>
+) {
+	return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function DeliverableForm({
 	clearErrors,
@@ -52,12 +60,19 @@ function DeliverableForm({
 	onCreate,
 	onUpdate,
 	children,
+	formIsOpen,
+	handleFormOpen,
 }: IDeliverableFormProps & React.PropsWithChildren<IDeliverableFormProps>) {
 	const classes = useStyles();
-	const [showForm, setShowForm] = useState(true);
 
 	return (
-		<Dialog fullWidth open={showForm} aria-labelledby="form-dialog-title" maxWidth="md">
+		<Dialog
+			fullWidth
+			open={formIsOpen}
+			aria-labelledby="form-dialog-title"
+			maxWidth="md"
+			TransitionComponent={Transition}
+		>
 			<DialogContent>
 				<Box
 					mx="auto"
@@ -74,12 +89,12 @@ function DeliverableForm({
 								Physical addresses of your organisation like headquarter branch etc
 							</Typography>
 							<Card elevation={0} className={classes.leftBox}>
-								<Box mt={2} ml={1}>
+								<Box mt={2} ml={3}>
 									<Typography variant="subtitle1" gutterBottom color="primary">
 										WORKSPACE 1
 									</Typography>
 								</Box>
-								<Box m={1}>
+								<Box m={1} ml={3}>
 									<Typography variant="body2" gutterBottom color="textPrimary">
 										PROJECT 1
 									</Typography>
@@ -102,7 +117,7 @@ function DeliverableForm({
 								{(formik) => {
 									return (
 										<Form
-											id="workspace_form"
+											id="deliverable_form"
 											className={classes.root}
 											autoComplete="off"
 										>
@@ -126,7 +141,7 @@ function DeliverableForm({
 												value={formik.values.code}
 												error={!!formik.errors.code}
 												onChange={formik.handleChange}
-												label="Code"
+												label="Deliverable Code"
 												required
 												name="code"
 												type="text"
@@ -150,11 +165,11 @@ function DeliverableForm({
 									);
 								}}
 							</Formik>
-							<Box display="flex">
+							<Box display="flex" m={1}>
 								<Button
 									color="secondary"
 									className={classes.button}
-									onClick={() => setShowForm(false)}
+									onClick={handleFormOpen}
 									variant="contained"
 								>
 									Cancel
@@ -162,7 +177,7 @@ function DeliverableForm({
 								<Button
 									className={classes.button}
 									data-testid="submit"
-									form="workspace_form"
+									form="deliverable_form"
 									type="submit"
 									color="primary"
 									variant="contained"
