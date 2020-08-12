@@ -18,7 +18,7 @@ import Project from "../../Project/Project";
 import { WORKSPACE_ACTIONS } from "../../workspace/constants";
 import Workspace from "../../workspace/Workspace";
 import ProjectList from "../ProjectList/ProjectList";
-import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { setActiveWorkSpace } from "../../../reducers/dashboardReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,16 +67,15 @@ function AddProject({ workspaces }: { workspaces: { id: number; name: string }[]
 	);
 }
 
-export default function WorkspaceList() {
+export default function WorkspaceList({ organization }: { organization: any }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
 	const [menuList, setMenuList] = React.useState<any>([]);
 
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
-	const dashboardData = useDashBoardData();
 	const dispatch = useDashboardDispatch();
-	const filter: any = { filter: dashboardData?.organization };
+	const filter: any = { variables: { filter: { organization } } };
 
 	const { data } = useQuery(GET_WORKSPACES_BY_ORG, filter);
 

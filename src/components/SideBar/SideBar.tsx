@@ -3,7 +3,7 @@ import { Box, Divider, List, MenuItem, Typography } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { client } from "../../config/grapql";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
@@ -18,7 +18,7 @@ import { setOrganisation } from "../../reducers/dashboardReducer";
 export default function SideBar({ children }: { children?: Function }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
-	const { loading, data } = useQuery(GET_ORGANISATIONS);
+	const { data } = useQuery(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
 
@@ -90,7 +90,7 @@ export default function SideBar({ children }: { children?: Function }) {
 
 					{data && data.organizationList[0].id && (
 						<ApolloProvider client={apolloClient}>
-							<WorkspaceList />
+							<WorkspaceList organization={data.organizationList[0].id} />
 						</ApolloProvider>
 					)}
 
