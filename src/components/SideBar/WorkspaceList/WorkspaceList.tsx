@@ -6,10 +6,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries";
-import { IGET_WORKSPACES_BY_ORG } from "../../../models/workspace/query";
+import { IGET_WORKSPACES_BY_ORG, IOrganisationWorkspaces } from "../../../models/workspace/query";
 import { IWorkspace } from "../../../models/workspace/workspace";
 import FIDialog from "../../Dialog/Dialog";
 import SimpleMenu from "../../Menu/Menu";
@@ -18,6 +18,8 @@ import Project from "../../Project/Project";
 import { WORKSPACE_ACTIONS } from "../../workspace/constants";
 import Workspace from "../../workspace/Workspace";
 import ProjectList from "../ProjectList/ProjectList";
+import { useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { setActiveWorkSpace } from "../../../reducers/dashboardReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -65,14 +67,15 @@ function AddProject({ workspaces }: { workspaces: { id: number; name: string }[]
 	);
 }
 
-export default function WorkspaceList({ organisation }: { organisation: any }) {
+export default function WorkspaceList({ organization }: { organization: any }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
-	const filter: any = { variables: { filter: { organisation } } };
 	const [menuList, setMenuList] = React.useState<any>([]);
 
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
+	const dispatch = useDashboardDispatch();
+	const filter: any = { variables: { filter: { organization } } };
 
 	const { data } = useQuery(GET_WORKSPACES_BY_ORG, filter);
 
@@ -95,6 +98,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 		if (data && data.orgWorkspaces) {
 			let array = [...menuList, { children: <AddProject workspaces={data.orgWorkspaces} /> }];
 			setMenuList(array);
+			dispatch(setActiveWorkSpace(data.orgWorkspaces[0]));
 		}
 	}, [data]);
 
@@ -116,10 +120,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 				{oldCachedData &&
 					oldCachedData.orgWorkspaces &&
 					oldCachedData.orgWorkspaces.map(
-						(
-							workspace: { id: number; name: string; [key: string]: any },
-							index: number
-						) => {
+						(workspace: IOrganisationWorkspaces, index: number) => {
 							return (
 								<ListItem className={classes.workspaceList} key={workspace.id}>
 									<Box display="flex">
@@ -136,6 +137,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 												aria-haspopup="true"
 												onClick={(e) => {
 													handleClick(e, index);
+													dispatch(setActiveWorkSpace(workspace));
 												}}
 											>
 												<EditOutlinedIcon fontSize="small" />
@@ -151,8 +153,8 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 														onClick={() => {
 															const workpsaceToEdit = {
 																...workspace,
-																organisation:
-																	workspace["organisation"]["id"],
+																organization:
+																	workspace["organization"]["id"],
 															};
 															seteditWorkspace(
 																workpsaceToEdit as any
@@ -166,7 +168,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 											)}
 										</Box>
 									</Box>
-									<ProjectList workspaceId={workspace.id} />
+									<ProjectList workspaceId={workspace.id} projectIndex={index} />
 									<Divider />
 								</ListItem>
 							);
@@ -178,7 +180,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 				{editWorkspace ? (
 					// TODO: Need to changed organisation id to dynamic
 					<Workspace
-						organisationId={13}
+						organizationId={13}
 						type={WORKSPACE_ACTIONS.UPDATE}
 						data={editWorkspace}
 						close={() => seteditWorkspace(null)}

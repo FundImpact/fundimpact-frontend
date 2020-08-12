@@ -32,7 +32,7 @@ export const getDefaultBasicInformation = (): IBasicInformation => {
 		email: "",
 		password: "",
 		provider: "local",
-		organisation: {
+		organization: {
 			name: "",
 			legal_name: "",
 			short_name: "",

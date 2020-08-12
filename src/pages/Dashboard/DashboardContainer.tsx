@@ -32,14 +32,14 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 				<Grid item xs={10}>
 					<SideBar>
 						{(
-							organisation: { name: string; id: string | null },
+							organization: { name: string; id: string | null },
 							workspaces: { name: string; id: string | number }[]
 						) => {
 							return (
 								<Grid container direction="column">
 									<Grid item>
 										<Typography variant="h5" gutterBottom noWrap={true}>
-											<Box color="primary.main">{organisation.name}</Box>
+											<Box color="primary.main">{organization.name}</Box>
 										</Typography>
 									</Grid>
 									<Grid item>

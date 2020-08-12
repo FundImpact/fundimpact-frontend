@@ -30,7 +30,7 @@ describe("Basic Details Form (Signup Page)", () => {
 	});
 
 	test("should have organisation name Field", async () => {
-		let organisationField = await signupComponent.findByText("Organisation Name");
+		let organisationField = await signupComponent.findByText("Organization Name");
 		expect(organisationField).toBeInTheDocument();
 	});
 });

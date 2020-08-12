@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_ORGANISATIONS = gql`
 	query {
-		organisationList {
+		organizationList {
 			id
 			name
 			short_name
@@ -16,7 +16,7 @@ export const GET_WORKSPACES_BY_ORG = gql`
 		orgWorkspaces(where: $filter) {
 			id
 			name
-			organisation {
+			organization {
 				id
 				name
 			}
@@ -28,7 +28,7 @@ export const GET_WORKSPACES = gql`
 		orgWorkspaces {
 			id
 			name
-			organisation {
+			organization {
 				name
 			}
 		}

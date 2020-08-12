@@ -5,7 +5,7 @@ export interface IWorkspace {
 	name: string;
 	short_name?: string;
 	description?: string;
-	organisation: number;
+	organization: number;
 }
 
 /**
@@ -16,7 +16,7 @@ export interface IWorkspaceData {
 	workspaces: IWorkspace[];
 }
 
-export type WorkspaceProps = { close: () => void; organisationId: number } & (
+export type WorkspaceProps = { close: () => void; organizationId: number } & (
 	| { type: WORKSPACE_ACTIONS.CREATE }
 	| { type: WORKSPACE_ACTIONS.UPDATE; data: IWorkspace }
 );

@@ -5,6 +5,7 @@ import SideBar from "../SideBar";
 import { GET_ORGANISATIONS } from "../../../graphql/queries";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
+import { DashboardProvider } from "../../../contexts/dashboardContext";
 
 const OrgMock = [
 	{
@@ -19,12 +20,12 @@ const WSMock = [
 	{
 		id: "5",
 		name: "INSTAGRAM",
-		organisation: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
 	},
 	{
 		id: "13",
 		name: "FACEBOOK",
-		organisation: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
 	},
 ];
 
@@ -47,12 +48,12 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 		const mocks = [
 			{
 				request: { query: GET_ORGANISATIONS },
-				result: { data: { organisationList: OrgMock } },
+				result: { data: { organizationList: OrgMock } },
 			},
 			{
 				request: {
 					query: GET_WORKSPACES_BY_ORG,
-					variables: { filter: { organisation: "13" } },
+					variables: { filter: { organization: "13" } },
 				},
 				result: { data: { orgWorkspaces: WSMock } },
 			},
@@ -71,10 +72,15 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 				result: { data: { orgProject: ProjectMockTwo } },
 			},
 		];
-		const { getByText } = await renderApollo(<SideBar />, {
-			mocks,
-			resolvers: {},
-		});
+		const { getByText } = await renderApollo(
+			<DashboardProvider>
+				<SideBar />
+			</DashboardProvider>,
+			{
+				mocks,
+				resolvers: {},
+			}
+		);
 		await waitForElement(() => getByText(/TSERIES/i));
 		await waitForElement(() => getByText(/INSTAGRAM/i));
 		await waitForElement(() => getByText(/FACEBOOK/i));
