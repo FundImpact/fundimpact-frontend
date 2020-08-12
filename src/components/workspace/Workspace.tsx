@@ -21,7 +21,7 @@ function getInitialValues(props: WorkspaceProps) {
 		name: "Testing Workspace",
 		short_name: "testing short name",
 		description: "some description",
-		organisation: 13, // TODO: Take the organiation id from Context provider
+		organization: 13, // TODO: Take the organiation id from Context provider
 	};
 }
 
@@ -50,7 +50,7 @@ function Workspace(props: WorkspaceProps) {
 
 	useEffect(() => {
 		if (!response) return;
-		setinitialValues({ description: "", name: "", short_name: "", organisation: 1 });
+		setinitialValues({ description: "", name: "", short_name: "", organization: 1 });
 
 		setsuccessMessage("Workspace Created.");
 	}, [response]);
@@ -124,7 +124,7 @@ function Workspace(props: WorkspaceProps) {
 		// Get the old data from Apollo Cache.
 		const oldCachedData = client.readQuery<IGET_WORKSPACES_BY_ORG>({
 			query: GET_WORKSPACES_BY_ORG,
-			variables: { filter: { organisation: props.organisationId.toString() } },
+			variables: { filter: { organization: props.organizationId.toString() } },
 		});
 
 		let updatedWorkspaces = oldCachedData

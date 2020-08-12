@@ -65,11 +65,11 @@ function AddProject({ workspaces }: { workspaces: { id: number; name: string }[]
 	);
 }
 
-export default function WorkspaceList({ organisation }: { organisation: any }) {
+export default function WorkspaceList({ organization }: { organization: any }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
-	const filter: any = { variables: { filter: { organisation } } };
+	const filter: any = { variables: { filter: { organization } } };
 	const [menuList, setMenuList] = React.useState<any>([]);
 
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
@@ -151,8 +151,8 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 														onClick={() => {
 															const workpsaceToEdit = {
 																...workspace,
-																organisation:
-																	workspace["organisation"]["id"],
+																organization:
+																	workspace["organization"]["id"],
 															};
 															seteditWorkspace(
 																workpsaceToEdit as any
@@ -178,7 +178,7 @@ export default function WorkspaceList({ organisation }: { organisation: any }) {
 				{editWorkspace ? (
 					// TODO: Need to changed organisation id to dynamic
 					<Workspace
-						organisationId={13}
+						organizationId={13}
 						type={WORKSPACE_ACTIONS.UPDATE}
 						data={editWorkspace}
 						close={() => seteditWorkspace(null)}

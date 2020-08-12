@@ -53,7 +53,7 @@ export default function SideBar({ children }: { children?: Function }) {
 						<Box flexGrow={1} ml={1}>
 							{
 								<Typography color="primary" gutterBottom variant="h6">
-									{data.organisationList[0].name}
+									{data.organizationList[0].name}
 								</Typography>
 							}
 						</Box>
@@ -61,7 +61,7 @@ export default function SideBar({ children }: { children?: Function }) {
 							<IconButton
 								edge="end"
 								aria-label="edit"
-								aria-controls={`organisationMenu`}
+								aria-controls={`organizationMenu`}
 								aria-haspopup="true"
 								onClick={handleClick}
 							>
@@ -69,7 +69,7 @@ export default function SideBar({ children }: { children?: Function }) {
 							</IconButton>
 							<SimpleMenu
 								handleClose={handleClose}
-								id={`organisationMenu`}
+								id={`organizationMenu`}
 								anchorEl={anchorEl}
 								menuList={menuList}
 							/>
@@ -77,16 +77,16 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
-					{data && data.organisationList[0].id && (
+					{data && data.organizationList[0].id && (
 						<ApolloProvider client={apolloClient}>
-							<WorkspaceList organisation={data.organisationList[0].id} />
+							<WorkspaceList organization={data.organizationList[0].id} />
 						</ApolloProvider>
 					)}
 					<List></List>
 					<ApolloProvider client={apolloClient}>
 						{viewWorkspace ? (
 							<Workspace
-								organisationId={data.organisationList[0].id}
+								organizationId={data.organizationList[0].id}
 								type={WORKSPACE_ACTIONS.CREATE}
 								close={() => setViewWorkspace(false)}
 							></Workspace>

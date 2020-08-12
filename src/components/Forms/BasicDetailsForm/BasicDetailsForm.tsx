@@ -158,16 +158,16 @@ const BasicDetailsForm = () => {
 
 								<Grid item xs={12} md={12}>
 									<TextField
-										error={!!formik.errors.organisation?.name}
+										error={!!formik.errors.organization?.name}
 										helperText={
-											formik.touched.organisation?.name &&
-											formik.errors.organisation?.name
+											formik.touched.organization?.name &&
+											formik.errors.organization?.name
 										}
 										onChange={formik.handleChange}
-										label="Organisation Name"
+										label="Organization Name"
 										required
 										fullWidth
-										name="organisation.name"
+										name="organization.name"
 										variant="outlined"
 									/>
 								</Grid>

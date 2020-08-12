@@ -26,7 +26,7 @@ export interface IBasicInformation {
 	password: string;
 	confirmPassword: string;
 	provider: "local";
-	organisation: {
+	organization: {
 		name: string;
 		short_name?: string;
 		legal_name?: string;

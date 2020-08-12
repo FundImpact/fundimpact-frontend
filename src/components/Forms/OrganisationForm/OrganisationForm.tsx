@@ -46,7 +46,7 @@ export default function OrganisationForm() {
 									error={!!formik.errors.orgName}
 									helperText={formik.touched.orgName && formik.errors.orgName}
 									onChange={formik.handleChange}
-									label="Organisation Name"
+									label="Organization Name"
 									required
 									fullWidth
 									name="orgName"
