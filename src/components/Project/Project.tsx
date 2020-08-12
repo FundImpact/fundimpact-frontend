@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import Snackbar from "../Snackbar/Snackbar";
-import CreateProject from "../Forms/Project/createProject";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import ProjectForm from "../Forms/Project/projectForm";
