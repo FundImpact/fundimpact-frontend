@@ -12,13 +12,23 @@ import SimpleMenu from "../Menu/Menu";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
 import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
+import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
+import { setOrganisation } from "../../reducers/dashboardReducer";
 
 export default function SideBar({ children }: { children?: Function }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const { loading, data } = useQuery(GET_ORGANISATIONS);
+	const dispatch = useDashboardDispatch();
+	const dashboardData = useDashBoardData();
+
 	React.useEffect(() => {
-		if (data) console.log(data);
+		if (data) {
+			const { organizationList } = data;
+			if (organizationList) {
+				dispatch(setOrganisation(organizationList[0]));
+			}
+		}
 	}, [data]);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -40,9 +50,10 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
+
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
-			{loading ? (
+			{!dashboardData ? (
 				<Box mt={6}>
 					<LinearProgress style={{ marginBottom: "3px" }} />
 					<LinearProgress color="secondary" />
@@ -53,7 +64,7 @@ export default function SideBar({ children }: { children?: Function }) {
 						<Box flexGrow={1} ml={1}>
 							{
 								<Typography color="primary" gutterBottom variant="h6">
-									{data.organizationList[0].name}
+									{dashboardData?.organization?.name}
 								</Typography>
 							}
 						</Box>
@@ -79,9 +90,10 @@ export default function SideBar({ children }: { children?: Function }) {
 
 					{data && data.organizationList[0].id && (
 						<ApolloProvider client={apolloClient}>
-							<WorkspaceList organization={data.organizationList[0].id} />
+							<WorkspaceList />
 						</ApolloProvider>
 					)}
+
 					<List></List>
 					<ApolloProvider client={apolloClient}>
 						{viewWorkspace ? (

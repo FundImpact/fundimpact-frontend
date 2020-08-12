@@ -7,6 +7,7 @@ import DashboardTableContainer from "../components/Dasboard/Table/DashboardTable
 import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
+import { DashboardProvider } from "../contexts/dashboardContext";
 
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
 const Login = React.lazy(() => import("../pages/Login/Login"));
@@ -27,7 +28,12 @@ function AppRoutes() {
 					path="dashboard"
 					element={
 						<ApolloProvider client={client}>
-							<DashboardContainer left={null} main={<DashboardTableContainer />} />
+							<DashboardProvider>
+								<DashboardContainer
+									left={null}
+									main={<DashboardTableContainer />}
+								/>
+							</DashboardProvider>
 						</ApolloProvider>
 					}
 				/>

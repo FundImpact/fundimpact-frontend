@@ -8,7 +8,7 @@ export interface IOrganisationWorkspaces {
 	id: number;
 	name: string;
 	__typename: string;
-	organisation: IOrganisation;
+	organization: IOrganisation;
 }
 
 export interface IUPDATE_WORKSPACE_Response {
