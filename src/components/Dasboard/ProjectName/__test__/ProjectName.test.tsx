@@ -15,46 +15,55 @@ const getProjectMock = {
 
 let updateProjectMutation = false;
 
-describe("Update Project text display and update", () => {
-	test("renders correctly", async () => {
-		const mocks = [
-			{
-				request: {
-					query: GET_PROJECT_BY_ID,
-					variables: { id: 1 },
-				},
-				result: { data: { project: getProjectMock } },
+const mocks = [
+	{
+		request: {
+			query: GET_PROJECT_BY_ID,
+			variables: { id: 1 },
+		},
+		result: { data: { project: getProjectMock } },
+	},
+	{
+		request: {
+			query: UPDATE_PROJECT,
+			variables: {
+				id: 1,
+				input: { name: "ARTISTAAN", short_name: "KMK", description: "" },
 			},
-			{
-				request: {
-					query: UPDATE_PROJECT,
-					variables: {
-						id: 1,
-						input: { name: "ARTISTAAN", short_name: "KMK", description: "" },
-					},
-				},
-				result: () => {
-					updateProjectMutation = true;
-					return {};
-				},
-			},
-		];
-		const { getByText, getByTestId } = await renderApollo(<ProjectName />, {
+		},
+		result: () => {
+			updateProjectMutation = true;
+			return {};
+		},
+	},
+];
+let projectName: any;
+beforeEach(() => {
+	act(() => {
+		projectName = renderApollo(<ProjectName />, {
 			mocks,
 			resolvers: {},
 		});
-		await waitForElement(() => getByText(/KALAMKAAR/i));
+	});
+});
 
-		const editButton = getByTestId("editable-edit");
+describe("Update Project text display and update", () => {
+	test("Get Project query call and text match with fetched project name", async () => {
+		await waitForElement(() => projectName.getByText(/KALAMKAAR/i));
+	});
+
+	test("Edit and Save Button Calls and Update Query Call", async () => {
+		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
+		const editButton = projectName.getByTestId("editable-edit");
 		fireEvent.click(editButton);
 
-		let inputField = getByTestId("editable-input") as HTMLInputElement;
+		let inputField = projectName.getByTestId("editable-input") as HTMLInputElement;
 		let value = "ARTISTAAN";
 		act(() => {
 			fireEvent.change(inputField, { target: { value } });
 		});
 
-		const saveButton = getByTestId("editable-save");
+		const saveButton = projectName.getByTestId("editable-save");
 		fireEvent.click(saveButton);
 
 		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
