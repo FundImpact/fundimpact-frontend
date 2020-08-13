@@ -9,7 +9,7 @@ import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/c
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Test",
+		name: "",
 		code: "T1",
 		description: "This is a sample deliverable",
 		organization: 2,
@@ -25,8 +25,11 @@ function Deliverable(props: DeliverableProps) {
 
 	const onCreate = async (value: IDeliverable) => {
 		console.log(`on Created is called with: `, value);
-		await createDeliverableCategory({ variables: { input: value } });
-		props.handleClose();
+		try {
+			await createDeliverableCategory({ variables: { input: value } });
+			props.handleClose();
+		} catch (error) {}
+
 		console.log("seeting loading to true");
 	};
 

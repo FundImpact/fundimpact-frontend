@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { IDeliverableFormProps } from "../../../models/deliverable/deliverableForm";
+import { IDeliverable } from "../../../models/deliverable/deliverable";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,9 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 				margin: theme.spacing(1),
 			},
 			"& .MuiButtonBase-root": {
-				marginTop: theme.spacing(4),
-				marginLeft: theme.spacing(1),
-				marginRight: theme.spacing(1),
+				marginTop: theme.spacing(2),
 			},
 		},
 		button: {
@@ -64,7 +63,11 @@ function DeliverableForm({
 	handleFormOpen,
 }: IDeliverableFormProps & React.PropsWithChildren<IDeliverableFormProps>) {
 	const classes = useStyles();
-
+	const validateInitialValue = (initialValue: IDeliverable) => {
+		const errors = validate(initialValue) as object;
+		if (!errors) return true;
+		return Object.keys(errors).length ? false : true;
+	};
 	return (
 		<Dialog
 			fullWidth
@@ -106,6 +109,9 @@ function DeliverableForm({
 								validateOnBlur
 								validateOnChange
 								initialValues={initialValues}
+								isInitialValid={(props: any) =>
+									validateInitialValue(props.initialValues)
+								}
 								enableReinitialize={true}
 								validate={validate}
 								onSubmit={(values) =>
@@ -122,9 +128,12 @@ function DeliverableForm({
 											autoComplete="off"
 										>
 											<TextField
-												data-testid="name"
+												data-testid="deliverableFormName"
 												value={formik.values.name}
 												error={!!formik.errors.name}
+												inputProps={{
+													"data-testid": "deliverableFormNameInput",
+												}}
 												helperText={
 													formik.touched.name && formik.errors.name
 												}
@@ -137,10 +146,13 @@ function DeliverableForm({
 											/>
 
 											<TextField
-												data-testid="short_name"
+												data-testid="deliverableFormCode"
 												value={formik.values.code}
 												error={!!formik.errors.code}
 												onChange={formik.handleChange}
+												inputProps={{
+													"data-testid": "deliverableFormCodeInput",
+												}}
 												label="Deliverable Code"
 												required
 												name="code"
@@ -149,10 +161,14 @@ function DeliverableForm({
 												fullWidth
 											/>
 											<TextField
-												data-testid="description"
+												data-testid="deliverableFormDescription"
 												value={formik.values.description}
 												error={!!formik.errors.description}
 												onChange={formik.handleChange}
+												inputProps={{
+													"data-testid":
+														"deliverableFormDescriptionInput",
+												}}
 												label="Description"
 												multiline
 												rows={3}
@@ -161,30 +177,33 @@ function DeliverableForm({
 												variant="outlined"
 												fullWidth
 											/>
+											<Box display="flex" m={1}>
+												<Button
+													color="secondary"
+													className={classes.button}
+													onClick={handleFormOpen}
+													variant="contained"
+												>
+													Cancel
+												</Button>
+												<Button
+													className={classes.button}
+													data-testid="deliverableFormSubmit"
+													form="deliverable_form"
+													disabled={!formik.isValid}
+													type="submit"
+													color="primary"
+													variant="contained"
+												>
+													{formState === DELIVERABLE_ACTIONS.CREATE
+														? "Create"
+														: "Update"}
+												</Button>
+											</Box>
 										</Form>
 									);
 								}}
 							</Formik>
-							<Box display="flex" m={1}>
-								<Button
-									color="secondary"
-									className={classes.button}
-									onClick={handleFormOpen}
-									variant="contained"
-								>
-									Cancel
-								</Button>
-								<Button
-									className={classes.button}
-									data-testid="submit"
-									form="deliverable_form"
-									type="submit"
-									color="primary"
-									variant="contained"
-								>
-									{formState === DELIVERABLE_ACTIONS.CREATE ? "Create" : "Update"}
-								</Button>
-							</Box>
 						</Grid>
 					</Grid>
 				</Box>
