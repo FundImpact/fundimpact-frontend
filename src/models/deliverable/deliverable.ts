@@ -5,15 +5,18 @@ export interface IDeliverable {
 	name: string;
 	code?: string;
 	description?: string;
-	project?: number | string;
+	organization?: number | string;
 }
 
 export type DeliverableProps =
-	| { type: DELIVERABLE_ACTIONS.CREATE; project: number; open: boolean; handleClose: () => void }
+	| {
+			type: DELIVERABLE_ACTIONS.CREATE;
+			open: boolean;
+			handleClose: () => void;
+	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverable;
-			project: number;
 			open: boolean;
 			handleClose: () => void;
 	  };

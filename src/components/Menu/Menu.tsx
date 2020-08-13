@@ -45,13 +45,12 @@ export default function SimpleMenu({
 				onClose={handleClose}
 			>
 				{menuList &&
-					menuList.map((menu, index: number) => {
-						return (
-							<div onClick={handleClose} key={index}>
-								{menu.children}
-							</div>
-						);
-					})}
+					menuList.map((menu: any, index: any) =>
+						React.cloneElement(menu.children, {
+							...menu.children.props,
+							key: index,
+						})
+					)}
 				{children ? children : null}
 			</StyledMenu>
 		</div>

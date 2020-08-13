@@ -3,7 +3,7 @@ import { Box, Divider, List, MenuItem, Typography } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { client } from "../../config/grapql";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
@@ -12,14 +12,24 @@ import SimpleMenu from "../Menu/Menu";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
 import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
+import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
+import { setOrganisation } from "../../reducers/dashboardReducer";
 
 export default function SideBar({ children }: { children?: Function }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
-	const { loading, data } = useQuery(GET_ORGANISATIONS);
+	const { data } = useQuery(GET_ORGANISATIONS);
+	const dispatch = useDashboardDispatch();
+	const dashboardData = useDashBoardData();
+
 	React.useEffect(() => {
-		if (data) console.log(data);
-	}, [data]);
+		if (data) {
+			const { organizationList } = data;
+			if (organizationList) {
+				dispatch(setOrganisation(organizationList[0]));
+			}
+		}
+	}, [data, dispatch]);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [viewWorkspace, setViewWorkspace] = React.useState<boolean>(false);
@@ -40,10 +50,9 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
-	console.log(data);
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
-			{loading ? (
+			{!dashboardData ? (
 				<Box mt={6}>
 					<LinearProgress style={{ marginBottom: "3px" }} />
 					<LinearProgress color="secondary" />
@@ -54,7 +63,7 @@ export default function SideBar({ children }: { children?: Function }) {
 						<Box flexGrow={1} ml={1}>
 							{data && data.organizationList[0].name && (
 								<Typography color="primary" gutterBottom variant="h6">
-									{data.organizationList[0].name}
+									{dashboardData?.organization?.name}
 								</Typography>
 							)}
 						</Box>
@@ -62,7 +71,7 @@ export default function SideBar({ children }: { children?: Function }) {
 							<IconButton
 								edge="end"
 								aria-label="edit"
-								aria-controls={`organisationMenu`}
+								aria-controls={`organizationMenu`}
 								aria-haspopup="true"
 								onClick={handleClick}
 							>
@@ -70,7 +79,7 @@ export default function SideBar({ children }: { children?: Function }) {
 							</IconButton>
 							<SimpleMenu
 								handleClose={handleClose}
-								id={`organisationMenu`}
+								id={`organizationMenu`}
 								anchorEl={anchorEl}
 								menuList={menuList}
 							/>
@@ -83,11 +92,12 @@ export default function SideBar({ children }: { children?: Function }) {
 							<WorkspaceList organization={data.organizationList[0].id} />
 						</ApolloProvider>
 					)}
+
 					<List></List>
 					<ApolloProvider client={apolloClient}>
 						{viewWorkspace ? (
 							<Workspace
-								organisationId={data.organizationList[0].id}
+								organizationId={data.organizationList[0].id}
 								type={WORKSPACE_ACTIONS.CREATE}
 								close={() => setViewWorkspace(false)}
 							></Workspace>

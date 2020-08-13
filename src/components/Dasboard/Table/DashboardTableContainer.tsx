@@ -3,6 +3,7 @@ import React from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
 import Deliverable from "../../Deliverable/Deliverable";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import FundsTable from "../../Table/Funds";
 import ImpactsTable from "../../Table/Impacts";
@@ -71,7 +72,6 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
-							project={1}
 							open={open}
 							handleClose={handleClose}
 						/>
@@ -87,7 +87,19 @@ export default function DashboardTableContainer() {
 		{
 			label: "Deliverables",
 			table: <DeliverablesTable />,
-			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+			createButtons: [
+				{
+					text: "Create Deliverable Targets",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
+				{ text: "Report Achivement" },
+			],
 		},
 		{
 			label: "Impact Indicators",

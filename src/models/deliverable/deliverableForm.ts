@@ -10,5 +10,4 @@ export interface IDeliverableFormProps {
 	handleFormOpen: () => void;
 	formIsOpen: boolean;
 	formState: DELIVERABLE_ACTIONS.CREATE | DELIVERABLE_ACTIONS.UPDATE;
-	project: number;
 }

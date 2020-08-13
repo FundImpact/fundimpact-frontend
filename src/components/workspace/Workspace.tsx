@@ -124,7 +124,7 @@ function Workspace(props: WorkspaceProps) {
 		// Get the old data from Apollo Cache.
 		const oldCachedData = client.readQuery<IGET_WORKSPACES_BY_ORG>({
 			query: GET_WORKSPACES_BY_ORG,
-			variables: { filter: { organisation: props.organisationId.toString() } },
+			variables: { filter: { organization: props.organizationId.toString() } },
 		});
 
 		let updatedWorkspaces = oldCachedData

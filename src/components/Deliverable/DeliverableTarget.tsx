@@ -1,51 +1,50 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
+import {
+	IDeliverableTarget,
+	DeliverableTargetProps,
+} from "../../models/deliverable/deliverableTarget";
 import Snackbar from "../Snackbar/Snackbar";
-import DeliverableForm from "../Forms/Deliverable/Deliverable";
+import DeliverableTargetForm from "../Forms/DeliverableTarget/DeliverableTarget";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
-import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
-function getInitialValues(props: DeliverableProps) {
+
+function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Test",
-		code: "T1",
+		name: "Test Deliverable",
 		description: "This is a sample deliverable",
-		organization: 2,
+		targetValue: "",
+		deliverableCategory: "",
+		deliverableUnit: 1,
+		deliverableCategoryUnit: 1,
+		project: 4,
 	};
 }
-
-function Deliverable(props: DeliverableProps) {
-	let initialValues: IDeliverable = getInitialValues(props);
-	const [
-		createDeliverableCategory,
-		{ data: response, loading: createLoading, error: createError },
-	] = useMutation(CREATE_DELIVERABLE_CATEGORY);
-
-	const onCreate = async (value: IDeliverable) => {
+const getDeliverableCategory = async () => {};
+function DeliverableTarget(props: DeliverableTargetProps) {
+	let initialValues: IDeliverableTarget = getInitialValues(props);
+	const onCreate = (value: IDeliverableTarget) => {
 		console.log(`on Created is called with: `, value);
-		await createDeliverableCategory({ variables: { input: value } });
-		props.handleClose();
 		console.log("seeting loading to true");
 	};
 
-	const onUpdate = (value: IDeliverable) => {
+	const onUpdate = (value: IDeliverableTarget) => {
 		console.log(`on Update is called`);
 		console.log("seeting loading to true");
 	};
 
-	const clearErrors = (values: IDeliverable) => {
+	const clearErrors = (values: IDeliverableTarget) => {
 		console.log(`Clear Errors is called`);
 	};
 
-	const validate = (values: IDeliverable) => {
-		let errors: Partial<IDeliverable> = {};
+	const validate = (values: IDeliverableTarget) => {
+		let errors: Partial<IDeliverableTarget> = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.organization) {
-			errors.organization = "Organization is required";
+		if (!values.project) {
+			errors.project = "Project is required";
 		}
 		return errors;
 	};
@@ -55,7 +54,7 @@ function Deliverable(props: DeliverableProps) {
 	const handleFormOpen = props.handleClose;
 	return (
 		<React.Fragment>
-			<DeliverableForm
+			<DeliverableTargetForm
 				{...{
 					initialValues,
 					formState,
@@ -73,7 +72,7 @@ function Deliverable(props: DeliverableProps) {
 				{props.type === DELIVERABLE_ACTIONS.UPDATE && updateError ? (
 					<Snackbar severity="error" msg={"Update Failed"} />
 				) : null} */}
-			</DeliverableForm>
+			</DeliverableTargetForm>
 			{/* {response && response.createOrgProject && response.createOrgProject.name && (
 				<Snackbar severity="success" msg={"Successfully created"} />
 			)}
@@ -83,4 +82,4 @@ function Deliverable(props: DeliverableProps) {
 	);
 }
 
-export default Deliverable;
+export default DeliverableTarget;

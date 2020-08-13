@@ -5,6 +5,7 @@ import SideBar from "../SideBar";
 import { GET_ORGANISATIONS } from "../../../graphql/queries";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
+import { DashboardProvider } from "../../../contexts/dashboardContext";
 
 const OrgMock = [
 	{
@@ -25,12 +26,12 @@ const WSMock = [
 	{
 		id: "5",
 		name: "INSTAGRAM",
-		organization: { __typename: "OrganizationList", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
 	},
 	{
 		id: "13",
 		name: "FACEBOOK",
-		organization: { __typename: "OrganizationList", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
 	},
 ];
 
@@ -77,10 +78,15 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 				result: { data: { orgProject: ProjectMockTwo } },
 			},
 		];
-		const { getByText } = renderApollo(<SideBar />, {
-			mocks,
-			resolvers: {},
-		});
+		const { getByText } = await renderApollo(
+			<DashboardProvider>
+				<SideBar />
+			</DashboardProvider>,
+			{
+				mocks,
+				resolvers: {},
+			}
+		);
 		await waitForElement(() => getByText(/TSERIES/i));
 		await waitForElement(() => getByText(/INSTAGRAM/i));
 		await waitForElement(() => getByText(/FACEBOOK/i));
