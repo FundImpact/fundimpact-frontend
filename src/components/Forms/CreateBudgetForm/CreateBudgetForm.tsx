@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function CreateBudgetForm({ initialValues, validate, onSubmit }: IBudgetFormProps) {
+function CreateBudgetForm({ initialValues, validate, onSubmit, onCancel }: IBudgetFormProps) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: IBudget) => {
 		const errors = validate(initialValue) as object;
@@ -53,13 +53,9 @@ function CreateBudgetForm({ initialValues, validate, onSubmit }: IBudgetFormProp
 							<Grid item xs={12}>
 								<TextField
 									style={{ width: "100%" }}
-									value={formik.values.budgetCode}
-									error={
-										!!formik.errors.budgetCode && !!formik.touched.budgetCode
-									}
-									helperText={
-										formik.touched.budgetCode && formik.errors.budgetCode
-									}
+									value={formik.values.code}
+									error={!!formik.errors.code && !!formik.touched.code}
+									helperText={formik.touched.code && formik.errors.code}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									label="Budget Code"
@@ -69,7 +65,7 @@ function CreateBudgetForm({ initialValues, validate, onSubmit }: IBudgetFormProp
 									}}
 									required
 									fullWidth
-									name="budgetCode"
+									name="code"
 									variant="outlined"
 									id="budgetCode"
 								/>
@@ -119,6 +115,7 @@ function CreateBudgetForm({ initialValues, validate, onSubmit }: IBudgetFormProp
 									color="secondary"
 									data-testid="createBudgetCancelButton"
 									disableRipple
+									onClick={onCancel}
 								>
 									Cancel
 								</Button>

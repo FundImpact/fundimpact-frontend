@@ -2,7 +2,8 @@ import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
-
+import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import DefaultTable from "../../Table/Table";
 
 interface TabPanelProps {
@@ -51,35 +52,52 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
+const tabs = [
+	{
+		label: "Funds",
+		createButtons: [
+			{
+				text: "Create Budget",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetDialog open={open} handleClose={handleClose} />
+				),
+			},
+			{ text: "Create Deliverables" },
+			{ text: "Create Impact Indicators" },
+			{ text: "Add Donor" },
+			{ text: "Create Budget Indicators" },
+			{ text: "Track Budget Spend" },
+			{ text: "Report Fund Receipt" },
+			{
+				text: "Create Budget Target",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetTargetDialog open={open} handleClose={handleClose} />
+				),
+			},
+		],
+	},
+	{
+		label: "Deliverables",
+		createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+	},
+	{
+		label: "Impact Indicators",
+		createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
+	},
+	{ label: "Documents", createButtons: [] },
+];
+
+function GetTable(label: string) {
+	switch (label) {
+		case "Funds":
+			return <BudgetTargetTable />;
+		default:
+			return <DefaultTable />;
+	}
+}
+
 export default function DashboardTableContainer() {
-	const tabs = [
-		{
-			label: "Funds",
-			createButtons: [
-				{
-					text: "Create Budget",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetDialog open={open} handleClose={handleClose} />
-					),
-				},
-				{ text: "Create Deliverables" },
-				{ text: "Create Impact Indicators" },
-				{ text: "Add Donor" },
-				{ text: "Create Budget Indicators" },
-				{ text: "Track Budget Spend" },
-				{ text: "Report Fund Receipt" },
-			],
-		},
-		{
-			label: "Deliverables",
-			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
-		},
-		{
-			label: "Impact Indicators",
-			createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
-		},
-		{ label: "Documents", createButtons: [] },
-	];
+
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
 
@@ -133,7 +151,7 @@ export default function DashboardTableContainer() {
 							</Button>
 						</div>
 					</Box>
-					<DefaultTable />
+					{GetTable(tab.label)}
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}

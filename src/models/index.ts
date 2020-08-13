@@ -22,6 +22,7 @@ export interface IOrganisation {
 	country: string;
 	zipCode: number | null;
 	name?: string;
+	id?: string;
 }
 
 export interface IBasicInformation {
@@ -52,4 +53,11 @@ export interface IDashboardDataContext {
 	project?: IProject;
 	organization?: IOrganisation;
 	workspace?: any;
+}
+
+export interface IOrganizationCurrency {
+	id: string;
+	currency: {
+		name: string;
+	};
 }
