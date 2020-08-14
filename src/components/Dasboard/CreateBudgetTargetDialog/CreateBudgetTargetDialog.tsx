@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,8 +17,9 @@ import { IBudgetTarget } from "../../../models/budget/budget";
 import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
 import { ICreateBudgetTargetProjectDialogProps } from "../../../models/budget/budget";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 
-const defaultFormValues: IBudgetTarget = {
+const defaultFormValues: IBudgetTargetForm = {
 	name: "",
 	total_target_amount: "",
 	description: "",
@@ -31,17 +32,8 @@ const compObject = (obj1: any, obj2: any): boolean =>
 	Object.keys(obj1).length == Object.keys(obj2).length &&
 	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] == obj1[key]);
 
-const validate = (values: IBudgetTarget) => {
-	interface IBudgetTargetErrors {
-		name: string;
-		total_target_amount: string;
-		description: string;
-		conversion_factor: string;
-		organization_currency: string;
-		budget_category_organization: string;
-	}
-
-	let errors: Partial<IBudgetTargetErrors> = {};
+const validate = (values: IBudgetTargetForm) => {
+	let errors: Partial<IBudgetTargetForm> = {};
 
 	if (!values.name) {
 		errors.name = "Name is required";
@@ -90,7 +82,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY);
 	const dashboardData = useDashBoardData();
 
-	const onCreate = (values: IBudgetTarget) => {
+	const onCreate = (values: IBudgetTargetForm) => {
 		createProjectBudgetTarget({
 			variables: {
 				input: {
@@ -121,8 +113,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 		props.handleClose();
 	};
 
-	const onUpdate = (values: IBudgetTarget) => {
-		// budget_category_organization: values.budget_category,
+	const onUpdate = (values: IBudgetTargetForm) => {
 		if (compObject(values, initialValues)) {
 			props.handleClose();
 			return;
@@ -150,14 +141,14 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 				maxWidth="md"
 				open={props.open}
 				onClose={props.handleClose}
-				data-testid="create-budget-dialog"
+				data-testid="create-budget-target-dialog"
 				aria-labelledby="form-dialog-title"
 			>
 				<Box px={3} py={4}>
 					<Grid container spacing={2}>
 						<Grid item xs={4}>
 							<Typography
-								data-testid="create-budget-dialog-header"
+								data-testid="create-budget-target-dialog-header"
 								variant="h6"
 								gutterBottom
 							>
@@ -195,7 +186,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 						</Grid>
 					</Grid>
 				</Box>
-				{creatingProjectBudgetTarget ? (
+				{creatingProjectBudgetTarget || updatingProjectBudgetTarget ? (
 					<Box position="fixed" bottom={0} alignSelf="center">
 						<CircularProgress />
 					</Box>

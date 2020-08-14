@@ -14,7 +14,6 @@ import React, { useState, useEffect } from "react";
 import CreateBudgetTargetDialog from "../../Dasboard/CreateBudgetTargetDialog";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 import SimpleMenu from "../../Menu/Menu";
-import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 
 const useStyles = makeStyles({
 	table: {
@@ -44,6 +43,20 @@ const tableHeading = [
 	{ label: "Total Target Amount" },
 	{ label: "Conversion Factor" },
 ];
+
+const getInitialValues = (budgetTargetsProject: IBudgetTargetProjectResponse) => {
+	return {
+		name: budgetTargetsProject.name,
+		description: budgetTargetsProject.description,
+		total_target_amount: budgetTargetsProject.total_target_amount,
+		conversion_factor: budgetTargetsProject.conversion_factor,
+		id: budgetTargetsProject.id,
+		organization_currency: budgetTargetsProject.organization_currency.id,
+		budget_category_organization: budgetTargetsProject?.budget_category_organization?.id
+			? budgetTargetsProject?.budget_category_organization?.id
+			: "12",
+	};
+};
 
 export default function BudgetTargetTable() {
 	const classes = useStyles();
@@ -115,22 +128,7 @@ export default function BudgetTargetTable() {
 											}
 											handleClose={() => setOpenDialog(false)}
 											formAction={BUDGET_ACTIONS.UPDATE}
-											initialValues={{
-												name: budgetTargetsProject.name,
-												description: budgetTargetsProject.description,
-												total_target_amount:
-													budgetTargetsProject.total_target_amount,
-												conversion_factor:
-													budgetTargetsProject.conversion_factor,
-												organization_currency:
-													budgetTargetsProject.organization_currency.id,
-												budget_category_organization: budgetTargetsProject
-													?.budget_category_organization?.id
-													? budgetTargetsProject
-															?.budget_category_organization?.id
-													: "12",
-												id: budgetTargetsProject.id,
-											}}
+											initialValues={getInitialValues(budgetTargetsProject)}
 										/>
 										<TableCell component="td" scope="row">
 											{index + 1}

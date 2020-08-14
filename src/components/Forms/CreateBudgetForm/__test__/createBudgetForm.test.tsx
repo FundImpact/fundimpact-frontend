@@ -1,17 +1,11 @@
 import React from "react";
-import {
-	act,
-	fireEvent,
-	queries,
-	render,
-	RenderResult
-} from "@testing-library/react";
+import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import CreateBudgetForm from "../CreateBudgetForm";
 import { IBudget } from "../../../../models/budget/budget";
 
 const intialFormValue: IBudget = {
-	budgetCode: "code 1",
+	code: "code 1",
 	description: "budget description",
 	name: "budget 1",
 };
@@ -24,14 +18,15 @@ const validate = (values: IBudget) => {
 	if (!values.description) {
 		errors.description = "Description is required";
 	}
-	if (!values.budgetCode) {
-		errors.budgetCode = "Budget code is required";
+	if (!values.code) {
+		errors.code = "Budget code is required";
 	}
 	return errors;
 };
 
 let createForm: RenderResult<typeof queries>;
 const onSubmit = jest.fn();
+const onCancel = jest.fn();
 
 beforeEach(() => {
 	act(() => {
@@ -40,6 +35,7 @@ beforeEach(() => {
 				initialValues={intialFormValue}
 				onSubmit={onSubmit}
 				validate={validate}
+				onCancel={onCancel}
 			/>
 		);
 	});
@@ -76,7 +72,7 @@ describe("Create Budget Form", () => {
 		expect(nameField.value).toBe(intialFormValue.name);
 
 		let budgetCodeField = createForm.getByTestId("createBudgetCodeInput") as HTMLInputElement;
-		expect(budgetCodeField.value).toBe(intialFormValue.budgetCode);
+		expect(budgetCodeField.value).toBe(intialFormValue.code);
 
 		let descriptionField = createForm.getByTestId(
 			"createBudgetDescriptionInput"
@@ -91,7 +87,7 @@ describe("Create Budget Form", () => {
 			fireEvent.change(nameField, { target: { value } });
 		});
 		expect(nameField.value).toBe(value);
-		let saveButton =  await createForm.findByTestId("createBudgetSaveButton");
+		let saveButton = await createForm.findByTestId("createBudgetSaveButton");
 		expect(saveButton).toBeDisabled();
 	});
 });

@@ -11,7 +11,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
 
-const initialValues = {
+const initialValues : IBudget = {
 	name: "",
 	code: "",
 	description: "",

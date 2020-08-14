@@ -13,7 +13,7 @@ import {
 	MenuItem,
 	FormHelperText,
 } from "@material-ui/core";
-import { IBudgetTargetFormProps } from "../../../models/budget/budgetForm";
+import { IBudgetTargetFormProps, IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import { IBudgetTarget, IBudget } from "../../../models/budget/budget";
 import { IOrganizationCurrency } from "../../../models";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
@@ -40,7 +40,7 @@ function CreateBudgetTargetForm({
 	budgetCategory,
 }: IBudgetTargetFormProps) {
 	const classes = useStyles();
-	const validateInitialValue = (initialValue: IBudgetTarget) => {
+	const validateInitialValue = (initialValue: IBudgetTargetForm) => {
 		const errors = validate(initialValue) as object;
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
@@ -48,7 +48,7 @@ function CreateBudgetTargetForm({
 	return (
 		<Formik
 			initialValues={initialValues}
-			onSubmit={(values: IBudgetTarget) =>
+			onSubmit={(values: IBudgetTargetForm) =>
 				formAction == BUDGET_ACTIONS.UPDATE ? onUpdate(values) : onCreate(values)
 			}
 			validate={validate}
@@ -67,9 +67,9 @@ function CreateBudgetTargetForm({
 									helperText={formik.touched.name && formik.errors.name}
 									onChange={formik.handleChange}
 									label="Name"
-									data-testid="createBudgetName"
+									data-testid="createBudgetTargetName"
 									inputProps={{
-										"data-testid": "createBudgetNameInput",
+										"data-testid": "createBudgetTargetNameInput",
 									}}
 									required
 									fullWidth
@@ -93,9 +93,9 @@ function CreateBudgetTargetForm({
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									label="Total Taget Amount"
-									data-testid="createBudgetCode"
+									data-testid="createBudgetTargetTotalTargetAmount"
 									inputProps={{
-										"data-testid": "createBudgetCodeInput",
+										"data-testid": "createBudgetTargetTotalTargetAmountInput",
 									}}
 									type="number"
 									required
@@ -123,9 +123,9 @@ function CreateBudgetTargetForm({
 										onBlur={formik.handleBlur}
 										label="Choose Organization Currency"
 										name="organization_currency"
-										data-testid="createProjectWorkspace"
+										data-testid="createBudgetTargetOrganizationCurrency"
 										inputProps={{
-											"data-testid": "createProjectWorkspaceOption",
+											"data-testid": "createBudgetTargetOrganizationCurrencyOption",
 										}}
 									>
 										{organizationCurrencies.map(
@@ -160,9 +160,9 @@ function CreateBudgetTargetForm({
 										onBlur={formik.handleBlur}
 										label="Choose Budget Category"
 										name="budget_category_organization"
-										data-testid="createProjectWorkspace"
+										data-testid="createBudgetTargetBudgetCategory"
 										inputProps={{
-											"data-testid": "createProjectWorkspaceOption",
+											"data-testid": "createBudgetTargetBudgetCategoryOption",
 										}}
 									>
 										{budgetCategory.map((elem: IBudget, index: number) => (
@@ -192,9 +192,9 @@ function CreateBudgetTargetForm({
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									label="Conversion Factor"
-									data-testid="createBudgetCode"
+									data-testid="createBudgetTargetConversionFactor"
 									inputProps={{
-										"data-testid": "createBudgetCodeInput",
+										"data-testid": "createBudgetTargetConversionFactorInput",
 									}}
 									type="number"
 									required
@@ -220,9 +220,9 @@ function CreateBudgetTargetForm({
 									required
 									fullWidth
 									multiline
-									data-testid="createBudgetDescription"
+									data-testid="createBudgetTargetDescription"
 									inputProps={{
-										"data-testid": "createBudgetDescriptionInput",
+										"data-testid": "createBudgetTargetDescriptionInput",
 									}}
 									rows={2}
 									name="description"
@@ -237,7 +237,7 @@ function CreateBudgetTargetForm({
 										variant="contained"
 										color="primary"
 										type="submit"
-										data-testid="createBudgetSaveButton"
+										data-testid="createBudgetTargetSaveButton"
 										disabled={!formik.isValid}
 									>
 										Save
@@ -247,7 +247,7 @@ function CreateBudgetTargetForm({
 									className={classes.button}
 									variant="contained"
 									color="secondary"
-									data-testid="createBudgetCancelButton"
+									data-testid="createBudgetTargetCancelButton"
 									disableRipple
 									onClick={onCancel}
 								>
