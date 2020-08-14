@@ -10,7 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { IBudgetTargetProjectResponse } from "../../../models/budget/query";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import CreateBudgetTargetDialog from "../../Dasboard/CreateBudgetTargetDialog";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 import SimpleMenu from "../../Menu/Menu";
@@ -40,6 +40,7 @@ const tableHeading = [
 	{ label: "Organization Currency" },
 	{ label: "Project" },
 	{ label: "Name" },
+	{ label: "Budget Category" },
 	{ label: "Total Target Amount" },
 	{ label: "Conversion Factor" },
 ];
@@ -52,6 +53,16 @@ export default function BudgetTargetTable() {
 	const { data, loading, error } = useQuery(GET_BUDGET_TARGET_PROJECT);
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+	useEffect(() => {
+		if (data) {
+			console.log("data :>> ", data);
+			let arr = data.budgetTargetsProjects.map(
+				(ele: any) => ele.budget_category_organization
+			);
+			console.log("arr :>> ", arr);
+		}
+	}, [data]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -113,7 +124,11 @@ export default function BudgetTargetTable() {
 													budgetTargetsProject.conversion_factor,
 												organization_currency:
 													budgetTargetsProject.organization_currency.id,
-												budget_category: "12",
+												budget_category_organization: budgetTargetsProject
+													?.budget_category_organization?.id
+													? budgetTargetsProject
+															?.budget_category_organization?.id
+													: "12",
 												id: budgetTargetsProject.id,
 											}}
 										/>
@@ -131,6 +146,12 @@ export default function BudgetTargetTable() {
 										</TableCell>
 										<TableCell align="left">
 											{budgetTargetsProject.name}
+										</TableCell>
+										<TableCell align="left">
+											{
+												budgetTargetsProject?.budget_category_organization
+													?.name
+											}
 										</TableCell>
 										<TableCell align="left">
 											{budgetTargetsProject.total_target_amount}

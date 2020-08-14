@@ -8,6 +8,8 @@ import { IBudget } from "../../../models/budget/budget";
 import CreateBudgetForm from "../../Forms/CreateBudgetForm";
 import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
+import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
 
 const initialValues = {
 	name: "",
@@ -45,7 +47,27 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 
 	const onSubmit = (values: IBudget) => {
 		createNewOrgBudgetCategory({
-			variables: { input: { ...values, organization: dashboardData?.organization?.id } },
+			variables: {
+				input: { ...values, organization: dashboardData?.organization?.id },
+			},
+			update: (store, { data: { createOrgBudgetCategory } }) => {
+				try {
+					const data = store.readQuery<IGET_BUDGET_CATEGORY>({
+						query: GET_ORGANIZATION_BUDGET_CATEGORY,
+					});
+					store.writeQuery<IGET_BUDGET_CATEGORY>({
+						query: GET_ORGANIZATION_BUDGET_CATEGORY,
+						data: {
+							orgBudgetCategory: [
+								...data!.orgBudgetCategory,
+								createOrgBudgetCategory,
+							],
+						},
+					});
+				} catch (err) {
+					console.log("err :>> ", err);
+				}
+			},
 		});
 	};
 

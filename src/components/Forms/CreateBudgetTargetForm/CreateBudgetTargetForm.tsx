@@ -152,14 +152,14 @@ function CreateBudgetTargetForm({
 										labelId="demo-simple-select-outlined-label"
 										id="demo-simple-select-outlined"
 										error={
-											!!formik.errors.budget_category &&
-											!!formik.touched.budget_category
+											!!formik.errors.budget_category_organization &&
+											!!formik.touched.budget_category_organization
 										}
-										value={formik.values.budget_category}
+										value={formik.values.budget_category_organization}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 										label="Choose Budget Category"
-										name="budget_category"
+										name="budget_category_organization"
 										data-testid="createProjectWorkspace"
 										inputProps={{
 											"data-testid": "createProjectWorkspaceOption",
@@ -172,8 +172,8 @@ function CreateBudgetTargetForm({
 										))}
 									</Select>
 									<FormHelperText error>
-										{formik.touched.budget_category &&
-											formik.errors.budget_category}
+										{formik.touched.budget_category_organization &&
+											formik.errors.budget_category_organization}
 									</FormHelperText>
 								</FormControl>
 							</Grid>

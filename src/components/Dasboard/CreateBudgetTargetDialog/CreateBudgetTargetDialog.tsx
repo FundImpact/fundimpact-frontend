@@ -24,7 +24,7 @@ const defaultFormValues: IBudgetTarget = {
 	description: "",
 	conversion_factor: "",
 	organization_currency: "",
-	budget_category: "",
+	budget_category_organization: "",
 };
 
 const compObject = (obj1: any, obj2: any): boolean =>
@@ -38,7 +38,7 @@ const validate = (values: IBudgetTarget) => {
 		description: string;
 		conversion_factor: string;
 		organization_currency: string;
-		budget_category: string;
+		budget_category_organization: string;
 	}
 
 	let errors: Partial<IBudgetTargetErrors> = {};
@@ -55,8 +55,8 @@ const validate = (values: IBudgetTarget) => {
 	if (!values.conversion_factor) {
 		errors.conversion_factor = "Conversion factor is required";
 	}
-	if (!values.budget_category) {
-		errors.budget_category = "Budget Category is required";
+	if (!values.budget_category_organization) {
+		errors.budget_category_organization = "Budget Category is required";
 	}
 	if (!values.organization_currency) {
 		errors.organization_currency = "Organization Currency is required";
@@ -91,8 +91,6 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	const dashboardData = useDashBoardData();
 
 	const onCreate = (values: IBudgetTarget) => {
-		// budget_category_organization: values.budget_category,
-		delete values.budget_category;
 		createProjectBudgetTarget({
 			variables: {
 				input: {
@@ -129,8 +127,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 			props.handleClose();
 			return;
 		}
-		
-		delete values.budget_category;
+
 		delete values.id;
 
 		updateProjectBudgetTarget({

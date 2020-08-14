@@ -13,7 +13,7 @@ export interface IBudgetTarget {
 	total_target_amount: string;
 	conversion_factor: string;
 	organization_currency: string;
-	budget_category: string;
+	budget_category_organization: string;
 	id?: string;
 }
 

@@ -6,11 +6,6 @@ export const CREATE_ORG_BUDGET_CATEGORY = gql`
 			id
 			name
 			code
-			description
-			organization {
-				id
-				name
-			}
 		}
 	}
 `;
@@ -48,6 +43,9 @@ export const CREATE_PROJECT_BUDGET_TARGET = gql`
 			project {
 				name
 			}
+			budget_category_organization{
+				name
+			}
 		}
 	}
 `;
@@ -64,6 +62,10 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 				}
 			}
 			project {
+				name
+			}
+			budget_category_organization{
+				id
 				name
 			}
 			description
