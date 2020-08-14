@@ -10,7 +10,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { IBudgetTargetProjectResponse } from "../../../models/budget/query";
-import React from "react";
+import React, { useState, useRef } from "react";
+import CreateBudgetTargetDialog from "../../Dasboard/CreateBudgetTargetDialog";
+import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import SimpleMenu from "../../Menu/Menu";
+import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 
 const useStyles = makeStyles({
 	table: {
@@ -36,7 +40,6 @@ const tableHeading = [
 	{ label: "Organization Currency" },
 	{ label: "Project" },
 	{ label: "Name" },
-	{ label: "Description" },
 	{ label: "Total Target Amount" },
 	{ label: "Conversion Factor" },
 ];
@@ -44,9 +47,35 @@ const tableHeading = [
 export default function BudgetTargetTable() {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
-	console.log(`table header`, tableHeader);
+	const menuId = React.useRef("");
+
 	const { data, loading, error } = useQuery(GET_BUDGET_TARGET_PROJECT);
-	console.log("data :>> ", data);
+	const [openDialog, setOpenDialog] = useState(false);
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const menuList = [
+		{
+			children: (
+				<MenuItem
+					onClick={() => {
+						setOpenDialog(true);
+						handleClose();
+					}}
+				>
+					Edit Budget Target
+				</MenuItem>
+			),
+		},
+	];
+
 	return (
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="simple table">
@@ -68,6 +97,26 @@ export default function BudgetTargetTable() {
 									index: number
 								) => (
 									<TableRow key={budgetTargetsProject.id}>
+										<CreateBudgetTargetDialog
+											open={
+												menuId.current == budgetTargetsProject.id &&
+												openDialog
+											}
+											handleClose={() => setOpenDialog(false)}
+											formAction={BUDGET_ACTIONS.UPDATE}
+											initialValues={{
+												name: budgetTargetsProject.name,
+												description: budgetTargetsProject.description,
+												total_target_amount:
+													budgetTargetsProject.total_target_amount,
+												conversion_factor:
+													budgetTargetsProject.conversion_factor,
+												organization_currency:
+													budgetTargetsProject.organization_currency.id,
+												budget_category: "12",
+												id: budgetTargetsProject.id,
+											}}
+										/>
 										<TableCell component="td" scope="row">
 											{index + 1}
 										</TableCell>
@@ -84,23 +133,33 @@ export default function BudgetTargetTable() {
 											{budgetTargetsProject.name}
 										</TableCell>
 										<TableCell align="left">
-											{budgetTargetsProject.description}
-										</TableCell>
-										<TableCell align="left">
 											{budgetTargetsProject.total_target_amount}
 										</TableCell>
 										<TableCell align="left">
 											{budgetTargetsProject.conversion_factor}
 										</TableCell>
 										<TableCell>
-											<IconButton aria-label="delete">
+											<IconButton
+												aria-haspopup="true"
+												onClick={(
+													event: React.MouseEvent<HTMLButtonElement>
+												) => {
+													menuId.current = budgetTargetsProject.id;
+													handleClick(event);
+												}}
+											>
 												<MoreVertIcon />
 											</IconButton>
-											<Menu open={false} id="simple-menu" keepMounted>
-												<MenuItem>Profile</MenuItem>
-												<MenuItem>My account</MenuItem>
-												<MenuItem>Logout</MenuItem>
-											</Menu>
+											<SimpleMenu
+												handleClose={handleClose}
+												id={`organizationMenu-${budgetTargetsProject.id}`}
+												anchorEl={
+													menuId.current == budgetTargetsProject.id
+														? anchorEl
+														: null
+												}
+												menuList={menuList}
+											/>
 										</TableCell>
 									</TableRow>
 								)

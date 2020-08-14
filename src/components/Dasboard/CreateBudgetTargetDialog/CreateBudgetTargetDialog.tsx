@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useMutation, useQuery, useApolloClient } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
@@ -8,21 +8,28 @@ import CreateBudgetTargetProjectForm from "../../Forms/CreateBudgetTargetForm";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	CREATE_PROJECT_BUDGET_TARGET,
+	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/queries/budget";
 import { GET_ORG_CURRENCIES } from "../../../graphql/queries";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IBudgetTarget } from "../../../models/budget/budget";
 import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
+import { ICreateBudgetTargetProjectDialogProps } from "../../../models/budget/budget";
+import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 
-const initialValues: IBudgetTarget = {
+const defaultFormValues: IBudgetTarget = {
 	name: "",
 	total_target_amount: "",
 	description: "",
 	conversion_factor: "",
-	organizationCurrencyId: "",
+	organization_currency: "",
 	budget_category: "",
 };
+
+const compObject = (obj1: any, obj2: any): boolean =>
+	Object.keys(obj1).length == Object.keys(obj2).length &&
+	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] == obj1[key]);
 
 const validate = (values: IBudgetTarget) => {
 	interface IBudgetTargetErrors {
@@ -30,7 +37,7 @@ const validate = (values: IBudgetTarget) => {
 		total_target_amount: string;
 		description: string;
 		conversion_factor: string;
-		organizationCurrencyId: string;
+		organization_currency: string;
 		budget_category: string;
 	}
 
@@ -51,78 +58,92 @@ const validate = (values: IBudgetTarget) => {
 	if (!values.budget_category) {
 		errors.budget_category = "Budget Category is required";
 	}
-	if (!values.organizationCurrencyId) {
-		errors.organizationCurrencyId = "Organization Currency is required";
+	if (!values.organization_currency) {
+		errors.organization_currency = "Organization Currency is required";
 	}
 	return errors;
 };
 
-function CreateBudgetTargetProjectDialog({
-	open,
-	handleClose,
-}: {
-	open: boolean;
-	handleClose: () => void;
-}) {
+function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
 	const [
 		createProjectBudgetTarget,
 		{
-			data: projectBudgetTarget,
+			data: createProjectBudgetTargetData,
 			loading: creatingProjectBudgetTarget,
 			error: createProjectBudgetTargetError,
-			client,
 		},
 	] = useMutation(CREATE_PROJECT_BUDGET_TARGET);
 
-	const apolloClient = useApolloClient();
+	let initialValues =
+		props.formAction == BUDGET_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+
+	const [
+		updateProjectBudgetTarget,
+		{
+			data: updateProjectBudgetTargetData,
+			loading: updatingProjectBudgetTarget,
+			error: updateProjectBudgetTargetError,
+		},
+	] = useMutation(UPDATE_PROJECT_BUDGET_TARGET);
 
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES);
 	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY);
 	const dashboardData = useDashBoardData();
 
-	const onSubmit = async (values: IBudgetTarget) => {
-		try {
-			const { data } = await createProjectBudgetTarget({
-				variables: {
-					input: {
-						project: "3",
-						name: values.name,
-						description: values.description,
-						total_target_amount: values.total_target_amount,
-						conversion_factor: values.conversion_factor,
-						organization_currency: values.organizationCurrencyId,
-						// budget_category_organization: values.budget_category,
-					},
+	const onCreate = (values: IBudgetTarget) => {
+		// budget_category_organization: values.budget_category,
+		delete values.budget_category;
+		createProjectBudgetTarget({
+			variables: {
+				input: {
+					project: dashboardData?.project?.id,
+					...values,
 				},
-			});
-
-			const oldCachedData = apolloClient.readQuery<IGET_BUDGET_TARGET_PROJECT>({
-				query: GET_BUDGET_TARGET_PROJECT,
-			});
-
-			apolloClient.writeQuery({
-				query: GET_BUDGET_TARGET_PROJECT,
-				data: {
-					budgetTargetsProjects: [
-						oldCachedData && oldCachedData.budgetTargetsProjects
-							? oldCachedData.budgetTargetsProjects.map((ele) => ele)
-							: [],
-						{
-							description: data.createProjectBudgetTarget.description,
-							project: data.createProjectBudgetTarget.project,
-							total_target_amount: data.createProjectBudgetTarget.total_target_amount,
-							name: data.createProjectBudgetTarget.name,
-							organization_currency:
-								data.createProjectBudgetTarget.organization_currency,
-							conversion_factor: data.createProjectBudgetTarget.conversion_factor,
+			},
+			update: (store, { data: { createProjectBudgetTarget } }) => {
+				try {
+					const data = store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
+						query: GET_BUDGET_TARGET_PROJECT,
+					});
+					store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
+						query: GET_BUDGET_TARGET_PROJECT,
+						data: {
+							budgetTargetsProjects: [
+								...data!.budgetTargetsProjects,
+								createProjectBudgetTarget,
+							],
 						},
-					],
-				},
-			});
-			handleClose();
-		} catch (err) {
-			console.log("err :>> ", err);
+					});
+				} catch (err) {
+					console.log("err :>> ", err);
+				}
+			},
+		});
+
+		props.handleClose();
+	};
+
+	const onUpdate = (values: IBudgetTarget) => {
+		// budget_category_organization: values.budget_category,
+		if (compObject(values, initialValues)) {
+			props.handleClose();
+			return;
 		}
+		
+		delete values.budget_category;
+		delete values.id;
+
+		updateProjectBudgetTarget({
+			variables: {
+				id: initialValues.id,
+				input: {
+					project: dashboardData?.project?.id,
+					...values,
+				},
+			},
+		});
+
+		props.handleClose();
 	};
 
 	return (
@@ -130,8 +151,8 @@ function CreateBudgetTargetProjectDialog({
 			<Dialog
 				fullWidth
 				maxWidth="md"
-				open={open}
-				onClose={handleClose}
+				open={props.open}
+				onClose={props.handleClose}
 				data-testid="create-budget-dialog"
 				aria-labelledby="form-dialog-title"
 			>
@@ -161,8 +182,10 @@ function CreateBudgetTargetProjectDialog({
 							<CreateBudgetTargetProjectForm
 								initialValues={initialValues}
 								validate={validate}
-								onSubmit={onSubmit}
-								onCancel={handleClose}
+								onCreate={onCreate}
+								onCancel={props.handleClose}
+								onUpdate={onUpdate}
+								formAction={props.formAction}
 								organizationCurrencies={
 									orgCurrencies?.orgCurrencies ? orgCurrencies.orgCurrencies : []
 								}

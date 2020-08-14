@@ -8,7 +8,6 @@ import { IBudget } from "../../../models/budget/budget";
 import CreateBudgetForm from "../../Forms/CreateBudgetForm";
 import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { FullScreenLoader } from "../../Loader/Loader";
 
 const initialValues = {
 	name: "",

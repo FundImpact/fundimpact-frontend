@@ -1,0 +1,4 @@
+export enum BUDGET_ACTIONS {
+	CREATE = "CREATE",
+	UPDATE = "UPDATE",
+}

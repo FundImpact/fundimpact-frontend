@@ -2,13 +2,13 @@ import { IOrganizationCurrency } from "../index";
 import { IProject } from "../project/project";
 
 export interface IBudgetTargetProjectResponse {
-	description: string;
 	id: string;
 	name: string;
-	total_target_amount: number;
-	conversion_factor: number;
-	organization_currency: Partial<IOrganizationCurrency>;
+	total_target_amount: string;
+	conversion_factor: string;
+	organization_currency: IOrganizationCurrency;
 	project: Partial<IProject>;
+	description: string;
 }
 
 export interface IGET_BUDGET_TARGET_PROJECT {

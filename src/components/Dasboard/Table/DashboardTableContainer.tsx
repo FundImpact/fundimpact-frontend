@@ -5,6 +5,7 @@ import CreateBudgetDialog from "../CreateBudgetDialog";
 import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import DefaultTable from "../../Table/Table";
+import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -71,7 +72,11 @@ const tabs = [
 			{
 				text: "Create Budget Target",
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<CreateBudgetTargetDialog open={open} handleClose={handleClose} />
+					<CreateBudgetTargetDialog
+						formAction={BUDGET_ACTIONS.CREATE}
+						open={open}
+						handleClose={handleClose}
+					/>
 				),
 			},
 		],
@@ -97,7 +102,6 @@ function GetTable(label: string) {
 }
 
 export default function DashboardTableContainer() {
-
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
 

@@ -16,6 +16,7 @@ import {
 import { IBudgetTargetFormProps } from "../../../models/budget/budgetForm";
 import { IBudgetTarget, IBudget } from "../../../models/budget/budget";
 import { IOrganizationCurrency } from "../../../models";
+import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -31,7 +32,9 @@ const useStyles = makeStyles(() =>
 function CreateBudgetTargetForm({
 	initialValues,
 	validate,
-	onSubmit,
+	onUpdate,
+	onCreate,
+	formAction,
 	onCancel,
 	organizationCurrencies,
 	budgetCategory,
@@ -45,7 +48,9 @@ function CreateBudgetTargetForm({
 	return (
 		<Formik
 			initialValues={initialValues}
-			onSubmit={onSubmit}
+			onSubmit={(values: IBudgetTarget) =>
+				formAction == BUDGET_ACTIONS.UPDATE ? onUpdate(values) : onCreate(values)
+			}
 			validate={validate}
 			isInitialValid={() => validateInitialValue(initialValues)}
 		>
@@ -108,16 +113,16 @@ function CreateBudgetTargetForm({
 
 									<Select
 										labelId="demo-simple-select-outlined-label"
-										id="demo-simple-select-outlined"
+										id="demo-simple-select-outlined-1"
 										error={
-											!!formik.errors.organizationCurrencyId &&
-											!!formik.touched.organizationCurrencyId
+											!!formik.errors.organization_currency &&
+											!!formik.touched.organization_currency
 										}
-										value={formik.values.organizationCurrencyId}
+										value={formik.values.organization_currency}
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 										label="Choose Organization Currency"
-										name="organizationCurrencyId"
+										name="organization_currency"
 										data-testid="createProjectWorkspace"
 										inputProps={{
 											"data-testid": "createProjectWorkspaceOption",
@@ -132,8 +137,8 @@ function CreateBudgetTargetForm({
 										)}
 									</Select>
 									<FormHelperText error>
-										{formik.touched.organizationCurrencyId &&
-											formik.errors.organizationCurrencyId}
+										{formik.touched.organization_currency &&
+											formik.errors.organization_currency}
 									</FormHelperText>
 								</FormControl>
 							</Grid>

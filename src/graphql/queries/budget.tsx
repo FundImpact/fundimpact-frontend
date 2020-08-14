@@ -38,7 +38,6 @@ export const CREATE_PROJECT_BUDGET_TARGET = gql`
 		createProjectBudgetTarget(input: $input) {
 			id
 			name
-			description
 			total_target_amount
 			conversion_factor
 			organization_currency {
@@ -59,16 +58,36 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 			id
 			name
 			organization_currency {
+				id
 				currency {
 					name
 				}
 			}
-			description
 			project {
 				name
 			}
+			description
 			total_target_amount
 			conversion_factor
+		}
+	}
+`;
+
+export const UPDATE_PROJECT_BUDGET_TARGET = gql`
+	mutation updateProjectBudgetTarget($id: ID!, $input: BudgetTargetsProjectInput!) {
+		updateProjectBudgetTarget(id: $id, input: $input) {
+			id
+			name
+			total_target_amount
+			conversion_factor
+			organization_currency {
+				currency {
+					name
+				}
+			}
+			project {
+				name
+			}
 		}
 	}
 `;
