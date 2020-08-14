@@ -5,7 +5,7 @@ import CreateBudgetDialog from "../CreateBudgetDialog";
 import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import ImpactUnitDialog from '../ImpactUnitDialog'
+import ImpactUnitDialog from "../ImpactUnitDialog";
 
 import DefaultTable from "../../Table/Table";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
@@ -61,7 +61,7 @@ const tabs = [
 		label: "Funds",
 		createButtons: [
 			{
-				text: "Create Budget",
+				text: "Create Budget Category",
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 					<CreateBudgetDialog open={open} handleClose={handleClose} />
 				),
@@ -90,7 +90,22 @@ const tabs = [
 	},
 	{
 		label: "Impact Indicators",
-		createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
+		createButtons: [
+			{ text: "Create Impact Targets" },
+			{ text: "Report Achivement" },
+			{
+				text: "Create Impact Category",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<ImpactCategoryDialog open={open} handleClose={handleClose} />
+				),
+			},
+			{
+				text: "Create Impact Unit",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<ImpactUnitDialog open={open} handleClose={handleClose} />
+				),
+			},
+		],
 	},
 	{ label: "Documents", createButtons: [] },
 ];
@@ -105,49 +120,6 @@ function GetTable(label: string) {
 }
 
 export default function DashboardTableContainer() {
-	const tabs = [
-		{
-			label: "Funds",
-			createButtons: [
-				{
-					text: "Create Budget",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetDialog open={open} handleClose={handleClose} />
-					),
-				},
-				{ text: "Create Deliverables" },
-				{ text: "Create Impact Indicators" },
-				{ text: "Add Donor" },
-				{ text: "Create Budget Indicators" },
-				{ text: "Track Budget Spend" },
-				{ text: "Report Fund Receipt" },
-			],
-		},
-		{
-			label: "Deliverables",
-			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
-		},
-		{
-			label: "Impact Indicators",
-			createButtons: [
-				{ text: "Create Impact Targets" },
-				{ text: "Report Achivement" },
-				{
-					text: "Create Impact Category",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactCategoryDialog open={open} handleClose={handleClose} />
-					),
-				},
-				{
-					text: "Create Impact Unit",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactUnitDialog open={open} handleClose={handleClose} />
-					),
-				},
-			],
-		},
-		{ label: "Documents", createButtons: [] },
-	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
 
