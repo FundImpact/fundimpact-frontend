@@ -3,11 +3,11 @@ import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { IImpactUnitFormInput, IImpactUnitFormProps } from "../../../models/impact/impactForm";
+import { useMutation } from "@apollo/client";
+import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import ImpactUnitForm from "../../Forms/ImpactUnitForm";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/queries/Impact/query";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",
@@ -44,23 +44,9 @@ const validate = (values: IImpactUnitFormInput) => {
 function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const dashboardData = useDashBoardData();
 
-	const [loadImpactCategory, { loading, error, data }] = useLazyQuery(
-		GET_IMPACT_CATEGORY_BY_ORG,
-		{
-			variables: {
-				filter: {
-					organization: dashboardData?.organization?.id,
-				},
-			},
-		}
+	const [createImpactUnitsOrgInput, { data, loading, error }] = useMutation(
+		CREATE_IMPACT_UNITS_ORG_INPUT
 	);
-
-	useEffect(() => {
-		if (dashboardData) {
-			console.log("calling :>> ");
-			loadImpactCategory();
-		}
-	}, [dashboardData]);
 
 	if (error) {
 		console.log("error :>> ", error);
@@ -71,6 +57,23 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 			console.log("data :>> ", data);
 		}
 	}, [data]);
+
+	const onSubmit = async (values: IImpactUnitFormInput) => {
+		try {
+			console.log("values :>> ", values);
+			await createImpactUnitsOrgInput({
+				variables: {
+					input: {
+						...values,
+					},
+				},
+			});
+			handleClose();
+		} catch (err) {
+			console.log("err :>> ", err);
+			handleClose();
+		}
+	};
 
 	return (
 		<Dialog
@@ -107,12 +110,17 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 						<ImpactUnitForm
 							initialValues={initialValues}
 							validate={validate}
-							onSubmit={(values: IImpactUnitFormInput) => console.log(values)}
+							onSubmit={onSubmit}
 							onCancel={() => handleClose()}
 						/>
 					</Grid>
 				</Grid>
 			</Box>
+			{loading ? (
+				<Box position="fixed" bottom={10}>
+					<CircularProgress />
+				</Box>
+			) : null}
 		</Dialog>
 	);
 }
