@@ -26,45 +26,51 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 			component={Grid}
 		>
 			<Grid item xs={12} md={3} container>
-				<Grid item xs={2}>
-					<LeftPanel />
-				</Grid>
-				<Grid item xs={10}>
-					<SideBar>
-						{(
-							organization: { name: string; id: string | null },
-							workspaces: { name: string; id: string | number }[]
-						) => {
-							return (
-								<Grid container direction="column">
-									<Grid item>
-										<Typography variant="h5" gutterBottom noWrap={true}>
-											<Box color="primary.main">{organization.name}</Box>
-										</Typography>
-									</Grid>
-									<Grid item>
-										<Box mt={5}>
-											{workspaces.map((workspace) => {
-												return (
-													<Typography
-														key={workspace.id}
-														variant="subtitle1"
-														gutterBottom
-														noWrap={true}
-													>
-														<Box color="primary.main">
-															{workspace.name}
-														</Box>
-													</Typography>
-												);
-											})}
-										</Box>
-									</Grid>
-								</Grid>
-							);
-						}}
-					</SideBar>
-				</Grid>
+				<Box position="fixed">
+					<Grid container>
+						<Grid item xs={2}>
+							<LeftPanel />
+						</Grid>
+						<Grid item xs={10}>
+							<SideBar>
+								{(
+									organization: { name: string; id: string | null },
+									workspaces: { name: string; id: string | number }[]
+								) => {
+									return (
+										<Grid container direction="column">
+											<Grid item>
+												<Typography variant="h5" gutterBottom noWrap={true}>
+													<Box color="primary.main">
+														{organization.name}
+													</Box>
+												</Typography>
+											</Grid>
+											<Grid item>
+												<Box mt={5}>
+													{workspaces.map((workspace) => {
+														return (
+															<Typography
+																key={workspace.id}
+																variant="subtitle1"
+																gutterBottom
+																noWrap={true}
+															>
+																<Box color="primary.main">
+																	{workspace.name}
+																</Box>
+															</Typography>
+														);
+													})}
+												</Box>
+											</Grid>
+										</Grid>
+									);
+								}}
+							</SideBar>
+						</Grid>
+					</Grid>
+				</Box>
 			</Grid>
 
 			<Grid item xs md={9} container direction="column">

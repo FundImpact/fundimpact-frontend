@@ -33,7 +33,7 @@ export default function LeftPanel() {
 		setAnchorEl(null);
 	};
 	return (
-		<Grid component={Box} container className={classes.leftPanel} direction="column">
+		<Grid  container className={classes.leftPanel} direction="column">
 			<Grid xs item>
 				<Box mb={1} mt={1}>
 					<IconButton>
