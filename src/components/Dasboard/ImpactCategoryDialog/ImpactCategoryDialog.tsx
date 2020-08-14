@@ -40,9 +40,9 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 	);
 	const dashboardData = useDashBoardData();
 
-	const onSubmit = (values: IImpactCategory) => {
+	const onSubmit = async (values: IImpactCategory) => {
 		try {
-			createImpactCategoryOrgInput({
+			await createImpactCategoryOrgInput({
 				variables: {
 					input: {
 						...values,
@@ -61,8 +61,10 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 				// 	});
 				// },
 			});
+			handleClose();
 		} catch (err) {
 			console.log("err :>> ", err);
+			handleClose();
 		}
 	};
 

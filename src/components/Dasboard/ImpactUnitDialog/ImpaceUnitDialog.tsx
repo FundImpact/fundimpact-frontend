@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
-import { Grid } from "@material-ui/core";
+import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { IImpactUnitFormInput, IImpactUnitFormProps } from "../../../models/impact/impactForm";
 import ImpactUnitForm from "../../Forms/ImpactUnitForm";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/queries/Impact/query";
@@ -43,15 +43,30 @@ const validate = (values: IImpactUnitFormInput) => {
 
 function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const dashboardData = useDashBoardData();
-	const { loading, error, data } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
-		variables: {
-			filter: {
-				organization: dashboardData?.organization?.id,
+
+	const [loadImpactCategory, { loading, error, data }] = useLazyQuery(
+		GET_IMPACT_CATEGORY_BY_ORG,
+		{
+			variables: {
+				filter: {
+					organization: dashboardData?.organization?.id,
+				},
 			},
-		},
-	});
-	
-	React.useEffect(() => {	
+		}
+	);
+
+	useEffect(() => {
+		if (dashboardData) {
+			console.log("calling :>> ");
+			loadImpactCategory();
+		}
+	}, [dashboardData]);
+
+	if (error) {
+		console.log("error :>> ", error);
+	}
+
+	useEffect(() => {
 		if (data) {
 			console.log("data :>> ", data);
 		}
