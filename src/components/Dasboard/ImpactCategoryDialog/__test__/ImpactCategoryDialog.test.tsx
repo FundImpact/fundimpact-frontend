@@ -4,9 +4,8 @@ import { act, fireEvent, wait, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
-// import { renderApollo } from "../../../../utils/test.util";
+import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/queries/Impact/mutation";
-import { MockedProvider } from "@apollo/react-testing";
 
 const handleClose = jest.fn();
 
@@ -38,14 +37,17 @@ const mocks = [
 
 beforeEach(() => {
 	act(() => {
-		dialog = render(
-			<MockedProvider mocks={mocks} addTypename={false}>
-				<DashboardProvider>
-					<NotificationProvider>
-						<ImpactCategoryDialog open={true} handleClose={handleClose} />
-					</NotificationProvider>
-				</DashboardProvider>
-			</MockedProvider>
+		dialog = renderApollo(
+			<DashboardProvider>
+				<NotificationProvider>
+					<ImpactCategoryDialog open={true} handleClose={handleClose} />
+				</NotificationProvider>
+			</DashboardProvider>, 
+			{
+				mocks,
+				addTypename: false,
+				resolvers: {}
+			}
 		);
 	});
 });
