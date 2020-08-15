@@ -3,6 +3,8 @@ import { Formik, Form } from "formik";
 import { Grid, TextField, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
 import { IBudgetFormProps } from "../../../models/budget/budgetForm";
 import { IBudget } from "../../../models/budget/budget";
+import { IInputField } from "../../../models";
+import InputField from "../../InputField";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -11,6 +13,32 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 	})
 );
+
+let inputFields: IInputField[] = [
+	{
+		name: "name",
+		id: "name",
+		dataTestId: "createBudgetName",
+		testId: "createBudgetNameInput",
+		label: "Name",
+	},
+	{
+		name: "code",
+		id: "budgetCode",
+		dataTestId: "createBudgetCode",
+		testId: "createBudgetCodeInput",
+		label: "Budget Code",
+	},
+	{
+		name: "description",
+		id: "description",
+		dataTestId: "createBudgetDescription",
+		testId: "createBudgetDescriptionInput",
+		label: "Description",
+		multiline: true,
+		rows: 3,
+	},
+];
 
 function CreateBudgetForm({ initialValues, validate, onSubmit, onCancel }: IBudgetFormProps) {
 	const classes = useStyles();
@@ -30,72 +58,25 @@ function CreateBudgetForm({ initialValues, validate, onSubmit, onCancel }: IBudg
 				return (
 					<Form>
 						<Grid container spacing={4}>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.name}
-									style={{ width: "100%" }}
-									error={!!formik.errors.name && !!formik.touched.name}
-									onBlur={formik.handleBlur}
-									helperText={formik.touched.name && formik.errors.name}
-									onChange={formik.handleChange}
-									label="Name"
-									data-testid="createBudgetName"
-									inputProps={{
-										"data-testid": "createBudgetNameInput",
-									}}
-									required
-									fullWidth
-									name="name"
-									variant="outlined"
-									id="name"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.code}
-									error={!!formik.errors.code && !!formik.touched.code}
-									helperText={formik.touched.code && formik.errors.code}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									label="Budget Code"
-									data-testid="createBudgetCode"
-									inputProps={{
-										"data-testid": "createBudgetCodeInput",
-									}}
-									required
-									fullWidth
-									name="code"
-									variant="outlined"
-									id="budgetCode"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.description}
-									error={
-										!!formik.errors.description && !!formik.touched.description
-									}
-									helperText={
-										formik.touched.description && formik.errors.description
-									}
-									onBlur={formik.handleBlur}
-									onChange={formik.handleChange}
-									label="Description"
-									required
-									fullWidth
-									multiline
-									data-testid="createBudgetDescription"
-									inputProps={{
-										"data-testid": "createBudgetDescriptionInput",
-									}}
-									rows={2}
-									name="description"
-									variant="outlined"
-									id="description"
-								/>
-							</Grid>
+							{inputFields.map((element: IInputField, index: number) => {
+								return (
+									<Grid item xs={12} key={index}>
+										<InputField
+											formik={formik}
+											name={element.name}
+											id={element.id}
+											dataTestId={element.dataTestId}
+											testId={element.testId}
+											label={element.label}
+											multiline={
+												element.multiline ? element.multiline : false
+											}
+											rows={element.rows ? element.rows : 1}
+										/>
+									</Grid>
+								);
+							})}
+
 							<Grid item xs={12}>
 								<Box component="span" mr={2}>
 									<Button

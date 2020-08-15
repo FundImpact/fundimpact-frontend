@@ -2,6 +2,8 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { Grid, TextField, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
 import { IImpactUnitFormProps, IImpactUnitFormInput } from "../../../models/impact/impactForm";
+import { IInputField } from "../../../models";
+import InputField from "../../InputField";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -10,6 +12,54 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 	})
 );
+
+let inputFields: IInputField[] = [
+	{
+		name: "name",
+		id: "name",
+		dataTestId: "createImpactUnitName",
+		testId: "createInpactUnitNameInput",
+		label: "Name",
+	},
+	{
+		name: "prefix_label",
+		id: "prefix-label",
+		dataTestId: "createImpactUnitPrefixLabel",
+		testId: "createImpactUnitPrefixLabelInput",
+		label: "Prefix Label",
+	},
+	{
+		name: "suffix_label",
+		id: "suffix-label",
+		dataTestId: "createImpactUnitSuffixLabel",
+		testId: "createImpactUnitSuffixLabelInput",
+		label: "Impact Code",
+	},
+	{
+		name: "code",
+		id: "impact-code",
+		dataTestId: "createImpactUnitCode",
+		testId: "createImpactUnitCodeInput",
+		label: "Suffix Label",
+	},
+	{
+		name: "target_unit",
+		id: "target-unit",
+		dataTestId: "createImpactUnitTargetUnit",
+		testId: "createImpactUnitTargetUnitInput",
+		label: "Target Unit",
+		type: "number",
+	},
+	{
+		name: "description",
+		id: "description",
+		dataTestId: "createImpactUnitDescription",
+		testId: "createImpactUnitDescriptionInput",
+		label: "Description",
+		rows: 2,
+		multiline: true,
+	},
+];
 
 function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel }: IImpactUnitFormProps) {
 	const classes = useStyles();
@@ -29,147 +79,26 @@ function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel }: IImpact
 				return (
 					<Form>
 						<Grid container spacing={4}>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.name}
-									style={{ width: "100%" }}
-									error={!!formik.errors.name && !!formik.touched.name}
-									onBlur={formik.handleBlur}
-									helperText={formik.touched.name && formik.errors.name}
-									onChange={formik.handleChange}
-									label="Name"
-									data-testid="createImpactUnitName"
-									inputProps={{
-										"data-testid": "createInpactUnitNameInput",
-									}}
-									required
-									fullWidth
-									name="name"
-									variant="outlined"
-									id="name"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.prefix_label}
-									style={{ width: "100%" }}
-									error={
-										!!formik.errors.prefix_label &&
-										!!formik.touched.prefix_label
-									}
-									onBlur={formik.handleBlur}
-									helperText={
-										formik.touched.prefix_label && formik.errors.prefix_label
-									}
-									onChange={formik.handleChange}
-									label="Prefix Label"
-									data-testid="createImpactUnitPrefixLabel"
-									inputProps={{
-										"data-testid": "createImpactUnitPrefixLabelInput",
-									}}
-									required
-									fullWidth
-									name="prefix_label"
-									variant="outlined"
-									id="prefix-label"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.suffix_label}
-									style={{ width: "100%" }}
-									error={
-										!!formik.errors.suffix_label &&
-										!!formik.touched.suffix_label
-									}
-									onBlur={formik.handleBlur}
-									helperText={
-										formik.touched.suffix_label && formik.errors.suffix_label
-									}
-									onChange={formik.handleChange}
-									label="Suffix Label"
-									data-testid="createImpactUnitSuffixLabel"
-									inputProps={{
-										"data-testid": "createImpactUnitSuffixLabelInput",
-									}}
-									required
-									fullWidth
-									name="suffix_label"
-									variant="outlined"
-									id="suffix-label"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.code}
-									error={!!formik.errors.code && !!formik.touched.code}
-									helperText={formik.touched.code && formik.errors.code}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									label="Impact Code"
-									data-testid="createImpactUnitCode"
-									inputProps={{
-										"data-testid": "createImpactUnitCodeInput",
-									}}
-									required
-									fullWidth
-									name="code"
-									variant="outlined"
-									id="impact-code"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.target_unit}
-									error={
-										!!formik.errors.target_unit && !!formik.touched.target_unit
-									}
-									helperText={
-										formik.touched.target_unit && formik.errors.target_unit
-									}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									label="Target Unit"
-									data-testid="createImpactUnitTargetUnit"
-									inputProps={{
-										"data-testid": "createImpactUnitTargetUnitInput",
-									}}
-									type="number"
-									required
-									fullWidth
-									name="target_unit"
-									variant="outlined"
-									id="target-unit"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.description}
-									error={
-										!!formik.errors.description && !!formik.touched.description
-									}
-									helperText={
-										formik.touched.description && formik.errors.description
-									}
-									onBlur={formik.handleBlur}
-									onChange={formik.handleChange}
-									label="Description"
-									required
-									fullWidth
-									multiline
-									data-testid="createImpactUnitDescription"
-									inputProps={{
-										"data-testid": "createImpactUnitDescriptionInput",
-									}}
-									rows={2}
-									name="description"
-									variant="outlined"
-									id="description"
-								/>
-							</Grid>
+							{inputFields.map((element: IInputField, index: number) => {
+								return (
+									<Grid item xs={12} key={index}>
+										<InputField
+											formik={formik}
+											name={element.name}
+											id={element.id}
+											dataTestId={element.dataTestId}
+											testId={element.testId}
+											label={element.label}
+											multiline={
+												element.multiline ? element.multiline : false
+											}
+											rows={element.rows ? element.rows : 1}
+											type={element.type ? element.type : "text"}
+										/>
+									</Grid>
+								);
+							})}
+
 							<Grid item xs={12}>
 								<Box component="span" mr={2}>
 									<Button

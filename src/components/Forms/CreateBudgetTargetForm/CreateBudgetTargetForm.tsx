@@ -17,6 +17,8 @@ import { IBudgetTargetFormProps, IBudgetTargetForm } from "../../../models/budge
 import { IBudget } from "../../../models/budget/budget";
 import { IOrganizationCurrency } from "../../../models";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import { IInputField } from "../../../models";
+import InputField from "../../InputField";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -28,6 +30,41 @@ const useStyles = makeStyles(() =>
 		},
 	})
 );
+
+let inputFields: IInputField[] = [
+	{
+		name: "name",
+		id: "name",
+		dataTestId: "createBudgetTargetName",
+		testId: "createBudgetTargetNameInput",
+		label: "Name",
+	},
+	{
+		name: "total_target_amount",
+		id: "total-target-amount",
+		dataTestId: "createBudgetTargetTotalTargetAmount",
+		testId: "createBudgetTargetTotalTargetAmountInput",
+		label: "Total Taget Amount",
+		type: "number",
+	},
+	{
+		name: "conversion_factor",
+		id: "conversion-factor",
+		dataTestId: "createBudgetTargetConversionFactor",
+		testId: "createBudgetTargetConversionFactorInput",
+		label: "Conversion Factor",
+		type: "number",
+	},
+	{
+		name: "description",
+		id: "description",
+		dataTestId: "createBudgetTargetDescription",
+		testId: "createBudgetTargetDescriptionInput",
+		label: "Description",
+		rows: 2,
+		multiline: true,
+	},
+];
 
 function CreateBudgetTargetForm({
 	initialValues,
@@ -59,53 +96,26 @@ function CreateBudgetTargetForm({
 				return (
 					<Form>
 						<Grid container spacing={4}>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.name}
-									style={{ width: "100%" }}
-									error={!!formik.errors.name && !!formik.touched.name}
-									onBlur={formik.handleBlur}
-									helperText={formik.touched.name && formik.errors.name}
-									onChange={formik.handleChange}
-									label="Name"
-									data-testid="createBudgetTargetName"
-									inputProps={{
-										"data-testid": "createBudgetTargetNameInput",
-									}}
-									required
-									fullWidth
-									name="name"
-									variant="outlined"
-									id="name"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.total_target_amount}
-									error={
-										!!formik.errors.total_target_amount &&
-										!!formik.touched.total_target_amount
-									}
-									helperText={
-										formik.touched.total_target_amount &&
-										formik.errors.total_target_amount
-									}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									label="Total Taget Amount"
-									data-testid="createBudgetTargetTotalTargetAmount"
-									inputProps={{
-										"data-testid": "createBudgetTargetTotalTargetAmountInput",
-									}}
-									type="number"
-									required
-									fullWidth
-									name="total_target_amount"
-									variant="outlined"
-									id="total-target-amount"
-								/>
-							</Grid>
+							{inputFields.map((element: IInputField, index: number) => {
+								return (
+									<Grid item xs={12} key={index}>
+										<InputField
+											formik={formik}
+											name={element.name}
+											id={element.id}
+											dataTestId={element.dataTestId}
+											testId={element.testId}
+											label={element.label}
+											multiline={
+												element.multiline ? element.multiline : false
+											}
+											rows={element.rows ? element.rows : 1}
+											type={element.type ? element.type : "text"}
+										/>
+									</Grid>
+								);
+							})}	
+
 							<Grid item xs={12} md={12}>
 								<FormControl variant="outlined" className={classes.formControl}>
 									<InputLabel id="demo-simple-select-outlined-label">
@@ -179,59 +189,7 @@ function CreateBudgetTargetForm({
 									</FormHelperText>
 								</FormControl>
 							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.conversion_factor}
-									error={
-										!!formik.errors.conversion_factor &&
-										!!formik.touched.conversion_factor
-									}
-									helperText={
-										formik.touched.conversion_factor &&
-										formik.errors.conversion_factor
-									}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									label="Conversion Factor"
-									data-testid="createBudgetTargetConversionFactor"
-									inputProps={{
-										"data-testid": "createBudgetTargetConversionFactorInput",
-									}}
-									type="number"
-									required
-									fullWidth
-									name="conversion_factor"
-									variant="outlined"
-									id="conversion-factor"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.description}
-									error={
-										!!formik.errors.description && !!formik.touched.description
-									}
-									helperText={
-										formik.touched.description && formik.errors.description
-									}
-									onBlur={formik.handleBlur}
-									onChange={formik.handleChange}
-									label="Description"
-									required
-									fullWidth
-									multiline
-									data-testid="createBudgetTargetDescription"
-									inputProps={{
-										"data-testid": "createBudgetTargetDescriptionInput",
-									}}
-									rows={2}
-									name="description"
-									variant="outlined"
-									id="description"
-								/>
-							</Grid>
+
 							<Grid item xs={12}>
 								<Box component="span" mr={2}>
 									<Button

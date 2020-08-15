@@ -3,6 +3,8 @@ import { Formik, Form } from "formik";
 import { Grid, TextField, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
 import { IImpactCategoryFormProps } from "../../../models/impact/impactForm";
 import { IImpactCategory } from "../../../models/impact/impact";
+import { IInputField } from "../../../models";
+import InputField from "../../InputField";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -12,7 +14,45 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function ImpaceCategoryForm({ initialValues, validate, onSubmit, onCancel }: IImpactCategoryFormProps) {
+let inputFields: IInputField[] = [
+	{
+		name: "name",
+		id: "name",
+		dataTestId: "createImpactName",
+		testId: "createImpactNameInput",
+		label: "Name",
+	},
+	{
+		name: "shortname",
+		id: "shortname",
+		dataTestId: "createImpactShortName",
+		testId: "createImpactShortNameInput",
+		label: "Short Name",
+	},
+	{
+		name: "code",
+		id: "impactCode",
+		dataTestId: "createImpactCode",
+		testId: "createImpactCodeInput",
+		label: "Impact Code",
+	},
+	{
+		name: "description",
+		id: "description",
+		dataTestId: "createImpactCategoryDescription",
+		testId: "createImpactCategoryDescriptionInput",
+		label: "Description",
+		multiline: true,
+		rows: 3,
+	},
+];
+
+function ImpaceCategoryForm({
+	initialValues,
+	validate,
+	onSubmit,
+	onCancel,
+}: IImpactCategoryFormProps) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: IImpactCategory) => {
 		const errors = validate(initialValue) as object;
@@ -30,92 +70,24 @@ function ImpaceCategoryForm({ initialValues, validate, onSubmit, onCancel }: IIm
 				return (
 					<Form>
 						<Grid container spacing={4}>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.name}
-									style={{ width: "100%" }}
-									error={!!formik.errors.name && !!formik.touched.name}
-									onBlur={formik.handleBlur}
-									helperText={formik.touched.name && formik.errors.name}
-									onChange={formik.handleChange}
-									label="Name"
-									data-testid="createImpactName"
-									inputProps={{
-										"data-testid": "createImpactNameInput",
-									}}
-									required
-									fullWidth
-									name="name"
-									variant="outlined"
-									id="name"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									value={formik.values.shortname}
-									style={{ width: "100%" }}
-									error={!!formik.errors.shortname && !!formik.touched.shortname}
-									onBlur={formik.handleBlur}
-									helperText={formik.touched.shortname && formik.errors.shortname}
-									onChange={formik.handleChange}
-									label="Short Name"
-									data-testid="createImpactShortName"
-									inputProps={{
-										"data-testid": "createImpactShortNameInput",
-									}}
-									required
-									fullWidth
-									name="shortname"
-									variant="outlined"
-									id="shortname"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.code}
-									error={!!formik.errors.code && !!formik.touched.code}
-									helperText={formik.touched.code && formik.errors.code}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									label="Impact Code"
-									data-testid="createImpactCode"
-									inputProps={{
-										"data-testid": "createImpactCodeInput",
-									}}
-									required
-									fullWidth
-									name="code"
-									variant="outlined"
-									id="impactCode"
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<TextField
-									style={{ width: "100%" }}
-									value={formik.values.description}
-									error={
-										!!formik.errors.description && !!formik.touched.description
-									}
-									helperText={
-										formik.touched.description && formik.errors.description
-									}
-									onBlur={formik.handleBlur}
-									onChange={formik.handleChange}
-									label="Description"
-									required
-									fullWidth
-									multiline
-									data-testid="createImpactCategoryDescription"
-									inputProps={{
-										"data-testid": "createImpactCategoryDescriptionInput",
-									}}
-									rows={2}
-									name="description"
-									variant="outlined"
-									id="description"
-								/>
-							</Grid>
+							{inputFields.map((element: IInputField, index: number) => {
+								return (
+									<Grid item xs={12} key={index}>
+										<InputField
+											formik={formik}
+											name={element.name}
+											id={element.id}
+											dataTestId={element.dataTestId}
+											testId={element.testId}
+											label={element.label}
+											multiline={
+												element.multiline ? element.multiline : false
+											}
+											rows={element.rows ? element.rows : 1}
+										/>
+									</Grid>
+								);
+							})}
 							<Grid item xs={12}>
 								<Box component="span" mr={2}>
 									<Button

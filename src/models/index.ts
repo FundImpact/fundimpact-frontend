@@ -55,7 +55,6 @@ export interface IDashboardDataContext {
 	workspace?: any;
 }
 
-
 export interface INotificationContext {
 	successNotification: string;
 	errorNotification: string;
@@ -66,4 +65,16 @@ export interface IOrganizationCurrency {
 	currency: {
 		name: string;
 	};
+}
+
+export interface IInputField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
 }
