@@ -39,7 +39,7 @@ const validate = (values: IBudget) => {
 function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const [
 		createNewOrgBudgetCategory,
-		{ data: response, loading: createLoading, error: createError },
+		{ loading: createLoading },
 	] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
 
 	const notificationDispatch = useNotificationDispatch();

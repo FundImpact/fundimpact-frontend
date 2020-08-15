@@ -13,7 +13,6 @@ import {
 import { GET_ORG_CURRENCIES } from "../../../graphql/queries";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IBudgetTarget } from "../../../models/budget/budget";
 import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
 import { ICreateBudgetTargetProjectDialogProps } from "../../../models/budget/budget";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
@@ -63,26 +62,16 @@ const validate = (values: IBudgetTargetForm) => {
 
 function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
 	const notificationDispatch = useNotificationDispatch();
-	const [
-		createProjectBudgetTarget,
-		{
-			data: createProjectBudgetTargetData,
-			loading: creatingProjectBudgetTarget,
-			error: createProjectBudgetTargetError,
-		},
-	] = useMutation(CREATE_PROJECT_BUDGET_TARGET);
+	const [createProjectBudgetTarget, { loading: creatingProjectBudgetTarget }] = useMutation(
+		CREATE_PROJECT_BUDGET_TARGET
+	);
 
 	let initialValues =
 		props.formAction == BUDGET_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
-	const [
-		updateProjectBudgetTarget,
-		{
-			data: updateProjectBudgetTargetData,
-			loading: updatingProjectBudgetTarget,
-			error: updateProjectBudgetTargetError,
-		},
-	] = useMutation(UPDATE_PROJECT_BUDGET_TARGET);
+	const [updateProjectBudgetTarget, { loading: updatingProjectBudgetTarget }] = useMutation(
+		UPDATE_PROJECT_BUDGET_TARGET
+	);
 
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES);
 	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY);
@@ -97,7 +86,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 						...values,
 					},
 				},
-				update: (store, { data: { createProjectBudgetTarget } }) => {
+				update: (store, { data: { createProjectBudgetTarget: projectCreated } }) => {
 					try {
 						const data = store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
@@ -107,7 +96,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 							data: {
 								budgetTargetsProjects: [
 									...data!.budgetTargetsProjects,
-									createProjectBudgetTarget,
+									projectCreated,
 								],
 							},
 						});

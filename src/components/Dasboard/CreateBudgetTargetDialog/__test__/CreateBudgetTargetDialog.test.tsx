@@ -5,7 +5,6 @@ import "@testing-library/jest-dom/extend-expect";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
-	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../../graphql/queries/budget";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
@@ -16,7 +15,7 @@ import { GET_ORG_CURRENCIES } from "../../../../graphql/queries";
 const handleClose = jest.fn();
 
 let dialog: any;
-let creationOccured = false;
+// let creationOccured = false;
 
 const intialFormValue: any = {
 	name: "bud tar",

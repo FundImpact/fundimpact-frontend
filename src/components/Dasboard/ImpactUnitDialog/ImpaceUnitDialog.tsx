@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import { useMutation } from "@apollo/client";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import ImpactUnitForm from "../../Forms/ImpactUnitForm";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
@@ -47,9 +46,8 @@ const validate = (values: IImpactUnitFormInput) => {
 };
 
 function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-	const dashboardData = useDashBoardData();
 
-	const [createImpactUnitsOrgInput, { data, loading, error }] = useMutation(
+	const [createImpactUnitsOrgInput, { loading }] = useMutation(
 		CREATE_IMPACT_UNITS_ORG_INPUT
 	);
 	const notificationDispatch = useNotificationDispatch();
@@ -113,7 +111,7 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 				</Grid>
 			</Box>
 			{loading ? (
-				<Box position="fixed" bottom={10}>
+				<Box position="fixed" bottom={0} alignSelf="center">
 					<CircularProgress />
 				</Box>
 			) : null}

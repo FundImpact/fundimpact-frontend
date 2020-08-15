@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
-import { Grid } from "@material-ui/core";
+import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import ImpactCategoryForm from "../../Forms/ImpactCategoryForm";
 import { IImpactCategory } from "../../../models/impact/impact";
@@ -39,7 +39,7 @@ const validate = (values: IImpactCategory) => {
 };
 
 function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-	const [createImpactCategoryOrgInput, { data, loading, error }] = useMutation(
+	const [createImpactCategoryOrgInput, { loading }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
 	);
 	const dashboardData = useDashBoardData();
@@ -104,6 +104,11 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 					</Grid>
 				</Grid>
 			</Box>
+			{loading ? (
+				<Box position="fixed" bottom={0} alignSelf="center">
+					<CircularProgress />
+				</Box>
+			) : null}
 		</Dialog>
 	);
 }

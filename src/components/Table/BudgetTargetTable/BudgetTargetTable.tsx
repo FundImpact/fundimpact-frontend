@@ -1,4 +1,4 @@
-import { IconButton, Menu, MenuItem, Table } from "@material-ui/core";
+import { IconButton, MenuItem, Table } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -63,7 +63,7 @@ export default function BudgetTargetTable() {
 	const tableHeader = StyledTableHeader();
 	const menuId = React.useRef("");
 
-	const { data, loading, error } = useQuery(GET_BUDGET_TARGET_PROJECT);
+	const { data } = useQuery(GET_BUDGET_TARGET_PROJECT);
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

@@ -1,6 +1,6 @@
 import React from "react";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import { act, fireEvent, wait, render } from "@testing-library/react";
+import { act, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
@@ -42,11 +42,11 @@ beforeEach(() => {
 				<NotificationProvider>
 					<ImpactCategoryDialog open={true} handleClose={handleClose} />
 				</NotificationProvider>
-			</DashboardProvider>, 
+			</DashboardProvider>,
 			{
 				mocks,
 				addTypename: false,
-				resolvers: {}
+				resolvers: {},
 			}
 		);
 	});

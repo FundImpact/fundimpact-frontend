@@ -2,7 +2,6 @@ import React from "react";
 import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import ImpaceUnitForm from "../ImpaceUnitForm";
-import { IImpactUnit } from "../../../../models/impact/impact";
 import { IImpactUnitFormInput } from "../../../../models/impact/impactForm";
 
 const initialValues: IImpactUnitFormInput = {

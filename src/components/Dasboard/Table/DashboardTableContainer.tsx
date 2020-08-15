@@ -112,12 +112,10 @@ const tabs = [
 ];
 
 function GetTable(label: string) {
-	switch (label) {
-		case "Funds":
-			return <BudgetTargetTable />;
-		default:
-			return <DefaultTable />;
+	if (label == "Funds") {
+		return <BudgetTargetTable />;
 	}
+	return <DefaultTable />;
 }
 
 export default function DashboardTableContainer() {

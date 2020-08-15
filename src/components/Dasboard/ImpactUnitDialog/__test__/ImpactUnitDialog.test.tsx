@@ -1,6 +1,6 @@
 import React from "react";
 import ImpaceUnitDialog from "../ImpaceUnitDialog";
-import { queries, wait, act, RenderResult, fireEvent } from "@testing-library/react";
+import { act, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
