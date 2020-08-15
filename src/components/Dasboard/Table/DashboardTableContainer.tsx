@@ -4,6 +4,9 @@ import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import DeliverableUnit from "../../Deliverable/DeliverableUnit";
+import ImpactTarget from "../../Impact/impactTarget";
+import { IMPACT_ACTIONS } from "../../Impact/constants";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import FundsTable from "../../Table/Funds";
 import ImpactsTable from "../../Table/Impacts";
@@ -26,7 +29,7 @@ function TabContent(props: TabPanelProps) {
 			aria-labelledby={`wrapped-tab-${index}`}
 			{...other}
 		>
-			{value === index && <Box p={3}>{children}</Box>}
+			{value === index && <Box p={1}>{children}</Box>}
 		</div>
 	);
 }
@@ -42,12 +45,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		//flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
+		height: "100%",
+		overflow: "scroll",
 	},
 	contentHeading: {
 		display: "flex",
 		justifyContent: "space-between",
 		alignItems: "center",
-		margin: "1%",
+		margin: theme.spacing(1),
 	},
 	button: {
 		margin: theme.spacing(1),
@@ -98,13 +103,35 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
+				{
+					text: "Create Deliverable Unit",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableUnit
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
 				{ text: "Report Achivement" },
 			],
 		},
 		{
 			label: "Impact Indicators",
 			table: <ImpactsTable />,
-			createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
+			createButtons: [
+				{
+					text: "Create Impact Targets",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactTarget
+							type={IMPACT_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
+				{ text: "Report Achivement" },
+			],
 		},
 		{ label: "Documents", createButtons: [] },
 	];
@@ -117,7 +144,7 @@ export default function DashboardTableContainer() {
 	};
 
 	return (
-		<Box className={classes.root}>
+		<Box className={classes.root} boxShadow={2}>
 			<Tabs
 				value={value}
 				indicatorColor="primary"
@@ -147,7 +174,7 @@ export default function DashboardTableContainer() {
 								disableElevation
 								className={classes.button}
 								variant={"contained"}
-								color="secondary"
+								color="primary"
 							>
 								Fund Received
 							</Button>
@@ -155,7 +182,7 @@ export default function DashboardTableContainer() {
 								disableElevation
 								className={classes.button}
 								variant={"contained"}
-								color="primary"
+								color="secondary"
 							>
 								Report Fund Spend
 							</Button>

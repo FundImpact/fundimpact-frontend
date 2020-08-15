@@ -7,7 +7,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
+import { useQuery } from "@apollo/client";
 
 const useStyles = makeStyles({
 	table: {
@@ -28,39 +30,42 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 	})
 );
 
-function createRow(
-	col1: string,
-	col2: string,
-	col3: string,
-	col4: string,
-	col5: string,
-	col6: string
-) {
-	return { col1, col2, col3, col4, col5, col6 };
+function createRow(col1: string, col2: string, col3: string, col4: string) {
+	return { col1, col2, col3, col4 };
 }
-
-const rows = [
-	createRow("[ + ] Pamphlets for Training 1", "Collaterals", "Print", "10K", "0", "0"),
-	createRow("[ + ] Pamphlets for Training 2", "Collaterals", "Print", "10K", "0", "0"),
-	createRow("[ + ] Pamphlets for Training 3", "Collaterals", "Print", "10K", "0", "0"),
-	createRow("[ + ] Pamphlets for Training 4", "Collaterals", "Print", "10K", "0", "0"),
-	createRow("[ + ] Pamphlets for Training 5", "Collaterals", "Print", "10K", "0", "0"),
-];
 
 const tableHeading = [
 	{ label: "S.no" },
-	{ label: "Impacts" },
-	{ label: "Head" },
-	{ label: "Sub Head" },
-	{ label: "Budget" },
-	{ label: "Spent" },
-	{ label: "%" },
-	{ label: "" },
+	{ label: "Name" },
+	{ label: "Category" },
+	{ label: "Target Value" },
+	{ label: "Unit" },
 ];
 
 export default function ImpactsTable() {
-	// let tt: TableCellProps;
-	// tt.
+	const { loading, data } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
+		variables: { filter: { project: 4 } },
+	});
+
+	const [rows, setRows] = useState<any>([]);
+
+	useEffect(() => {
+		if (data) {
+			let impactTargetProjectList = data.impactTargetProjectList;
+			let arr = [];
+			for (let i = 0; i < impactTargetProjectList.length; i++) {
+				let row = createRow(
+					impactTargetProjectList[i].name,
+					impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
+					impactTargetProjectList[i].target_value,
+
+					impactTargetProjectList[i].impact_category_unit.impact_units_org.name
+				);
+				arr.push(row);
+			}
+			setRows(arr);
+		}
+	}, [data]);
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
 	console.log(`table header`, tableHeader);
@@ -83,7 +88,7 @@ export default function ImpactsTable() {
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
-					{rows.map((row, index) => (
+					{rows.map((row: any, index: number) => (
 						<TableRow key={index}>
 							<TableCell component="td" scope="row">
 								{index + 1}
@@ -92,17 +97,10 @@ export default function ImpactsTable() {
 							<TableCell align="left">{row.col2}</TableCell>
 							<TableCell align="left">{row.col3}</TableCell>
 							<TableCell align="left">{row.col4}</TableCell>
-							<TableCell align="left">{row.col5}</TableCell>
-							<TableCell align="left">{row.col6}</TableCell>
 							<TableCell>
 								<IconButton aria-label="delete">
-									<MoreVertIcon />
+									<MoreVertIcon fontSize="small" />
 								</IconButton>
-								<Menu open={false} id="simple-menu" keepMounted>
-									<MenuItem>Profile</MenuItem>
-									<MenuItem>My account</MenuItem>
-									<MenuItem>Logout</MenuItem>
-								</Menu>
 							</TableCell>
 						</TableRow>
 					))}

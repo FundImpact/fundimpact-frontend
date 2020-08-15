@@ -1,21 +1,22 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
 
-export interface IDeliverableTarget {
+export interface IDeliverableUnit {
 	id?: number;
 	name: string;
 	description?: string;
-	target_value: string | number;
+	code: string;
 	deliverableCategory?: number | string;
-	deliverableUnit?: number | string;
-	deliverable_category_unit: number | string;
-	project?: number | string;
+	unit_type: number | string;
+	prefix_label: number | string;
+	suffix_label: number | string;
+	organization?: number | string;
 }
 
-export type DeliverableTargetProps =
+export type DeliverableUnitProps =
 	| { type: DELIVERABLE_ACTIONS.CREATE; open: boolean; handleClose: () => void }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
-			data: IDeliverableTarget;
+			data: IDeliverableUnit;
 			open: boolean;
 			handleClose: () => void;
 	  };

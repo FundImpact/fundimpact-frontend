@@ -20,9 +20,11 @@ import React, { useEffect } from "react";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { IDeliverableTargetFormProps } from "../../../models/deliverable/deliverableTargetForm";
+import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/queries/Deliverable/category";
-import { useQuery } from "@apollo/client";
+import { GET_CATEGORY_UNIT } from "../../../graphql/queries/Deliverable/categoryUnit";
+import { useQuery, useLazyQuery } from "@apollo/client";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
@@ -59,7 +61,7 @@ const Transition = React.forwardRef(function Transition(
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function DeliverableForm({
+function DeliverableTargetForm({
 	clearErrors,
 	initialValues,
 	validate,
@@ -71,8 +73,28 @@ function DeliverableForm({
 	handleFormOpen,
 }: IDeliverableTargetFormProps & React.PropsWithChildren<IDeliverableTargetFormProps>) {
 	const classes = useStyles();
-	const { loading, data } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
-	useEffect(() => {}, [data]);
+	const { loading, data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
+
+	const [getUnitsByCategory, { data: unitsBycategory }] = useLazyQuery(GET_CATEGORY_UNIT);
+
+	const [currCategoryId, setCurrentCategoryId] = React.useState<any>(null);
+
+	const validateInitialValue = (initialValue: IDeliverableTarget) => {
+		const errors = validate(initialValue) as object;
+		if (!errors) return true;
+		return Object.keys(errors).length ? false : true;
+	};
+
+	useEffect(() => {
+		if (currCategoryId) {
+			// get units by catrgory
+			getUnitsByCategory({
+				variables: { filter: { deliverable_category_org: currCategoryId } },
+			});
+		}
+	}, [currCategoryId]);
+
+	useEffect(() => {}, [deliverableCategories]);
 	return (
 		<Dialog
 			fullWidth
@@ -116,6 +138,9 @@ function DeliverableForm({
 								initialValues={initialValues}
 								enableReinitialize={true}
 								validate={validate}
+								isInitialValid={(props: any) =>
+									validateInitialValue(props.initialValues)
+								}
 								onSubmit={(values) =>
 									formState === DELIVERABLE_ACTIONS.CREATE
 										? onCreate(values)
@@ -132,7 +157,7 @@ function DeliverableForm({
 											<Grid container spacing={1}>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="name"
+														deliverableCategories-testid="name"
 														value={formik.values.name}
 														error={!!formik.errors.name}
 														helperText={
@@ -149,17 +174,17 @@ function DeliverableForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="targetValue"
-														value={formik.values.targetValue}
-														error={!!formik.errors.targetValue}
+														deliverableCategories-testid="target_value"
+														value={formik.values.target_value}
+														error={!!formik.errors.target_value}
 														helperText={
-															formik.touched.targetValue &&
-															formik.errors.targetValue
+															formik.touched.target_value &&
+															formik.errors.target_value
 														}
 														onChange={formik.handleChange}
 														label="Target value"
 														required
-														name="targetValue"
+														name="target_value"
 														variant="outlined"
 														fullWidth
 													/>
@@ -182,18 +207,29 @@ function DeliverableForm({
 															value={
 																formik.values.deliverableCategory
 															}
-															onChange={formik.handleChange}
+															onChange={(event) => {
+																setCurrentCategoryId(
+																	event.target.value
+																);
+																formik.handleChange(event);
+															}}
 															label="Deliverable Category"
 															name="deliverableCategory"
-															data-testid="deliverableCategory"
+															required
+															deliverableCategories-testid="deliverableCategory"
 															inputProps={{
-																"data-testid":
+																"deliverableCategories-testid":
 																	"deliverableCategory",
 															}}
 														>
-															{data &&
-																data.deliverableCategory &&
-																data.deliverableCategory.map(
+															{!deliverableCategories && (
+																<MenuItem value="">
+																	<em>None</em>
+																</MenuItem>
+															)}
+															{deliverableCategories &&
+																deliverableCategories.deliverableCategory &&
+																deliverableCategories.deliverableCategory.map(
 																	(
 																		elem: {
 																			id: number;
@@ -213,25 +249,67 @@ function DeliverableForm({
 													</FormControl>
 												</Grid>
 												<Grid item xs={6}>
-													<TextField
-														data-testid="targetValue"
-														value={formik.values.targetValue}
-														error={!!formik.errors.targetValue}
-														helperText={
-															formik.touched.targetValue &&
-															formik.errors.targetValue
-														}
-														onChange={formik.handleChange}
-														label="Target value"
-														required
-														name="targetValue"
+													<FormControl
 														variant="outlined"
 														fullWidth
-													/>
+														className={classes.formControl}
+													>
+														<InputLabel id="demo-simple-select-outlined-label">
+															Deliverable Unit
+														</InputLabel>
+														<Select
+															labelId="demo-simple-select-outlined-label"
+															id="demo-simple-select-outlined"
+															error={!!formik.errors.deliverableUnit}
+															value={formik.values.deliverableUnit}
+															required
+															onChange={formik.handleChange}
+															label="Deliverable Unit"
+															name="deliverableUnit"
+															data-testid="DeliverableUnit"
+															inputProps={{
+																"data-testid": "DeliverableUnit",
+															}}
+														>
+															{!unitsBycategory && (
+																<MenuItem value="">
+																	<em>None</em>
+																</MenuItem>
+															)}
+															{unitsBycategory &&
+																unitsBycategory.deliverableCategoryUnitList &&
+																unitsBycategory.deliverableCategoryUnitList.map(
+																	(
+																		elem: {
+																			deliverable_units_org: {
+																				id: number;
+																				name: string;
+																			};
+																		},
+																		index: number
+																	) => (
+																		<MenuItem
+																			key={index}
+																			value={
+																				elem
+																					.deliverable_units_org
+																					.id
+																			}
+																		>
+																			{
+																				elem
+																					.deliverable_units_org
+																					.name
+																			}
+																		</MenuItem>
+																	)
+																)}
+														</Select>
+													</FormControl>
 												</Grid>
 												<Grid item xs={12}>
 													<TextField
-														data-testid="description"
+														deliverableCategories-testid="description"
 														value={formik.values.description}
 														error={!!formik.errors.description}
 														onChange={formik.handleChange}
@@ -244,31 +322,34 @@ function DeliverableForm({
 														fullWidth
 													/>
 												</Grid>
+												<Box display="flex" m={1}>
+													<Button
+														color="secondary"
+														className={classes.button}
+														onClick={handleFormOpen}
+														variant="contained"
+													>
+														Cancel
+													</Button>
+													<Button
+														className={classes.button}
+														deliverableCategories-testid="submit"
+														form="deliverable_target_form"
+														type="submit"
+														color="primary"
+														disabled={!formik.isValid}
+														variant="contained"
+													>
+														{formState === DELIVERABLE_ACTIONS.CREATE
+															? "Create"
+															: "Update"}
+													</Button>
+												</Box>
 											</Grid>
 										</Form>
 									);
 								}}
 							</Formik>
-							<Box display="flex" m={1}>
-								<Button
-									color="secondary"
-									className={classes.button}
-									onClick={handleFormOpen}
-									variant="contained"
-								>
-									Cancel
-								</Button>
-								<Button
-									className={classes.button}
-									data-testid="submit"
-									form="deliverable_target_form"
-									type="submit"
-									color="primary"
-									variant="contained"
-								>
-									{formState === DELIVERABLE_ACTIONS.CREATE ? "Create" : "Update"}
-								</Button>
-							</Box>
 						</Grid>
 					</Grid>
 				</Box>
@@ -278,4 +359,4 @@ function DeliverableForm({
 	);
 }
 
-export default DeliverableForm;
+export default DeliverableTargetForm;

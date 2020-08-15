@@ -30,7 +30,7 @@ export const GET_DELIVERABLE_ORG_CATEGORY = gql`
 `;
 
 export const CREATE_DELIVERABLE_CATEGORY = gql`
-	mutation createDeliverableCategory($input: DeliverableCategoryInput!) {
+	mutation createDeliverableCategory($input: DeliverableCategoryOrgInput!) {
 		createDeliverableCategory(input: $input) {
 			id
 			name

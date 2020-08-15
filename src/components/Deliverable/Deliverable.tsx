@@ -10,8 +10,8 @@ function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
-		code: "T1",
-		description: "This is a sample deliverable",
+		code: "",
+		description: "",
 		organization: 2,
 	};
 }
@@ -23,11 +23,15 @@ function Deliverable(props: DeliverableProps) {
 		{ data: response, loading: createLoading, error: createError },
 	] = useMutation(CREATE_DELIVERABLE_CATEGORY);
 
+	useEffect(() => {
+		if (response) {
+			props.handleClose();
+		}
+	}, [response]);
 	const onCreate = async (value: IDeliverable) => {
 		console.log(`on Created is called with: `, value);
 		try {
 			await createDeliverableCategory({ variables: { input: value } });
-			props.handleClose();
 		} catch (error) {}
 
 		console.log("seeting loading to true");
