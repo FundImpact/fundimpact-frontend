@@ -4,12 +4,15 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { IAlertMsg } from "../../models/index";
 import FIAlert from "../AlertMessage/AlertMessage";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { clearNotification } from "../../reducers/notificationReducer";
 
 interface State extends SnackbarOrigin {
 	open: boolean;
 }
 
 export default function PositionedSnackbar({ severity = "error", msg }: IAlertMsg) {
+	const dispatch = useNotificationDispatch();
 	const [state, setState] = React.useState<State>({
 		open: true,
 		vertical: "top",
@@ -25,7 +28,10 @@ export default function PositionedSnackbar({ severity = "error", msg }: IAlertMs
 			anchorOrigin={{ vertical, horizontal }}
 			open={open}
 			autoHideDuration={6000}
-			onClose={handleClose}
+			onClose={() => {
+				dispatch(clearNotification());
+				handleClose();
+			}}
 			key={vertical + horizontal}
 			data-testid="fi-snackbar"
 		>

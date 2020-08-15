@@ -5,9 +5,6 @@ import dashboardReducer from "../reducers/dashboardReducer";
 const DashboardDataContext = React.createContext<IDashboardDataContext | undefined>(undefined);
 const DashboardDispatchContext = createContext<Dispatch<any> | undefined>(undefined);
 
-/**
- *
- */
 const useDashBoardData = (): IDashboardDataContext | undefined => {
 	const context = React.useContext(DashboardDataContext);
 	if (!context) {

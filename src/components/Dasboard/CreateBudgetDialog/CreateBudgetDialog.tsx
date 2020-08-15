@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMutation } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,8 +10,13 @@ import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from "../../../reducers/notificationReducer";
 
-const initialValues : IBudget = {
+const initialValues: IBudget = {
 	name: "",
 	code: "",
 	description: "",
@@ -37,38 +42,44 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 		{ data: response, loading: createLoading, error: createError },
 	] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
 
+	const notificationDispatch = useNotificationDispatch();
+
 	const dashboardData = useDashBoardData();
 
-	useEffect(() => {
-		if (response) {
+	const onSubmit = async (values: IBudget) => {
+		try {
+			await createNewOrgBudgetCategory({
+				variables: {
+					input: { ...values, organization: dashboardData?.organization?.id },
+				},
+				update: (store, { data: { createOrgBudgetCategory } }) => {
+					try {
+						const data = store.readQuery<IGET_BUDGET_CATEGORY>({
+							query: GET_ORGANIZATION_BUDGET_CATEGORY,
+						});
+						store.writeQuery<IGET_BUDGET_CATEGORY>({
+							query: GET_ORGANIZATION_BUDGET_CATEGORY,
+							data: {
+								orgBudgetCategory: [
+									...data!.orgBudgetCategory,
+									createOrgBudgetCategory,
+								],
+							},
+						});
+					} catch (err) {
+						notificationDispatch(
+							setErrorNotification("Budget Category Creation Failure")
+						);
+						handleClose();
+					}
+				},
+			});
+			notificationDispatch(setSuccessNotification("Budget Category Creation Success"));
+			handleClose();
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Budget Category Creation Failure"));
 			handleClose();
 		}
-	}, [response]);
-
-	const onSubmit = (values: IBudget) => {
-		createNewOrgBudgetCategory({
-			variables: {
-				input: { ...values, organization: dashboardData?.organization?.id },
-			},
-			update: (store, { data: { createOrgBudgetCategory } }) => {
-				try {
-					const data = store.readQuery<IGET_BUDGET_CATEGORY>({
-						query: GET_ORGANIZATION_BUDGET_CATEGORY,
-					});
-					store.writeQuery<IGET_BUDGET_CATEGORY>({
-						query: GET_ORGANIZATION_BUDGET_CATEGORY,
-						data: {
-							orgBudgetCategory: [
-								...data!.orgBudgetCategory,
-								createOrgBudgetCategory,
-							],
-						},
-					});
-				} catch (err) {
-					console.log("err :>> ", err);
-				}
-			},
-		});
 	};
 
 	return (
@@ -89,7 +100,7 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 								variant="h6"
 								gutterBottom
 							>
-								New Budget
+								New Budget Category
 							</Typography>
 							<Typography variant="subtitle2" color="textSecondary" gutterBottom>
 								Physical addresses of your organizatin like headquater, branch etc.

@@ -18,6 +18,11 @@ import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
 import { ICreateBudgetTargetProjectDialogProps } from "../../../models/budget/budget";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from "../../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -57,6 +62,7 @@ const validate = (values: IBudgetTargetForm) => {
 };
 
 function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
+	const notificationDispatch = useNotificationDispatch();
 	const [
 		createProjectBudgetTarget,
 		{
@@ -82,56 +88,70 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY);
 	const dashboardData = useDashBoardData();
 
-	const onCreate = (values: IBudgetTargetForm) => {
-		createProjectBudgetTarget({
-			variables: {
-				input: {
-					project: dashboardData?.project?.id,
-					...values,
+	const onCreate = async (values: IBudgetTargetForm) => {
+		try {
+			await createProjectBudgetTarget({
+				variables: {
+					input: {
+						project: dashboardData?.project?.id,
+						...values,
+					},
 				},
-			},
-			update: (store, { data: { createProjectBudgetTarget } }) => {
-				try {
-					const data = store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
-						query: GET_BUDGET_TARGET_PROJECT,
-					});
-					store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
-						query: GET_BUDGET_TARGET_PROJECT,
-						data: {
-							budgetTargetsProjects: [
-								...data!.budgetTargetsProjects,
-								createProjectBudgetTarget,
-							],
-						},
-					});
-				} catch (err) {
-					console.log("err :>> ", err);
-				}
-			},
-		});
-
-		props.handleClose();
+				update: (store, { data: { createProjectBudgetTarget } }) => {
+					try {
+						const data = store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
+							query: GET_BUDGET_TARGET_PROJECT,
+						});
+						store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
+							query: GET_BUDGET_TARGET_PROJECT,
+							data: {
+								budgetTargetsProjects: [
+									...data!.budgetTargetsProjects,
+									createProjectBudgetTarget,
+								],
+							},
+						});
+					} catch (err) {
+						notificationDispatch(
+							setErrorNotification("Budget Target Creation Failure")
+						);
+						props.handleClose();
+					}
+				},
+			});
+			notificationDispatch(setSuccessNotification("Budget Target Creation Success"));
+			props.handleClose();
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Budget Target Creation Failure"));
+			props.handleClose();
+		}
 	};
 
-	const onUpdate = (values: IBudgetTargetForm) => {
-		if (compObject(values, initialValues)) {
-			props.handleClose();
-			return;
-		}
+	const onUpdate = async (values: IBudgetTargetForm) => {
+		try {
+			if (compObject(values, initialValues)) {
+				props.handleClose();
+				return;
+			}
 
-		delete values.id;
+			delete values.id;
 
-		updateProjectBudgetTarget({
-			variables: {
-				id: initialValues.id,
-				input: {
-					project: dashboardData?.project?.id,
-					...values,
+			await updateProjectBudgetTarget({
+				variables: {
+					id: initialValues.id,
+					input: {
+						project: dashboardData?.project?.id,
+						...values,
+					},
 				},
-			},
-		});
+			});
+			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 
-		props.handleClose();
+			props.handleClose();
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Budget Target Updation Failure"));
+			props.handleClose();
+		}
 	};
 
 	return (

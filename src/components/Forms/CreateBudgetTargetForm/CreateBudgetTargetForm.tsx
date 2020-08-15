@@ -14,7 +14,7 @@ import {
 	FormHelperText,
 } from "@material-ui/core";
 import { IBudgetTargetFormProps, IBudgetTargetForm } from "../../../models/budget/budgetForm";
-import { IBudgetTarget, IBudget } from "../../../models/budget/budget";
+import { IBudget } from "../../../models/budget/budget";
 import { IOrganizationCurrency } from "../../../models";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 
@@ -45,6 +45,7 @@ function CreateBudgetTargetForm({
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
 	};
+
 	return (
 		<Formik
 			initialValues={initialValues}
@@ -125,7 +126,8 @@ function CreateBudgetTargetForm({
 										name="organization_currency"
 										data-testid="createBudgetTargetOrganizationCurrency"
 										inputProps={{
-											"data-testid": "createBudgetTargetOrganizationCurrencyOption",
+											"data-testid":
+												"createBudgetTargetOrganizationCurrencyOption",
 										}}
 									>
 										{organizationCurrencies.map(

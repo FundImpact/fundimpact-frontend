@@ -1,85 +1,97 @@
-// import React from "react";
-// import CreateBudgetDialog from "../CreateBudgetDialog";
-// import { queries, render, act, RenderResult } from "@testing-library/react";
-// import "@testing-library/jest-dom/extend-expect";
-// import { DashboardProvider } from "../../../../contexts/dashboardContext";
-// import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
-// import { renderApollo } from "../../../../utils/test.util";
+import React from "react";
+import CreateBudgetDialog from "../CreateBudgetDialog";
+import { fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
+import { renderApollo } from "../../../../utils/test.util";
+import { act } from "react-dom/test-utils";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
 
-// const handleClose = jest.fn();
+const handleClose = jest.fn();
 
-// const mocks = [
-// 	{
-// 		request: {
-// 			query: CREATE_ORG_BUDGET_CATEGORY,
-// 			variables: {
-// 				input: {
-// 					organization: "2",
-// 					name: "my name",
-// 					description: "desc",
-// 					code: "code 1",
-// 				},
-// 			},
-// 		},
-// 		result: {
-// 			name: "my name",
-// 			code: "code 1",
-// 		},
-// 	},
-// ];
+let dialog: any;
+let updationDone = false;
 
-// let dialog: RenderResult<typeof queries>;
+const intialFormValue: any = {
+	code: "category code",
+	description: "category description",
+	name: "category namqfe",
+};
 
-// beforeEach(() => {
-// 	act(() => {
-// 		dialog = render(
-// 			<DashboardProvider>
-// 				<MockedProvider mocks={mocks}>
-// 					<CreateBudgetDialog open={true} handleClose={handleClose} />
-// 				</MockedProvider>
-// 			</DashboardProvider>
-// 		);
-// 	});
-// });
+const mocks = [
+	{
+		request: {
+			query: CREATE_ORG_BUDGET_CATEGORY,
+			variables: {
+				input: {
+					name: "new name",
+					description: "new desc",
+					code: "new code",
+				},
+			},
+		},
+		result: () => {
+			updationDone = true;
+			return {};
+		},
+	},
+];
 
-// it("Dialog is rendered correctly", () => {
-// 	const conponent = dialog.getByTestId("create-budget-dialog");
-// 	expect(conponent).toBeInTheDocument();
-// });
+beforeEach(() => {
+	act(() => {
+		dialog = renderApollo(
+			<DashboardProvider>
+				<NotificationProvider>
+					<CreateBudgetDialog open={true} handleClose={handleClose} />
+				</NotificationProvider>
+			</DashboardProvider>,
+			{
+				mocks,
+				resolvers: {}
+			}
+		);
+	});
+});
 
-// it("Dialog render header correctly", () => {
-// 	const header = dialog.getByTestId("create-budget-dialog-header");
-// 	expect(header).toHaveTextContent("New Budget");
-// });
+let inputIds = [
+	{ id: "createBudgetNameInput", key: "name" },
+	{ id: "createBudgetCodeInput", key: "code" },
+	{ id: "createBudgetDescriptionInput", key: "description" },
+];
 
-// // import React from "react";
-// // import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
-// // import { queries, render, act, RenderResult } from "@testing-library/react";
-// // import "@testing-library/jest-dom/extend-expect";
-// // import { BUDGET_ACTIONS } from "../../../../models/budget/constants";
+describe("Budget Category Dialog tests", () => {
+	test("Budget Category Dialog is rendered correctly", () => {
+		const conponent = dialog.getByTestId("create-budget-dialog");
+		expect(conponent).toBeInTheDocument();
+	});
 
-// // const handleClose = jest.fn();
+	test("Budget Category Dialog render header correctly", () => {
+		const header = dialog.getByTestId("create-budget-dialog-header");
+		expect(header).toHaveTextContent("New Budget Category");
+	});
 
-// // let dialog: RenderResult<typeof queries>;
+	test("Create Budget Category", async () => {
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].key];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
+			await expect(fieldName.value).toBe(value);
+		}
 
-// // beforeEach(() => {
-// // 	act(() => {
-// // 		dialog = render(
-// // 			<CreateBudgetTargetDialog
-// // 				formAction={BUDGET_ACTIONS.CREATE}
-// // 				open={true}
-// //         handleClose={handleClose}
-// // 			/>
-// // 		);
-// // 	});
-// // });
+		await act(async () => {
+			let saveButton = await dialog.getByTestId("createBudgetSaveButton");
+			expect(saveButton).toBeEnabled();
+		});
 
-// // it("Dialog is rendered correctly", () => {
-// // 	const conponent = dialog.getByTestId("create-budget-target-dialog");
-// // 	expect(conponent).toBeInTheDocument();
-// // });
+		await act(async () => {
+			let saveButton = await dialog.findByTestId("createBudgetSaveButton");
+			await fireEvent.click(saveButton);
+		});
 
-// // it("Dialog render header correctly", () => {
-// // 	const header = dialog.getByTestId("create-budget-target-dialog-header");
-// // 	expect(header).toHaveTextContent("New Budget Target");
-// // });
+		// await new Promise((resolve) => setTimeout(resolve, 1000));
+		// expect(updationDone).toBe(true);
+	});
+});

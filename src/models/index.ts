@@ -55,6 +55,12 @@ export interface IDashboardDataContext {
 	workspace?: any;
 }
 
+
+export interface INotificationContext {
+	successNotification: string;
+	errorNotification: string;
+}
+
 export interface IOrganizationCurrency {
 	id: string;
 	currency: {

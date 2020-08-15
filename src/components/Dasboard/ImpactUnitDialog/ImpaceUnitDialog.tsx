@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
@@ -8,6 +8,11 @@ import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import ImpactUnitForm from "../../Forms/ImpactUnitForm";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from "../../../reducers/notificationReducer";
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",
@@ -41,36 +46,27 @@ const validate = (values: IImpactUnitFormInput) => {
 	return errors;
 };
 
-function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const dashboardData = useDashBoardData();
 
 	const [createImpactUnitsOrgInput, { data, loading, error }] = useMutation(
 		CREATE_IMPACT_UNITS_ORG_INPUT
 	);
-
-	if (error) {
-		console.log("error :>> ", error);
-	}
-
-	useEffect(() => {
-		if (data) {
-			console.log("data :>> ", data);
-		}
-	}, [data]);
+	const notificationDispatch = useNotificationDispatch();
 
 	const onSubmit = async (values: IImpactUnitFormInput) => {
 		try {
-			console.log("values :>> ", values);
-			await createImpactUnitsOrgInput({
+			 createImpactUnitsOrgInput({
 				variables: {
 					input: {
 						...values,
 					},
 				},
 			});
+			notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
 			handleClose();
 		} catch (err) {
-			console.log("err :>> ", err);
+			notificationDispatch(setErrorNotification("Impact Unit Creation Failure"));
 			handleClose();
 		}
 	};
@@ -92,7 +88,7 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 							variant="h6"
 							gutterBottom
 						>
-							New Impact Indicators
+							New Impact Unit
 						</Typography>
 						<Typography variant="subtitle2" color="textSecondary" gutterBottom>
 							Physical addresses of your organizatin like headquater, branch etc.
@@ -125,4 +121,4 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 	);
 }
 
-export default ImpactCategoryDialog;
+export default ImpactUnitDialog;

@@ -6,9 +6,10 @@ import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
 import ImpactUnitDialog from "../ImpactUnitDialog";
-
 import DefaultTable from "../../Table/Table";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import { useNotificationData } from "../../../contexts/notificationContext";
+import Snackbar from "../../Snackbar/Snackbar";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -122,6 +123,7 @@ function GetTable(label: string) {
 export default function DashboardTableContainer() {
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
+	const notificationData = useNotificationData();
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		console.log(`setting tab index `, newValue);
@@ -174,9 +176,16 @@ export default function DashboardTableContainer() {
 						</div>
 					</Box>
 					{GetTable(tab.label)}
+
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
+			{notificationData!.successNotification && (
+				<Snackbar severity="success" msg={notificationData!.successNotification} />
+			)}
+			{notificationData!.errorNotification && (
+				<Snackbar severity="error" msg={notificationData!.errorNotification} />
+			)}
 		</Box>
 	);
 }

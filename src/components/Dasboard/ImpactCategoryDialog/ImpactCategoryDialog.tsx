@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid } from "@material-ui/core";
@@ -8,7 +8,11 @@ import { IImpactCategory } from "../../../models/impact/impact";
 import { useMutation } from "@apollo/client";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/queries/Impact/query";
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from "../../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 
 const initialValues: IImpactCategory = {
 	name: "",
@@ -39,6 +43,7 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
 	);
 	const dashboardData = useDashBoardData();
+	const notificationDispatch = useNotificationDispatch();
 
 	const onSubmit = async (values: IImpactCategory) => {
 		try {
@@ -49,30 +54,14 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 						organization: dashboardData?.organization?.id,
 					},
 				},
-				// update: (store, { data: { createImpactCategoryOrgInput } }) => {
-				// 	store.writeQuery({
-				// 		query: GET_IMPACT_CATEGORY_BY_ORG,
-				// 		data: {
-				// 			impactCategoryOrgList: [
-				// 				...data.impactCategoryOrgList,
-				// 				createImpactCategoryOrgInput,
-				// 			],
-				// 		},
-				// 	});
-				// },
 			});
+			notificationDispatch(setSuccessNotification("Impact Category Creation Success"));
 			handleClose();
 		} catch (err) {
-			console.log("err :>> ", err);
+			notificationDispatch(setErrorNotification("Impact Category Creation Failure"));
 			handleClose();
 		}
 	};
-
-	useEffect(() => {
-		if (data) {
-			console.log("data :>> ", data);
-		}
-	}, [data]);
 
 	return (
 		<Dialog
@@ -91,7 +80,7 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 							variant="h6"
 							gutterBottom
 						>
-							New Impact Indicators
+							New Impact Category
 						</Typography>
 						<Typography variant="subtitle2" color="textSecondary" gutterBottom>
 							Physical addresses of your organizatin like headquater, branch etc.
