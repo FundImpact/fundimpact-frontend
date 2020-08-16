@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import { Grid, CircularProgress } from "@material-ui/core";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	CREATE_PROJECT_BUDGET_TARGET,
@@ -13,19 +10,18 @@ import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
 import { ICreateBudgetTargetProjectDialogProps } from "../../../models/budget/budget";
-import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import CommonInputForm from "../../Forms/CommonInputForm";
 import {
 	createBudgetTargetFormSelectFields,
 	createBudgetTargetForm,
 } from "../../../utils/inputFields.json";
-import DialogBoxSidebar from "../../DialogBoxSidebar";
+import CommonDialog from "../CommonDialog";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -71,7 +67,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	);
 
 	let initialValues =
-		props.formAction == BUDGET_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+		props.formAction == FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
 	const [updateProjectBudgetTarget, { loading: updatingProjectBudgetTarget }] = useMutation(
 		UPDATE_PROJECT_BUDGET_TARGET
@@ -164,45 +160,21 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	};
 
 	return (
-		<>
-			<Dialog
-				fullWidth
-				maxWidth="md"
-				open={props.open}
-				onClose={props.handleClose}
-				data-testid="create-budget-target-dialog"
-				aria-labelledby="form-dialog-title"
-			>
-				<Box px={3} py={4}>
-					<Grid container spacing={2}>
-						<Grid item xs={4}>
-							<DialogBoxSidebar
-								title="New Budget Target"
-								subtitle="Physical addresses of your organizatin like headquater, branch etc."
-								workspace="WORKSPACE 1"
-							/>
-						</Grid>
-						<Grid item xs={8}>
-							<CommonInputForm
-								initialValues={initialValues}
-								validate={validate}
-								onSubmit={onCreate}
-								onCancel={props.handleClose}
-								onUpdate={onUpdate}
-								formAction={props.formAction}
-								selectFields={createBudgetTargetFormSelectFields}
-								inputFields={createBudgetTargetForm}
-							/>
-						</Grid>
-					</Grid>
-				</Box>
-				{creatingProjectBudgetTarget || updatingProjectBudgetTarget ? (
-					<Box position="fixed" bottom={0} alignSelf="center">
-						<CircularProgress />
-					</Box>
-				) : null}
-			</Dialog>
-		</>
+		<CommonDialog
+			handleClose={props.handleClose}
+			open={props.open}
+			initialValues={initialValues}
+			inputFields={createBudgetTargetForm}
+			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
+			onSubmit={onCreate}
+			validate={validate}
+			title="New Budget Target"
+			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			workspace="WORKSPACE 1"
+			selectFields={createBudgetTargetFormSelectFields}
+			formAction={props.formAction}
+			onUpdate={onUpdate}
+		/>
 	);
 }
 

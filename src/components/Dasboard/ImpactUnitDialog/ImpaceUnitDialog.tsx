@@ -15,6 +15,7 @@ import {
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
 import DialogBoxSidebar from "../../DialogBoxSidebar";
+import CommonDialog from "../CommonDialog";
 
 let inputFields: IInputField[] = dataInputFields.impactUnitForm;
 
@@ -72,40 +73,18 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 	};
 
 	return (
-		<Dialog
-			fullWidth
-			maxWidth="md"
+		<CommonDialog
+			handleClose={handleClose}
 			open={open}
-			onClose={handleClose}
-			data-testid="impact-unit-dialog"
-			aria-labelledby="form-dialog-title"
-		>
-			<Box px={3} py={4}>
-				<Grid container spacing={2}>
-					<Grid item xs={4}>
-						<DialogBoxSidebar
-							title="New Impact Unit"
-							subtitle="Physical addresses of your organizatin like headquater, branch etc."
-							workspace="WORKSPACE 1"
-						/>
-					</Grid>
-					<Grid item xs={8}>
-						<CommonInputForm
-							initialValues={initialValues}
-							validate={validate}
-							onSubmit={onSubmit}
-							onCancel={() => handleClose()}
-							inputFields={inputFields}
-						/>
-					</Grid>
-				</Grid>
-			</Box>
-			{loading ? (
-				<Box position="fixed" bottom={0} alignSelf="center">
-					<CircularProgress />
-				</Box>
-			) : null}
-		</Dialog>
+			initialValues={initialValues}
+			inputFields={inputFields}
+			loading={loading}
+			onSubmit={onSubmit}
+			validate={validate}
+			title="New Impact Unit"
+			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			workspace="WORKSPACE 1"
+		/>
 	);
 }
 

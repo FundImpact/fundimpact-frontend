@@ -9,7 +9,7 @@ import {
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
-import { BUDGET_ACTIONS } from "../../../../models/budget/constants";
+import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { GET_ORG_CURRENCIES } from "../../../../graphql/queries";
 
 const handleClose = jest.fn();
@@ -64,7 +64,7 @@ beforeEach(() => {
 			<DashboardProvider>
 				<NotificationProvider>
 					<CreateBudgetTargetDialog
-						formAction={BUDGET_ACTIONS.CREATE}
+						formAction={FORM_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}
 					/>
@@ -90,7 +90,7 @@ const inputIds = [
 
 describe("Budget Target Dialog tests", () => {
 	test("Budget Category Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("create-budget-target-dialog");
+		const conponent = dialog.getByTestId("common-dialog");
 		expect(conponent).toBeInTheDocument();
 	});
 

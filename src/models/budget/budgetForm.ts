@@ -1,6 +1,6 @@
 import { IBudget, IBudgetTarget } from "./budget";
 import { IOrganizationCurrency } from "../index";
-import { BUDGET_ACTIONS } from "./constants";
+import { FORM_ACTIONS } from "./constants";
 
 export interface IBudgetFormProps {
 	initialValues: IBudget;
@@ -21,5 +21,5 @@ export interface IBudgetTargetFormProps {
 	onCancel: () => void;
 	organizationCurrencies: IOrganizationCurrency[];
 	budgetCategory: IBudget[];
-	formAction: BUDGET_ACTIONS.CREATE | BUDGET_ACTIONS.UPDATE;
+	formAction: FORM_ACTIONS.CREATE | FORM_ACTIONS.UPDATE;
 }

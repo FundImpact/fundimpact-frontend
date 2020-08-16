@@ -12,7 +12,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { IBudgetTargetProjectResponse } from "../../../models/budget/query";
 import React, { useState, useEffect } from "react";
 import CreateBudgetTargetDialog from "../../Dasboard/CreateBudgetTargetDialog";
-import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
 import SimpleMenu from "../../Menu/Menu";
 
 const useStyles = makeStyles({
@@ -127,7 +127,7 @@ export default function BudgetTargetTable() {
 												openDialog
 											}
 											handleClose={() => setOpenDialog(false)}
-											formAction={BUDGET_ACTIONS.UPDATE}
+											formAction={FORM_ACTIONS.UPDATE}
 											initialValues={getInitialValues(budgetTargetsProject)}
 										/>
 										<TableCell component="td" scope="row">

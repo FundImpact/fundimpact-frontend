@@ -1,4 +1,4 @@
-import { BUDGET_ACTIONS } from "./constants";
+import { FORM_ACTIONS } from "./constants";
 import { IBudgetTargetForm } from "./budgetForm";
 
 export interface IBudget {
@@ -22,11 +22,11 @@ export type ICreateBudgetTargetProjectDialogProps =
 	| {
 			open: boolean;
 			handleClose: () => void;
-			formAction: BUDGET_ACTIONS.UPDATE;
+			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetTargetForm;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
-			formAction: BUDGET_ACTIONS.CREATE;
+			formAction: FORM_ACTIONS.CREATE;
 	  };

@@ -62,7 +62,7 @@ let inputIds = [
 
 describe("Budget Category Dialog tests", () => {
 	test("Budget Category Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("create-budget-dialog");
+		const conponent = dialog.getByTestId("common-dialog");
 		expect(conponent).toBeInTheDocument();
 	});
 

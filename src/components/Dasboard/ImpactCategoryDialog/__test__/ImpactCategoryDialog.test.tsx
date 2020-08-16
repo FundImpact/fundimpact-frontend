@@ -61,7 +61,7 @@ const inputIds = [
 
 describe("Imact category dialog tests", () => {
 	test("Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("impact-category-dialog");
+		const conponent = dialog.getByTestId("common-dialog");
 		expect(conponent).toBeInTheDocument();
 	});
 

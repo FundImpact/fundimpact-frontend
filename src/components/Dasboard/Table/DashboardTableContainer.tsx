@@ -7,7 +7,7 @@ import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
 import ImpactUnitDialog from "../ImpactUnitDialog";
 import DefaultTable from "../../Table/Table";
-import { BUDGET_ACTIONS } from "../../../models/budget/constants";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
 import Snackbar from "../../Snackbar/Snackbar";
 
@@ -77,7 +77,7 @@ const tabs = [
 				text: "Create Budget Target",
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 					<CreateBudgetTargetDialog
-						formAction={BUDGET_ACTIONS.CREATE}
+						formAction={FORM_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
 					/>

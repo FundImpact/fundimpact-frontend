@@ -1,11 +1,6 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import { Grid, CircularProgress } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
 import { IBudget } from "../../../models/budget/budget";
-import CommonInputForm from "../../Forms/CommonInputForm";
 import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
@@ -17,7 +12,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import DialogBoxSidebar from "../../DialogBoxSidebar";
+import CommonDialog from "../CommonDialog";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
@@ -42,9 +37,7 @@ const validate = (values: IBudget) => {
 };
 
 function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-	const [createNewOrgBudgetCategory, { loading: createLoading }] = useMutation(
-		CREATE_ORG_BUDGET_CATEGORY
-	);
+	const [createNewOrgBudgetCategory, { loading }] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -88,40 +81,18 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 
 	return (
 		<>
-			<Dialog
-				fullWidth
-				maxWidth="md"
+			<CommonDialog
+				handleClose={handleClose}
 				open={open}
-				onClose={handleClose}
-				data-testid="create-budget-dialog"
-				aria-labelledby="form-dialog-title"
-			>
-				<Box px={3} py={4}>
-					<Grid container spacing={2}>
-						<Grid item xs={4}>
-							<DialogBoxSidebar
-								title="New Budget Category"
-								subtitle="Physical addresses of your organizatin like headquater, branch etc."
-								workspace="WORKSPACE 1"
-							/>
-						</Grid>
-						<Grid item xs={8}>
-							<CommonInputForm
-								initialValues={initialValues}
-								validate={validate}
-								onSubmit={onSubmit}
-								onCancel={handleClose}
-								inputFields={inputFields}
-							/>
-						</Grid>
-					</Grid>
-				</Box>
-				{createLoading ? (
-					<Box position="fixed" bottom={0} alignSelf="center">
-						<CircularProgress />
-					</Box>
-				) : null}
-			</Dialog>
+				initialValues={initialValues}
+				inputFields={inputFields}
+				loading={loading}
+				onSubmit={onSubmit}
+				validate={validate}
+				title="New Budget Category"
+				subtitle="Physical addresses of your organizatin like headquater, branch etc."
+				workspace="WORKSPACE 1"
+			/>
 		</>
 	);
 }

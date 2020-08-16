@@ -70,7 +70,7 @@ const inputIds = [
 
 describe("Impact Unit dialog tests", () => {
 	test("Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("impact-unit-dialog");
+		const conponent = dialog.getByTestId("common-dialog");
 		expect(conponent).toBeInTheDocument();
 	});
 
