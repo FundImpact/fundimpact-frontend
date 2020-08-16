@@ -1,8 +1,10 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import { Grid, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
-import { IInputField } from "../../../models";
+import { IInputField, ISelectField } from "../../../models";
 import InputField from "../../InputField";
+import SelectField from "../../SelectField";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -12,8 +14,16 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-
-function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel, inputFields }: any) {
+function CommonInputForm({
+	initialValues,
+	validate,
+	onSubmit,
+	onCancel,
+	onUpdate = () => {},
+	inputFields,
+	selectFields = [],
+	formAction = FORM_ACTIONS.CREATE,
+}: any) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
 		const errors = validate(initialValue) as object;
@@ -23,7 +33,9 @@ function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel, inputFiel
 	return (
 		<Formik
 			initialValues={initialValues}
-			onSubmit={onSubmit}
+			onSubmit={(values: any) => {
+				formAction == FORM_ACTIONS.CREATE ? onSubmit(values) : onUpdate(values);
+			}}
 			validate={validate}
 			isInitialValid={() => validateInitialValue(initialValues)}
 		>
@@ -46,6 +58,24 @@ function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel, inputFiel
 											}
 											rows={element.rows ? element.rows : 1}
 											type={element.type ? element.type : "text"}
+										/>
+									</Grid>
+								);
+							})}
+
+							{selectFields.map((element: ISelectField, index: number) => {
+								return (
+									<Grid item xs={12} key={index}>
+										<SelectField
+											formik={formik}
+											name={element.name}
+											dataTestId={element.dataTestId}
+											testId={element.testId}
+											label={element.label}
+											optionsArray={element.optionsArray}
+											inputLabelId={element.inputLabelId}
+											selectLabelId={element.selectLabelId}
+											selectId={element.selectId}
 										/>
 									</Grid>
 								);
@@ -83,4 +113,4 @@ function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel, inputFiel
 	);
 }
 
-export default ImpactUnitForm;
+export default CommonInputForm;

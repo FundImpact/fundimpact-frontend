@@ -78,3 +78,15 @@ export interface IInputField {
 	formik?: any;
 	type?: string;
 }
+
+export interface ISelectField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	formik?: any;
+	optionsArray: [any];
+	inputLabelId: string,
+  selectLabelId: string,
+  selectId: string
+}

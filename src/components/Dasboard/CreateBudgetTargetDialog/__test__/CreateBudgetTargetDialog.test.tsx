@@ -103,6 +103,7 @@ describe("Budget Target Dialog tests", () => {
 		for (let i = 0; i < inputIds.length; i++) {
 			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
 			let value = intialFormValue[inputIds[i].key];
+	
 			await act(async () => {
 				await fireEvent.change(fieldName, { target: { value } });
 			});
@@ -110,12 +111,12 @@ describe("Budget Target Dialog tests", () => {
 		}
 
 		await act(async () => {
-			let saveButton = await dialog.getByTestId("createBudgetTargetSaveButton");
+			let saveButton = await dialog.getByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
 		});
 
 		await act(async () => {
-			let saveButton = await dialog.getByTestId("createBudgetTargetSaveButton");
+			let saveButton = await dialog.getByTestId("createSaveButton");
 			fireEvent.click(saveButton);
 		});
 	});

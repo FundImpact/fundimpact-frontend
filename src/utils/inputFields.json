@@ -136,5 +136,27 @@
 			"rows": 2,
 			"multiline": true
 		}
+	],
+	"createBudgetTargetFormSelectFields": [
+		{
+			"name": "organization_currency",
+			"label": "Choose Organization Currency",
+			"testId": "createBudgetTargetOrganizationCurrencyOption",
+			"dataTestId": "createBudgetTargetOrganizationCurrency",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1"
+		},
+		{
+			"name": "budget_category_organization",
+			"label": "Choose Budget Category",
+			"testId": "createBudgetTargetBudgetCategoryOption",
+			"dataTestId": "createBudgetTargetBudgetCategory",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined"
+		}
 	]
 }

@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import CreateBudgetTargetProjectForm from "../../Forms/CreateBudgetTargetForm";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	CREATE_PROJECT_BUDGET_TARGET,
@@ -22,6 +21,11 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import CommonInputForm from "../../Forms/CommonInputForm";
+import {
+	createBudgetTargetFormSelectFields,
+	createBudgetTargetForm,
+} from "../../../utils/inputFields.json";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -76,6 +80,22 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES);
 	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY);
 	const dashboardData = useDashBoardData();
+
+	useEffect(() => {
+		if (orgCurrencies) {
+			createBudgetTargetFormSelectFields[0].optionsArray = orgCurrencies.orgCurrencies.map(
+				(element: { id: string; currency: { name: string } }) => {
+					return {
+						name: element.currency.name,
+						id: element.id,
+					};
+				}
+			);
+		}
+		if (budgetCategory) {
+			createBudgetTargetFormSelectFields[1].optionsArray = budgetCategory.orgBudgetCategory;
+		}
+	}, [orgCurrencies, budgetCategory]);
 
 	const onCreate = async (values: IBudgetTargetForm) => {
 		try {
@@ -176,21 +196,15 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 							</Box>
 						</Grid>
 						<Grid item xs={8}>
-							<CreateBudgetTargetProjectForm
+							<CommonInputForm
 								initialValues={initialValues}
 								validate={validate}
-								onCreate={onCreate}
+								onSubmit={onCreate}
 								onCancel={props.handleClose}
 								onUpdate={onUpdate}
 								formAction={props.formAction}
-								organizationCurrencies={
-									orgCurrencies?.orgCurrencies ? orgCurrencies.orgCurrencies : []
-								}
-								budgetCategory={
-									budgetCategory?.orgBudgetCategory
-										? budgetCategory.orgBudgetCategory
-										: []
-								}
+								selectFields={createBudgetTargetFormSelectFields}
+								inputFields={createBudgetTargetForm}
 							/>
 						</Grid>
 					</Grid>
