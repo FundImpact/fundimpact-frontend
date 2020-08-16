@@ -1,10 +1,11 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
-import Snackbar from "../Snackbar/Snackbar";
 import DeliverableForm from "../Forms/Deliverable/Deliverable";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -17,14 +18,15 @@ function getInitialValues(props: DeliverableProps) {
 }
 
 function Deliverable(props: DeliverableProps) {
+	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverable = getInitialValues(props);
-	const [
-		createDeliverableCategory,
-		{ data: response, loading: createLoading, error: createError },
-	] = useMutation(CREATE_DELIVERABLE_CATEGORY);
+	const [createDeliverableCategory, { data: response, loading: createLoading }] = useMutation(
+		CREATE_DELIVERABLE_CATEGORY
+	);
 
 	useEffect(() => {
 		if (response) {
+			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			props.handleClose();
 		}
 	}, [response]);
@@ -32,7 +34,9 @@ function Deliverable(props: DeliverableProps) {
 		console.log(`on Created is called with: `, value);
 		try {
 			await createDeliverableCategory({ variables: { input: value } });
-		} catch (error) {}
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
+		}
 
 		console.log("seeting loading to true");
 	};

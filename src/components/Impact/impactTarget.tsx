@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
-import Snackbar from "../Snackbar/Snackbar";
 import ImpactTargetForm from "../Forms/Impact/impactTarget";
 import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
 import { CREATE_IMPACT_TARGET } from "../../graphql/queries/Impact/target";
 import { useMutation, useLazyQuery } from "@apollo/client";
@@ -21,39 +22,36 @@ function getInitialValues(props: ImpactTargetProps) {
 	};
 }
 function ImpactTarget(props: ImpactTargetProps) {
-	const [getUnitsByCategory, { data: unitAndcategory, error }] = useLazyQuery(
-		GET_IMPACT_CATEGORY_UNIT
-	);
+	const notificationDispatch = useNotificationDispatch();
+	const [getUnitsByCategory, { data: unitAndcategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT);
 
 	const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
-	const [successMessage, setSuccessmessage] = useState<string>();
-	const [
-		createImpactTarget,
-		{ data: impact, loading: impactLoading, error: impactError },
-	] = useMutation(CREATE_IMPACT_TARGET);
+	const [createImpactTarget, { data: impact, loading: impactLoading }] = useMutation(
+		CREATE_IMPACT_TARGET
+	);
 
 	useEffect(() => {
 		if (unitAndcategory) {
 			// successfully fetched impact_category_unit_id
-			console.log("here", {
-				...impactTarget,
-				impact_category_unit: unitAndcategory.impactCategoryUnitList[0].id,
-			});
 			let createInputTarget = {
 				...impactTarget,
 				impact_category_unit: unitAndcategory.impactCategoryUnitList[0].id,
 			};
-			createImpactTarget({
-				variables: {
-					input: createInputTarget,
-				},
-			});
+			try {
+				createImpactTarget({
+					variables: {
+						input: createInputTarget,
+					},
+				});
+			} catch (error) {
+				notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
+			}
 		}
 	}, [unitAndcategory]);
 
 	useEffect(() => {
 		if (impact) {
-			setSuccessmessage("Impact Target Successfully created !");
+			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
 			props.handleClose();
 		}
 	}, [impact]);
@@ -71,14 +69,19 @@ function ImpactTarget(props: ImpactTargetProps) {
 			impact_category_unit: -1,
 		});
 
-		getUnitsByCategory({
-			variables: {
-				filter: {
-					impact_category_org: value.impactCategory,
-					impact_units_org: value.impactUnit,
+		try {
+			getUnitsByCategory({
+				variables: {
+					filter: {
+						impact_category_org: value.impactCategory,
+						impact_units_org: value.impactUnit,
+					},
 				},
-			},
-		});
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
+		}
+
 		console.log("seeting loading to true");
 	};
 

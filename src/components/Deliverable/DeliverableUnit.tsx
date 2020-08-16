@@ -1,9 +1,10 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { IDeliverableUnit, DeliverableUnitProps } from "../../models/deliverable/deliverableUnit";
-import Snackbar from "../Snackbar/Snackbar";
 import DeliverableUnitForm from "../Forms/Deliverable/DeliverableUnit";
 import { FullScreenLoader } from "../Loader/Loader";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { CREATE_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/categoryUnit";
 import { CREATE_DELIVERABLE_UNIT } from "../../graphql/queries/Deliverable/unit";
 import { DELIVERABLE_ACTIONS } from "./constants";
@@ -22,7 +23,7 @@ function getInitialValues(props: DeliverableUnitProps) {
 }
 function DeliverableUnit(props: DeliverableUnitProps) {
 	const [deliverableCategory, setDeliverableCategory] = useState<number>();
-	const [successMessage, setSuccessmessage] = useState<string>();
+	const notificationDispatch = useNotificationDispatch();
 
 	const [createUnit, { data: createUnitResponse, error: createUnitError }] = useMutation(
 		CREATE_DELIVERABLE_UNIT
@@ -35,20 +36,24 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 
 	useEffect(() => {
 		if (createUnitResponse) {
-			createCategoryUnit({
-				variables: {
-					input: {
-						deliverable_category_org: deliverableCategory,
-						deliverable_units_org: createUnitResponse.createDeliverableUnitOrg.id,
+			try {
+				createCategoryUnit({
+					variables: {
+						input: {
+							deliverable_category_org: deliverableCategory,
+							deliverable_units_org: createUnitResponse.createDeliverableUnitOrg.id,
+						},
 					},
-				},
-			});
+				});
+			} catch (error) {
+				notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
+			}
 		}
 	}, [createUnitResponse]);
 
 	useEffect(() => {
 		if (createCategoryUnitResponse) {
-			setSuccessmessage("Deliverable Unit Created !");
+			notificationDispatch(setSuccessNotification("Deliverable Unit Successfully created !"));
 			props.handleClose();
 		}
 	}, [createCategoryUnitResponse]);
@@ -57,7 +62,11 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const onCreate = (value: IDeliverableUnit) => {
 		setDeliverableCategory(Number(value.deliverableCategory));
 		delete value.deliverableCategory;
-		createUnit({ variables: { input: value } });
+		try {
+			createUnit({ variables: { input: value } });
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
+		}
 
 		console.log(`on Created is called with: `, value);
 		console.log("seeting loading to true");

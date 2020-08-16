@@ -4,7 +4,8 @@ import {
 	IDeliverableTarget,
 	DeliverableTargetProps,
 } from "../../models/deliverable/deliverableTarget";
-import Snackbar from "../Snackbar/Snackbar";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import DeliverableTargetForm from "../Forms/Deliverable/DeliverableTarget";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
@@ -23,17 +24,13 @@ function getInitialValues(props: DeliverableTargetProps) {
 	};
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
-	const [getCategoryUnit, { data: categoryUnit, error }] = useLazyQuery(GET_CATEGORY_UNIT);
+	const notificationDispatch = useNotificationDispatch();
+	const [getCategoryUnit, { data: categoryUnit }] = useLazyQuery(GET_CATEGORY_UNIT);
 
 	const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
-	const [successMessage, setSuccessmessage] = useState<string>();
 	const [
 		createDeliverableTarget,
-		{
-			data: createDeliverableTargetRes,
-			loading: createDeliverableTargetLoading,
-			error: createDeliverableTargetError,
-		},
+		{ data: createDeliverableTargetRes, loading: createDeliverableTargetLoading },
 	] = useMutation(CREATE_DELIVERABLE_TARGET);
 
 	useEffect(() => {
@@ -43,18 +40,25 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				...deliverbaleTarget,
 				deliverable_category_unit: categoryUnit.deliverableCategoryUnitList[0].id,
 			};
-			createDeliverableTarget({
-				variables: {
-					input: createInputTarget,
-				},
-			});
+			try {
+				createDeliverableTarget({
+					variables: {
+						input: createInputTarget,
+					},
+				});
+			} catch (error) {
+				notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
+			}
+
 			console.log("categoryUnit", categoryUnit);
 		}
 	}, [categoryUnit]);
 
 	useEffect(() => {
 		if (createDeliverableTargetRes) {
-			setSuccessmessage("Deliverable Target Successfully created !");
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target Successfully created !")
+			);
 			console.log("createDeliverableTargetRes", createDeliverableTargetRes);
 			props.handleClose();
 		}
@@ -70,15 +74,19 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			project: value.project,
 			deliverable_category_unit: -1,
 		});
-
-		getCategoryUnit({
-			variables: {
-				filter: {
-					deliverable_category_org: value.deliverableCategory,
-					deliverable_units_org: value.deliverableUnit,
+		try {
+			getCategoryUnit({
+				variables: {
+					filter: {
+						deliverable_category_org: value.deliverableCategory,
+						deliverable_units_org: value.deliverableUnit,
+					},
 				},
-			},
-		});
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
+		}
+
 		console.log("seeting loading to true");
 	};
 

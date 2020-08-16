@@ -4,17 +4,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Slide from "@material-ui/core/Slide";
 import { Grid, ClickAwayListener } from "@material-ui/core";
 import SlidingButton from "./SlidingButton";
-
-interface CreateButton {
-	text: string;
-	dialog?: ({
-		open,
-		handleClose,
-	}: {
-		open: boolean;
-		handleClose: () => void;
-	}) => React.ReactNode | void;
-}
+import { CreateButton } from "../../../models/addButton";
 
 function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 	const [openSlider, setOpenSlider] = useState<boolean>(false);
@@ -48,10 +38,7 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 				>
 					{createButtons.map((createButton, index) => {
 						return (
-							<SlidingButton
-								dialog={createButton.dialog}
-								key={index}
-							>
+							<SlidingButton dialog={createButton.dialog} key={index}>
 								{createButton.text}
 							</SlidingButton>
 						);

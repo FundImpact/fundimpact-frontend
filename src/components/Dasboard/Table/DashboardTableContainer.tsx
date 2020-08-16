@@ -11,6 +11,13 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import FundsTable from "../../Table/Funds";
 import ImpactsTable from "../../Table/Impacts";
 import DeliverablesTable from "../../Table/Deliverable";
+import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import ImpactCategoryDialog from "../ImpactCategoryDialog";
+import ImpactUnitDialog from "../ImpactUnitDialog";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { useNotificationData } from "../../../contexts/notificationContext";
+import Snackbar from "../../Snackbar/Snackbar";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -60,20 +67,102 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
+// const tabs = [
+// 	{
+// 		label: "Funds",
+// 		createButtons: [
+// 			{
+// 				text: "Create Budget Category",
+// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+// 					<CreateBudgetDialog open={open} handleClose={handleClose} />
+// 				),
+// 			},
+// 			{ text: "Create Deliverables" },
+// 			{ text: "Create Impact Indicators" },
+// 			{ text: "Add Donor" },
+// 			{ text: "Create Budget Indicators" },
+// 			{ text: "Track Budget Spend" },
+// 			{ text: "Report Fund Receipt" },
+// 			{
+// 				text: "Create Budget Target",
+// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+// 					<CreateBudgetTargetDialog
+// 						formAction={FORM_ACTIONS.CREATE}
+// 						open={open}
+// 						handleClose={handleClose}
+// 					/>
+// 				),
+// 			},
+// 		],
+// 	},
+// 	{
+// 		label: "Deliverables",
+// 		createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+// 	},
+// 	{
+// 		label: "Impact Indicators",
+// 		createButtons: [
+// 			{ text: "Create Impact Targets" },
+// 			{ text: "Report Achivement" },
+// 			{
+// 				text: "Create Impact Category",
+// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+// 					<ImpactCategoryDialog open={open} handleClose={handleClose} />
+// 				),
+// 			},
+// 			{
+// 				text: "Create Impact Unit",
+// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+// 					<ImpactUnitDialog open={open} handleClose={handleClose} />
+// 				),
+// 			},
+// 		],
+// 	},
+// 	{ label: "Documents", createButtons: [] },
+// ];
+
+// function GetTable(label: string) {
+// 	if (label == "Funds") {
+// 		return <BudgetTargetTable />;
+// 	}
+// }
+
 export default function DashboardTableContainer() {
 	const tabs = [
 		{
 			label: "Funds",
-			table: <FundsTable />,
+			table: <BudgetTargetTable />,
 			createButtons: [
 				{
-					text: "Create Budget",
+					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<CreateBudgetDialog open={open} handleClose={handleClose} />
 					),
 				},
+				{ text: "Create Deliverables" },
+				{ text: "Create Impact Indicators" },
+				{ text: "Add Donor" },
+				{ text: "Create Budget Indicators" },
+				{ text: "Track Budget Spend" },
+				{ text: "Report Fund Receipt" },
 				{
-					text: "Create Deliverables",
+					text: "Create Budget Target",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<CreateBudgetTargetDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
+			],
+		},
+		{
+			label: "Deliverables",
+			table: <DeliverablesTable />,
+			createButtons: [
+				{
+					text: "Create Deliverables Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -82,17 +171,6 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
-				{ text: "Create Impact Indicators" },
-				{ text: "Add Donor" },
-				{ text: "Create Budget Indicators" },
-				{ text: "Track Budget Spend" },
-				{ text: "Report Fund Receipt" },
-			],
-		},
-		{
-			label: "Deliverables",
-			table: <DeliverablesTable />,
-			createButtons: [
 				{
 					text: "Create Deliverable Targets",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -130,6 +208,18 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
+				{
+					text: "Create Impact Unit",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactUnitDialog open={open} handleClose={handleClose} />
+					),
+				},
+				{
+					text: "Create Impact Category",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactCategoryDialog open={open} handleClose={handleClose} />
+					),
+				},
 				{ text: "Report Achivement" },
 			],
 		},
@@ -137,6 +227,7 @@ export default function DashboardTableContainer() {
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
+	const notificationData = useNotificationData();
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		console.log(`setting tab index `, newValue);
@@ -189,9 +280,17 @@ export default function DashboardTableContainer() {
 						</div>
 					</Box>
 					{tab.table && tab.table}
+					{/* {GetTable(tab.label)} */}
+
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
+			{notificationData!.successNotification && (
+				<Snackbar severity="success" msg={notificationData!.successNotification} />
+			)}
+			{notificationData!.errorNotification && (
+				<Snackbar severity="error" msg={notificationData!.errorNotification} />
+			)}
 		</Box>
 	);
 }

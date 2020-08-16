@@ -68,3 +68,14 @@ export const GET_PROJECTS = gql`
 		}
 	}
 `;
+
+export const GET_ORG_CURRENCIES = gql`
+	query {
+		orgCurrencies {
+			id
+			currency {
+				name
+			}
+		}
+	}
+`;

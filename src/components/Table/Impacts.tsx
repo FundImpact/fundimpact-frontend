@@ -40,6 +40,7 @@ const tableHeading = [
 	{ label: "Category" },
 	{ label: "Target Value" },
 	{ label: "Unit" },
+	{ label: "" }, //edit icon
 ];
 
 export default function ImpactsTable() {
