@@ -1,6 +1,6 @@
 import React from "react";
 import ImpaceUnitDialog from "../ImpaceUnitDialog";
-import { act, fireEvent } from "@testing-library/react";
+import { act, fireEvent, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
@@ -28,19 +28,13 @@ const mocks = [
 		request: {
 			query: CREATE_IMPACT_UNITS_ORG_INPUT,
 			variables: {
-				input: initialValues,
+				input: { ...initialValues, target_unit: 123 },
 			},
 		},
-		newData: jest.fn(() => {
-			return {
-				data: {
-					createImpactUnitsOrgInput: {
-						name: "impc name",
-						code: "impc code",
-					},
-				},
-			};
-		}),
+		result: () => {
+			creationOccured = true;
+			return {};
+		},
 	},
 ];
 
@@ -76,6 +70,11 @@ describe("Impact Unit dialog tests", () => {
 		await act(async () => {
 			let saveButton = await dialog.findByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
+			fireEvent.click(saveButton);
+			await wait();
 		});
+
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		expect(creationOccured).toBe(true);
 	});
 });

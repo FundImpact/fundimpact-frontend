@@ -1,20 +1,24 @@
 import React from "react";
 import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
+import {
+	GET_ORGANIZATION_BUDGET_CATEGORY,
+	CREATE_PROJECT_BUDGET_TARGET,
+} from "../../../../graphql/queries/budget";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { GET_ORG_CURRENCIES } from "../../../../graphql/queries";
 import { createBudgetTargetDialoginputFields } from "../../../../utils/inputTestFields.json";
+import { projectDetails } from "../../../../utils/testMock.json";
 
 const handleClose = jest.fn();
 
 let dialog: any;
-// let creationOccured = false;
+let creationOccured = false;
 
 const intialFormValue: any = {
 	name: "bud tar",
@@ -55,12 +59,32 @@ const mocks = [
 			},
 		},
 	},
+	{
+		request: {
+			query: CREATE_PROJECT_BUDGET_TARGET,
+			variables: {
+				input: {
+					project: 3,
+					name: "bud tar",
+					total_target_amount: 213,
+					description: "desc",
+					conversion_factor: 43,
+					organization_currency: "1",
+					budget_category_organization: "1",
+				},
+			},
+		},
+		result: () => {
+			creationOccured = true;
+			return {};
+		},
+	},
 ];
 
 beforeEach(() => {
 	act(() => {
 		dialog = renderApollo(
-			<DashboardProvider>
+			<DashboardProvider defaultState={{ project: projectDetails }}>
 				<NotificationProvider>
 					<CreateBudgetTargetDialog
 						formAction={FORM_ACTIONS.CREATE}
@@ -71,7 +95,6 @@ beforeEach(() => {
 			</DashboardProvider>,
 			{
 				mocks,
-				resolvers: {},
 				addTypename: false,
 			}
 		);
@@ -95,11 +118,11 @@ describe("Budget Target Dialog tests", () => {
 		await act(async () => {
 			let saveButton = await dialog.getByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
+			fireEvent.click(saveButton);
+			await wait();
 		});
 
-		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
-			fireEvent.click(saveButton);
-		});
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		expect(creationOccured).toBe(true);
 	});
 });

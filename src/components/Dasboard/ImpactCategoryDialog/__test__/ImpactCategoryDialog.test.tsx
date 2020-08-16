@@ -1,12 +1,13 @@
 import React from "react";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import { act, fireEvent } from "@testing-library/react";
+import { act, fireEvent, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/queries/Impact/mutation";
 import { impactCategoeyDialogFields } from "../../../../utils/inputTestFields.json";
+import { organizationDetails } from "../../../../utils/testMock.json";
 
 const handleClose = jest.fn();
 
@@ -25,8 +26,7 @@ const mocks = [
 		request: {
 			query: CREATE_IMPACT_CATEGORY_ORG_INPUT,
 			variables: {
-				input: initialValues,
-				organization: "1",
+				input: { ...initialValues, organization: "3" },
 			},
 		},
 		result: () => {
@@ -39,7 +39,7 @@ const mocks = [
 beforeEach(() => {
 	act(() => {
 		dialog = renderApollo(
-			<DashboardProvider>
+			<DashboardProvider defaultState={{ organization: organizationDetails }}>
 				<NotificationProvider>
 					<ImpactCategoryDialog open={true} handleClose={handleClose} />
 				</NotificationProvider>
@@ -70,12 +70,12 @@ describe("Imact category dialog tests", () => {
 		await act(async () => {
 			let saveButton = await dialog.getByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
+			fireEvent.click(saveButton);
+			await wait();
 		});
 
-		// await act(async () => {
-		// 	let saveButton = await dialog.getByTestId("createImpactCategorySaveButton");
-		// 	await wait(() => fireEvent.click(saveButton));
-		// });
-		// expect(creationOccured).toBe(true);
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+
+		expect(creationOccured).toBe(true);
 	});
 });
