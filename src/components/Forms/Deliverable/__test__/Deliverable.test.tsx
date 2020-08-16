@@ -4,7 +4,6 @@ import { act, fireEvent, queries, render, RenderResult } from "@testing-library/
 import "@testing-library/jest-dom/extend-expect";
 import { IDeliverable } from "../../../../models/deliverable/deliverable";
 import { DELIVERABLE_ACTIONS } from "../../../Deliverable/constants";
-import Deliverable from "../../../Deliverable/Deliverable";
 
 const intialFormValue: IDeliverable = {
 	name: "Deliverable",

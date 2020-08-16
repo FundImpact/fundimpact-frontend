@@ -139,7 +139,11 @@ function DeliverableUnitForm({
 											<Grid container spacing={1}>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="name"
+														data-testid="deliverableUnitName"
+														inputProps={{
+															"data-testid":
+																"deliverableUnitNameInput",
+														}}
 														value={formik.values.name}
 														error={!!formik.errors.name}
 														helperText={
@@ -156,7 +160,11 @@ function DeliverableUnitForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="code"
+														data-testid="deliverableUnitCode"
+														inputProps={{
+															"data-testid":
+																"deliverableUnitCodeInput",
+														}}
 														value={formik.values.code}
 														error={!!formik.errors.code}
 														helperText={
@@ -165,7 +173,6 @@ function DeliverableUnitForm({
 														}
 														onChange={formik.handleChange}
 														label="Code"
-														required
 														name="code"
 														variant="outlined"
 														fullWidth
@@ -193,10 +200,10 @@ function DeliverableUnitForm({
 															onChange={formik.handleChange}
 															label="Deliverable Category"
 															name="deliverableCategory"
-															data-testid="deliverableCategory"
+															data-testid="deliverableUnitCategory"
 															inputProps={{
 																"data-testid":
-																	"deliverableCategory",
+																	"deliverableUnitCategoryInput",
 															}}
 														>
 															{data &&
@@ -222,7 +229,11 @@ function DeliverableUnitForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="unit_type"
+														data-testid="deliverableUnitUnitType"
+														inputProps={{
+															"data-testid":
+																"deliverableUnitUnitTypeInput",
+														}}
 														value={formik.values.unit_type}
 														error={!!formik.errors.unit_type}
 														helperText={
@@ -239,7 +250,11 @@ function DeliverableUnitForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="suffix_label"
+														data-testid="deliverableUnitSuffixLabel"
+														inputProps={{
+															"data-testid":
+																"deliverableUnitSuffixLabelInput",
+														}}
 														value={formik.values.suffix_label}
 														error={!!formik.errors.suffix_label}
 														helperText={
@@ -256,7 +271,11 @@ function DeliverableUnitForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="prefix_label"
+														data-testid="deliverableUnitPrefixLabel"
+														inputProps={{
+															"data-testid":
+																"deliverableUnitPrefixLabelInput",
+														}}
 														value={formik.values.prefix_label}
 														error={!!formik.errors.prefix_label}
 														helperText={
@@ -273,7 +292,11 @@ function DeliverableUnitForm({
 												</Grid>
 												<Grid item xs={12}>
 													<TextField
-														data-testid="description"
+														data-testid="deliverableUnitDescription"
+														inputProps={{
+															"data-testid":
+																"deliverableUnitDescriptionInput",
+														}}
 														value={formik.values.description}
 														error={!!formik.errors.description}
 														onChange={formik.handleChange}
@@ -297,7 +320,7 @@ function DeliverableUnitForm({
 													</Button>
 													<Button
 														className={classes.button}
-														data-testid="submit"
+														data-testid="deliverableUnitSubmit"
 														form="deliverable_unit_form"
 														disabled={!formik.isValid}
 														type="submit"

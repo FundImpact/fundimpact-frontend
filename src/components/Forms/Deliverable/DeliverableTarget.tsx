@@ -157,13 +157,17 @@ function DeliverableTargetForm({
 											<Grid container spacing={1}>
 												<Grid item xs={6}>
 													<TextField
-														deliverableCategories-testid="name"
+														data-testid="deliverableTargetName"
 														value={formik.values.name}
 														error={!!formik.errors.name}
 														helperText={
 															formik.touched.name &&
 															formik.errors.name
 														}
+														inputProps={{
+															"data-testid":
+																"deliverableTargetNameInput",
+														}}
 														onChange={formik.handleChange}
 														label="Name"
 														required
@@ -174,13 +178,17 @@ function DeliverableTargetForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														deliverableCategories-testid="target_value"
+														data-testid="deliverableTargetTargetValue"
 														value={formik.values.target_value}
 														error={!!formik.errors.target_value}
 														helperText={
 															formik.touched.target_value &&
 															formik.errors.target_value
 														}
+														inputProps={{
+															"data-testid":
+																"deliverableTargetTargetValueInput",
+														}}
 														onChange={formik.handleChange}
 														label="Target value"
 														required
@@ -216,10 +224,10 @@ function DeliverableTargetForm({
 															label="Deliverable Category"
 															name="deliverableCategory"
 															required
-															deliverableCategories-testid="deliverableCategory"
+															data-testid="deliverableTargetCategory"
 															inputProps={{
-																"deliverableCategories-testid":
-																	"deliverableCategory",
+																"data-testid":
+																	"deliverableTargetCategoryInput",
 															}}
 														>
 															{!deliverableCategories && (
@@ -266,9 +274,10 @@ function DeliverableTargetForm({
 															onChange={formik.handleChange}
 															label="Deliverable Unit"
 															name="deliverableUnit"
-															data-testid="DeliverableUnit"
+															data-testid="deliverableTargetUnit"
 															inputProps={{
-																"data-testid": "DeliverableUnit",
+																"data-testid":
+																	"deliverableTargetUnitInput",
 															}}
 														>
 															{!unitsBycategory && (
@@ -309,10 +318,14 @@ function DeliverableTargetForm({
 												</Grid>
 												<Grid item xs={12}>
 													<TextField
-														deliverableCategories-testid="description"
+														data-testid="deliverableTargetDescription"
 														value={formik.values.description}
 														error={!!formik.errors.description}
 														onChange={formik.handleChange}
+														inputProps={{
+															"data-testid":
+																"deliverableTargetDescriptionInput",
+														}}
 														label="Description"
 														multiline
 														rows={3}
@@ -333,7 +346,7 @@ function DeliverableTargetForm({
 													</Button>
 													<Button
 														className={classes.button}
-														deliverableCategories-testid="submit"
+														data-testid="deliverableTargetSubmit"
 														form="deliverable_target_form"
 														type="submit"
 														color="primary"

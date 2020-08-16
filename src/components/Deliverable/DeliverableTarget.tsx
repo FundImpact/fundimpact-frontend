@@ -109,7 +109,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			errors.name = "Target value is required";
 		}
 		return errors;
-		return errors;
 	};
 
 	const formState = props.type;

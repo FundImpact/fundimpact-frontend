@@ -154,7 +154,10 @@ function ImpactTargetForm({
 											<Grid container spacing={1}>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="name"
+														data-testid="impactTargetName"
+														inputProps={{
+															"data-testid": "impactTargetNameInput",
+														}}
 														value={formik.values.name}
 														error={!!formik.errors.name}
 														helperText={
@@ -171,7 +174,11 @@ function ImpactTargetForm({
 												</Grid>
 												<Grid item xs={6}>
 													<TextField
-														data-testid="target_value"
+														data-testid="impactTargetTargetValue"
+														inputProps={{
+															"data-testid":
+																"impactTargetTargetValueInput",
+														}}
 														value={formik.values.target_value}
 														error={!!formik.errors.target_value}
 														helperText={
@@ -208,9 +215,10 @@ function ImpactTargetForm({
 															}}
 															label="Impact Category"
 															name="impactCategory"
-															data-testid="impactCategory"
+															data-testid="impactTargetCategory"
 															inputProps={{
-																"data-testid": "impactCategory",
+																"data-testid":
+																	"impactTargetCategoryInput",
 															}}
 														>
 															{!categories && (
@@ -256,9 +264,10 @@ function ImpactTargetForm({
 															onChange={formik.handleChange}
 															label="Impact Unit"
 															name="impactUnit"
-															data-testid="impactUnit"
+															data-testid="impactTargetUnit"
 															inputProps={{
-																"data-testid": "impactUnit",
+																"data-testid":
+																	"impactTargetUnitInput",
 															}}
 														>
 															{!unitsBycategory && (
@@ -300,7 +309,11 @@ function ImpactTargetForm({
 
 												<Grid item xs={12}>
 													<TextField
-														data-testid="description"
+														data-testid="impactTargetDescription"
+														inputProps={{
+															"data-testid":
+																"impactTargetDescriptionInput",
+														}}
 														value={formik.values.description}
 														error={!!formik.errors.description}
 														onChange={formik.handleChange}
@@ -324,7 +337,7 @@ function ImpactTargetForm({
 													</Button>
 													<Button
 														className={classes.button}
-														data-testid="submit"
+														data-testid="impactTargetSubmit"
 														form="impact_target_form"
 														disabled={!formik.isValid}
 														type="submit"
