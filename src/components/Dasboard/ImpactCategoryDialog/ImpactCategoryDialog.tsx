@@ -1,9 +1,4 @@
 import React from "react";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import { Grid, CircularProgress } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import CommonInputForm from "../../Forms/CommonInputForm";
 import { IImpactCategory } from "../../../models/impact/impact";
 import { useMutation } from "@apollo/client";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
@@ -15,7 +10,6 @@ import {
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import DialogBoxSidebar from "../../DialogBoxSidebar";
 import CommonDialog from "../CommonDialog";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
