@@ -4,6 +4,7 @@ import { Grid, TextField, Button, Box, makeStyles, createStyles, Theme } from "@
 import { IImpactUnitFormProps, IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import { IInputField } from "../../../models";
 import InputField from "../../InputField";
+import dataInputFields from "../../../utils/inputFields.json";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -13,53 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-let inputFields: IInputField[] = [
-	{
-		name: "name",
-		id: "name",
-		dataTestId: "createImpactUnitName",
-		testId: "createInpactUnitNameInput",
-		label: "Name",
-	},
-	{
-		name: "prefix_label",
-		id: "prefix-label",
-		dataTestId: "createImpactUnitPrefixLabel",
-		testId: "createImpactUnitPrefixLabelInput",
-		label: "Prefix Label",
-	},
-	{
-		name: "suffix_label",
-		id: "suffix-label",
-		dataTestId: "createImpactUnitSuffixLabel",
-		testId: "createImpactUnitSuffixLabelInput",
-		label: "Impact Code",
-	},
-	{
-		name: "code",
-		id: "impact-code",
-		dataTestId: "createImpactUnitCode",
-		testId: "createImpactUnitCodeInput",
-		label: "Suffix Label",
-	},
-	{
-		name: "target_unit",
-		id: "target-unit",
-		dataTestId: "createImpactUnitTargetUnit",
-		testId: "createImpactUnitTargetUnitInput",
-		label: "Target Unit",
-		type: "number",
-	},
-	{
-		name: "description",
-		id: "description",
-		dataTestId: "createImpactUnitDescription",
-		testId: "createImpactUnitDescriptionInput",
-		label: "Description",
-		rows: 2,
-		multiline: true,
-	},
-];
+let inputFields: IInputField[] = dataInputFields.impactUnitForm;
 
 function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel }: IImpactUnitFormProps) {
 	const classes = useStyles();

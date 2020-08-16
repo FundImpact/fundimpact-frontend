@@ -19,6 +19,7 @@ import { IOrganizationCurrency } from "../../../models";
 import { BUDGET_ACTIONS } from "../../../models/budget/constants";
 import { IInputField } from "../../../models";
 import InputField from "../../InputField";
+import dataInputFields from "../../../utils/inputFields.json";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -31,40 +32,7 @@ const useStyles = makeStyles(() =>
 	})
 );
 
-let inputFields: IInputField[] = [
-	{
-		name: "name",
-		id: "name",
-		dataTestId: "createBudgetTargetName",
-		testId: "createBudgetTargetNameInput",
-		label: "Name",
-	},
-	{
-		name: "total_target_amount",
-		id: "total-target-amount",
-		dataTestId: "createBudgetTargetTotalTargetAmount",
-		testId: "createBudgetTargetTotalTargetAmountInput",
-		label: "Total Taget Amount",
-		type: "number",
-	},
-	{
-		name: "conversion_factor",
-		id: "conversion-factor",
-		dataTestId: "createBudgetTargetConversionFactor",
-		testId: "createBudgetTargetConversionFactorInput",
-		label: "Conversion Factor",
-		type: "number",
-	},
-	{
-		name: "description",
-		id: "description",
-		dataTestId: "createBudgetTargetDescription",
-		testId: "createBudgetTargetDescriptionInput",
-		label: "Description",
-		rows: 2,
-		multiline: true,
-	},
-];
+let inputFields: IInputField[] = dataInputFields.createBudgetTargetForm;
 
 function CreateBudgetTargetForm({
 	initialValues,
@@ -114,7 +82,7 @@ function CreateBudgetTargetForm({
 										/>
 									</Grid>
 								);
-							})}	
+							})}
 
 							<Grid item xs={12} md={12}>
 								<FormControl variant="outlined" className={classes.formControl}>

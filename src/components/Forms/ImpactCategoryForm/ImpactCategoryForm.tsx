@@ -5,6 +5,7 @@ import { IImpactCategoryFormProps } from "../../../models/impact/impactForm";
 import { IImpactCategory } from "../../../models/impact/impact";
 import { IInputField } from "../../../models";
 import InputField from "../../InputField";
+import dataInputFields from "../../../utils/inputFields.json";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -14,38 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-let inputFields: IInputField[] = [
-	{
-		name: "name",
-		id: "name",
-		dataTestId: "createImpactName",
-		testId: "createImpactNameInput",
-		label: "Name",
-	},
-	{
-		name: "shortname",
-		id: "shortname",
-		dataTestId: "createImpactShortName",
-		testId: "createImpactShortNameInput",
-		label: "Short Name",
-	},
-	{
-		name: "code",
-		id: "impactCode",
-		dataTestId: "createImpactCode",
-		testId: "createImpactCodeInput",
-		label: "Impact Code",
-	},
-	{
-		name: "description",
-		id: "description",
-		dataTestId: "createImpactCategoryDescription",
-		testId: "createImpactCategoryDescriptionInput",
-		label: "Description",
-		multiline: true,
-		rows: 3,
-	},
-];
+let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
 function ImpaceCategoryForm({
 	initialValues,

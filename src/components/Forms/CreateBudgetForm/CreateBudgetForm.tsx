@@ -5,6 +5,7 @@ import { IBudgetFormProps } from "../../../models/budget/budgetForm";
 import { IBudget } from "../../../models/budget/budget";
 import { IInputField } from "../../../models";
 import InputField from "../../InputField";
+import dataInputFields from "../../../utils/inputFields.json";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -14,31 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-let inputFields: IInputField[] = [
-	{
-		name: "name",
-		id: "name",
-		dataTestId: "createBudgetName",
-		testId: "createBudgetNameInput",
-		label: "Name",
-	},
-	{
-		name: "code",
-		id: "budgetCode",
-		dataTestId: "createBudgetCode",
-		testId: "createBudgetCodeInput",
-		label: "Budget Code",
-	},
-	{
-		name: "description",
-		id: "description",
-		dataTestId: "createBudgetDescription",
-		testId: "createBudgetDescriptionInput",
-		label: "Description",
-		multiline: true,
-		rows: 3,
-	},
-];
+let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
 function CreateBudgetForm({ initialValues, validate, onSubmit, onCancel }: IBudgetFormProps) {
 	const classes = useStyles();
