@@ -5,9 +5,6 @@ import dashboardReducer from "../reducers/dashboardReducer";
 const DashboardDataContext = React.createContext<IDashboardDataContext | undefined>(undefined);
 const DashboardDispatchContext = createContext<Dispatch<any> | undefined>(undefined);
 
-/**
- *
- */
 const useDashBoardData = (): IDashboardDataContext | undefined => {
 	const context = React.useContext(DashboardDataContext);
 	if (!context) {
@@ -28,11 +25,17 @@ const useDashboard = () => [useDashBoardData(), useDashboardDispatch()];
 
 const defaultDashboardState: IDashboardDataContext = {};
 
-const DashboardProvider = ({ children }: { children: React.ReactNode | React.ReactElement }) => {
+const DashboardProvider = ({
+	children,
+	defaultState = defaultDashboardState,
+}: {
+	children: React.ReactNode | React.ReactElement;
+	defaultState?: IDashboardDataContext;
+}) => {
 	const [state, dispatch] = React.useReducer(
 		dashboardReducer,
-		defaultDashboardState,
-		() => defaultDashboardState
+		defaultState,
+		() => defaultState
 	);
 	return (
 		<DashboardDataContext.Provider value={state}>

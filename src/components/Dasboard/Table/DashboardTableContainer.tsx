@@ -2,8 +2,14 @@ import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
-
+import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import ImpactCategoryDialog from "../ImpactCategoryDialog";
+import ImpactUnitDialog from "../ImpactUnitDialog";
 import DefaultTable from "../../Table/Table";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { useNotificationData } from "../../../contexts/notificationContext";
+import Snackbar from "../../Snackbar/Snackbar";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -51,37 +57,71 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
+const tabs = [
+	{
+		label: "Funds",
+		createButtons: [
+			{
+				text: "Create Budget Category",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetDialog open={open} handleClose={handleClose} />
+				),
+			},
+			{ text: "Create Deliverables" },
+			{ text: "Create Impact Indicators" },
+			{ text: "Add Donor" },
+			{ text: "Create Budget Indicators" },
+			{ text: "Track Budget Spend" },
+			{ text: "Report Fund Receipt" },
+			{
+				text: "Create Budget Target",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetTargetDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={open}
+						handleClose={handleClose}
+					/>
+				),
+			},
+		],
+	},
+	{
+		label: "Deliverables",
+		createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+	},
+	{
+		label: "Impact Indicators",
+		createButtons: [
+			{ text: "Create Impact Targets" },
+			{ text: "Report Achivement" },
+			{
+				text: "Create Impact Category",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<ImpactCategoryDialog open={open} handleClose={handleClose} />
+				),
+			},
+			{
+				text: "Create Impact Unit",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<ImpactUnitDialog open={open} handleClose={handleClose} />
+				),
+			},
+		],
+	},
+	{ label: "Documents", createButtons: [] },
+];
+
+function GetTable(label: string) {
+	if (label == "Funds") {
+		return <BudgetTargetTable />;
+	}
+	return <DefaultTable />;
+}
+
 export default function DashboardTableContainer() {
-	const tabs = [
-		{
-			label: "Funds",
-			createButtons: [
-				{
-					text: "Create Budget",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetDialog open={open} handleClose={handleClose} />
-					),
-				},
-				{ text: "Create Deliverables" },
-				{ text: "Create Impact Indicators" },
-				{ text: "Add Donor" },
-				{ text: "Create Budget Indicators" },
-				{ text: "Track Budget Spend" },
-				{ text: "Report Fund Receipt" },
-			],
-		},
-		{
-			label: "Deliverables",
-			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
-		},
-		{
-			label: "Impact Indicators",
-			createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
-		},
-		{ label: "Documents", createButtons: [] },
-	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
+	const notificationData = useNotificationData();
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		console.log(`setting tab index `, newValue);
@@ -133,10 +173,17 @@ export default function DashboardTableContainer() {
 							</Button>
 						</div>
 					</Box>
-					<DefaultTable />
+					{GetTable(tab.label)}
+
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
+			{notificationData!.successNotification && (
+				<Snackbar severity="success" msg={notificationData!.successNotification} />
+			)}
+			{notificationData!.errorNotification && (
+				<Snackbar severity="error" msg={notificationData!.errorNotification} />
+			)}
 		</Box>
 	);
 }

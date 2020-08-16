@@ -22,6 +22,7 @@ export interface IOrganisation {
 	country: string;
 	zipCode: number | null;
 	name?: string;
+	id?: string;
 }
 
 export interface IBasicInformation {
@@ -52,4 +53,40 @@ export interface IDashboardDataContext {
 	project?: IProject;
 	organization?: IOrganisation;
 	workspace?: any;
+}
+
+export interface INotificationContext {
+	successNotification: string;
+	errorNotification: string;
+}
+
+export interface IOrganizationCurrency {
+	id: string;
+	currency: {
+		name: string;
+	};
+}
+
+export interface IInputField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
+}
+
+export interface ISelectField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	formik?: any;
+	optionsArray: [any];
+	inputLabelId: string,
+  selectLabelId: string,
+  selectId: string
 }

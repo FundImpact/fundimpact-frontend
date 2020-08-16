@@ -1,0 +1,29 @@
+{
+	"createBudgetDialogInputFields": [
+		{ "id": "createBudgetNameInput", "key": "name" },
+		{ "id": "createBudgetCodeInput", "key": "code" },
+		{ "id": "createBudgetDescriptionInput", "key": "description" }
+	],
+	"createBudgetTargetDialoginputFields": [
+		{ "id": "createBudgetTargetNameInput", "key": "name" },
+		{ "id": "createBudgetTargetTotalTargetAmountInput", "key": "total_target_amount" },
+		{ "id": "createBudgetTargetOrganizationCurrencyOption", "key": "organization_currency" },
+		{ "id": "createBudgetTargetBudgetCategoryOption", "key": "budget_category_organization" },
+		{ "id": "createBudgetTargetConversionFactorInput", "key": "conversion_factor" },
+		{ "id": "createBudgetTargetDescriptionInput", "key": "description" }
+	],
+	"impactCategoeyDialogFields": [
+		{ "id": "createImpactNameInput", "key": "name" },
+		{ "id": "createImpactShortNameInput", "key": "shortname" },
+		{ "id": "createImpactCodeInput", "key": "code" },
+		{ "id": "createImpactCategoryDescriptionInput", "key": "description" }
+	],
+	"impactUnitDialogFields": [
+		{ "id": "createInpactUnitNameInput", "key": "name" },
+		{ "id": "createImpactUnitPrefixLabelInput", "key": "prefix_label" },
+		{ "id": "createImpactUnitSuffixLabelInput", "key": "suffix_label" },
+		{ "id": "createImpactUnitCodeInput", "key": "code" },
+		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit" },
+		{ "id": "createImpactUnitDescriptionInput", "key": "description" }
+	]
+}
