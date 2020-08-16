@@ -1,12 +1,8 @@
 import React from "react";
 import CommonDialog from "../CommonDialog";
-import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { DashboardProvider } from "../../../../contexts/dashboardContext";
-import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../contexts/notificationContext";
 
 const handleClose = jest.fn();
 const onUpdate = jest.fn();

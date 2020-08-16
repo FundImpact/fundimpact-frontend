@@ -6,6 +6,7 @@ import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/queries/Impact/mutation";
+import { impactCategoeyDialogFields } from "../../../../utils/inputTestFields.json";
 
 const handleClose = jest.fn();
 
@@ -52,15 +53,9 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = [
-	{ id: "createImpactNameInput", key: "name" },
-	{ id: "createImpactShortNameInput", key: "shortname" },
-	{ id: "createImpactCodeInput", key: "code" },
-	{ id: "createImpactCategoryDescriptionInput", key: "description" },
-];
+const inputIds = impactCategoeyDialogFields;
 
 describe("Imact category dialog tests", () => {
-
 	test("Mock response", async () => {
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 		for (let i = 0; i < inputIds.length; i++) {

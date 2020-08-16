@@ -6,6 +6,7 @@ import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../../graphql/queries/Impact/mutation";
+import { impactUnitDialogFields } from "../../../../utils/inputTestFields.json";
 
 const handleClose = jest.fn();
 
@@ -59,17 +60,9 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = [
-	{ id: "createInpactUnitNameInput", key: "name" },
-	{ id: "createImpactUnitPrefixLabelInput", key: "prefix_label" },
-	{ id: "createImpactUnitSuffixLabelInput", key: "suffix_label" },
-	{ id: "createImpactUnitCodeInput", key: "code" },
-	{ id: "createImpactUnitTargetUnitInput", key: "target_unit" },
-	{ id: "createImpactUnitDescriptionInput", key: "description" },
-];
+const inputIds = impactUnitDialogFields;
 
 describe("Impact Unit dialog tests", () => {
-
 	test("mock data", async () => {
 		for (let i = 0; i < inputIds.length; i++) {
 			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;

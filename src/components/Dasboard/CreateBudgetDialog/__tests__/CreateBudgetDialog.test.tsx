@@ -7,6 +7,7 @@ import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { createBudgetDialogInputFields } from "../../../../utils/inputTestFields.json";
 
 const handleClose = jest.fn();
 
@@ -48,20 +49,15 @@ beforeEach(() => {
 			</DashboardProvider>,
 			{
 				mocks,
-				resolvers: {}
+				resolvers: {},
 			}
 		);
 	});
 });
 
-let inputIds = [
-	{ id: "createBudgetNameInput", key: "name" },
-	{ id: "createBudgetCodeInput", key: "code" },
-	{ id: "createBudgetDescriptionInput", key: "description" },
-];
+let inputIds = createBudgetDialogInputFields;
 
 describe("Budget Category Dialog tests", () => {
-
 	test("Create Budget Category", async () => {
 		for (let i = 0; i < inputIds.length; i++) {
 			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
