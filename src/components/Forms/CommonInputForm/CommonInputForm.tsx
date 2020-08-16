@@ -1,11 +1,8 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { Grid, TextField, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
-import { IImpactCategoryFormProps } from "../../../models/impact/impactForm";
-import { IImpactCategory } from "../../../models/impact/impact";
+import { Grid, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
 import { IInputField } from "../../../models";
 import InputField from "../../InputField";
-import dataInputFields from "../../../utils/inputFields.json";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -15,16 +12,10 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
-function ImpaceCategoryForm({
-	initialValues,
-	validate,
-	onSubmit,
-	onCancel,
-}: IImpactCategoryFormProps) {
+function ImpactUnitForm({ initialValues, validate, onSubmit, onCancel, inputFields }: any) {
 	const classes = useStyles();
-	const validateInitialValue = (initialValue: IImpactCategory) => {
+	const validateInitialValue = (initialValue: any) => {
 		const errors = validate(initialValue) as object;
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
@@ -54,10 +45,12 @@ function ImpaceCategoryForm({
 												element.multiline ? element.multiline : false
 											}
 											rows={element.rows ? element.rows : 1}
+											type={element.type ? element.type : "text"}
 										/>
 									</Grid>
 								);
 							})}
+
 							<Grid item xs={12}>
 								<Box component="span" mr={2}>
 									<Button
@@ -65,7 +58,7 @@ function ImpaceCategoryForm({
 										variant="contained"
 										color="primary"
 										type="submit"
-										data-testid="createImpactCategorySaveButton"
+										data-testid="createSaveButton"
 										disabled={!formik.isValid}
 									>
 										Save
@@ -75,7 +68,7 @@ function ImpaceCategoryForm({
 									className={classes.button}
 									variant="contained"
 									color="secondary"
-									data-testid="createImpactCategoryCancelButton"
+									data-testid="createCancelButton"
 									disableRipple
 									onClick={onCancel}
 								>
@@ -90,4 +83,4 @@ function ImpaceCategoryForm({
 	);
 }
 
-export default ImpaceCategoryForm;
+export default ImpactUnitForm;

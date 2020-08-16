@@ -3,7 +3,7 @@ import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import ImpactCategoryForm from "../../Forms/ImpactCategoryForm";
+import CommonInputForm from "../../Forms/CommonInputForm";
 import { IImpactCategory } from "../../../models/impact/impact";
 import { useMutation } from "@apollo/client";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
@@ -13,6 +13,10 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import dataInputFields from "../../../utils/inputFields.json";
+import { IInputField } from "../../../models";
+
+let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
 const initialValues: IImpactCategory = {
 	name: "",
@@ -95,11 +99,12 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 						</Box>
 					</Grid>
 					<Grid item xs={8}>
-						<ImpactCategoryForm
+						<CommonInputForm
 							initialValues={initialValues}
 							validate={validate}
 							onSubmit={onSubmit}
 							onCancel={() => handleClose()}
+							inputFields={inputFields}
 						/>
 					</Grid>
 				</Grid>

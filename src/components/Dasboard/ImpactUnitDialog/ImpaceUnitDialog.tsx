@@ -5,13 +5,17 @@ import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { useMutation } from "@apollo/client";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
-import ImpactUnitForm from "../../Forms/ImpactUnitForm";
+import CommonInputForm from "../../Forms/CommonInputForm";
 import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
+import dataInputFields from "../../../utils/inputFields.json";
+import { IInputField } from "../../../models";
+
+let inputFields: IInputField[] = dataInputFields.impactUnitForm;
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",
@@ -46,15 +50,12 @@ const validate = (values: IImpactUnitFormInput) => {
 };
 
 function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-
-	const [createImpactUnitsOrgInput, { loading }] = useMutation(
-		CREATE_IMPACT_UNITS_ORG_INPUT
-	);
+	const [createImpactUnitsOrgInput, { loading }] = useMutation(CREATE_IMPACT_UNITS_ORG_INPUT);
 	const notificationDispatch = useNotificationDispatch();
 
 	const onSubmit = async (values: IImpactUnitFormInput) => {
 		try {
-			 createImpactUnitsOrgInput({
+			createImpactUnitsOrgInput({
 				variables: {
 					input: {
 						...values,
@@ -101,11 +102,12 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 						</Box>
 					</Grid>
 					<Grid item xs={8}>
-						<ImpactUnitForm
+						<CommonInputForm
 							initialValues={initialValues}
 							validate={validate}
 							onSubmit={onSubmit}
 							onCancel={() => handleClose()}
+							inputFields={inputFields}
 						/>
 					</Grid>
 				</Grid>

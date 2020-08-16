@@ -82,12 +82,12 @@ describe("Budget Category Dialog tests", () => {
 		}
 
 		await act(async () => {
-			let saveButton = await dialog.getByTestId("createBudgetSaveButton");
+			let saveButton = await dialog.getByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
 		});
 
 		await act(async () => {
-			let saveButton = await dialog.findByTestId("createBudgetSaveButton");
+			let saveButton = await dialog.findByTestId("createSaveButton");
 			await fireEvent.click(saveButton);
 		});
 

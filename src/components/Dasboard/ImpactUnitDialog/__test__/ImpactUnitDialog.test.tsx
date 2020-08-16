@@ -90,7 +90,7 @@ describe("Impact Unit dialog tests", () => {
 		}
 
 		await act(async () => {
-			let saveButton = await dialog.findByTestId("createImpactUnitSaveButton");
+			let saveButton = await dialog.findByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
 		});
 	});

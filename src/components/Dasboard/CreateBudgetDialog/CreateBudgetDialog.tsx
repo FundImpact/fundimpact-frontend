@@ -5,7 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { IBudget } from "../../../models/budget/budget";
-import CreateBudgetForm from "../../Forms/CreateBudgetForm";
+import CommonInputForm from "../../Forms/CommonInputForm";
 import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
@@ -15,6 +15,10 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
+import dataInputFields from "../../../utils/inputFields.json";
+import { IInputField } from "../../../models";
+
+let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
 const initialValues: IBudget = {
 	name: "",
@@ -37,10 +41,9 @@ const validate = (values: IBudget) => {
 };
 
 function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-	const [
-		createNewOrgBudgetCategory,
-		{ loading: createLoading },
-	] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
+	const [createNewOrgBudgetCategory, { loading: createLoading }] = useMutation(
+		CREATE_ORG_BUDGET_CATEGORY
+	);
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -115,11 +118,12 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 							</Box>
 						</Grid>
 						<Grid item xs={8}>
-							<CreateBudgetForm
+							<CommonInputForm
 								initialValues={initialValues}
 								validate={validate}
 								onSubmit={onSubmit}
 								onCancel={handleClose}
+								inputFields={inputFields}
 							/>
 						</Grid>
 					</Grid>

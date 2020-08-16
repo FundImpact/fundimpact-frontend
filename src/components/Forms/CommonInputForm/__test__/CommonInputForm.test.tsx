@@ -1,8 +1,9 @@
 import React from "react";
 import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import ImpaceUnitForm from "../ImpaceUnitForm";
+import ImpaceUnitForm from "../CommonInputForm";
 import { IImpactUnitFormInput } from "../../../../models/impact/impactForm";
+import { impactUnitForm } from "../../../../utils/inputFields.json";
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",
@@ -48,6 +49,7 @@ beforeEach(() => {
 				onSubmit={onSubmit}
 				validate={validate}
 				onCancel={onCancel}
+				inputFields={impactUnitForm}
 			/>
 		);
 	});
@@ -85,12 +87,12 @@ describe("Impact Unit Form", () => {
 	});
 
 	test("should have save button", () => {
-		let saveButton = createForm.getByTestId("createImpactUnitSaveButton");
+		let saveButton = createForm.getByTestId("createSaveButton");
 		expect(saveButton).toBeInTheDocument();
 	});
 
 	test("should have cancel button", () => {
-		let saveButton = createForm.getByTestId("createImpactUnitCancelButton");
+		let saveButton = createForm.getByTestId("createCancelButton");
 		expect(saveButton).toBeInTheDocument();
 	});
 
@@ -111,8 +113,8 @@ describe("Impact Unit Form", () => {
 		let suffixLabelField = createForm.getByTestId(
 			"createImpactUnitSuffixLabelInput"
 		) as HTMLInputElement;
-    expect(suffixLabelField.value).toBe(initialValues.suffix_label);
-    
+		expect(suffixLabelField.value).toBe(initialValues.suffix_label);
+
 		let targetUnitField = createForm.getByTestId(
 			"createImpactUnitTargetUnitInput"
 		) as HTMLInputElement;
@@ -131,7 +133,7 @@ describe("Impact Unit Form", () => {
 			fireEvent.change(nameField, { target: { value } });
 		});
 		expect(nameField.value).toBe(value);
-		let saveButton = await createForm.findByTestId("createImpactUnitSaveButton");
+		let saveButton = await createForm.findByTestId("createSaveButton");
 		expect(saveButton).toBeDisabled();
 	});
 });

@@ -82,7 +82,7 @@ describe("Imact category dialog tests", () => {
 		}
 
 		await act(async () => {
-			let saveButton = await dialog.getByTestId("createImpactCategorySaveButton");
+			let saveButton = await dialog.getByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
 		});
 
