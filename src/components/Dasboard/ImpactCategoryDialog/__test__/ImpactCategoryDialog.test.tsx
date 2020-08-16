@@ -66,7 +66,7 @@ describe("Imact category dialog tests", () => {
 	});
 
 	test("Dialog render header correctly", () => {
-		const header = dialog.getByTestId("impact-category-dialog-header");
+		const header = dialog.getByTestId("dialog-header");
 		expect(header).toHaveTextContent("New Impact Category");
 	});
 

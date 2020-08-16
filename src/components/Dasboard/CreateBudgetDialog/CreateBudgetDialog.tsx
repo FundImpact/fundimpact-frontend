@@ -17,6 +17,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
+import DialogBoxSidebar from "../../DialogBoxSidebar";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
@@ -98,24 +99,11 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 				<Box px={3} py={4}>
 					<Grid container spacing={2}>
 						<Grid item xs={4}>
-							<Typography
-								data-testid="create-budget-dialog-header"
-								variant="h6"
-								gutterBottom
-							>
-								New Budget Category
-							</Typography>
-							<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-								Physical addresses of your organizatin like headquater, branch etc.
-							</Typography>
-							<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>
-								<Typography color="primary" gutterBottom>
-									WORKSPACE 1
-								</Typography>
-								<Box mt={1}>
-									<Typography variant="subtitle2">Project Name One</Typography>
-								</Box>
-							</Box>
+							<DialogBoxSidebar
+								title="New Budget Category"
+								subtitle="Physical addresses of your organizatin like headquater, branch etc."
+								workspace="WORKSPACE 1"
+							/>
 						</Grid>
 						<Grid item xs={8}>
 							<CommonInputForm

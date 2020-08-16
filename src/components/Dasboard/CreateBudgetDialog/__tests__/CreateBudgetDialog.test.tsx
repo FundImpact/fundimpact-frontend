@@ -67,7 +67,7 @@ describe("Budget Category Dialog tests", () => {
 	});
 
 	test("Budget Category Dialog render header correctly", () => {
-		const header = dialog.getByTestId("create-budget-dialog-header");
+		const header = dialog.getByTestId("dialog-header");
 		expect(header).toHaveTextContent("New Budget Category");
 	});
 

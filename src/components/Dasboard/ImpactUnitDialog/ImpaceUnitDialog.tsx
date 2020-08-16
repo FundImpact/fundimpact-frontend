@@ -14,6 +14,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
+import DialogBoxSidebar from "../../DialogBoxSidebar";
 
 let inputFields: IInputField[] = dataInputFields.impactUnitForm;
 
@@ -82,24 +83,11 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 			<Box px={3} py={4}>
 				<Grid container spacing={2}>
 					<Grid item xs={4}>
-						<Typography
-							data-testid="impact-unit-dialog-header"
-							variant="h6"
-							gutterBottom
-						>
-							New Impact Unit
-						</Typography>
-						<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-							Physical addresses of your organizatin like headquater, branch etc.
-						</Typography>
-						<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>
-							<Typography color="primary" gutterBottom>
-								WORKSPACE 1
-							</Typography>
-							<Box mt={1}>
-								<Typography variant="subtitle2">Project Name One</Typography>
-							</Box>
-						</Box>
+						<DialogBoxSidebar
+							title="New Impact Unit"
+							subtitle="Physical addresses of your organizatin like headquater, branch etc."
+							workspace="WORKSPACE 1"
+						/>
 					</Grid>
 					<Grid item xs={8}>
 						<CommonInputForm

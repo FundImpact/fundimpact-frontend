@@ -3,7 +3,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import { Grid, CircularProgress } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	CREATE_PROJECT_BUDGET_TARGET,
@@ -26,6 +25,7 @@ import {
 	createBudgetTargetFormSelectFields,
 	createBudgetTargetForm,
 } from "../../../utils/inputFields.json";
+import DialogBoxSidebar from "../../DialogBoxSidebar";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -176,24 +176,11 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 				<Box px={3} py={4}>
 					<Grid container spacing={2}>
 						<Grid item xs={4}>
-							<Typography
-								data-testid="create-budget-target-dialog-header"
-								variant="h6"
-								gutterBottom
-							>
-								New Budget Target
-							</Typography>
-							<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-								Physical addresses of your organizatin like headquater, branch etc.
-							</Typography>
-							<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>
-								<Typography color="primary" gutterBottom>
-									WORKSPACE 1
-								</Typography>
-								<Box mt={1}>
-									<Typography variant="subtitle2">Project Name One</Typography>
-								</Box>
-							</Box>
+							<DialogBoxSidebar
+								title="New Budget Target"
+								subtitle="Physical addresses of your organizatin like headquater, branch etc."
+								workspace="WORKSPACE 1"
+							/>
 						</Grid>
 						<Grid item xs={8}>
 							<CommonInputForm

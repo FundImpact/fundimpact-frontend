@@ -75,7 +75,7 @@ describe("Impact Unit dialog tests", () => {
 	});
 
 	test("Dialog render header correctly", () => {
-		const header = dialog.getByTestId("impact-unit-dialog-header");
+		const header = dialog.getByTestId("dialog-header");
 		expect(header).toHaveTextContent("New Impact Unit");
 	});
 
