@@ -61,15 +61,6 @@ let inputIds = [
 ];
 
 describe("Budget Category Dialog tests", () => {
-	test("Budget Category Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("common-dialog");
-		expect(conponent).toBeInTheDocument();
-	});
-
-	test("Budget Category Dialog render header correctly", () => {
-		const header = dialog.getByTestId("dialog-header");
-		expect(header).toHaveTextContent("New Budget Category");
-	});
 
 	test("Create Budget Category", async () => {
 		for (let i = 0; i < inputIds.length; i++) {

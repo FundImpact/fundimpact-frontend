@@ -89,15 +89,6 @@ const inputIds = [
 ];
 
 describe("Budget Target Dialog tests", () => {
-	test("Budget Category Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("common-dialog");
-		expect(conponent).toBeInTheDocument();
-	});
-
-	test("Budget Category Dialog render header correctly", () => {
-		const header = dialog.getByTestId("dialog-header");
-		expect(header).toHaveTextContent("New Budget Target");
-	});
 
 	test("Mock response", async () => {
 		for (let i = 0; i < inputIds.length; i++) {

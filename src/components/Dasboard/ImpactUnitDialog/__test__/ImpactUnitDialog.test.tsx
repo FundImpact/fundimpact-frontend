@@ -69,15 +69,6 @@ const inputIds = [
 ];
 
 describe("Impact Unit dialog tests", () => {
-	test("Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("common-dialog");
-		expect(conponent).toBeInTheDocument();
-	});
-
-	test("Dialog render header correctly", () => {
-		const header = dialog.getByTestId("dialog-header");
-		expect(header).toHaveTextContent("New Impact Unit");
-	});
 
 	test("mock data", async () => {
 		for (let i = 0; i < inputIds.length; i++) {

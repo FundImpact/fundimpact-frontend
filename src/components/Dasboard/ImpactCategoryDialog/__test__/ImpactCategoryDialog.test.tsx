@@ -60,15 +60,6 @@ const inputIds = [
 ];
 
 describe("Imact category dialog tests", () => {
-	test("Dialog is rendered correctly", () => {
-		const conponent = dialog.getByTestId("common-dialog");
-		expect(conponent).toBeInTheDocument();
-	});
-
-	test("Dialog render header correctly", () => {
-		const header = dialog.getByTestId("dialog-header");
-		expect(header).toHaveTextContent("New Impact Category");
-	});
 
 	test("Mock response", async () => {
 		await new Promise((resolve) => setTimeout(resolve, 2000));
