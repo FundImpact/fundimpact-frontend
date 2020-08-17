@@ -2,14 +2,10 @@ import {
 	Box,
 	Button,
 	createStyles,
-	Dialog,
-	DialogContent,
 	makeStyles,
 	TextField,
 	Theme,
 	Grid,
-	Typography,
-	Card,
 	FormControl,
 	MenuItem,
 	Select,
@@ -33,20 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
 				marginBottom: theme.spacing(0),
 			},
 			"& .MuiButtonBase-root": {
-				marginTop: theme.spacing(4),
-				marginLeft: theme.spacing(1),
 				marginRight: theme.spacing(1),
 			},
 		},
 		button: {
 			color: theme.palette.common.white,
 			margin: theme.spacing(1),
-		},
-		leftBox: {
-			width: "100%",
-			backgroundColor: "#e3f2fd",
-			height: "40%",
-			marginTop: theme.spacing(1),
 		},
 		formControl: {
 			margin: theme.spacing(1),
@@ -96,279 +84,215 @@ function DeliverableTargetForm({
 
 	useEffect(() => {}, [deliverableCategories]);
 	return (
-		<Dialog
-			fullWidth
-			open={formIsOpen}
-			aria-labelledby="form-dialog-title"
-			maxWidth="md"
-			TransitionComponent={Transition}
+		<Box
+			mx="auto"
+			height={"100%"}
+			width={{ xs: "100%", md: "100%", lg: "100%" }}
+			onChange={clearErrors}
 		>
-			<DialogContent>
-				<Box
-					mx="auto"
-					height={"100%"}
-					width={{ xs: "100%", md: "100%", lg: "100%" }}
-					onChange={clearErrors}
-				>
-					<Grid container justify={"center"}>
-						<Grid item xs={4}>
-							<Typography variant="h6" gutterBottom>
-								New Deliverable Target
-							</Typography>
-							<Typography variant="subtitle2" gutterBottom color="textSecondary">
-								Physical addresses of your organisation like headquarter branch etc
-							</Typography>
-							<Card elevation={0} className={classes.leftBox}>
-								<Box mt={2} ml={3}>
-									<Typography variant="subtitle1" gutterBottom color="primary">
-										WORKSPACE 1
-									</Typography>
-								</Box>
-								<Box m={1} ml={3}>
-									<Typography variant="body2" gutterBottom color="textPrimary">
-										PROJECT 1
-									</Typography>
-								</Box>
-							</Card>
-						</Grid>
-						<Grid item xs={8}>
-							<Formik
-								validateOnBlur
-								validateOnChange
-								initialValues={initialValues}
-								enableReinitialize={true}
-								validate={validate}
-								isInitialValid={(props: any) =>
-									validateInitialValue(props.initialValues)
-								}
-								onSubmit={(values) =>
-									formState === DELIVERABLE_ACTIONS.CREATE
-										? onCreate(values)
-										: onUpdate(values)
-								}
-							>
-								{(formik) => {
-									return (
-										<Form
-											id="deliverable_target_form"
-											className={classes.root}
-											autoComplete="off"
+			<Formik
+				validateOnBlur
+				validateOnChange
+				initialValues={initialValues}
+				enableReinitialize={true}
+				validate={validate}
+				isInitialValid={(props: any) => validateInitialValue(props.initialValues)}
+				onSubmit={(values) =>
+					formState === DELIVERABLE_ACTIONS.CREATE ? onCreate(values) : onUpdate(values)
+				}
+			>
+				{(formik) => {
+					return (
+						<Form
+							id="deliverable_target_form"
+							className={classes.root}
+							autoComplete="off"
+						>
+							<Grid container spacing={1}>
+								<Grid item xs={6}>
+									<TextField
+										data-testid="deliverableTargetName"
+										value={formik.values.name}
+										error={!!formik.errors.name}
+										helperText={formik.touched.name && formik.errors.name}
+										inputProps={{
+											"data-testid": "deliverableTargetNameInput",
+										}}
+										onChange={formik.handleChange}
+										label="Name"
+										required
+										name="name"
+										variant="outlined"
+										fullWidth
+									/>
+								</Grid>
+								<Grid item xs={6}>
+									<TextField
+										data-testid="deliverableTargetTargetValue"
+										value={formik.values.target_value}
+										error={!!formik.errors.target_value}
+										helperText={
+											formik.touched.target_value &&
+											formik.errors.target_value
+										}
+										inputProps={{
+											"data-testid": "deliverableTargetTargetValueInput",
+										}}
+										onChange={formik.handleChange}
+										label="Target value"
+										required
+										name="target_value"
+										variant="outlined"
+										fullWidth
+									/>
+								</Grid>
+								<Grid item xs={6}>
+									<FormControl
+										variant="outlined"
+										fullWidth
+										className={classes.formControl}
+									>
+										<InputLabel id="demo-simple-select-outlined-label">
+											Deliverable Category
+										</InputLabel>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											error={!!formik.errors.deliverableCategory}
+											value={formik.values.deliverableCategory}
+											onChange={(event) => {
+												setCurrentCategoryId(event.target.value);
+												formik.handleChange(event);
+											}}
+											label="Deliverable Category"
+											name="deliverableCategory"
+											required
+											data-testid="deliverableTargetCategory"
+											inputProps={{
+												"data-testid": "deliverableTargetCategoryInput",
+											}}
 										>
-											<Grid container spacing={1}>
-												<Grid item xs={6}>
-													<TextField
-														data-testid="deliverableTargetName"
-														value={formik.values.name}
-														error={!!formik.errors.name}
-														helperText={
-															formik.touched.name &&
-															formik.errors.name
-														}
-														inputProps={{
-															"data-testid":
-																"deliverableTargetNameInput",
-														}}
-														onChange={formik.handleChange}
-														label="Name"
-														required
-														name="name"
-														variant="outlined"
-														fullWidth
-													/>
-												</Grid>
-												<Grid item xs={6}>
-													<TextField
-														data-testid="deliverableTargetTargetValue"
-														value={formik.values.target_value}
-														error={!!formik.errors.target_value}
-														helperText={
-															formik.touched.target_value &&
-															formik.errors.target_value
-														}
-														inputProps={{
-															"data-testid":
-																"deliverableTargetTargetValueInput",
-														}}
-														onChange={formik.handleChange}
-														label="Target value"
-														required
-														name="target_value"
-														variant="outlined"
-														fullWidth
-													/>
-												</Grid>
-												<Grid item xs={6}>
-													<FormControl
-														variant="outlined"
-														fullWidth
-														className={classes.formControl}
-													>
-														<InputLabel id="demo-simple-select-outlined-label">
-															Deliverable Category
-														</InputLabel>
-														<Select
-															labelId="demo-simple-select-outlined-label"
-															id="demo-simple-select-outlined"
-															error={
-																!!formik.errors.deliverableCategory
-															}
-															value={
-																formik.values.deliverableCategory
-															}
-															onChange={(event) => {
-																setCurrentCategoryId(
-																	event.target.value
-																);
-																formik.handleChange(event);
-															}}
-															label="Deliverable Category"
-															name="deliverableCategory"
-															required
-															data-testid="deliverableTargetCategory"
-															inputProps={{
-																"data-testid":
-																	"deliverableTargetCategoryInput",
-															}}
+											{!deliverableCategories && (
+												<MenuItem value="">
+													<em>None</em>
+												</MenuItem>
+											)}
+											{deliverableCategories &&
+												deliverableCategories.deliverableCategory &&
+												deliverableCategories.deliverableCategory.map(
+													(
+														elem: {
+															id: number;
+															name: string;
+														},
+														index: number
+													) => (
+														<MenuItem key={index} value={elem.id}>
+															{elem.name}
+														</MenuItem>
+													)
+												)}
+										</Select>
+									</FormControl>
+								</Grid>
+								<Grid item xs={6}>
+									<FormControl
+										variant="outlined"
+										fullWidth
+										className={classes.formControl}
+									>
+										<InputLabel id="demo-simple-select-outlined-label">
+											Deliverable Unit
+										</InputLabel>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											error={!!formik.errors.deliverableUnit}
+											value={formik.values.deliverableUnit}
+											required
+											onChange={formik.handleChange}
+											label="Deliverable Unit"
+											name="deliverableUnit"
+											data-testid="deliverableTargetUnit"
+											inputProps={{
+												"data-testid": "deliverableTargetUnitInput",
+											}}
+										>
+											{!unitsBycategory && (
+												<MenuItem value="">
+													<em>None</em>
+												</MenuItem>
+											)}
+											{unitsBycategory &&
+												unitsBycategory.deliverableCategoryUnitList &&
+												unitsBycategory.deliverableCategoryUnitList.map(
+													(
+														elem: {
+															deliverable_units_org: {
+																id: number;
+																name: string;
+															};
+														},
+														index: number
+													) => (
+														<MenuItem
+															key={index}
+															value={elem.deliverable_units_org.id}
 														>
-															{!deliverableCategories && (
-																<MenuItem value="">
-																	<em>None</em>
-																</MenuItem>
-															)}
-															{deliverableCategories &&
-																deliverableCategories.deliverableCategory &&
-																deliverableCategories.deliverableCategory.map(
-																	(
-																		elem: {
-																			id: number;
-																			name: string;
-																		},
-																		index: number
-																	) => (
-																		<MenuItem
-																			key={index}
-																			value={elem.id}
-																		>
-																			{elem.name}
-																		</MenuItem>
-																	)
-																)}
-														</Select>
-													</FormControl>
-												</Grid>
-												<Grid item xs={6}>
-													<FormControl
-														variant="outlined"
-														fullWidth
-														className={classes.formControl}
-													>
-														<InputLabel id="demo-simple-select-outlined-label">
-															Deliverable Unit
-														</InputLabel>
-														<Select
-															labelId="demo-simple-select-outlined-label"
-															id="demo-simple-select-outlined"
-															error={!!formik.errors.deliverableUnit}
-															value={formik.values.deliverableUnit}
-															required
-															onChange={formik.handleChange}
-															label="Deliverable Unit"
-															name="deliverableUnit"
-															data-testid="deliverableTargetUnit"
-															inputProps={{
-																"data-testid":
-																	"deliverableTargetUnitInput",
-															}}
-														>
-															{!unitsBycategory && (
-																<MenuItem value="">
-																	<em>None</em>
-																</MenuItem>
-															)}
-															{unitsBycategory &&
-																unitsBycategory.deliverableCategoryUnitList &&
-																unitsBycategory.deliverableCategoryUnitList.map(
-																	(
-																		elem: {
-																			deliverable_units_org: {
-																				id: number;
-																				name: string;
-																			};
-																		},
-																		index: number
-																	) => (
-																		<MenuItem
-																			key={index}
-																			value={
-																				elem
-																					.deliverable_units_org
-																					.id
-																			}
-																		>
-																			{
-																				elem
-																					.deliverable_units_org
-																					.name
-																			}
-																		</MenuItem>
-																	)
-																)}
-														</Select>
-													</FormControl>
-												</Grid>
-												<Grid item xs={12}>
-													<TextField
-														data-testid="deliverableTargetDescription"
-														value={formik.values.description}
-														error={!!formik.errors.description}
-														onChange={formik.handleChange}
-														inputProps={{
-															"data-testid":
-																"deliverableTargetDescriptionInput",
-														}}
-														label="Description"
-														multiline
-														rows={3}
-														name="description"
-														type="text"
-														variant="outlined"
-														fullWidth
-													/>
-												</Grid>
-												<Box display="flex" m={1}>
-													<Button
-														color="secondary"
-														className={classes.button}
-														onClick={handleFormOpen}
-														variant="contained"
-													>
-														Cancel
-													</Button>
-													<Button
-														className={classes.button}
-														data-testid="deliverableTargetSubmit"
-														form="deliverable_target_form"
-														type="submit"
-														color="primary"
-														disabled={!formik.isValid}
-														variant="contained"
-													>
-														{formState === DELIVERABLE_ACTIONS.CREATE
-															? "Create"
-															: "Update"}
-													</Button>
-												</Box>
-											</Grid>
-										</Form>
-									);
-								}}
-							</Formik>
-						</Grid>
-					</Grid>
-				</Box>
-			</DialogContent>
-			{children ? children : null}
-		</Dialog>
+															{elem.deliverable_units_org.name}
+														</MenuItem>
+													)
+												)}
+										</Select>
+									</FormControl>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										data-testid="deliverableTargetDescription"
+										value={formik.values.description}
+										error={!!formik.errors.description}
+										onChange={formik.handleChange}
+										inputProps={{
+											"data-testid": "deliverableTargetDescriptionInput",
+										}}
+										label="Description"
+										multiline
+										rows={3}
+										name="description"
+										type="text"
+										variant="outlined"
+										fullWidth
+									/>
+								</Grid>
+								<Box display="flex" m={1}>
+									<Button
+										color="primary"
+										className={classes.button}
+										onClick={handleFormOpen}
+										variant="contained"
+									>
+										Cancel
+									</Button>
+									<Button
+										className={classes.button}
+										data-testid="deliverableTargetSubmit"
+										form="deliverable_target_form"
+										type="submit"
+										color="secondary"
+										disabled={!formik.isValid}
+										variant="contained"
+									>
+										{formState === DELIVERABLE_ACTIONS.CREATE
+											? "Create"
+											: "Update"}
+									</Button>
+								</Box>
+							</Grid>
+						</Form>
+					);
+				}}
+			</Formik>
+		</Box>
 	);
 }
 

@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import Snackbar from "../Snackbar/Snackbar";
+import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import ProjectForm from "../Forms/Project/projectForm";
 
 function getInitialValues(props: ProjectProps) {
@@ -19,46 +21,39 @@ function getInitialValues(props: ProjectProps) {
 }
 
 function Project(props: ProjectProps) {
+	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IProject = getInitialValues(props);
-	const [successMessage, setSuccessMessage] = useState<string>("");
-	const [errorMessage, setErrorMessage] = useState<string>("");
 
-	const [
-		createNewproject,
-		{ data: response, loading: createLoading, error: createError },
-	] = useMutation(CREATE_PROJECT);
+	const [createNewproject, { data: response, loading: createLoading }] = useMutation(
+		CREATE_PROJECT
+	);
 
 	useEffect(() => {
 		if (response) {
-			console.log(`Got response `, response);
-			setSuccessMessage("Project created successfully !");
+			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
+			props.handleClose();
 		}
 	}, [response]);
 
 	const onCreate = async (value: IProject) => {
-		console.log(`on Created is called with: `, value);
-		await createNewproject({ variables: { input: value } });
-		props.handleClose();
+		try {
+			await createNewproject({ variables: { input: value } });
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
+		}
 	};
 
-	const [
-		updateProject,
-		{ data: updateResponse, loading: updateLoading, error: updateError },
-	] = useMutation(UPDATE_PROJECT);
+	const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
+		UPDATE_PROJECT
+	);
 
-	useEffect(() => {
-		console.log(`Got update response `, updateResponse);
-	}, [updateResponse]);
+	useEffect(() => {}, [updateResponse]);
 
 	const onUpdate = (value: IProject) => {
-		console.log(`on Update is called`);
-		console.log("seeting loading to true");
 		// updateProject({ variables: { payload: value, projectID: 4 } });
 	};
 
-	const clearErrors = (values: IProject) => {
-		console.log(`Clear Errors is called`);
-	};
+	const clearErrors = (values: IProject) => {};
 
 	const validate = (values: IProject) => {
 		let errors: Partial<IProject> = {};
@@ -77,27 +72,27 @@ function Project(props: ProjectProps) {
 	const handleFormOpen = props.handleClose;
 	return (
 		<>
-			<ProjectForm
-				{...{
-					initialValues,
-					formState,
-					onCreate,
-					onUpdate,
-					clearErrors,
-					validate,
-					formIsOpen,
-					handleFormOpen,
-					workspaces,
-				}}
+			<FormDialog
+				title={"New Project"}
+				subtitle={"create a new Project"}
+				workspace={"workspace"}
+				open={formIsOpen}
+				handleClose={handleFormOpen}
 			>
-				{props.type === PROJECT_ACTIONS.CREATE && createError ? (
-					<Snackbar severity="error" msg={"Create Failed"} />
-				) : null}
-				{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
-					<Snackbar severity="error" msg={"Update Failed"} />
-				) : null}
-			</ProjectForm>
-			{successMessage ? <Snackbar severity="success" msg={successMessage} /> : null}
+				<ProjectForm
+					{...{
+						initialValues,
+						formState,
+						onCreate,
+						onUpdate,
+						clearErrors,
+						validate,
+						formIsOpen,
+						handleFormOpen,
+						workspaces,
+					}}
+				/>
+			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
 		</>

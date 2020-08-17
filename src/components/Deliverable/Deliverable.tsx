@@ -7,6 +7,8 @@ import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
+import FormDialog from "../FormDialog/FormDialog";
+
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -20,7 +22,7 @@ function getInitialValues(props: DeliverableProps) {
 function Deliverable(props: DeliverableProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverable = getInitialValues(props);
-	const [createDeliverableCategory, { data: response, loading: createLoading }] = useMutation(
+	const [createDeliverableCategory, { data: response, loading }] = useMutation(
 		CREATE_DELIVERABLE_CATEGORY
 	);
 
@@ -37,18 +39,11 @@ function Deliverable(props: DeliverableProps) {
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
 		}
-
-		console.log("seeting loading to true");
 	};
 
-	const onUpdate = (value: IDeliverable) => {
-		console.log(`on Update is called`);
-		console.log("seeting loading to true");
-	};
+	const onUpdate = (value: IDeliverable) => {};
 
-	const clearErrors = (values: IDeliverable) => {
-		console.log(`Clear Errors is called`);
-	};
+	const clearErrors = (values: IDeliverable) => {};
 
 	const validate = (values: IDeliverable) => {
 		let errors: Partial<IDeliverable> = {};
@@ -66,30 +61,27 @@ function Deliverable(props: DeliverableProps) {
 	const handleFormOpen = props.handleClose;
 	return (
 		<React.Fragment>
-			<DeliverableForm
-				{...{
-					initialValues,
-					formState,
-					onCreate,
-					onUpdate,
-					clearErrors,
-					validate,
-					formIsOpen,
-					handleFormOpen,
-				}}
+			<FormDialog
+				title={"New Deliverable Category"}
+				subtitle={"create a new deliverable category"}
+				workspace={"workspace"}
+				open={formIsOpen}
+				handleClose={handleFormOpen}
 			>
-				{/* {props.type === DELIVERABLE_ACTIONS.CREATE && createError ? (
-					<Snackbar severity="error" msg={"Create Failed"} />
-				) : null}
-				{props.type === DELIVERABLE_ACTIONS.UPDATE && updateError ? (
-					<Snackbar severity="error" msg={"Update Failed"} />
-				) : null} */}
-			</DeliverableForm>
-			{/* {response && response.createOrgProject && response.createOrgProject.name && (
-				<Snackbar severity="success" msg={"Successfully created"} />
-			)}
-			{createLoading ? <FullScreenLoader /> : null}
-			{updateLoading ? <FullScreenLoader /> : null} */}
+				<DeliverableForm
+					{...{
+						initialValues,
+						formState,
+						onCreate,
+						onUpdate,
+						clearErrors,
+						validate,
+						formIsOpen,
+						handleFormOpen,
+					}}
+				/>
+			</FormDialog>
+			{loading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

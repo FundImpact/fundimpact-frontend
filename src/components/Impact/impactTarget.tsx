@@ -8,6 +8,7 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
 import { CREATE_IMPACT_TARGET } from "../../graphql/queries/Impact/target";
 import { useMutation, useLazyQuery } from "@apollo/client";
+import FormDialog from "../FormDialog/FormDialog";
 
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -59,7 +60,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 	let initialValues: IImpactTarget = getInitialValues(props);
 
 	const onCreate = (value: IImpactTarget) => {
-		console.log(`on Created is called with: `, value);
 		// fetch impact_category_unit_id
 		setImpactTarget({
 			name: value.name,
@@ -81,18 +81,11 @@ function ImpactTarget(props: ImpactTargetProps) {
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
 		}
-
-		console.log("seeting loading to true");
 	};
 
-	const onUpdate = (value: IImpactTarget) => {
-		console.log(`on Update is called`);
-		console.log("seeting loading to true");
-	};
+	const onUpdate = (value: IImpactTarget) => {};
 
-	const clearErrors = (values: IImpactTarget) => {
-		console.log(`Clear Errors is called`);
-	};
+	const clearErrors = (values: IImpactTarget) => {};
 
 	const validate = (values: IImpactTarget) => {
 		let errors: Partial<IImpactTarget> = {};
@@ -101,6 +94,9 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 		if (!values.project) {
 			errors.project = "Project is required";
+		}
+		if (!values.target_value) {
+			errors.target_value = "Target value is required";
 		}
 		if (!values.impactCategory) {
 			errors.impactCategory = "impact Category is required";
@@ -119,18 +115,26 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const handleFormOpen = props.handleClose;
 	return (
 		<React.Fragment>
-			<ImpactTargetForm
-				{...{
-					initialValues,
-					formState,
-					onCreate,
-					onUpdate,
-					clearErrors,
-					validate,
-					formIsOpen,
-					handleFormOpen,
-				}}
-			></ImpactTargetForm>
+			<FormDialog
+				title={"New Impact Target"}
+				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				workspace={"workspace"}
+				open={formIsOpen}
+				handleClose={handleFormOpen}
+			>
+				<ImpactTargetForm
+					{...{
+						initialValues,
+						formState,
+						onCreate,
+						onUpdate,
+						clearErrors,
+						validate,
+						formIsOpen,
+						handleFormOpen,
+					}}
+				/>
+			</FormDialog>
 			{impactLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);

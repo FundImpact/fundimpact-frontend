@@ -11,6 +11,7 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { CREATE_DELIVERABLE_TARGET } from "../../graphql/queries/Deliverable/target";
 import { GET_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/categoryUnit";
+import FormDialog from "../FormDialog/FormDialog";
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -49,8 +50,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			} catch (error) {
 				notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
 			}
-
-			console.log("categoryUnit", categoryUnit);
 		}
 	}, [categoryUnit]);
 
@@ -59,14 +58,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target Successfully created !")
 			);
-			console.log("createDeliverableTargetRes", createDeliverableTargetRes);
 			props.handleClose();
 		}
 	}, [createDeliverableTargetRes]);
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = (value: IDeliverableTarget) => {
-		console.log(`on Created is called with: `, value);
 		setDeliverableTarget({
 			name: value.name,
 			target_value: Number(value.target_value),
@@ -86,18 +83,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
 		}
-
-		console.log("seeting loading to true");
 	};
 
-	const onUpdate = (value: IDeliverableTarget) => {
-		console.log(`on Update is called`);
-		console.log("seeting loading to true");
-	};
+	const onUpdate = (value: IDeliverableTarget) => {};
 
-	const clearErrors = (values: IDeliverableTarget) => {
-		console.log(`Clear Errors is called`);
-	};
+	const clearErrors = (values: IDeliverableTarget) => {};
 
 	const validate = (values: IDeliverableTarget) => {
 		let errors: Partial<IDeliverableTarget> = {};
@@ -106,6 +96,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 		if (!values.project) {
 			errors.project = "Project is required";
+		}
+		if (!values.target_value) {
+			errors.target_value = "Target value is required";
 		}
 		if (!values.deliverableCategory) {
 			errors.deliverableCategory = "Deliverable Category is required";
@@ -124,18 +117,27 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const handleFormOpen = props.handleClose;
 	return (
 		<React.Fragment>
-			<DeliverableTargetForm
-				{...{
-					initialValues,
-					formState,
-					onCreate,
-					onUpdate,
-					clearErrors,
-					validate,
-					formIsOpen,
-					handleFormOpen,
-				}}
-			></DeliverableTargetForm>
+			<FormDialog
+				title={"New Deliverable Target"}
+				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				workspace={"workspace"}
+				open={formIsOpen}
+				handleClose={handleFormOpen}
+			>
+				<DeliverableTargetForm
+					{...{
+						initialValues,
+						formState,
+						onCreate,
+						onUpdate,
+						clearErrors,
+						validate,
+						formIsOpen,
+						handleFormOpen,
+					}}
+				/>
+			</FormDialog>
+			{createDeliverableTargetLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

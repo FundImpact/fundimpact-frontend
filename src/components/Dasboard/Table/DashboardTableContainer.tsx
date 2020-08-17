@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
+import { Box, Typography, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
@@ -260,28 +260,9 @@ export default function DashboardTableContainer() {
 				<TabContent key={index} value={value} index={index}>
 					<Box className={classes.contentHeading}>
 						<strong> Budget Tracker </strong>
-						<div>
-							<Button
-								disableElevation
-								className={classes.button}
-								variant={"contained"}
-								color="primary"
-							>
-								Fund Received
-							</Button>
-							<Button
-								disableElevation
-								className={classes.button}
-								variant={"contained"}
-								color="secondary"
-							>
-								Report Fund Spend
-							</Button>
-						</div>
 					</Box>
 					{tab.table && tab.table}
 					{/* {GetTable(tab.label)} */}
-
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}

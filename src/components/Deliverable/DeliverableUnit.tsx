@@ -8,6 +8,7 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { CREATE_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/categoryUnit";
 import { CREATE_DELIVERABLE_UNIT } from "../../graphql/queries/Deliverable/unit";
 import { DELIVERABLE_ACTIONS } from "./constants";
+import FormDialog from "../FormDialog/FormDialog";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -25,14 +26,14 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const [deliverableCategory, setDeliverableCategory] = useState<number>();
 	const notificationDispatch = useNotificationDispatch();
 
-	const [createUnit, { data: createUnitResponse, error: createUnitError }] = useMutation(
-		CREATE_DELIVERABLE_UNIT
-	);
-
 	const [
-		createCategoryUnit,
-		{ data: createCategoryUnitResponse, error: createCategoryUnitError },
-	] = useMutation(CREATE_CATEGORY_UNIT);
+		createUnit,
+		{ data: createUnitResponse, loading: createDeliverableLoading },
+	] = useMutation(CREATE_DELIVERABLE_UNIT);
+
+	const [createCategoryUnit, { data: createCategoryUnitResponse }] = useMutation(
+		CREATE_CATEGORY_UNIT
+	);
 
 	useEffect(() => {
 		if (createUnitResponse) {
@@ -106,30 +107,27 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const handleFormOpen = props.handleClose;
 	return (
 		<React.Fragment>
-			<DeliverableUnitForm
-				{...{
-					initialValues,
-					formState,
-					onCreate,
-					onUpdate,
-					clearErrors,
-					validate,
-					formIsOpen,
-					handleFormOpen,
-				}}
+			<FormDialog
+				title={"New Deliverable Unit"}
+				subtitle={"create a new deliverable unit"}
+				workspace={"workspace"}
+				open={formIsOpen}
+				handleClose={handleFormOpen}
 			>
-				{/* {props.type === DELIVERABLE_ACTIONS.CREATE && createError ? (
-					<Snackbar severity="error" msg={"Create Failed"} />
-				) : null}
-				{props.type === DELIVERABLE_ACTIONS.UPDATE && updateError ? (
-					<Snackbar severity="error" msg={"Update Failed"} />
-				) : null} */}
-			</DeliverableUnitForm>
-			{/* {response && response.createOrgProject && response.createOrgProject.name && (
-				<Snackbar severity="success" msg={"Successfully created"} />
-			)}
-			{createLoading ? <FullScreenLoader /> : null}
-			{updateLoading ? <FullScreenLoader /> : null} */}
+				<DeliverableUnitForm
+					{...{
+						initialValues,
+						formState,
+						onCreate,
+						onUpdate,
+						clearErrors,
+						validate,
+						formIsOpen,
+						handleFormOpen,
+					}}
+				/>
+			</FormDialog>
+			{createDeliverableLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }
