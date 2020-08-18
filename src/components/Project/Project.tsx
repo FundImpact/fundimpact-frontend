@@ -1,15 +1,17 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
+import { GET_ORGANISATIONS } from "../../graphql/queries/index";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import ProjectForm from "../Forms/Project/projectForm";
-
+import { projectForm } from "../../utils/inputFields.json";
+import CommonForm from "../CommonForm/commonForm";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 function getInitialValues(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -22,24 +24,32 @@ function getInitialValues(props: ProjectProps) {
 
 function Project(props: ProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
-	let initialValues: IProject = getInitialValues(props);
+	const dashboardData = useDashBoardData();
 
+	let initialValues: IProject = getInitialValues(props);
 	const [createNewproject, { data: response, loading: createLoading }] = useMutation(
 		CREATE_PROJECT
 	);
 
 	useEffect(() => {
 		if (response) {
-			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
+			notificationDispatch(setSuccessNotification("Project Successfully created !"));
 			props.handleClose();
 		}
 	}, [response]);
 
 	const onCreate = async (value: IProject) => {
 		try {
-			await createNewproject({ variables: { input: value } });
+			await createNewproject({
+				variables: { input: value },
+				refetchQueries: [
+					{
+						query: GET_ORGANISATIONS,
+					},
+				],
+			});
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
+			notificationDispatch(setErrorNotification("Project creation Failed !"));
 		}
 	};
 
@@ -66,10 +76,11 @@ function Project(props: ProjectProps) {
 		return errors;
 	};
 
-	const formState = props.type;
-	const workspaces = props.workspaces;
+	const formAction = props.type;
 	const formIsOpen = props.open;
-	const handleFormOpen = props.handleClose;
+	const onCancel = props.handleClose;
+	const workspaces: any = props.workspaces;
+	projectForm[1].optionsArray = workspaces;
 	return (
 		<>
 			<FormDialog
@@ -77,19 +88,17 @@ function Project(props: ProjectProps) {
 				subtitle={"create a new Project"}
 				workspace={"workspace"}
 				open={formIsOpen}
-				handleClose={handleFormOpen}
+				handleClose={onCancel}
 			>
-				<ProjectForm
+				<CommonForm
 					{...{
 						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
 						validate,
-						formIsOpen,
-						handleFormOpen,
-						workspaces,
+						onCreate,
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: projectForm,
 					}}
 				/>
 			</FormDialog>

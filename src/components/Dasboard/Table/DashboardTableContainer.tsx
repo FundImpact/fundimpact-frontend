@@ -1,5 +1,5 @@
 import { Box, Typography, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
 import Deliverable from "../../Deliverable/Deliverable";
@@ -18,6 +18,7 @@ import ImpactUnitDialog from "../ImpactUnitDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
 import Snackbar from "../../Snackbar/Snackbar";
+import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -67,67 +68,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-// const tabs = [
-// 	{
-// 		label: "Funds",
-// 		createButtons: [
-// 			{
-// 				text: "Create Budget Category",
-// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-// 					<CreateBudgetDialog open={open} handleClose={handleClose} />
-// 				),
-// 			},
-// 			{ text: "Create Deliverables" },
-// 			{ text: "Create Impact Indicators" },
-// 			{ text: "Add Donor" },
-// 			{ text: "Create Budget Indicators" },
-// 			{ text: "Track Budget Spend" },
-// 			{ text: "Report Fund Receipt" },
-// 			{
-// 				text: "Create Budget Target",
-// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-// 					<CreateBudgetTargetDialog
-// 						formAction={FORM_ACTIONS.CREATE}
-// 						open={open}
-// 						handleClose={handleClose}
-// 					/>
-// 				),
-// 			},
-// 		],
-// 	},
-// 	{
-// 		label: "Deliverables",
-// 		createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
-// 	},
-// 	{
-// 		label: "Impact Indicators",
-// 		createButtons: [
-// 			{ text: "Create Impact Targets" },
-// 			{ text: "Report Achivement" },
-// 			{
-// 				text: "Create Impact Category",
-// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-// 					<ImpactCategoryDialog open={open} handleClose={handleClose} />
-// 				),
-// 			},
-// 			{
-// 				text: "Create Impact Unit",
-// 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-// 					<ImpactUnitDialog open={open} handleClose={handleClose} />
-// 				),
-// 			},
-// 		],
-// 	},
-// 	{ label: "Documents", createButtons: [] },
-// ];
-
-// function GetTable(label: string) {
-// 	if (label == "Funds") {
-// 		return <BudgetTargetTable />;
-// 	}
-// }
-
 export default function DashboardTableContainer() {
+	const dashboardData = useDashBoardData();
+	useEffect(() => {}, [dashboardData]); // re-render whenever project or organization changes
 	const tabs = [
 		{
 			label: "Funds",
@@ -168,6 +111,7 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
 						/>
 					),
 				},
@@ -178,6 +122,7 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							project={dashboardData?.project?.id}
 						/>
 					),
 				},
@@ -188,6 +133,7 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
 						/>
 					),
 				},
@@ -205,6 +151,7 @@ export default function DashboardTableContainer() {
 							type={IMPACT_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							project={dashboardData?.project?.id}
 						/>
 					),
 				},
@@ -261,7 +208,7 @@ export default function DashboardTableContainer() {
 					<Box className={classes.contentHeading}>
 						<strong> Budget Tracker </strong>
 					</Box>
-					{tab.table && tab.table}
+					{tab.table}
 					{/* {GetTable(tab.label)} */}
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>

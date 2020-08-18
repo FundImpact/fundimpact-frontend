@@ -13,6 +13,7 @@ export type DeliverableProps =
 			type: DELIVERABLE_ACTIONS.CREATE;
 			open: boolean;
 			handleClose: () => void;
+			organization: number | string | undefined;
 	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;

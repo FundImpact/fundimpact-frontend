@@ -2,10 +2,10 @@ import React from "react";
 import DeliverableUnit from "../DeliverableUnit";
 import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { IDeliverableUnit } from "../../../../models/deliverable/deliverableUnit";
-import { DELIVERABLE_ACTIONS } from "../../../Deliverable/constants";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../../graphql/queries/Deliverable/category";
-import { renderApollo } from "../../../../utils/test.util";
+import { IDeliverableUnit } from "../../../models/deliverable/deliverableUnit";
+import { DELIVERABLE_ACTIONS } from "../constants";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/queries/Deliverable/category";
+import { renderApollo } from "../../../utils/test.util";
 const intialFormValue: IDeliverableUnit = {
 	name: "Test Deliverable",
 	code: "",
@@ -55,21 +55,16 @@ const mocks = [
 		result: { data: { deliverableCategory: categoryMock } },
 	},
 ];
-
+let handleClose = jest.fn();
 let deliverableUnit: RenderResult<typeof queries>;
 
 beforeEach(() => {
 	act(() => {
 		deliverableUnit = renderApollo(
 			<DeliverableUnit
-				clearErrors={clearErrors}
-				initialValues={intialFormValue}
-				validate={validate}
-				formState={DELIVERABLE_ACTIONS.CREATE}
-				onCreate={onCreateMock}
-				onUpdate={onUpdateMock}
-				handleFormOpen={handleFormOpen}
-				formIsOpen={formIsOpen}
+				type={DELIVERABLE_ACTIONS.CREATE}
+				open={true}
+				handleClose={handleClose}
 			/>,
 			{
 				mocks,

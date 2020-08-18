@@ -1,11 +1,11 @@
 import React from "react";
 import ImpactTarget from "../impactTarget";
 import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
-import { IImpactTarget } from "../../../../models/impact/impactTarget";
-import { IMPACT_ACTIONS } from "../../../Impact/constants";
-import { GET_IMPACT_CATEGORY } from "../../../../graphql/queries/Impact/category";
-import { renderApollo } from "../../../../utils/test.util";
+import "../../../Deliverable/__test__/__test__/node_modules/@testing-library/jest-dom/extend-expect";
+import { IImpactTarget } from "../../../models/impact/impactTarget";
+import { IMPACT_ACTIONS } from "../constants";
+import { GET_IMPACT_CATEGORY } from "../../../graphql/queries/Impact/category";
+import { renderApollo } from "../../../utils/test.util";
 const intialFormValue: IImpactTarget = {
 	name: "Impact TARGET",
 	description: "This is a sample Impact TARGET",
@@ -56,20 +56,12 @@ const mocks = [
 ];
 
 let impactTarget: RenderResult<typeof queries>;
+let handleClose = jest.fn();
 
 beforeEach(() => {
 	act(() => {
 		impactTarget = renderApollo(
-			<ImpactTarget
-				clearErrors={clearErrors}
-				initialValues={intialFormValue}
-				validate={validate}
-				formState={IMPACT_ACTIONS.CREATE}
-				onCreate={onCreateMock}
-				onUpdate={onUpdateMock}
-				handleFormOpen={handleFormOpen}
-				formIsOpen={formIsOpen}
-			/>,
+			<ImpactTarget type={IMPACT_ACTIONS.CREATE} open={true} handleClose={handleClose} />,
 			{
 				mocks,
 				resolvers: {},

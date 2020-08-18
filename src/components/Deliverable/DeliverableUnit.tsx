@@ -1,7 +1,6 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { IDeliverableUnit, DeliverableUnitProps } from "../../models/deliverable/deliverableUnit";
-import DeliverableUnitForm from "../Forms/Deliverable/DeliverableUnit";
 import { FullScreenLoader } from "../Loader/Loader";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -9,6 +8,9 @@ import { CREATE_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/category
 import { CREATE_DELIVERABLE_UNIT } from "../../graphql/queries/Deliverable/unit";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/queries/Deliverable/category";
+import CommonForm from "../CommonForm/commonForm";
+import { deliverableUnitForm } from "../../utils/inputFields.json";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -19,13 +21,12 @@ function getInitialValues(props: DeliverableUnitProps) {
 		unit_type: "",
 		prefix_label: "XX",
 		suffix_label: "YY",
-		organization: 2,
+		organization: props.organization,
 	};
 }
 function DeliverableUnit(props: DeliverableUnitProps) {
 	const [deliverableCategory, setDeliverableCategory] = useState<number>();
-	const notificationDispatch = useNotificationDispatch();
-
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
 	const [
 		createUnit,
 		{ data: createUnitResponse, loading: createDeliverableLoading },
@@ -34,6 +35,14 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const [createCategoryUnit, { data: createCategoryUnitResponse }] = useMutation(
 		CREATE_CATEGORY_UNIT
 	);
+	const notificationDispatch = useNotificationDispatch();
+
+	// updating categories field with fetched categories list
+	useEffect(() => {
+		if (deliverableCategories) {
+			deliverableUnitForm[2].optionsArray = deliverableCategories.deliverableCategory;
+		}
+	}, [deliverableCategories]);
 
 	useEffect(() => {
 		if (createUnitResponse) {
@@ -68,19 +77,11 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
 		}
-
-		console.log(`on Created is called with: `, value);
-		console.log("seeting loading to true");
 	};
 
-	const onUpdate = (value: IDeliverableUnit) => {
-		console.log(`on Update is called`);
-		console.log("seeting loading to true");
-	};
+	const onUpdate = (value: IDeliverableUnit) => {};
 
-	const clearErrors = (values: IDeliverableUnit) => {
-		console.log(`Clear Errors is called`);
-	};
+	const clearErrors = (values: IDeliverableUnit) => {};
 
 	const validate = (values: IDeliverableUnit) => {
 		let errors: Partial<IDeliverableUnit> = {};
@@ -88,23 +89,23 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 			errors.name = "Name is required";
 		}
 		if (!values.prefix_label) {
-			errors.prefix_label = "prefix label is required";
+			errors.prefix_label = "prefix Label is required";
 		}
 		if (!values.suffix_label) {
-			errors.suffix_label = "Project is required";
+			errors.suffix_label = "Suffix Label is required";
 		}
 		if (!values.deliverableCategory) {
-			errors.deliverableCategory = "Name is required";
+			errors.deliverableCategory = "Category is required";
 		}
 		if (!values.organization) {
-			errors.organization = "Project is required";
+			errors.organization = "Organization is required";
 		}
 		return errors;
 	};
 
-	const formState = props.type;
+	const formAction = props.type;
 	const formIsOpen = props.open;
-	const handleFormOpen = props.handleClose;
+	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -112,18 +113,17 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 				subtitle={"create a new deliverable unit"}
 				workspace={"workspace"}
 				open={formIsOpen}
-				handleClose={handleFormOpen}
+				handleClose={onCancel}
 			>
-				<DeliverableUnitForm
+				<CommonForm
 					{...{
 						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
 						validate,
-						formIsOpen,
-						handleFormOpen,
+						onCreate,
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: deliverableUnitForm,
 					}}
 				/>
 			</FormDialog>

@@ -9,8 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
-import { useQuery } from "@apollo/client";
-
+import { useLazyQuery } from "@apollo/client";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 const useStyles = makeStyles({
 	table: {
 		minWidth: 650,
@@ -46,24 +46,38 @@ const tableHeading = [
 export default function DeliverablesTable() {
 	// let tt: TableCellProps;
 	// tt.
-	const { loading, data } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
-		variables: { filter: { project: 4 } },
-	});
+	const dashboardData = useDashBoardData();
+	const [getDeliverableTargetByProject, { loading, data }] = useLazyQuery(
+		GET_DELIVERABLE_TARGET_BY_PROJECT
+	);
+	useEffect(() => {
+		if (dashboardData?.project) {
+			console.log("project", dashboardData?.project);
+			getDeliverableTargetByProject({
+				variables: { filter: { project: dashboardData?.project.id } },
+			});
+		}
+	}, [dashboardData, dashboardData?.project]);
+
 	const [rows, setRows] = useState<any>([]);
 	useEffect(() => {
-		if (data) {
+		console.log("data", data);
+		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
 			let deliverableTargetList = data.deliverableTargetList;
 			let arr = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
-				let row = createRow(
-					deliverableTargetList[i].name,
-					deliverableTargetList[i].deliverable_category_unit.deliverable_category_org
-						.name,
-					deliverableTargetList[i].target_value,
+				if (deliverableTargetList[i].deliverable_category_unit) {
+					let row = createRow(
+						deliverableTargetList[i].name,
+						deliverableTargetList[i].deliverable_category_unit.deliverable_category_org
+							.name,
+						deliverableTargetList[i].target_value,
 
-					deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name
-				);
-				arr.push(row);
+						deliverableTargetList[i].deliverable_category_unit.deliverable_units_org
+							.name
+					);
+					arr.push(row);
+				}
 			}
 			setRows(arr);
 		}

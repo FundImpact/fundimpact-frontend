@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
-import ImpactTargetForm from "../Forms/Impact/impactTarget";
 import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
 import { CREATE_IMPACT_TARGET } from "../../graphql/queries/Impact/target";
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
 import FormDialog from "../FormDialog/FormDialog";
+import CommonForm from "../CommonForm/commonForm";
+import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
+import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
+import { impactTargetForm } from "../../utils/inputFields.json";
 
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -19,17 +22,58 @@ function getInitialValues(props: ImpactTargetProps) {
 		impactCategory: "",
 		impactUnit: "",
 		impact_category_unit: "",
-		project: 4,
+		project: props.project,
 	};
 }
 function ImpactTarget(props: ImpactTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
-	const [getUnitsByCategory, { data: unitAndcategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT);
+	const { data: categories } = useQuery(GET_IMPACT_CATEGORY);
+	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
+
+	const [getUnitsAndCategory, { data: unitAndcategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); //for fetching category_unit id
+	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
 
 	const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
 	const [createImpactTarget, { data: impact, loading: impactLoading }] = useMutation(
 		CREATE_IMPACT_TARGET
 	);
+
+	// updating categories field with fetched categories list
+	useEffect(() => {
+		if (categories) {
+			impactTargetForm[2].optionsArray = categories.impactCategoryOrgList;
+			impactTargetForm[2].getInputValue = setCurrentCategoryId;
+		}
+	}, [categories]);
+
+	// handling category change
+	useEffect(() => {
+		if (currCategoryId) {
+			try {
+				getUnitsByCategory({
+					variables: { filter: { impact_category_org: currCategoryId } },
+				});
+			} catch (error) {
+				notificationDispatch(setErrorNotification("Categories fetching failed !"));
+			}
+		}
+	}, [currCategoryId]);
+
+	// updating units field with fetched units list
+	useEffect(() => {
+		if (unitByCategory) {
+			let arr: any = [];
+			unitByCategory.impactCategoryUnitList.forEach(
+				(elem: { impact_units_org: { id: number; name: string } }) => {
+					arr.push({
+						id: elem.impact_units_org.id,
+						name: elem.impact_units_org.name,
+					});
+				}
+			);
+			impactTargetForm[3].optionsArray = arr;
+		}
+	}, [unitByCategory]);
 
 	useEffect(() => {
 		if (unitAndcategory) {
@@ -43,6 +87,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 					variables: {
 						input: createInputTarget,
 					},
+					refetchQueries: [
+						{
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: { filter: { project: props.project } },
+						},
+					],
 				});
 			} catch (error) {
 				notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
@@ -70,7 +120,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 		});
 
 		try {
-			getUnitsByCategory({
+			getUnitsAndCategory({
 				variables: {
 					filter: {
 						impact_category_org: value.impactCategory,
@@ -110,9 +160,9 @@ function ImpactTarget(props: ImpactTargetProps) {
 		return errors;
 	};
 
-	const formState = props.type;
+	const formAction = props.type;
 	const formIsOpen = props.open;
-	const handleFormOpen = props.handleClose;
+	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -120,18 +170,17 @@ function ImpactTarget(props: ImpactTargetProps) {
 				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
 				workspace={"workspace"}
 				open={formIsOpen}
-				handleClose={handleFormOpen}
+				handleClose={onCancel}
 			>
-				<ImpactTargetForm
+				<CommonForm
 					{...{
 						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
 						validate,
-						formIsOpen,
-						handleFormOpen,
+						onCreate,
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: impactTargetForm,
 					}}
 				/>
 			</FormDialog>

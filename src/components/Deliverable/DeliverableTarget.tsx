@@ -1,4 +1,4 @@
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import {
 	IDeliverableTarget,
@@ -6,12 +6,18 @@ import {
 } from "../../models/deliverable/deliverableTarget";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import DeliverableTargetForm from "../Forms/Deliverable/DeliverableTarget";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
-import { CREATE_DELIVERABLE_TARGET } from "../../graphql/queries/Deliverable/target";
+import {
+	CREATE_DELIVERABLE_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../graphql/queries/Deliverable/target";
 import { GET_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/categoryUnit";
 import FormDialog from "../FormDialog/FormDialog";
+import CommonForm from "../CommonForm/commonForm";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/queries/Deliverable/category";
+import { deliverableTargetForm } from "../../utils/inputFields.json";
+
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -21,18 +27,60 @@ function getInitialValues(props: DeliverableTargetProps) {
 		deliverableCategory: "",
 		deliverableUnit: "",
 		deliverable_category_unit: -1,
-		project: 4,
+		project: props.project,
 	};
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
-	const [getCategoryUnit, { data: categoryUnit }] = useLazyQuery(GET_CATEGORY_UNIT);
 
+	const [getCategoryUnit, { data: categoryUnit }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching category_unit id
+	const [getUnitsByCategory, { data: unitsBycategory }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching units by category
+
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
+
+	const [currentCategory, setcurrentCategory] = useState<any>();
 	const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
+
 	const [
 		createDeliverableTarget,
 		{ data: createDeliverableTargetRes, loading: createDeliverableTargetLoading },
 	] = useMutation(CREATE_DELIVERABLE_TARGET);
+
+	// updating categories field with fetched categories list
+	useEffect(() => {
+		if (deliverableCategories) {
+			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
+			deliverableTargetForm[2].getInputValue = setcurrentCategory;
+		}
+	}, [deliverableCategories]);
+	// handling category change
+	useEffect(() => {
+		if (currentCategory) {
+			try {
+				getUnitsByCategory({
+					variables: { filter: { deliverable_category_org: currentCategory } },
+				});
+			} catch (error) {
+				notificationDispatch(setErrorNotification("Categories fetching failed !"));
+			}
+		}
+	}, [currentCategory]);
+
+	// updating units field with fetched units list
+	useEffect(() => {
+		if (unitsBycategory) {
+			let arr: any = [];
+			unitsBycategory.deliverableCategoryUnitList.forEach(
+				(elem: { deliverable_units_org: { id: number; name: string } }) => {
+					arr.push({
+						id: elem.deliverable_units_org.id,
+						name: elem.deliverable_units_org.name,
+					});
+				}
+			);
+			deliverableTargetForm[3].optionsArray = arr;
+		}
+	}, [unitsBycategory]);
 
 	useEffect(() => {
 		if (categoryUnit) {
@@ -46,6 +94,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					variables: {
 						input: createInputTarget,
 					},
+					refetchQueries: [
+						{
+							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+							variables: { filter: { project: props.project } },
+						},
+					],
 				});
 			} catch (error) {
 				notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
@@ -106,15 +160,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		if (!values.deliverableUnit) {
 			errors.deliverableUnit = "Deliverable Unit is required";
 		}
-		if (!values.target_value) {
-			errors.name = "Target value is required";
-		}
 		return errors;
 	};
 
-	const formState = props.type;
 	const formIsOpen = props.open;
-	const handleFormOpen = props.handleClose;
+	const onCancel = props.handleClose;
+	const formAction = props.type;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -122,18 +173,17 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
 				workspace={"workspace"}
 				open={formIsOpen}
-				handleClose={handleFormOpen}
+				handleClose={onCancel}
 			>
-				<DeliverableTargetForm
+				<CommonForm
 					{...{
 						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
 						validate,
-						formIsOpen,
-						handleFormOpen,
+						onCreate,
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: deliverableTargetForm,
 					}}
 				/>
 			</FormDialog>

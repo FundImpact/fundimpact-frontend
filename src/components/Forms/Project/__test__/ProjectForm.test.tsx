@@ -1,7 +1,7 @@
 import React, { Children } from "react";
 import ProjectForm from "../projectForm";
 import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "../../../Deliverable/__test__/__test__/node_modules/@testing-library/jest-dom/extend-expect";
 import { IProject } from "../../../../models/project/project";
 import { PROJECT_ACTIONS } from "../../../Project/constants";
 

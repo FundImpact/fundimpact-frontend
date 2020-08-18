@@ -1,7 +1,7 @@
 import React from "react";
 import CreateBudgetDialog from "../CreateBudgetDialog";
 import { fireEvent, wait } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "../../../Deliverable/__test__/__test__/node_modules/@testing-library/jest-dom/extend-expect";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
 import { renderApollo } from "../../../../utils/test.util";

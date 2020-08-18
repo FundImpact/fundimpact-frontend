@@ -9,7 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
-import { useQuery } from "@apollo/client";
+import { useDashBoardData } from "../../contexts/dashboardContext";
+import { useLazyQuery } from "@apollo/client";
 
 const useStyles = makeStyles({
 	table: {
@@ -44,25 +45,35 @@ const tableHeading = [
 ];
 
 export default function ImpactsTable() {
-	const { loading, data } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
-		variables: { filter: { project: 4 } },
-	});
-
+	const [getImpactTargetByProject, { loading, data }] = useLazyQuery(
+		GET_IMPACT_TARGET_BY_PROJECT
+	);
+	const dashboardData = useDashBoardData();
 	const [rows, setRows] = useState<any>([]);
+
+	useEffect(() => {
+		if (dashboardData?.project) {
+			console.log("project", dashboardData?.project);
+			getImpactTargetByProject({
+				variables: { filter: { project: dashboardData?.project.id } },
+			});
+		}
+	}, [dashboardData, dashboardData?.project]);
 
 	useEffect(() => {
 		if (data) {
 			let impactTargetProjectList = data.impactTargetProjectList;
 			let arr = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {
-				let row = createRow(
-					impactTargetProjectList[i].name,
-					impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
-					impactTargetProjectList[i].target_value,
-
-					impactTargetProjectList[i].impact_category_unit.impact_units_org.name
-				);
-				arr.push(row);
+				if (impactTargetProjectList[i].impact_category_unit) {
+					let row = createRow(
+						impactTargetProjectList[i].name,
+						impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
+						impactTargetProjectList[i].target_value,
+						impactTargetProjectList[i].impact_category_unit.impact_units_org.name
+					);
+					arr.push(row);
+				}
 			}
 			setRows(arr);
 		}

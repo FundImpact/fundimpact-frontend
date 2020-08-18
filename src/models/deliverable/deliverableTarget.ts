@@ -12,10 +12,16 @@ export interface IDeliverableTarget {
 }
 
 export type DeliverableTargetProps =
-	| { type: DELIVERABLE_ACTIONS.CREATE; open: boolean; handleClose: () => void }
+	| {
+			type: DELIVERABLE_ACTIONS.CREATE;
+			open: boolean;
+			handleClose: () => void;
+			project: number | string | undefined;
+	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTarget;
 			open: boolean;
 			handleClose: () => void;
+			project: number | string | undefined;
 	  };

@@ -1,6 +1,6 @@
 import React from "react";
 import CommonDialog from "../CommonDialog";
-import "@testing-library/jest-dom/extend-expect";
+import "../../../Deliverable/__test__/__test__/node_modules/@testing-library/jest-dom/extend-expect";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 

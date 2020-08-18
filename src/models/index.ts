@@ -79,6 +79,24 @@ export interface IInputField {
 	type?: string;
 }
 
+export interface IInputFields {
+	inputType: string;
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
+	optionsArray?: any[];
+	inputLabelId?: string;
+	selectLabelId?: string;
+	selectId?: string;
+	getInputValue?: any;
+}
+
 export interface ISelectField {
 	name: string;
 	label: string;

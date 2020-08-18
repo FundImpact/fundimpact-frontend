@@ -3,13 +3,13 @@ import { ListItem, ListItemText, List } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
 import { useQuery } from "@apollo/client";
-import { useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { setProject } from "../../../reducers/dashboardReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		ProjectList: {
-			padding: theme.spacing(0),
+		selectedProject: {
+			backgroundColor: theme.palette.grey[100],
 		},
 	})
 );
@@ -22,6 +22,7 @@ export default function ProjectList({
 	projectIndex: number;
 }) {
 	const classes = useStyles();
+	const dashboardData = useDashBoardData();
 	const dispatch = useDashboardDispatch();
 	const filter: any = { variables: { filter: { workspace: workspaceId } } };
 	const { data } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
@@ -36,6 +37,9 @@ export default function ProjectList({
 				data.orgProject &&
 				data.orgProject.map((project: { id: number; name: string }) => (
 					<ListItem
+						className={
+							dashboardData?.project?.id === project.id ? classes.selectedProject : ""
+						}
 						button
 						key={project.id}
 						onClick={() => {

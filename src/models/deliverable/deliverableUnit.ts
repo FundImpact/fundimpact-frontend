@@ -13,7 +13,12 @@ export interface IDeliverableUnit {
 }
 
 export type DeliverableUnitProps =
-	| { type: DELIVERABLE_ACTIONS.CREATE; open: boolean; handleClose: () => void }
+	| {
+			type: DELIVERABLE_ACTIONS.CREATE;
+			open: boolean;
+			handleClose: () => void;
+			organization: number | string | undefined;
+	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableUnit;

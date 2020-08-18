@@ -16,7 +16,7 @@ function FormDialog({
 	subtitle: string;
 	workspace: string;
 	project?: string;
-	children: React.ReactChild;
+	children: any;
 }) {
 	return (
 		<Dialog

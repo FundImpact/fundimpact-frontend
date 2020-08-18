@@ -1,13 +1,14 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
-import DeliverableForm from "../Forms/Deliverable/Deliverable";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
+import CommonForm from "../CommonForm/commonForm";
+import { deliverableCategoryForm } from "../../utils/inputFields.json";
 
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -15,7 +16,7 @@ function getInitialValues(props: DeliverableProps) {
 		name: "",
 		code: "",
 		description: "",
-		organization: 2,
+		organization: props.organization,
 	};
 }
 
@@ -56,9 +57,9 @@ function Deliverable(props: DeliverableProps) {
 		return errors;
 	};
 
-	const formState = props.type;
+	const formAction = props.type;
 	const formIsOpen = props.open;
-	const handleFormOpen = props.handleClose;
+	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -66,18 +67,17 @@ function Deliverable(props: DeliverableProps) {
 				subtitle={"create a new deliverable category"}
 				workspace={"workspace"}
 				open={formIsOpen}
-				handleClose={handleFormOpen}
+				handleClose={onCancel}
 			>
-				<DeliverableForm
+				<CommonForm
 					{...{
 						initialValues,
-						formState,
-						onCreate,
-						onUpdate,
-						clearErrors,
 						validate,
-						formIsOpen,
-						handleFormOpen,
+						onCreate,
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: deliverableCategoryForm,
 					}}
 				/>
 			</FormDialog>
