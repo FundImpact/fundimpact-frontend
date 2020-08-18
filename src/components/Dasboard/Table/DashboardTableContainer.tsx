@@ -1,11 +1,11 @@
 import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import AddButton from "../../Dasboard/AddButton";
-import CreateBudgetDialog from "../CreateBudgetDialog";
-import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
+import CreateBudgetDialog from "../../Budget/CreateBudgetDialog";
+import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
-import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import ImpactUnitDialog from "../ImpactUnitDialog";
+import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
+import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
 import DefaultTable from "../../Table/Table";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";

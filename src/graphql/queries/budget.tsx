@@ -43,16 +43,41 @@ export const CREATE_PROJECT_BUDGET_TARGET = gql`
 			project {
 				name
 			}
-			budget_category_organization{
+			budget_category_organization {
 				name
 			}
 		}
 	}
 `;
 
+// export const GET_BUDGET_TARGET_PROJECT = gql`
+// 	query {
+// 		budgetTargetsProjects {
+// 			id
+// 			name
+// 			organization_currency {
+// 				id
+// 				currency {
+// 					name
+// 				}
+// 			}
+// 			project {
+// 				name
+// 			}
+// 			budget_category_organization {
+// 				id
+// 				name
+// 			}
+// 			description
+// 			total_target_amount
+// 			conversion_factor
+// 		}
+// 	}
+// `;
+
 export const GET_BUDGET_TARGET_PROJECT = gql`
-	query {
-		budgetTargetsProjects {
+	query getDeliverableCategoryUnitByCategory($filter: JSON) {
+		projectBudgetTargets(where: $filter) {
 			id
 			name
 			organization_currency {
@@ -63,8 +88,9 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 			}
 			project {
 				name
+				id
 			}
-			budget_category_organization{
+			budget_category_organization {
 				id
 				name
 			}

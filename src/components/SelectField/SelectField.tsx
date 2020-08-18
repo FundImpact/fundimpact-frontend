@@ -27,25 +27,21 @@ const SelectField = ({
 	label,
 	testId,
 	dataTestId,
-  optionsArray,
-  inputLabelId,
-  selectLabelId,
-  selectId
-}: ISelectField) => {
+	optionsArray,
+	inputLabelId,
+	selectLabelId,
+	selectId,
+}: Omit<ISelectField, "size"| 'type'>) => {
 	const classes = useStyles();
 
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
-			<InputLabel id={inputLabelId}>
-				{label}
-			</InputLabel>
+			<InputLabel id={inputLabelId}>{label}</InputLabel>
 
 			<Select
 				labelId={selectLabelId}
 				id={selectId}
-				error={
-					!!formik.errors[name] && !!formik.touched[name]
-				}
+				error={!!formik.errors[name] && !!formik.touched[name]}
 				value={formik.values[name]}
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
@@ -62,9 +58,7 @@ const SelectField = ({
 					</MenuItem>
 				))}
 			</Select>
-			<FormHelperText error>
-				{formik.touched[name] && formik.errors[name]}
-			</FormHelperText>
+			<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 		</FormControl>
 	);
 };

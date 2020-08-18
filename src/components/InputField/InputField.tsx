@@ -12,7 +12,7 @@ const InputField = ({
 	multiline = false,
 	rows = 1,
 	type = "text",
-}: IInputField) => {
+}: Omit<IInputField, "size">) => {
 	return (
 		<TextField
 			style={{ width: "100%" }}
@@ -32,8 +32,8 @@ const InputField = ({
 			variant="outlined"
 			id={id}
 			multiline={multiline}
-      rows={rows}
-      type={type}
+			rows={rows}
+			type={type}
 		/>
 	);
 };

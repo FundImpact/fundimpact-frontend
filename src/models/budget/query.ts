@@ -10,11 +10,14 @@ export interface IBudgetTargetProjectResponse {
 	organization_currency: IOrganizationCurrency;
 	project: Partial<IProject>;
 	description: string;
-	budget_category_organization: Partial<IBudget>;
+	budget_category_organization: {
+		id: string,
+		name: string
+	};
 }
 
 export interface IGET_BUDGET_TARGET_PROJECT {
-	budgetTargetsProjects: IBudgetTargetProjectResponse[];
+	projectBudgetTargets: IBudgetTargetProjectResponse[];
 }
 
 export interface IGET_BUDGET_CATEGORY {

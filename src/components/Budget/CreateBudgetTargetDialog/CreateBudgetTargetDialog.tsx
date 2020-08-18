@@ -21,7 +21,8 @@ import {
 	createBudgetTargetFormSelectFields,
 	createBudgetTargetForm,
 } from "../../../utils/inputFields.json";
-import CommonDialog from "../CommonDialog";
+import CommonDialog from "../../Dasboard/CommonDialog";
+import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -106,21 +107,28 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 					try {
 						const data = store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
 						});
 						store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
 							data: {
-								budgetTargetsProjects: [
-									...data!.budgetTargetsProjects,
+								projectBudgetTargets: [
+									...data!.projectBudgetTargets,
 									projectCreated,
 								],
 							},
 						});
 					} catch (err) {
-						notificationDispatch(
-							setErrorNotification("Budget Target Creation Failure")
-						);
-						props.handleClose();
+						throw err;
 					}
 				},
 			});
@@ -163,18 +171,22 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 		<CommonDialog
 			handleClose={props.handleClose}
 			open={props.open}
-			initialValues={initialValues}
-			inputFields={createBudgetTargetForm}
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
-			onSubmit={onCreate}
-			validate={validate}
 			title="New Budget Target"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace="WORKSPACE 1"
-			selectFields={createBudgetTargetFormSelectFields}
-			formAction={props.formAction}
-			onUpdate={onUpdate}
-		/>
+		>
+			<CommonInputForm
+				initialValues={initialValues}
+				validate={validate}
+				onSubmit={onCreate}
+				onCancel={props.handleClose}
+				inputFields={createBudgetTargetForm}
+				selectFields={createBudgetTargetFormSelectFields}
+				formAction={props.formAction}
+				onUpdate={onUpdate}
+			/>
+		</CommonDialog>
 	);
 }
 

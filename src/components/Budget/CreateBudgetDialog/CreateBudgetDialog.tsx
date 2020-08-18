@@ -12,7 +12,8 @@ import {
 } from "../../../reducers/notificationReducer";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import CommonDialog from "../CommonDialog";
+import CommonDialog from "../../Dasboard/CommonDialog";
+import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
@@ -84,15 +85,19 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 			<CommonDialog
 				handleClose={handleClose}
 				open={open}
-				initialValues={initialValues}
-				inputFields={inputFields}
 				loading={loading}
-				onSubmit={onSubmit}
-				validate={validate}
 				title="New Budget Category"
 				subtitle="Physical addresses of your organizatin like headquater, branch etc."
 				workspace="WORKSPACE 1"
-			/>
+			>
+				<CommonInputForm
+					initialValues={initialValues}
+					validate={validate}
+					onSubmit={onSubmit}
+					onCancel={handleClose}
+					inputFields={inputFields}
+				/>
+			</CommonDialog>
 		</>
 	);
 }

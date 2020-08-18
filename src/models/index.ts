@@ -1,4 +1,5 @@
 import { IProject } from "./project/project";
+import { FORM_ACTIONS } from "./budget/constants";
 
 export interface ISignUpStep {
 	label: string;
@@ -77,6 +78,7 @@ export interface IInputField {
 	rows?: number;
 	formik?: any;
 	type?: string;
+	size: any;
 }
 
 export interface ISelectField {
@@ -85,8 +87,31 @@ export interface ISelectField {
 	testId: string;
 	dataTestId: string;
 	formik?: any;
-	optionsArray: [any];
-	inputLabelId: string,
-  selectLabelId: string,
-  selectId: string
+	optionsArray: any[];
+	inputLabelId: string;
+	selectLabelId: string;
+	selectId: string;
+	size: any;
+}
+
+export interface ICommonDialog {
+	open: boolean;
+	handleClose: () => void;
+	loading: boolean;
+	title: string;
+	subtitle: string;
+	workspace: string;
+	onUpdate?: any;
+	children: React.ReactNode;
+}
+
+export interface ICommonInputForm {
+	validate: any;
+	onSubmit: any;
+	onCancel: () => void;
+	onUpdate?: any;
+	inputFields: IInputField[];
+	selectFields?: ISelectField[];
+	initialValues: any;
+	formAction?: FORM_ACTIONS;
 }

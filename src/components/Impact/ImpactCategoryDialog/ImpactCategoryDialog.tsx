@@ -10,7 +10,8 @@ import {
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import CommonDialog from "../CommonDialog";
+import CommonDialog from "../../Dasboard/CommonDialog";
+import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -67,15 +68,19 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 		<CommonDialog
 			handleClose={handleClose}
 			open={open}
-			initialValues={initialValues}
-			inputFields={inputFields}
 			loading={loading}
-			onSubmit={onSubmit}
-			validate={validate}
 			title="New Impact Category"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace="WORKSPACE 1"
-		/>
+		>
+			<CommonInputForm
+				initialValues={initialValues}
+				validate={validate}
+				onSubmit={onSubmit}
+				onCancel={handleClose}
+				inputFields={inputFields}
+			/>
+		</CommonDialog>
 	);
 }
 

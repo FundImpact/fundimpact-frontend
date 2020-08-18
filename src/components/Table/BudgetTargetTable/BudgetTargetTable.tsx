@@ -3,17 +3,22 @@ import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { IBudgetTargetProjectResponse } from "../../../models/budget/query";
-import React, { useState, useEffect } from "react";
-import CreateBudgetTargetDialog from "../../Dasboard/CreateBudgetTargetDialog";
+import {
+	IBudgetTargetProjectResponse,
+	IGET_BUDGET_TARGET_PROJECT,
+} from "../../../models/budget/query";
+import React, { useState } from "react";
+import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import SimpleMenu from "../../Menu/Menu";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 
 const useStyles = makeStyles({
 	table: {
@@ -37,45 +42,65 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 const tableHeading = [
 	{ label: "S.no" },
 	{ label: "Organization Currency" },
-	{ label: "Project" },
 	{ label: "Name" },
 	{ label: "Budget Category" },
 	{ label: "Total Target Amount" },
 	{ label: "Conversion Factor" },
 ];
 
-const getInitialValues = (budgetTargetsProject: IBudgetTargetProjectResponse) => {
+function getInitialValues(
+	budgetTargetsProject: IBudgetTargetProjectResponse | null
+): IBudgetTargetForm {
 	return {
-		name: budgetTargetsProject.name,
-		description: budgetTargetsProject.description,
-		total_target_amount: budgetTargetsProject.total_target_amount,
-		conversion_factor: budgetTargetsProject.conversion_factor,
-		id: budgetTargetsProject.id,
-		organization_currency: budgetTargetsProject.organization_currency.id,
-		budget_category_organization: budgetTargetsProject?.budget_category_organization?.id
-			? budgetTargetsProject?.budget_category_organization?.id
-			: "12",
+		name: budgetTargetsProject ? budgetTargetsProject.name : "",
+		description: budgetTargetsProject ? budgetTargetsProject.description : "",
+		total_target_amount: budgetTargetsProject ? budgetTargetsProject.total_target_amount : "",
+		conversion_factor: budgetTargetsProject ? budgetTargetsProject.conversion_factor : "",
+		id: budgetTargetsProject ? budgetTargetsProject.id : "",
+		organization_currency: budgetTargetsProject
+			? budgetTargetsProject.organization_currency.id
+			: "",
+		budget_category_organization: budgetTargetsProject
+			? budgetTargetsProject.budget_category_organization.id
+			: "",
 	};
-};
+}
 
-export default function BudgetTargetTable() {
+function BudgetTargetTable() {
 	const classes = useStyles();
+	const apolloClient = useApolloClient();
 	const tableHeader = StyledTableHeader();
 	const menuId = React.useRef("");
+	const selectedTargetBudget = React.useRef<IBudgetTargetProjectResponse | null>(null);
+	const currentProject = useDashBoardData()?.project;
 
-	const { data } = useQuery(GET_BUDGET_TARGET_PROJECT);
+	const [loadBudgetTarget] = useLazyQuery(GET_BUDGET_TARGET_PROJECT, {
+		variables: {
+			filter: {
+				project: currentProject?.id,
+			},
+		},
+	});
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	useEffect(() => {
-		if (data) {
-			console.log("data :>> ", data);
-			let arr = data.budgetTargetsProjects.map(
-				(ele: any) => ele.budget_category_organization
-			);
-			console.log("arr :>> ", arr);
+	let oldCachedBudgetTargetProjectData: IGET_BUDGET_TARGET_PROJECT | null = null;
+	try {
+		oldCachedBudgetTargetProjectData = apolloClient.readQuery<IGET_BUDGET_TARGET_PROJECT>({
+			query: GET_BUDGET_TARGET_PROJECT,
+			variables: {
+				filter: {
+					project: currentProject?.id,
+				},
+			},
+		});
+	} catch (error) {}
+
+	React.useEffect(() => {
+		if (currentProject && !oldCachedBudgetTargetProjectData) {
+			loadBudgetTarget();
 		}
-	}, [data]);
+	}, [currentProject]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -102,6 +127,16 @@ export default function BudgetTargetTable() {
 
 	return (
 		<TableContainer component={Paper}>
+			<CreateBudgetTargetDialog
+				open={openDialog}
+				handleClose={() => {
+					setOpenDialog(false);
+					selectedTargetBudget.current = null;
+					menuId.current = "";
+				}}
+				formAction={FORM_ACTIONS.UPDATE}
+				initialValues={getInitialValues(selectedTargetBudget.current)}
+			/>
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
@@ -114,22 +149,13 @@ export default function BudgetTargetTable() {
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
 					{/* {wirte here loading} */}
-					{data
-						? data.budgetTargetsProjects.map(
+					{oldCachedBudgetTargetProjectData
+						? oldCachedBudgetTargetProjectData.projectBudgetTargets.map(
 								(
 									budgetTargetsProject: IBudgetTargetProjectResponse,
 									index: number
 								) => (
 									<TableRow key={budgetTargetsProject.id}>
-										<CreateBudgetTargetDialog
-											open={
-												menuId.current == budgetTargetsProject.id &&
-												openDialog
-											}
-											handleClose={() => setOpenDialog(false)}
-											formAction={FORM_ACTIONS.UPDATE}
-											initialValues={getInitialValues(budgetTargetsProject)}
-										/>
 										<TableCell component="td" scope="row">
 											{index + 1}
 										</TableCell>
@@ -140,16 +166,10 @@ export default function BudgetTargetTable() {
 											}
 										</TableCell>
 										<TableCell align="left">
-											{budgetTargetsProject.project?.name}
-										</TableCell>
-										<TableCell align="left">
 											{budgetTargetsProject.name}
 										</TableCell>
 										<TableCell align="left">
-											{
-												budgetTargetsProject?.budget_category_organization
-													?.name
-											}
+											{budgetTargetsProject.budget_category_organization.name}
 										</TableCell>
 										<TableCell align="left">
 											{budgetTargetsProject.total_target_amount}
@@ -164,6 +184,7 @@ export default function BudgetTargetTable() {
 													event: React.MouseEvent<HTMLButtonElement>
 												) => {
 													menuId.current = budgetTargetsProject.id;
+													selectedTargetBudget.current = budgetTargetsProject;
 													handleClick(event);
 												}}
 											>
@@ -189,3 +210,5 @@ export default function BudgetTargetTable() {
 		</TableContainer>
 	);
 }
+
+export default React.memo(BudgetTargetTable);

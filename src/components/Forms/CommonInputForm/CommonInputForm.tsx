@@ -5,6 +5,7 @@ import { IInputField, ISelectField } from "../../../models";
 import InputField from "../../InputField";
 import SelectField from "../../SelectField";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { ICommonInputForm } from "../../../models";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -23,7 +24,7 @@ function CommonInputForm({
 	inputFields,
 	selectFields = [],
 	formAction = FORM_ACTIONS.CREATE,
-}: any) {
+}: ICommonInputForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
 		const errors = validate(initialValue) as object;
@@ -45,7 +46,7 @@ function CommonInputForm({
 						<Grid container spacing={4}>
 							{inputFields.map((element: IInputField, index: number) => {
 								return (
-									<Grid item xs={12} key={index}>
+									<Grid item xs={element.size} key={index}>
 										<InputField
 											formik={formik}
 											name={element.name}
@@ -65,7 +66,7 @@ function CommonInputForm({
 
 							{selectFields.map((element: ISelectField, index: number) => {
 								return (
-									<Grid item xs={12} key={index}>
+									<Grid item xs={element.size} key={index}>
 										<SelectField
 											formik={formik}
 											name={element.name}

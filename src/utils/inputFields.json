@@ -5,28 +5,32 @@
 			"id": "name",
 			"dataTestId": "createImpactUnitName",
 			"testId": "createInpactUnitNameInput",
-			"label": "Name"
+			"label": "Name",
+			"size": 6
 		},
 		{
 			"name": "prefix_label",
 			"id": "prefix-label",
 			"dataTestId": "createImpactUnitPrefixLabel",
 			"testId": "createImpactUnitPrefixLabelInput",
-			"label": "Prefix Label"
+			"label": "Prefix Label",
+			"size": 6
 		},
 		{
 			"name": "suffix_label",
 			"id": "suffix-label",
 			"dataTestId": "createImpactUnitSuffixLabel",
 			"testId": "createImpactUnitSuffixLabelInput",
-			"label": "Impact Code"
+			"label": "Impact Code",
+			"size": 6
 		},
 		{
 			"name": "code",
 			"id": "impact-code",
 			"dataTestId": "createImpactUnitCode",
 			"testId": "createImpactUnitCodeInput",
-			"label": "Suffix Label"
+			"label": "Suffix Label",
+			"size": 6
 		},
 		{
 			"name": "target_unit",
@@ -34,6 +38,7 @@
 			"dataTestId": "createImpactUnitTargetUnit",
 			"testId": "createImpactUnitTargetUnitInput",
 			"label": "Target Unit",
+			"size": 12,
 			"type": "number"
 		},
 		{
@@ -42,6 +47,7 @@
 			"dataTestId": "createImpactUnitDescription",
 			"testId": "createImpactUnitDescriptionInput",
 			"label": "Description",
+			"size": 12,
 			"rows": 2,
 			"multiline": true
 		}
@@ -52,21 +58,24 @@
 			"id": "name",
 			"dataTestId": "createImpactName",
 			"testId": "createImpactNameInput",
-			"label": "Name"
+			"label": "Name",
+			"size": 6
 		},
 		{
 			"name": "shortname",
 			"id": "shortname",
 			"dataTestId": "createImpactShortName",
 			"testId": "createImpactShortNameInput",
-			"label": "Short Name"
+			"label": "Short Name",
+			"size": 6
 		},
 		{
 			"name": "code",
 			"id": "impactCode",
 			"dataTestId": "createImpactCode",
 			"testId": "createImpactCodeInput",
-			"label": "Impact Code"
+			"label": "Impact Code",
+			"size": 12
 		},
 		{
 			"name": "description",
@@ -74,6 +83,7 @@
 			"dataTestId": "createImpactCategoryDescription",
 			"testId": "createImpactCategoryDescriptionInput",
 			"label": "Description",
+			"size": 12,
 			"multiline": true,
 			"rows": 3
 		}
@@ -84,14 +94,16 @@
 			"id": "name",
 			"dataTestId": "createBudgetName",
 			"testId": "createBudgetNameInput",
-			"label": "Name"
+			"label": "Name",
+			"size": 6
 		},
 		{
 			"name": "code",
 			"id": "budgetCode",
 			"dataTestId": "createBudgetCode",
 			"testId": "createBudgetCodeInput",
-			"label": "Budget Code"
+			"label": "Budget Code",
+			"size": 6
 		},
 		{
 			"name": "description",
@@ -99,6 +111,7 @@
 			"dataTestId": "createBudgetDescription",
 			"testId": "createBudgetDescriptionInput",
 			"label": "Description",
+			"size": 12,
 			"multiline": true,
 			"rows": 3
 		}
@@ -109,15 +122,8 @@
 			"id": "name",
 			"dataTestId": "createBudgetTargetName",
 			"testId": "createBudgetTargetNameInput",
-			"label": "Name"
-		},
-		{
-			"name": "total_target_amount",
-			"id": "total-target-amount",
-			"dataTestId": "createBudgetTargetTotalTargetAmount",
-			"testId": "createBudgetTargetTotalTargetAmountInput",
-			"label": "Total Taget Amount",
-			"type": "number"
+			"label": "Name",
+			"size": 6
 		},
 		{
 			"name": "conversion_factor",
@@ -125,6 +131,16 @@
 			"dataTestId": "createBudgetTargetConversionFactor",
 			"testId": "createBudgetTargetConversionFactorInput",
 			"label": "Conversion Factor",
+			"size": 6,
+			"type": "number"
+		},
+		{
+			"name": "total_target_amount",
+			"id": "total-target-amount",
+			"dataTestId": "createBudgetTargetTotalTargetAmount",
+			"testId": "createBudgetTargetTotalTargetAmountInput",
+			"label": "Total Taget Amount",
+			"size": 12,
 			"type": "number"
 		},
 		{
@@ -133,6 +149,7 @@
 			"dataTestId": "createBudgetTargetDescription",
 			"testId": "createBudgetTargetDescriptionInput",
 			"label": "Description",
+			"size": 12,
 			"rows": 2,
 			"multiline": true
 		}
@@ -141,22 +158,26 @@
 		{
 			"name": "organization_currency",
 			"label": "Choose Organization Currency",
+			"size": 6,
 			"testId": "createBudgetTargetOrganizationCurrencyOption",
 			"dataTestId": "createBudgetTargetOrganizationCurrency",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1"
+			"selectId": "demo-simple-select-outlined-1",
+			"type": "select"
 		},
 		{
 			"name": "budget_category_organization",
 			"label": "Choose Budget Category",
+			"size": 6,
 			"testId": "createBudgetTargetBudgetCategoryOption",
 			"dataTestId": "createBudgetTargetBudgetCategory",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined"
+			"selectId": "demo-simple-select-outlined",
+			"type": "select"
 		}
 	]
 }
