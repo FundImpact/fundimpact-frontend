@@ -5,7 +5,6 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React from "react";
 
-import { client } from "../../config/grapql";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
 import { useStyles } from "../Dasboard/styles";
 import SimpleMenu from "../Menu/Menu";

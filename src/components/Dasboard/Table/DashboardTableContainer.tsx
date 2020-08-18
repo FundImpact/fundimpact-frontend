@@ -5,10 +5,10 @@ import CreateBudgetDialog from "../CreateBudgetDialog";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
+import DeliverableTargetLine from "../../Deliverable/DeliverableTargetLine";
 import ImpactTarget from "../../Impact/impactTarget";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import FundsTable from "../../Table/Funds";
 import ImpactsTable from "../../Table/Impacts";
 import DeliverablesTable from "../../Table/Deliverable";
 import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
@@ -137,7 +137,17 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
-				{ text: "Report Achivement" },
+				{
+					text: "Report Achivement",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTargetLine
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							deliverableTarget={dashboardData?.project?.id}
+						/>
+					),
+				},
 			],
 		},
 		{

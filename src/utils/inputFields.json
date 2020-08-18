@@ -354,6 +354,90 @@
 			"rows": 3
 		}
 	],
+	"deliverableTragetLineForm": [
+		{
+			"name": "deliverable_target_project",
+			"id": "deliverable_target_project",
+			"label": "Deliverable Target",
+			"size": 6,
+			"dataTestId": "deliverableTargetProject",
+			"testId": "deliverableTargetProjectInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "value",
+			"id": "value",
+			"dataTestId": "deliverableValue",
+			"testId": "deliverableValueInput",
+			"label": "Value",
+			"size": 6
+		},
+		{
+			"name": "annual_year",
+			"id": "annual_year",
+			"label": "Annual Year",
+			"size": 6,
+			"dataTestId": "deliverableAnnualYear",
+			"testId": "deliverableAnnualYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_years_org",
+			"id": "financial_years_org",
+			"label": "Financial Year Organization",
+			"size": 6,
+			"dataTestId": "deliverableFYOrganization",
+			"testId": "deliverableFYOrganizationInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_years_donor",
+			"id": "financial_years_donor",
+			"label": "Financial Year Donor",
+			"size": 6,
+			"dataTestId": "deliverableFYDonor",
+			"testId": "deliverableFYDonorInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "grant_periods_project",
+			"id": "grant_periods_project",
+			"label": "Grant Periods",
+			"size": 6,
+			"dataTestId": "deliverableGrantPeriod",
+			"testId": "deliverableGrantPeriodInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "note",
+			"id": "note",
+			"dataTestId": "deliverableNote",
+			"testId": "deliverableNoteInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3
+		}
+	],
 	"createBudgetTargetForm": [
 		{
 			"name": "name",
