@@ -1,7 +1,6 @@
 import React from "react";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
 import { act, fireEvent, wait } from "@testing-library/react";
-import "../../../Deliverable/__test__/__test__/node_modules/@testing-library/jest-dom/extend-expect";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";

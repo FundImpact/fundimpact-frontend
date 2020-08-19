@@ -1,11 +1,14 @@
 import React from "react";
 import ImpactTarget from "../impactTarget";
-import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
-import "../../../Deliverable/__test__/__test__/node_modules/@testing-library/jest-dom/extend-expect";
+import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
 import { IMPACT_ACTIONS } from "../constants";
 import { GET_IMPACT_CATEGORY } from "../../../graphql/queries/Impact/category";
 import { renderApollo } from "../../../utils/test.util";
+import { DashboardProvider } from "../../../contexts/dashboardContext";
+import { NotificationProvider } from "../../../contexts/notificationContext";
+import { organizationDetails } from "../../../utils/testMock.json";
+
 const intialFormValue: IImpactTarget = {
 	name: "Impact TARGET",
 	description: "This is a sample Impact TARGET",
@@ -61,7 +64,16 @@ let handleClose = jest.fn();
 beforeEach(() => {
 	act(() => {
 		impactTarget = renderApollo(
-			<ImpactTarget type={IMPACT_ACTIONS.CREATE} open={true} handleClose={handleClose} />,
+			<DashboardProvider defaultState={{ organization: organizationDetails }}>
+				<NotificationProvider>
+					<ImpactTarget
+						type={IMPACT_ACTIONS.CREATE}
+						open={true}
+						handleClose={handleClose}
+						project={1}
+					/>
+				</NotificationProvider>
+			</DashboardProvider>,
 			{
 				mocks,
 				resolvers: {},
@@ -72,90 +84,98 @@ beforeEach(() => {
 
 describe("Impact Target Form", () => {
 	test("should have a name field", () => {
-		let nameField = impactTarget.getByTestId("impactTargetName");
-		expect(nameField).toBeInTheDocument();
+		let impactTargetName = impactTarget.getByTestId("impactTargetName");
+		expect(impactTargetName).toBeInTheDocument();
 	});
 	test("should have a target Value field", () => {
-		let targetValueField = impactTarget.getByTestId("impactTargetTargetValue");
-		expect(targetValueField).toBeInTheDocument();
+		let impactTargetTargetValue = impactTarget.getByTestId("impactTargetTargetValue");
+		expect(impactTargetTargetValue).toBeInTheDocument();
 	});
 	test("should have a category field", () => {
-		let categoryField = impactTarget.getByTestId("impactTargetCategory");
-		expect(categoryField).toBeInTheDocument();
+		let impactTargetCategory = impactTarget.getByTestId("impactTargetCategory");
+		expect(impactTargetCategory).toBeInTheDocument();
 	});
 	test("should have a unit field", () => {
-		let unitField = impactTarget.getByTestId("impactTargetUnit");
-		expect(unitField).toBeInTheDocument();
+		let impactTargetUnit = impactTarget.getByTestId("impactTargetUnit");
+		expect(impactTargetUnit).toBeInTheDocument();
 	});
 	test("should have a description field", () => {
-		let descriptionField = impactTarget.getByTestId("impactTargetDescription");
-		expect(descriptionField).toBeInTheDocument();
+		let impacttargetDescription = impactTarget.getByTestId("impactTargetDescription");
+		expect(impacttargetDescription).toBeInTheDocument();
 	});
 	test("should have a submit button", () => {
-		let submitButton = impactTarget.getByTestId("impactTargetSubmit");
+		let submitButton = impactTarget.getByTestId("createSaveButton");
 		expect(submitButton).toBeInTheDocument();
 	});
 
 	test("should have initial values", () => {
-		let nameField = impactTarget.getByTestId("impactTargetNameInput") as HTMLInputElement;
-		expect(nameField.value).toBe(intialFormValue.name);
+		let impactTargetName = impactTarget.getByTestId(
+			"impactTargetNameInput"
+		) as HTMLInputElement;
+		expect(impactTargetName.value).toBe(intialFormValue.name);
 
-		let targetValueField = impactTarget.getByTestId(
+		let impactTargetTargetValue = impactTarget.getByTestId(
 			"impactTargetTargetValueInput"
 		) as HTMLInputElement;
-		expect(targetValueField.value).toBe(intialFormValue.target_value);
+		expect(impactTargetTargetValue.value).toBe(intialFormValue.target_value);
 
-		let categoryField = impactTarget.getByTestId(
+		let impactTargetCategory = impactTarget.getByTestId(
 			"impactTargetCategoryInput"
 		) as HTMLInputElement;
-		expect(categoryField.value).toBe(intialFormValue.impactCategory);
+		expect(impactTargetCategory.value).toBe(intialFormValue.impactCategory);
 
-		let unitField = impactTarget.getByTestId("impactTargetUnitInput") as HTMLInputElement;
-		expect(unitField.value).toBe(intialFormValue.impactUnit);
+		let impactTargetUnit = impactTarget.getByTestId(
+			"impactTargetUnitInput"
+		) as HTMLInputElement;
+		expect(impactTargetUnit.value).toBe(intialFormValue.impactUnit);
 
-		let descriptionField = impactTarget.getByTestId(
+		let impacttargetDescription = impactTarget.getByTestId(
 			"impactTargetDescriptionInput"
 		) as HTMLInputElement;
-		expect(descriptionField.value).toBe(intialFormValue.description);
+		expect(impacttargetDescription.value).toBe(intialFormValue.description);
 	});
 
 	test("Submit Button should be disabled if either of name,targetValue,category,unit fields is empty", async () => {
-		let nameField = impactTarget.getByTestId("impactTargetNameInput") as HTMLInputElement;
+		let impactTargetName = impactTarget.getByTestId(
+			"impactTargetNameInput"
+		) as HTMLInputElement;
 
-		let targetValueField = impactTarget.getByTestId(
+		let impactTargetTargetValue = impactTarget.getByTestId(
 			"impactTargetTargetValueInput"
 		) as HTMLInputElement;
 
-		let categoryField = impactTarget.getByTestId(
+		let impactTargetCategory = impactTarget.getByTestId(
 			"impactTargetCategoryInput"
 		) as HTMLInputElement;
 
-		let unitField = impactTarget.getByTestId("impactTargetUnitInput") as HTMLInputElement;
+		let impactTargetUnit = impactTarget.getByTestId(
+			"impactTargetUnitInput"
+		) as HTMLInputElement;
 
 		let value = "";
 
 		act(() => {
-			fireEvent.change(nameField, { target: { value } });
+			fireEvent.change(impactTargetName, { target: { value } });
 		});
-		expect(nameField.value).toBe(value);
+		expect(impactTargetName.value).toBe(value);
 
 		act(() => {
-			fireEvent.change(targetValueField, { target: { value } });
+			fireEvent.change(impactTargetTargetValue, { target: { value } });
 		});
-		expect(targetValueField.value).toBe(value);
+		expect(impactTargetTargetValue.value).toBe(value);
 
 		act(() => {
-			fireEvent.change(categoryField, { target: { value } });
+			fireEvent.change(impactTargetCategory, { target: { value } });
 		});
-		expect(categoryField.value).toBe(value);
+		expect(impactTargetCategory.value).toBe(value);
 
 		act(() => {
-			fireEvent.change(unitField, { target: { value } });
+			fireEvent.change(impactTargetUnit, { target: { value } });
 		});
 
-		expect(unitField.value).toBe(value);
+		expect(impactTargetUnit.value).toBe(value);
 
-		let submitButton = await impactTarget.findByTestId(`impactTargetSubmit`);
+		let submitButton = await impactTarget.findByTestId(`createSaveButton`);
 		expect(submitButton).toBeDisabled();
 	});
 });

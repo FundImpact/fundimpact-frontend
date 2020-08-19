@@ -11,8 +11,8 @@
 		{
 			"name": "workspace",
 			"id": "workspace",
-			"dataTestId": "createProjectNameWorkspace",
-			"testId": "createProjectNameWorkspace",
+			"dataTestId": "createProjectWorkspace",
+			"testId": "createProjectWorkspaceInput",
 			"label": "Choose Workspace",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
@@ -24,8 +24,8 @@
 		{
 			"name": "short_name",
 			"id": "short-name",
-			"dataTestId": "createProjectCode",
-			"testId": "createProjectCodeInput",
+			"dataTestId": "createProjectShortName",
+			"testId": "createProjectShortNameInput",
 			"label": "Code",
 			"size": 12
 		},
@@ -181,24 +181,24 @@
 		{
 			"name": "name",
 			"id": "name",
-			"dataTestId": "deliverableUnitName",
-			"testId": "deliverableUnitNameInput",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
 			"label": "Name",
 			"size": 12
 		},
 		{
 			"name": "code",
 			"id": "impactCode",
-			"dataTestId": "deliverableUnitCode",
-			"testId": "deliverableUnitCodeInput",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
 			"label": "Code",
 			"size": 12
 		},
 		{
 			"name": "description",
 			"id": "description",
-			"dataTestId": "deliverableUnitCategoryDescription",
-			"testId": "deliverableUnitCategoryDescriptionInput",
+			"dataTestId": "deliverableFormDescription",
+			"testId": "deliverableFormDescriptionInput",
 			"label": "Description",
 			"multiline": true,
 			"rows": 3,
@@ -296,8 +296,8 @@
 		{
 			"name": "unit_type",
 			"id": "unit-type",
-			"dataTestId": "createImpactUnitTargetUnit",
-			"testId": "createImpactUnitTargetUnitInput",
+			"dataTestId": "deliverableUnitUnitType",
+			"testId": "deliverableUnitUnitTypeInput",
 			"label": "Unit Type",
 			"size": 6
 		},

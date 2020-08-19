@@ -12,7 +12,7 @@ import CommonForm from "../CommonForm/commonForm";
 import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
 import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
 import { impactTargetForm } from "../../utils/inputFields.json";
-
+import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -164,7 +164,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	return (
-		<React.Fragment>
+		<DashboardProvider>
 			<FormDialog
 				title={"New Impact Target"}
 				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
@@ -185,7 +185,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 				/>
 			</FormDialog>
 			{impactLoading ? <FullScreenLoader /> : null}
-		</React.Fragment>
+		</DashboardProvider>
 	);
 }
 

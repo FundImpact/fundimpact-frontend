@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import { GET_ORGANISATIONS, GET_WORKSPACES_BY_ORG } from "../../graphql/queries/index";
+import { GET_ORGANISATIONS } from "../../graphql/queries/index";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
@@ -37,10 +37,10 @@ function Project(props: ProjectProps) {
 		}
 	}, [response]);
 
-	const onCreate = async (value: IProject) => {
+	const onCreate = (value: IProject) => {
 		let org: any = dashboardData?.organization?.id;
 		try {
-			await createNewproject({
+			createNewproject({
 				variables: { input: value },
 				refetchQueries: [
 					{

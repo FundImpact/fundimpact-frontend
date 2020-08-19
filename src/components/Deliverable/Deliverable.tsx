@@ -33,10 +33,10 @@ function Deliverable(props: DeliverableProps) {
 			props.handleClose();
 		}
 	}, [response]);
-	const onCreate = async (value: IDeliverable) => {
+	const onCreate = (value: IDeliverable) => {
 		console.log(`on Created is called with: `, value);
 		try {
-			await createDeliverableCategory({ variables: { input: value } });
+			createDeliverableCategory({ variables: { input: value } });
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
 		}
