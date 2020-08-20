@@ -6,3 +6,11 @@ export const getToken = (): string | null => {
 	}
 	return null;
 };
+
+export const getTodaysDate = (dateArg?: Date): string => {
+	let date = dateArg ? new Date(dateArg) : new Date();
+	return (date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getDate())
+		.split("-")
+		.map((ele: string) => (ele.length > 1 ? ele : "0" + ele))
+		.join("-");
+};

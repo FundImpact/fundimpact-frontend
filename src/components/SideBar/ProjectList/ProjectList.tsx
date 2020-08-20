@@ -1,15 +1,19 @@
-import React from "react";
-import { ListItem, ListItemText, List } from "@material-ui/core";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
 import { useQuery } from "@apollo/client";
+import { List, ListItem, ListItemText } from "@material-ui/core";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import React from "react";
+
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries";
 import { setProject } from "../../../reducers/dashboardReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		selectedProject: {
 			backgroundColor: theme.palette.grey[100],
+		},
+		listItem: {
+			backgroundColor: "#e0e0e0",
 		},
 	})
 );
@@ -22,8 +26,8 @@ export default function ProjectList({
 	projectIndex: number;
 }) {
 	const classes = useStyles();
-	const dashboardData = useDashBoardData();
 	const dispatch = useDashboardDispatch();
+	const dashboardData = useDashBoardData();
 	const filter: any = { variables: { filter: { workspace: workspaceId } } };
 	const { data } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
 	React.useEffect(() => {

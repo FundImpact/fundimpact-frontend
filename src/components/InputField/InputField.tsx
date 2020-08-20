@@ -12,7 +12,7 @@ const InputField = ({
 	multiline = false,
 	rows = 1,
 	type = "text",
-}: IInputField) => {
+}: Omit<IInputField, "size">) => {
 	return (
 		<TextField
 			style={{ width: "100%" }}

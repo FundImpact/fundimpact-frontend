@@ -2,7 +2,7 @@ import { Box, Button, createStyles, Grid, makeStyles, Theme } from "@material-ui
 import { Form, Formik } from "formik";
 import React from "react";
 
-import { IInputField, ISelectField } from "../../../models";
+import { ICommonInputForm, IInputField, ISelectField } from "../../../models";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import InputField from "../../InputField";
 import SelectField from "../../SelectField";
@@ -24,7 +24,7 @@ function CommonInputForm({
 	inputFields,
 	selectFields = [],
 	formAction = FORM_ACTIONS.CREATE,
-}: any) {
+}: ICommonInputForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
 		const errors = validate(initialValue) as object;
@@ -46,7 +46,7 @@ function CommonInputForm({
 						<Grid container spacing={4}>
 							{inputFields.map((element: IInputField, index: number) => {
 								return (
-									<Grid item xs={12} key={index}>
+									<Grid item xs={element.size} key={index}>
 										<InputField
 											formik={formik}
 											name={element.name}
@@ -66,7 +66,7 @@ function CommonInputForm({
 
 							{selectFields.map((element: ISelectField, index: number) => {
 								return (
-									<Grid item xs={12} key={index}>
+									<Grid item xs={element.size} key={index}>
 										<SelectField
 											formik={formik}
 											name={element.name}

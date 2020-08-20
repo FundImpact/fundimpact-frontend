@@ -1,37 +1,19 @@
 import React from "react";
 import { Dialog, Box, Grid, CircularProgress, Typography } from "@material-ui/core";
-import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { ICommonDialog } from "../../../models";
+
+//This is a common dialog which will be used by all other dialog and form will be passed as
+//children and the title, subtitle, workspace will be passes in props
 
 function CommonDialog({
 	open,
 	handleClose,
-	initialValues,
-	validate,
-	onSubmit,
-	inputFields,
 	loading,
 	title,
 	subtitle,
 	workspace,
-	selectFields = [],
-	formAction = FORM_ACTIONS.CREATE,
-	onUpdate,
-}: {
-	open: boolean;
-	handleClose: () => void;
-	onSubmit: any;
-	initialValues: any;
-	validate: any;
-	inputFields: any[];
-	loading: boolean;
-	title: string;
-	subtitle: string;
-	workspace: string;
-	selectFields?: any[];
-	formAction?: FORM_ACTIONS;
-	onUpdate?: any;
-}) {
+	children,
+}: ICommonDialog) {
 	return (
 		<Dialog
 			fullWidth
@@ -60,16 +42,7 @@ function CommonDialog({
 						</Box>
 					</Grid>
 					<Grid item xs={8}>
-						<CommonInputForm
-							initialValues={initialValues}
-							validate={validate}
-							onSubmit={onSubmit}
-							onCancel={handleClose}
-							inputFields={inputFields}
-							selectFields={selectFields}
-							formAction={formAction}
-							onUpdate={onUpdate}
-						/>
+						{children}
 					</Grid>
 				</Grid>
 			</Box>

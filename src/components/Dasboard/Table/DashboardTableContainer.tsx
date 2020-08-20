@@ -1,24 +1,26 @@
-import { Box, Typography, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
+import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React, { useEffect } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useNotificationData } from "../../../contexts/notificationContext";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
+import CreateBudgetDialog from "../../Budget/CreateBudgetDialog";
+import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
+import CreateBudgetTrackingLineitemDialog from "../../Budget/CreateBudgetTrackingLineitemDialog";
 import AddButton from "../../Dasboard/AddButton";
-import CreateBudgetDialog from "../CreateBudgetDialog";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import DeliverableTargetLine from "../../Deliverable/DeliverableTargetLine";
-import ImpactTarget from "../../Impact/impactTarget";
+import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import ImpactsTable from "../../Table/Impacts";
-import DeliverablesTable from "../../Table/Deliverable";
-import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
-import BudgetTargetTable from "../../Table/BudgetTargetTable";
-import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import ImpactUnitDialog from "../ImpactUnitDialog";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
-import { useNotificationData } from "../../../contexts/notificationContext";
+import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
+import ImpactTarget from "../../Impact/impactTarget";
+import ImpactUnitDialog from "../../Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import Snackbar from "../../Snackbar/Snackbar";
-import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import DeliverablesTable from "../../Table/Deliverable";
+import ImpactsTable from "../../Table/Impacts";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -68,6 +70,77 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
+const tabs = [
+	{
+		label: "Funds",
+		createButtons: [
+			{
+				text: "Create Budget Category",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetDialog open={open} handleClose={handleClose} />
+				),
+			},
+			{ text: "Create Deliverables" },
+			{ text: "Create Impact Indicators" },
+			{ text: "Add Donor" },
+			{ text: "Track Budget Spend" },
+			{ text: "Report Fund Receipt" },
+			{
+				text: "Create Budget Target",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetTargetDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={open}
+						handleClose={handleClose}
+					/>
+				),
+			},
+			{
+				text: "Create Budget Tracking Lineitem",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetTrackingLineitemDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={open}
+						handleClose={handleClose}
+					/>
+				),
+			},
+		],
+	},
+	{
+		label: "Deliverables",
+		createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+	},
+	{
+		label: "Impact Indicators",
+		createButtons: [
+			{ text: "Create Impact Targets" },
+			{ text: "Report Achivement" },
+			{
+				text: "Create Impact Category",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<ImpactCategoryDialog open={open} handleClose={handleClose} />
+				),
+			},
+			{
+				text: "Create Impact Unit",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<ImpactUnitDialog open={open} handleClose={handleClose} />
+				),
+			},
+		],
+	},
+	{ label: "Documents", createButtons: [] },
+];
+
+function GetTable(label: string) {
+	if (label == "Funds") {
+		return <BudgetTargetTable />;
+	}
+	return null;
+	// return <DefaultTable />;
+}
+
 export default function DashboardTableContainer() {
 	const dashboardData = useDashBoardData();
 	useEffect(() => {}, [dashboardData]); // re-render whenever project or organization changes
@@ -92,6 +165,16 @@ export default function DashboardTableContainer() {
 					text: "Create Budget Target",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<CreateBudgetTargetDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
+				{
+					text: "Create Budget Tracking Lineitem",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<CreateBudgetTrackingLineitemDialog
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
