@@ -19,12 +19,13 @@ const useStyles = makeStyles({
 
 const StyledTableHeader = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main },
+		th: { color: theme.palette.primary.main, fontSize: "13px" },
 		tbody: {
 			"& tr:nth-child(even) td": { background: "#F5F6FA" },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
+				fontSize: "13px",
 			},
 		},
 	})
@@ -56,7 +57,7 @@ function BudgetTrackingLineItemTable({
 				<TableHead>
 					<TableRow color="primary">
 						{tableHeading.map((heading) => (
-							<TableCell key={heading.label} align="left">
+							<TableCell className={tableHeader.th} key={heading.label} align="left">
 								{heading.label}
 							</TableCell>
 						))}

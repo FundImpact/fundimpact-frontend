@@ -242,7 +242,7 @@ function BudgetTargetTable() {
 											<TableCell align="left">
 												{
 													budgetTargetsProject
-														.budget_category_organization.name
+														?.budget_category_organization?.name
 												}
 											</TableCell>
 											<TableCell align="left">
