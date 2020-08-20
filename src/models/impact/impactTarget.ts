@@ -11,17 +11,16 @@ export interface IImpactTarget {
 	project?: number | string;
 }
 
-export type ImpactTargetProps =
+export type ImpactTargetProps = {
+	open: boolean;
+	handleClose: () => void;
+	project: number | string | undefined;
+} & (
 	| {
 			type: IMPACT_ACTIONS.CREATE;
-			open: boolean;
-			handleClose: () => void;
-			project: number | string | undefined;
 	  }
 	| {
 			type: IMPACT_ACTIONS.UPDATE;
 			data: IImpactTarget;
-			open: boolean;
-			handleClose: () => void;
-			project: number | string | undefined;
-	  };
+	  }
+);

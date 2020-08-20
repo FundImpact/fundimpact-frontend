@@ -1,4 +1,4 @@
-import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
+import { Box, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		justifyContent: "space-between",
 		alignItems: "center",
 		margin: theme.spacing(1),
+		marginLeft: theme.spacing(2),
 	},
 	button: {
 		margin: theme.spacing(1),
@@ -143,10 +144,9 @@ function GetTable(label: string) {
 
 export default function DashboardTableContainer() {
 	const dashboardData = useDashBoardData();
-	useEffect(() => {}, [dashboardData]); // re-render whenever project or organization changes
 	const tabs = [
 		{
-			label: "Funds",
+			label: "Budget",
 			table: <BudgetTargetTable />,
 			createButtons: [
 				{
@@ -275,7 +275,7 @@ export default function DashboardTableContainer() {
 	};
 
 	return (
-		<Box className={classes.root} boxShadow={2}>
+		<Box className={classes.root} boxShadow={0}>
 			<Tabs
 				value={value}
 				indicatorColor="primary"
@@ -299,7 +299,7 @@ export default function DashboardTableContainer() {
 			{tabs.map((tab, index) => (
 				<TabContent key={index} value={value} index={index}>
 					<Box className={classes.contentHeading}>
-						<strong> Budget Tracker </strong>
+						<Typography variant="subtitle2">Budget Tracker</Typography>
 					</Box>
 					{tab.table}
 					{/* {GetTable(tab.label)} */}

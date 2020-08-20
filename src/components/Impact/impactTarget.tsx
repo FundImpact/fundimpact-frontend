@@ -41,8 +41,8 @@ function ImpactTarget(props: ImpactTargetProps) {
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (categories) {
-			impactTargetForm[2].optionsArray = categories.impactCategoryOrgList;
-			impactTargetForm[2].getInputValue = setCurrentCategoryId;
+			impactTargetForm[1].optionsArray = categories.impactCategoryOrgList;
+			impactTargetForm[1].getInputValue = setCurrentCategoryId;
 		}
 	}, [categories]);
 

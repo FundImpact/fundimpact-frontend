@@ -4,7 +4,7 @@ import { Grid, Button, Box, makeStyles, createStyles, Theme } from "@material-ui
 import { IInputFields } from "../../models/index";
 import InputFields from "../InputFields/inputField";
 import { FORM_ACTIONS } from "../Forms/constant";
-
+import { ICommonForm } from "./model";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
@@ -22,7 +22,7 @@ function CommonInputForm({
 	onCancel,
 	inputFields,
 	formAction,
-}: any) {
+}: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
 		const errors = validate(initialValue) as object;

@@ -12,16 +12,16 @@ export interface IDeliverableUnit {
 	organization?: number | string;
 }
 
-export type DeliverableUnitProps =
+export type DeliverableUnitProps = {
+	open: boolean;
+	handleClose: () => void;
+	organization: number | string | undefined;
+} & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;
-			open: boolean;
-			handleClose: () => void;
-			organization: number | string | undefined;
 	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableUnit;
-			open: boolean;
-			handleClose: () => void;
-	  };
+	  }
+);

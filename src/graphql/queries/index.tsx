@@ -121,3 +121,12 @@ export const GET_ANNUAL_YEAR_LIST = gql`
 		}
 	}
 `;
+export const GET_ANNUAL_YEARS = gql`
+	query {
+		annualYears {
+			id
+			name
+			short_name
+		}
+	}
+`;

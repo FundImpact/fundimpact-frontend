@@ -10,9 +10,9 @@ export interface IProject {
 }
 
 export type ProjectProps = {
-	handleClose: () => void;
-	open: boolean;
 	workspaces: NonNullable<Pick<IWorkspace, "id" | "name">>[];
+	open: boolean;
+	handleClose: () => void;
 } & (
 	| {
 			type: PROJECT_ACTIONS.CREATE;

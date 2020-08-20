@@ -1,4 +1,4 @@
-import { IconButton, Menu, MenuItem, Table } from "@material-ui/core";
+import { Typography, Table, Box } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,12 +12,16 @@ const useStyles = makeStyles({
 	table: {
 		minWidth: 650,
 	},
+	tableContainer: {
+		height: "47vh",
+	},
 });
 
 const StyledTableHeader = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
+			minHeight: "300px",
 			"& tr:nth-child(even) td": { background: "#F5F6FA" },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
@@ -38,35 +42,45 @@ export default function FITable({
 	const tableHeader = StyledTableHeader();
 
 	return (
-		<TableContainer component={Paper}>
-			<Table className={classes.table} aria-label="simple table">
-				<TableHead>
-					<TableRow color="primary">
-						{tableHeading.map((heading) => (
-							<TableCell className={tableHeader.th} key={heading.label} align="left">
-								{heading.label}
-							</TableCell>
-						))}
-					</TableRow>
-				</TableHead>
-				<TableBody className={tableHeader.tbody}>
-					{rows.map((row: any, index: number) => (
-						<TableRow key={index}>
-							<TableCell component="td" scope="row">
-								{index + 1}
-							</TableCell>
-							{row.map((col: string) => {
-								return <TableCell align="left">{col}</TableCell>;
-							})}
-							<TableCell>
-								<IconButton aria-label="delete">
-									<MoreVertIcon fontSize="small" />
-								</IconButton>
-							</TableCell>
+		<TableContainer component={Paper} className={classes.tableContainer}>
+			{!rows.length ? (
+				<Box mt={5} display="flex" justifyContent="center">
+					{" "}
+					<Typography variant="h5" gutterBottom>
+						No targets Found :(
+					</Typography>
+				</Box>
+			) : (
+				<Table className={classes.table} aria-label="simple table">
+					<TableHead>
+						<TableRow color="primary">
+							{rows &&
+								rows.length > 0 &&
+								tableHeading.map((heading) => (
+									<TableCell
+										className={tableHeader.th}
+										key={heading.label}
+										align="left"
+									>
+										{heading.label}
+									</TableCell>
+								))}
 						</TableRow>
-					))}
-				</TableBody>
-			</Table>
+					</TableHead>
+					<TableBody className={tableHeader.tbody}>
+						{rows.map((row: any, index: number) => (
+							<TableRow key={index}>
+								<TableCell component="td" scope="row">
+									{index + 1}
+								</TableCell>
+								{row.map((col: string) => {
+									return <TableCell align="left">{col}</TableCell>;
+								})}
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			)}
 		</TableContainer>
 	);
 }
