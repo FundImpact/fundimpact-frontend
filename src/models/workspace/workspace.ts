@@ -1,11 +1,13 @@
+import { IOrganisation } from "..";
 import { WORKSPACE_ACTIONS } from "../../components/workspace/constants";
 
 export interface IWorkspace {
-	id?: number;
+	id?: string;
 	name: string;
-	short_name?: string;
+	short_name: string;
 	description?: string;
-	organization: number;
+	organization: string;
+	__typename?: string;
 }
 
 /**
@@ -16,7 +18,7 @@ export interface IWorkspaceData {
 	workspaces: IWorkspace[];
 }
 
-export type WorkspaceProps = { close: () => void; organizationId: number } & (
+export type WorkspaceProps = { close: () => void; organizationId: IOrganisation["id"] } & (
 	| { type: WORKSPACE_ACTIONS.CREATE }
 	| { type: WORKSPACE_ACTIONS.UPDATE; data: IWorkspace }
 );

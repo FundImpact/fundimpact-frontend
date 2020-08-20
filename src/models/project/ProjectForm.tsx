@@ -1,4 +1,5 @@
 import { PROJECT_ACTIONS } from "../../components/Project/constants";
+import { IWorkspace } from "../workspace/workspace";
 import { IProject } from "./project";
 
 export interface IProjectFormProps {
@@ -8,5 +9,5 @@ export interface IProjectFormProps {
 	clearErrors: any;
 	validate: any;
 	formState: PROJECT_ACTIONS.CREATE | PROJECT_ACTIONS.UPDATE;
-	workspaces: { id: number; name: string }[];
+	workspaces: Pick<IWorkspace, "id" | "name">[];
 }

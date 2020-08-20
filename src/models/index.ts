@@ -15,6 +15,7 @@ export interface IUserSignUp {
 }
 
 export interface IOrganisation {
+	id?: string;
 	orgName: string;
 	streetAdd: string;
 	city: string;
