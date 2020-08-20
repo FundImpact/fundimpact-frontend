@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
-import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
+import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import Snackbar from "../Snackbar/Snackbar";
 import CreateProject from "../Forms/CreateProject/createProject";

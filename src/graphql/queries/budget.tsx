@@ -50,6 +50,38 @@ export const CREATE_PROJECT_BUDGET_TARGET = gql`
 	}
 `;
 
+export const CREATE_PROJECT_BUDGET_TRACKING = gql`
+	mutation createProjBudgetTracking($input: BudgetTrackingLineitemInput!) {
+		createProjBudgetTracking(input: $input) {
+			id
+			amount
+			conversion_factor
+			note
+			reporting_date
+			budget_targets_project {
+				id
+				name
+			}
+			annual_year {
+				id
+				name
+			}
+			financial_years_donor {
+				id
+				name
+				donor {
+					id
+					name
+				}
+			}
+			grant_periods_project {
+				id
+				name
+			}
+		}
+	}
+`;
+
 // export const GET_BUDGET_TARGET_PROJECT = gql`
 // 	query {
 // 		budgetTargetsProjects {

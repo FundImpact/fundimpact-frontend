@@ -36,3 +36,18 @@ export const GET_PROJECT_BY_ID = gql`
 		}
 	}
 `;
+
+export const GET_PROJ_DONORS_BY_DONOR = gql`
+	query getProjectDonorsByDonor($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		projectDonors(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			donor {
+				id
+				name
+			}
+			project{
+				id
+			}
+		}
+	}
+`;

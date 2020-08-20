@@ -71,3 +71,43 @@ export const GET_ORG_CURRENCIES = gql`
 		}
 	}
 `;
+
+export const GET_ORG_CURRENCIES_BY_ORG = gql`
+	query getorgCurrenciesByorg($filter: JSON) {
+		orgCurrencies(where: $filter) {
+			id
+			currency {
+				name
+			}
+		}
+	}
+`;
+
+export const GET_FINANCIAL_YEARS_ORG_LIST_BY_ORG = gql`
+	query getfinancialYearsOrgListByOrg($filter: JSON) {
+		financialYearsOrgList(where: $filter) {
+			id
+			name
+		}
+	}
+`;
+export const GET_FINANCIAL_YEARS_DONOR_LIST_BY_DONOR = gql`
+	query getfinancialYearsDonorListByDonor($filter: JSON) {
+		financialYearsDonorList(where: $filter) {
+			id
+			name
+		}
+	}
+`;
+
+export const GET_ANNUAL_YEAR_LIST = gql`
+	query {
+		annualYearList {
+			id
+			name
+			short_name
+			start_date
+			end_date
+		}
+	}
+`;

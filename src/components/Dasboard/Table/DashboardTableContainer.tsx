@@ -6,6 +6,7 @@ import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
+import CreateBudgetTrackingLineitemDialog from "../../Budget/CreateBudgetTrackingLineitemDialog";
 import DefaultTable from "../../Table/Table";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
@@ -70,13 +71,22 @@ const tabs = [
 			{ text: "Create Deliverables" },
 			{ text: "Create Impact Indicators" },
 			{ text: "Add Donor" },
-			{ text: "Create Budget Indicators" },
 			{ text: "Track Budget Spend" },
 			{ text: "Report Fund Receipt" },
 			{
 				text: "Create Budget Target",
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 					<CreateBudgetTargetDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={open}
+						handleClose={handleClose}
+					/>
+				),
+			},
+			{
+				text: "Create Budget Tracking Lineitem",
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<CreateBudgetTrackingLineitemDialog
 						formAction={FORM_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
