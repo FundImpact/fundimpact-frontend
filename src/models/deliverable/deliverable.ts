@@ -21,3 +21,5 @@ export type DeliverableProps =
 			open: boolean;
 			handleClose: () => void;
 	  };
+
+// workspaces: NonNullable < Pick < IWorkspace, "id" | ("name" >> []);

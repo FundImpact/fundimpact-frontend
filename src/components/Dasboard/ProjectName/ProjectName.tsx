@@ -57,8 +57,12 @@ export default function ProjectName() {
 		getProject({ variables: { id: dashboardData?.project?.id } });
 	};
 	return (
-		<Box>
-			{loading ? <CircularProgress /> : null}
+		<Box display="flex">
+			{loading ? (
+				<Box m={2} mr={0}>
+					<CircularProgress size={40} />
+				</Box>
+			) : null}
 			{project && project.name && (
 				<EditableText textValue={project.name} handleSubmit={handleSubmit} />
 			)}

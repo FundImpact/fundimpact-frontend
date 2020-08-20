@@ -11,17 +11,16 @@ export interface IDeliverableTargetLine {
 	note?: string;
 }
 
-export type DeliverableTargetLineProps =
+export type DeliverableTargetLineProps = {
+	open: boolean;
+	handleClose: () => void;
+	deliverableTarget: number | string | undefined;
+} & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;
-			open: boolean;
-			handleClose: () => void;
-			deliverableTarget: number | string | undefined;
 	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTargetLine;
-			open: boolean;
-			handleClose: () => void;
-			deliverableTarget: number | string | undefined;
-	  };
+	  }
+);

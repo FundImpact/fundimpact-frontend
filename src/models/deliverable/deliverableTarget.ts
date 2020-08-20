@@ -1,5 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
-
+import { IProject } from "../project/project";
 export interface IDeliverableTarget {
 	id?: number;
 	name: string;
@@ -11,17 +11,16 @@ export interface IDeliverableTarget {
 	project?: number | string;
 }
 
-export type DeliverableTargetProps =
+export type DeliverableTargetProps = {
+	open: boolean;
+	handleClose: () => void;
+	project: number | undefined;
+} & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;
-			open: boolean;
-			handleClose: () => void;
-			project: number | string | undefined;
 	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTarget;
-			open: boolean;
-			handleClose: () => void;
-			project: number | string | undefined;
-	  };
+	  }
+);

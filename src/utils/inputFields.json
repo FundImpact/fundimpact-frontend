@@ -127,16 +127,7 @@
 			"testId": "impactTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 6
-		},
-		{
-			"name": "target_value",
-			"id": "target_value",
-			"dataTestId": "impactTargetTargetValue",
-			"testId": "impactTargetTargetValueInput",
-			"label": "Target Value",
-			"inputType": "textarea",
-			"size": 6
+			"size": 12
 		},
 		{
 			"name": "impactCategory",
@@ -150,6 +141,15 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"getInputValue": {},
+			"size": 12
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
 			"size": 6
 		},
 		{
@@ -213,16 +213,7 @@
 			"testId": "deliverableTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 6
-		},
-		{
-			"name": "target_value",
-			"id": "target_value",
-			"dataTestId": "deliverableTargetTargetValue",
-			"testId": "deliverableTargetTargetValueInput",
-			"label": "Target Value",
-			"inputType": "textarea",
-			"size": 6
+			"size": 12
 		},
 		{
 			"name": "deliverableCategory",
@@ -236,6 +227,15 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"getInputValue": {},
+			"size": 12
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "deliverableTargetTargetValue",
+			"testId": "deliverableTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
 			"size": 6
 		},
 		{
@@ -356,19 +356,6 @@
 	],
 	"deliverableTragetLineForm": [
 		{
-			"name": "deliverable_target_project",
-			"id": "deliverable_target_project",
-			"label": "Deliverable Target",
-			"size": 6,
-			"dataTestId": "deliverableTargetProject",
-			"testId": "deliverableTargetProjectInput",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
-		},
-		{
 			"name": "value",
 			"id": "value",
 			"dataTestId": "deliverableValue",
@@ -419,7 +406,7 @@
 			"name": "grant_periods_project",
 			"id": "grant_periods_project",
 			"label": "Grant Periods",
-			"size": 6,
+			"size": 12,
 			"dataTestId": "deliverableGrantPeriod",
 			"testId": "deliverableGrantPeriodInput",
 			"optionsArray": [],
@@ -433,9 +420,10 @@
 			"id": "note",
 			"dataTestId": "deliverableNote",
 			"testId": "deliverableNoteInput",
-			"label": "Description",
+			"label": "Note",
 			"multiline": true,
-			"rows": 3
+			"rows": 2,
+			"size": 12
 		}
 	],
 	"createBudgetTargetForm": [

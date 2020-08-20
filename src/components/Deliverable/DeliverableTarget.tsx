@@ -11,6 +11,7 @@ import { DELIVERABLE_ACTIONS } from "./constants";
 import {
 	CREATE_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
+	UPDATE_DELIVERABLE_TARGET,
 } from "../../graphql/queries/Deliverable/target";
 import { GET_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/categoryUnit";
 import FormDialog from "../FormDialog/FormDialog";
@@ -46,11 +47,16 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		{ data: createDeliverableTargetRes, loading: createDeliverableTargetLoading },
 	] = useMutation(CREATE_DELIVERABLE_TARGET);
 
+	const [
+		updateDeliverableTarget,
+		{ data: updateDeliverableTargetRes, loading: updateDeliverableTargetLoading },
+	] = useMutation(UPDATE_DELIVERABLE_TARGET);
+
 	// updating categories field with fetched categories list
 	useEffect(() => {
-		if (deliverableCategories) {
-			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
-			deliverableTargetForm[2].getInputValue = setcurrentCategory;
+		if (deliverableCategories && props.type === DELIVERABLE_ACTIONS.CREATE) {
+			deliverableTargetForm[1].optionsArray = deliverableCategories.deliverableCategory;
+			deliverableTargetForm[1].getInputValue = setcurrentCategory;
 		}
 	}, [deliverableCategories]);
 	// handling category change
@@ -116,6 +122,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	}, [createDeliverableTargetRes]);
 
+	useEffect(() => {
+		if (updateDeliverableTargetRes) {
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			props.handleClose();
+		}
+	}, [updateDeliverableTargetRes]);
+
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = (value: IDeliverableTarget) => {
 		setDeliverableTarget({
@@ -139,33 +154,70 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	};
 
-	const onUpdate = (value: IDeliverableTarget) => {};
+	const onUpdate = (value: IDeliverableTarget) => {
+		let deliverableId = value.id;
+		delete value.id;
+		try {
+			updateDeliverableTarget({
+				variables: {
+					id: deliverableId,
+					input: value,
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
+					},
+				],
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
+		}
+	};
 
 	const clearErrors = (values: IDeliverableTarget) => {};
 
 	const validate = (values: IDeliverableTarget) => {
 		let errors: Partial<IDeliverableTarget> = {};
-		if (!values.name && !values.name.length) {
-			errors.name = "Name is required";
+		if (props.type === DELIVERABLE_ACTIONS.CREATE) {
+			if (!values.name && !values.name.length) {
+				errors.name = "Name is required";
+			}
+			if (!values.project) {
+				errors.project = "Project is required";
+			}
+			if (!values.target_value) {
+				errors.target_value = "Target value is required";
+			}
+			if (!values.deliverableCategory) {
+				errors.deliverableCategory = "Deliverable Category is required";
+			}
+			if (!values.deliverableUnit) {
+				errors.deliverableUnit = "Deliverable Unit is required";
+			}
 		}
-		if (!values.project) {
-			errors.project = "Project is required";
-		}
-		if (!values.target_value) {
-			errors.target_value = "Target value is required";
-		}
-		if (!values.deliverableCategory) {
-			errors.deliverableCategory = "Deliverable Category is required";
-		}
-		if (!values.deliverableUnit) {
-			errors.deliverableUnit = "Deliverable Unit is required";
+
+		if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+			if (!values.name && !values.name.length) {
+				errors.name = "Name is required";
+			}
+			if (!values.project) {
+				errors.project = "Project is required";
+			}
+			if (!values.target_value) {
+				errors.target_value = "Target value is required";
+			}
 		}
 		return errors;
 	};
-
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	const formAction = props.type;
+	if (formAction === DELIVERABLE_ACTIONS.UPDATE) {
+		delete deliverableTargetForm[1];
+		delete deliverableTargetForm[3];
+	}
+
 	return (
 		<React.Fragment>
 			<FormDialog

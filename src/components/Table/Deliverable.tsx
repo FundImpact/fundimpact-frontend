@@ -1,22 +1,90 @@
 import React, { useEffect, useState } from "react";
 import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { deliverableAndImpactHeadings } from "./constants";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DeliverableTargetLine from "../Deliverable/DeliverableTargetLine";
+import DeliverableTarget from "../Deliverable/DeliverableTarget";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import FITable from "./FITable";
+import { IDeliverableTarget } from "../../models/deliverable/deliverableTarget";
+import { DELIVERABLE_ACTIONS } from "../Deliverable/constants";
+
+function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
+	const dashboardData = useDashBoardData();
+	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
+	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
+	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setMenuAnchor(event.currentTarget);
+	};
+	const handleMenuClose = () => {
+		setMenuAnchor(null);
+	};
+	return (
+		<>
+			<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<MoreVertIcon fontSize="small" />
+			</IconButton>
+			<Menu
+				id="deliverable-target-simple-menu"
+				anchorEl={menuAnchor}
+				keepMounted
+				open={Boolean(menuAnchor)}
+				onClose={handleMenuClose}
+			>
+				<MenuItem
+					onClick={() => {
+						setTargetData({
+							id: deliverableTarget.id,
+							name: deliverableTarget.name,
+							target_value: deliverableTarget.target_value,
+							description: deliverableTarget.description,
+							deliverable_category_unit:
+								deliverableTarget.deliverable_category_unit.id,
+							project: deliverableTarget.project.id,
+						});
+						handleMenuClose();
+					}}
+				>
+					Edit Target
+				</MenuItem>
+				<MenuItem
+					onClick={() => {
+						handleMenuClose();
+						setTargetLineDialog(true);
+					}}
+				>
+					Add Target Line
+				</MenuItem>
+			</Menu>
+			{targetData && (
+				<DeliverableTarget
+					open={targetData !== null}
+					handleClose={() => setTargetData(null)}
+					type={DELIVERABLE_ACTIONS.UPDATE}
+					data={targetData}
+					project={deliverableTarget.project.id}
+				/>
+			)}
+			{targetLineDialog && (
+				<DeliverableTargetLine
+					open={targetLineDialog}
+					handleClose={() => setTargetLineDialog(false)}
+					type={DELIVERABLE_ACTIONS.CREATE}
+					deliverableTarget={deliverableTarget.id}
+				/>
+			)}
+		</>
+	);
+}
 
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
-	const [getDeliverableTargetByProject, { loading, data }] = useLazyQuery(
-		GET_DELIVERABLE_TARGET_BY_PROJECT
-	);
-	useEffect(() => {
-		if (dashboardData?.project) {
-			getDeliverableTargetByProject({
-				variables: { filter: { project: dashboardData?.project.id } },
-			});
-		}
-	}, [dashboardData, dashboardData?.project]);
+	const { loading, data } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+		variables: { filter: { project: dashboardData?.project?.id } },
+	});
 
 	const [rows, setRows] = useState<any>([]);
 	useEffect(() => {
@@ -33,10 +101,15 @@ export default function DeliverablesTable() {
 						deliverableTargetList[i].deliverable_category_unit.deliverable_units_org
 							.name,
 					];
+					row.push(
+						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
+					);
 					arr.push(row);
 				}
 			}
 			setRows(arr);
+		} else {
+			setRows([]);
 		}
 	}, [data]);
 

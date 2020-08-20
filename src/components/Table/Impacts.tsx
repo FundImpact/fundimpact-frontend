@@ -3,7 +3,26 @@ import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/targe
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { deliverableAndImpactHeadings } from "./constants";
+import { IconButton } from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FITable from "./FITable";
+
+function EditImpactTargetIcon() {
+	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setMenuAnchor(event.currentTarget);
+	};
+	const handleMenuClose = () => {
+		setMenuAnchor(null);
+	};
+	return (
+		<>
+			<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<MoreVertIcon fontSize="small" />
+			</IconButton>
+		</>
+	);
+}
 
 export default function ImpactsTable() {
 	const [getImpactTargetByProject, { loading, data }] = useLazyQuery(
@@ -33,6 +52,7 @@ export default function ImpactsTable() {
 						impactTargetProjectList[i].target_value,
 						impactTargetProjectList[i].impact_category_unit.impact_units_org.name,
 					];
+					row.push(<EditImpactTargetIcon />);
 					arr.push(row);
 				}
 			}
