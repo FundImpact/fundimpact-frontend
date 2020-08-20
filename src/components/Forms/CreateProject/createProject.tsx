@@ -1,21 +1,23 @@
 import {
+	Box,
 	Button,
 	createStyles,
+	FormControl,
 	Grid,
+	InputLabel,
+	MenuItem,
+	Select,
 	TextField,
 	Theme,
-	FormControl,
-	InputLabel,
-	Select,
-	Box,
-	MenuItem,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik } from "formik";
-import { IProjectFormProps } from "../../../models/project/ProjectForm";
-import { PROJECT_ACTIONS } from "../../Project/constants";
 import React from "react";
+
 import { IProject } from "../../../models/project/project";
+import { IProjectFormProps } from "../../../models/project/ProjectForm";
+import { IWorkspace } from "../../../models/workspace/workspace";
+import { PROJECT_ACTIONS } from "../../Project/constants";
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -121,7 +123,7 @@ function CreateProject({
 												{workspaces &&
 													workspaces.map(
 														(
-															elem: { id: number; name: string },
+															elem: Pick<IWorkspace, "id" | "name">,
 															index: number
 														) => (
 															<MenuItem key={index} value={elem.id}>

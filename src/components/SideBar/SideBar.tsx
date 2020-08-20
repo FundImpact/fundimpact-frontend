@@ -1,19 +1,18 @@
-import { ApolloProvider, useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { Box, Divider, List, MenuItem, Typography } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React from "react";
 
-import { client } from "../../config/grapql";
+import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
+import { setOrganisation } from "../../reducers/dashboardReducer";
 import { useStyles } from "../Dasboard/styles";
 import SimpleMenu from "../Menu/Menu";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
 import Workspace from "../workspace/Workspace";
-import WorkspaceList from "./WorkspaceList/WorkspaceList";
-import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
-import { setOrganisation } from "../../reducers/dashboardReducer";
+import { WorkspaceList } from "./WorkspaceList/WorkspaceList";
 
 export default function SideBar({ children }: { children?: Function }) {
 	const apolloClient = useApolloClient();
@@ -44,6 +43,7 @@ export default function SideBar({ children }: { children?: Function }) {
 
 	const openWorkspaceComponent = () => {
 		setViewWorkspace(true);
+		handleClose();
 	};
 
 	const menuList = [
@@ -89,21 +89,17 @@ export default function SideBar({ children }: { children?: Function }) {
 					<Divider />
 
 					{data && data.organizationList[0].id && (
-						<ApolloProvider client={apolloClient}>
-							<WorkspaceList organization={data.organizationList[0].id} />
-						</ApolloProvider>
+						<WorkspaceList organization={data.organizationList[0].id} />
 					)}
 
 					<List></List>
-					<ApolloProvider client={apolloClient}>
-						{viewWorkspace ? (
-							<Workspace
-								organizationId={data.organizationList[0].id}
-								type={WORKSPACE_ACTIONS.CREATE}
-								close={() => setViewWorkspace(false)}
-							></Workspace>
-						) : null}
-					</ApolloProvider>
+					{viewWorkspace ? (
+						<Workspace
+							organizationId={data.organizationList[0].id}
+							type={WORKSPACE_ACTIONS.CREATE}
+							close={() => setViewWorkspace(false)}
+						></Workspace>
+					) : null}
 				</div>
 			)}
 		</Box>

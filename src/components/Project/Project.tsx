@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import Snackbar from "../Snackbar/Snackbar";
 import CreateProject from "../Forms/CreateProject/createProject";
 import { FullScreenLoader } from "../Loader/Loader";
+import Snackbar from "../Snackbar/Snackbar";
 import { PROJECT_ACTIONS } from "./constants";
 
 function getInitialValues(props: ProjectProps) {
