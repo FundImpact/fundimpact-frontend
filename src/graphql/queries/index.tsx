@@ -16,6 +16,8 @@ export const GET_WORKSPACES_BY_ORG = gql`
 		orgWorkspaces(where: $filter) {
 			id
 			name
+			short_name
+			description
 			organization {
 				id
 				name
