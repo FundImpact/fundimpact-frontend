@@ -28,14 +28,11 @@ export function getSteps(): ISignUpStep[] {
 
 export const getDefaultBasicInformation = (): IBasicInformation => {
 	return {
-		username: "",
 		confirmPassword: "",
 		email: "",
-		firstName: "",
-		lastName: "",
 		password: "",
 		provider: "local",
-		organisation: {
+		organization: {
 			name: "",
 			legal_name: "",
 			short_name: "",

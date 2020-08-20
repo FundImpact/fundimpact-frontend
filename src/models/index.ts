@@ -1,3 +1,5 @@
+import { IProject } from "./project/project";
+
 export interface ISignUpStep {
 	label: string;
 	id: string;
@@ -19,6 +21,8 @@ export interface IOrganisation {
 	state: string;
 	country: string;
 	zipCode: number | null;
+	name?: string;
+	id?: string;
 }
 
 export interface IBasicInformation {
@@ -26,7 +30,7 @@ export interface IBasicInformation {
 	password: string;
 	confirmPassword: string;
 	provider: "local";
-	organisation: {
+	organization: {
 		name: string;
 		short_name?: string;
 		legal_name?: string;
@@ -38,4 +42,51 @@ export interface IBasicInformation {
 export interface ILoginForm {
 	email: String;
 	password: String;
+}
+
+export interface IAlertMsg {
+	severity?: "success" | "info" | "warning" | "error";
+	msg: string;
+}
+
+export interface IDashboardDataContext {
+	project?: IProject;
+	organization?: IOrganisation;
+	workspace?: any;
+}
+
+export interface INotificationContext {
+	successNotification: string;
+	errorNotification: string;
+}
+
+export interface IOrganizationCurrency {
+	id: string;
+	currency: {
+		name: string;
+	};
+}
+
+export interface IInputField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
+}
+
+export interface ISelectField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	formik?: any;
+	optionsArray: [any];
+	inputLabelId: string,
+  selectLabelId: string,
+  selectId: string
 }

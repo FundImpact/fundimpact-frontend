@@ -1,0 +1,162 @@
+{
+	"impactUnitForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactUnitName",
+			"testId": "createInpactUnitNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "prefix_label",
+			"id": "prefix-label",
+			"dataTestId": "createImpactUnitPrefixLabel",
+			"testId": "createImpactUnitPrefixLabelInput",
+			"label": "Prefix Label"
+		},
+		{
+			"name": "suffix_label",
+			"id": "suffix-label",
+			"dataTestId": "createImpactUnitSuffixLabel",
+			"testId": "createImpactUnitSuffixLabelInput",
+			"label": "Impact Code"
+		},
+		{
+			"name": "code",
+			"id": "impact-code",
+			"dataTestId": "createImpactUnitCode",
+			"testId": "createImpactUnitCodeInput",
+			"label": "Suffix Label"
+		},
+		{
+			"name": "target_unit",
+			"id": "target-unit",
+			"dataTestId": "createImpactUnitTargetUnit",
+			"testId": "createImpactUnitTargetUnitInput",
+			"label": "Target Unit",
+			"type": "number"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactUnitDescription",
+			"testId": "createImpactUnitDescriptionInput",
+			"label": "Description",
+			"rows": 2,
+			"multiline": true
+		}
+	],
+	"impactCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactName",
+			"testId": "createImpactNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "shortname",
+			"id": "shortname",
+			"dataTestId": "createImpactShortName",
+			"testId": "createImpactShortNameInput",
+			"label": "Short Name"
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "createImpactCode",
+			"testId": "createImpactCodeInput",
+			"label": "Impact Code"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactCategoryDescription",
+			"testId": "createImpactCategoryDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3
+		}
+	],
+	"createBudgetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetName",
+			"testId": "createBudgetNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "code",
+			"id": "budgetCode",
+			"dataTestId": "createBudgetCode",
+			"testId": "createBudgetCodeInput",
+			"label": "Budget Code"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetDescription",
+			"testId": "createBudgetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3
+		}
+	],
+	"createBudgetTargetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetTargetName",
+			"testId": "createBudgetTargetNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "total_target_amount",
+			"id": "total-target-amount",
+			"dataTestId": "createBudgetTargetTotalTargetAmount",
+			"testId": "createBudgetTargetTotalTargetAmountInput",
+			"label": "Total Taget Amount",
+			"type": "number"
+		},
+		{
+			"name": "conversion_factor",
+			"id": "conversion-factor",
+			"dataTestId": "createBudgetTargetConversionFactor",
+			"testId": "createBudgetTargetConversionFactorInput",
+			"label": "Conversion Factor",
+			"type": "number"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetTargetDescription",
+			"testId": "createBudgetTargetDescriptionInput",
+			"label": "Description",
+			"rows": 2,
+			"multiline": true
+		}
+	],
+	"createBudgetTargetFormSelectFields": [
+		{
+			"name": "organization_currency",
+			"label": "Choose Organization Currency",
+			"testId": "createBudgetTargetOrganizationCurrencyOption",
+			"dataTestId": "createBudgetTargetOrganizationCurrency",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1"
+		},
+		{
+			"name": "budget_category_organization",
+			"label": "Choose Budget Category",
+			"testId": "createBudgetTargetBudgetCategoryOption",
+			"dataTestId": "createBudgetTargetBudgetCategory",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined"
+		}
+	]
+}
