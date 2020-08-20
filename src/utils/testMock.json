@@ -1,0 +1,19 @@
+{
+	"organizationDetails": {
+		"orgName": "my org",
+		"streetAdd": "221 baker street",
+		"city": "London",
+		"state": "London",
+		"country": "England",
+		"zipCode": 123213,
+		"name": "sherlock",
+		"id": "3"
+	},
+	"projectDetails": {
+		"id": 3,
+		"name": "my project",
+		"short_name": "my shortname",
+		"description": "project desc",
+		"workspace": "my workspace"
+	}
+}

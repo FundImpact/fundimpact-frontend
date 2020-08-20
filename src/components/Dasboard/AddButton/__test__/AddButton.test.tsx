@@ -1,6 +1,5 @@
 import React from "react";
 import { act, fireEvent, queries, render, RenderResult, wait } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
 import AddButton from "../AddButton";
 
 interface CreateButton {

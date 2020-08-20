@@ -1,9 +1,24 @@
-import { Box, Button, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
-import React from "react";
+import { Box, Typography, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
+import React, { useEffect } from "react";
 import AddButton from "../../Dasboard/AddButton";
 import CreateBudgetDialog from "../CreateBudgetDialog";
-
-import DefaultTable from "../../Table/Table";
+import Deliverable from "../../Deliverable/Deliverable";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import DeliverableUnit from "../../Deliverable/DeliverableUnit";
+import DeliverableTargetLine from "../../Deliverable/DeliverableTargetLine";
+import ImpactTarget from "../../Impact/impactTarget";
+import { IMPACT_ACTIONS } from "../../Impact/constants";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import ImpactsTable from "../../Table/Impacts";
+import DeliverablesTable from "../../Table/Deliverable";
+import CreateBudgetTargetDialog from "../CreateBudgetTargetDialog";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import ImpactCategoryDialog from "../ImpactCategoryDialog";
+import ImpactUnitDialog from "../ImpactUnitDialog";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { useNotificationData } from "../../../contexts/notificationContext";
+import Snackbar from "../../Snackbar/Snackbar";
+import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -22,7 +37,7 @@ function TabContent(props: TabPanelProps) {
 			aria-labelledby={`wrapped-tab-${index}`}
 			{...other}
 		>
-			{value === index && <Box p={3}>{children}</Box>}
+			{value === index && <Box p={1}>{children}</Box>}
 		</div>
 	);
 }
@@ -38,12 +53,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		//flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
+		height: "100%",
+		overflow: "scroll",
 	},
 	contentHeading: {
 		display: "flex",
 		justifyContent: "space-between",
 		alignItems: "center",
-		margin: "1%",
+		margin: theme.spacing(1),
 	},
 	button: {
 		margin: theme.spacing(1),
@@ -52,12 +69,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function DashboardTableContainer() {
+	const dashboardData = useDashBoardData();
+	useEffect(() => {}, [dashboardData]); // re-render whenever project or organization changes
 	const tabs = [
 		{
 			label: "Funds",
+			table: <BudgetTargetTable />,
 			createButtons: [
 				{
-					text: "Create Budget",
+					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<CreateBudgetDialog open={open} handleClose={handleClose} />
 					),
@@ -68,20 +88,103 @@ export default function DashboardTableContainer() {
 				{ text: "Create Budget Indicators" },
 				{ text: "Track Budget Spend" },
 				{ text: "Report Fund Receipt" },
+				{
+					text: "Create Budget Target",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<CreateBudgetTargetDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+				},
 			],
 		},
 		{
 			label: "Deliverables",
-			createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
+			table: <DeliverablesTable />,
+			createButtons: [
+				{
+					text: "Create Deliverables Category",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<Deliverable
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
+						/>
+					),
+				},
+				{
+					text: "Create Deliverable Targets",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							project={dashboardData?.project?.id}
+						/>
+					),
+				},
+				{
+					text: "Create Deliverable Unit",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableUnit
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
+						/>
+					),
+				},
+				{
+					text: "Report Achivement",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTargetLine
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							deliverableTarget={dashboardData?.project?.id}
+						/>
+					),
+				},
+			],
 		},
 		{
 			label: "Impact Indicators",
-			createButtons: [{ text: "Create Impact Targets" }, { text: "Report Achivement" }],
+			table: <ImpactsTable />,
+			createButtons: [
+				{
+					text: "Create Impact Targets",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactTarget
+							type={IMPACT_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							project={dashboardData?.project?.id}
+						/>
+					),
+				},
+				{
+					text: "Create Impact Unit",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactUnitDialog open={open} handleClose={handleClose} />
+					),
+				},
+				{
+					text: "Create Impact Category",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactCategoryDialog open={open} handleClose={handleClose} />
+					),
+				},
+				{ text: "Report Achivement" },
+			],
 		},
 		{ label: "Documents", createButtons: [] },
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
+	const notificationData = useNotificationData();
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		console.log(`setting tab index `, newValue);
@@ -89,7 +192,7 @@ export default function DashboardTableContainer() {
 	};
 
 	return (
-		<Box className={classes.root}>
+		<Box className={classes.root} boxShadow={2}>
 			<Tabs
 				value={value}
 				indicatorColor="primary"
@@ -114,29 +217,18 @@ export default function DashboardTableContainer() {
 				<TabContent key={index} value={value} index={index}>
 					<Box className={classes.contentHeading}>
 						<strong> Budget Tracker </strong>
-						<div>
-							<Button
-								disableElevation
-								className={classes.button}
-								variant={"contained"}
-								color="secondary"
-							>
-								Fund Received
-							</Button>
-							<Button
-								disableElevation
-								className={classes.button}
-								variant={"contained"}
-								color="primary"
-							>
-								Report Fund Spend
-							</Button>
-						</div>
 					</Box>
-					<DefaultTable />
+					{tab.table}
+					{/* {GetTable(tab.label)} */}
 					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
+			{notificationData!.successNotification && (
+				<Snackbar severity="success" msg={notificationData!.successNotification} />
+			)}
+			{notificationData!.errorNotification && (
+				<Snackbar severity="error" msg={notificationData!.errorNotification} />
+			)}
 		</Box>
 	);
 }

@@ -1,3 +1,4 @@
+import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
 
 export interface ISignUpStep {
@@ -14,16 +15,16 @@ export interface IUserSignUp {
 	password: string;
 }
 
-export interface IOrganisation {
-	id?: string;
-	orgName: string;
-	streetAdd: string;
-	city: string;
-	state: string;
-	country: string;
-	zipCode: number | null;
-	name?: string;
-}
+// export interface IOrganisation {
+// 	id?: string;
+// 	orgName: string;
+// 	streetAdd: string;
+// 	city: string;
+// 	state: string;
+// 	country: string;
+// 	zipCode: number | null;
+// 	name?: string;
+// }
 
 export interface IBasicInformation {
 	email: string;
@@ -53,4 +54,58 @@ export interface IDashboardDataContext {
 	project?: IProject;
 	organization?: IOrganisation;
 	workspace?: any;
+}
+
+export interface INotificationContext {
+	successNotification: string;
+	errorNotification: string;
+}
+
+export interface IOrganizationCurrency {
+	id: string;
+	currency: {
+		name: string;
+	};
+}
+
+export interface IInputField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
+}
+
+export interface IInputFields {
+	inputType: string;
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
+	optionsArray?: any[];
+	inputLabelId?: string;
+	selectLabelId?: string;
+	selectId?: string;
+	getInputValue?: any;
+}
+
+export interface ISelectField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	formik?: any;
+	optionsArray: [any];
+	inputLabelId: string;
+	selectLabelId: string;
+	selectId: string;
 }

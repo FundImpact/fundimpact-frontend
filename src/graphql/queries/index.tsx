@@ -6,6 +6,14 @@ export const GET_ORGANISATIONS = gql`
 			id
 			name
 			short_name
+			organization_registration_type {
+				id
+				reg_type
+			}
+			account {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -57,6 +65,17 @@ export const GET_PROJECTS = gql`
 			name
 			workspace {
 				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_ORG_CURRENCIES = gql`
+	query {
+		orgCurrencies {
+			id
+			currency {
 				name
 			}
 		}

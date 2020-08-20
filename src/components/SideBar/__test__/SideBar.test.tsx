@@ -9,10 +9,16 @@ import { DashboardProvider } from "../../../contexts/dashboardContext";
 
 const OrgMock = [
 	{
-		__typename: "Organisation",
+		__typename: "OrganizationList",
 		id: "13",
 		name: "TSERIES",
-		short_name: null,
+		short_name: "TS",
+		organization_registration_type: {
+			__typename: "OrganizationRegistrationType",
+			id: "1",
+			reg_type: "Trusts",
+		},
+		account: { __typename: "Account", id: "2", name: "rahul@gmail.com" },
 	},
 ];
 

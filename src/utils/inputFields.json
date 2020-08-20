@@ -1,0 +1,497 @@
+{
+	"projectForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createProjectName",
+			"testId": "createProjectNameInput",
+			"label": "Name",
+			"size": 12
+		},
+		{
+			"name": "workspace",
+			"id": "workspace",
+			"dataTestId": "createProjectWorkspace",
+			"testId": "createProjectWorkspaceInput",
+			"label": "Choose Workspace",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 12
+		},
+		{
+			"name": "short_name",
+			"id": "short-name",
+			"dataTestId": "createProjectShortName",
+			"testId": "createProjectShortNameInput",
+			"label": "Code",
+			"size": 12
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createProjectDescription",
+			"testId": "createProjectDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"size": 12
+		}
+	],
+	"impactUnitForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactUnitName",
+			"testId": "createInpactUnitNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "prefix_label",
+			"id": "prefix-label",
+			"dataTestId": "createImpactUnitPrefixLabel",
+			"testId": "createImpactUnitPrefixLabelInput",
+			"label": "Prefix Label"
+		},
+		{
+			"name": "suffix_label",
+			"id": "suffix-label",
+			"dataTestId": "createImpactUnitSuffixLabel",
+			"testId": "createImpactUnitSuffixLabelInput",
+			"label": "Impact Code"
+		},
+		{
+			"name": "code",
+			"id": "impact-code",
+			"dataTestId": "createImpactUnitCode",
+			"testId": "createImpactUnitCodeInput",
+			"label": "Suffix Label"
+		},
+		{
+			"name": "target_unit",
+			"id": "target-unit",
+			"dataTestId": "createImpactUnitTargetUnit",
+			"testId": "createImpactUnitTargetUnitInput",
+			"label": "Target Unit",
+			"type": "number"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactUnitDescription",
+			"testId": "createImpactUnitDescriptionInput",
+			"label": "Description",
+			"rows": 2,
+			"multiline": true
+		}
+	],
+	"impactCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactName",
+			"testId": "createImpactNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "shortname",
+			"id": "shortname",
+			"dataTestId": "createImpactShortName",
+			"testId": "createImpactShortNameInput",
+			"label": "Short Name"
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "createImpactCode",
+			"testId": "createImpactCodeInput",
+			"label": "Impact Code"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactCategoryDescription",
+			"testId": "createImpactCategoryDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3
+		}
+	],
+	"impactTargetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "impactTargetName",
+			"testId": "impactTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "impactCategory",
+			"id": "impactCategory",
+			"dataTestId": "impactTargetCategory",
+			"testId": "impactTargetCategoryInput",
+			"label": "Impact Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"getInputValue": {},
+			"size": 6
+		},
+		{
+			"name": "impactUnit",
+			"id": "impactUnit",
+			"dataTestId": "impactTargetUnit",
+			"testId": "impactTargetUnitInput",
+			"label": "Impact Unit",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "impactTargetDescription",
+			"testId": "impactTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+	"deliverableCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Name",
+			"size": 12
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Code",
+			"size": 12
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableFormDescription",
+			"testId": "deliverableFormDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"size": 12
+		}
+	],
+	"deliverableTargetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableTargetName",
+			"testId": "deliverableTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "deliverableTargetTargetValue",
+			"testId": "deliverableTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "deliverableCategory",
+			"id": "deliverableCategory",
+			"dataTestId": "deliverableTargetCategory",
+			"testId": "deliverableTargetCategoryInput",
+			"label": "Deliverable Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"getInputValue": {},
+			"size": 6
+		},
+		{
+			"name": "deliverableUnit",
+			"id": "deliverableUnit",
+			"dataTestId": "deliverableTargetUnit",
+			"testId": "deliverableTargetUnitInput",
+			"label": "Deliverable Unit",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableTargetDescription",
+			"testId": "deliverableTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+	"deliverableUnitForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "deliverableCategory",
+			"id": "deliverableCategory",
+			"dataTestId": "deliverableUnitCategory",
+			"testId": "deliverableUnitCategoryInput",
+			"label": "Deliverable Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "unit_type",
+			"id": "unit-type",
+			"dataTestId": "deliverableUnitUnitType",
+			"testId": "deliverableUnitUnitTypeInput",
+			"label": "Unit Type",
+			"size": 6
+		},
+		{
+			"name": "prefix_label",
+			"id": "prefix-label",
+			"dataTestId": "deliverableUnitPrefixLabel",
+			"testId": "deliverableUnitPrefixLabelInput",
+			"label": "Prefix Label",
+			"size": 6
+		},
+		{
+			"name": "suffix_label",
+			"id": "suffix-label",
+			"dataTestId": "deliverableUnitSuffixLabel",
+			"testId": "deliverableUnitSuffixLabelInput",
+			"label": "Suffix Label",
+			"size": 6
+		},
+
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableUnitDescription",
+			"testId": "deliverableUnitDescriptionInput",
+			"label": "Description",
+			"rows": 2,
+			"multiline": true,
+			"size": 12
+		}
+	],
+	"createBudgetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetName",
+			"testId": "createBudgetNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "code",
+			"id": "budgetCode",
+			"dataTestId": "createBudgetCode",
+			"testId": "createBudgetCodeInput",
+			"label": "Budget Code"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetDescription",
+			"testId": "createBudgetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3
+		}
+	],
+	"deliverableTragetLineForm": [
+		{
+			"name": "deliverable_target_project",
+			"id": "deliverable_target_project",
+			"label": "Deliverable Target",
+			"size": 6,
+			"dataTestId": "deliverableTargetProject",
+			"testId": "deliverableTargetProjectInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "value",
+			"id": "value",
+			"dataTestId": "deliverableValue",
+			"testId": "deliverableValueInput",
+			"label": "Value",
+			"size": 6
+		},
+		{
+			"name": "annual_year",
+			"id": "annual_year",
+			"label": "Annual Year",
+			"size": 6,
+			"dataTestId": "deliverableAnnualYear",
+			"testId": "deliverableAnnualYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_years_org",
+			"id": "financial_years_org",
+			"label": "Financial Year Organization",
+			"size": 6,
+			"dataTestId": "deliverableFYOrganization",
+			"testId": "deliverableFYOrganizationInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_years_donor",
+			"id": "financial_years_donor",
+			"label": "Financial Year Donor",
+			"size": 6,
+			"dataTestId": "deliverableFYDonor",
+			"testId": "deliverableFYDonorInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "grant_periods_project",
+			"id": "grant_periods_project",
+			"label": "Grant Periods",
+			"size": 6,
+			"dataTestId": "deliverableGrantPeriod",
+			"testId": "deliverableGrantPeriodInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "note",
+			"id": "note",
+			"dataTestId": "deliverableNote",
+			"testId": "deliverableNoteInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3
+		}
+	],
+	"createBudgetTargetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetTargetName",
+			"testId": "createBudgetTargetNameInput",
+			"label": "Name"
+		},
+		{
+			"name": "total_target_amount",
+			"id": "total-target-amount",
+			"dataTestId": "createBudgetTargetTotalTargetAmount",
+			"testId": "createBudgetTargetTotalTargetAmountInput",
+			"label": "Total Taget Amount",
+			"type": "number"
+		},
+		{
+			"name": "conversion_factor",
+			"id": "conversion-factor",
+			"dataTestId": "createBudgetTargetConversionFactor",
+			"testId": "createBudgetTargetConversionFactorInput",
+			"label": "Conversion Factor",
+			"type": "number"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetTargetDescription",
+			"testId": "createBudgetTargetDescriptionInput",
+			"label": "Description",
+			"rows": 2,
+			"multiline": true
+		}
+	],
+	"createBudgetTargetFormSelectFields": [
+		{
+			"name": "organization_currency",
+			"label": "Choose Organization Currency",
+			"testId": "createBudgetTargetOrganizationCurrencyOption",
+			"dataTestId": "createBudgetTargetOrganizationCurrency",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1"
+		},
+		{
+			"name": "budget_category_organization",
+			"label": "Choose Budget Category",
+			"testId": "createBudgetTargetBudgetCategoryOption",
+			"dataTestId": "createBudgetTargetBudgetCategory",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined"
+		}
+	]
+}

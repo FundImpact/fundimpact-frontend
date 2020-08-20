@@ -1,5 +1,5 @@
-import { IOrganisation } from "..";
 import { WORKSPACE_ACTIONS } from "../../components/workspace/constants";
+import { IOrganisation } from "../organisation/types";
 
 export interface IWorkspace {
 	id?: string;

@@ -8,6 +8,7 @@ import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
 import { DashboardProvider } from "../contexts/dashboardContext";
+import { NotificationProvider } from "../contexts/notificationContext";
 
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
 const Login = React.lazy(() => import("../pages/Login/Login"));
@@ -28,12 +29,14 @@ function AppRoutes() {
 					path="dashboard"
 					element={
 						<ApolloProvider client={client}>
-							<DashboardProvider>
-								<DashboardContainer
-									left={null}
-									main={<DashboardTableContainer />}
-								/>
-							</DashboardProvider>
+							<NotificationProvider>
+								<DashboardProvider>
+									<DashboardContainer
+										left={null}
+										main={<DashboardTableContainer />}
+									/>
+								</DashboardProvider>
+							</NotificationProvider>
 						</ApolloProvider>
 					}
 				/>

@@ -22,7 +22,7 @@ function getInitialValues(props: WorkspaceProps) {
 		name: "Workspace 1",
 		short_name: "short name",
 		description: "some description",
-		organization: props.organizationId as string,
+		organization: props.organizationId,
 	};
 }
 

@@ -10,11 +10,10 @@ import React, { useState } from "react";
 
 import { useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries";
-import { IOrganisation } from "../../../models";
+import { IOrganisation } from "../../../models/organisation/types";
 import { IGET_WORKSPACES_BY_ORG, IOrganisationWorkspaces } from "../../../models/workspace/query";
 import { IWorkspace } from "../../../models/workspace/workspace";
 import { setActiveWorkSpace } from "../../../reducers/dashboardReducer";
-import FIDialog from "../../Dialog/Dialog";
 import SimpleMenu from "../../Menu/Menu";
 import { PROJECT_ACTIONS } from "../../Project/constants";
 import Project from "../../Project/Project";
@@ -45,46 +44,21 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function AddProject({
-	workspaces,
+export default function WorkspaceList({
+	organizationId: organizationId,
 }: {
-	workspaces: { id: IWorkspace["id"]; name: IWorkspace["name"] }[];
+	organizationId: IOrganisation["id"];
 }) {
-	const [open, setOpen] = React.useState(false);
-	const handleModalOpen = () => {
-		setOpen(true);
-	};
-	const handleModalClose = () => {
-		setOpen(false);
-	};
-	return (
-		<div>
-			<MenuItem onClick={handleModalOpen}>Add project</MenuItem>
-			{open && (
-				<FIDialog
-					open={open}
-					handleClose={() => handleModalClose()}
-					header={"Create Project"}
-					children={<Project type={PROJECT_ACTIONS.CREATE} workspaces={workspaces} />}
-				/>
-			)}
-		</div>
-	);
-}
-
-export interface IWorkspaceListProps {
-	organization: NonNullable<IOrganisation["id"]>;
-}
-
-export const WorkspaceList = React.memo(({ organization }: IWorkspaceListProps) => {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
-	const [menuList, setMenuList] = React.useState<{ children: JSX.Element }[]>([]);
-
+	const filter: { variables: { filter: { organization: IOrganisation["id"] } } } = {
+		variables: { filter: { organization: organizationId } },
+	};
+	const [projectDialogOpen, setProjectDialogOpen] = useState<boolean>(false);
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
 	const dispatch = useDashboardDispatch();
-	const filter = { variables: { filter: { organization } } };
+
 	useQuery(GET_WORKSPACES_BY_ORG, filter);
 
 	/**
@@ -101,24 +75,6 @@ export const WorkspaceList = React.memo(({ organization }: IWorkspaceListProps) 
 			true
 		);
 	} catch (error) {}
-
-	// React.useEffect(() => {
-	// 	if (!cachedWorkspaces || !cachedWorkspaces.orgWorkspaces) return;
-
-	// 	const addProjectMenuItem = {
-	// 		children: (
-	// 			<AddProject key={"Add_Project"} workspaces={cachedWorkspaces.orgWorkspaces} />
-	// 		),
-	// 	};
-	// 	let newMenuList = [...menuList];
-
-	// 	// if (!newMenuList.find((menu) => menu.children.key === "Add_Project")) {
-	// 	// 	newMenuList.push(addProjectMenuItem);
-	// 	// }
-
-	// 	setMenuList(newMenuList);
-	// 	dispatch(setActiveWorkSpace(cachedWorkspaces.orgWorkspaces[0]));
-	// }, [cachedWorkspaces]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
 		let array = [...anchorEl];
@@ -160,39 +116,33 @@ export const WorkspaceList = React.memo(({ organization }: IWorkspaceListProps) 
 											>
 												<EditOutlinedIcon fontSize="small" />
 											</IconButton>
-
-											{menuList && (
-												<SimpleMenu
-													handleClose={() => closeMenuItems(index)}
-													id={`projectmenu${index}`}
-													anchorEl={anchorEl[index]}
-													menuList={menuList}
+											<SimpleMenu
+												handleClose={() => closeMenuItems(index)}
+												id={`projectmenu${index}`}
+												anchorEl={anchorEl[index]}
+											>
+												<MenuItem
+													onClick={() => {
+														const workpsaceToEdit = {
+															...workspace,
+															organization:
+																workspace["organization"]["id"],
+														};
+														seteditWorkspace(workpsaceToEdit as any);
+														closeMenuItems(index);
+													}}
 												>
-													<AddProject
-														key={"Add_Project"}
-														workspaces={
-															(cachedWorkspaces as NonNullable<
-																IGET_WORKSPACES_BY_ORG
-															>).orgWorkspaces
-														}
-													/>
-													<MenuItem
-														onClick={() => {
-															const workpsaceToEdit = {
-																...workspace,
-																organization:
-																	workspace["organization"]["id"],
-															};
-															seteditWorkspace(
-																workpsaceToEdit as any
-															);
-															closeMenuItems(index);
-														}}
-													>
-														Edit Workspace
-													</MenuItem>
-												</SimpleMenu>
-											)}
+													Edit Workspace{" "}
+												</MenuItem>
+												<MenuItem
+													onClick={() => {
+														setProjectDialogOpen(true);
+														closeMenuItems(index);
+													}}
+												>
+													Add Project
+												</MenuItem>
+											</SimpleMenu>
 										</Box>
 									</Box>
 									<ProjectList workspaceId={workspace.id} projectIndex={index} />
@@ -202,10 +152,18 @@ export const WorkspaceList = React.memo(({ organization }: IWorkspaceListProps) 
 						}
 					)}
 			</List>
-
+			{projectDialogOpen && cachedWorkspaces && cachedWorkspaces.orgWorkspaces ? (
+				<Project
+					type={PROJECT_ACTIONS.CREATE}
+					workspaces={cachedWorkspaces.orgWorkspaces}
+					open={projectDialogOpen}
+					handleClose={() => setProjectDialogOpen(false)}
+				/>
+			) : null}
 			{editWorkspace ? (
+				// TODO: Need to changed organisation id to dynamic
 				<Workspace
-					organizationId={organization}
+					organizationId={organizationId}
 					type={WORKSPACE_ACTIONS.UPDATE}
 					data={editWorkspace}
 					close={() => seteditWorkspace(null)}
@@ -213,4 +171,4 @@ export const WorkspaceList = React.memo(({ organization }: IWorkspaceListProps) 
 			) : null}
 		</React.Fragment>
 	);
-});
+}
