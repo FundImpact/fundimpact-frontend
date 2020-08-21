@@ -10,8 +10,6 @@ import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import FITable from "./FITable";
 import { IDeliverableTarget } from "../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../Deliverable/constants";
-import DeliverableTracklineTable from "./DeliverableTrackLine";
-import FICollaspeTable from "./FICollapseTable";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const dashboardData = useDashBoardData();
@@ -27,7 +25,7 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 	return (
 		<>
 			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
+				<MoreVertIcon fontSize="small" />
 			</IconButton>
 			<Menu
 				id="deliverable-target-simple-menu"
@@ -82,7 +80,12 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 	);
 }
 
-export default function DeliverablesTable() {
+export default function DeliverablesTrackLineTable({
+	deliverableTargetId,
+}: {
+	deliverableTargetId: string;
+}) {
+	console.log("hey", deliverableTargetId);
 	const dashboardData = useDashBoardData();
 	const { loading, data } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: { filter: { project: dashboardData?.project?.id } },
@@ -92,38 +95,29 @@ export default function DeliverablesTable() {
 	useEffect(() => {
 		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
 			let deliverableTargetList = data.deliverableTargetList;
-			let array: { collaspeTable: any; column: any[] }[] = [];
+			let arr = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
-				let row: { collaspeTable: any; column: any[] } = {
-					collaspeTable: null,
-					column: [],
-				};
-
-				row.collaspeTable = (
-					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
-				);
-
 				if (deliverableTargetList[i].deliverable_category_unit) {
-					let column = [
+					let row = [
 						deliverableTargetList[i].name,
 						deliverableTargetList[i].deliverable_category_unit.deliverable_category_org
 							.name,
-						`${deliverableTargetList[i].target_value} 
-						${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
-						"80%",
+						deliverableTargetList[i].target_value,
+						deliverableTargetList[i].deliverable_category_unit.deliverable_units_org
+							.name,
+						"",
 					];
-					column.push(
+					row.push(
 						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
 					);
-					row.column = column;
-					array.push(row);
+					arr.push(row);
 				}
 			}
-			setRows(array);
+			setRows(arr);
 		} else {
 			setRows([]);
 		}
 	}, [data]);
 
-	return <FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />;
+	return <FITable tableHeading={deliverableAndImpactHeadings} rows={rows} />;
 }

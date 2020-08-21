@@ -51,6 +51,7 @@ export default function ImpactsTable() {
 						impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
 						impactTargetProjectList[i].target_value,
 						impactTargetProjectList[i].impact_category_unit.impact_units_org.name,
+						"",
 					];
 					row.push(<EditImpactTargetIcon />);
 					arr.push(row);

@@ -6,22 +6,15 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React from "react";
 const useStyles = makeStyles({
-	table: {
-		minWidth: 650,
-	},
-	tableContainer: {
-		height: "47vh",
-	},
+	table: {},
 });
 
 const StyledTableHeader = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			minHeight: "300px",
 			"& tr:nth-child(even) td": { background: "#F5F6FA" },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
@@ -42,7 +35,7 @@ export default function FITable({
 	const tableHeader = StyledTableHeader();
 
 	return (
-		<TableContainer component={Paper} className={classes.tableContainer}>
+		<TableContainer component={Paper}>
 			{!rows.length ? (
 				<Box mt={5} display="flex" justifyContent="center">
 					{" "}
