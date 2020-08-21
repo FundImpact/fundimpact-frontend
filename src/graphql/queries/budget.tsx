@@ -19,8 +19,8 @@ export const CREATE_ORGANIZATION_CURRENCY = gql`
 `;
 
 export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
-	query getOrganizationBudgetCategory {
-		orgBudgetCategory {
+	query getorgBudgetCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		orgBudgetCategory(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			code
@@ -77,6 +77,45 @@ export const CREATE_PROJECT_BUDGET_TRACKING = gql`
 			grant_periods_project {
 				id
 				name
+			}
+		}
+	}
+`;
+
+export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
+	mutation updateProjBudgetTracking($id: ID!, $input: BudgetTrackingLineitemInput!) {
+		updateProjBudgetTracking(id: $id, input: $input) {
+			id
+			amount
+			conversion_factor
+			note
+			reporting_date
+			budget_targets_project {
+				id
+				name
+				description
+			}
+			annual_year {
+				id
+				name
+			}
+			financial_years_donor {
+				id
+				name
+				short_name
+				start_date
+				end_date
+				donor {
+					id
+					name
+				}
+			}
+			grant_periods_project {
+				id
+				name
+				short_name
+				start_date
+				end_date
 			}
 		}
 	}

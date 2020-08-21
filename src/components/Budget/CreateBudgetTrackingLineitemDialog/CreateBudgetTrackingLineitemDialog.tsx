@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useLazyQuery, useApolloClient } from "@apollo/client";
-import { CREATE_PROJECT_BUDGET_TRACKING } from "../../../graphql/queries/budget";
+import {
+	CREATE_PROJECT_BUDGET_TRACKING,
+	UPDATE_PROJECT_BUDGET_TRACKING,
+} from "../../../graphql/queries/budget";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -45,7 +48,11 @@ const defaultFormValues: IBudgetTrackingLineitemForm = {
 	reporting_date: getTodaysDate(),
 };
 
-function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
+const compObject = (obj1: any, obj2: any): boolean =>
+	Object.keys(obj1).length == Object.keys(obj2).length &&
+	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] == obj1[key]);
+
+function CreateBudgetTrackingLineItemDialog(props: any) {
 	const apolloClient = useApolloClient();
 	const [selectedDonor, setSelectedDonor] = useState("");
 
@@ -54,12 +61,12 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 		CREATE_PROJECT_BUDGET_TRACKING
 	);
 
-	// let initialValues =
-	// 	props.formAction == FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
 
-	// const [updateProjectBudgetTarget, { loading: updatingProjectBudgetTarget }] = useMutation(
-	// 	UPDATE_PROJECT_BUDGET_TARGET
-	// );
+	const [updateProjectBudgetTracking, { loading: updatingProjectBudgetTarget }] = useMutation(
+		UPDATE_PROJECT_BUDGET_TRACKING
+	);
+
 	const dashboardData = useDashBoardData();
 	const currentProject = dashboardData?.project;
 
@@ -143,6 +150,19 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	const [getFinancialYearsDonorList, { data: financialYearsDonorList }] = useLazyQuery(
 		GET_FINANCIAL_YEARS_DONOR_LIST_BY_DONOR
 	);
+
+	useEffect(() => {
+		console.log("initialValues.donor :>> ", initialValues.donor);
+		if (initialValues.donor) {
+			getFinancialYearsDonorList({
+				variables: {
+					filter: {
+						donor: initialValues.donor,
+					},
+				},
+			});
+		}
+	}, [initialValues.donor]);
 
 	useEffect(() => {
 		if (selectedDonor) {
@@ -241,25 +261,26 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 						reporting_date,
 					},
 				},
-				// update: (store, { data: { createProjBudgetTracking: lineItemCreated } }) => {
-				// 	try {
-				// 		const data: any = store.readQuery({
-				// 			query: GET_PROJECT_BUDGET_TARCKING,
-				// 		});
-				// 		console.log('lineItemCreated :>> ', lineItemCreated);
-				// 		store.writeQuery({
-				// 			query: GET_PROJECT_BUDGET_TARCKING,
-				// 			data: {
-				// 				projBudgetTrackings: [
-				// 					...data!.projBudgetTrackings,
-				// 					lineItemCreated,
-				// 				],
-				// 			},
-				// 		});
-				// 	} catch (err) {
-				// 		throw err;
-				// 	}
-				// },
+				update: (store, { data: { createProjBudgetTracking: lineItemCreated } }) => {
+					try {
+						const data: any = store.readQuery({
+							query: GET_PROJECT_BUDGET_TARCKING,
+						});
+						console.log("lineItemCreated :>> ", lineItemCreated);
+						console.log("data :>> ", data);
+						store.writeQuery({
+							query: GET_PROJECT_BUDGET_TARCKING,
+							data: {
+								projBudgetTrackings: [
+									...data!.projBudgetTrackings,
+									lineItemCreated,
+								],
+							},
+						});
+					} catch (err) {
+						throw err;
+					}
+				},
 			});
 			notificationDispatch(
 				setSuccessNotification("Budget Tracking Line Item Creation Success")
@@ -274,39 +295,44 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	};
 
 	const onUpdate = async (values: IBudgetTrackingLineitemForm) => {
-		// try {
-		// 	if (compObject(values, initialValues)) {
-		// 		props.handleClose();
-		// 		return;
-		// 	}
-		// 	delete values.id;
-		// 	await updateProjectBudgetTarget({
-		// 		variables: {
-		// 			id: initialValues.id,
-		// 			input: {
-		// 				project: dashboardData?.project?.id,
-		// 				...values,
-		// 			},
-		// 		},
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
-		// 	props.handleClose();
-		// } catch (err) {
-		// 	notificationDispatch(setErrorNotification("Budget Target Updation Failure"));
-		// 	props.handleClose();
-		// }
+		try {
+			const reporting_date = new Date(values.reporting_date);
+			if (compObject(values, initialValues)) {
+				props.handleClose();
+				return;
+			}
+			delete values.id;
+			await updateProjectBudgetTracking({
+				variables: {
+					id: initialValues.id,
+					input: {
+						...values,
+						reporting_date,
+					},
+				},
+			});
+			notificationDispatch(
+				setSuccessNotification("Budget Tracking Line Item Updation Success")
+			);
+			props.handleClose();
+		} catch (err) {
+			notificationDispatch(
+				setErrorNotification("Budget Tracking Line Item Updation Failure")
+			);
+			props.handleClose();
+		}
 	};
 	return (
 		<CommonDialog
 			handleClose={props.handleClose}
 			open={props.open}
 			loading={false}
-			title="New Budget Tracking Line Item"
+			title="Report Expenditure"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace="WORKSPACE 1"
 		>
 			<CommonInputForm
-				initialValues={defaultFormValues}
+				initialValues={initialValues}
 				validate={validate}
 				onSubmit={onCreate}
 				onCancel={props.handleClose}
@@ -319,4 +345,4 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	);
 }
 
-export default CreateBudgetTargetProjectDialog;
+export default CreateBudgetTrackingLineItemDialog;

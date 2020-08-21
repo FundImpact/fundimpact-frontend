@@ -18,27 +18,30 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				name
 			}
 			amount
-			annual_year {
-				name
-			}
-			financial_years_org {
-				name
-			}
-			financial_years_donor {
-				name
-			}
+			note
 			reporting_date
-			grant_periods_project {
+			donor {
+				id
 				name
 			}
 			conversion_factor
-			organization_currency {
-				currency {
-					name
-				}
+			budget_targets_project {
+				id
 			}
-			donor{
-				name
+			annual_year {
+				id
+			}
+			financial_years_org {
+				id
+			}
+			financial_years_donor {
+				id
+			}
+			grant_periods_project {
+				id
+			}
+			organization_currency {
+				id
 			}
 		}
 	}
