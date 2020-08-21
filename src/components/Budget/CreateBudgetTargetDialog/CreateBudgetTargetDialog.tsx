@@ -75,8 +75,14 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	);
 
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES);
-	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY);
 	const dashboardData = useDashBoardData();
+	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY, {
+		variables: {
+			filter: {
+				project: dashboardData?.project?.id,
+			},
+		},
+	});
 
 	useEffect(() => {
 		if (orgCurrencies) {

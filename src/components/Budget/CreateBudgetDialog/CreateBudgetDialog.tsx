@@ -14,6 +14,7 @@ import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
 import CommonDialog from "../../Dasboard/CommonDialog";
 import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
+import Project from "../../Project/Project";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
@@ -54,9 +55,19 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 					try {
 						const data = store.readQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
 						});
 						store.writeQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
 							data: {
 								orgBudgetCategory: [
 									...data!.orgBudgetCategory,
