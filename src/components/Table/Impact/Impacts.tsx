@@ -56,7 +56,7 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 						setImpactTargetLineDialog(true);
 					}}
 				>
-					Add Target Line
+					Report Achievement
 				</MenuItem>
 			</Menu>
 			{impactTargetData && (

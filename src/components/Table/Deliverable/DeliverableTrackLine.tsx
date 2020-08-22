@@ -41,14 +41,14 @@ function EditImpactTrackLineIcon({ deliverableTrackline }: { deliverableTracklin
 							deliverable_target_project:
 								deliverableTrackline.deliverable_target_project.id,
 							annual_year: deliverableTrackline.annual_year.id,
-							reporting_date: deliverableTrackline.reporting_date.toISOString(),
+							reporting_date: deliverableTrackline.reporting_date,
 							value: deliverableTrackline.value,
 							note: deliverableTrackline.note,
 						});
 						handleMenuClose();
 					}}
 				>
-					Edit Target Line
+					Edit Achievement
 				</MenuItem>
 			</Menu>
 			{deliverableTracklineData && (

@@ -2,7 +2,7 @@ import React from "react";
 import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import ImpaceUnitForm from "../CommonInputForm";
 import { IImpactUnitFormInput } from "../../../../models/impact/impactForm";
-import { impactUnitForm } from "../../../../utils/inputFields.json";
+import { impactUnitForm } from "../../../Impact/inputField.json";
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",

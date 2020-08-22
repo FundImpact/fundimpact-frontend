@@ -39,7 +39,7 @@ const mocks = [
 	{
 		request: {
 			query: GET_ORGANIZATION_BUDGET_CATEGORY,
-			variables: {},
+			variables: { filter: { project: 3 } },
 		},
 		result: {
 			data: {

@@ -58,7 +58,7 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 						setTargetLineDialog(true);
 					}}
 				>
-					Add Target Line
+					Report Achievement
 				</MenuItem>
 			</Menu>
 			{targetData && (
