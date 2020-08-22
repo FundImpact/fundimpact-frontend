@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";

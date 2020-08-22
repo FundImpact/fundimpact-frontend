@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
 import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";

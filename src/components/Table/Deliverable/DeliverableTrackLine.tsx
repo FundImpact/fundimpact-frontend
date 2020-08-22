@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
-import { IconButton, Menu, MenuItem, Typography, Table, Grid, Box } from "@material-ui/core";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import FITable from "../FITable";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";

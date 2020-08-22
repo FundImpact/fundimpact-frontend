@@ -3,7 +3,7 @@ import { GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/queries/Impact/ta
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { deliverableAndImpactHeadings } from "../constants";
-import { IconButton, Menu, MenuItem, Grid, Box, Typography } from "@material-ui/core";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FICollaspeTable from "../FICollapseTable";
 import { IImpactTarget } from "../../../models/impact/impactTarget";

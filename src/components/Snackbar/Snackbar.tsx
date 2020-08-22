@@ -1,7 +1,5 @@
 import React from "react";
 import Snackbar, { SnackbarOrigin } from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import { IAlertMsg } from "../../models/index";
 import FIAlert from "../AlertMessage/AlertMessage";
 import { useNotificationDispatch } from "../../contexts/notificationContext";

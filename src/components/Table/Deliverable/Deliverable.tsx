@@ -6,7 +6,7 @@ import { deliverableAndImpactHeadings } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import { IconButton, Menu, MenuItem, Grid, Box, Typography } from "@material-ui/core";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTracklineTable from "./DeliverableTrackLine";

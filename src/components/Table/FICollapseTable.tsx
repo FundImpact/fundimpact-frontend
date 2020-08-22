@@ -1,6 +1,6 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { Box, Typography, Grid } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
@@ -57,7 +57,7 @@ function Row(props: { row: { collaspeTable: any; column: any[] }; index: number 
 			<TableRow>
 				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
 					<Collapse in={open} timeout="auto" unmountOnExit>
-						<Box margin={1}>{row.collaspeTable && row.collaspeTable}</Box>
+						<Box margin={1}>{row.collaspeTable}</Box>
 					</Collapse>
 				</TableCell>
 			</TableRow>
