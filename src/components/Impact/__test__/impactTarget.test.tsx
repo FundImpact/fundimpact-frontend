@@ -64,7 +64,7 @@ let handleClose = jest.fn();
 beforeEach(() => {
 	act(() => {
 		impactTarget = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetails }}>
+			<DashboardProvider>
 				<NotificationProvider>
 					<ImpactTarget
 						type={IMPACT_ACTIONS.CREATE}

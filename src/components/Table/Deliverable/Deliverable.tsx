@@ -11,6 +11,7 @@ import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarge
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
 import FICollaspeTable from "../FICollapseTable";
+import FullScreenLoader from "../../commons/GlobalLoader";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const dashboardData = useDashBoardData();
@@ -99,14 +100,7 @@ export default function DeliverablesTable() {
 				};
 
 				row.collaspeTable = (
-					<Grid>
-						<Box m={2}>
-							<Typography variant="subtitle2">Achievements</Typography>
-						</Box>
-						<DeliverableTracklineTable
-							deliverableTargetId={deliverableTargetList[i].id}
-						/>
-					</Grid>
+					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 				);
 
 				if (deliverableTargetList[i].deliverable_category_unit) {
@@ -116,8 +110,8 @@ export default function DeliverablesTable() {
 							.name,
 						`${deliverableTargetList[i].target_value} 
 						${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
-						"80%",
 						`xx ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
+						"80%",
 					];
 					column.push(
 						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
@@ -132,5 +126,10 @@ export default function DeliverablesTable() {
 		}
 	}, [data]);
 
-	return <FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />;
+	return (
+		<>
+			{loading ? <FullScreenLoader /> : null}
+			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+		</>
+	);
 }

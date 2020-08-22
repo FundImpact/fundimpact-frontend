@@ -10,7 +10,8 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
-	GET_DELIVERABle_TRACKLINE_BY_DELIVERABLE_TARGET,
+	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+	UPDATE_DELIVERABLE_TRACKLINE,
 } from "../../graphql/queries/Deliverable/trackline";
 import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
 import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
@@ -54,6 +55,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		CREATE_DELIVERABLE_TRACKLINE
 	);
 
+	const [
+		updateDeliverableTrackLine,
+		{ data: updateDeliverableTrackLineRes, loading: updateDeliverableTrackLineLoading },
+	] = useMutation(UPDATE_DELIVERABLE_TRACKLINE);
+
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (annualYears) {
@@ -92,6 +98,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			props.handleClose();
 		}
 	}, [response]);
+
+	useEffect(() => {
+		if (updateDeliverableTrackLineRes) {
+			notificationDispatch(
+				setSuccessNotification("Deliverable Trackline updated successfully !")
+			);
+			props.handleClose();
+		}
+	}, [updateDeliverableTrackLineRes]);
+
 	const onCreate = async (value: IDeliverableTargetLine) => {
 		console.log(`on Created is called with: `, value);
 		delete value.financial_years_donor;
@@ -103,7 +119,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				variables: { input: value },
 				refetchQueries: [
 					{
-						query: GET_DELIVERABle_TRACKLINE_BY_DELIVERABLE_TARGET,
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 						variables: {
 							filter: {
 								deliverable_target_project: value.deliverable_target_project,
@@ -117,7 +133,30 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	};
 
-	const onUpdate = (value: IDeliverableTargetLine) => {};
+	const onUpdate = (value: IDeliverableTargetLine) => {
+		let DeliverableTargetLineId = value.id;
+		delete value.id;
+		try {
+			updateDeliverableTrackLine({
+				variables: {
+					id: DeliverableTargetLineId,
+					input: value,
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+						},
+					},
+				],
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
+		}
+	};
 
 	const clearErrors = (values: IDeliverableTargetLine) => {};
 

@@ -4,8 +4,9 @@ export const deliverableAndImpactHeadings = [
 	{ label: "Name" },
 	{ label: "Category" },
 	{ label: "Target" },
-	{ label: "Progess" },
 	{ label: "Achieved" },
+	{ label: "Progess" },
+
 	{ label: "" }, //edit icon
 ];
 
@@ -13,6 +14,6 @@ export const deliverableAndimpactTracklineHeading = [
 	{ label: "S.no" },
 	{ label: "Date" },
 	{ label: "Note" },
-	{ label: "Amount" },
+	{ label: "Achieved" },
 	{ label: "" }, //edit icon
 ];

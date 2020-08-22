@@ -82,9 +82,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	useEffect(() => {
 		if (updateImpactTrackLineRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
+			notificationDispatch(setSuccessNotification("Impact Trackline updated successfully !"));
 			props.handleClose();
 		}
 	}, [updateImpactTrackLineRes]);

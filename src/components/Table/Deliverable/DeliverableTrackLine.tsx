@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { GET_DELIVERABle_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../graphql/queries/Deliverable/trackline";
+import { GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../graphql/queries/Deliverable/trackline";
 import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Typography, Table, Grid, Box } from "@material-ui/core";
 import FITable from "../FITable";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import FullScreenLoader from "../../commons/GlobalLoader";
 
 function EditImpactTrackLineIcon({ deliverableTrackline }: { deliverableTrackline: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -40,7 +41,7 @@ function EditImpactTrackLineIcon({ deliverableTrackline }: { deliverableTracklin
 							deliverable_target_project:
 								deliverableTrackline.deliverable_target_project.id,
 							annual_year: deliverableTrackline.annual_year.id,
-							reporting_date: deliverableTrackline.reporting_date,
+							reporting_date: deliverableTrackline.reporting_date.toISOString(),
 							value: deliverableTrackline.value,
 							note: deliverableTrackline.note,
 						});
@@ -69,7 +70,7 @@ export default function DeliverablesTrackLineTable({
 	deliverableTargetId: string;
 }) {
 	console.log("hey", deliverableTargetId);
-	const { loading, data } = useQuery(GET_DELIVERABle_TRACKLINE_BY_DELIVERABLE_TARGET, {
+	const { loading, data } = useQuery(GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET, {
 		variables: { filter: { deliverable_target_project: deliverableTargetId } },
 	});
 
@@ -103,5 +104,10 @@ export default function DeliverablesTrackLineTable({
 		}
 	}, [data]);
 
-	return <FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />;
+	return (
+		<>
+			{loading ? <FullScreenLoader /> : null}
+			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
+		</>
+	);
 }

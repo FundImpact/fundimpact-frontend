@@ -4,10 +4,11 @@ import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Typography, Table, Grid, Box } from "@material-ui/core";
 import FITable from "../FITable";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
+import FullScreenLoader from "../../commons/GlobalLoader";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -90,5 +91,10 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		}
 	}, [data]);
 
-	return <FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />;
+	return (
+		<>
+			{loading ? <FullScreenLoader /> : null}
+			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
+		</>
+	);
 }

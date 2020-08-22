@@ -35,11 +35,11 @@ export default function FITable({
 	const tableHeader = StyledTableHeader();
 
 	return (
-		<TableContainer component={Paper}>
+		<>
 			{!rows.length ? (
 				<Grid container style={{ backgroundColor: "#F5F6FA" }}>
 					<Grid xs={12}>
-						<Box m={1}>
+						<Box>
 							<Typography
 								align="center"
 								variant="subtitle1"
@@ -53,36 +53,43 @@ export default function FITable({
 					</Grid>
 				</Grid>
 			) : (
-				<Table className={classes.table} aria-label="simple table">
-					<TableHead>
-						<TableRow color="primary">
-							{rows &&
-								rows.length > 0 &&
-								tableHeading.map((heading) => (
-									<TableCell
-										className={tableHeader.th}
-										key={heading.label}
-										align="left"
-									>
-										{heading.label}
-									</TableCell>
+				<Grid>
+					<Box m={1}>
+						<Typography variant="subtitle2">Achievements</Typography>
+					</Box>
+					<TableContainer component={Paper}>
+						<Table className={classes.table} aria-label="simple table">
+							<TableHead>
+								<TableRow color="primary">
+									{rows &&
+										rows.length > 0 &&
+										tableHeading.map((heading) => (
+											<TableCell
+												className={tableHeader.th}
+												key={heading.label}
+												align="left"
+											>
+												{heading.label}
+											</TableCell>
+										))}
+								</TableRow>
+							</TableHead>
+							<TableBody className={tableHeader.tbody}>
+								{rows.map((row: any, index: number) => (
+									<TableRow key={index}>
+										<TableCell component="td" scope="row">
+											{index + 1}
+										</TableCell>
+										{row.map((col: string) => {
+											return <TableCell align="left">{col}</TableCell>;
+										})}
+									</TableRow>
 								))}
-						</TableRow>
-					</TableHead>
-					<TableBody className={tableHeader.tbody}>
-						{rows.map((row: any, index: number) => (
-							<TableRow key={index}>
-								<TableCell component="td" scope="row">
-									{index + 1}
-								</TableCell>
-								{row.map((col: string) => {
-									return <TableCell align="left">{col}</TableCell>;
-								})}
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
 			)}
-		</TableContainer>
+		</>
 	);
 }

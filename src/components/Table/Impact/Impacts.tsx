@@ -11,9 +11,9 @@ import ImpactTrackLine from "../../Impact/impactTrackLine";
 import ImpactTarget from "../../Impact/impactTarget";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTrackLineTable from "./impactTrackline";
+import FullScreenLoader from "../../commons/GlobalLoader";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
-	const dashboardData = useDashBoardData();
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
 	const [impactTargetData, setImpactTargetData] = useState<IImpactTarget | null>();
@@ -29,7 +29,7 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 				<MoreVertIcon />
 			</IconButton>
 			<Menu
-				id="deliverable-target-simple-menu"
+				id="impact-target-simple-menu"
 				anchorEl={menuAnchor}
 				keepMounted
 				open={Boolean(menuAnchor)}
@@ -106,12 +106,7 @@ export default function ImpactsTable() {
 				};
 
 				row.collaspeTable = (
-					<Grid>
-						<Box m={2}>
-							<Typography variant="subtitle2">Achievements</Typography>
-						</Box>
-						<ImpactTrackLineTable impactTargetId={impactTargetProjectList[i].id} />
-					</Grid>
+					<ImpactTrackLineTable impactTargetId={impactTargetProjectList[i].id} />
 				); // row collaspeTable for impact
 
 				if (impactTargetProjectList[i].impact_category_unit) {
@@ -120,8 +115,8 @@ export default function ImpactsTable() {
 						impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
 						`${impactTargetProjectList[i].target_value}
 						${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`,
-						"50%",
 						`xx ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`,
+						"50%",
 					];
 					column.push(<EditImpactTargetIcon impactTarget={impactTargetProjectList[i]} />);
 
@@ -135,5 +130,10 @@ export default function ImpactsTable() {
 		}
 	}, [data]);
 
-	return <FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />;
+	return (
+		<>
+			{loading ? <FullScreenLoader /> : null}
+			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+		</>
+	);
 }
