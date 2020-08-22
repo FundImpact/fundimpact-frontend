@@ -1,4 +1,4 @@
-import { Typography, Table, Box } from "@material-ui/core";
+import { Typography, Table, Grid, Box } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -37,12 +37,21 @@ export default function FITable({
 	return (
 		<TableContainer component={Paper}>
 			{!rows.length ? (
-				<Box mt={5} display="flex" justifyContent="center">
-					{" "}
-					<Typography variant="h5" gutterBottom>
-						No targets Found :(
-					</Typography>
-				</Box>
+				<Grid container style={{ backgroundColor: "#F5F6FA" }}>
+					<Grid xs={12}>
+						<Box m={1}>
+							<Typography
+								align="center"
+								variant="subtitle1"
+								variantMapping={{
+									subtitle1: "h1",
+								}}
+							>
+								No Achievement Reported
+							</Typography>
+						</Box>
+					</Grid>
+				</Grid>
 			) : (
 				<Table className={classes.table} aria-label="simple table">
 					<TableHead>

@@ -10,7 +10,7 @@ import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/queries/Deliverable/category";
 import CommonForm from "../CommonForm/commonForm";
-import { deliverableUnitForm } from "../../utils/inputFields.json";
+import { deliverableUnitForm } from "./inputField.json";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };

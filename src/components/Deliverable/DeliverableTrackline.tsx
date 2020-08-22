@@ -3,24 +3,29 @@ import React, { useEffect, useState } from "react";
 import {
 	IDeliverableTargetLine,
 	DeliverableTargetLineProps,
-} from "../../models/deliverable/deliverableTargetLine";
+} from "../../models/deliverable/deliverableTrackline";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
+import {
+	CREATE_DELIVERABLE_TRACKLINE,
+	GET_DELIVERABle_TRACKLINE_BY_DELIVERABLE_TARGET,
+} from "../../graphql/queries/Deliverable/trackline";
+import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
 import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { deliverableTragetLineForm } from "../../utils/inputFields.json";
-import { GET_FINANCIAL_YEARS_ORG } from "../../graphql/queries/financialYears";
+import { deliverableTragetLineForm } from "./inputField.json";
+// import { GET_FINANCIAL_YEARS_ORG } from "../../graphql/queries/financialYears";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		deliverable_target_project: props.deliverableTarget,
 		annual_year: "",
-		value: "",
+		value: 0,
+		grant_period: "",
 		financial_years_org: "",
 		financial_years_donor: "",
 		reporting_date: "",
@@ -28,21 +33,31 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 	};
 }
 
-function DeliverableTargetLine(props: DeliverableTargetLineProps) {
+function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
 	const { data: annualYears, error: annualYearsError } = useQuery(GET_ANNUAL_YEARS);
-	const { data: fYOrg, error: fYOrgError } = useQuery(GET_FINANCIAL_YEARS_ORG, {
-		variables: { filter: { organization: DashBoardData?.organization?.id } },
-	});
-	const [createDeliverableCategory, { data: response, loading }] = useMutation(
-		CREATE_DELIVERABLE_CATEGORY
+
+	// const { data: fYOrg, error: fYOrgError } = useQuery(GET_FINANCIAL_YEARS_ORG, {
+	// 	variables: { filter: { organization: DashBoardData?.organization?.id } },
+	// });
+
+	const { data: deliverableTargets, error: deliverableTargesError } = useQuery(
+		GET_DELIVERABLE_TARGET_BY_PROJECT,
+		{
+			variables: { filter: { project: DashBoardData?.project?.id } },
+		}
 	);
+
+	const [createDeliverableTrackline, { data: response, loading }] = useMutation(
+		CREATE_DELIVERABLE_TRACKLINE
+	);
+
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (annualYears) {
-			deliverableTragetLineForm[1].optionsArray = annualYears.annualYears;
+			deliverableTragetLineForm[2].optionsArray = annualYears.annualYears;
 		}
 		if (annualYearsError) {
 			notificationDispatch(setErrorNotification("Annual Year Fetching Failed !"));
@@ -51,27 +66,55 @@ function DeliverableTargetLine(props: DeliverableTargetLineProps) {
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
-		if (fYOrg) {
-			deliverableTragetLineForm[2].optionsArray = fYOrg.financialYearsOrgList;
+		if (deliverableTargets) {
+			deliverableTragetLineForm[0].optionsArray = deliverableTargets.deliverableTargetList;
 		}
-		if (fYOrgError) {
-			notificationDispatch(setErrorNotification("Financial Years Org Fetching Failed !"));
+		if (deliverableTargesError) {
+			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
 		}
-	}, [fYOrg, fYOrgError]);
+	}, [deliverableTargets, deliverableTargesError]);
+
+	// updating annaul year field with fetched annual year list
+	// useEffect(() => {
+	// 	if (fYOrg) {
+	// 		deliverableTragetLineForm[2].optionsArray = fYOrg.financialYearsOrgList;
+	// 	}
+	// 	if (fYOrgError) {
+	// 		notificationDispatch(setErrorNotification("Financial Years Org Fetching Failed !"));
+	// 	}
+	// }, [fYOrg, fYOrgError]);
 
 	useEffect(() => {
 		if (response) {
-			notificationDispatch(setSuccessNotification("Deliverable category created !"));
+			notificationDispatch(
+				setSuccessNotification("Deliverable Trackline created successfully!")
+			);
 			props.handleClose();
 		}
 	}, [response]);
 	const onCreate = async (value: IDeliverableTargetLine) => {
-		// console.log(`on Created is called with: `, value);
-		// try {
-		// 	await createDeliverableCategory({ variables: { input: value } });
-		// } catch (error) {
-		// 	notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
-		// }
+		console.log(`on Created is called with: `, value);
+		delete value.financial_years_donor;
+		delete value.financial_years_org;
+		delete value.grant_period;
+		value.reporting_date = new Date();
+		try {
+			await createDeliverableTrackline({
+				variables: { input: value },
+				refetchQueries: [
+					{
+						query: GET_DELIVERABle_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+						},
+					},
+				],
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
+		}
 	};
 
 	const onUpdate = (value: IDeliverableTargetLine) => {};
@@ -116,4 +159,4 @@ function DeliverableTargetLine(props: DeliverableTargetLineProps) {
 	);
 }
 
-export default DeliverableTargetLine;
+export default DeliverableTrackLine;

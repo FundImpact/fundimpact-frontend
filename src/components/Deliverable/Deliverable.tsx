@@ -8,7 +8,7 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { deliverableCategoryForm } from "../../utils/inputFields.json";
+import { deliverableCategoryForm } from "./inputField.json";
 
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };

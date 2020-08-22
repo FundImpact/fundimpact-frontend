@@ -7,7 +7,7 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import dataInputFields from "../../../utils/inputFields.json";
+import dataInputFields from "../inputField.json";
 import { IInputField } from "../../../models";
 import CommonDialog from "../../Dasboard/CommonDialog";
 import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
