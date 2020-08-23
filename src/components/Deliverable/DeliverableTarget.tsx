@@ -14,7 +14,7 @@ import {
 	IDeliverableTarget,
 } from "../../models/deliverable/deliverableTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { deliverableTargetForm } from "../../utils/inputFields.json";
+import { deliverableTargetForm, deliverableTargetUpdateForm } from "./inputField.json";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
@@ -55,7 +55,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	// updating categories field with fetched categories list
 	useEffect(() => {
-		if (deliverableCategories && props.type === DELIVERABLE_ACTIONS.CREATE) {
+		if (deliverableCategories) {
 			deliverableTargetForm[1].optionsArray = deliverableCategories.deliverableCategory;
 			deliverableTargetForm[1].getInputValue = setcurrentCategory;
 		}
@@ -215,10 +215,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	const formAction = props.type;
-	if (formAction === DELIVERABLE_ACTIONS.UPDATE) {
-		delete deliverableTargetForm[1];
-		delete deliverableTargetForm[3];
-	}
 
 	return (
 		<React.Fragment>
@@ -237,7 +233,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields: deliverableTargetForm,
+						inputFields:
+							formAction === DELIVERABLE_ACTIONS.CREATE
+								? deliverableTargetForm
+								: deliverableTargetUpdateForm,
 					}}
 				/>
 			</FormDialog>

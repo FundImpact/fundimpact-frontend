@@ -5,13 +5,13 @@ import { IMPACT_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
-import { CREATE_IMPACT_TARGET } from "../../graphql/queries/Impact/target";
+import { CREATE_IMPACT_TARGET, UPDATE_IMAPACT_TARGET } from "../../graphql/queries/Impact/target";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
 import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
-import { impactTargetForm } from "../../utils/inputFields.json";
+import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
 import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -37,6 +37,11 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const [createImpactTarget, { data: impact, loading: impactLoading }] = useMutation(
 		CREATE_IMPACT_TARGET
 	);
+
+	const [
+		updateImpactTarget,
+		{ data: updateImpactTargetRes, loading: updateImpactTargetLoading },
+	] = useMutation(UPDATE_IMAPACT_TARGET);
 
 	// updating categories field with fetched categories list
 	useEffect(() => {
@@ -107,6 +112,14 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 	}, [impact]);
 
+	useEffect(() => {
+		if (updateImpactTargetRes) {
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			props.handleClose();
+		}
+	}, [updateImpactTargetRes]);
 	let initialValues: IImpactTarget = getInitialValues(props);
 
 	const onCreate = (value: IImpactTarget) => {
@@ -133,29 +146,61 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 	};
 
-	const onUpdate = (value: IImpactTarget) => {};
+	const onUpdate = (value: IImpactTarget) => {
+		let impactId = value.id;
+		delete value.id;
+		value.target_value = Number(value.target_value);
+		console.log(value, props);
+		try {
+			updateImpactTarget({
+				variables: {
+					id: impactId,
+					input: value,
+				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
+					},
+				],
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
+		}
+	};
 
 	const clearErrors = (values: IImpactTarget) => {};
 
 	const validate = (values: IImpactTarget) => {
-		let errors: Partial<IImpactTarget> = {};
-		if (!values.name && !values.name.length) {
-			errors.name = "Name is required";
+		let errors: Partial<any> = {};
+		if (props.type === IMPACT_ACTIONS.CREATE) {
+			if (!values.name && !values.name.length) {
+				errors.name = "Name is required here";
+			}
+			if (!values.project) {
+				errors.project = "Project is required here";
+			}
+			if (!values.target_value) {
+				errors.target_value = "Target value is required here";
+			}
+			if (!values.impactCategory) {
+				errors.deliverableCategory = "Deliverable Category is required here";
+			}
+			if (!values.impactUnit) {
+				errors.deliverableUnit = "Deliverable Unit is required here";
+			}
 		}
-		if (!values.project) {
-			errors.project = "Project is required";
-		}
-		if (!values.target_value) {
-			errors.target_value = "Target value is required";
-		}
-		if (!values.impactCategory) {
-			errors.impactCategory = "impact Category is required";
-		}
-		if (!values.impactUnit) {
-			errors.impactUnit = "impact Unit is required";
-		}
-		if (!values.target_value) {
-			errors.name = "Target value is required";
+
+		if (props.type === IMPACT_ACTIONS.UPDATE) {
+			if (!values.name && !values.name.length) {
+				errors.name = "Name is required here";
+			}
+			if (!values.project) {
+				errors.project = "Project is required here";
+			}
+			if (!values.target_value) {
+				errors.target_value = "Target value is required here";
+			}
 		}
 		return errors;
 	};
@@ -163,6 +208,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
+
 	return (
 		<DashboardProvider>
 			<FormDialog
@@ -180,11 +226,15 @@ function ImpactTarget(props: ImpactTargetProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields: impactTargetForm,
+						inputFields:
+							formAction === IMPACT_ACTIONS.CREATE
+								? impactTargetForm
+								: impactTargetUpdateForm,
 					}}
 				/>
 			</FormDialog>
 			{impactLoading ? <FullScreenLoader /> : null}
+			{updateImpactTargetLoading ? <FullScreenLoader /> : null}
 		</DashboardProvider>
 	);
 }

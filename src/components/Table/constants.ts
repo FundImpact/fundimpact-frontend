@@ -1,8 +1,19 @@
 export const deliverableAndImpactHeadings = [
+	{ label: "" },
 	{ label: "S.no" },
 	{ label: "Name" },
 	{ label: "Category" },
-	{ label: "Target Value" },
-	{ label: "Unit" },
+	{ label: "Target" },
+	{ label: "Achieved" },
+	{ label: "Progess" },
+
+	{ label: "" }, //edit icon
+];
+
+export const deliverableAndimpactTracklineHeading = [
+	{ label: "S.no" },
+	{ label: "Date" },
+	{ label: "Note" },
+	{ label: "Achieved" },
 	{ label: "" }, //edit icon
 ];

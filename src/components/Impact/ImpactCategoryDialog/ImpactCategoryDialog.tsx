@@ -8,7 +8,7 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import dataInputFields from "../../../utils/inputFields.json";
+import dataInputFields from "../inputField.json";
 import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";

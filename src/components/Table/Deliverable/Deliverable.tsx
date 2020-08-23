@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { useDashBoardData } from "../../contexts/dashboardContext";
-import { deliverableAndImpactHeadings } from "./constants";
+import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/queries/Deliverable/target";
+import { useQuery } from "@apollo/client";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { deliverableAndImpactHeadings } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import DeliverableTargetLine from "../Deliverable/DeliverableTargetLine";
-import DeliverableTarget from "../Deliverable/DeliverableTarget";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import FITable from "./FITable";
-import { IDeliverableTarget } from "../../models/deliverable/deliverableTarget";
-import { DELIVERABLE_ACTIONS } from "../Deliverable/constants";
+import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import DeliverableTracklineTable from "./DeliverableTrackLine";
+import FICollaspeTable from "../FICollapseTable";
+import FullScreenLoader from "../../commons/GlobalLoader";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const dashboardData = useDashBoardData();
@@ -25,7 +27,7 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 	return (
 		<>
 			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon fontSize="small" />
+				<MoreVertIcon />
 			</IconButton>
 			<Menu
 				id="deliverable-target-simple-menu"
@@ -56,7 +58,7 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 						setTargetLineDialog(true);
 					}}
 				>
-					Add Target Line
+					Report Achievement
 				</MenuItem>
 			</Menu>
 			{targetData && (
@@ -69,7 +71,7 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 				/>
 			)}
 			{targetLineDialog && (
-				<DeliverableTargetLine
+				<DeliverableTrackLine
 					open={targetLineDialog}
 					handleClose={() => setTargetLineDialog(false)}
 					type={DELIVERABLE_ACTIONS.CREATE}
@@ -90,28 +92,44 @@ export default function DeliverablesTable() {
 	useEffect(() => {
 		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
 			let deliverableTargetList = data.deliverableTargetList;
-			let arr = [];
+			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
+				let row: { collaspeTable: any; column: any[] } = {
+					collaspeTable: null,
+					column: [],
+				};
+
+				row.collaspeTable = (
+					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
+				);
+
 				if (deliverableTargetList[i].deliverable_category_unit) {
-					let row = [
+					let column = [
 						deliverableTargetList[i].name,
 						deliverableTargetList[i].deliverable_category_unit.deliverable_category_org
 							.name,
-						deliverableTargetList[i].target_value,
-						deliverableTargetList[i].deliverable_category_unit.deliverable_units_org
-							.name,
+						`${deliverableTargetList[i].target_value} 
+						${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
+						`xx ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
+						"80%",
 					];
-					row.push(
+					column.push(
 						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
 					);
-					arr.push(row);
+					row.column = column;
+					array.push(row);
 				}
 			}
-			setRows(arr);
+			setRows(array);
 		} else {
 			setRows([]);
 		}
 	}, [data]);
 
-	return <FITable tableHeading={deliverableAndImpactHeadings} rows={rows} />;
+	return (
+		<>
+			{loading ? <FullScreenLoader /> : null}
+			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+		</>
+	);
 }

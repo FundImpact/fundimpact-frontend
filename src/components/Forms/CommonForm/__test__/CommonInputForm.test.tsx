@@ -3,7 +3,7 @@ import { act, fireEvent, queries, render, RenderResult } from "@testing-library/
 import "@testing-library/jest-dom/extend-expect";
 import ImpaceUnitForm from "../CommonForm";
 import { IImpactUnitFormInput } from "../../../../models/impact/impactForm";
-import { impactUnitForm } from "../../../../utils/inputFields.json";
+import { impactUnitForm } from "../../../Impact/inputField.json";
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",

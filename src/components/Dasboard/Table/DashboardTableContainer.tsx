@@ -1,6 +1,5 @@
 import { Box, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
 import React from "react";
-
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 import BudgetCategoryDialog from "../../Budget/Dialog/BudgetCategoryDialog";
@@ -16,13 +15,15 @@ import AddButton from "../../Dasboard/AddButton";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import DeliverableTargetLine from "../../Deliverable/DeliverableTargetLine";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTarget from "../../Impact/impactTarget";
 import Snackbar from "../../Snackbar/Snackbar";
-import DeliverablesTable from "../../Table/Deliverable";
-import ImpactsTable from "../../Table/Impacts";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import DeliverablesTable from "../../Table/Deliverable/Deliverable";
+import ImpactsTable from "../../Table/Impact/Impacts";
+import ImpactTrackLine from "../../Impact/impactTrackLine";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -120,17 +121,6 @@ export default function DashboardTableContainer() {
 			table: <DeliverablesTable />,
 			createButtons: [
 				{
-					text: "Create Deliverables Category",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<Deliverable
-							type={DELIVERABLE_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							organization={dashboardData?.organization?.id}
-						/>
-					),
-				},
-				{
 					text: "Create Deliverable Targets",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
@@ -153,13 +143,23 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achivement",
+					text: "Create Deliverables Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<DeliverableTargetLine
+						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							deliverableTarget={dashboardData?.project?.id}
+							organization={dashboardData?.organization?.id}
+						/>
+					),
+				},
+				{
+					text: "Report Achivement",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTrackLine
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
 						/>
 					),
 				},
@@ -192,7 +192,16 @@ export default function DashboardTableContainer() {
 						<ImpactCategoryDialog open={open} handleClose={handleClose} />
 					),
 				},
-				{ text: "Report Achivement" },
+				{
+					text: "Report Achivement",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactTrackLine
+							open={open}
+							handleClose={handleClose}
+							type={IMPACT_ACTIONS.CREATE}
+						/>
+					),
+				},
 			],
 		},
 		{ label: "Documents", createButtons: [] },
