@@ -20,7 +20,6 @@ import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTarget from "../../Impact/impactTarget";
 import Snackbar from "../../Snackbar/Snackbar";
-import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import DeliverablesTable from "../../Table/Deliverable/Deliverable";
 import ImpactsTable from "../../Table/Impact/Impacts";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
