@@ -22,7 +22,7 @@ import {
 } from "../../../utils/inputFields.json";
 import CommonDialog from "../../Dasboard/CommonDialog";
 import CommonForm from "../../Forms/CommonForm";
-import { GET_PROJ_DONORS } from "../../../graphql/queries/project/project";
+import { GET_PROJ_DONORS } from "../../../graphql/queries/project";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
 
 const defaultFormValues: IBudgetTargetForm = {

@@ -12,7 +12,7 @@ import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { createBudgetTargetDialoginputFields } from "../../../../utils/inputTestFields.json";
 import { projectDetails, organizationDetails } from "../../../../utils/testMock.json";
-import { GET_PROJ_DONORS } from "../../../../graphql/queries/project/project";
+import { GET_PROJ_DONORS } from "../../../../graphql/queries/project";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql/queries/";
 
 const handleClose = jest.fn();
