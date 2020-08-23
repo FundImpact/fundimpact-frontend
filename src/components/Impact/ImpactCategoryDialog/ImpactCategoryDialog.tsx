@@ -10,7 +10,7 @@ import {
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import FormDialog from "../../Dasboard/FormDialog";
+import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
