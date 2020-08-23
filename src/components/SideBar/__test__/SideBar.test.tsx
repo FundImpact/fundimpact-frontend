@@ -6,6 +6,7 @@ import { GET_ORGANISATIONS } from "../../../graphql/queries";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
+import { NotificationProvider } from "../../../contexts/notificationContext";
 
 const OrgMock = [
 	{
@@ -26,11 +27,15 @@ const WSMock = [
 	{
 		id: "5",
 		name: "INSTAGRAM",
+		short_name: "INSTA",
+		description: "Instagram desc",
 		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
 	},
 	{
 		id: "13",
 		name: "FACEBOOK",
+		short_name: "FB",
+		description: "Facebook desc",
 		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
 	},
 ];
@@ -79,9 +84,11 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 			},
 		];
 		const { getByText } = await renderApollo(
-			<DashboardProvider>
-				<SideBar />
-			</DashboardProvider>,
+			<NotificationProvider>
+				<DashboardProvider>
+					<SideBar />
+				</DashboardProvider>
+			</NotificationProvider>,
 			{
 				mocks,
 				resolvers: {},

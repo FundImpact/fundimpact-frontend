@@ -146,6 +146,5 @@ describe("Budget Target Dialog tests", () => {
 			expect(saveButton).toBeEnabled();
 			await wait();
 		});
-
 	});
 });
