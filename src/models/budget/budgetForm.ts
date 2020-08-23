@@ -1,4 +1,4 @@
-import { IBudget, IBudgetTarget } from "./budget";
+import { IBudget, IBudgetTarget, IBudgetTrackingLineitem } from "./budget";
 import { IOrganizationCurrency } from "../index";
 import { FORM_ACTIONS } from "./constants";
 
@@ -7,6 +7,12 @@ export interface IBudgetFormProps {
 	onSubmit: (values: IBudget) => void;
 	validate: any;
 	onCancel: () => void;
+}
+
+export interface IBudgetTrackingLineitemForm
+	extends Omit<IBudgetTrackingLineitem, "amount" | "conversion_factor" | "reporting_date"> {
+	amount: string;
+	reporting_date: string;
 }
 
 export interface IBudgetTargetForm extends Omit<IBudgetTarget, "total_target_amount"> {

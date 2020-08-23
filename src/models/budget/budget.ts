@@ -1,5 +1,5 @@
 import { FORM_ACTIONS } from "./constants";
-import { IBudgetTargetForm } from "./budgetForm";
+import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
 
 export interface IBudget {
 	id?: string;
@@ -8,14 +8,22 @@ export interface IBudget {
 	code: string;
 }
 
+export interface IBudgetTrackingLineitem {
+	id?: string;
+	amount: number;
+	note: string;
+	budget_targets_project: string;
+	annual_year: string;
+	reporting_date: string;
+}
+
 export interface IBudgetTarget {
 	name: string;
 	description: string;
 	total_target_amount: number;
-	conversion_factor: string;
-	organization_currency: string;
 	budget_category_organization: string;
 	id?: string;
+	donor: string
 }
 
 export type ICreateBudgetTargetProjectDialogProps =
@@ -29,4 +37,18 @@ export type ICreateBudgetTargetProjectDialogProps =
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
+		};
+		
+export type ICreateBudgetTrackingLineitemDialogProps =
+	| {
+			open: boolean;
+			handleClose: () => void;
+			formAction: FORM_ACTIONS.UPDATE;
+			initialValues: IBudgetTrackingLineitem;
+	  }
+	| {
+			open: boolean;
+			handleClose: () => void;
+			formAction: FORM_ACTIONS.CREATE;
+			initialValues?: IBudgetTrackingLineitemForm;
 	  };

@@ -1,3 +1,5 @@
+import { FORM_ACTIONS } from "./budget/constants";
+import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
 
 export interface ISignUpStep {
@@ -14,16 +16,16 @@ export interface IUserSignUp {
 	password: string;
 }
 
-export interface IOrganisation {
-	orgName: string;
-	streetAdd: string;
-	city: string;
-	state: string;
-	country: string;
-	zipCode: number | null;
-	name?: string;
-	id?: string;
-}
+// export interface IOrganisation {
+// 	id?: string;
+// 	orgName: string;
+// 	streetAdd: string;
+// 	city: string;
+// 	state: string;
+// 	country: string;
+// 	zipCode: number | null;
+// 	name?: string;
+// }
 
 export interface IBasicInformation {
 	email: string;
@@ -75,8 +77,28 @@ export interface IInputField {
 	id: string;
 	multiline?: boolean;
 	rows?: number;
+	endAdornment?: string;
 	formik?: any;
 	type?: string;
+	size: any;
+}
+
+export interface IInputFields {
+	inputType: string;
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	formik?: any;
+	type?: string;
+	optionsArray?: any[];
+	inputLabelId?: string;
+	selectLabelId?: string;
+	selectId?: string;
+	getInputValue?: any;
 }
 
 export interface ISelectField {
@@ -85,8 +107,32 @@ export interface ISelectField {
 	testId: string;
 	dataTestId: string;
 	formik?: any;
-	optionsArray: [any];
-	inputLabelId: string,
-  selectLabelId: string,
-  selectId: string
+	optionsArray: any[];
+	inputLabelId: string;
+	selectLabelId: string;
+	selectId: string;
+	size: any;
+}
+
+export interface IFormDialog {
+	open: boolean;
+	handleClose: () => void;
+	loading: boolean;
+	title: string;
+	subtitle: string;
+	workspace: string;
+	project: string;
+	onUpdate?: any;
+	children: React.ReactNode;
+}
+
+export interface ICommonForm {
+	validate: any;
+	onSubmit: any;
+	onCancel: () => void;
+	onUpdate?: any;
+	inputFields: IInputField[];
+	selectFields?: ISelectField[];
+	initialValues: any;
+	formAction?: FORM_ACTIONS;
 }

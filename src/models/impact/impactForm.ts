@@ -7,7 +7,6 @@ export interface IImpactCategoryFormProps {
 	onCancel: () => void;
 }
 
-
 export interface IImpactUnitFormInput extends Omit<IImpactUnit, "target_unit"> {
 	target_unit: string;
 }

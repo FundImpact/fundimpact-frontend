@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, InputAdornment } from "@material-ui/core";
 import { IInputField } from "../../models";
 
 const InputField = ({
@@ -12,7 +12,8 @@ const InputField = ({
 	multiline = false,
 	rows = 1,
 	type = "text",
-}: IInputField) => {
+	endAdornment,
+}: Omit<IInputField, "size">) => {
 	return (
 		<TextField
 			style={{ width: "100%" }}
@@ -26,14 +27,19 @@ const InputField = ({
 			inputProps={{
 				"data-testid": testId,
 			}}
+			InputProps={{
+				endAdornment: endAdornment && (
+					<InputAdornment position="end">{endAdornment}</InputAdornment>
+				),
+			}}
 			required
 			fullWidth
 			name={`${name}`}
 			variant="outlined"
 			id={id}
 			multiline={multiline}
-      rows={rows}
-      type={type}
+			rows={rows}
+			type={type}
 		/>
 	);
 };
