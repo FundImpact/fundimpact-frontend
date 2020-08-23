@@ -2,7 +2,7 @@ import React from "react";
 import { renderApollo } from "../../../utils/test.util";
 import { fireEvent } from "@testing-library/react";
 import Project from "../Project";
-import { CREATE_PROJECT } from "../../../graphql/queries/project/project";
+import { CREATE_PROJECT } from "../../../graphql/queries/project/";
 import { GET_ORGANISATIONS } from "../../../graphql/queries/index";
 import { act } from "react-dom/test-utils";
 import { PROJECT_ACTIONS } from "../constants";
