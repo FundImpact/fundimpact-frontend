@@ -87,7 +87,7 @@ function BudgetTrackingLineItemTable({
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [getProjectBudgetTrackingData, { data, called }] = useLazyQuery(
+	const [getProjectBudgetTrackingData] = useLazyQuery(
 		GET_PROJECT_BUDGET_TARCKING
 	);
 
