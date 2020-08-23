@@ -28,7 +28,6 @@ import { getTodaysDate } from "../../../utils/index";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
 import {
 	IGET_BUDGET_TARGET_PROJECT,
-	IBudgetTargetProjectResponse,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
 

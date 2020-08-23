@@ -21,11 +21,8 @@ import {
 	IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
-import {
-	GET_PROJECT_BUDGET_TARCKING,
-	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-} from "../../../graphql/queries/budget/query";
-import { useLazyQuery, useApolloClient, useQuery } from "@apollo/client";
+import { GET_PROJECT_BUDGET_TARCKING } from "../../../graphql/queries/budget/query";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 
 const useStyles = makeStyles({
 	table: {
