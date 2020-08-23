@@ -9,6 +9,7 @@ import FITable from "../FITable";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import { getTodaysDate } from "../../../utils";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -73,7 +74,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			for (let i = 0; i < impactTrackingLineitemList.length; i++) {
 				if (impactTrackingLineitemList[i]) {
 					let row = [
-						impactTrackingLineitemList[i].reporting_date,
+						getTodaysDate(impactTrackingLineitemList[i].reporting_date),
 						impactTrackingLineitemList[i].note,
 						impactTrackingLineitemList[i].value,
 					];

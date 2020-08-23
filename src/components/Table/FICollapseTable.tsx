@@ -51,7 +51,7 @@ function Row(props: { row: { collaspeTable: any; column: any[] }; index: number 
 					{index + 1}
 				</TableCell>
 				{row.column.map((col) => {
-					return <TableCell align="left">{col}</TableCell>;
+					return col;
 				})}
 			</TableRow>
 			<TableRow>

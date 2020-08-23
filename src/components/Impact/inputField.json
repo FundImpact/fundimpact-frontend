@@ -197,6 +197,7 @@
 			"dataTestId": "impactValue",
 			"testId": "impactValueInput",
 			"label": "Value",
+			"type": "number",
 			"size": 6
 		},
 		{

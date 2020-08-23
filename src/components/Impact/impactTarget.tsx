@@ -5,7 +5,11 @@ import { IMPACT_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
-import { CREATE_IMPACT_TARGET, UPDATE_IMAPACT_TARGET } from "../../graphql/queries/Impact/target";
+import {
+	CREATE_IMPACT_TARGET,
+	UPDATE_IMAPACT_TARGET,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+} from "../../graphql/queries/Impact/target";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
@@ -161,6 +165,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 					{
 						query: GET_IMPACT_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { impactTargetProject: impactId },
+						},
 					},
 				],
 			});

@@ -144,6 +144,11 @@ export const UPDATE_IMAPACT_TARGET = gql`
 	}
 `;
 
+export const GET_ACHIEVED_VALLUE_BY_TARGET = gql`
+	query getImpactTrackingTotalValueByTargetProject($filter: JSON) {
+		impactTrackingSpendValue(where: $filter)
+	}
+`;
 export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 	query getImpactTargetProjectByImpactCategoryUnit($filter: JSON) {
 		impactTargetProjectList(where: $filter) {

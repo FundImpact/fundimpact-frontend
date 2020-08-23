@@ -9,6 +9,7 @@ import FITable from "../FITable";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import { getTodaysDate } from "../../../utils";
 
 function EditImpactTrackLineIcon({ deliverableTrackline }: { deliverableTrackline: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -86,7 +87,7 @@ export default function DeliverablesTrackLineTable({
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
 					let row = [
-						deliverableTrackingLineitemList[i].reporting_date,
+						getTodaysDate(deliverableTrackingLineitemList[i].reporting_date),
 						deliverableTrackingLineitemList[i].note,
 						deliverableTrackingLineitemList[i].value,
 					];

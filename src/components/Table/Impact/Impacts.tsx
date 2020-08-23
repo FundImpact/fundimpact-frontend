@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/queries/Impact/target";
+import {
+	GET_IMPACT_TARGET_BY_PROJECT,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+} from "../../../graphql/queries/Impact/target";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useLazyQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { deliverableAndImpactHeadings } from "../constants";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FICollaspeTable from "../FICollapseTable";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
@@ -79,6 +82,37 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		</>
 	);
 }
+
+function ImpactTargetAchievementAndProgress({
+	impactTargetId,
+	impactTargetValue,
+	impactTargetUnit,
+}: {
+	impactTargetId: string;
+	impactTargetValue: number;
+	impactTargetUnit: string;
+}) {
+	const { data } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+		variables: { filter: { impactTargetProject: impactTargetId } },
+	});
+	const [impactTargetAchieved, setImpactTargetAchieved] = useState<number>();
+	const [impactTargetProgess, setImpactTargetProgess] = useState<string>();
+	useEffect(() => {
+		if (data) {
+			setImpactTargetAchieved(data.impactTrackingSpendValue);
+			setImpactTargetProgess(
+				((data.impactTrackingSpendValue / impactTargetValue) * 100).toFixed(2)
+			);
+		}
+	}, [data]);
+	return (
+		<>
+			<TableCell>{`${impactTargetAchieved} ${impactTargetUnit}`}</TableCell>
+			<TableCell>{impactTargetProgess} %</TableCell>
+		</>
+	);
+}
+
 export default function ImpactsTable() {
 	const [getImpactTargetByProject, { loading, data }] = useLazyQuery(
 		GET_IMPACT_TARGET_BY_PROJECT
@@ -111,13 +145,25 @@ export default function ImpactsTable() {
 
 				if (impactTargetProjectList[i].impact_category_unit) {
 					let column = [
-						impactTargetProjectList[i].name,
-						impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
-						`${impactTargetProjectList[i].target_value}
-						${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`,
-						`xx ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`,
-						"50%",
+						<TableCell>{impactTargetProjectList[i].name}</TableCell>,
+						<TableCell>
+							{
+								impactTargetProjectList[i].impact_category_unit.impact_category_org
+									.name
+							}
+						</TableCell>,
+						<TableCell>{`${impactTargetProjectList[i].target_value} ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`}</TableCell>,
 					];
+					column.push(
+						<ImpactTargetAchievementAndProgress
+							impactTargetId={impactTargetProjectList[i].id}
+							impactTargetValue={impactTargetProjectList[i].target_value}
+							impactTargetUnit={
+								impactTargetProjectList[i].impact_category_unit.impact_units_org
+									.name
+							}
+						/>
+					);
 					column.push(<EditImpactTargetIcon impactTarget={impactTargetProjectList[i]} />);
 
 					row.column = column;

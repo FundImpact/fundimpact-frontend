@@ -10,7 +10,10 @@ import {
 	UPDATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 } from "../../graphql/queries/Impact/trackline";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
+import {
+	GET_IMPACT_TARGET_BY_PROJECT,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+} from "../../graphql/queries/Impact/target";
 import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
@@ -22,7 +25,7 @@ function getInitialValues(props: ImpactTargetLineProps) {
 	return {
 		impact_target_project: props.impactTarget,
 		annual_year: "",
-		value: "",
+		value: 0,
 		grant_period: "",
 		financial_years_org: "",
 		financial_years_donor: "",
@@ -91,7 +94,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		delete value.financial_years_donor;
 		delete value.financial_years_org;
 		delete value.grant_period;
-		value.reporting_date = "2020-08-25";
+		value.reporting_date = new Date();
 		console.log(`on Created is called with: `, value);
 		try {
 			await createImpactTrackline({
@@ -101,6 +104,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 						variables: {
 							filter: { impact_target_project: value.impact_target_project },
+						},
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { impactTargetProject: value.impact_target_project },
 						},
 					},
 				],
@@ -124,6 +133,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 						variables: {
 							filter: { impact_target_project: value.impact_target_project },
+						},
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { impactTargetProject: value.impact_target_project },
 						},
 					},
 				],
@@ -156,7 +171,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={"New Impact Target Line"}
+				title={"Report Achievement"}
 				subtitle={"Manage Targets"}
 				workspace={"workspace"}
 				open={formIsOpen}

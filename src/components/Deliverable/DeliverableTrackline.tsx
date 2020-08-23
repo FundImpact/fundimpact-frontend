@@ -13,7 +13,10 @@ import {
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
 } from "../../graphql/queries/Deliverable/trackline";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
+import {
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+} from "../../graphql/queries/Deliverable/target";
 import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
@@ -126,6 +129,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							},
 						},
 					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: value.deliverable_target_project },
+						},
+					},
 				],
 			});
 		} catch (error) {
@@ -149,6 +158,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							filter: {
 								deliverable_target_project: value.deliverable_target_project,
 							},
+						},
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: value.deliverable_target_project },
 						},
 					},
 				],
@@ -175,7 +190,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={"New Deliverable Target Line"}
+				title={"Report Achievement"}
 				subtitle={"Manage Targets"}
 				workspace={"workspace"}
 				open={formIsOpen}

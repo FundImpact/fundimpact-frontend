@@ -8,6 +8,7 @@ import {
 	CREATE_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	UPDATE_DELIVERABLE_TARGET,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
 } from "../../graphql/queries/Deliverable/target";
 import {
 	DeliverableTargetProps,
@@ -169,6 +170,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					{
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: deliverableId },
+						},
 					},
 				],
 			});

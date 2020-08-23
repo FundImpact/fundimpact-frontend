@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/queries/Deliverable/target";
+import {
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+} from "../../../graphql/queries/Deliverable/target";
 import { useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { deliverableAndImpactHeadings } from "../constants";
@@ -12,6 +15,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
 import FICollaspeTable from "../FICollapseTable";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import TableCell from "@material-ui/core/TableCell";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const dashboardData = useDashBoardData();
@@ -26,9 +30,11 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 	};
 	return (
 		<>
-			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
-			</IconButton>
+			<TableCell>
+				<IconButton aria-label="delete" onClick={handleMenuClick}>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
 			<Menu
 				id="deliverable-target-simple-menu"
 				anchorEl={menuAnchor}
@@ -82,6 +88,36 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 	);
 }
 
+function DeliverableTargetAchievementAndProgress({
+	deliverableTargetId,
+	deliverableTargetValue,
+	deliverableTargetUnit,
+}: {
+	deliverableTargetId: string;
+	deliverableTargetValue: number;
+	deliverableTargetUnit: string;
+}) {
+	const { data } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+		variables: { filter: { deliverableTargetProject: deliverableTargetId } },
+	});
+	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
+	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
+	useEffect(() => {
+		if (data) {
+			setDeliverableTargetAchieved(data.deliverableTrackingTotalValue);
+			setDeliverableTargetProgess(
+				((data.deliverableTrackingTotalValue / deliverableTargetValue) * 100).toFixed(2)
+			);
+		}
+	}, [data]);
+	return (
+		<>
+			<TableCell>{`${DeliverableTargetAchieved} ${deliverableTargetUnit}`}</TableCell>
+			<TableCell>{DeliverableTargetProgess} %</TableCell>
+		</>
+	);
+}
+
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
 	const { loading, data } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
@@ -105,14 +141,29 @@ export default function DeliverablesTable() {
 
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
-						deliverableTargetList[i].name,
-						deliverableTargetList[i].deliverable_category_unit.deliverable_category_org
-							.name,
-						`${deliverableTargetList[i].target_value} 
-						${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
-						`xx ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}`,
-						"80%",
+						<TableCell>{deliverableTargetList[i].name}</TableCell>,
+						<TableCell>
+							{
+								deliverableTargetList[i].deliverable_category_unit
+									.deliverable_category_org.name
+							}
+						</TableCell>,
+						,
+						<TableCell>
+							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}
+							`}
+						</TableCell>,
 					];
+					column.push(
+						<DeliverableTargetAchievementAndProgress
+							deliverableTargetId={deliverableTargetList[i].id}
+							deliverableTargetValue={deliverableTargetList[i].target_value}
+							deliverableTargetUnit={
+								deliverableTargetList[i].deliverable_category_unit
+									.deliverable_units_org.name
+							}
+						/>
+					);
 					column.push(
 						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
 					);
