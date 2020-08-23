@@ -10,7 +10,7 @@ import {
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import CommonDialog from "../../Dasboard/CommonDialog";
+import FormDialog from "../../Dasboard/FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
@@ -65,7 +65,7 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 	};
 
 	return (
-		<CommonDialog
+		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={loading}
@@ -81,7 +81,7 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 				validate={validate}
 				initialValues={initialValues}
 			/>
-		</CommonDialog>
+		</FormDialog>
 	);
 }
 

@@ -1,11 +1,11 @@
 import React from "react";
 import { Dialog, Box, Grid, CircularProgress, Typography } from "@material-ui/core";
-import { ICommonDialog } from "../../../models";
+import { IFormDialog } from "../../../models";
 
 //This is a common dialog which will be used by all other dialog and form will be passed as
 //children and the title, subtitle, workspace will be passes in props
 
-function CommonDialog({
+function FormDialog({
 	open,
 	handleClose,
 	loading,
@@ -14,7 +14,7 @@ function CommonDialog({
 	workspace,
 	children,
 	project
-}: ICommonDialog) {
+}: IFormDialog) {
 	return (
 		<Dialog
 			fullWidth
@@ -56,4 +56,4 @@ function CommonDialog({
 	);
 }
 
-export default CommonDialog;
+export default FormDialog;

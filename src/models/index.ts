@@ -114,7 +114,7 @@ export interface ISelectField {
 	size: any;
 }
 
-export interface ICommonDialog {
+export interface IFormDialog {
 	open: boolean;
 	handleClose: () => void;
 	loading: boolean;

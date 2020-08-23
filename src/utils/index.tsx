@@ -14,3 +14,7 @@ export const getTodaysDate = (dateArg?: Date): string => {
 		.map((ele: string) => (ele.length > 1 ? ele : "0" + ele))
 		.join("-");
 };
+
+export const compareObjectKeys = (obj1: any, obj2: any): boolean =>
+	Object.keys(obj1).length == Object.keys(obj2).length &&
+	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] == obj1[key]);

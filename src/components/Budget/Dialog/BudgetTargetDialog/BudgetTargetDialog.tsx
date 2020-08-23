@@ -4,26 +4,27 @@ import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	CREATE_PROJECT_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
-} from "../../../graphql/queries/budget";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
-import { ICreateBudgetTargetProjectDialogProps } from "../../../models/budget/budget";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
-import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
+} from "../../../../graphql/queries/budget";
+import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/queries/budget";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { IGET_BUDGET_TARGET_PROJECT } from "../../../../models/budget/query";
+import { ICreateBudgetTargetProjectDialogProps } from "../../../../models/budget/budget";
+import { FORM_ACTIONS } from "../../../../models/budget/constants";
+import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
 import {
 	setErrorNotification,
 	setSuccessNotification,
-} from "../../../reducers/notificationReducer";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
+} from "../../../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import {
 	createBudgetTargetFormSelectFields,
 	createBudgetTargetForm,
-} from "../../../utils/inputFields.json";
-import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonForm from "../../Forms/CommonForm";
-import { GET_PROJ_DONORS } from "../../../graphql/queries/project";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
+} from "../../../../utils/inputFields.json";
+import FormDialog from "../../../Dasboard/FormDialog";
+import CommonForm from "../../../Forms/CommonForm";
+import { GET_PROJ_DONORS } from "../../../../graphql/queries/project";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql/queries";
+import { compareObjectKeys } from "../../../../utils";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -32,10 +33,6 @@ const defaultFormValues: IBudgetTargetForm = {
 	budget_category_organization: "",
 	donor: "",
 };
-
-const compObject = (obj1: any, obj2: any): boolean =>
-	Object.keys(obj1).length == Object.keys(obj2).length &&
-	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] == obj1[key]);
 
 const validate = (values: IBudgetTargetForm) => {
 	let errors: Partial<IBudgetTargetForm> = {};
@@ -59,7 +56,7 @@ const validate = (values: IBudgetTargetForm) => {
 	return errors;
 };
 
-function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
+function BudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 
@@ -169,7 +166,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 
 	const onUpdate = async (values: IBudgetTargetForm) => {
 		try {
-			if (compObject(values, initialValues)) {
+			if (compareObjectKeys(values, initialValues)) {
 				props.handleClose();
 				return;
 			}
@@ -195,7 +192,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 	};
 
 	return (
-		<CommonDialog
+		<FormDialog
 			handleClose={props.handleClose}
 			open={props.open}
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
@@ -214,8 +211,8 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 				formAction={props.formAction}
 				onUpdate={onUpdate}
 			/>
-		</CommonDialog>
+		</FormDialog>
 	);
 }
 
-export default CreateBudgetTargetProjectDialog;
+export default BudgetTargetProjectDialog;

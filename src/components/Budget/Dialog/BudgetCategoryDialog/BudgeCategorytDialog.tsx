@@ -1,19 +1,19 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
-import { IBudget } from "../../../models/budget/budget";
-import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/queries/budget";
-import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { IBudget } from "../../../../models/budget/budget";
+import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
+import { IGET_BUDGET_CATEGORY } from "../../../../models/budget/query";
+import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import {
 	setErrorNotification,
 	setSuccessNotification,
-} from "../../../reducers/notificationReducer";
-import dataInputFields from "../../../utils/inputFields.json";
-import { IInputField } from "../../../models";
-import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonForm from "../../Forms/CommonForm";
+} from "../../../../reducers/notificationReducer";
+import dataInputFields from "../../../../utils/inputFields.json";
+import { IInputField } from "../../../../models";
+import FormDialog from "../../../Dasboard/FormDialog";
+import CommonForm from "../../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
@@ -37,7 +37,7 @@ const validate = (values: IBudget) => {
 	return errors;
 };
 
-function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+function BudgetCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const [createNewOrgBudgetCategory, { loading }] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
 
 	const notificationDispatch = useNotificationDispatch();
@@ -87,7 +87,7 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 
 	return (
 		<>
-			<CommonDialog
+			<FormDialog
 				handleClose={handleClose}
 				open={open}
 				loading={loading}
@@ -103,9 +103,9 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 					onCancel={handleClose}
 					inputFields={inputFields}
 				/>
-			</CommonDialog>
+			</FormDialog>
 		</>
 	);
 }
 
-export default CreateBudgetDialog;
+export default BudgetCategoryDialog;

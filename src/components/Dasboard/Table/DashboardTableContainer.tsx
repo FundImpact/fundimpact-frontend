@@ -3,12 +3,12 @@ import React from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
-import CreateBudgetDialog from "../../Budget/CreateBudgetDialog";
-import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
+import BudgetCategoryDialog from "../../Budget/Dialog/BudgetCategoryDialog";
+import BudgetTargetDialog from "../../Budget/Dialog/BudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
-import CreateBudgetLineitemDialog from "../../Budget/CreateBudgetLineitemDialog";
+import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
 
@@ -84,7 +84,7 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetDialog open={open} handleClose={handleClose} />
+						<BudgetCategoryDialog open={open} handleClose={handleClose} />
 					),
 				},
 				{ text: "Create Deliverables" },
@@ -96,7 +96,7 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Target",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetTargetDialog
+						<BudgetTargetDialog
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
@@ -106,7 +106,7 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Tracking Lineitem",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetLineitemDialog
+						<BudgetLineitemDialog
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
@@ -230,9 +230,9 @@ export default function DashboardTableContainer() {
 
 			{tabs.map((tab, index) => (
 				<TabContent key={index} value={value} index={index}>
-					<Box className={classes.contentHeading}>
+					{/* <Box className={classes.contentHeading}>
 						<Typography variant="subtitle2">Budget Tracker</Typography>
-					</Box>
+					</Box> */}
 					{tab.table}
 					{/* {GetTable(tab.label)} */}
 					<AddButton createButtons={tab.createButtons} />

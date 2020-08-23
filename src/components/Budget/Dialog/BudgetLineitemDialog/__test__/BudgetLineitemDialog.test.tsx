@@ -1,20 +1,20 @@
 import React from "react";
-import CreateBudgetLineitemDialog from "../CreateBudgetLineitemDialog";
+import BudgetLineitemDialog from "../BudgetLineitemDialog";
 import { fireEvent, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { DashboardProvider } from "../../../../../contexts/dashboardContext";
 import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	GET_BUDGET_TARGET_PROJECT,
-} from "../../../../graphql/queries/budget";
-import { GET_ANNUAL_YEAR_LIST, GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql/queries";
-import { renderApollo } from "../../../../utils/test.util";
+} from "../../../../../graphql/queries/budget";
+import { GET_ANNUAL_YEAR_LIST, GET_ORG_CURRENCIES_BY_ORG } from "../../../../../graphql/queries";
+import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../contexts/notificationContext";
-import { FORM_ACTIONS } from "../../../../models/budget/constants";
-import { budgetLineItemInputFields } from "../../../../utils/inputTestFields.json";
-import { projectDetails, organizationDetails } from "../../../../utils/testMock.json";
-import { getTodaysDate } from "../../../../utils";
+import { NotificationProvider } from "../../../../../contexts/notificationContext";
+import { FORM_ACTIONS } from "../../../../../models/budget/constants";
+import { budgetLineItemInputFields } from "../../../../../utils/inputTestFields.json";
+import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
+import { getTodaysDate } from "../../../../../utils";
 
 const handleClose = jest.fn();
 
@@ -123,7 +123,7 @@ beforeEach(() => {
 				<DashboardProvider
 					defaultState={{ project: projectDetails, organization: organizationDetails }}
 				>
-					<CreateBudgetLineitemDialog
+					<BudgetLineitemDialog
 						formAction={FORM_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}

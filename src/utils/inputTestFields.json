@@ -1,10 +1,10 @@
 {
-	"createBudgetDialogInputFields": [
+	"BudgetCategoryDialogInputFields": [
 		{ "id": "createBudgetNameInput", "key": "name" },
 		{ "id": "createBudgetCodeInput", "key": "code" },
 		{ "id": "createBudgetDescriptionInput", "key": "description" }
 	],
-	"createBudgetTargetDialoginputFields": [
+	"BudgetTargetDialoginputFields": [
 		{ "id": "createBudgetTargetNameInput", "key": "name" },
 		{ "id": "createBudgetTargetTotalTargetAmountInput", "key": "total_target_amount" },
 		{ "id": "createBudgetTargetDescriptionInput", "key": "description" },

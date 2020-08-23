@@ -13,7 +13,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu/Menu";
-import CreateBudgetLineitemDialog from "../../Budget/CreateBudgetLineitemDialog";
+import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { getTodaysDate } from "../../../utils";
 import { IBudgetTrackingLineitem } from "../../../models/budget/budget";
@@ -142,7 +142,7 @@ function BudgetTrackingLineItemTable({
 
 	return (
 		<TableContainer component={Paper}>
-			<CreateBudgetLineitemDialog
+			<BudgetLineitemDialog
 				open={openDialog}
 				handleClose={() => {
 					setOpenDialog(false);

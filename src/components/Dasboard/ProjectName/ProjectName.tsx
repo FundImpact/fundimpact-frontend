@@ -41,7 +41,7 @@ export default function ProjectName() {
 	const [updateProject] = useMutation(UPDATE_PROJECT);
 
 	useEffect(() => {
-		if (data && data.project) {
+		if (data) {
 			setProject({
 				name: data.project.name,
 				short_name: data.project.short_name,

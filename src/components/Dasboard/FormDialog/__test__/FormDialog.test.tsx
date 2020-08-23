@@ -1,5 +1,5 @@
 import React from "react";
-import CommonDialog from "../CommonDialog";
+import FormDialog from "../FormDialog";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 
@@ -19,7 +19,7 @@ const intialFormValue: any = {
 beforeEach(() => {
 	act(() => {
 		dialog = renderApollo(
-			<CommonDialog
+			<FormDialog
 				open={true}
 				handleClose={handleClose}
 				onUpdate={onUpdate}

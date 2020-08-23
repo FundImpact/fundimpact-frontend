@@ -8,7 +8,7 @@ import { ICommonForm } from "./model";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
-			color: "white",
+			color: theme.palette.background.paper,
 			marginRight: theme.spacing(2),
 		},
 	})

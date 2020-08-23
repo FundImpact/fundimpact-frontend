@@ -14,7 +14,7 @@ import {
 	IGET_BUDGET_TARGET_PROJECT,
 } from "../../../models/budget/query";
 import React, { useState } from "react";
-import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
+import BudgetTargetDialog from "../../Budget/Dialog/BudgetTargetDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import SimpleMenu from "../../Menu/Menu";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -25,7 +25,7 @@ import Collapse from "@material-ui/core/Collapse";
 import BudgetTrackingLineItemTable from "../BudgetTrackingLineItemTable";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../utils";
-import CreateBudgetLineitemDialog from "../../Budget/CreateBudgetLineitemDialog";
+import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
 import AmountSpent from './AmountSpent';
 
@@ -184,7 +184,7 @@ function BudgetTargetTable() {
 
 	return (
 		<TableContainer component={Paper}>
-			<CreateBudgetTargetDialog
+			<BudgetTargetDialog
 				open={openDialog}
 				handleClose={() => {
 					setOpenDialog(false);
@@ -193,7 +193,7 @@ function BudgetTargetTable() {
 				formAction={FORM_ACTIONS.UPDATE}
 				initialValues={getInitialValues(selectedTargetBudget.current)}
 			/>
-			<CreateBudgetLineitemDialog
+			<BudgetLineitemDialog
 				open={openBudgetTrackingLineItem}
 				handleClose={() => {
 					setOpenBudgetTrackingLineItem(false);

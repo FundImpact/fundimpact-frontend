@@ -11,7 +11,7 @@ import { ICommonForm } from "../../../models";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
-			color: "white",
+			color: theme.palette.background.paper,
 		},
 	})
 );

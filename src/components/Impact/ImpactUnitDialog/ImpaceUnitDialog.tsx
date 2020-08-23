@@ -9,7 +9,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
-import CommonDialog from "../../Dasboard/CommonDialog";
+import FormDialog from "../../Dasboard/FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
@@ -70,7 +70,7 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 	};
 
 	return (
-		<CommonDialog
+		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={loading}
@@ -86,7 +86,7 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 				onCancel={handleClose}
 				inputFields={inputFields}
 			/>
-		</CommonDialog>
+		</FormDialog>
 	);
 }
 
