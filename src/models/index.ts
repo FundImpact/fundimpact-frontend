@@ -76,6 +76,7 @@ export interface IInputField {
 	id: string;
 	multiline?: boolean;
 	rows?: number;
+	endAdornment?: string;
 	formik?: any;
 	type?: string;
 	size: any;
@@ -101,11 +102,12 @@ export interface ICommonDialog {
 	title: string;
 	subtitle: string;
 	workspace: string;
+	project: string;
 	onUpdate?: any;
 	children: React.ReactNode;
 }
 
-export interface ICommonInputForm {
+export interface ICommonForm {
 	validate: any;
 	onSubmit: any;
 	onCancel: () => void;

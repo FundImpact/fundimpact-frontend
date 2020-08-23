@@ -6,7 +6,7 @@ import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
 import BudgetTargetTable from "../../Table/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
-import CreateBudgetTrackingLineitemDialog from "../../Budget/CreateBudgetTrackingLineitemDialog";
+import CreateBudgetLineitemDialog from "../../Budget/CreateBudgetLineitemDialog";
 import DefaultTable from "../../Table/Table";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
@@ -86,7 +86,7 @@ const tabs = [
 			{
 				text: "Create Budget Tracking Lineitem",
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<CreateBudgetTrackingLineitemDialog
+					<CreateBudgetLineitemDialog
 						formAction={FORM_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
@@ -162,27 +162,6 @@ export default function DashboardTableContainer() {
 
 			{tabs.map((tab, index) => (
 				<TabContent key={index} value={value} index={index}>
-					<Box className={classes.contentHeading}>
-						<strong> Budget Tracker </strong>
-						<div>
-							<Button
-								disableElevation
-								className={classes.button}
-								variant={"contained"}
-								color="secondary"
-							>
-								Fund Received
-							</Button>
-							<Button
-								disableElevation
-								className={classes.button}
-								variant={"contained"}
-								color="primary"
-							>
-								Report Fund Spend
-							</Button>
-						</div>
-					</Box>
 					{GetTable(tab.label)}
 
 					<AddButton createButtons={tab.createButtons} />

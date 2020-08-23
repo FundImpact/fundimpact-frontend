@@ -151,12 +151,6 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 		projectBudgetTargets(where: $filter) {
 			id
 			name
-			organization_currency {
-				id
-				currency {
-					name
-				}
-			}
 			project {
 				name
 				id
@@ -167,7 +161,10 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 			}
 			description
 			total_target_amount
-			conversion_factor
+			donor{
+				name
+				id
+			}
 		}
 	}
 `;

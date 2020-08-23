@@ -7,10 +7,9 @@
 	"createBudgetTargetDialoginputFields": [
 		{ "id": "createBudgetTargetNameInput", "key": "name" },
 		{ "id": "createBudgetTargetTotalTargetAmountInput", "key": "total_target_amount" },
-		{ "id": "createBudgetTargetOrganizationCurrencyOption", "key": "organization_currency" },
+		{ "id": "createBudgetTargetDescriptionInput", "key": "description" },
 		{ "id": "createBudgetTargetBudgetCategoryOption", "key": "budget_category_organization" },
-		{ "id": "createBudgetTargetConversionFactorInput", "key": "conversion_factor" },
-		{ "id": "createBudgetTargetDescriptionInput", "key": "description" }
+		{ "id": "createBudgetTargetDonorOption", "key": "donor" }
 	],
 	"impactCategoeyDialogFields": [
 		{ "id": "createImpactNameInput", "key": "name" },
@@ -25,5 +24,12 @@
 		{ "id": "createImpactUnitCodeInput", "key": "code" },
 		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit" },
 		{ "id": "createImpactUnitDescriptionInput", "key": "description" }
+	],
+	"budgetLineItemInputFields": [
+		{ "id": "createBudgetLineitemConversionFactorInput", "key": "reporting_date" },
+		{ "id": "createBudgetLineitemAmountInput", "key": "amount" },
+		{ "id": "createBudgetLineitemNoteInput", "key": "note" },
+		{ "id": "createBudgetLineitemAnnualYearOption", "key": "annual_year" },
+		{ "id": "createBudgetLineitemBudgetTargetsOption", "key": "budget_targets_project" }
 	]
 }

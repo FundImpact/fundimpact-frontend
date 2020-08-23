@@ -5,7 +5,7 @@ import { IInputField, ISelectField } from "../../../models";
 import InputField from "../../InputField";
 import SelectField from "../../SelectField";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
-import { ICommonInputForm } from "../../../models";
+import { ICommonForm } from "../../../models";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function CommonInputForm({
+function CommonForm({
 	initialValues,
 	validate,
 	onSubmit,
@@ -24,7 +24,7 @@ function CommonInputForm({
 	inputFields,
 	selectFields = [],
 	formAction = FORM_ACTIONS.CREATE,
-}: ICommonInputForm) {
+}: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
 		const errors = validate(initialValue) as object;
@@ -59,6 +59,9 @@ function CommonInputForm({
 											}
 											rows={element.rows ? element.rows : 1}
 											type={element.type ? element.type : "text"}
+											endAdornment={
+												element.endAdornment ? element.endAdornment : ""
+											}
 										/>
 									</Grid>
 								);
@@ -85,9 +88,10 @@ function CommonInputForm({
 							<Grid item xs={12}>
 								<Box component="span" mr={2}>
 									<Button
+										className={classes.button}
 										disableRipple
 										variant="contained"
-										color="primary"
+										color="secondary"
 										type="submit"
 										data-testid="createSaveButton"
 										disabled={!formik.isValid}
@@ -98,7 +102,7 @@ function CommonInputForm({
 								<Button
 									className={classes.button}
 									variant="contained"
-									color="secondary"
+									color="primary"
 									data-testid="createCancelButton"
 									disableRipple
 									onClick={onCancel}
@@ -114,4 +118,4 @@ function CommonInputForm({
 	);
 }
 
-export default CommonInputForm;
+export default CommonForm;

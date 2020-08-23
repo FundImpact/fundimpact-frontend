@@ -11,7 +11,7 @@ import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
 import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
+import CommonForm from "../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -71,9 +71,10 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 			loading={loading}
 			title="New Impact Category"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
-			workspace="WORKSPACE 1"
+			workspace={dashboardData?.workspace?.name}
+			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>
-			<CommonInputForm
+			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
 				onSubmit={onSubmit}

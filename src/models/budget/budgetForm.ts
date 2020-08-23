@@ -12,7 +12,6 @@ export interface IBudgetFormProps {
 export interface IBudgetTrackingLineitemForm
 	extends Omit<IBudgetTrackingLineitem, "amount" | "conversion_factor" | "reporting_date"> {
 	amount: string;
-	conversion_factor: string;
 	reporting_date: string;
 }
 

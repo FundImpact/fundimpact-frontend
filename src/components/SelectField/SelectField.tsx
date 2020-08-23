@@ -31,9 +31,8 @@ const SelectField = ({
 	inputLabelId,
 	selectLabelId,
 	selectId,
-}: Omit<ISelectField, "size"| 'type'>) => {
+}: Omit<ISelectField, "size" | "type">) => {
 	const classes = useStyles();
-
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
 			<InputLabel id={inputLabelId}>{label}</InputLabel>

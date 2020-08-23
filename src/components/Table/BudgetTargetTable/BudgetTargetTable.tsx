@@ -13,12 +13,11 @@ import {
 	IBudgetTargetProjectResponse,
 	IGET_BUDGET_TARGET_PROJECT,
 } from "../../../models/budget/query";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import SimpleMenu from "../../Menu/Menu";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { GET_PROJECT_BUDGET_TARCKING } from "../../../graphql/queries/budget/query";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -26,8 +25,9 @@ import Collapse from "@material-ui/core/Collapse";
 import BudgetTrackingLineItemTable from "../BudgetTrackingLineItemTable";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../utils";
-import CreateBudgetTrackingLineitemDialog from "../../Budget/CreateBudgetTrackingLineitemDialog";
-import { usePagination } from "../../../hooks/pagination";
+import CreateBudgetLineitemDialog from "../../Budget/CreateBudgetLineitemDialog";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
+import AmountSpent from './AmountSpent';
 
 const useStyles = makeStyles({
 	table: {
@@ -54,27 +54,11 @@ const getBudgetTrackingLineitemInitialvalues = (
 	return {
 		amount: "",
 		note: "",
-		conversion_factor: "",
 		budget_targets_project,
 		annual_year: "",
-		financial_years_org: "",
-		financial_years_donor: "",
-		grant_periods_project: "",
-		organization_currency: "",
-		donor: "",
 		reporting_date: getTodaysDate(),
 	};
 };
-
-const tableHeading = [
-	{ label: "" },
-	{ label: "S.no" },
-	{ label: "Target Name" },
-	{ label: "Budget Category" },
-	{ label: "Total Amount" },
-	{ label: "Spent" },
-	{ label: "Progress %" },
-];
 
 function getInitialValues(
 	budgetTargetsProject: IBudgetTargetProjectResponse | null
@@ -83,18 +67,25 @@ function getInitialValues(
 		name: budgetTargetsProject ? budgetTargetsProject.name : "",
 		description: budgetTargetsProject ? budgetTargetsProject.description : "",
 		total_target_amount: budgetTargetsProject ? budgetTargetsProject.total_target_amount : "",
-		conversion_factor: budgetTargetsProject ? budgetTargetsProject.conversion_factor : "",
 		id: budgetTargetsProject ? budgetTargetsProject.id : "",
-		organization_currency: budgetTargetsProject
-			? budgetTargetsProject.organization_currency.id
-			: "",
 		budget_category_organization: budgetTargetsProject
-			? budgetTargetsProject.budget_category_organization.id
+			? budgetTargetsProject?.budget_category_organization?.id
 			: "",
+		donor: budgetTargetsProject ? budgetTargetsProject?.donor?.id : "",
 	};
 }
 
-let projectcBudgetTarcking: any = {};
+const tableHeading = [
+	{ label: "" },
+	{ label: "S.no" },
+	{ label: "Target Name" },
+	{ label: "Budget Category" },
+	{ label: "Donor" },
+	{ label: "Total Amount" },
+	{ label: "Spent" },
+	{ label: "Progress %" },
+	{ label: "" },
+];
 
 function BudgetTargetTable() {
 	const classes = useStyles();
@@ -102,23 +93,28 @@ function BudgetTargetTable() {
 	const tableHeader = StyledTableHeader();
 	const menuId = React.useRef("");
 	const selectedTargetBudget = React.useRef<IBudgetTargetProjectResponse | null>(null);
-	const currentProject = useDashBoardData()?.project;
+	const dashboardData = useDashBoardData();
+	const currentProject = dashboardData?.project;
+
 	const [openTableRows, setOpenTableRows] = useState<boolean[]>([]);
-
-	const [getProjectBudgetTrackingData] = useLazyQuery(GET_PROJECT_BUDGET_TARCKING);
-
-	const [loadBudgetTarget] = useLazyQuery(GET_BUDGET_TARGET_PROJECT, {
-		variables: {
-			filter: {
-				project: currentProject?.id,
-			},
-		},
-	});
-	const [openDialog, setOpenDialog] = useState(false);
+	const [loadBudgetTarget] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [openBudgetTrackingLineItem, setOpenBudgetTrackingLineItem] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	// const [nextRequest, {count, data}] = usePagination();
+	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
+		variables: {
+			filter: {
+				organization: dashboardData?.organization?.id,
+				isHomeCurrency: true,
+			},
+		},
+	});
+
+	const reInitializeRef = (): void => {
+		selectedTargetBudget.current = null;
+		menuId.current = "";
+	};
 
 	let oldCachedBudgetTargetProjectData: IGET_BUDGET_TARGET_PROJECT | null = null;
 	try {
@@ -132,24 +128,17 @@ function BudgetTargetTable() {
 		});
 	} catch (error) {}
 
-	let oldCachedProjectBudgetTrackingData: any = null;
-	try {
-		oldCachedProjectBudgetTrackingData = apolloClient.readQuery({
-			query: GET_PROJECT_BUDGET_TARCKING,
-		});
-	} catch (error) {}
-
 	React.useEffect(() => {
-		if (!oldCachedProjectBudgetTrackingData) {
-			getProjectBudgetTrackingData();
+		if (!oldCachedBudgetTargetProjectData) {
+			loadBudgetTarget({
+				variables: {
+					filter: {
+						project: currentProject?.id,
+					},
+				},
+			});
 		}
-	}, [oldCachedProjectBudgetTrackingData]);
-
-	React.useEffect(() => {
-		if (currentProject && !oldCachedBudgetTargetProjectData) {
-			loadBudgetTarget();
-		}
-	}, [currentProject]);
+	}, [oldCachedBudgetTargetProjectData, currentProject, loadBudgetTarget]);
 
 	React.useEffect(() => {
 		if (oldCachedBudgetTargetProjectData) {
@@ -157,19 +146,6 @@ function BudgetTargetTable() {
 			setOpenTableRows(arr);
 		}
 	}, [oldCachedBudgetTargetProjectData]);
-
-	//change any and rename ele and change to old cache
-	React.useEffect(() => {
-		if (oldCachedProjectBudgetTrackingData) {
-			projectcBudgetTarcking = {};
-			oldCachedProjectBudgetTrackingData.projBudgetTrackings.forEach((ele: any) => {
-				if (!projectcBudgetTarcking[ele.budget_targets_project.id]) {
-					projectcBudgetTarcking[ele.budget_targets_project.id] = [];
-				}
-				projectcBudgetTarcking[ele.budget_targets_project.id].push(ele);
-			});
-		}
-	}, [oldCachedProjectBudgetTrackingData]);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -212,19 +188,16 @@ function BudgetTargetTable() {
 				open={openDialog}
 				handleClose={() => {
 					setOpenDialog(false);
-					selectedTargetBudget.current = null;
-					menuId.current = "";
+					reInitializeRef();
 				}}
 				formAction={FORM_ACTIONS.UPDATE}
 				initialValues={getInitialValues(selectedTargetBudget.current)}
 			/>
-			<CreateBudgetTrackingLineitemDialog
+			<CreateBudgetLineitemDialog
 				open={openBudgetTrackingLineItem}
 				handleClose={() => {
 					setOpenBudgetTrackingLineItem(false);
-					//same thing is written above
-					selectedTargetBudget.current = null;
-					menuId.current = "";
+					reInitializeRef();
 				}}
 				formAction={FORM_ACTIONS.CREATE}
 				initialValues={getBudgetTrackingLineitemInitialvalues(
@@ -234,9 +207,15 @@ function BudgetTargetTable() {
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						{tableHeading.map((heading) => (
-							<TableCell className={tableHeader.th} key={heading.label} align="left">
-								{heading.label}
+						{tableHeading.map((heading: { label: string }, index: number) => (
+							<TableCell className={tableHeader.th} key={index} align="left">
+								{heading.label == "Total Amount"
+									? `Total Amount (${
+											orgCurrencies?.orgCurrencies[0].currency.code
+												? orgCurrencies?.orgCurrencies[0].currency.code
+												: ""
+									  })`
+									: heading.label}
 							</TableCell>
 						))}
 					</TableRow>
@@ -288,37 +267,37 @@ function BudgetTargetTable() {
 												}
 											</TableCell>
 											<TableCell align="left">
+												{budgetTargetsProject?.donor?.name}
+											</TableCell>
+											<TableCell align="left">
 												{budgetTargetsProject.total_target_amount}
 											</TableCell>
 											<TableCell align="left">
-												{projectcBudgetTarcking[budgetTargetsProject.id]
-													? projectcBudgetTarcking[
-															budgetTargetsProject.id
-													  ].reduce(
-															(accumulator: any, current: any) =>
-																accumulator + current.amount,
-															0
-													  )
-													: 0}
+												<AmountSpent
+													budgetTargetId={budgetTargetsProject.id}
+												>
+													{(amount: number) => {
+														return <span>{amount}</span>;
+													}}
+												</AmountSpent>
 											</TableCell>
 											<TableCell align="left">
-												{projectcBudgetTarcking[budgetTargetsProject.id] &&
-												parseInt(budgetTargetsProject.total_target_amount) >
-													0
-													? (
-															(projectcBudgetTarcking[
-																budgetTargetsProject.id
-															].reduce(
-																(accumulator: any, current: any) =>
-																	accumulator + current.amount,
-																0
-															) /
-																parseInt(
-																	budgetTargetsProject.total_target_amount
-																)) *
-															100
-													  ).toFixed(2)
-													: 0}
+												<AmountSpent
+													budgetTargetId={budgetTargetsProject.id}
+												>
+													{(amount: number) => {
+														return (
+															<span>
+																{(
+																	(amount * 100) /
+																	parseInt(
+																		budgetTargetsProject.total_target_amount
+																	)
+																).toFixed(2)}
+															</span>
+														);
+													}}
+												</AmountSpent>
 											</TableCell>
 											<TableCell>
 												<IconButton
@@ -348,7 +327,7 @@ function BudgetTargetTable() {
 										<TableRow>
 											<TableCell
 												style={{ paddingBottom: 0, paddingTop: 0 }}
-												colSpan={8}
+												colSpan={9}
 											>
 												<Collapse
 													in={openTableRows[index]}
@@ -356,31 +335,33 @@ function BudgetTargetTable() {
 													unmountOnExit
 												>
 													<Box m={1}>
-														{projectcBudgetTarcking[
-															budgetTargetsProject.id
-														] ? (
-															<BudgetTrackingLineItemTable
-																budgetTrackingLineItems={
-																	projectcBudgetTarcking[
-																		budgetTargetsProject.id
-																	]
-																}
-															/>
-														) : (
-															<Grid container>
-																<Grid xs={12}>
+														<Grid container>
+															<Grid xs={12}>
+																<Box m={1}>
 																	<Typography
-																		align="center"
+																		align="left"
 																		variant="subtitle1"
+																		style={{
+																			fontSize: "0.8rem",
+																		}}
 																		variantMapping={{
 																			subtitle1: "h1",
 																		}}
 																	>
-																		No Expenditue Reported
+																		{
+																			budgetTargetsProject.description
+																		}
 																	</Typography>
-																</Grid>
+																</Box>
 															</Grid>
-														)}
+														</Grid>
+														<BudgetTrackingLineItemTable
+															budgetTargetId={budgetTargetsProject.id}
+															currency={
+																orgCurrencies?.orgCurrencies[0]
+																	.currency.code
+															}
+														/>
 													</Box>
 												</Collapse>
 											</TableCell>

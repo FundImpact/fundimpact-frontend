@@ -13,8 +13,7 @@ import {
 import dataInputFields from "../../../utils/inputFields.json";
 import { IInputField } from "../../../models";
 import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
-import Project from "../../Project/Project";
+import CommonForm from "../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
@@ -57,7 +56,7 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									organization: dashboardData?.organization?.id,
 								},
 							},
 						});
@@ -65,7 +64,7 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									organization: dashboardData?.organization?.id,
 								},
 							},
 							data: {
@@ -75,12 +74,7 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 								],
 							},
 						});
-					} catch (err) {
-						notificationDispatch(
-							setErrorNotification("Budget Category Creation Failure")
-						);
-						handleClose();
-					}
+					} catch (err) {}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Creation Success"));
@@ -99,9 +93,10 @@ function CreateBudgetDialog({ open, handleClose }: { open: boolean; handleClose:
 				loading={loading}
 				title="New Budget Category"
 				subtitle="Physical addresses of your organizatin like headquater, branch etc."
-				workspace="WORKSPACE 1"
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 			>
-				<CommonInputForm
+				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
 					onSubmit={onSubmit}

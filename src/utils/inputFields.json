@@ -126,22 +126,14 @@
 			"size": 6
 		},
 		{
-			"name": "conversion_factor",
-			"id": "conversion-factor",
-			"dataTestId": "createBudgetTargetConversionFactor",
-			"testId": "createBudgetTargetConversionFactorInput",
-			"label": "Conversion Factor",
-			"size": 6,
-			"type": "number"
-		},
-		{
 			"name": "total_target_amount",
 			"id": "total-target-amount",
 			"dataTestId": "createBudgetTargetTotalTargetAmount",
 			"testId": "createBudgetTargetTotalTargetAmountInput",
 			"label": "Total Taget Amount",
-			"size": 12,
-			"type": "number"
+			"size": 6,
+			"type": "number",
+			"endAdornment": ""
 		},
 		{
 			"name": "description",
@@ -156,24 +148,6 @@
 	],
 	"createBudgetTrackingLineitemForm": [
 		{
-			"name": "amount",
-			"id": "amount",
-			"dataTestId": "createBudgetLineitemAmount",
-			"testId": "createBudgetLineitemAmountInput",
-			"label": "Amount",
-			"size": 6,
-			"type": "number"
-		},
-		{
-			"name": "conversion_factor",
-			"id": "conversion-factor",
-			"dataTestId": "createBudgetLineitemConversionFactor",
-			"testId": "createBudgetLineitemConversionFactorInput",
-			"label": "Conversion Factor",
-			"size": 6,
-			"type": "number"
-		},
-		{
 			"name": "reporting_date",
 			"id": "reporting-date",
 			"dataTestId": "createBudgetLineitemReportingDate",
@@ -181,6 +155,16 @@
 			"label": "Reporting date",
 			"size": 6,
 			"type": "date"
+		},
+		{
+			"name": "amount",
+			"id": "amount",
+			"dataTestId": "createBudgetLineitemAmount",
+			"testId": "createBudgetLineitemAmountInput",
+			"label": "Amount",
+			"size": 6,
+			"type": "number",
+			"endAdornment": ""
 		},
 		{
 			"name": "note",
@@ -195,23 +179,23 @@
 	],
 	"createBudgetTargetFormSelectFields": [
 		{
-			"name": "organization_currency",
-			"label": "Choose Organization Currency",
-			"size": 6,
-			"testId": "createBudgetTargetOrganizationCurrencyOption",
-			"dataTestId": "createBudgetTargetOrganizationCurrency",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
-		},
-		{
 			"name": "budget_category_organization",
 			"label": "Choose Budget Category",
 			"size": 6,
 			"testId": "createBudgetTargetBudgetCategoryOption",
 			"dataTestId": "createBudgetTargetBudgetCategory",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"type": "select"
+		},
+		{
+			"name": "donor",
+			"label": "Choose Donor",
+			"size": 6,
+			"testId": "createBudgetTargetDonorOption",
+			"dataTestId": "createBudgetTargetDonor",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -224,8 +208,8 @@
 			"name": "budget_targets_project",
 			"label": "Choose Budget Target",
 			"size": 6,
-			"testId": "createBudgetLineitemBudgetTargetsProjectOption",
-			"dataTestId": "createBudgetLineitemBudgetTargetsProject",
+			"testId": "createBudgetLineitemBudgetTargetsOption",
+			"dataTestId": "createBudgetLineitemBudgetTargets",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -241,67 +225,7 @@
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
-		},
-		{
-			"name": "financial_years_org",
-			"label": "Choose Organization Financial Year",
-			"size": 6,
-			"testId": "createBudgetLineitemOrganizationFinancialYearOption",
-			"dataTestId": "createBudgetLineitemOrganizationFinancialYear",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
-		},
-		{
-			"name": "donor",
-			"label": "Choose Donor",
-			"size": 6,
-			"testId": "createBudgetLineitemDonorOption",
-			"dataTestId": "createBudgetLineitemDonor",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
-		},
-		{
-			"name": "financial_years_donor",
-			"label": "Choose Donor Financial Year",
-			"size": 6,
-			"testId": "createBudgetLineitemDonorFinancialYearOption",
-			"dataTestId": "createBudgetLineitemDonorFinancialYear",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
-		},
-		{
-			"name": "grant_periods_project",
-			"label": "Choose Project Garnt Period",
-			"size": 6,
-			"testId": "createBudgetLineitemProjectGarntPeriodOption",
-			"dataTestId": "createBudgetLineitemProjectGarntPeriod",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
-		},
-		{
-			"name": "organization_currency",
-			"label": "Choose Organization Currency",
-			"size": 6,
-			"testId": "createBudgetLineitemOrganizationCurrencyOption",
-			"dataTestId": "createBudgetLineitemOrganizationCurrency",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
+			"selectId": "demo-simple-select-outlined-2",
 			"type": "select"
 		}
 	]

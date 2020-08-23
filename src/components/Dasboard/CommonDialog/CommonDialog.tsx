@@ -13,6 +13,7 @@ function CommonDialog({
 	subtitle,
 	workspace,
 	children,
+	project
 }: ICommonDialog) {
 	return (
 		<Dialog
@@ -37,7 +38,7 @@ function CommonDialog({
 								{workspace}
 							</Typography>
 							<Box mt={1}>
-								<Typography variant="subtitle2">Project Name One</Typography>
+								<Typography variant="subtitle2">{project}</Typography>
 							</Box>
 						</Box>
 					</Grid>

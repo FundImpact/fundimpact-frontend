@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, useApolloClient, useLazyQuery } from "@apollo/client";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	CREATE_PROJECT_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/queries/budget";
-import { GET_ORG_CURRENCIES } from "../../../graphql/queries";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/queries/budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
@@ -22,15 +21,16 @@ import {
 	createBudgetTargetForm,
 } from "../../../utils/inputFields.json";
 import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
+import CommonForm from "../../Forms/CommonForm";
+import { GET_PROJ_DONORS } from "../../../graphql/queries/project/project";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql/queries";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
 	total_target_amount: "",
 	description: "",
-	conversion_factor: "",
-	organization_currency: "",
 	budget_category_organization: "",
+	donor: "",
 };
 
 const compObject = (obj1: any, obj2: any): boolean =>
@@ -49,20 +49,20 @@ const validate = (values: IBudgetTargetForm) => {
 	if (!values.total_target_amount) {
 		errors.total_target_amount = "Total target amount is required";
 	}
-	if (!values.conversion_factor) {
-		errors.conversion_factor = "Conversion factor is required";
-	}
 	if (!values.budget_category_organization) {
 		errors.budget_category_organization = "Budget Category is required";
 	}
-	if (!values.organization_currency) {
-		errors.organization_currency = "Organization Currency is required";
+	if (!values.donor) {
+		errors.donor = "Donor is required";
 	}
+
 	return errors;
 };
 
 function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps) {
 	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
+
 	const [createProjectBudgetTarget, { loading: creatingProjectBudgetTarget }] = useMutation(
 		CREATE_PROJECT_BUDGET_TARGET
 	);
@@ -74,9 +74,25 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 		UPDATE_PROJECT_BUDGET_TARGET
 	);
 
-	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES);
-	const dashboardData = useDashBoardData();
+	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
+		variables: {
+			filter: {
+				organization: dashboardData?.organization?.id,
+				isHomeCurrency: true,
+			},
+		},
+	});
+
+
 	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY, {
+		variables: {
+			filter: {
+				organization: dashboardData?.organization?.id,
+			},
+		},
+	});
+
+	const { data: donors } = useQuery(GET_PROJ_DONORS, {
 		variables: {
 			filter: {
 				project: dashboardData?.project?.id,
@@ -86,19 +102,25 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 
 	useEffect(() => {
 		if (orgCurrencies) {
-			createBudgetTargetFormSelectFields[0].optionsArray = orgCurrencies.orgCurrencies.map(
-				(element: { id: string; currency: { name: string } }) => {
-					return {
-						name: element.currency.name,
-						id: element.id,
-					};
+			createBudgetTargetForm[1].endAdornment = orgCurrencies.orgCurrencies[0].currency.code;
+		}
+	}, [orgCurrencies]);
+
+	useEffect(() => {
+		if (donors) {
+			createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors.map(
+				({ donor }: { donor: { id: string; name: string } }) => {
+					return { id: donor.id, name: donor.name };
 				}
 			);
 		}
+	}, [donors]);
+
+	useEffect(() => {
 		if (budgetCategory) {
-			createBudgetTargetFormSelectFields[1].optionsArray = budgetCategory.orgBudgetCategory;
+			createBudgetTargetFormSelectFields[0].optionsArray = budgetCategory.orgBudgetCategory;
 		}
-	}, [orgCurrencies, budgetCategory]);
+	}, [budgetCategory]);
 
 	const onCreate = async (values: IBudgetTargetForm) => {
 		try {
@@ -109,9 +131,9 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 						...values,
 					},
 				},
-				update: (store, { data: { createProjectBudgetTarget: projectCreated } }) => {
+				update: async (store, { data: { createProjectBudgetTarget: projectCreated } }) => {
 					try {
-						const data = store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
+						const dataRead = await store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
@@ -128,7 +150,7 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 							},
 							data: {
 								projectBudgetTargets: [
-									...data!.projectBudgetTargets,
+									...dataRead!.projectBudgetTargets,
 									projectCreated,
 								],
 							},
@@ -180,9 +202,10 @@ function CreateBudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialog
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
 			title="New Budget Target"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
-			workspace="WORKSPACE 1"
+			workspace={dashboardData?.workspace?.name}
+			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>
-			<CommonInputForm
+			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
 				onSubmit={onCreate}
