@@ -1,6 +1,6 @@
 import React from "react";
-import FormDialog from "../FormDialog";
-import { renderApollo } from "../../../../utils/test.util";
+import FormDialog from "../../FormDialog";
+import { renderApollo } from "../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 
 const handleClose = jest.fn();
@@ -22,15 +22,11 @@ beforeEach(() => {
 			<FormDialog
 				open={true}
 				handleClose={handleClose}
-				onUpdate={onUpdate}
-				initialValues={intialFormValue}
-				inputFields={[]}
-				loading={false}
-				onSubmit={onSubmit}
 				title="new title"
 				subtitle="new subtitle"
-				validate={validate}
 				workspace="new workspace"
+				loading={false}
+				validate={validate}
 			/>
 		);
 	});
