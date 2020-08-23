@@ -75,11 +75,11 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>
 			<CommonForm
-				initialValues={initialValues}
-				validate={validate}
-				onSubmit={onSubmit}
-				onCancel={handleClose}
 				inputFields={inputFields}
+				onCancel={handleClose}
+				onSubmit={onSubmit}
+				validate={validate}
+				initialValues={initialValues}
 			/>
 		</CommonDialog>
 	);
