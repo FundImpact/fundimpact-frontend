@@ -1,7 +1,9 @@
+import { Box, Button, createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
+import { Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form } from "formik";
-import { Grid, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
-import { IInputField, ISelectField } from "../../../models";
+
+import { ICommonInputForm, IInputField, ISelectField } from "../../../models";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
 import InputField from "../../InputField";
 import SelectField from "../../SelectField";
 import { FORM_ACTIONS } from "../../../models/budget/constants";

@@ -1,4 +1,5 @@
 import { PROJECT_ACTIONS } from "../../components/Project/constants";
+import { IWorkspace } from "../workspace/workspace";
 
 export interface IProject {
 	id?: number;
@@ -8,10 +9,16 @@ export interface IProject {
 	workspace?: number | string;
 }
 
-export type ProjectProps =
-	| { type: PROJECT_ACTIONS.CREATE; workspaces: { id: number; name: string }[] }
+export type ProjectProps = {
+	workspaces: NonNullable<Pick<IWorkspace, "id" | "name">>[];
+	open: boolean;
+	handleClose: () => void;
+} & (
+	| {
+			type: PROJECT_ACTIONS.CREATE;
+	  }
 	| {
 			type: PROJECT_ACTIONS.UPDATE;
 			data: IProject;
-			workspaces: { id: number; name: string }[];
-	  };
+	  }
+);

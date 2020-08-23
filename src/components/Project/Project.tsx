@@ -1,10 +1,15 @@
 import { useMutation } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
+import { useDashBoardData } from "../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { GET_ORGANISATIONS } from "../../graphql/queries";
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project/project";
 import { IProject, ProjectProps } from "../../models/project/project";
-import Snackbar from "../Snackbar/Snackbar";
-import CreateProject from "../Forms/CreateProject/createProject";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { projectForm } from "../../utils/inputFields.json";
+import CommonForm from "../CommonForm/commonForm";
+import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 
@@ -19,43 +24,47 @@ function getInitialValues(props: ProjectProps) {
 }
 
 function Project(props: ProjectProps) {
+	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
 	let initialValues: IProject = getInitialValues(props);
-	const [
-		createNewproject,
-		{ data: response, loading: createLoading, error: createError },
-	] = useMutation(CREATE_PROJECT);
+	const [createNewproject, { data: response, loading: createLoading }] = useMutation(
+		CREATE_PROJECT
+	);
 
 	useEffect(() => {
 		if (response) {
-			console.log(`Got response `, response);
+			notificationDispatch(setSuccessNotification("Project Successfully created !"));
+			props.handleClose();
 		}
 	}, [response]);
 
 	const onCreate = (value: IProject) => {
-		console.log(`on Created is called with: `, value);
-		createNewproject({ variables: { input: value } });
-
-		console.log("seeting loading to true");
+		let org: any = dashboardData?.organization?.id;
+		try {
+			createNewproject({
+				variables: { input: value },
+				refetchQueries: [
+					{
+						query: GET_ORGANISATIONS,
+					},
+				],
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Project creation Failed !"));
+		}
 	};
 
-	const [
-		updateProject,
-		{ data: updateResponse, loading: updateLoading, error: updateError },
-	] = useMutation(UPDATE_PROJECT);
+	const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
+		UPDATE_PROJECT
+	);
 
-	useEffect(() => {
-		console.log(`Got update response `, updateResponse);
-	}, [updateResponse]);
+	useEffect(() => {}, [updateResponse]);
 
 	const onUpdate = (value: IProject) => {
-		console.log(`on Update is called`);
-		console.log("seeting loading to true");
 		// updateProject({ variables: { payload: value, projectID: 4 } });
 	};
 
-	const clearErrors = (values: IProject) => {
-		console.log(`Clear Errors is called`);
-	};
+	const clearErrors = (values: IProject) => {};
 
 	const validate = (values: IProject) => {
 		let errors: Partial<IProject> = {};
@@ -68,34 +77,35 @@ function Project(props: ProjectProps) {
 		return errors;
 	};
 
-	const formState = props.type;
-	const workspaces = props.workspaces;
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
+	const workspaces: any = props.workspaces;
+	projectForm[1].optionsArray = workspaces;
 	return (
-		<React.Fragment>
-			<CreateProject
-				{...{
-					initialValues,
-					formState,
-					onCreate,
-					onUpdate,
-					clearErrors,
-					validate,
-					workspaces,
-				}}
+		<>
+			<FormDialog
+				title={"New Project"}
+				subtitle={"create a new Project"}
+				workspace={"workspace"}
+				open={formIsOpen}
+				handleClose={onCancel}
 			>
-				{props.type === PROJECT_ACTIONS.CREATE && createError ? (
-					<Snackbar severity="error" msg={"Create Failed"} />
-				) : null}
-				{props.type === PROJECT_ACTIONS.UPDATE && updateError ? (
-					<Snackbar severity="error" msg={"Update Failed"} />
-				) : null}
-			</CreateProject>
-			{response && response.createOrgProject && response.createOrgProject.name && (
-				<Snackbar severity="success" msg={"Successfully created"} />
-			)}
+				<CommonForm
+					{...{
+						initialValues,
+						validate,
+						onCreate,
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: projectForm,
+					}}
+				/>
+			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
-		</React.Fragment>
+		</>
 	);
 }
 

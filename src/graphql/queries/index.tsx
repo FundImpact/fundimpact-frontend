@@ -6,6 +6,14 @@ export const GET_ORGANISATIONS = gql`
 			id
 			name
 			short_name
+			organization_registration_type {
+				id
+				reg_type
+			}
+			account {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -16,6 +24,8 @@ export const GET_WORKSPACES_BY_ORG = gql`
 		orgWorkspaces(where: $filter) {
 			id
 			name
+			short_name
+			description
 			organization {
 				id
 				name
@@ -96,6 +106,15 @@ export const GET_ANNUAL_YEAR_LIST = gql`
 			short_name
 			start_date
 			end_date
+		}
+	}
+`;
+export const GET_ANNUAL_YEARS = gql`
+	query {
+		annualYears {
+			id
+			name
+			short_name
 		}
 	}
 `;

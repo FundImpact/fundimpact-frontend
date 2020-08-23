@@ -52,7 +52,7 @@ function WorkspaceForm({
 		if (!showForm) {
 			Close();
 		}
-	}, [showForm]);
+	}, [showForm, Close]);
 
 	return (
 		<Dialog fullWidth open={showForm} aria-labelledby="form-dialog-title">

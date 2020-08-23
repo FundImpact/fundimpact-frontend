@@ -32,11 +32,7 @@ const DashboardProvider = ({
 	children: React.ReactNode | React.ReactElement;
 	defaultState?: IDashboardDataContext;
 }) => {
-	const [state, dispatch] = React.useReducer(
-		dashboardReducer,
-		defaultState,
-		() => defaultState
-	);
+	const [state, dispatch] = React.useReducer(dashboardReducer, defaultState, () => defaultState);
 	return (
 		<DashboardDataContext.Provider value={state}>
 			<DashboardDispatchContext.Provider value={dispatch}>

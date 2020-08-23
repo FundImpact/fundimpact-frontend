@@ -5,7 +5,7 @@ export interface IGET_WORKSPACES_BY_ORG {
 }
 
 export interface IOrganisationWorkspaces {
-	id: number;
+	id: string;
 	name: string;
 	__typename: string;
 	organization: IOrganisation;
@@ -13,6 +13,13 @@ export interface IOrganisationWorkspaces {
 
 export interface IUPDATE_WORKSPACE_Response {
 	updateWorkspace: {
+		workspace: IOrganisationWorkspaces;
+	};
+}
+
+export interface ICreate_Workspace_Response {
+	createWorkspace: {
+		__typename: string;
 		workspace: IOrganisationWorkspaces;
 	};
 }

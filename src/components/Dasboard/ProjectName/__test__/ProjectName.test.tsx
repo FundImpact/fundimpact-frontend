@@ -4,6 +4,9 @@ import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import ProjectName from "../ProjectName";
 import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from "../../../../graphql/queries/project/project";
 import { act } from "react-dom/test-utils";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { projectDetails } from "../../../../utils/testMock.json";
 
 const getProjectMock = {
 	__typename: "Project",
@@ -19,7 +22,7 @@ const mocks = [
 	{
 		request: {
 			query: GET_PROJECT_BY_ID,
-			variables: { id: 1 },
+			variables: { id: 3 },
 		},
 		result: { data: { project: getProjectMock } },
 	},
@@ -27,7 +30,7 @@ const mocks = [
 		request: {
 			query: UPDATE_PROJECT,
 			variables: {
-				id: 1,
+				id: 3,
 				input: { name: "ARTISTAAN", short_name: "KMK", description: "" },
 			},
 		},
@@ -40,10 +43,17 @@ const mocks = [
 let projectName: any;
 beforeEach(() => {
 	act(() => {
-		projectName = renderApollo(<ProjectName />, {
-			mocks,
-			resolvers: {},
-		});
+		projectName = renderApollo(
+			<DashboardProvider defaultState={{ project: projectDetails }}>
+				<NotificationProvider>
+					<ProjectName />
+				</NotificationProvider>
+			</DashboardProvider>,
+			{
+				mocks,
+				resolvers: {},
+			}
+		);
 	});
 });
 

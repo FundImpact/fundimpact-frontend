@@ -41,7 +41,12 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				id
 			}
 			organization_currency {
-				id
+				currency {
+					name
+				}
+			}
+			donor {
+				name
 			}
 		}
 	}

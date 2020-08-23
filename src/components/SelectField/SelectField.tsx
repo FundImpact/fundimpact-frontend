@@ -1,13 +1,14 @@
-import React from "react";
 import {
-	FormControl,
-	InputLabel,
-	Select,
-	FormHelperText,
-	MenuItem,
-	makeStyles,
 	createStyles,
+	FormControl,
+	FormHelperText,
+	InputLabel,
+	makeStyles,
+	MenuItem,
+	Select,
 } from "@material-ui/core";
+import React from "react";
+
 import { ISelectField } from "../../models";
 
 const useStyles = makeStyles(() =>

@@ -1,6 +1,7 @@
-import { IDashboardDataContext, IOrganisation } from "../models";
-import { IOrganisationWorkspaces } from "../models/workspace/query";
+import { IDashboardDataContext } from "../models";
+import { IOrganisation } from "../models/organisation/types";
 import { IProject } from "../models/project/project";
+import { IOrganisationWorkspaces } from "../models/workspace/query";
 
 interface Action {
 	type: "SET_ORGANISATION" | "SET_WORKSPACE" | "SET_PROJECT";
