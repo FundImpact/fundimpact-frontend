@@ -66,13 +66,13 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 
 	return (
 		<FormDialog
-			handleClose={handleClose}
-			open={open}
-			loading={loading}
-			title="New Impact Category"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
-			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={dashboardData?.workspace?.name}
+			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title="New Impact Category"
+			loading={loading}
+			open={open}
+			handleClose={handleClose}
 		>
 			<CommonForm
 				inputFields={inputFields}
