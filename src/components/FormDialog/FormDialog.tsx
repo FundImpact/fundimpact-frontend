@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, Box, Grid, Typography } from "@material-ui/core";
+import { Dialog, Box, Grid, Typography, CircularProgress } from "@material-ui/core";
 
 function FormDialog({
 	open,
@@ -9,6 +9,7 @@ function FormDialog({
 	workspace,
 	project,
 	children,
+	loading,
 }: {
 	open: boolean;
 	handleClose: () => void;
@@ -17,6 +18,7 @@ function FormDialog({
 	workspace: string;
 	project?: string;
 	children: any;
+	loading?: boolean;
 }) {
 	return (
 		<Dialog
@@ -50,6 +52,11 @@ function FormDialog({
 					</Grid>
 				</Grid>
 			</Box>
+			{loading ? (
+				<Box position="fixed" bottom={0} alignSelf="center">
+					<CircularProgress />
+				</Box>
+			) : null}
 		</Dialog>
 	);
 }

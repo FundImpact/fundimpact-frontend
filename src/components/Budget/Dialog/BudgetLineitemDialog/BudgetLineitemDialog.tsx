@@ -17,7 +17,7 @@ import {
 	createBudgetTrackingLineitemFormSelectFields,
 	createBudgetTrackingLineitemForm,
 } from "../../../../utils/inputFields.json";
-import FormDialog from "../../../Dasboard/FormDialog";
+import FormDialog from "../../../FormDialog";
 import CommonForm from "../../../Forms/CommonForm";
 import {
 	GET_PROJECT_BUDGET_TARCKING,

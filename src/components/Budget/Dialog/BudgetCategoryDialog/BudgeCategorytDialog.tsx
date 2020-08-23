@@ -12,7 +12,7 @@ import {
 } from "../../../../reducers/notificationReducer";
 import dataInputFields from "../../../../utils/inputFields.json";
 import { IInputField } from "../../../../models";
-import FormDialog from "../../../Dasboard/FormDialog";
+import FormDialog from "../../../FormDialog";
 import CommonForm from "../../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
