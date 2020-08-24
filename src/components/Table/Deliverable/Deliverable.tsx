@@ -18,7 +18,6 @@ import FullScreenLoader from "../../commons/GlobalLoader";
 import TableCell from "@material-ui/core/TableCell";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
-	const dashboardData = useDashBoardData();
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
 	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
@@ -109,7 +108,7 @@ function DeliverableTargetAchievementAndProgress({
 				((data.deliverableTrackingTotalValue / deliverableTargetValue) * 100).toFixed(2)
 			);
 		}
-	}, [data]);
+	}, [data, deliverableTargetValue]);
 	return (
 		<>
 			<TableCell>{`${DeliverableTargetAchieved} ${deliverableTargetUnit}`}</TableCell>
@@ -148,7 +147,6 @@ export default function DeliverablesTable() {
 									.deliverable_category_org.name
 							}
 						</TableCell>,
-						,
 						<TableCell>
 							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}
 							`}

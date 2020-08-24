@@ -1,4 +1,4 @@
-import { Box, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
+import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
@@ -72,7 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 		color: theme.palette.common.white,
 	},
 }));
-
 
 export default function DashboardTableContainer() {
 	const dashboardData = useDashBoardData();

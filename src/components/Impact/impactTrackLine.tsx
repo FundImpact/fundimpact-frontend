@@ -38,23 +38,17 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IImpactTargetLine = getInitialValues(props);
-	const { data: getAnnualYears, error: annualYearsError } = useQuery(GET_ANNUAL_YEARS);
+	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
 
-	const { data: impactTargets, error: impactTargetsError } = useQuery(
-		GET_IMPACT_TARGET_BY_PROJECT,
-		{
-			variables: { filter: { project: DashBoardData?.project?.id } },
-		}
+	const { data: impactTargets } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
+		variables: { filter: { project: DashBoardData?.project?.id } },
+	});
+
+	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE);
+
+	const [updateImpactTrackLine, { loading: updateImpactTrackLineLoading }] = useMutation(
+		UPDATE_IMPACT_TRACKLINE
 	);
-
-	const [createImpactTrackline, { data: impactTracklineresponse, loading }] = useMutation(
-		CREATE_IMPACT_TRACKLINE
-	);
-
-	const [
-		updateImpactTrackLine,
-		{ data: updateImpactTrackLineRes, loading: updateImpactTrackLineLoading },
-	] = useMutation(UPDATE_IMPACT_TRACKLINE);
 
 	const formAction = props.type;
 	const formIsOpen = props.open;
@@ -65,34 +59,14 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		if (getAnnualYears) {
 			impactTragetLineForm[2].optionsArray = getAnnualYears.annualYears;
 		}
-		if (annualYearsError) {
-			notificationDispatch(setErrorNotification("Annual Year Fetching Failed !"));
-		}
-	}, [getAnnualYears, annualYearsError, notificationDispatch]);
+	}, [getAnnualYears]);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (impactTargets) {
 			impactTragetLineForm[0].optionsArray = impactTargets.impactTargetProjectList;
 		}
-		if (impactTargetsError) {
-			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
-		}
-	}, [impactTargets, impactTargetsError, notificationDispatch]);
-
-	useEffect(() => {
-		if (impactTracklineresponse) {
-			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
-			onCancel();
-		}
-	}, [impactTracklineresponse, notificationDispatch, onCancel]);
-
-	useEffect(() => {
-		if (updateImpactTrackLineRes) {
-			notificationDispatch(setSuccessNotification("Impact Trackline updated successfully !"));
-			onCancel();
-		}
-	}, [updateImpactTrackLineRes, notificationDispatch, onCancel]);
+	}, [impactTargets]);
 
 	const onCreate = async (value: IImpactTargetLine) => {
 		delete value.financial_years_donor;
@@ -117,16 +91,18 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					},
 				],
 			});
+			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
+			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
+			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
 		}
 	};
 
-	const onUpdate = (value: IImpactTargetLine) => {
+	const onUpdate = async (value: IImpactTargetLine) => {
 		let impactTargetLineId = value.id;
 		delete value.id;
 		try {
-			updateImpactTrackLine({
+			await updateImpactTrackLine({
 				variables: {
 					id: impactTargetLineId,
 					input: value,
@@ -146,12 +122,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					},
 				],
 			});
+			notificationDispatch(setSuccessNotification("Impact Trackline updated successfully !"));
+			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
 		}
 	};
-
-	const clearErrors = (values: IImpactTargetLine) => {};
 
 	const validate = (values: IImpactTargetLine) => {
 		let errors: Partial<IImpactTargetLine> = {};

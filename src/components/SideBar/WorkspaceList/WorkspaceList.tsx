@@ -44,11 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function WorkspaceList({
-	organizationId: organizationId,
-}: {
-	organizationId: IOrganisation["id"];
-}) {
+export default function WorkspaceList({ organizationId }: { organizationId: IOrganisation["id"] }) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);

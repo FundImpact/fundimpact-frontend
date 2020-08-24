@@ -41,7 +41,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
-	const { data: annualYears, error: annualYearsError } = useQuery(GET_ANNUAL_YEARS);
+	const { data: annualYears } = useQuery(GET_ANNUAL_YEARS);
 
 	// const { data: fYOrg, error: fYOrgError } = useQuery(GET_FINANCIAL_YEARS_ORG, {
 	// 	variables: { filter: { organization: DashBoardData?.organization?.id } },
@@ -51,20 +51,15 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const { data: deliverableTargets, error: deliverableTargesError } = useQuery(
-		GET_DELIVERABLE_TARGET_BY_PROJECT,
-		{
-			variables: { filter: { project: DashBoardData?.project?.id } },
-		}
-	);
+	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+		variables: { filter: { project: DashBoardData?.project?.id } },
+	});
 
-	const [createDeliverableTrackline, { data: response, loading }] = useMutation(
-		CREATE_DELIVERABLE_TRACKLINE
-	);
+	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE);
 
 	const [
 		updateDeliverableTrackLine,
-		{ data: updateDeliverableTrackLineRes, loading: updateDeliverableTrackLineLoading },
+		{ loading: updateDeliverableTrackLineLoading },
 	] = useMutation(UPDATE_DELIVERABLE_TRACKLINE);
 
 	// updating annaul year field with fetched annual year list
@@ -72,20 +67,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (annualYears) {
 			deliverableTragetLineForm[2].optionsArray = annualYears.annualYears;
 		}
-		if (annualYearsError) {
-			notificationDispatch(setErrorNotification("Annual Year Fetching Failed !"));
-		}
-	}, [annualYears, annualYearsError, notificationDispatch]);
+	}, [annualYears]);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (deliverableTargets) {
 			deliverableTragetLineForm[0].optionsArray = deliverableTargets.deliverableTargetList;
 		}
-		if (deliverableTargesError) {
-			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
-		}
-	}, [deliverableTargets, deliverableTargesError, notificationDispatch]);
+	}, [deliverableTargets]);
 
 	// updating annaul year field with fetched annual year list
 	// useEffect(() => {
@@ -96,24 +85,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// 		notificationDispatch(setErrorNotification("Financial Years Org Fetching Failed !"));
 	// 	}
 	// }, [fYOrg, fYOrgError]);
-
-	useEffect(() => {
-		if (response) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Trackline created successfully!")
-			);
-			onCancel();
-		}
-	}, [response, notificationDispatch, onCancel]);
-
-	useEffect(() => {
-		if (updateDeliverableTrackLineRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Trackline updated successfully !")
-			);
-			onCancel();
-		}
-	}, [updateDeliverableTrackLineRes, notificationDispatch, onCancel]);
 
 	const onCreate = async (value: IDeliverableTargetLine) => {
 		console.log(`on Created is called with: `, value);
@@ -141,6 +112,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					},
 				],
 			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Trackline created successfully!")
+			);
+			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
 		}
@@ -172,6 +147,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					},
 				],
 			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Trackline updated successfully !")
+			);
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
 		}

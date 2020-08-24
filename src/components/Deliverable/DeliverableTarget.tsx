@@ -36,42 +36,62 @@ function getInitialValues(props: DeliverableTargetProps) {
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 
-	const [getCategoryUnit, { data: categoryUnit, error: categoryUnitError }] = useLazyQuery(
-		GET_CATEGORY_UNIT
-	); // for fetching category_unit id
-	const [
-		getUnitsByCategory,
-		{ data: unitsBycategory, error: unitsBycategoryError },
-	] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching units by category
+	const [getUnitsByCategory, { data: unitsBycategory }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching units by category
 
-	const { data: deliverableCategories, error: deliverableCategoriesError } = useQuery(
-		GET_DELIVERABLE_ORG_CATEGORY
-	);
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
 
 	const [currentCategory, setcurrentCategory] = useState<any>();
 	const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
 
-	const [
-		createDeliverableTarget,
-		{
-			data: createDeliverableTargetRes,
-			loading: createDeliverableTargetLoading,
-			error: createDeliverableTargetError,
-		},
-	] = useMutation(CREATE_DELIVERABLE_TARGET);
+	const [createDeliverableTarget, { loading: createDeliverableTargetLoading }] = useMutation(
+		CREATE_DELIVERABLE_TARGET
+	);
 
-	const [
-		updateDeliverableTarget,
-		{
-			data: updateDeliverableTargetRes,
-			loading: updateDeliverableTargetLoading,
-			error: updateDeliverableTargetError,
-		},
-	] = useMutation(UPDATE_DELIVERABLE_TARGET);
+	const [updateDeliverableTarget, { loading: updateDeliverableTargetLoading }] = useMutation(
+		UPDATE_DELIVERABLE_TARGET
+	);
 
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	const formAction = props.type;
+
+	const createDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
+		try {
+			let createInputTarget = {
+				...deliverbaleTarget,
+				deliverable_category_unit: deliverableCategoryUnitId,
+			};
+			await createDeliverableTarget({
+				variables: {
+					input: createInputTarget,
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
+					},
+				],
+			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target created successfully !")
+			);
+			onCancel();
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
+		}
+	};
+
+	//  fetching category_unit id and on completion creating deliverable target
+	const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
+		onCompleted(data) {
+			if (data.deliverableCategoryUnitList && data.deliverableCategoryUnitList.length) {
+				createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id); //deliverable_category_unit id
+			}
+		},
+		onError(err) {
+			notificationDispatch(setErrorNotification("Unit not match with category !"));
+		},
+	});
 
 	// updating categories field with fetched categories list
 	useEffect(() => {
@@ -79,10 +99,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			deliverableTargetForm[1].optionsArray = deliverableCategories.deliverableCategory;
 			deliverableTargetForm[1].getInputValue = setcurrentCategory;
 		}
-		if (deliverableCategoriesError) {
-			notificationDispatch(setErrorNotification("Deliverable Categories Fetching Failed !"));
-		}
-	}, [deliverableCategories, deliverableCategoriesError, notificationDispatch]);
+	}, [deliverableCategories]);
+
 	// handling category change
 	useEffect(() => {
 		if (currentCategory) {
@@ -106,72 +124,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			);
 			deliverableTargetForm[3].optionsArray = arr;
 		}
-		if (unitsBycategoryError) {
-			notificationDispatch(setErrorNotification("Units fetching failed !"));
-		}
-	}, [unitsBycategory, unitsBycategoryError, notificationDispatch]);
-
-	useEffect(() => {
-		if (categoryUnit) {
-			// successfully fetched impact_category_unit_id
-			let createInputTarget = {
-				...deliverbaleTarget,
-				deliverable_category_unit: categoryUnit.deliverableCategoryUnitList[0].id,
-			};
-
-			createDeliverableTarget({
-				variables: {
-					input: createInputTarget,
-				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: { filter: { project: props.project } },
-					},
-				],
-			});
-
-			if (categoryUnitError) {
-				notificationDispatch(
-					setErrorNotification("Deliverable Category and Unit not matching !")
-				);
-			}
-		}
-	}, [
-		categoryUnit,
-		categoryUnitError,
-		notificationDispatch,
-		props.project,
-		deliverbaleTarget,
-		createDeliverableTarget,
-	]);
-
-	useEffect(() => {
-		if (createDeliverableTargetRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target Successfully created !")
-			);
-			onCancel();
-		}
-		if (createDeliverableTargetError) {
-			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
-		}
-	}, [createDeliverableTargetRes, createDeliverableTargetError, onCancel, notificationDispatch]);
-
-	useEffect(() => {
-		if (updateDeliverableTargetRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
-			onCancel();
-		}
-		if (updateDeliverableTargetError) {
-			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
-		}
-	}, [updateDeliverableTargetRes, updateDeliverableTargetError, onCancel, notificationDispatch]);
+	}, [unitsBycategory]);
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
-	const onCreate = (value: IDeliverableTarget) => {
+	const onCreate = async (value: IDeliverableTarget) => {
 		setDeliverableTarget({
 			name: value.name,
 			target_value: Number(value.target_value),
@@ -179,6 +135,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			project: value.project,
 			deliverable_category_unit: -1,
 		});
+
+		// fetching deliverable_category_unit before creating deliverable Target
 		getCategoryUnit({
 			variables: {
 				filter: {
@@ -189,28 +147,35 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		});
 	};
 
-	const onUpdate = (value: IDeliverableTarget) => {
+	const onUpdate = async (value: IDeliverableTarget) => {
 		let deliverableId = value.id;
 		delete value.id;
-
-		updateDeliverableTarget({
-			variables: {
-				id: deliverableId,
-				input: value,
-			},
-			refetchQueries: [
-				{
-					query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-					variables: { filter: { project: props.project } },
+		try {
+			await updateDeliverableTarget({
+				variables: {
+					id: deliverableId,
+					input: value,
 				},
-				{
-					query: GET_ACHIEVED_VALLUE_BY_TARGET,
-					variables: {
-						filter: { deliverableTargetProject: deliverableId },
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
 					},
-				},
-			],
-		});
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: deliverableId },
+						},
+					},
+				],
+			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			onCancel();
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
+		}
 	};
 
 	const validate = (values: IDeliverableTarget) => {

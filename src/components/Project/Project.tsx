@@ -1,9 +1,8 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
-import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
-import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
+import { CREATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { projectForm } from "../../utils/inputFields.json";
@@ -24,46 +23,45 @@ function getInitialValues(props: ProjectProps) {
 
 function Project(props: ProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
-	const dashboardData = useDashBoardData();
 	let initialValues: IProject = getInitialValues(props);
-	const [createNewproject, { data: response, loading: createLoading }] = useMutation(
+	const [createNewproject, { data: response, loading: createLoading, error }] = useMutation(
 		CREATE_PROJECT
 	);
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
+	const workspaces: any = props.workspaces;
 
 	useEffect(() => {
 		if (response) {
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
-			props.handleClose();
+			onCancel();
 		}
-	}, [response]);
-
-	const onCreate = (value: IProject) => {
-		let org: any = dashboardData?.organization?.id;
-		try {
-			createNewproject({
-				variables: { input: value },
-				refetchQueries: [
-					{
-						query: GET_ORGANISATIONS,
-					},
-				],
-			});
-		} catch (error) {
+		if (error) {
 			notificationDispatch(setErrorNotification("Project creation Failed !"));
 		}
+	}, [response, error, notificationDispatch, onCancel]);
+
+	const onCreate = (value: IProject) => {
+		createNewproject({
+			variables: { input: value },
+			refetchQueries: [
+				{
+					query: GET_ORGANISATIONS,
+				},
+			],
+		});
 	};
 
-	const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
-		UPDATE_PROJECT
-	);
+	// const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
+	// 	UPDATE_PROJECT
+	// );
 
-	useEffect(() => {}, [updateResponse]);
+	// useEffect(() => {}, [updateResponse]);
 
 	const onUpdate = (value: IProject) => {
 		// updateProject({ variables: { payload: value, projectID: 4 } });
 	};
-
-	const clearErrors = (values: IProject) => {};
 
 	const validate = (values: IProject) => {
 		let errors: Partial<IProject> = {};
@@ -76,10 +74,6 @@ function Project(props: ProjectProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
-	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
 	return (
 		<>
@@ -103,7 +97,7 @@ function Project(props: ProjectProps) {
 				/>
 			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
-			{updateLoading ? <FullScreenLoader /> : null}
+			{/* {updateLoading ? <FullScreenLoader /> : null} */}
 		</>
 	);
 }

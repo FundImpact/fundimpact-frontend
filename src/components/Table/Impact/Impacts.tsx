@@ -28,9 +28,11 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	};
 	return (
 		<>
-			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
-			</IconButton>
+			<TableCell>
+				<IconButton aria-label="delete" onClick={handleMenuClick}>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
 			<Menu
 				id="impact-target-simple-menu"
 				anchorEl={menuAnchor}
@@ -104,7 +106,7 @@ function ImpactTargetAchievementAndProgress({
 				((data.impactTrackingSpendValue / impactTargetValue) * 100).toFixed(2)
 			);
 		}
-	}, [data]);
+	}, [data, impactTargetValue]);
 	return (
 		<>
 			<TableCell>{`${impactTargetAchieved} ${impactTargetUnit}`}</TableCell>
@@ -122,12 +124,11 @@ export default function ImpactsTable() {
 
 	useEffect(() => {
 		if (dashboardData?.project) {
-			console.log("project", dashboardData?.project);
 			getImpactTargetByProject({
 				variables: { filter: { project: dashboardData?.project.id } },
 			});
 		}
-	}, [dashboardData, dashboardData?.project]);
+	}, [dashboardData, getImpactTargetByProject]);
 
 	useEffect(() => {
 		if (data) {
