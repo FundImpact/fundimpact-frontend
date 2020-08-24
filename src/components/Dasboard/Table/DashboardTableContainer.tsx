@@ -81,18 +81,15 @@ export default function DashboardTableContainer() {
 			label: "Budget",
 			table: <BudgetTargetTable />,
 			createButtons: [
+				{ text: "Create Deliverable Target" },
+				{ text: "Create Impact Target" },
+				{ text: "Add Donor" },
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<BudgetCategoryDialog open={open} handleClose={handleClose} />
 					),
 				},
-				{ text: "Create Deliverables" },
-				{ text: "Create Impact Indicators" },
-				{ text: "Add Donor" },
-				{ text: "Create Budget Indicators" },
-				{ text: "Track Budget Spend" },
-				{ text: "Report Fund Receipt" },
 				{
 					text: "Create Budget Target",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -103,8 +100,9 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
+				{ text: "Report Fund Receipt" },
 				{
-					text: "Create Budget Tracking Lineitem",
+					text: "Report Budget Spend",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<BudgetLineitemDialog
 							formAction={FORM_ACTIONS.CREATE}
