@@ -1,4 +1,6 @@
 export interface IUserDataContext {
 	jwt?: string;
-	user?: any;
+	user?: {
+		id: string | number;
+	};
 }

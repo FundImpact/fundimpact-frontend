@@ -1,0 +1,35 @@
+{
+	"BudgetCategoryDialogInputFields": [
+		{ "id": "createBudgetNameInput", "key": "name" },
+		{ "id": "createBudgetCodeInput", "key": "code" },
+		{ "id": "createBudgetDescriptionInput", "key": "description" }
+	],
+	"BudgetTargetDialoginputFields": [
+		{ "id": "createBudgetTargetNameInput", "key": "name" },
+		{ "id": "createBudgetTargetTotalTargetAmountInput", "key": "total_target_amount" },
+		{ "id": "createBudgetTargetDescriptionInput", "key": "description" },
+		{ "id": "createBudgetTargetBudgetCategoryOption", "key": "budget_category_organization" },
+		{ "id": "createBudgetTargetDonorOption", "key": "donor" }
+	],
+	"impactCategoeyDialogFields": [
+		{ "id": "createImpactNameInput", "key": "name" },
+		{ "id": "createImpactShortNameInput", "key": "shortname" },
+		{ "id": "createImpactCodeInput", "key": "code" },
+		{ "id": "createImpactCategoryDescriptionInput", "key": "description" }
+	],
+	"impactUnitDialogFields": [
+		{ "id": "createInpactUnitNameInput", "key": "name" },
+		{ "id": "createImpactUnitPrefixLabelInput", "key": "prefix_label" },
+		{ "id": "createImpactUnitSuffixLabelInput", "key": "suffix_label" },
+		{ "id": "createImpactUnitCodeInput", "key": "code" },
+		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit" },
+		{ "id": "createImpactUnitDescriptionInput", "key": "description" }
+	],
+	"budgetLineItemInputFields": [
+		{ "id": "createBudgetLineitemConversionFactorInput", "key": "reporting_date" },
+		{ "id": "createBudgetLineitemAmountInput", "key": "amount" },
+		{ "id": "createBudgetLineitemNoteInput", "key": "note" },
+		{ "id": "createBudgetLineitemAnnualYearOption", "key": "annual_year" },
+		{ "id": "createBudgetLineitemBudgetTargetsOption", "key": "budget_targets_project" }
+	]
+}

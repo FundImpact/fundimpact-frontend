@@ -1,11 +1,18 @@
+import { ApolloProvider } from "@apollo/client";
 import React from "react";
-import LandingPage from "../pages/Landing/Landing";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { RouteProps } from "react-router";
-import { useAuth } from "../contexts/userContext";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-const SignUp = React.lazy(() => import("../components/SignUp"));
-const Login = React.lazy(() => import("../components/Login"));
+import DashboardTableContainer from "../components/Dasboard/Table/DashboardTableContainer";
+import { useAuth } from "../contexts/userContext";
+import LandingPage from "../pages/Landing/Landing";
+import { client } from "./grapql";
+import { DashboardProvider } from "../contexts/dashboardContext";
+import { NotificationProvider } from "../contexts/notificationContext";
+
+const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
+const Login = React.lazy(() => import("../pages/Login/Login"));
+const DashboardContainer = React.lazy(() => import("../pages/Dashboard/DashboardContainer"));
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
 	const { jwt } = useAuth();
@@ -18,7 +25,22 @@ function AppRoutes() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<PrivateRoute path="dashboard" element={<div>Example Private Route</div>} />
+				<PrivateRoute
+					path="dashboard"
+					element={
+						<ApolloProvider client={client}>
+							<NotificationProvider>
+								<DashboardProvider>
+									<DashboardContainer
+										left={null}
+										main={<DashboardTableContainer />}
+									/>
+								</DashboardProvider>
+							</NotificationProvider>
+						</ApolloProvider>
+					}
+				/>
+
 				<Route path="" element={<LandingPage />}>
 					<Route path="login" element={<Login />} />
 					<Route path="signup/:id" element={<SignUp />} />
