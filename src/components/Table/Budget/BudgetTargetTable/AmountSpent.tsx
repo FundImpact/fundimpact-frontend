@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
 import { useApolloClient, useLazyQuery } from "@apollo/client";
-import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../graphql/queries/budget/query";
+import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/queries/budget/query";
 
-const AmountSpent = ({ budgetTargetId, children }: { budgetTargetId: string; children: any }) => {
+const AmountSpent = ({
+	budgetTargetId,
+	children,
+}: {
+	budgetTargetId: string;
+	children: (props: number) => React.ReactNode
+}) => {
 	const apolloClient = useApolloClient();
 	let [getSpentAmount] = useLazyQuery(GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM);
 
@@ -30,7 +36,7 @@ const AmountSpent = ({ budgetTargetId, children }: { budgetTargetId: string; chi
 				},
 			});
 		}
-	}, [oldCachedBudgetTargetProjectData, budgetTargetId]);
+	}, [oldCachedBudgetTargetProjectData, budgetTargetId, getSpentAmount]);
 
 	if (!oldCachedBudgetTargetProjectData) {
 		return <span>{children(0)}</span>;

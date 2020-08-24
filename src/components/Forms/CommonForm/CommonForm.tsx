@@ -36,7 +36,7 @@ function CommonForm({
 		<Formik
 			initialValues={initialValues}
 			onSubmit={(values: any) => {
-				formAction == FORM_ACTIONS.CREATE ? onSubmit(values) : onUpdate(values);
+				formAction === FORM_ACTIONS.CREATE ? onSubmit(values) : onUpdate(values);
 			}}
 			validate={validate}
 			isInitialValid={() => validateInitialValue(initialValues)}
@@ -97,7 +97,7 @@ function CommonForm({
 										data-testid="createSaveButton"
 										disabled={!formik.isValid}
 									>
-										Save
+										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
 									</Button>
 								</Box>
 								<Button

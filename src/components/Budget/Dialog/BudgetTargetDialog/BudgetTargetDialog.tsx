@@ -65,7 +65,7 @@ function BudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps)
 	);
 
 	let initialValues =
-		props.formAction == FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
 	const [updateProjectBudgetTarget, { loading: updatingProjectBudgetTarget }] = useMutation(
 		UPDATE_PROJECT_BUDGET_TARGET
@@ -152,7 +152,6 @@ function BudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps)
 							},
 						});
 					} catch (err) {
-						throw err;
 					}
 				},
 			});

@@ -1,10 +1,10 @@
-import { Box, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
+import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 import BudgetCategoryDialog from "../../Budget/Dialog/BudgetCategoryDialog";
 import BudgetTargetDialog from "../../Budget/Dialog/BudgetTargetDialog";
-import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
 import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
@@ -72,7 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 		color: theme.palette.common.white,
 	},
 }));
-
 
 export default function DashboardTableContainer() {
 	const dashboardData = useDashBoardData();

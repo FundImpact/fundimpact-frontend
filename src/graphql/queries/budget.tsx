@@ -34,15 +34,6 @@ export const CREATE_PROJECT_BUDGET_TARGET = gql`
 			id
 			name
 			total_target_amount
-			conversion_factor
-			organization_currency {
-				currency {
-					name
-				}
-			}
-			project {
-				name
-			}
 			budget_category_organization {
 				name
 			}
@@ -120,31 +111,6 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 		}
 	}
 `;
-
-// export const GET_BUDGET_TARGET_PROJECT = gql`
-// 	query {
-// 		budgetTargetsProjects {
-// 			id
-// 			name
-// 			organization_currency {
-// 				id
-// 				currency {
-// 					name
-// 				}
-// 			}
-// 			project {
-// 				name
-// 			}
-// 			budget_category_organization {
-// 				id
-// 				name
-// 			}
-// 			description
-// 			total_target_amount
-// 			conversion_factor
-// 		}
-// 	}
-// `;
 
 export const GET_BUDGET_TARGET_PROJECT = gql`
 	query getDeliverableCategoryUnitByCategory($filter: JSON) {

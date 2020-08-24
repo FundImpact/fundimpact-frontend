@@ -35,7 +35,10 @@ const mockDonors = [
 	{ id: "2", donor: { id: "2", name: "donor 2" } },
 ];
 
-const mockOrgBudgetCategory = [{ id: "1", name: "military", code: "m5" }];
+const mockOrgBudgetCategory = [
+	{ id: "1", name: "military 1", code: "m5" },
+	{ id: "2", name: "military 2", code: "m6" },
+];
 
 const mocks = [
 	{
@@ -100,7 +103,19 @@ const mocks = [
 		},
 		result: () => {
 			creationOccured = true;
-			return {};
+			return {
+				data: {
+					createProjectBudgetTarget: {
+						id: "1",
+						name: "bud tar",
+						total_target_amount: 213,
+						budget_category_organization: {
+							name: "military 1",
+							id: "1",
+						},
+					},
+				},
+			};
 		},
 	},
 ];
@@ -131,6 +146,8 @@ const inputIds = BudgetTargetDialoginputFields;
 
 describe("Budget Target Dialog tests", () => {
 	test("Mock response", async () => {
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+
 		for (let i = 0; i < inputIds.length; i++) {
 			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
 			let value = intialFormValue[inputIds[i].key];
@@ -144,7 +161,10 @@ describe("Budget Target Dialog tests", () => {
 		await act(async () => {
 			let saveButton = await dialog.getByTestId("createSaveButton");
 			expect(saveButton).toBeEnabled();
+			fireEvent.click(saveButton);
 			await wait();
 		});
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		expect(creationOccured).toBe(true);
 	});
 });
