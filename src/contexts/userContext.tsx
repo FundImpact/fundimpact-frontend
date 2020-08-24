@@ -16,7 +16,7 @@ const getDefaultUserState = (): IUserDataContext => {
 	return {};
 };
 
-const UserDataContext = createContext<IUserDataContext | undefined>(getDefaultUserState());
+const UserDataContext = createContext<IUserDataContext | undefined>(undefined);
 const UserDispatchContext = createContext<Dispatch<any> | undefined>(undefined);
 
 UserDataContext.displayName = "UserData";

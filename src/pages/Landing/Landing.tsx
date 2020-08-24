@@ -1,13 +1,12 @@
-import "./index.css";
-
-import { Box, Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Grid, Box, Typography, Button } from "@material-ui/core";
 
-import useRouteResolver from "../../hooks/routes/useRouteResolver";
-import useSignUpStep from "../../hooks/signup/useSignupStep";
+import "./index.css";
+import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
+import useSignUpStep from "../../hooks/useSignupStep";
 import { ISignUpStep } from "../../models";
 import { getSteps } from "../../utils/signup.util";
+import useRouteResolver from "../../hooks/useRouteResolver";
 
 function ActionDescription({ stepNumber }: { stepNumber: number | undefined }) {
 	const steps = getSteps();
