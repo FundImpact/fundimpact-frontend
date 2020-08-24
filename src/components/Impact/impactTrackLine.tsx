@@ -56,6 +56,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		{ data: updateImpactTrackLineRes, loading: updateImpactTrackLineLoading },
 	] = useMutation(UPDATE_IMPACT_TRACKLINE);
 
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
+
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (getAnnualYears) {
@@ -64,7 +68,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		if (annualYearsError) {
 			notificationDispatch(setErrorNotification("Annual Year Fetching Failed !"));
 		}
-	}, [getAnnualYears, annualYearsError]);
+	}, [getAnnualYears, annualYearsError, notificationDispatch]);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
@@ -74,28 +78,27 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		if (impactTargetsError) {
 			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
 		}
-	}, [impactTargets, impactTargetsError]);
+	}, [impactTargets, impactTargetsError, notificationDispatch]);
 
 	useEffect(() => {
 		if (impactTracklineresponse) {
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
-			props.handleClose();
+			onCancel();
 		}
-	}, [impactTracklineresponse]);
+	}, [impactTracklineresponse, notificationDispatch, onCancel]);
 
 	useEffect(() => {
 		if (updateImpactTrackLineRes) {
 			notificationDispatch(setSuccessNotification("Impact Trackline updated successfully !"));
-			props.handleClose();
+			onCancel();
 		}
-	}, [updateImpactTrackLineRes]);
+	}, [updateImpactTrackLineRes, notificationDispatch, onCancel]);
 
 	const onCreate = async (value: IImpactTargetLine) => {
 		delete value.financial_years_donor;
 		delete value.financial_years_org;
 		delete value.grant_period;
 		value.reporting_date = new Date();
-		console.log(`on Created is called with: `, value);
 		try {
 			await createImpactTrackline({
 				variables: { input: value },
@@ -165,9 +168,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog

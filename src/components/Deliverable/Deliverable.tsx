@@ -23,28 +23,27 @@ function getInitialValues(props: DeliverableProps) {
 function Deliverable(props: DeliverableProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverable = getInitialValues(props);
-	const [createDeliverableCategory, { data: response, loading }] = useMutation(
+	const [createDeliverableCategory, { data: response, loading, error }] = useMutation(
 		CREATE_DELIVERABLE_CATEGORY
 	);
-
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 	useEffect(() => {
 		if (response) {
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
-			props.handleClose();
+			onCancel();
 		}
-	}, [response]);
-	const onCreate = (value: IDeliverable) => {
-		console.log(`on Created is called with: `, value);
-		try {
-			createDeliverableCategory({ variables: { input: value } });
-		} catch (error) {
+		if (error) {
 			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
 		}
+	}, [response, error, onCancel, notificationDispatch]);
+
+	const onCreate = (value: IDeliverable) => {
+		createDeliverableCategory({ variables: { input: value } });
 	};
 
 	const onUpdate = (value: IDeliverable) => {};
-
-	const clearErrors = (values: IDeliverable) => {};
 
 	const validate = (values: IDeliverable) => {
 		let errors: Partial<IDeliverable> = {};
@@ -57,9 +56,6 @@ function Deliverable(props: DeliverableProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog

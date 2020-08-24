@@ -47,6 +47,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// 	variables: { filter: { organization: DashBoardData?.organization?.id } },
 	// });
 
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
+
 	const { data: deliverableTargets, error: deliverableTargesError } = useQuery(
 		GET_DELIVERABLE_TARGET_BY_PROJECT,
 		{
@@ -71,7 +75,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (annualYearsError) {
 			notificationDispatch(setErrorNotification("Annual Year Fetching Failed !"));
 		}
-	}, [annualYears, annualYearsError]);
+	}, [annualYears, annualYearsError, notificationDispatch]);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
@@ -81,7 +85,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (deliverableTargesError) {
 			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
 		}
-	}, [deliverableTargets, deliverableTargesError]);
+	}, [deliverableTargets, deliverableTargesError, notificationDispatch]);
 
 	// updating annaul year field with fetched annual year list
 	// useEffect(() => {
@@ -98,18 +102,18 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
-			props.handleClose();
+			onCancel();
 		}
-	}, [response]);
+	}, [response, notificationDispatch, onCancel]);
 
 	useEffect(() => {
 		if (updateDeliverableTrackLineRes) {
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline updated successfully !")
 			);
-			props.handleClose();
+			onCancel();
 		}
-	}, [updateDeliverableTrackLineRes]);
+	}, [updateDeliverableTrackLineRes, notificationDispatch, onCancel]);
 
 	const onCreate = async (value: IDeliverableTargetLine) => {
 		console.log(`on Created is called with: `, value);
@@ -142,11 +146,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	};
 
-	const onUpdate = (value: IDeliverableTargetLine) => {
+	const onUpdate = async (value: IDeliverableTargetLine) => {
 		let DeliverableTargetLineId = value.id;
 		delete value.id;
 		try {
-			updateDeliverableTrackLine({
+			await updateDeliverableTrackLine({
 				variables: {
 					id: DeliverableTargetLineId,
 					input: value,
@@ -173,8 +177,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	};
 
-	const clearErrors = (values: IDeliverableTargetLine) => {};
-
 	const validate = (values: IDeliverableTargetLine) => {
 		let errors: Partial<IDeliverableTargetLine> = {};
 		if (!values.annual_year) {
@@ -184,9 +186,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -209,6 +208,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				/>
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}
+			{updateDeliverableTrackLineLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

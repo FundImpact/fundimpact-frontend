@@ -29,7 +29,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
 	const [
 		createUnit,
-		{ data: createUnitResponse, loading: createDeliverableLoading },
+		{ data: createUnitResponse, loading: createUnitLoading, error: createUnitError },
 	] = useMutation(CREATE_DELIVERABLE_UNIT);
 
 	const [createCategoryUnit, { data: createCategoryUnitResponse }] = useMutation(
@@ -37,6 +37,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	);
 	const notificationDispatch = useNotificationDispatch();
 
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
@@ -46,27 +49,32 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 
 	useEffect(() => {
 		if (createUnitResponse) {
-			try {
-				createCategoryUnit({
-					variables: {
-						input: {
-							deliverable_category_org: deliverableCategory,
-							deliverable_units_org: createUnitResponse.createDeliverableUnitOrg.id,
-						},
+			createCategoryUnit({
+				variables: {
+					input: {
+						deliverable_category_org: deliverableCategory,
+						deliverable_units_org: createUnitResponse.createDeliverableUnitOrg.id,
 					},
-				});
-			} catch (error) {
-				notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
-			}
+				},
+			});
 		}
-	}, [createUnitResponse]);
+		if (createUnitError) {
+			notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
+		}
+	}, [
+		createUnitResponse,
+		createUnitError,
+		notificationDispatch,
+		createCategoryUnit,
+		deliverableCategory,
+	]);
 
 	useEffect(() => {
 		if (createCategoryUnitResponse) {
 			notificationDispatch(setSuccessNotification("Deliverable Unit Successfully created !"));
-			props.handleClose();
+			onCancel();
 		}
-	}, [createCategoryUnitResponse]);
+	}, [createCategoryUnitResponse, notificationDispatch, onCancel]);
 
 	let initialValues: IDeliverableUnit = getInitialValues(props);
 	const onCreate = (value: IDeliverableUnit) => {
@@ -80,8 +88,6 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	};
 
 	const onUpdate = (value: IDeliverableUnit) => {};
-
-	const clearErrors = (values: IDeliverableUnit) => {};
 
 	const validate = (values: IDeliverableUnit) => {
 		let errors: Partial<IDeliverableUnit> = {};
@@ -103,9 +109,6 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -127,7 +130,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 					}}
 				/>
 			</FormDialog>
-			{createDeliverableLoading ? <FullScreenLoader /> : null}
+			{createUnitLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

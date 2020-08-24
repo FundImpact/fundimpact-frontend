@@ -66,7 +66,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 				notificationDispatch(setErrorNotification("Categories fetching failed !"));
 			}
 		}
-	}, [currCategoryId]);
+	}, [currCategoryId, notificationDispatch, getUnitsByCategory]);
 
 	// updating units field with fetched units list
 	useEffect(() => {
@@ -82,7 +82,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			);
 			impactTargetForm[3].optionsArray = arr;
 		}
-	}, [unitByCategory]);
+	}, [unitByCategory, notificationDispatch]);
 
 	useEffect(() => {
 		if (unitAndcategory) {
@@ -107,14 +107,14 @@ function ImpactTarget(props: ImpactTargetProps) {
 				notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
 			}
 		}
-	}, [unitAndcategory]);
+	}, [unitAndcategory, notificationDispatch]);
 
 	useEffect(() => {
 		if (impact) {
 			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
 			props.handleClose();
 		}
-	}, [impact]);
+	}, [impact, notificationDispatch]);
 
 	useEffect(() => {
 		if (updateImpactTargetRes) {
