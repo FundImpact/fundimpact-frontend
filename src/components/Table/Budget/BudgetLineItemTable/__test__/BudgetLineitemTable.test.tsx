@@ -16,32 +16,6 @@ let table: any;
 
 const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
 
-const mockBudgetLineItem = [
-	{
-		id: "1",
-		budget_targets_project: {
-			id: "1",
-			name: "budget target 1",
-		},
-		amount: 100,
-		note: "note 1",
-		reporting_date: new Date(),
-		annual_year: {
-			id: "1",
-		},
-	},
-];
-
-const mockDonors = [
-	{ id: "1", donor: { id: "1", name: "donor 1" } },
-	{ id: "2", donor: { id: "2", name: "donor 2" } },
-];
-
-const mockOrgBudgetCategory = [
-	{ id: "1", name: "military 1", code: "m5" },
-	{ id: "2", name: "military 2", code: "m6" },
-];
-
 const mockAnnualYearList = [
 	{
 		id: "ay",
@@ -49,6 +23,23 @@ const mockAnnualYearList = [
 		short_name: "sh1",
 		start_date: "2020-03-03",
 		end_date: "2020-04-04",
+	},
+];
+
+
+const mockBudgetLineItem = [
+	{
+		id: "1",
+		budget_targets_project: {
+			id: "1",
+			name: "budget target 1",
+		},
+		amount: 500,
+		note: "note 1",
+		reporting_date: new Date(),
+		annual_year: {
+			id: "1",
+		},
 	},
 ];
 
@@ -65,6 +56,33 @@ const mockBudgetTarget = [
 ];
 
 const mocks = [
+	{
+		request: {
+			query: GET_ORG_CURRENCIES_BY_ORG,
+			variables: {
+				filter: {
+					organization: "3",
+					isHomeCurrency: true,
+				},
+			},
+		},
+		result: {
+			data: {
+				orgCurrencies: mockOrgHomeCurrency,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ANNUAL_YEAR_LIST,
+			variables: {},
+		},
+		result: {
+			data: {
+				annualYearList: mockAnnualYearList,
+			},
+		},
+	},
 	{
 		request: {
 			query: GET_PROJECT_BUDGET_TARCKING,
@@ -95,33 +113,6 @@ const mocks = [
 			},
 		},
 	},
-	{
-		request: {
-			query: GET_ORG_CURRENCIES_BY_ORG,
-			variables: {
-				filter: {
-					organization: "3",
-					isHomeCurrency: true,
-				},
-			},
-		},
-		result: {
-			data: {
-				orgCurrencies: mockOrgHomeCurrency,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_ANNUAL_YEAR_LIST,
-			variables: {},
-		},
-		result: {
-			data: {
-				annualYearList: mockAnnualYearList,
-			},
-		},
-	},
 ];
 
 beforeEach(() => {
@@ -144,7 +135,7 @@ beforeEach(() => {
 
 describe("Budget Line Item Table tests", () => {
 	test("renders correctly", async () => {
-		await waitForElement(() => table.getByText(/100/i));
+		await waitForElement(() => table.getByText(/500/i));
 		await waitForElement(() => table.getByText(/note 1/i));
 	});
 });
