@@ -71,23 +71,11 @@ export const GET_PROJECTS = gql`
 	}
 `;
 
-export const GET_ORG_CURRENCIES = gql`
-	query {
-		orgCurrencies {
-			id
-			currency {
-				name
-			}
-		}
-	}
-`;
-
 export const GET_ORG_CURRENCIES_BY_ORG = gql`
 	query getorgCurrenciesByorg($filter: JSON) {
 		orgCurrencies(where: $filter) {
-			id
 			currency {
-				name
+				code
 			}
 		}
 	}

@@ -10,15 +10,6 @@ import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { organizationDetails } from "../../../utils/testMock.json";
 
-// const intialFormValue: IDeliverableTarget = {
-// 	name: "Test Deliverable Target",
-// 	description: "This is a sample deliverable",
-// 	target_value: "2500",
-// 	deliverableCategory: "",
-// 	deliverableUnit: "",
-// 	deliverable_category_unit: -1,
-// 	project: 4,
-// };
 const categoryMock = [
 	{ id: 1, name: "SONG" },
 	{ id: 1, name: "SONG" },
@@ -37,7 +28,7 @@ let deliverableTarget: RenderResult<typeof queries>;
 beforeEach(() => {
 	act(() => {
 		deliverableTarget = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetails }}>
+			<DashboardProvider>
 				<NotificationProvider>
 					<DeliverableTarget
 						type={DELIVERABLE_ACTIONS.CREATE}

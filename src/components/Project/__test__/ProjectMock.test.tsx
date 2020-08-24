@@ -2,13 +2,12 @@ import React from "react";
 import { renderApollo } from "../../../utils/test.util";
 import { fireEvent } from "@testing-library/react";
 import Project from "../Project";
-import { CREATE_PROJECT } from "../../../graphql/queries/project";
+import { CREATE_PROJECT } from "../../../graphql/queries/project/";
 import { GET_ORGANISATIONS } from "../../../graphql/queries/index";
 import { act } from "react-dom/test-utils";
 import { PROJECT_ACTIONS } from "../constants";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetails } from "../../../utils/testMock.json";
 
 let ProjectMutation = false;
 const OrgMock = [
@@ -31,7 +30,7 @@ const mocks = [
 		request: {
 			query: CREATE_PROJECT,
 			variables: {
-				input: { name: "ARTISTAAN", short_name: "", description: "", workspace: 1 },
+				input: { name: "ARTISTAAN", short_name: "", description: "", workspace: "1" },
 			},
 		},
 		result: () => {
@@ -51,13 +50,13 @@ let project: any;
 beforeEach(() => {
 	act(() => {
 		project = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetails }}>
+			<DashboardProvider>
 				<NotificationProvider>
 					<Project
 						type={PROJECT_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}
-						workspaces={[{ id: 1, name: "XYZ" }]}
+						workspaces={[{ id: "1", name: "XYZ" }]}
 					/>
 				</NotificationProvider>
 			</DashboardProvider>,

@@ -2,7 +2,7 @@ import React from "react";
 import { renderApollo } from "../../../../utils/test.util";
 import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import ProjectName from "../ProjectName";
-import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from "../../../../graphql/queries/project/project";
+import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from "../../../../graphql/queries/project";
 import { act } from "react-dom/test-utils";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";

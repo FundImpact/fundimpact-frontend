@@ -1,10 +1,9 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
-
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ORGANISATIONS } from "../../graphql/queries";
-import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project/project";
+import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/queries/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { projectForm } from "../../utils/inputFields.json";

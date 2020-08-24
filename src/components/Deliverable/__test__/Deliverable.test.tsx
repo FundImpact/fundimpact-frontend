@@ -38,7 +38,7 @@ let deliverableForm: RenderResult<typeof queries>;
 beforeEach(() => {
 	act(() => {
 		deliverableForm = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetails }}>
+			<DashboardProvider>
 				<NotificationProvider>
 					<DeliverableForm
 						type={DELIVERABLE_ACTIONS.CREATE}

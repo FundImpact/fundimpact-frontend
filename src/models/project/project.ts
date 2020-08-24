@@ -6,7 +6,7 @@ export interface IProject {
 	name: string;
 	short_name?: string;
 	description?: string;
-	workspace?: number | string;
+	workspace?: any;
 }
 
 export type ProjectProps = {

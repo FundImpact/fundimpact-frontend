@@ -10,8 +10,8 @@ export const GET_GRANT_PERIODS_PROJECT_LIST = gql`
 `;
 
 export const GET_PROJECT_BUDGET_TARCKING = gql`
-	query {
-		projBudgetTrackings {
+	query getProjBudgetTrackingsByProject($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		projBudgetTrackings(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			budget_targets_project {
 				id
@@ -49,5 +49,11 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				name
 			}
 		}
+	}
+`;
+
+export const GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM = gql`
+	query getProjBudgetTrackingTotalAmountByProject($filter: JSON) {
+		projBudgetTrackingsTotalAmount(where: $filter)
 	}
 `;

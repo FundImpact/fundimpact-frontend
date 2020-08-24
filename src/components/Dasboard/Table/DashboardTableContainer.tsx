@@ -1,26 +1,28 @@
 import { Box, makeStyles, Tab, Tabs, Theme, Typography } from "@material-ui/core";
-import React, { useEffect } from "react";
-
+import React from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useNotificationData } from "../../../contexts/notificationContext";
+
+import BudgetCategoryDialog from "../../Budget/Dialog/BudgetCategoryDialog";
+import BudgetTargetDialog from "../../Budget/Dialog/BudgetTargetDialog";
+import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
+import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
+import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
-import CreateBudgetDialog from "../../Budget/CreateBudgetDialog";
-import CreateBudgetTargetDialog from "../../Budget/CreateBudgetTargetDialog";
-import CreateBudgetTrackingLineitemDialog from "../../Budget/CreateBudgetTrackingLineitemDialog";
+import { useNotificationData } from "../../../contexts/notificationContext";
+
 import AddButton from "../../Dasboard/AddButton";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import DeliverableTargetLine from "../../Deliverable/DeliverableTargetLine";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
-import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactTarget from "../../Impact/impactTarget";
-import ImpactUnitDialog from "../../Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import Snackbar from "../../Snackbar/Snackbar";
-import BudgetTargetTable from "../../Table/BudgetTargetTable";
-import DeliverablesTable from "../../Table/Deliverable";
-import ImpactsTable from "../../Table/Impacts";
+import DeliverablesTable from "../../Table/Deliverable/Deliverable";
+import ImpactsTable from "../../Table/Impact/Impacts";
+import ImpactTrackLine from "../../Impact/impactTrackLine";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -71,76 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-const tabs = [
-	{
-		label: "Funds",
-		createButtons: [
-			{
-				text: "Create Budget Category",
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<CreateBudgetDialog open={open} handleClose={handleClose} />
-				),
-			},
-			{ text: "Create Deliverables" },
-			{ text: "Create Impact Indicators" },
-			{ text: "Add Donor" },
-			{ text: "Track Budget Spend" },
-			{ text: "Report Fund Receipt" },
-			{
-				text: "Create Budget Target",
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<CreateBudgetTargetDialog
-						formAction={FORM_ACTIONS.CREATE}
-						open={open}
-						handleClose={handleClose}
-					/>
-				),
-			},
-			{
-				text: "Create Budget Tracking Lineitem",
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<CreateBudgetTrackingLineitemDialog
-						formAction={FORM_ACTIONS.CREATE}
-						open={open}
-						handleClose={handleClose}
-					/>
-				),
-			},
-		],
-	},
-	{
-		label: "Deliverables",
-		createButtons: [{ text: "Create Deliverable Targets" }, { text: "Report Achivement" }],
-	},
-	{
-		label: "Impact Indicators",
-		createButtons: [
-			{ text: "Create Impact Targets" },
-			{ text: "Report Achivement" },
-			{
-				text: "Create Impact Category",
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<ImpactCategoryDialog open={open} handleClose={handleClose} />
-				),
-			},
-			{
-				text: "Create Impact Unit",
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<ImpactUnitDialog open={open} handleClose={handleClose} />
-				),
-			},
-		],
-	},
-	{ label: "Documents", createButtons: [] },
-];
-
-function GetTable(label: string) {
-	if (label == "Funds") {
-		return <BudgetTargetTable />;
-	}
-	return null;
-	// return <DefaultTable />;
-}
 
 export default function DashboardTableContainer() {
 	const dashboardData = useDashBoardData();
@@ -149,32 +81,30 @@ export default function DashboardTableContainer() {
 			label: "Budget",
 			table: <BudgetTargetTable />,
 			createButtons: [
+				{ text: "Create Deliverable Target" },
+				{ text: "Create Impact Target" },
+				{ text: "Add Donor" },
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetDialog open={open} handleClose={handleClose} />
+						<BudgetCategoryDialog open={open} handleClose={handleClose} />
 					),
 				},
-				{ text: "Create Deliverables" },
-				{ text: "Create Impact Indicators" },
-				{ text: "Add Donor" },
-				{ text: "Create Budget Indicators" },
-				{ text: "Track Budget Spend" },
-				{ text: "Report Fund Receipt" },
 				{
 					text: "Create Budget Target",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetTargetDialog
+						<BudgetTargetDialog
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
 						/>
 					),
 				},
+				{ text: "Report Fund Receipt" },
 				{
-					text: "Create Budget Tracking Lineitem",
+					text: "Report Budget Spend",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<CreateBudgetTrackingLineitemDialog
+						<BudgetLineitemDialog
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
@@ -187,17 +117,6 @@ export default function DashboardTableContainer() {
 			label: "Deliverables",
 			table: <DeliverablesTable />,
 			createButtons: [
-				{
-					text: "Create Deliverables Category",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<Deliverable
-							type={DELIVERABLE_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							organization={dashboardData?.organization?.id}
-						/>
-					),
-				},
 				{
 					text: "Create Deliverable Targets",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -221,13 +140,23 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achivement",
+					text: "Create Deliverables Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<DeliverableTargetLine
+						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							deliverableTarget={dashboardData?.project?.id}
+							organization={dashboardData?.organization?.id}
+						/>
+					),
+				},
+				{
+					text: "Report Achivement",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTrackLine
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
 						/>
 					),
 				},
@@ -260,7 +189,16 @@ export default function DashboardTableContainer() {
 						<ImpactCategoryDialog open={open} handleClose={handleClose} />
 					),
 				},
-				{ text: "Report Achivement" },
+				{
+					text: "Report Achivement",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ImpactTrackLine
+							open={open}
+							handleClose={handleClose}
+							type={IMPACT_ACTIONS.CREATE}
+						/>
+					),
+				},
 			],
 		},
 		{ label: "Documents", createButtons: [] },
@@ -298,9 +236,9 @@ export default function DashboardTableContainer() {
 
 			{tabs.map((tab, index) => (
 				<TabContent key={index} value={value} index={index}>
-					<Box className={classes.contentHeading}>
+					{/* <Box className={classes.contentHeading}>
 						<Typography variant="subtitle2">Budget Tracker</Typography>
-					</Box>
+					</Box> */}
 					{tab.table}
 					{/* {GetTable(tab.label)} */}
 					<AddButton createButtons={tab.createButtons} />

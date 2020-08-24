@@ -7,10 +7,11 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import dataInputFields from "../../../utils/inputFields.json";
+import dataInputFields from "../inputField.json";
 import { IInputField } from "../../../models";
-import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../Forms/CommonForm";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 let inputFields: IInputField[] = dataInputFields.impactUnitForm;
 
@@ -49,6 +50,7 @@ const validate = (values: IImpactUnitFormInput) => {
 function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const [createImpactUnitsOrgInput, { loading }] = useMutation(CREATE_IMPACT_UNITS_ORG_INPUT);
 	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
 
 	const onSubmit = async (values: IImpactUnitFormInput) => {
 		try {
@@ -68,22 +70,23 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 	};
 
 	return (
-		<CommonDialog
+		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={loading}
 			title="New Impact Unit"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
-			workspace="WORKSPACE 1"
+			workspace={dashboardData?.workspace?.name}
+			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>
-			<CommonInputForm
+			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
 				onSubmit={onSubmit}
 				onCancel={handleClose}
 				inputFields={inputFields}
 			/>
-		</CommonDialog>
+		</FormDialog>
 	);
 }
 

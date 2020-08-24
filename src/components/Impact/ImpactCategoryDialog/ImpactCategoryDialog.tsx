@@ -8,10 +8,10 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import dataInputFields from "../../../utils/inputFields.json";
+import dataInputFields from "../inputField.json";
 import { IInputField } from "../../../models";
-import CommonDialog from "../../Dasboard/CommonDialog";
-import CommonInputForm from "../../Forms/CommonInputForm/CommonInputForm";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -65,22 +65,23 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 	};
 
 	return (
-		<CommonDialog
+		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={loading}
 			title="New Impact Category"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
-			workspace="WORKSPACE 1"
+			workspace={dashboardData?.workspace?.name}
+			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>
-			<CommonInputForm
-				initialValues={initialValues}
-				validate={validate}
-				onSubmit={onSubmit}
-				onCancel={handleClose}
+			<CommonForm
 				inputFields={inputFields}
+				onCancel={handleClose}
+				onSubmit={onSubmit}
+				validate={validate}
+				initialValues={initialValues}
 			/>
-		</CommonDialog>
+		</FormDialog>
 	);
 }
 

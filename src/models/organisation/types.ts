@@ -1,5 +1,5 @@
 export interface IOrganisationType {
-	id: number;
+	id: string;
 	reg_type: string;
 }
 
