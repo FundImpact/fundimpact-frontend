@@ -129,7 +129,7 @@ function BudgetTargetTable() {
 	} catch (error) {}
 
 	React.useEffect(() => {
-		if (!oldCachedBudgetTargetProjectData) {
+		if (!oldCachedBudgetTargetProjectData && currentProject) {
 			loadBudgetTarget({
 				variables: {
 					filter: {
@@ -211,8 +211,8 @@ function BudgetTargetTable() {
 							<TableCell className={tableHeader.th} key={index} align="left">
 								{heading.label === "Total Amount"
 									? `Total Amount (${
-											orgCurrencies?.orgCurrencies[0].currency.code
-												? orgCurrencies?.orgCurrencies[0].currency.code
+											orgCurrencies?.orgCurrencies[0]?.currency.code
+												? orgCurrencies?.orgCurrencies[0]?.currency.code
 												: ""
 									  })`
 									: heading.label}
@@ -359,7 +359,11 @@ function BudgetTargetTable() {
 															budgetTargetId={budgetTargetsProject.id}
 															currency={
 																orgCurrencies?.orgCurrencies[0]
-																	.currency.code
+																	?.currency.code
+																	? orgCurrencies
+																			?.orgCurrencies[0]
+																			?.currency.code
+																	: ""
 															}
 														/>
 													</Box>

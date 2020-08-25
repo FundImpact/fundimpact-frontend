@@ -111,7 +111,7 @@ function BudgetLineItemDialog(props: ICreateBudgetTrackingLineitemDialogProps) {
 	}, [oldCachedBudgetTargetProjectData, currentProject, getBudgetTargetProject]);
 
 	useEffect(() => {
-		if (orgCurrencies) {
+		if (orgCurrencies && orgCurrencies.orgCurrencies.length) {
 			createBudgetTrackingLineitemForm[1].endAdornment =
 				orgCurrencies.orgCurrencies[0].currency.code;
 		}
