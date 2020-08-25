@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import AppRoutes from "./config/routes";
-import { FullScreenLoader } from "./components/Loader/Loader";
-import "./App.css";
+import { FullScreenLoader } from "./components/Loader";
 
 function App() {
 	return (

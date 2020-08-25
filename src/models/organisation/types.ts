@@ -1,12 +1,6 @@
 export interface IOrganisationType {
-	id: string;
+	created_at: string;
+	id: number;
 	reg_type: string;
-}
-
-export interface IOrganisation {
-	__typename: string;
-	id: string;
-	name: string;
-	short_name: string;
-	organization_registration_type: IOrganisationType;
+	updated_at: string;
 }

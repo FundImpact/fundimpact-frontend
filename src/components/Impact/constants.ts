@@ -1,4 +1,0 @@
-export enum IMPACT_ACTIONS {
-	CREATE = "CREATE",
-	UPDATE = "UPDATE",
-}
