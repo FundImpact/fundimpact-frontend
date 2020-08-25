@@ -13,8 +13,13 @@ import {
 	IBudgetTargetProjectResponse,
 	IGET_BUDGET_TARGET_PROJECT,
 } from "../../../../models/budget/query";
+
 import React, { useState } from "react";
 import BudgetTarget from "../../../Budget/BudgetTarget";
+import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/queries/budget/query";
+import React, { useState, useEffect } from "react";
+import BudgetTargetDialog from "../../../Budget/Dialog/BudgetTargetDialog";
+
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import SimpleMenu from "../../../Menu/Menu";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
@@ -28,6 +33,7 @@ import { getTodaysDate } from "../../../../utils";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import AmountSpent from "./AmountSpent";
+import pagination from "../../../../hooks/pagination";
 
 const useStyles = makeStyles({
 	table: {

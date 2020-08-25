@@ -63,6 +63,10 @@ export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
 			id
 			name
 			code
-		}
+		}`;
+
+export const GET_PROJECT_BUDGET_TARGETS_COUNT = gql`
+	query getProjectBudgetTargetsCount($filter: JSON) {
+		projectBudgetTargetsCount(where: $filter)
 	}
 `;
