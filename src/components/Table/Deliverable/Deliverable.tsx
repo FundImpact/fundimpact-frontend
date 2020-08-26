@@ -18,14 +18,17 @@ import FullScreenLoader from "../../commons/GlobalLoader";
 import TableCell from "@material-ui/core/TableCell";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
-	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [
+		deliverableTargetMenuAnchor,
+		setDeliverableTargetMenuAnchor,
+	] = useState<null | HTMLElement>(null);
 	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
 	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
+		setDeliverableTargetMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setMenuAnchor(null);
+		setDeliverableTargetMenuAnchor(null);
 	};
 	return (
 		<>
@@ -36,9 +39,9 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 			</TableCell>
 			<Menu
 				id="deliverable-target-simple-menu"
-				anchorEl={menuAnchor}
+				anchorEl={deliverableTargetMenuAnchor}
 				keepMounted
-				open={Boolean(menuAnchor)}
+				open={Boolean(deliverableTargetMenuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem

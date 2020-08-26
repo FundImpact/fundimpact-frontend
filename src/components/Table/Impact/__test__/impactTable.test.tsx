@@ -1,6 +1,6 @@
 import React from "react";
 import { renderApollo } from "../../../../utils/test.util";
-import { waitForElement, wait, act, fireEvent } from "@testing-library/react";
+import { waitForElement, act, fireEvent } from "@testing-library/react";
 import ImpactTable from "../Impacts";
 import {
 	GET_IMPACT_TARGET_BY_PROJECT,

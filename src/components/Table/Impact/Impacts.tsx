@@ -17,27 +17,27 @@ import ImpactTrackLineTable from "./impactTrackline";
 import FullScreenLoader from "../../commons/GlobalLoader";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
-	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
 	const [impactTargetData, setImpactTargetData] = useState<IImpactTarget | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
+		setImpactTargetMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setMenuAnchor(null);
+		setImpactTargetMenuAnchor(null);
 	};
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<IconButton aria-label="impact-target-edit" onClick={handleMenuClick}>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
 			<Menu
 				id="impact-target-simple-menu"
-				anchorEl={menuAnchor}
+				anchorEl={impactTargetMenuAnchor}
 				keepMounted
-				open={Boolean(menuAnchor)}
+				open={Boolean(impactTargetMenuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem

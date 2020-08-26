@@ -12,26 +12,28 @@ import FullScreenLoader from "../../commons/GlobalLoader";
 import { getTodaysDate } from "../../../utils";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
-	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [impactTracklineMenuAnchor, setImpactTracklineMenuAnchor] = useState<null | HTMLElement>(
+		null
+	);
 	const [impactTargetLineData, setImpactTargetLineData] = useState<IImpactTargetLine | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
+		setImpactTracklineMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setMenuAnchor(null);
+		setImpactTracklineMenuAnchor(null);
 	};
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<IconButton aria-label="impact_trackline-edit" onClick={handleMenuClick}>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
 			<Menu
 				id="impact-trackline-simple-menu"
-				anchorEl={menuAnchor}
+				anchorEl={impactTracklineMenuAnchor}
 				keepMounted
-				open={Boolean(menuAnchor)}
+				open={Boolean(impactTracklineMenuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem

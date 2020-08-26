@@ -80,7 +80,7 @@ export default function FITable({
 										<TableCell component="td" scope="row">
 											{index + 1}
 										</TableCell>
-										{row.map((col: React.ReactNode, index: number) => {
+										{row.map((col: React.ReactNode) => {
 											return col;
 										})}
 									</TableRow>
