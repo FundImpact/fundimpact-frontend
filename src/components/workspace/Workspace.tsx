@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
-import { GET_WORKSPACES_BY_ORG } from "../../graphql/queries";
-import { CREATE_WORKSPACE, UPDATE_WORKSPACE } from "../../graphql/queries/workspace";
+import { GET_WORKSPACES_BY_ORG } from "../../graphql";
+import { CREATE_WORKSPACE, UPDATE_WORKSPACE } from "../../graphql/workspace";
 import {
 	ICreate_Workspace_Response,
 	IGET_WORKSPACES_BY_ORG,

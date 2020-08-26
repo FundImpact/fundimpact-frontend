@@ -7,7 +7,7 @@ import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { organizationDetails } from "../../../utils/testMock.json";
-import { CREATE_DELIVERABLE_CATEGORY } from "../../../graphql/queries/Deliverable/category";
+import { CREATE_DELIVERABLE_CATEGORY } from "../../../graphql/Deliverable/category";
 let deliverableMutation = false;
 
 const mocks = [

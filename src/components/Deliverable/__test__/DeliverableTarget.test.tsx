@@ -4,7 +4,7 @@ import { act, fireEvent, queries, render, RenderResult } from "@testing-library/
 import "@testing-library/jest-dom/extend-expect";
 import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../constants";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/queries/Deliverable/category";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";

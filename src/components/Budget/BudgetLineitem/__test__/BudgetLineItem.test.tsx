@@ -1,20 +1,18 @@
 import React from "react";
-import BudgetLineitemDialog from "../BudgetLineitemDialog";
+import BudgetLineitem from "../BudgetLineItem";
 import { fireEvent, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import {
-	CREATE_PROJECT_BUDGET_TRACKING,
-	GET_BUDGET_TARGET_PROJECT,
-} from "../../../../../graphql/queries/budget";
-import { GET_ANNUAL_YEAR_LIST, GET_ORG_CURRENCIES_BY_ORG } from "../../../../../graphql/queries";
-import { renderApollo } from "../../../../../utils/test.util";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { CREATE_PROJECT_BUDGET_TRACKING } from "../../../../graphql/Budget/mutation";
+import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/Budget";
+import { GET_ANNUAL_YEAR_LIST, GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
+import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../../contexts/notificationContext";
-import { FORM_ACTIONS } from "../../../../../models/budget/constants";
-import { budgetLineItemInputFields } from "../../../../../utils/inputTestFields.json";
-import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
-import { getTodaysDate } from "../../../../../utils";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { FORM_ACTIONS } from "../../../../models/budget/constants";
+import { budgetLineItemInputFields } from "../../../../utils/inputTestFields.json";
+import { projectDetails, organizationDetails } from "../../../../utils/testMock.json";
+import { getTodaysDate } from "../../../../utils";
 
 const handleClose = jest.fn();
 
@@ -48,7 +46,13 @@ const mockOrgBudgetTargetProject = [
 ];
 
 const mockAnnualYearList = [
-	{ id: "ay", name: "year 1", short_name: "sh1", start_date: "2020-03-03", end_date: "2020-04-04" },
+	{
+		id: "ay",
+		name: "year 1",
+		short_name: "sh1",
+		start_date: "2020-03-03",
+		end_date: "2020-04-04",
+	},
 ];
 
 const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
@@ -123,7 +127,7 @@ beforeEach(() => {
 				<DashboardProvider
 					defaultState={{ project: projectDetails, organization: organizationDetails }}
 				>
-					<BudgetLineitemDialog
+					<BudgetLineitem
 						formAction={FORM_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}
