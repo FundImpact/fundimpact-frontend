@@ -1,4 +1,4 @@
-import { IconButton, MenuItem, Table, Box, Typography, Grid } from "@material-ui/core";
+import { IconButton, MenuItem, Table, Box, Typography, Grid, TableFooter } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -34,10 +34,14 @@ import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import AmountSpent from "./AmountSpent";
 import pagination from "../../../../hooks/pagination";
+import TablePagination from "@material-ui/core/TablePagination";
 
 const useStyles = makeStyles({
 	table: {
 		minWidth: 650,
+	},
+	pagination: {
+		paddingRight: "40px",
 	},
 });
 
@@ -107,6 +111,19 @@ function BudgetTargetTable() {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [openBudgetTrackingLineItem, setOpenBudgetTrackingLineItem] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const [page, setPage] = React.useState(0);
+
+	let { count, queryData: budgetTargetProjectData, changePage } = pagination({
+		query: GET_BUDGET_TARGET_PROJECT,
+		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
+		countFilter: {
+			project: currentProject?.id,
+		},
+		queryFilter: {
+			project: currentProject?.id,
+		},
+		sort: "created_at:DESC",
+	});
 
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
 		variables: {
@@ -116,6 +133,10 @@ function BudgetTargetTable() {
 			},
 		},
 	});
+
+	useEffect(() => {
+		setPage(0);
+	}, [currentProject]);
 
 	const reInitializeRef = (): void => {
 		selectedTargetBudget.current = null;
@@ -134,7 +155,7 @@ function BudgetTargetTable() {
 		});
 	} catch (error) {}
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!oldCachedBudgetTargetProjectData && currentProject) {
 			loadBudgetTarget({
 				variables: {
@@ -146,7 +167,7 @@ function BudgetTargetTable() {
 		}
 	}, [oldCachedBudgetTargetProjectData, currentProject, loadBudgetTarget]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (oldCachedBudgetTargetProjectData) {
 			let arr = oldCachedBudgetTargetProjectData.projectBudgetTargets.map(() => false);
 			setOpenTableRows(arr);
@@ -188,6 +209,18 @@ function BudgetTargetTable() {
 		},
 	];
 
+	const handleChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > page) {
+			changePage();
+		} else {
+			changePage(true);
+		}
+		setPage(newPage);
+	};
+
 	return (
 		<TableContainer component={Paper}>
 			<BudgetTarget
@@ -228,8 +261,8 @@ function BudgetTargetTable() {
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
 					{/* {wirte here loading} */}
-					{oldCachedBudgetTargetProjectData
-						? oldCachedBudgetTargetProjectData.projectBudgetTargets.map(
+					{budgetTargetProjectData
+						? budgetTargetProjectData.projectBudgetTargets.map(
 								(
 									budgetTargetsProject: IBudgetTargetProjectResponse,
 									index: number
@@ -261,7 +294,7 @@ function BudgetTargetTable() {
 												</IconButton>
 											</TableCell>
 											<TableCell component="td" scope="row">
-												{index + 1}
+												{page * 10 + index + 1}
 											</TableCell>
 											<TableCell align="left">
 												{budgetTargetsProject.name}
@@ -381,6 +414,20 @@ function BudgetTargetTable() {
 						  )
 						: null}
 				</TableBody>
+				<TableFooter>
+					<TableRow>
+						<TablePagination
+							rowsPerPageOptions={[]}
+							colSpan={9}
+							count={count}
+							rowsPerPage={count > 10 ? 10 : count}
+							page={page}
+							onChangePage={handleChangePage}
+							onChangeRowsPerPage={() => {}}
+							style={{ paddingRight: "40px" }}
+						/>
+					</TableRow>
+				</TableFooter>
 			</Table>
 		</TableContainer>
 	);

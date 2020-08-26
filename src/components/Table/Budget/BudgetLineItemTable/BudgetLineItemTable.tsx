@@ -8,6 +8,8 @@ import {
 	TableHead,
 	IconButton,
 	MenuItem,
+	TableFooter,
+	TablePagination,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -16,13 +18,13 @@ import SimpleMenu from "../../../Menu";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { getTodaysDate } from "../../../../utils";
-import { IBudgetTrackingLineitem } from "../../../../models/budget";
+import { IBudgetTrackingLineitem } from "../../../../models/budget/budget";
+import { IBUDGET_TRACKING_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import {
-	IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
-	IGET_BUDGET_TARCKING_LINE_ITEM,
-} from "../../../../models/budget/query";
-import { GET_PROJECT_BUDGET_TARCKING } from "../../../../graphql/Budget";
-import { useLazyQuery, useApolloClient } from "@apollo/client";
+	GET_PROJECT_BUDGET_TARCKING,
+	GET_PROJ_BUDGET_TRACINGS_COUNT,
+} from "../../../../graphql/queries/budget/query";
+import pagination from "../../../../hooks/pagination";
 
 const useStyles = makeStyles({
 	table: {
@@ -83,11 +85,22 @@ function BudgetLineItemTable({
 		null
 	);
 	const menuId = React.useRef("");
-	const apolloClient = useApolloClient();
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [getProjectBudgetTrackingData] = useLazyQuery(GET_PROJECT_BUDGET_TARCKING);
+	const [page, setPage] = React.useState(0);
+
+	let { count, queryData: budgetLineitemData, changePage } = pagination({
+		query: GET_PROJECT_BUDGET_TARCKING,
+		countQuery: GET_PROJ_BUDGET_TRACINGS_COUNT,
+		countFilter: {
+			budget_targets_project: budgetTargetId,
+		},
+		queryFilter: {
+			budget_targets_project: budgetTargetId,
+		},
+		sort: "created_at:DESC",
+	});
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -112,32 +125,6 @@ function BudgetLineItemTable({
 		},
 	];
 
-	let oldCachedProjectBudgetTrackingData: IGET_BUDGET_TARCKING_LINE_ITEM | null = null;
-	try {
-		oldCachedProjectBudgetTrackingData = apolloClient.readQuery<IGET_BUDGET_TARCKING_LINE_ITEM>(
-			{
-				query: GET_PROJECT_BUDGET_TARCKING,
-				variables: {
-					filter: {
-						budget_targets_project: budgetTargetId,
-					},
-				},
-			}
-		);
-	} catch (error) {}
-
-	useEffect(() => {
-		if (!oldCachedProjectBudgetTrackingData) {
-			getProjectBudgetTrackingData({
-				variables: {
-					filter: {
-						budget_targets_project: budgetTargetId,
-					},
-				},
-			});
-		}
-	}, [oldCachedProjectBudgetTrackingData, budgetTargetId, getProjectBudgetTrackingData]);
-
 	return (
 		<TableContainer component={Paper}>
 			<BudgetLineitem
@@ -153,7 +140,7 @@ function BudgetLineItemTable({
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						{oldCachedProjectBudgetTrackingData?.projBudgetTrackings?.length
+						{budgetLineitemData?.projBudgetTrackings?.length
 							? tableHeading.map((heading: { label: string }, index: number) => (
 									<TableCell className={tableHeader.th} key={index} align="left">
 										{heading.label === "Amount"
@@ -165,8 +152,8 @@ function BudgetLineItemTable({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
-					{oldCachedProjectBudgetTrackingData &&
-						oldCachedProjectBudgetTrackingData.projBudgetTrackings.map(
+					{budgetLineitemData &&
+						budgetLineitemData.projBudgetTrackings.map(
 							(
 								budgetTrackingLineItem: IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
 								index: number
@@ -214,6 +201,35 @@ function BudgetLineItemTable({
 							)
 						)}
 				</TableBody>
+				{budgetLineitemData && (
+					<TableFooter>
+						<TableRow>
+							<TablePagination
+								rowsPerPageOptions={[]}
+								colSpan={8}
+								count={count}
+								rowsPerPage={count > 10 ? 10 : count}
+								page={page}
+								SelectProps={{
+									inputProps: { "aria-label": "rows per page" },
+									native: true,
+								}}
+								onChangePage={(
+									event: React.MouseEvent<HTMLButtonElement> | null,
+									newPage: number
+								) => {
+									if (newPage > page) {
+										changePage();
+									} else {
+										changePage(true);
+									}
+									setPage(newPage);
+								}}
+								onChangeRowsPerPage={() => {}}
+							/>
+						</TableRow>
+					</TableFooter>
+				)}
 			</Table>
 		</TableContainer>
 	);

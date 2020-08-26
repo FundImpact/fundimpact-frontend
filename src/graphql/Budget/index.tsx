@@ -70,3 +70,9 @@ export const GET_PROJECT_BUDGET_TARGETS_COUNT = gql`
 		projectBudgetTargetsCount(where: $filter)
 	}
 `;
+
+export const GET_PROJ_BUDGET_TRACINGS_COUNT = gql`
+	query getProjBudgetTrackingsCount($filter: JSON) {
+		projBudgetTrackingsCount(where: $filter)
+	}
+`;
