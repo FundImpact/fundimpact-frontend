@@ -12,16 +12,16 @@ import {
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import SimpleMenu from "../../Menu/Menu";
-import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
-import { getTodaysDate } from "../../../utils";
-import { IBudgetTrackingLineitem } from "../../../models/budget/budget";
+import SimpleMenu from "../../../Menu";
+import BudgetLineitem from "../../../Budget/BudgetLineitem";
+import { FORM_ACTIONS } from "../../../../models/budget/constants";
+import { getTodaysDate } from "../../../../utils";
+import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import {
 	IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
-} from "../../../models/budget/query";
-import { GET_PROJECT_BUDGET_TARCKING } from "../../../graphql/queries/budget/query";
+} from "../../../../models/budget/query";
+import { GET_PROJECT_BUDGET_TARCKING } from "../../../../graphql/Budget";
 import { useLazyQuery, useApolloClient } from "@apollo/client";
 
 const useStyles = makeStyles({
@@ -70,7 +70,7 @@ const getInitialValues = (
 	};
 };
 
-function BudgetTrackingLineItemTable({
+function BudgetLineItemTable({
 	currency,
 	budgetTargetId,
 }: {
@@ -87,9 +87,7 @@ function BudgetTrackingLineItemTable({
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [getProjectBudgetTrackingData] = useLazyQuery(
-		GET_PROJECT_BUDGET_TARCKING
-	);
+	const [getProjectBudgetTrackingData] = useLazyQuery(GET_PROJECT_BUDGET_TARCKING);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -142,7 +140,7 @@ function BudgetTrackingLineItemTable({
 
 	return (
 		<TableContainer component={Paper}>
-			<BudgetLineitemDialog
+			<BudgetLineitem
 				open={openDialog}
 				handleClose={() => {
 					setOpenDialog(false);
@@ -158,7 +156,7 @@ function BudgetTrackingLineItemTable({
 						{oldCachedProjectBudgetTrackingData?.projBudgetTrackings?.length
 							? tableHeading.map((heading: { label: string }, index: number) => (
 									<TableCell className={tableHeader.th} key={index} align="left">
-										{heading.label == "Amount"
+										{heading.label === "Amount"
 											? `Amount (${currency})`
 											: heading.label}
 									</TableCell>
@@ -205,7 +203,7 @@ function BudgetTrackingLineItemTable({
 											handleClose={handleClose}
 											id={`organizationMenu-${budgetTrackingLineItem.id}`}
 											anchorEl={
-												menuId.current == budgetTrackingLineItem.id
+												menuId.current === budgetTrackingLineItem.id
 													? anchorEl
 													: null
 											}
@@ -221,4 +219,4 @@ function BudgetTrackingLineItemTable({
 	);
 }
 
-export default React.memo(BudgetTrackingLineItemTable);
+export default React.memo(BudgetLineItemTable);

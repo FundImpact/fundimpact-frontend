@@ -4,8 +4,6 @@ import { renderApollo } from "../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 
 const handleClose = jest.fn();
-const onUpdate = jest.fn();
-const onSubmit = jest.fn();
 const validate = jest.fn();
 
 let dialog: any;

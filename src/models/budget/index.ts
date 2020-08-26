@@ -1,7 +1,7 @@
 import { FORM_ACTIONS } from "./constants";
 import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
 
-export interface IBudget {
+export interface IBudgetCategory {
 	id?: string;
 	name: string;
 	description?: string;
@@ -26,7 +26,7 @@ export interface IBudgetTarget {
 	donor: string
 }
 
-export type ICreateBudgetTargetProjectDialogProps =
+export type IBudgetTargetProjectProps =
 	| {
 			open: boolean;
 			handleClose: () => void;
@@ -39,7 +39,7 @@ export type ICreateBudgetTargetProjectDialogProps =
 			formAction: FORM_ACTIONS.CREATE;
 		};
 		
-export type ICreateBudgetTrackingLineitemDialogProps =
+export type IBudgetLineitemProps =
 	| {
 			open: boolean;
 			handleClose: () => void;

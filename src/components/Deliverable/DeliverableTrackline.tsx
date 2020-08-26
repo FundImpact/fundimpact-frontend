@@ -12,9 +12,9 @@ import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
-} from "../../graphql/queries/Deliverable/trackline";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/queries/Deliverable/target";
-import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
+} from "../../graphql/Deliverable/trackline";
+import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../graphql/Deliverable/target";
+import { GET_ANNUAL_YEARS } from "../../graphql/index";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableTragetLineForm } from "./inputField.json";

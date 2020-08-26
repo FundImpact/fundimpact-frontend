@@ -4,13 +4,13 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
-import { CREATE_IMPACT_TARGET, UPDATE_IMAPACT_TARGET } from "../../graphql/queries/Impact/target";
+import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
+import { CREATE_IMPACT_TARGET, UPDATE_IMAPACT_TARGET } from "../../graphql/Impact/target";
 import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
+import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
+import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/Impact/target";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
 import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
