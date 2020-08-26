@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_DELIVERABLE_ORG_CATEGORY = gql`
-	query {
-		deliverableCategory {
+	query getDeliverableCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		deliverableCategory(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			description

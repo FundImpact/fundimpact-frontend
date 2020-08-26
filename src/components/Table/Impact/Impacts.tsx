@@ -120,7 +120,9 @@ export default function ImpactsTable() {
 		GET_IMPACT_TARGET_BY_PROJECT
 	);
 	const dashboardData = useDashBoardData();
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<
+		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
+	>([]);
 
 	useEffect(() => {
 		if (dashboardData?.project) {
@@ -133,9 +135,9 @@ export default function ImpactsTable() {
 	useEffect(() => {
 		if (data) {
 			let impactTargetProjectList = data.impactTargetProjectList;
-			let array: { collaspeTable: any; column: any[] }[] = [];
+			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {
-				let row: { collaspeTable: any; column: any[] } = {
+				let row: { collaspeTable: React.ReactNode; column: React.ReactNode[] } = {
 					collaspeTable: null,
 					column: [],
 				};

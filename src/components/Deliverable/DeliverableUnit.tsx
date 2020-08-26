@@ -11,6 +11,7 @@ import FormDialog from "../FormDialog/FormDialog";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/queries/Deliverable/category";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableUnitForm } from "./inputField.json";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -27,12 +28,15 @@ function getInitialValues(props: DeliverableUnitProps) {
 
 function DeliverableUnit(props: DeliverableUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
 	const [deliverableCategory, setDeliverableCategory] = useState<number>();
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
 	const [createCategoryUnit] = useMutation(CREATE_CATEGORY_UNIT);
 
 	const createCategoryUnitHelper = async (deliverableUnitId: string) => {

@@ -19,7 +19,7 @@ import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { impactTragetLineForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
-
+import { getTodaysDate } from "../../utils/index";
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -29,7 +29,7 @@ function getInitialValues(props: ImpactTargetLineProps) {
 		grant_period: "",
 		financial_years_org: "",
 		financial_years_donor: "",
-		reporting_date: "",
+		reporting_date: getTodaysDate(),
 		note: "",
 	};
 }
@@ -44,7 +44,11 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 
-	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE);
+	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
+		onError(err) {
+			console.log(err);
+		},
+	});
 
 	const [updateImpactTrackLine, { loading: updateImpactTrackLineLoading }] = useMutation(
 		UPDATE_IMPACT_TRACKLINE
@@ -72,7 +76,8 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		delete value.financial_years_donor;
 		delete value.financial_years_org;
 		delete value.grant_period;
-		value.reporting_date = new Date();
+		value.reporting_date = new Date(value.reporting_date);
+		console.log(value);
 		try {
 			await createImpactTrackline({
 				variables: { input: value },
@@ -94,7 +99,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
+			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
 		}
 	};
 

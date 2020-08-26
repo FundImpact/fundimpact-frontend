@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import FITable from "../FITable";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
@@ -22,9 +22,11 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	};
 	return (
 		<>
-			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
-			</IconButton>
+			<TableCell>
+				<IconButton aria-label="delete" onClick={handleMenuClick}>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
 			<Menu
 				id="impact-trackline-simple-menu"
 				anchorEl={menuAnchor}
@@ -66,7 +68,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		variables: { filter: { impact_target_project: impactTargetId } },
 	});
 
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (data && data.impactTrackingLineitemList && data.impactTrackingLineitemList.length) {
 			let impactTrackingLineitemList = data.impactTrackingLineitemList;
@@ -74,9 +76,11 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			for (let i = 0; i < impactTrackingLineitemList.length; i++) {
 				if (impactTrackingLineitemList[i]) {
 					let row = [
-						getTodaysDate(impactTrackingLineitemList[i].reporting_date),
-						impactTrackingLineitemList[i].note,
-						impactTrackingLineitemList[i].value,
+						<TableCell>
+							{getTodaysDate(impactTrackingLineitemList[i].reporting_date)}
+						</TableCell>,
+						<TableCell>{impactTrackingLineitemList[i].note}</TableCell>,
+						<TableCell>{impactTrackingLineitemList[i].value}</TableCell>,
 					];
 					row.push(
 						<EditImpactTargetLineIcon

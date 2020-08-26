@@ -20,6 +20,7 @@ import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -35,10 +36,12 @@ function getInitialValues(props: DeliverableTargetProps) {
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
-
+	const dashboardData = useDashBoardData();
 	const [getUnitsByCategory, { data: unitsBycategory }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching units by category
 
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
 
 	const [currentCategory, setcurrentCategory] = useState<any>();
 	const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
@@ -103,6 +106,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	// handling category change
 	useEffect(() => {
+		console.log("hey", currentCategory);
 		if (currentCategory) {
 			getUnitsByCategory({
 				variables: { filter: { deliverable_category_org: currentCategory } },
@@ -114,6 +118,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	useEffect(() => {
 		if (unitsBycategory) {
 			let arr: any = [];
+			console.log(unitsBycategory);
 			unitsBycategory.deliverableCategoryUnitList.forEach(
 				(elem: { deliverable_units_org: { id: string; name: string } }) => {
 					arr.push({

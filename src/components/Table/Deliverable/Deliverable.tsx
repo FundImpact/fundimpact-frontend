@@ -123,13 +123,16 @@ export default function DeliverablesTable() {
 		variables: { filter: { project: dashboardData?.project?.id } },
 	});
 
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<
+		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
+	>([]);
+
 	useEffect(() => {
 		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
 			let deliverableTargetList = data.deliverableTargetList;
-			let array: { collaspeTable: any; column: any[] }[] = [];
+			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
-				let row: { collaspeTable: any; column: any[] } = {
+				let row: { collaspeTable: React.ReactNode; column: React.ReactNode[] } = {
 					collaspeTable: null,
 					column: [],
 				};

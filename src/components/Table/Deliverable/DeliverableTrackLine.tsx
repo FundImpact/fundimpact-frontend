@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import FITable from "../FITable";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
@@ -25,9 +25,11 @@ function EditImpactTrackLineIcon({ deliverableTrackline }: { deliverableTracklin
 	};
 	return (
 		<>
-			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
-			</IconButton>
+			<TableCell>
+				<IconButton aria-label="delete" onClick={handleMenuClick}>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
 			<Menu
 				id="deliverable-trackline-simple-menu"
 				anchorEl={menuAnchor}
@@ -75,7 +77,7 @@ export default function DeliverablesTrackLineTable({
 		variables: { filter: { deliverable_target_project: deliverableTargetId } },
 	});
 
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (
 			data &&
@@ -87,9 +89,11 @@ export default function DeliverablesTrackLineTable({
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
 					let row = [
-						getTodaysDate(deliverableTrackingLineitemList[i].reporting_date),
-						deliverableTrackingLineitemList[i].note,
-						deliverableTrackingLineitemList[i].value,
+						<TableCell>
+							{getTodaysDate(deliverableTrackingLineitemList[i].reporting_date)}
+						</TableCell>,
+						<TableCell>{deliverableTrackingLineitemList[i].note}</TableCell>,
+						<TableCell>{deliverableTrackingLineitemList[i].value}</TableCell>,
 					];
 					row.push(
 						<EditImpactTrackLineIcon
