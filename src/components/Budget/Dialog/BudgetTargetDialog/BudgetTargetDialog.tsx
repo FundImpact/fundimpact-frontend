@@ -97,7 +97,7 @@ function BudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps)
 	});
 
 	useEffect(() => {
-		if (orgCurrencies && orgCurrencies.orgCurrencies?.length) {
+		if (orgCurrencies?.orgCurrencies?.length) {
 			createBudgetTargetForm[1].endAdornment = orgCurrencies.orgCurrencies[0].currency.code;
 		}
 	}, [orgCurrencies]);

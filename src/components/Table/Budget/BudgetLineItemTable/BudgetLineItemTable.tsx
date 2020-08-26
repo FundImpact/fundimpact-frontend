@@ -12,7 +12,7 @@ import {
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import SimpleMenu from "../../../Menu/Menu";
+import SimpleMenu from "../../../Menu";
 import BudgetLineitemDialog from "../../../Budget/Dialog/BudgetLineitemDialog";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { getTodaysDate } from "../../../../utils";
