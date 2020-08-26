@@ -11,6 +11,7 @@ import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
 import { useStyles } from "../Dasboard/styles";
 import SimpleMenu from "../Menu/Menu";
+import SidebarSkeleton from "../Skeletons/SidebarSkeleton";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
 import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
@@ -31,7 +32,7 @@ export default function SideBar({ children }: { children?: Function }) {
 	}, [data, dispatch]);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [viewWorkspace, setViewWorkspace] = React.useState<boolean>(false);
+	const [shouldCreateWorkspace, setViewWorkspace] = React.useState<boolean>(false);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -50,6 +51,8 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
+
+	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			{!dashboardData ? (
@@ -61,7 +64,7 @@ export default function SideBar({ children }: { children?: Function }) {
 				<div>
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1}>
-							{data && data.organizationList[0].name && (
+							{data.organizationList[0]?.name && (
 								<Typography color="primary" gutterBottom variant="h6">
 									{dashboardData?.organization?.name}
 								</Typography>
@@ -87,12 +90,12 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
-					{data && data.organizationList[0].id && (
+					{data.organizationList[0]?.id && (
 						<WorkspaceList organizationId={data.organizationList[0].id} />
 					)}
 
 					<List></List>
-					{viewWorkspace && data ? (
+					{shouldCreateWorkspace && data ? (
 						<Workspace
 							organizationId={data.organizationList[0].id}
 							type={WORKSPACE_ACTIONS.CREATE}
