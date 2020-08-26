@@ -68,7 +68,7 @@ function Pagination({
 			return;
 		}
 
-		if (!prev && startingValue.current >= count.current) {
+		if (!prev && startingValue.current > count.current) {
 			setError("Start Cannot Be More Than Count");
 			return;
 		}

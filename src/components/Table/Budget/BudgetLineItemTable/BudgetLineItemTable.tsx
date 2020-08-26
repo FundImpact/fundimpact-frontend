@@ -201,7 +201,7 @@ function BudgetLineItemTable({
 							)
 						)}
 				</TableBody>
-				{budgetLineitemData && (
+				{budgetLineitemData?.projBudgetTrackings?.length ? (
 					<TableFooter>
 						<TableRow>
 							<TablePagination
@@ -229,7 +229,7 @@ function BudgetLineItemTable({
 							/>
 						</TableRow>
 					</TableFooter>
-				)}
+				) : null}
 			</Table>
 		</TableContainer>
 	);

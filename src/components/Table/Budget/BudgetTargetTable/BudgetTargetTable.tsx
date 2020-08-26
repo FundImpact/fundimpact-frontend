@@ -1,33 +1,21 @@
-import { IconButton, MenuItem, Table, Box, Typography, Grid, TableFooter } from "@material-ui/core";
+import { Table, TableFooter } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import { useLazyQuery, useApolloClient, useQuery } from "@apollo/client";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/Budget";
+import { useQuery } from "@apollo/client";
+import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/queries/budget";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {
-	IBudgetTargetProjectResponse,
-	IGET_BUDGET_TARGET_PROJECT,
-} from "../../../../models/budget/query";
-
-import React, { useState } from "react";
-import BudgetTarget from "../../../Budget/BudgetTarget";
+import { IBudgetTargetProjectResponse } from "../../../../models/budget/query";
 import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/queries/budget/query";
 import React, { useState, useEffect } from "react";
 import BudgetTargetDialog from "../../../Budget/Dialog/BudgetTargetDialog";
 
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
-import SimpleMenu from "../../../Menu/Menu";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import Collapse from "@material-ui/core/Collapse";
-import BudgetLineItemTable from "../BudgetLineItemTable";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
@@ -35,6 +23,7 @@ import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import AmountSpent from "./AmountSpent";
 import pagination from "../../../../hooks/pagination";
 import TablePagination from "@material-ui/core/TablePagination";
+import BudgetTargetTableRow from "./BudgetTargetTableRow";
 
 const useStyles = makeStyles({
 	table: {
@@ -99,18 +88,14 @@ const tableHeading = [
 
 function BudgetTargetTable() {
 	const classes = useStyles();
-	const apolloClient = useApolloClient();
 	const tableHeader = StyledTableHeader();
-	const menuId = React.useRef("");
+	const menuId = React.useRef<string>("");
 	const selectedTargetBudget = React.useRef<IBudgetTargetProjectResponse | null>(null);
 	const dashboardData = useDashBoardData();
 	const currentProject = dashboardData?.project;
 
-	const [openTableRows, setOpenTableRows] = useState<boolean[]>([]);
-	const [loadBudgetTarget] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
-	const [openDialog, setOpenDialog] = useState<boolean>(false);
-	const [openBudgetTrackingLineItem, setOpenBudgetTrackingLineItem] = useState(false);
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const [openBudgetCategory, setOpenBudgetCategory] = useState<boolean>(false);
+	const [openBudgetLineItem, setOpenBudgetLineItem] = useState(false);
 	const [page, setPage] = React.useState(0);
 
 	let { count, queryData: budgetTargetProjectData, changePage } = pagination({
@@ -143,72 +128,6 @@ function BudgetTargetTable() {
 		menuId.current = "";
 	};
 
-	let oldCachedBudgetTargetProjectData: IGET_BUDGET_TARGET_PROJECT | null = null;
-	try {
-		oldCachedBudgetTargetProjectData = apolloClient.readQuery<IGET_BUDGET_TARGET_PROJECT>({
-			query: GET_BUDGET_TARGET_PROJECT,
-			variables: {
-				filter: {
-					project: currentProject?.id,
-				},
-			},
-		});
-	} catch (error) {}
-
-	useEffect(() => {
-		if (!oldCachedBudgetTargetProjectData && currentProject) {
-			loadBudgetTarget({
-				variables: {
-					filter: {
-						project: currentProject?.id,
-					},
-				},
-			});
-		}
-	}, [oldCachedBudgetTargetProjectData, currentProject, loadBudgetTarget]);
-
-	useEffect(() => {
-		if (oldCachedBudgetTargetProjectData) {
-			let arr = oldCachedBudgetTargetProjectData.projectBudgetTargets.map(() => false);
-			setOpenTableRows(arr);
-		}
-	}, [oldCachedBudgetTargetProjectData]);
-
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const menuList = [
-		{
-			children: (
-				<MenuItem
-					onClick={() => {
-						setOpenDialog(true);
-						handleClose();
-					}}
-				>
-					Edit Budget Target
-				</MenuItem>
-			),
-		},
-		{
-			children: (
-				<MenuItem
-					onClick={() => {
-						setOpenBudgetTrackingLineItem(true);
-						handleClose();
-					}}
-				>
-					Report Expenditure
-				</MenuItem>
-			),
-		},
-	];
-
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
 		newPage: number
@@ -226,7 +145,7 @@ function BudgetTargetTable() {
 			<BudgetTarget
 				open={openDialog}
 				handleClose={() => {
-					setOpenDialog(false);
+					setOpenBudgetCategory(false);
 					reInitializeRef();
 				}}
 				formAction={FORM_ACTIONS.UPDATE}
@@ -235,7 +154,7 @@ function BudgetTargetTable() {
 			<BudgetLineitem
 				open={openBudgetTrackingLineItem}
 				handleClose={() => {
-					setOpenBudgetTrackingLineItem(false);
+					setOpenBudgetLineItem(false);
 					reInitializeRef();
 				}}
 				formAction={FORM_ACTIONS.CREATE}
@@ -267,167 +186,40 @@ function BudgetTargetTable() {
 									budgetTargetsProject: IBudgetTargetProjectResponse,
 									index: number
 								) => (
-									<React.Fragment key={budgetTargetsProject.id}>
-										<TableRow>
-											<TableCell>
-												<IconButton
-													aria-label="expand row"
-													size="small"
-													onClick={() =>
-														setOpenTableRows(
-															(
-																openTableRowsArr: boolean[]
-															): boolean[] => {
-																openTableRowsArr[
-																	index
-																] = !openTableRowsArr[index];
-																return [...openTableRowsArr];
-															}
-														)
-													}
-												>
-													{openTableRows[index] ? (
-														<KeyboardArrowUpIcon />
-													) : (
-														<KeyboardArrowDownIcon />
-													)}
-												</IconButton>
-											</TableCell>
-											<TableCell component="td" scope="row">
-												{page * 10 + index + 1}
-											</TableCell>
-											<TableCell align="left">
-												{budgetTargetsProject.name}
-											</TableCell>
-											<TableCell align="left">
-												{
-													budgetTargetsProject
-														?.budget_category_organization?.name
-												}
-											</TableCell>
-											<TableCell align="left">
-												{budgetTargetsProject?.donor?.name}
-											</TableCell>
-											<TableCell align="left">
-												{budgetTargetsProject.total_target_amount}
-											</TableCell>
-											<TableCell align="left">
-												<AmountSpent
-													budgetTargetId={budgetTargetsProject.id}
-												>
-													{(amount: number) => {
-														return <span>{amount}</span>;
-													}}
-												</AmountSpent>
-											</TableCell>
-											<TableCell align="left">
-												<AmountSpent
-													budgetTargetId={budgetTargetsProject.id}
-												>
-													{(amount: number) => {
-														return (
-															<span>
-																{(
-																	(amount * 100) /
-																	parseInt(
-																		budgetTargetsProject.total_target_amount
-																	)
-																).toFixed(2)}
-															</span>
-														);
-													}}
-												</AmountSpent>
-											</TableCell>
-											<TableCell>
-												<IconButton
-													aria-haspopup="true"
-													onClick={(
-														event: React.MouseEvent<HTMLButtonElement>
-													) => {
-														menuId.current = budgetTargetsProject.id;
-														selectedTargetBudget.current = budgetTargetsProject;
-														handleClick(event);
-													}}
-												>
-													<MoreVertIcon />
-												</IconButton>
-												<SimpleMenu
-													handleClose={handleClose}
-													id={`organizationMenu-${budgetTargetsProject.id}`}
-													anchorEl={
-														menuId.current === budgetTargetsProject.id
-															? anchorEl
-															: null
-													}
-													menuList={menuList}
-												/>
-											</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell
-												style={{ paddingBottom: 0, paddingTop: 0 }}
-												colSpan={9}
-											>
-												<Collapse
-													in={openTableRows[index]}
-													timeout="auto"
-													unmountOnExit
-												>
-													<Box m={1}>
-														<Grid container>
-															<Grid item xs={12}>
-																<Box m={1}>
-																	<Typography
-																		align="left"
-																		variant="subtitle1"
-																		style={{
-																			fontSize: "0.8rem",
-																		}}
-																		variantMapping={{
-																			subtitle1: "h1",
-																		}}
-																	>
-																		{
-																			budgetTargetsProject.description
-																		}
-																	</Typography>
-																</Box>
-															</Grid>
-														</Grid>
-														<BudgetLineItemTable
-															budgetTargetId={budgetTargetsProject.id}
-															currency={
-																orgCurrencies?.orgCurrencies[0]
-																	?.currency.code
-																	? orgCurrencies
-																			?.orgCurrencies[0]
-																			?.currency.code
-																	: ""
-															}
-														/>
-													</Box>
-												</Collapse>
-											</TableCell>
-										</TableRow>
-									</React.Fragment>
+									<BudgetTargetTableRow
+										budgetTarget={budgetTargetsProject}
+										key={budgetTargetsProject.id}
+										currency={
+											orgCurrencies?.orgCurrencies[0]?.currency.code
+												? orgCurrencies?.orgCurrencies[0]?.currency.code
+												: ""
+										}
+										serialNo={page * 10 + index + 1}
+										menuId={menuId}
+										selectedTargetBudget={selectedTargetBudget}
+										setOpenBudgetLineItem={setOpenBudgetLineItem}
+										setOpenBudgetCategory={setOpenBudgetCategory}
+									/>
 								)
 						  )
 						: null}
 				</TableBody>
-				<TableFooter>
-					<TableRow>
-						<TablePagination
-							rowsPerPageOptions={[]}
-							colSpan={9}
-							count={count}
-							rowsPerPage={count > 10 ? 10 : count}
-							page={page}
-							onChangePage={handleChangePage}
-							onChangeRowsPerPage={() => {}}
-							style={{ paddingRight: "40px" }}
-						/>
-					</TableRow>
-				</TableFooter>
+				{budgetTargetProjectData?.projectBudgetTargets?.length ? (
+					<TableFooter>
+						<TableRow>
+							<TablePagination
+								rowsPerPageOptions={[]}
+								colSpan={9}
+								count={count}
+								rowsPerPage={count > 10 ? 10 : count}
+								page={page}
+								onChangePage={handleChangePage}
+								onChangeRowsPerPage={() => {}}
+								style={{ paddingRight: "40px" }}
+							/>
+						</TableRow>
+					</TableFooter>
+				) : null}
 			</Table>
 		</TableContainer>
 	);

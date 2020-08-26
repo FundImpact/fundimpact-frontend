@@ -293,4 +293,4 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	);
 }
 
-export default BudgetLineitem;
+export default React.memo(BudgetLineitem);
