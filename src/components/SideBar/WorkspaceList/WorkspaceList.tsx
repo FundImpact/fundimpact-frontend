@@ -17,6 +17,7 @@ import { setActiveWorkSpace } from "../../../reducers/dashboardReducer";
 import SimpleMenu from "../../Menu/Menu";
 import { PROJECT_ACTIONS } from "../../Project/constants";
 import Project from "../../Project/Project";
+import WorkspaceListSkeleton from "../../Skeleton/WorkspaceListSkeleton";
 import { WORKSPACE_ACTIONS } from "../../workspace/constants";
 import Workspace from "../../workspace/Workspace";
 import ProjectList from "../ProjectList/ProjectList";
@@ -88,71 +89,73 @@ export default function WorkspaceList({
 		setAnchorEl(array);
 	};
 
+	if (!cachedWorkspaces || !cachedWorkspaces.orgWorkspaces)
+		return <WorkspaceListSkeleton></WorkspaceListSkeleton>;
+
 	return (
 		<React.Fragment>
 			<List className={classes.workspace}>
-				{cachedWorkspaces &&
-					cachedWorkspaces.orgWorkspaces &&
-					cachedWorkspaces.orgWorkspaces.map(
-						(workspace: IOrganisationWorkspaces, index: number) => {
-							return (
-								<ListItem className={classes.workspaceList} key={workspace.id}>
-									<Box display="flex">
-										<Box flexGrow={1}>
-											<ListItemText
-												primary={workspace.name}
-												className={classes.workspaceListText}
-											/>
-										</Box>
-										<Box>
-											<IconButton
-												className={classes.workspaceEditIcon}
-												aria-controls={`projectmenu${index}`}
-												aria-haspopup="true"
-												onClick={(e) => {
-													handleClick(e, index);
-													dispatch(setActiveWorkSpace(workspace));
+				{cachedWorkspaces.orgWorkspaces.map(
+					(workspace: IOrganisationWorkspaces, index: number) => {
+						return (
+							<ListItem className={classes.workspaceList} key={workspace.id}>
+								<Box display="flex">
+									<Box flexGrow={1}>
+										<ListItemText
+											primary={workspace.name}
+											className={classes.workspaceListText}
+										/>
+									</Box>
+									<Box>
+										<IconButton
+											className={classes.workspaceEditIcon}
+											aria-controls={`projectmenu${index}`}
+											aria-haspopup="true"
+											onClick={(e) => {
+												handleClick(e, index);
+												dispatch(setActiveWorkSpace(workspace));
+											}}
+										>
+											<EditOutlinedIcon fontSize="small" />
+										</IconButton>
+										<SimpleMenu
+											handleClose={() => closeMenuItems(index)}
+											id={`projectmenu${index}`}
+											anchorEl={anchorEl[index]}
+										>
+											<MenuItem
+												onClick={() => {
+													const workpsaceToEdit = {
+														...workspace,
+														organization:
+															workspace["organization"]["id"],
+													};
+													seteditWorkspace(workpsaceToEdit as any);
+													closeMenuItems(index);
 												}}
 											>
-												<EditOutlinedIcon fontSize="small" />
-											</IconButton>
-											<SimpleMenu
-												handleClose={() => closeMenuItems(index)}
-												id={`projectmenu${index}`}
-												anchorEl={anchorEl[index]}
+												Edit Workspace{" "}
+											</MenuItem>
+											<MenuItem
+												onClick={() => {
+													setProjectDialogOpen(true);
+													closeMenuItems(index);
+												}}
 											>
-												<MenuItem
-													onClick={() => {
-														const workpsaceToEdit = {
-															...workspace,
-															organization:
-																workspace["organization"]["id"],
-														};
-														seteditWorkspace(workpsaceToEdit as any);
-														closeMenuItems(index);
-													}}
-												>
-													Edit Workspace{" "}
-												</MenuItem>
-												<MenuItem
-													onClick={() => {
-														setProjectDialogOpen(true);
-														closeMenuItems(index);
-													}}
-												>
-													Add Project
-												</MenuItem>
-											</SimpleMenu>
-										</Box>
+												Add Project
+											</MenuItem>
+										</SimpleMenu>
 									</Box>
-									<ProjectList workspaceId={workspace.id} projectIndex={index} />
-									<Divider />
-								</ListItem>
-							);
-						}
-					)}
+								</Box>
+								<ProjectList workspaceId={workspace.id} projectIndex={index} />
+								<Divider />
+							</ListItem>
+						);
+					}
+				)}
 			</List>
-			{projectDialogOpen && cachedWorkspaces && cachedWorkspaces.orgWorkspaces ? (
+
+			{projectDialogOpen ? (
 				<Project
 					type={PROJECT_ACTIONS.CREATE}
 					workspaces={cachedWorkspaces.orgWorkspaces}
@@ -161,7 +164,6 @@ export default function WorkspaceList({
 				/>
 			) : null}
 			{editWorkspace ? (
-				// TODO: Need to changed organisation id to dynamic
 				<Workspace
 					organizationId={organizationId}
 					type={WORKSPACE_ACTIONS.UPDATE}

@@ -6,6 +6,7 @@ import React from "react";
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries";
 import { setProject } from "../../../reducers/dashboardReducer";
+import ProjectListSkeleton from "../../Skeletons/projectList";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -35,6 +36,8 @@ export default function ProjectList({
 			dispatch(setProject(data.orgProject[0]));
 		}
 	}, [data, dispatch, projectIndex]);
+
+	if (!data?.orgProject) return <ProjectListSkeleton />;
 	return (
 		<List>
 			{data &&
