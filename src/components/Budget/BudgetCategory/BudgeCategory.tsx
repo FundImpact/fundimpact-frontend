@@ -60,6 +60,9 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 								},
 							},
 						});
+						let budgetCategory: Partial<IBudgetCategory>[] = data?.orgBudgetCategory
+							? data?.orgBudgetCategory
+							: [];
 						store.writeQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
@@ -68,10 +71,7 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 								},
 							},
 							data: {
-								orgBudgetCategory: [
-									...data!.orgBudgetCategory,
-									createOrgBudgetCategory,
-								],
+								orgBudgetCategory: [...budgetCategory, createOrgBudgetCategory],
 							},
 						});
 					} catch (err) {}

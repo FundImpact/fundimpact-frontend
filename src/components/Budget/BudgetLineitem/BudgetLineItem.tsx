@@ -29,6 +29,7 @@ import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
 import {
 	IGET_BUDGET_TARGET_PROJECT,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
+	IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
 } from "../../../models/budget/query";
 import { compareObjectKeys } from "../../../utils";
 
@@ -151,6 +152,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								},
 							},
 						});
+						let budgetLineItems: IBUDGET_TRACKING_LINE_ITEM_RESPONSE[] = data?.projBudgetTrackings
+							? data?.projBudgetTrackings
+							: [];
 						store.writeQuery({
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
@@ -160,10 +164,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								},
 							},
 							data: {
-								projBudgetTrackings: [
-									...data!.projBudgetTrackings,
-									lineItemCreated,
-								],
+								projBudgetTrackings: [...budgetLineItems, lineItemCreated],
 							},
 						});
 					} catch (err) {}
@@ -188,8 +189,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							},
 							data: {
 								projBudgetTrackingsTotalAmount:
-									amountSpentData!.projBudgetTrackingsTotalAmount +
-									lineItemCreated.amount,
+									(amountSpentData?.projBudgetTrackingsTotalAmount
+										? amountSpentData?.projBudgetTrackingsTotalAmount
+										: 0) + lineItemCreated.amount,
 							},
 						});
 					} catch (err) {}
@@ -245,12 +247,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							},
 							data: {
 								projBudgetTrackingsTotalAmount:
-									amountSpentData!.projBudgetTrackingsTotalAmount + change,
+									(amountSpentData?.projBudgetTrackingsTotalAmount
+										? amountSpentData?.projBudgetTrackingsTotalAmount
+										: 0) + change,
 							},
 						});
 					} catch (err) {
 						console.log("err :>> ", err);
-						throw err;
+						// throw err;
 					}
 				},
 			});

@@ -7,7 +7,7 @@ import {
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/Budget";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGET_BUDGET_TARGET_PROJECT } from "../../../models/budget/query";
+import { IGET_BUDGET_TARGET_PROJECT, IBudgetTargetProjectResponse } from "../../../models/budget/query";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
@@ -137,6 +137,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 						});
+						let budgetTargets : IBudgetTargetProjectResponse[] = dataRead?.projectBudgetTargets
+							? dataRead?.projectBudgetTargets
+							: [];
 						store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
@@ -146,7 +149,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							},
 							data: {
 								projectBudgetTargets: [
-									...dataRead!.projectBudgetTargets,
+									...budgetTargets,
 									projectCreated,
 								],
 							},
