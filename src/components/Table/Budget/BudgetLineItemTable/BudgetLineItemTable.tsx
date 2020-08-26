@@ -13,15 +13,15 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../../Menu";
-import BudgetLineitemDialog from "../../../Budget/Dialog/BudgetLineitemDialog";
+import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { getTodaysDate } from "../../../../utils";
-import { IBudgetTrackingLineitem } from "../../../../models/budget/budget";
+import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import {
 	IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../../models/budget/query";
-import { GET_PROJECT_BUDGET_TARCKING } from "../../../../graphql/queries/budget/query";
+import { GET_PROJECT_BUDGET_TARCKING } from "../../../../graphql/Budget";
 import { useLazyQuery, useApolloClient } from "@apollo/client";
 
 const useStyles = makeStyles({
@@ -87,9 +87,7 @@ function BudgetLineItemTable({
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [getProjectBudgetTrackingData] = useLazyQuery(
-		GET_PROJECT_BUDGET_TARCKING
-	);
+	const [getProjectBudgetTrackingData] = useLazyQuery(GET_PROJECT_BUDGET_TARCKING);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -142,7 +140,7 @@ function BudgetLineItemTable({
 
 	return (
 		<TableContainer component={Paper}>
-			<BudgetLineitemDialog
+			<BudgetLineitem
 				open={openDialog}
 				handleClose={() => {
 					setOpenDialog(false);

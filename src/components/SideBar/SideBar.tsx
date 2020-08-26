@@ -6,7 +6,7 @@ import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
-import { GET_ORGANISATIONS } from "../../graphql/queries";
+import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
 import { useStyles } from "../Dasboard/styles";

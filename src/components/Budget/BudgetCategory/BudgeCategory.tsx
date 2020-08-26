@@ -1,30 +1,30 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
-import { IBudget } from "../../../../models/budget/budget";
-import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
-import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/queries/budget";
-import { IGET_BUDGET_CATEGORY } from "../../../../models/budget/query";
-import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+import { IBudgetCategory } from "../../../models/budget";
+import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/Budget/mutation";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/Budget";
+import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	setErrorNotification,
 	setSuccessNotification,
-} from "../../../../reducers/notificationReducer";
-import dataInputFields from "../../../../utils/inputFields.json";
-import { IInputField } from "../../../../models";
-import FormDialog from "../../../FormDialog";
-import CommonForm from "../../../Forms/CommonForm";
+} from "../../../reducers/notificationReducer";
+import dataInputFields from "../../../utils/inputFields.json";
+import { IInputField } from "../../../models";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../Forms/CommonForm";
 
 let inputFields: IInputField[] = dataInputFields.createBudgetForm;
 
-const initialValues: IBudget = {
+const initialValues: IBudgetCategory = {
 	name: "",
 	code: "",
 	description: "",
 };
 
-const validate = (values: IBudget) => {
-	let errors: Partial<IBudget> = {};
+const validate = (values: IBudgetCategory) => {
+	let errors: Partial<IBudgetCategory> = {};
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
@@ -37,14 +37,14 @@ const validate = (values: IBudget) => {
 	return errors;
 };
 
-function BudgetCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const [createNewOrgBudgetCategory, { loading }] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
 
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
 
-	const onSubmit = async (values: IBudget) => {
+	const onSubmit = async (values: IBudgetCategory) => {
 		try {
 			await createNewOrgBudgetCategory({
 				variables: {
@@ -108,4 +108,4 @@ function BudgetCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 	);
 }
 
-export default BudgetCategoryDialog;
+export default BudgetCategory;

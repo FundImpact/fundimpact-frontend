@@ -1,13 +1,13 @@
 import React from "react";
-import BudgetCategoryDialog from "../BudgeCategorytDialog";
+import BudgetCategory from "../BudgeCategory";
 import { fireEvent, wait } from "@testing-library/react";
-import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../../graphql/queries/budget";
-import { renderApollo } from "../../../../../utils/test.util";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/Budget/mutation";
+import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../../contexts/notificationContext";
-import { BudgetCategoryDialogInputFields } from "../../../../../utils/inputTestFields.json";
-import { organizationDetails } from "../../../../../utils/testMock.json";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { BudgetCategoryInputFields } from "../../../../utils/inputTestFields.json";
+import { organizationDetails } from "../../../../utils/testMock.json";
 
 const handleClose = jest.fn();
 
@@ -47,7 +47,7 @@ beforeEach(() => {
 		dialog = renderApollo(
 			<DashboardProvider defaultState={{ organization: orgDetails }}>
 				<NotificationProvider>
-					<BudgetCategoryDialog open={true} handleClose={handleClose} />
+					<BudgetCategory open={true} handleClose={handleClose} />
 				</NotificationProvider>
 			</DashboardProvider>,
 			{
@@ -58,7 +58,7 @@ beforeEach(() => {
 	});
 });
 
-let inputIds = BudgetCategoryDialogInputFields;
+let inputIds = BudgetCategoryInputFields;
 
 describe("Budget Category Dialog tests", () => {
 	test("Create Budget Category", async () => {

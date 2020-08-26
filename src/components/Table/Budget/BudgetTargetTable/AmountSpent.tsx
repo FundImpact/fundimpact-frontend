@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useApolloClient, useLazyQuery } from "@apollo/client";
-import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/queries/budget/query";
+import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/Budget";
 
 const AmountSpent = ({
 	budgetTargetId,

@@ -10,24 +10,6 @@ export const CREATE_ORG_BUDGET_CATEGORY = gql`
 	}
 `;
 
-export const CREATE_ORGANIZATION_CURRENCY = gql`
-	mutation createOrgCurrency($input: OrganizationCurrencyInput!) {
-		createOrgCurrency(input: $input) {
-			id
-		}
-	}
-`;
-
-export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
-	query getorgBudgetCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
-		orgBudgetCategory(sort: $sort, limit: $limit, start: $start, where: $filter) {
-			id
-			name
-			code
-		}
-	}
-`;
-
 export const CREATE_PROJECT_BUDGET_TARGET = gql`
 	mutation createProjectBudgetTarget($input: BudgetTargetsProjectInput!) {
 		createProjectBudgetTarget(input: $input) {
@@ -94,29 +76,6 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 				short_name
 				start_date
 				end_date
-			}
-		}
-	}
-`;
-
-export const GET_BUDGET_TARGET_PROJECT = gql`
-	query getDeliverableCategoryUnitByCategory($filter: JSON) {
-		projectBudgetTargets(where: $filter) {
-			id
-			name
-			project {
-				name
-				id
-			}
-			budget_category_organization {
-				id
-				name
-			}
-			description
-			total_target_amount
-			donor{
-				name
-				id
 			}
 		}
 	}

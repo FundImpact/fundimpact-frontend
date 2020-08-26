@@ -2,12 +2,12 @@ import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
-import BudgetCategoryDialog from "../../Budget/Dialog/BudgetCategoryDialog";
-import BudgetTargetDialog from "../../Budget/Dialog/BudgetTargetDialog";
+import BudgetCategory from "../../Budget/BudgetCategory";
+import BudgetTarget from "../../Budget/BudgetTarget";
 import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
-import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
+import BudgetLineitem from "../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
 
@@ -86,13 +86,13 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategoryDialog open={open} handleClose={handleClose} />
+						<BudgetCategory open={open} handleClose={handleClose} />
 					),
 				},
 				{
 					text: "Create Budget Target",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetTargetDialog
+						<BudgetTarget
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
@@ -103,7 +103,7 @@ export default function DashboardTableContainer() {
 				{
 					text: "Report Budget Spend",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetLineitemDialog
+						<BudgetLineitem
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}

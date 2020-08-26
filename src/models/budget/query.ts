@@ -1,5 +1,5 @@
 import { IProject } from "../project/project";
-import { IBudget } from "../budget/budget";
+import { IBudgetCategory } from ".";
 
 export interface IBudgetTargetProjectResponse {
 	id: string;
@@ -35,7 +35,7 @@ export interface IGET_BUDGET_TARGET_PROJECT {
 }
 
 export interface IGET_BUDGET_CATEGORY {
-	orgBudgetCategory: Partial<IBudget>[];
+	orgBudgetCategory: Partial<IBudgetCategory>[];
 }
 
 export interface IGET_BUDGET_TARCKING_LINE_ITEM {

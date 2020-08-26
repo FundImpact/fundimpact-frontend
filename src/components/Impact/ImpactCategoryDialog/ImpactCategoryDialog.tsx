@@ -1,7 +1,7 @@
 import React from "react";
 import { IImpactCategory } from "../../../models/impact/impact";
 import { useMutation } from "@apollo/client";
-import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
+import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../graphql/Impact/mutation";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
 	setErrorNotification,

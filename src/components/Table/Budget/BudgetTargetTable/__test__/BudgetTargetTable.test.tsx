@@ -1,17 +1,14 @@
 import React from "react";
 import { waitForElement } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import {
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-	GET_BUDGET_TARGET_PROJECT,
-} from "../../../../../graphql/queries/budget";
-import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../../graphql/queries/budget/query";
+import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../../graphql/Budget";
+import { GET_BUDGET_TARGET_PROJECT, GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../../graphql/Budget";
 import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../../contexts/notificationContext";
 import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
-import { GET_PROJ_DONORS } from "../../../../../graphql/queries/project";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_ANNUAL_YEAR_LIST } from "../../../../../graphql/queries";
+import { GET_PROJ_DONORS } from "../../../../../graphql/project";
+import { GET_ORG_CURRENCIES_BY_ORG, GET_ANNUAL_YEAR_LIST } from "../../../../../graphql";
 import BudgetTargetTable from "..";
 
 let table: any;

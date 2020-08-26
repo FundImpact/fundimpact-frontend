@@ -4,7 +4,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import { useLazyQuery, useApolloClient, useQuery } from "@apollo/client";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/queries/budget";
+import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/Budget";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -14,7 +14,7 @@ import {
 	IGET_BUDGET_TARGET_PROJECT,
 } from "../../../../models/budget/query";
 import React, { useState } from "react";
-import BudgetTargetDialog from "../../../Budget/Dialog/BudgetTargetDialog";
+import BudgetTarget from "../../../Budget/BudgetTarget";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import SimpleMenu from "../../../Menu/Menu";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
@@ -25,8 +25,8 @@ import Collapse from "@material-ui/core/Collapse";
 import BudgetLineItemTable from "../BudgetLineItemTable";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
-import BudgetLineitemDialog from "../../../Budget/Dialog/BudgetLineitemDialog";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql/queries";
+import BudgetLineitem from "../../../Budget/BudgetLineitem";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import AmountSpent from "./AmountSpent";
 
 const useStyles = makeStyles({
@@ -184,7 +184,7 @@ function BudgetTargetTable() {
 
 	return (
 		<TableContainer component={Paper}>
-			<BudgetTargetDialog
+			<BudgetTarget
 				open={openDialog}
 				handleClose={() => {
 					setOpenDialog(false);
@@ -193,7 +193,7 @@ function BudgetTargetTable() {
 				formAction={FORM_ACTIONS.UPDATE}
 				initialValues={getInitialValues(selectedTargetBudget.current)}
 			/>
-			<BudgetLineitemDialog
+			<BudgetLineitem
 				open={openBudgetTrackingLineItem}
 				handleClose={() => {
 					setOpenBudgetTrackingLineItem(false);

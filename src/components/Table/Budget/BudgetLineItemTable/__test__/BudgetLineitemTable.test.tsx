@@ -1,15 +1,12 @@
 import React from "react";
 import { waitForElement } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import {
-	GET_BUDGET_TARGET_PROJECT,
-} from "../../../../../graphql/queries/budget";
-import { GET_PROJECT_BUDGET_TARCKING } from "../../../../../graphql/queries/budget/query";
+import { GET_BUDGET_TARGET_PROJECT, GET_PROJECT_BUDGET_TARCKING } from "../../../../../graphql/Budget";
 import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../../contexts/notificationContext";
 import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_ANNUAL_YEAR_LIST } from "../../../../../graphql/queries";
+import { GET_ORG_CURRENCIES_BY_ORG, GET_ANNUAL_YEAR_LIST } from "../../../../../graphql";
 import BudgetLineItemTable from "../BudgetLineItemTable";
 
 let table: any;
@@ -25,7 +22,6 @@ const mockAnnualYearList = [
 		end_date: "2020-04-04",
 	},
 ];
-
 
 const mockBudgetLineItem = [
 	{

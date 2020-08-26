@@ -9,7 +9,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import React, { useState } from "react";
 
 import { useDashboardDispatch } from "../../../contexts/dashboardContext";
-import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries";
+import { GET_WORKSPACES_BY_ORG } from "../../../graphql";
 import { IOrganisation } from "../../../models/organisation/types";
 import { IGET_WORKSPACES_BY_ORG, IOrganisationWorkspaces } from "../../../models/workspace/query";
 import { IWorkspace } from "../../../models/workspace/workspace";

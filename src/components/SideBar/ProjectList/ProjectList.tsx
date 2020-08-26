@@ -4,7 +4,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
-import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
 import { setProject } from "../../../reducers/dashboardReducer";
 
 const useStyles = makeStyles((theme: Theme) =>

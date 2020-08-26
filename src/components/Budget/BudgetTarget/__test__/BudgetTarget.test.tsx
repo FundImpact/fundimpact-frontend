@@ -1,19 +1,17 @@
 import React from "react";
-import BudgetTargetDialog from "../BudgetTargetDialog";
+import BudgetTarget from "../BudgetTarget";
 import { fireEvent, wait } from "@testing-library/react";
-import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import {
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-	CREATE_PROJECT_BUDGET_TARGET,
-} from "../../../../../graphql/queries/budget";
-import { renderApollo } from "../../../../../utils/test.util";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
+import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
+import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../../contexts/notificationContext";
-import { FORM_ACTIONS } from "../../../../../models/budget/constants";
-import { BudgetTargetDialoginputFields } from "../../../../../utils/inputTestFields.json";
-import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
-import { GET_PROJ_DONORS } from "../../../../../graphql/queries/project";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../../graphql/queries";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { FORM_ACTIONS } from "../../../../models/budget/constants";
+import { BudgetTargetinputFields } from "../../../../utils/inputTestFields.json";
+import { projectDetails, organizationDetails } from "../../../../utils/testMock.json";
+import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 
 const handleClose = jest.fn();
 
@@ -127,7 +125,7 @@ beforeEach(() => {
 				defaultState={{ project: projectDetails, organization: organizationDetails }}
 			>
 				<NotificationProvider>
-					<BudgetTargetDialog
+					<BudgetTarget
 						formAction={FORM_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}
@@ -142,7 +140,7 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = BudgetTargetDialoginputFields;
+const inputIds = BudgetTargetinputFields;
 
 describe("Budget Target Dialog tests", () => {
 	test("Mock response", async () => {

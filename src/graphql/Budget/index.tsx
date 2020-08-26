@@ -33,3 +33,36 @@ export const GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM = gql`
 		projBudgetTrackingsTotalAmount(where: $filter)
 	}
 `;
+
+export const GET_BUDGET_TARGET_PROJECT = gql`
+	query getBudgettargetProject($filter: JSON) {
+		projectBudgetTargets(where: $filter) {
+			id
+			name
+			project {
+				name
+				id
+			}
+			budget_category_organization {
+				id
+				name
+			}
+			description
+			total_target_amount
+			donor {
+				name
+				id
+			}
+		}
+	}
+`;
+
+export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
+	query getorgBudgetCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		orgBudgetCategory(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			name
+			code
+		}
+	}
+`;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/queries/Deliverable/target";
+import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/Deliverable/target";
 import { useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { deliverableAndImpactHeadings } from "../constants";

@@ -3,34 +3,34 @@ import { useMutation, useQuery, useApolloClient, useLazyQuery } from "@apollo/cl
 import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	UPDATE_PROJECT_BUDGET_TRACKING,
-} from "../../../../graphql/queries/budget";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/queries/budget";
-import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { ICreateBudgetTrackingLineitemDialogProps } from "../../../../models/budget/budget";
-import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
+} from "../../../graphql/Budget/mutation";
+import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { IBudgetLineitemProps } from "../../../models/budget";
+import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import {
 	setErrorNotification,
 	setSuccessNotification,
-} from "../../../../reducers/notificationReducer";
-import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+} from "../../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	createBudgetTrackingLineitemFormSelectFields,
 	createBudgetTrackingLineitemForm,
-} from "../../../../utils/inputFields.json";
-import FormDialog from "../../../FormDialog";
-import CommonForm from "../../../Forms/CommonForm";
+} from "../../../utils/inputFields.json";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../Forms/CommonForm";
 import {
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-} from "../../../../graphql/queries/budget/query";
-import { GET_ANNUAL_YEAR_LIST } from "../../../../graphql/queries";
-import { getTodaysDate } from "../../../../utils/index";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql/queries";
+} from "../../../graphql/Budget";
+import { GET_ANNUAL_YEAR_LIST } from "../../../graphql";
+import { getTodaysDate } from "../../../utils/index";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
 import {
 	IGET_BUDGET_TARGET_PROJECT,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
-} from "../../../../models/budget/query";
-import { compareObjectKeys } from "../../../../utils";
+} from "../../../models/budget/query";
+import { compareObjectKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -60,7 +60,7 @@ const validate = (values: IBudgetTrackingLineitemForm) => {
 	return errors;
 };
 
-function BudgetLineItemDialog(props: ICreateBudgetTrackingLineitemDialogProps) {
+function BudgetLineitem(props: IBudgetLineitemProps) {
 	const apolloClient = useApolloClient();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -289,4 +289,4 @@ function BudgetLineItemDialog(props: ICreateBudgetTrackingLineitemDialogProps) {
 	);
 }
 
-export default BudgetLineItemDialog;
+export default BudgetLineitem;
