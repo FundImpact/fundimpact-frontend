@@ -17,7 +17,7 @@ import { setActiveWorkSpace } from "../../../reducers/dashboardReducer";
 import SimpleMenu from "../../Menu/Menu";
 import { PROJECT_ACTIONS } from "../../Project/constants";
 import Project from "../../Project/Project";
-import WorkspaceListSkeleton from "../../Skeleton/WorkspaceListSkeleton";
+import WorkspaceListSkeleton from "../../Skeletons/WorkspaceListSkeleton";
 import { WORKSPACE_ACTIONS } from "../../workspace/constants";
 import Workspace from "../../workspace/Workspace";
 import ProjectList from "../ProjectList/ProjectList";
