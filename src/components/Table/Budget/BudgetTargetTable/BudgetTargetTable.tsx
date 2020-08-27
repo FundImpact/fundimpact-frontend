@@ -4,14 +4,14 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import { useQuery } from "@apollo/client";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/queries/budget";
+import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/Budget";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { IBudgetTargetProjectResponse } from "../../../../models/budget/query";
-import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/queries/budget/query";
+import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/Budget";
 import React, { useState, useEffect } from "react";
-import BudgetTargetDialog from "../../../Budget/Dialog/BudgetTargetDialog";
+import BudgetTarget from "../../../Budget/BudgetTarget";
 
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
@@ -56,6 +56,9 @@ const getBudgetTrackingLineitemInitialvalues = (
 		budget_targets_project,
 		annual_year: "",
 		reporting_date: getTodaysDate(),
+		fy_donor: "",
+		fy_org: "",
+		grant_periods_project: "",
 	};
 };
 
@@ -94,7 +97,7 @@ function BudgetTargetTable() {
 	const dashboardData = useDashBoardData();
 	const currentProject = dashboardData?.project;
 
-	const [openBudgetCategory, setOpenBudgetCategory] = useState<boolean>(false);
+	const [openBudgetTarget, setOpenBudgetTarget] = useState<boolean>(false);
 	const [openBudgetLineItem, setOpenBudgetLineItem] = useState(false);
 	const [page, setPage] = React.useState(0);
 
@@ -143,16 +146,16 @@ function BudgetTargetTable() {
 	return (
 		<TableContainer component={Paper}>
 			<BudgetTarget
-				open={openDialog}
+				open={openBudgetTarget}
 				handleClose={() => {
-					setOpenBudgetCategory(false);
+					setOpenBudgetTarget(false);
 					reInitializeRef();
 				}}
 				formAction={FORM_ACTIONS.UPDATE}
 				initialValues={getInitialValues(selectedTargetBudget.current)}
 			/>
 			<BudgetLineitem
-				open={openBudgetTrackingLineItem}
+				open={openBudgetLineItem}
 				handleClose={() => {
 					setOpenBudgetLineItem(false);
 					reInitializeRef();
@@ -198,7 +201,7 @@ function BudgetTargetTable() {
 										menuId={menuId}
 										selectedTargetBudget={selectedTargetBudget}
 										setOpenBudgetLineItem={setOpenBudgetLineItem}
-										setOpenBudgetCategory={setOpenBudgetCategory}
+										setOpenBudgetCategory={setOpenBudgetTarget}
 									/>
 								)
 						  )

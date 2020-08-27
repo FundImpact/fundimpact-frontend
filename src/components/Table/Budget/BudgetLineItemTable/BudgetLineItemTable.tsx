@@ -18,12 +18,12 @@ import SimpleMenu from "../../../Menu";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { getTodaysDate } from "../../../../utils";
-import { IBudgetTrackingLineitem } from "../../../../models/budget/budget";
+import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { IBUDGET_TRACKING_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import {
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
-} from "../../../../graphql/queries/budget/query";
+} from "../../../../graphql/Budget";
 import pagination from "../../../../hooks/pagination";
 
 const useStyles = makeStyles({
@@ -69,6 +69,9 @@ const getInitialValues = (
 			budgetTrackingLineItem ? budgetTrackingLineItem.reporting_date : undefined
 		),
 		id: budgetTrackingLineItem ? budgetTrackingLineItem.id : "",
+		fy_donor: "",
+		fy_org: "",
+		grant_periods_project: ""
 	};
 };
 

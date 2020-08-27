@@ -35,8 +35,8 @@ export const GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM = gql`
 `;
 
 export const GET_BUDGET_TARGET_PROJECT = gql`
-	query getBudgettargetProject($filter: JSON) {
-		projectBudgetTargets(where: $filter) {
+	query getProjectBudgetTargetsByProject($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		projectBudgetTargets(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			project {
@@ -57,14 +57,6 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 	}
 `;
 
-export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
-	query getorgBudgetCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
-		orgBudgetCategory(sort: $sort, limit: $limit, start: $start, where: $filter) {
-			id
-			name
-			code
-		}`;
-
 export const GET_PROJECT_BUDGET_TARGETS_COUNT = gql`
 	query getProjectBudgetTargetsCount($filter: JSON) {
 		projectBudgetTargetsCount(where: $filter)
@@ -74,5 +66,15 @@ export const GET_PROJECT_BUDGET_TARGETS_COUNT = gql`
 export const GET_PROJ_BUDGET_TRACINGS_COUNT = gql`
 	query getProjBudgetTrackingsCount($filter: JSON) {
 		projBudgetTrackingsCount(where: $filter)
+	}
+`;
+
+export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
+	query getorgBudgetCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		orgBudgetCategory(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			name
+			code
+		}
 	}
 `;
