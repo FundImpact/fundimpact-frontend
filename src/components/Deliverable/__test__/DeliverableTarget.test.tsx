@@ -1,34 +1,86 @@
-import React from "react";
-import DeliverableTarget from "../DeliverableTarget";
-import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
-import { DELIVERABLE_ACTIONS } from "../constants";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/queries/Deliverable/category";
-import { renderApollo } from "../../../utils/test.util";
+
+import { act, fireEvent } from "@testing-library/react";
+import React from "react";
+
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetails } from "../../../utils/testMock.json";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
+import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
+import {
+	CREATE_DELIVERABLE_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../../graphql/Deliverable/target";
+import { renderApollo } from "../../../utils/test.util";
+import { organizationDetail } from "../../../utils/testMock.json";
+import { DELIVERABLE_ACTIONS } from "../constants";
+import DeliverableTarget from "../DeliverableTarget";
+import { deliverableCategoryMock, deliverableCategoryUnitListMock, projectsMock } from "./testHelp";
 
-const categoryMock = [
-	{ id: 1, name: "SONG" },
-	{ id: 1, name: "SONG" },
-];
+let createDeliverableTargetMutation = false;
 const mocks = [
 	{
 		request: {
 			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: { filter: {} },
 		},
-		result: { data: { deliverableCategory: categoryMock } },
+		result: { data: { deliverableCategory: [] } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { deliverableCategory: deliverableCategoryMock } },
+	},
+	{
+		request: {
+			query: GET_CATEGORY_UNIT,
+			variables: { deliverable_category_org: "1" },
+		},
+		result: { data: { deliverableCategoryUnitList: deliverableCategoryUnitListMock } },
+	},
+	{
+		request: {
+			query: GET_CATEGORY_UNIT,
+			variables: { deliverable_category_org: "1", deliverable_units_org: "1" },
+		},
+		result: { data: { deliverableCategoryUnitList: deliverableCategoryUnitListMock } },
+	},
+	{
+		request: {
+			query: CREATE_DELIVERABLE_TARGET,
+			variables: {
+				input: {
+					name: "DeliverableTarget",
+					description: "note",
+					target_value: 5000,
+					deliverable_category_unit: "1",
+					project: 2,
+				},
+			},
+		},
+		result: () => {
+			createDeliverableTargetMutation = true;
+			return {};
+		},
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+			variables: { filter: { project: 2 } },
+		},
 	},
 ];
 let handleClose = jest.fn();
-let deliverableTarget: RenderResult<typeof queries>;
+let deliverableTarget: any;
 
 beforeEach(() => {
 	act(() => {
 		deliverableTarget = renderApollo(
-			<DashboardProvider>
+			<DashboardProvider
+				defaultState={{ organization: organizationDetail, project: projectsMock }}
+			>
 				<NotificationProvider>
 					<DeliverableTarget
 						type={DELIVERABLE_ACTIONS.CREATE}
@@ -76,33 +128,6 @@ describe("Deliverable Target Form", () => {
 		expect(deliverableTargetSubmit).toBeInTheDocument();
 	});
 
-	// test("should have initial values", () => {
-	// 	let deliverableTargetName = deliverableTarget.getByTestId(
-	// 		"deliverableTargetNameInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableTargetName.value).toBe(intialFormValue.name);
-
-	// 	let deliverableTargetTargetValue = deliverableTarget.getByTestId(
-	// 		"deliverableTargetTargetValueInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableTargetTargetValue.value).toBe(intialFormValue.target_value);
-
-	// 	let deliverableTargetCategory = deliverableTarget.getByTestId(
-	// 		"deliverableTargetCategoryInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableTargetCategory.value).toBe(intialFormValue.deliverableCategory);
-
-	// 	let deliverableTargetUnit = deliverableTarget.getByTestId(
-	// 		"deliverableTargetUnitInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableTargetUnit.value).toBe(intialFormValue.deliverableUnit);
-
-	// 	let deliverableTargetDescription = deliverableTarget.getByTestId(
-	// 		"deliverableTargetDescriptionInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableTargetDescription.value).toBe(intialFormValue.description);
-	// });
-
 	test("Submit Button should be disabled if either of name,targetValue,category,unit fields is empty", async () => {
 		let deliverableTargetName = deliverableTarget.getByTestId(
 			"deliverableTargetNameInput"
@@ -146,4 +171,67 @@ describe("Deliverable Target Form", () => {
 		let deliverableTargetSubmit = await deliverableTarget.findByTestId(`createSaveButton`);
 		expect(deliverableTargetSubmit).toBeDisabled();
 	});
+
+	// test("Deliverable Target GraphQL Call on submit button", async () => {
+	// 	let deliverableTargetName = deliverableTarget.getByTestId(
+	// 		"deliverableTargetNameInput"
+	// 	) as HTMLInputElement;
+
+	// 	let deliverableTargetTargetValue = deliverableTarget.getByTestId(
+	// 		"deliverableTargetTargetValueInput"
+	// 	) as HTMLInputElement;
+
+	// 	let deliverableTargetCategory = deliverableTarget.getByTestId(
+	// 		"deliverableTargetCategoryInput"
+	// 	) as HTMLInputElement;
+
+	// 	let deliverableTargetUnit = deliverableTarget.getByTestId(
+	// 		"deliverableTargetUnitInput"
+	// 	) as HTMLInputElement;
+
+	// 	let deliverableTargetDescription = deliverableTarget.getByTestId(
+	// 		"deliverableTargetDescriptionInput"
+	// 	) as HTMLInputElement;
+
+	// 	act(() => {
+	// 		fireEvent.change(deliverableTargetName, {
+	// 			target: { value: "DeliverableTarget" },
+	// 		});
+	// 	});
+	// 	expect(deliverableTargetName.value).toBe("DeliverableTarget");
+
+	// 	act(() => {
+	// 		fireEvent.change(deliverableTargetTargetValue, { target: { value: "5000" } });
+	// 	});
+	// 	expect(deliverableTargetTargetValue.value).toBe("5000");
+
+	// 	act(() => {
+	// 		fireEvent.change(deliverableTargetDescription, { target: { value: "note" } });
+	// 	});
+	// 	expect(deliverableTargetDescription.value).toBe("note");
+
+	// 	act(() => {
+	// 		deliverableTarget.instance().setCurrentCategory(deliverableCategoryMock[0].id);
+	// 		fireEvent.change(deliverableTargetCategory, {
+	// 			target: { value: deliverableCategoryMock[0].id },
+	// 		});
+	// 	});
+	// 	expect(deliverableTargetCategory.value).toBe(deliverableCategoryMock[0].id);
+	// 	await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response for units
+	// 	act(() => {
+	// 		fireEvent.change(deliverableTargetUnit, {
+	// 			target: { value: deliverableCategoryUnitListMock[0].deliverable_units_org.id },
+	// 		});
+	// 	});
+	// 	expect(deliverableTargetUnit.value).toBe(
+	// 		deliverableCategoryUnitListMock[0].deliverable_units_org.id
+	// 	);
+	// 	let deliverableTracklineSubmit = await deliverableTarget.findByTestId(`createSaveButton`);
+	// 	expect(deliverableTracklineSubmit).toBeEnabled();
+	// 	act(() => {
+	// 		fireEvent.click(deliverableTracklineSubmit);
+	// 	});
+	// 	await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
+	// 	expect(createDeliverableTargetMutation).toBe(true);
+	// });
 });

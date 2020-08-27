@@ -1,43 +1,44 @@
-import React, { useEffect, useState } from "react";
-import {
-	GET_IMPACT_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../graphql/queries/Impact/target";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { deliverableAndImpactHeadings } from "../constants";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import FICollaspeTable from "../FICollapseTable";
+import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
+} from "../../../graphql/Impact/target";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
-import ImpactTrackLine from "../../Impact/impactTrackLine";
-import ImpactTarget from "../../Impact/impactTarget";
-import { IMPACT_ACTIONS } from "../../Impact/constants";
-import ImpactTrackLineTable from "./impactTrackline";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import { IMPACT_ACTIONS } from "../../Impact/constants";
+import ImpactTarget from "../../Impact/impactTarget";
+import ImpactTrackLine from "../../Impact/impactTrackLine";
+import { deliverableAndImpactHeadings } from "../constants";
+import FICollaspeTable from "../FICollapseTable";
+import ImpactTrackLineTable from "./impactTrackline";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
-	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
 	const [impactTargetData, setImpactTargetData] = useState<IImpactTarget | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
+		setImpactTargetMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setMenuAnchor(null);
+		setImpactTargetMenuAnchor(null);
 	};
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<IconButton aria-label="impact-target-edit" onClick={handleMenuClick}>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
 			<Menu
 				id="impact-target-simple-menu"
-				anchorEl={menuAnchor}
+				anchorEl={impactTargetMenuAnchor}
 				keepMounted
-				open={Boolean(menuAnchor)}
+				open={Boolean(impactTargetMenuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem
@@ -120,7 +121,9 @@ export default function ImpactsTable() {
 		GET_IMPACT_TARGET_BY_PROJECT
 	);
 	const dashboardData = useDashBoardData();
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<
+		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
+	>([]);
 
 	useEffect(() => {
 		if (dashboardData?.project) {
@@ -133,9 +136,9 @@ export default function ImpactsTable() {
 	useEffect(() => {
 		if (data) {
 			let impactTargetProjectList = data.impactTargetProjectList;
-			let array: { collaspeTable: any; column: any[] }[] = [];
+			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {
-				let row: { collaspeTable: any; column: any[] } = {
+				let row: { collaspeTable: React.ReactNode; column: React.ReactNode[] } = {
 					collaspeTable: null,
 					column: [],
 				};

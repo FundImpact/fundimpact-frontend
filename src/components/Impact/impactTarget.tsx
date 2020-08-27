@@ -1,22 +1,24 @@
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
-import { FullScreenLoader } from "../Loader/Loader";
-import { IMPACT_ACTIONS } from "./constants";
+
+import { DashboardProvider } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/queries/Impact/categoryUnit";
+import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
+import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
 import {
 	CREATE_IMPACT_TARGET,
-	UPDATE_IMAPACT_TARGET,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../graphql/queries/Impact/target";
-import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
-import FormDialog from "../FormDialog/FormDialog";
+	GET_IMPACT_TARGET_BY_PROJECT,
+	UPDATE_IMAPACT_TARGET,
+} from "../../graphql/Impact/target";
+import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import CommonForm from "../CommonForm/commonForm";
-import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
+import FormDialog from "../FormDialog/FormDialog";
+import { FullScreenLoader } from "../Loader/Loader";
+import { IMPACT_ACTIONS } from "./constants";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
-import { DashboardProvider } from "../../contexts/dashboardContext";
+
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {

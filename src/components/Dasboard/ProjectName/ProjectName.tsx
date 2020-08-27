@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, CircularProgress } from "@material-ui/core";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from "../../../graphql/queries/project";
+import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from "../../../graphql/project";
 import { IProject } from "../../../models/project/project";
 import EditableText from "../../EditableText/EditableText";
 import { useDashBoardData } from "../../../contexts/dashboardContext";

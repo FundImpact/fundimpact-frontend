@@ -35,7 +35,10 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 	})
 );
 
-function Row(props: { row: { collaspeTable: any; column: any[] }; index: number }) {
+function Row(props: {
+	row: { collaspeTable: React.ReactNode; column: React.ReactNode[] };
+	index: number;
+}) {
 	const { row, index } = props;
 	const [open, setOpen] = React.useState(false);
 
@@ -43,7 +46,12 @@ function Row(props: { row: { collaspeTable: any; column: any[] }; index: number 
 		<React.Fragment>
 			<TableRow key={index}>
 				<TableCell>
-					<IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+					<IconButton
+						aria-label="expand row"
+						size="small"
+						onClick={() => setOpen(!open)}
+						data-testid={`collaspeButton${index}`}
+					>
 						{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 					</IconButton>
 				</TableCell>
@@ -70,7 +78,7 @@ export default function CollapsibleTable({
 	rows,
 }: {
 	tableHeading: { label: string }[];
-	rows: { collaspeTable: any; column: any[] }[];
+	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
 }) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();

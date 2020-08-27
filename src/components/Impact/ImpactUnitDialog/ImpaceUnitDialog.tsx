@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
-import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/queries/Impact/mutation";
+import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/Impact/mutation";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	setErrorNotification,

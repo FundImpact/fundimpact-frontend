@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/queries/Impact/trackline";
+import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/Impact/trackline";
 import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import FITable from "../FITable";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
@@ -12,24 +12,28 @@ import FullScreenLoader from "../../commons/GlobalLoader";
 import { getTodaysDate } from "../../../utils";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
-	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [impactTracklineMenuAnchor, setImpactTracklineMenuAnchor] = useState<null | HTMLElement>(
+		null
+	);
 	const [impactTargetLineData, setImpactTargetLineData] = useState<IImpactTargetLine | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
+		setImpactTracklineMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setMenuAnchor(null);
+		setImpactTracklineMenuAnchor(null);
 	};
 	return (
 		<>
-			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
-			</IconButton>
+			<TableCell>
+				<IconButton aria-label="impact_trackline-edit" onClick={handleMenuClick}>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
 			<Menu
 				id="impact-trackline-simple-menu"
-				anchorEl={menuAnchor}
+				anchorEl={impactTracklineMenuAnchor}
 				keepMounted
-				open={Boolean(menuAnchor)}
+				open={Boolean(impactTracklineMenuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem
@@ -66,7 +70,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		variables: { filter: { impact_target_project: impactTargetId } },
 	});
 
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (data && data.impactTrackingLineitemList && data.impactTrackingLineitemList.length) {
 			let impactTrackingLineitemList = data.impactTrackingLineitemList;
@@ -74,9 +78,11 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			for (let i = 0; i < impactTrackingLineitemList.length; i++) {
 				if (impactTrackingLineitemList[i]) {
 					let row = [
-						getTodaysDate(impactTrackingLineitemList[i].reporting_date),
-						impactTrackingLineitemList[i].note,
-						impactTrackingLineitemList[i].value,
+						<TableCell>
+							{getTodaysDate(impactTrackingLineitemList[i].reporting_date)}
+						</TableCell>,
+						<TableCell>{impactTrackingLineitemList[i].note}</TableCell>,
+						<TableCell>{impactTrackingLineitemList[i].value}</TableCell>,
 					];
 					row.push(
 						<EditImpactTargetLineIcon

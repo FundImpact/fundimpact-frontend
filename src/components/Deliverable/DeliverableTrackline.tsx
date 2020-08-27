@@ -1,28 +1,31 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import {
-	IDeliverableTargetLine,
-	DeliverableTargetLineProps,
-} from "../../models/deliverable/deliverableTrackline";
-import { FullScreenLoader } from "../Loader/Loader";
-import { DELIVERABLE_ACTIONS } from "./constants";
+
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { GET_ANNUAL_YEARS } from "../../graphql";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../graphql/Deliverable/target";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
-} from "../../graphql/queries/Deliverable/trackline";
+} from "../../graphql/Deliverable/trackline";
 import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../graphql/queries/Deliverable/target";
-import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
-import FormDialog from "../FormDialog/FormDialog";
+	DeliverableTargetLineProps,
+	IDeliverableTargetLine,
+} from "../../models/deliverable/deliverableTrackline";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { getTodaysDate } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
+import FormDialog from "../FormDialog/FormDialog";
+import { FullScreenLoader } from "../Loader/Loader";
+import { DELIVERABLE_ACTIONS } from "./constants";
 import { deliverableTragetLineForm } from "./inputField.json";
-// import { GET_FINANCIAL_YEARS_ORG } from "../../graphql/queries/financialYears";
-import { useDashBoardData } from "../../contexts/dashboardContext";
+
+// import { GET_FINANCIAL_YEARS_ORG } from "../../graphql/financialYears";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -32,7 +35,7 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 		grant_period: "",
 		financial_years_org: "",
 		financial_years_donor: "",
-		reporting_date: "",
+		reporting_date: getTodaysDate(),
 		note: "",
 	};
 }
@@ -55,12 +58,32 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 
-	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE);
+	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
+		onCompleted(data) {
+			notificationDispatch(
+				setSuccessNotification("Deliverable Trackline created successfully!")
+			);
+			onCancel();
+		},
+		onError(data) {
+			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
+		},
+	});
 
 	const [
 		updateDeliverableTrackLine,
 		{ loading: updateDeliverableTrackLineLoading },
-	] = useMutation(UPDATE_DELIVERABLE_TRACKLINE);
+	] = useMutation(UPDATE_DELIVERABLE_TRACKLINE, {
+		onCompleted(data) {
+			notificationDispatch(
+				setSuccessNotification("Deliverable Trackline Updated successfully!")
+			);
+			onCancel();
+		},
+		onError(data) {
+			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
+		},
+	});
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
@@ -86,73 +109,60 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// 	}
 	// }, [fYOrg, fYOrgError]);
 
-	const onCreate = async (value: IDeliverableTargetLine) => {
+	const onCreate = (value: IDeliverableTargetLine) => {
 		console.log(`on Created is called with: `, value);
 		delete value.financial_years_donor;
 		delete value.financial_years_org;
 		delete value.grant_period;
-		value.reporting_date = new Date();
-		try {
-			await createDeliverableTrackline({
-				variables: { input: value },
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-						variables: {
-							filter: {
-								deliverable_target_project: value.deliverable_target_project,
-							},
+		value.reporting_date = new Date(value.reporting_date);
+		console.log(`on Created is called with: `, value);
+
+		createDeliverableTrackline({
+			variables: { input: value },
+			refetchQueries: [
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						filter: {
+							deliverable_target_project: value.deliverable_target_project,
 						},
 					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { deliverableTargetProject: value.deliverable_target_project },
-						},
+				},
+				{
+					query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					variables: {
+						filter: { deliverableTargetProject: value.deliverable_target_project },
 					},
-				],
-			});
-			notificationDispatch(
-				setSuccessNotification("Deliverable Trackline created successfully!")
-			);
-			onCancel();
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
-		}
+				},
+			],
+		});
 	};
 
-	const onUpdate = async (value: IDeliverableTargetLine) => {
+	const onUpdate = (value: IDeliverableTargetLine) => {
 		let DeliverableTargetLineId = value.id;
 		delete value.id;
-		try {
-			await updateDeliverableTrackLine({
-				variables: {
-					id: DeliverableTargetLineId,
-					input: value,
+		updateDeliverableTrackLine({
+			variables: {
+				id: DeliverableTargetLineId,
+				input: value,
+			},
+			refetchQueries: [
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						filter: {
+							deliverable_target_project: value.deliverable_target_project,
+						},
+					},
 				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-						variables: {
-							filter: {
-								deliverable_target_project: value.deliverable_target_project,
-							},
-						},
+				{
+					query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					variables: {
+						filter: { deliverableTargetProject: value.deliverable_target_project },
 					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { deliverableTargetProject: value.deliverable_target_project },
-						},
-					},
-				],
-			});
-			notificationDispatch(
-				setSuccessNotification("Deliverable Trackline updated successfully !")
-			);
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
-		}
+				},
+			],
+		});
 	};
 
 	const validate = (values: IDeliverableTargetLine) => {

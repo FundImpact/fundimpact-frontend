@@ -1,24 +1,26 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
-import { FullScreenLoader } from "../Loader/Loader";
-import { IMPACT_ACTIONS } from "./constants";
+
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { GET_ANNUAL_YEARS } from "../../graphql";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
+} from "../../graphql/Impact/target";
 import {
 	CREATE_IMPACT_TRACKLINE,
-	UPDATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-} from "../../graphql/queries/Impact/trackline";
-import {
-	GET_IMPACT_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../graphql/queries/Impact/target";
-import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
-import FormDialog from "../FormDialog/FormDialog";
+	UPDATE_IMPACT_TRACKLINE,
+} from "../../graphql/Impact/trackline";
+import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { getTodaysDate } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
+import FormDialog from "../FormDialog/FormDialog";
+import { FullScreenLoader } from "../Loader/Loader";
+import { IMPACT_ACTIONS } from "./constants";
 import { impactTragetLineForm } from "./inputField.json";
-import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -29,7 +31,7 @@ function getInitialValues(props: ImpactTargetLineProps) {
 		grant_period: "",
 		financial_years_org: "",
 		financial_years_donor: "",
-		reporting_date: "",
+		reporting_date: getTodaysDate(),
 		note: "",
 	};
 }
@@ -44,7 +46,11 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 
-	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE);
+	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
+		onError(err) {
+			console.log(err);
+		},
+	});
 
 	const [updateImpactTrackLine, { loading: updateImpactTrackLineLoading }] = useMutation(
 		UPDATE_IMPACT_TRACKLINE
@@ -72,7 +78,8 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		delete value.financial_years_donor;
 		delete value.financial_years_org;
 		delete value.grant_period;
-		value.reporting_date = new Date();
+		value.reporting_date = new Date(value.reporting_date);
+		console.log(value);
 		try {
 			await createImpactTrackline({
 				variables: { input: value },
@@ -94,7 +101,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Targets Fetching Failed !"));
+			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
 		}
 	};
 
