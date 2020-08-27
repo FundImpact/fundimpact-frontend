@@ -1,4 +1,4 @@
-import { FORM_ACTIONS } from "./budget/constants";
+import { FORM_ACTIONS } from "./constants";
 import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
 

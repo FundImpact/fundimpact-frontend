@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import React from "react";
 
 import { IInputField, ISelectField } from "../../../models";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { FORM_ACTIONS } from "../../../models/constants";
 import InputField from "../../InputField";
 import SelectField from "../../SelectField";
 import { ICommonForm } from "../../../models";
