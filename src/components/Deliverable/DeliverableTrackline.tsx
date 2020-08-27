@@ -1,30 +1,31 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import {
-	IDeliverableTargetLine,
-	DeliverableTargetLineProps,
-} from "../../models/deliverable/deliverableTrackline";
-import { FullScreenLoader } from "../Loader/Loader";
-import { DELIVERABLE_ACTIONS } from "./constants";
+
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { GET_ANNUAL_YEARS } from "../../graphql";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../graphql/Deliverable/target";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
-} from "../../graphql/queries/Deliverable/trackline";
+} from "../../graphql/Deliverable/trackline";
 import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../graphql/queries/Deliverable/target";
-import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
-import FormDialog from "../FormDialog/FormDialog";
+	DeliverableTargetLineProps,
+	IDeliverableTargetLine,
+} from "../../models/deliverable/deliverableTrackline";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { getTodaysDate } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
+import FormDialog from "../FormDialog/FormDialog";
+import { FullScreenLoader } from "../Loader/Loader";
+import { DELIVERABLE_ACTIONS } from "./constants";
 import { deliverableTragetLineForm } from "./inputField.json";
-// import { GET_FINANCIAL_YEARS_ORG } from "../../graphql/queries/financialYears";
-import { useDashBoardData } from "../../contexts/dashboardContext";
-import { getTodaysDate } from "../../utils/index";
 
+// import { GET_FINANCIAL_YEARS_ORG } from "../../graphql/financialYears";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {

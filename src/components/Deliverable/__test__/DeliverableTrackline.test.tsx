@@ -1,22 +1,25 @@
-import React from "react";
-import DeliverableTrackline from "../DeliverableTrackline";
-import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { DELIVERABLE_ACTIONS } from "../constants";
+
+import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
+import React from "react";
+
+import { DashboardProvider } from "../../../contexts/dashboardContext";
+import { NotificationProvider } from "../../../contexts/notificationContext";
+import { GET_ANNUAL_YEARS } from "../../../graphql";
 import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../graphql/queries/Deliverable/target";
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../../graphql/Deliverable/target";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-} from "../../../graphql/queries/Deliverable/trackline";
-import { GET_ANNUAL_YEARS } from "../../../graphql/queries/index";
+} from "../../../graphql/Deliverable/trackline";
+import { getTodaysDate } from "../../../utils";
 import { renderApollo } from "../../../utils/test.util";
-import { DashboardProvider } from "../../../contexts/dashboardContext";
-import { NotificationProvider } from "../../../contexts/notificationContext";
-import { DeliverableTargetMock, projectsMock, annualYearListMock } from "./testHelp";
-import { getTodaysDate } from "../../../utils/index";
+import { DELIVERABLE_ACTIONS } from "../constants";
+import DeliverableTrackline from "../DeliverableTrackline";
+import { annualYearListMock, DeliverableTargetMock, projectsMock } from "./testHelp";
+
 let createDeliverableTracklineMutation = false;
 const mocks = [
 	{

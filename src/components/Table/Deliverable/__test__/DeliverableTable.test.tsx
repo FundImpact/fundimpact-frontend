@@ -1,24 +1,26 @@
+import { act, fireEvent, RenderResult, waitForElement } from "@testing-library/react";
+import { debug } from "console";
 import React from "react";
-import { renderApollo } from "../../../../utils/test.util";
-import { waitForElement, act, fireEvent } from "@testing-library/react";
-import DeliverableTable from "../Deliverable";
-import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../../graphql/queries/Deliverable/target";
-import { GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../../graphql/queries/Deliverable/trackline";
+
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../../../graphql/Deliverable/target";
+import { GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../../graphql/Deliverable/trackline";
+import { renderApollo } from "../../../../utils/test.util";
+import {
+	achieveValueMock,
+	DeliverableTargetMock,
+	DeliverableTracklineByTargetMock,
+	projectsMock,
+} from "../../../Deliverable/__test__/testHelp";
 import {
 	deliverableAndImpactHeadings,
 	deliverableAndimpactTracklineHeading,
 } from "../../constants";
-import {
-	DeliverableTargetMock,
-	achieveValueMock,
-	DeliverableTracklineByTargetMock,
-	projectsMock,
-} from "../../../Deliverable/__test__/testHelp";
+import DeliverableTable from "../Deliverable";
 
 const mocks = [
 	{
@@ -44,7 +46,7 @@ const mocks = [
 	},
 ];
 
-let deliverableTable: any;
+let deliverableTable: RenderResult;
 
 beforeEach(() => {
 	act(() => {
@@ -71,6 +73,7 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 	});
 	test("Data listing of Deliverable table", async () => {
 		const { getByText } = deliverableTable;
+		debug(deliverableTable.container);
 		await waitForElement(() => getByText(/Test Deliverable Target/i)); // name of target
 		await waitForElement(() => getByText(/JUKEBOX/i)); // Category of target
 		await waitForElement(() => getByText(/50000 unit/i)); // Target Value of target

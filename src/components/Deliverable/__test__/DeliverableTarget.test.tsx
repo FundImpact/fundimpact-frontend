@@ -1,20 +1,21 @@
-import React from "react";
-import DeliverableTarget from "../DeliverableTarget";
-import { act, fireEvent, queries, render, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-import { DELIVERABLE_ACTIONS } from "../constants";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/queries/Deliverable/category";
-import { GET_CATEGORY_UNIT } from "../../../graphql/queries/Deliverable/categoryUnit";
-import { renderApollo } from "../../../utils/test.util";
+import { act, fireEvent } from "@testing-library/react";
+import React from "react";
+
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
+import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
-} from "../../../graphql/queries/Deliverable/target";
-import { projectsMock, deliverableCategoryMock, deliverableCategoryUnitListMock } from "./testHelp";
+} from "../../../graphql/Deliverable/target";
+import { renderApollo } from "../../../utils/test.util";
 import { organizationDetail } from "../../../utils/testMock.json";
+import { DELIVERABLE_ACTIONS } from "../constants";
+import DeliverableTarget from "../DeliverableTarget";
+import { deliverableCategoryMock, deliverableCategoryUnitListMock, projectsMock } from "./testHelp";
 
 let createDeliverableTargetMutation = false;
 const mocks = [

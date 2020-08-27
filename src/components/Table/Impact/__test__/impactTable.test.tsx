@@ -1,24 +1,25 @@
+import { act, fireEvent, waitForElement } from "@testing-library/react";
 import React from "react";
-import { renderApollo } from "../../../../utils/test.util";
-import { waitForElement, act, fireEvent } from "@testing-library/react";
-import ImpactTable from "../Impacts";
-import {
-	GET_IMPACT_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../../graphql/queries/Impact/target";
-import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../../graphql/queries/Impact/trackline";
+
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
+} from "../../../../graphql/Impact/target";
+import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../../graphql/Impact/trackline";
+import { renderApollo } from "../../../../utils/test.util";
+import {
+	achieveValueMock,
+	impactTargetMock,
+	impactTracklineByTargetMock,
+	projectMock,
+} from "../../../Impact/__test__/testHelp";
 import {
 	deliverableAndImpactHeadings,
 	deliverableAndimpactTracklineHeading,
 } from "../../constants";
-import {
-	impactTargetMock,
-	achieveValueMock,
-	impactTracklineByTargetMock,
-	projectMock,
-} from "../../../Impact/__test__/testHelp";
+import ImpactTable from "../Impacts";
 
 const mocks = [
 	{

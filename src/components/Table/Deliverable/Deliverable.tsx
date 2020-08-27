@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
-import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../graphql/queries/Deliverable/target";
 import { useQuery } from "@apollo/client";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { deliverableAndImpactHeadings } from "../constants";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
-import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DeliverableTracklineTable from "./DeliverableTrackLine";
-import FICollaspeTable from "../FICollapseTable";
-import FullScreenLoader from "../../commons/GlobalLoader";
 import TableCell from "@material-ui/core/TableCell";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../../graphql/Deliverable/target";
+import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
+import FullScreenLoader from "../../commons/GlobalLoader";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
+import { deliverableAndImpactHeadings } from "../constants";
+import FICollaspeTable from "../FICollapseTable";
+import DeliverableTracklineTable from "./DeliverableTrackLine";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [

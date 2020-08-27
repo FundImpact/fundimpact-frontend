@@ -1,22 +1,24 @@
-import React from "react";
-import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { IMPACT_ACTIONS } from "../constants";
+
+import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
+import React from "react";
+
+import { DashboardProvider } from "../../../contexts/dashboardContext";
+import { NotificationProvider } from "../../../contexts/notificationContext";
+import { GET_ANNUAL_YEARS } from "../../../graphql";
 import {
-	GET_IMPACT_TARGET_BY_PROJECT,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../graphql/queries/Impact/target";
+	GET_IMPACT_TARGET_BY_PROJECT,
+} from "../../../graphql/Impact/target";
 import {
 	CREATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-} from "../../../graphql/queries/Impact/trackline";
-import { GET_ANNUAL_YEARS } from "../../../graphql/queries/index";
+} from "../../../graphql/Impact/trackline";
+import { getTodaysDate } from "../../../utils";
 import { renderApollo } from "../../../utils/test.util";
-import { DashboardProvider } from "../../../contexts/dashboardContext";
-import { NotificationProvider } from "../../../contexts/notificationContext";
-import { impactTargetMock, projectMock, annualYearListMock } from "./testHelp";
-import { getTodaysDate } from "../../../utils/index";
+import { IMPACT_ACTIONS } from "../constants";
 import ImpactTrackLine from "../impactTrackLine";
+import { annualYearListMock, impactTargetMock, projectMock } from "./testHelp";
 
 let createimpactTracklineMutation = false;
 const mocks = [
