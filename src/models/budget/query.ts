@@ -14,7 +14,10 @@ export interface IBudgetTargetProjectResponse {
 	donor: {
 		name: string;
 		id: string;
-	}
+		country: {
+			id: string;
+		};
+	};
 }
 
 export interface IBUDGET_TRACKING_LINE_ITEM_RESPONSE {
@@ -28,6 +31,18 @@ export interface IBUDGET_TRACKING_LINE_ITEM_RESPONSE {
 	};
 	reporting_date: Date;
 	id: string;
+	fy_org: {
+		id: string;
+		name: string;
+	};
+	grant_periods_project: {
+		id: string;
+		name: string;
+	};
+	fy_donor: {
+		id: string;
+		name: string;
+	};
 }
 
 export interface IGET_BUDGET_TARGET_PROJECT {

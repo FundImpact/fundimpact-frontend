@@ -14,6 +14,9 @@ export const GET_ORGANISATIONS = gql`
 				id
 				name
 			}
+			country{
+				id
+			}
 		}
 	}
 `;

@@ -51,13 +51,16 @@ const tableHeading = [
 	{ label: "Date" },
 	{ label: "Note" },
 	{ label: "Amount" },
-	{ label: "Tags" },
+	{ label: "Financial Year Organization" },
+	{ label: "Financial Year Donor" },
+	{ label: "Grant Period" },
 	{ label: "" },
 ];
 
 const getInitialValues = (
 	budgetTrackingLineItem: IBUDGET_TRACKING_LINE_ITEM_RESPONSE | null
 ): IBudgetTrackingLineitem => {
+	console.log("budgetTrackingLineItem :>> ", budgetTrackingLineItem);
 	return {
 		amount: budgetTrackingLineItem ? budgetTrackingLineItem.amount : 0,
 		note: budgetTrackingLineItem ? budgetTrackingLineItem.note : "",
@@ -69,9 +72,11 @@ const getInitialValues = (
 			budgetTrackingLineItem ? budgetTrackingLineItem.reporting_date : undefined
 		),
 		id: budgetTrackingLineItem ? budgetTrackingLineItem.id : "",
-		fy_donor: "",
-		fy_org: "",
-		grant_periods_project: ""
+		grant_periods_project: budgetTrackingLineItem
+			? budgetTrackingLineItem.grant_periods_project.id
+			: "",
+		fy_org: budgetTrackingLineItem ? budgetTrackingLineItem?.fy_org?.id : "",
+		fy_donor: budgetTrackingLineItem ? budgetTrackingLineItem?.fy_donor?.id : "",
 	};
 };
 
@@ -174,7 +179,15 @@ function BudgetLineItemTable({
 									<TableCell align="left">
 										{budgetTrackingLineItem.amount}
 									</TableCell>
-									<TableCell align="left"></TableCell>
+									<TableCell align="left">
+										{budgetTrackingLineItem?.fy_org?.name}
+									</TableCell>
+									<TableCell align="left">
+										{budgetTrackingLineItem?.fy_donor?.name}
+									</TableCell>
+									<TableCell align="left">
+										{budgetTrackingLineItem?.grant_periods_project?.name}
+									</TableCell>
 
 									<TableCell>
 										<IconButton

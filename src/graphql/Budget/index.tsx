@@ -20,9 +20,20 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 			amount
 			note
 			reporting_date
-
 			annual_year {
 				id
+			}
+			fy_org {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+			}
+			fy_donor {
+				id
+				name
 			}
 		}
 	}

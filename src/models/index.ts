@@ -112,6 +112,7 @@ export interface ISelectField {
 	selectLabelId: string;
 	selectId: string;
 	size: any;
+	hidden?: boolean;
 }
 
 export interface IFormDialog {
