@@ -109,12 +109,13 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	}, [orgCurrencies]);
 
 	useEffect(() => {
-		if (!donors?.id) return;
-		createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors.map(
-			({ donor }: { donor: { id: string; name: string } }) => {
-				return { id: donor.id, name: donor.name };
-			}
-		);
+		if (donors) {
+			createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
+				.filter(({ donor }: { donor: { id: string; name: string } }) => donor)
+				.map(({ donor }: { donor: { id: string; name: string } }) => {
+					return { id: donor.id, name: donor.name };
+				});
+		}
 	}, [donors]);
 
 	useEffect(() => {
