@@ -9,9 +9,9 @@ import {
 	CREATE_IMPACT_TRACKLINE,
 	UPDATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-} from "../../graphql/queries/Impact/trackline";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
-import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
+} from "../../graphql/Impact/trackline";
+import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/Impact/target";
+import { GET_ANNUAL_YEARS } from "../../graphql/index";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { impactTragetLineForm } from "./inputField.json";

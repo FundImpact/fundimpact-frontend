@@ -2,9 +2,9 @@ import React from "react";
 import { renderApollo } from "../../../utils/test.util";
 import { waitForElement } from "@testing-library/react";
 import SideBar from "../SideBar";
-import { GET_ORGANISATIONS } from "../../../graphql/queries";
-import { GET_WORKSPACES_BY_ORG } from "../../../graphql/queries/index";
-import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries/index";
+import { GET_ORGANISATIONS } from "../../../graphql";
+import { GET_WORKSPACES_BY_ORG } from "../../../graphql/index";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 
