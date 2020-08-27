@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../graphql/queries/Deliverable/trackline";
+import { GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../graphql/Deliverable/trackline";
 import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";

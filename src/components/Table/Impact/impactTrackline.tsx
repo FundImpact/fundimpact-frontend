@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/queries/Impact/trackline";
+import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/Impact/trackline";
 import { useQuery } from "@apollo/client";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";

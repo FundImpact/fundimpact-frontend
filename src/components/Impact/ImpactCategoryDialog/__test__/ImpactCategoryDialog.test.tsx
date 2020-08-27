@@ -4,7 +4,7 @@ import { act, fireEvent, wait } from "@testing-library/react";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
-import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/queries/Impact/mutation";
+import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/Impact/mutation";
 import { impactCategoeyDialogFields } from "../../../../utils/inputTestFields.json";
 import { organizationDetails } from "../../../../utils/testMock.json";
 

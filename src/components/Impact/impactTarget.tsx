@@ -13,8 +13,8 @@ import {
 import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
+import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
+import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/Impact/target";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
 import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {

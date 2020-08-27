@@ -2,8 +2,8 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/queries/Deliverable/category";
-import { GET_CATEGORY_UNIT } from "../../graphql/queries/Deliverable/categoryUnit";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
+import { GET_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
