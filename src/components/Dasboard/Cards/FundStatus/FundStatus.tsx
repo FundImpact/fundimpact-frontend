@@ -128,7 +128,6 @@ export default function FundStatus() {
 
 	useEffect(() => {
 		ProjectTotalBudgetApproved = ProjectTotalSpendAmount = ProjectTotalRecievedAmount = undefined;
-		// console.log(`ProjectTotalSpendAmount B`, ProjectTotalSpendAmount);
 		setFUND_DETAILS(undefined);
 
 		if (projectId === undefined || projectId === null) return;
@@ -137,8 +136,6 @@ export default function FundStatus() {
 		GetProjectTotalSpend({ variables: { filter: { project: projectId } } });
 		GetProjectTotalReceived({ variables: { filter: { project: projectId } } });
 	}, [projectId]);
-
-	// console.log("fund details ", FUND_DETAILS);
 
 	if (!FUND_DETAILS)
 		return (
@@ -154,7 +151,7 @@ export default function FundStatus() {
 	return (
 		<Box mt={1} className={classes.root}>
 			<Grid container spacing={0} direction="row">
-				<Grid item xs={5}>
+				<Grid item xs={5} container={true} alignContent="center">
 					{FUND_DETAILS.map((fund, index) => (
 						<React.Fragment key={fund.name}>
 							<Box m={0} display="inline">
@@ -169,7 +166,7 @@ export default function FundStatus() {
 						</React.Fragment>
 					))}
 				</Grid>
-				<Grid item xs={7}>
+				<Grid item xs={7} alignContent="center">
 					<PieCharts data={chartData} />
 				</Grid>
 			</Grid>
