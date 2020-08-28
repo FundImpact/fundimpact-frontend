@@ -12,7 +12,6 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
-import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
 import SettingsIcon from "@material-ui/icons/Settings";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -61,12 +60,12 @@ export default function LeftPanel() {
 							color: "#bdbdbd",
 							to: "/settings",
 						},
-						{
-							name: "Star",
-							Icon: GradeOutlinedIcon,
-							color: "#bdbdbd",
-							to: "/asd",
-						},
+						// {
+						// 	name: "Star",
+						// 	Icon: GradeOutlinedIcon,
+						// 	color: "#bdbdbd",
+						// 	to: "/asd",
+						// },
 					].map((item, index) => (
 						<NavLink to={item.to} activeClassName={classes.leftPanelActiveLink}>
 							<ListItemIcon>
