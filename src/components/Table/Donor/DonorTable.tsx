@@ -19,6 +19,7 @@ import { IDONOR_RESPONSE } from "../../../models/donor/query";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { useQuery } from "@apollo/client";
 import { IDONOR } from "../../../models/donor";
+import pagination from '../../../hooks/pagination';
 
 const useStyles = makeStyles({
 	table: {
@@ -81,6 +82,9 @@ function DonorTable() {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
 	const { data: donorList } = useQuery(GET_ORG_DONOR);
+	// pagination({
+
+	// })
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};

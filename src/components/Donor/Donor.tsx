@@ -1,5 +1,5 @@
-import React from "react";
-import { useMutation } from "@apollo/client";
+import React, { useEffect } from "react";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import { IDONOR, IDONOR_PROPS } from "../../models/donor";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -106,7 +106,7 @@ function Donor(props: IDONOR_PROPS) {
 			props.handleClose();
 		}
 	};
-
+	
 	return (
 		<>
 			<FormDialog
