@@ -2,13 +2,14 @@ import { useLazyQuery } from "@apollo/client";
 import { Box, Grid, Typography } from "@material-ui/core";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import {
+	GET_PROJECT_AMOUNT_RECEIVED,
+	GET_PROJECT_AMOUNT_SPEND,
 	GET_PROJECT_BUDGET_AMOUNT,
-	GET_PROJECT_TOTAL_RECIEVED,
-	GET_PROJECT_TOTAL_SPENT,
 } from "../../../../graphql/project";
 import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
 import PieCharts from "../../../Charts/Pie/PieChart";
@@ -24,88 +25,112 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-const calculateFundDetails = () => {};
+const createFundDetails = (
+	amountApproved: number,
+	amountSpend: number,
+	amountReceived: number,
+	theme: Theme
+) => {
+	const FUNDS_APPROVED: IFUNDS = {
+		name: "Approved",
+		amountToShow: undefined,
+		color: theme.palette.secondary.main,
+	};
 
+	const FUNDS_SPENT: IFUNDS = {
+		name: "SPEND",
+		amountToShow: undefined,
+		color: theme.palette.primary.main,
+	};
+
+	const FUNDS_RECEIVED: IFUNDS = {
+		name: "Received",
+		amountToShow: undefined,
+		color: theme.palette.grey[200],
+	};
+	let pieData = {
+		datasets: [
+			{
+				backgroundColor: [FUNDS_APPROVED.color, FUNDS_SPENT.color, FUNDS_RECEIVED.color],
+				data: [amountApproved, amountSpend, amountReceived],
+			},
+		],
+	};
+
+	let details = [
+		{
+			...FUNDS_APPROVED,
+			amountToShow:
+				amountApproved > 999
+					? (amountApproved / 1000).toFixed(1) + "K"
+					: amountApproved + "",
+			originalAmount: amountApproved,
+		},
+		{
+			...FUNDS_RECEIVED,
+			amountToShow:
+				amountReceived > 999
+					? (amountReceived / 1000).toFixed(1) + "K"
+					: amountReceived + "",
+			originalAmount: amountReceived,
+		},
+		{
+			...FUNDS_SPENT,
+			amountToShow:
+				amountSpend > 999 ? (amountSpend / 1000).toFixed(1) + "K" : amountSpend + "",
+			originalAmount: amountSpend,
+		},
+	];
+
+	return { pieData, details };
+};
 export default function FundStatus() {
-	let mycolor: string;
 	const dashboardData = useDashBoardData();
 	const projectId = dashboardData?.project?.id;
 
 	const classes = useStyles();
 	const theme = useTheme();
 
-	const FUNDS_APPROVED: IFUNDS = {
-		name: "Approved",
-		amount: undefined,
-		color: theme.palette.secondary.main,
-	};
-
-	const FUNDS_SPENT: IFUNDS = {
-		name: "SPEND",
-		amount: undefined,
-		color: theme.palette.primary.main,
-	};
-
-	const FUNDS_RECEIVED: IFUNDS = {
-		name: "Received",
-		amount: undefined,
-		color: theme.palette.grey[200],
-	};
 	const [FUND_DETAILS, setFUND_DETAILS] = useState<IFUNDS[]>();
 
-	console.log("fund card render");
+	// console.log("fund card render");
 
 	let [GetProjectTotalBudget, { data: ProjectTotalBudgetApproved }] = useLazyQuery(
-		GET_PROJECT_BUDGET_AMOUNT,
-		{}
+		GET_PROJECT_BUDGET_AMOUNT
 	);
 
 	let [GetProjectTotalSpend, { data: ProjectTotalSpendAmount }] = useLazyQuery(
-		GET_PROJECT_TOTAL_SPENT,
-		{}
+		GET_PROJECT_AMOUNT_SPEND
 	);
 	let [GetProjectTotalReceived, { data: ProjectTotalRecievedAmount }] = useLazyQuery(
-		GET_PROJECT_TOTAL_RECIEVED,
-		{}
+		GET_PROJECT_AMOUNT_RECEIVED
 	);
 
 	let [chartData, setChartData] = useState<PieDataFormat>();
 
 	useEffect(() => {
-		if (ProjectTotalBudgetApproved === undefined || ProjectTotalBudgetApproved === null) return;
-		if (ProjectTotalRecievedAmount === undefined || ProjectTotalRecievedAmount === null) return;
-		if (ProjectTotalSpendAmount === undefined || ProjectTotalSpendAmount === null) return;
+		if (!ProjectTotalBudgetApproved) return;
+		if (!ProjectTotalRecievedAmount) return;
+		if (!ProjectTotalSpendAmount) return;
+
 		const amountApproved = ProjectTotalBudgetApproved.projectBudgetTargetAmountSum;
 		const amountSpend = ProjectTotalSpendAmount.projBudgetTrackingsTotalSpendAmount;
 		const amountReceived = ProjectTotalRecievedAmount.fundReceiptProjectTotalAmount;
-		console.log({
-			ProjectTotalBudgetApproved,
-			ProjectTotalSpendAmount,
-			ProjectTotalRecievedAmount,
-		});
-
-		let pieData = {
-			datasets: [
-				{
-					backgroundColor: [
-						FUNDS_APPROVED.color,
-						FUNDS_SPENT.color,
-						FUNDS_RECEIVED.color,
-					],
-					data: [amountApproved, amountSpend, amountReceived],
-				},
-			],
-		};
+		const { pieData, details } = createFundDetails(
+			amountApproved,
+			amountSpend,
+			amountReceived,
+			theme
+		);
 		setChartData(pieData);
-		let details = [
-			{ ...FUNDS_APPROVED, amount: amountApproved },
-			{ ...FUNDS_RECEIVED, amount: amountReceived },
-			{ ...FUNDS_SPENT, amount: amountSpend },
-		];
-		// setFUND_DETAILS(details);
+		setFUND_DETAILS(details);
 	}, [ProjectTotalBudgetApproved, ProjectTotalSpendAmount, ProjectTotalRecievedAmount]);
 
 	useEffect(() => {
+		ProjectTotalBudgetApproved = ProjectTotalSpendAmount = ProjectTotalRecievedAmount = undefined;
+		// console.log(`ProjectTotalSpendAmount B`, ProjectTotalSpendAmount);
+		setFUND_DETAILS(undefined);
+
 		if (projectId === undefined || projectId === null) return;
 
 		GetProjectTotalBudget({ variables: { filter: { project: projectId } } });
@@ -113,24 +138,35 @@ export default function FundStatus() {
 		GetProjectTotalReceived({ variables: { filter: { project: projectId } } });
 	}, [projectId]);
 
-	if (!FUND_DETAILS) return null;
+	// console.log("fund details ", FUND_DETAILS);
+
+	if (!FUND_DETAILS)
+		return (
+			<>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+			</>
+		);
 
 	return (
 		<Box mt={1} className={classes.root}>
 			<Grid container spacing={0} direction="row">
 				<Grid item xs={5}>
 					{FUND_DETAILS.map((fund, index) => (
-						<>
-							<Box m={0} display="inline" key={fund.name}>
+						<React.Fragment key={fund.name}>
+							<Box m={0} display="inline">
 								<Typography variant="subtitle1">
 									<FiberManualRecordIcon
 										className={classes.fundTextIcon}
 										style={{ color: fund.color }}
 									/>
-									{`${fund.amount} ${fund.name}`}
+									{`${fund.amountToShow} ${fund.name}`}
 								</Typography>
 							</Box>
-						</>
+						</React.Fragment>
 					))}
 				</Grid>
 				<Grid item xs={7}>

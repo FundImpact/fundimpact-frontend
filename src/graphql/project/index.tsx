@@ -55,14 +55,26 @@ export const GET_PROJECT_BUDGET_AMOUNT = gql`
 	}
 `;
 
-export const GET_PROJECT_TOTAL_SPENT = gql`
-	query getProjectBudgetTargetAmountSum($filter: JSON) {
+export const GET_PROJECT_AMOUNT_SPEND = gql`
+	query getProjectBudgetTargetSpendAmount($filter: JSON) {
 		projBudgetTrackingsTotalSpendAmount(where: $filter)
 	}
 `;
 
-export const GET_PROJECT_TOTAL_RECIEVED = gql`
-	query getProjectBudgetTargetAmountSum($filter: JSON) {
+export const GET_PROJECT_AMOUNT_RECEIVED = gql`
+	query getFundReceiptProjectTotalAmount($filter: JSON) {
 		fundReceiptProjectTotalAmount(where: $filter)
+	}
+`;
+
+export const GET_ALL_DELIVERABLES_TARGET_AMOUNT = gql`
+	query getDeliverableTargetTotalAmountByProject($filter: JSON) {
+		deliverableTargetTotalAmount(where: $filter)
+	}
+`;
+
+export const GET_ALL_DELIVERABLES_SPEND_AMOUNT = gql`
+	query getDeliverableTrackingTotalSpendAmountByProject($filter: JSON) {
+		deliverableTrackingTotalSpendAmount(where: $filter)
 	}
 `;

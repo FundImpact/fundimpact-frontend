@@ -1,5 +1,6 @@
 export interface IFUNDS {
-	amount?: number;
+	amountToShow?: string;
 	name: string;
 	color: string;
+	originalAmount?: number;
 }
