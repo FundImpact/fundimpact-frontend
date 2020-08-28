@@ -4,14 +4,16 @@ import { Route, Routes } from "react-router-dom";
 
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
+import Snackbar from "../../components/Snackbar/Snackbar";
 import { DashboardProvider } from "../../contexts/dashboardContext";
+import { useNotificationData } from "../../contexts/notificationContext";
 import IDefaultView from "./defaultView";
+import { DonorContainer } from "./donor/container";
 import SettingsSidebar from "./sidebar";
-
-const ItestingDonor = () => <div>donors component will be here.</div>;
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
+	const notificationData = useNotificationData();
 
 	return (
 		<DashboardProvider>
@@ -37,11 +39,17 @@ export default function SettingContainer() {
 					</Grid>
 					<Grid item xs={12} md={9}>
 						<Routes>
-							<Route path="donors" element={<ItestingDonor />} />
+							<Route path="donors" element={<DonorContainer />} />
 							<Route path="/" element={<IDefaultView />} />
 						</Routes>
 					</Grid>
 				</Grid>
+				{notificationData!.successNotification && (
+					<Snackbar severity="success" msg={notificationData!.successNotification} />
+				)}
+				{notificationData!.errorNotification && (
+					<Snackbar severity="error" msg={notificationData!.errorNotification} />
+				)}
 			</Container>
 		</DashboardProvider>
 	);
