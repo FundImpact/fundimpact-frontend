@@ -15,7 +15,7 @@ export const sidePanelStyles = makeStyles((theme: Theme) =>
 		},
 		leftPanelContent: {},
 		leftPanelActiveLink: {
-			background: "white",
+			background: theme.palette.primary.contrastText,
 			display: "block",
 			color: "red",
 		},
