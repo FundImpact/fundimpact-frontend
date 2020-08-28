@@ -8,6 +8,8 @@ import {
 	TableHead,
 	IconButton,
 	MenuItem,
+	TableFooter,
+	TablePagination,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -16,10 +18,11 @@ import SimpleMenu from "../../Menu";
 import Donor from "../../Donor";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IDONOR_RESPONSE } from "../../../models/donor/query";
-import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
 import { useQuery } from "@apollo/client";
 import { IDONOR } from "../../../models/donor";
-import pagination from '../../../hooks/pagination';
+import pagination from "../../../hooks/pagination";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 const useStyles = makeStyles({
 	table: {
@@ -69,22 +72,32 @@ function getValue(obj: any, key: string[]): any {
 	if (key.length == 1) {
 		return obj[key[0]];
 	}
-	key.shift();
-	return getValue(obj[key[0]], key);
+	return getValue(obj[key[0]], key.slice(1));
 }
 
 function DonorTable() {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
 	const selectedDonor = React.useRef<IDONOR_RESPONSE | null>(null);
+	const [page, setPage] = useState<number>(0);
+
+	const dashboardData = useDashBoardData();
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	const { data: donorList } = useQuery(GET_ORG_DONOR);
-	// pagination({
+	let { changePage, count, queryData: donorList } = pagination({
+		countQuery: GET_DONOR_COUNT,
+		countFilter: {
+			organization: dashboardData?.organization?.id,
+		},
+		query: GET_ORG_DONOR,
+		queryFilter: {
+			organization: dashboardData?.organization?.id,
+		},
+		sort: "created_at:DESC",
+	});
 
-	// })
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -163,6 +176,36 @@ function DonorTable() {
 						</TableRow>
 					))}
 				</TableBody>
+				{donorList?.orgDonors?.length ? (
+					<TableFooter>
+						<TableRow>
+							<TablePagination
+								rowsPerPageOptions={[]}
+								colSpan={8}
+								count={count}
+								rowsPerPage={count > 10 ? 10 : count}
+								page={page}
+								SelectProps={{
+									inputProps: { "aria-label": "rows per page" },
+									native: true,
+								}}
+								onChangePage={(
+									event: React.MouseEvent<HTMLButtonElement> | null,
+									newPage: number
+								) => {
+									if (newPage > page) {
+										changePage();
+									} else {
+										changePage(true);
+									}
+									setPage(newPage);
+								}}
+								onChangeRowsPerPage={() => {}}
+								style={{ paddingRight: "40px" }}
+							/>
+						</TableRow>
+					</TableFooter>
+				) : null}
 			</Table>
 		</TableContainer>
 	);

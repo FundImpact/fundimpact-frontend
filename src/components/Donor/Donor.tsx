@@ -13,11 +13,12 @@ import { GET_ORG_DONOR } from "../../graphql/donor";
 import { FORM_ACTIONS } from "../../models/constants";
 import { compareObjectKeys } from "../../utils/index";
 import { IGET_DONOR } from "../../models/donor/query";
+import { GET_COUNTRY_LIST } from "../../graphql/queries/index";
 
 let inputFields: IInputField[] = addDonorForm;
 
 const defaultFormValues: IDONOR = {
-	country: "1",
+	country: "",
 	legal_name: "",
 	name: "",
 	short_name: "",
@@ -43,6 +44,11 @@ const validate = (values: IDONOR) => {
 function Donor(props: IDONOR_PROPS) {
 	const [createOrgDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
 	const [updateOrgDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
+	const [getCountryList] = useLazyQuery(GET_COUNTRY_LIST, {
+		onCompleted: ({ countryList }) => {
+			addDonorFormSelectFields[0].optionsArray = countryList;
+		},
+	});
 
 	const initialValues =
 		props.formAction == FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
@@ -106,7 +112,11 @@ function Donor(props: IDONOR_PROPS) {
 			props.handleClose();
 		}
 	};
-	
+
+	useEffect(() => {
+		getCountryList();
+	}, []);
+
 	return (
 		<>
 			<FormDialog
