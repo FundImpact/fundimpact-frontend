@@ -48,3 +48,21 @@ export const GET_PROJ_DONORS = gql`
 		}
 	}
 `;
+
+export const GET_PROJECT_BUDGET_AMOUNT = gql`
+	query getProjectBudgetTargetAmountSum($filter: JSON) {
+		projectBudgetTargetAmountSum(where: $filter)
+	}
+`;
+
+export const GET_PROJECT_TOTAL_SPENT = gql`
+	query getProjectBudgetTargetAmountSum($filter: JSON) {
+		projBudgetTrackingsTotalSpendAmount(where: $filter)
+	}
+`;
+
+export const GET_PROJECT_TOTAL_RECIEVED = gql`
+	query getProjectBudgetTargetAmountSum($filter: JSON) {
+		fundReceiptProjectTotalAmount(where: $filter)
+	}
+`;
