@@ -7,7 +7,7 @@ import BudgetTarget from "../../Budget/BudgetTarget";
 import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
-import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
+import BudgetLineitem from "../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
 

@@ -13,7 +13,7 @@ import { GET_ORG_DONOR } from "../../graphql/donor";
 import { FORM_ACTIONS } from "../../models/constants";
 import { compareObjectKeys } from "../../utils/index";
 import { IGET_DONOR } from "../../models/donor/query";
-import { GET_COUNTRY_LIST } from "../../graphql/queries/index";
+import { GET_COUNTRY_LIST } from "../../graphql/";
 
 let inputFields: IInputField[] = addDonorForm;
 
