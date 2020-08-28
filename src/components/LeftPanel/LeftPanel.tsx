@@ -74,7 +74,7 @@ export default function LeftPanel() {
 									style={{
 										color: item.color,
 										fontSize: "2rem",
-										margin: "5px",
+										margin: "5px 5px 5px 25%",
 									}}
 								/>
 							</ListItemIcon>
