@@ -13,7 +13,7 @@ import {
 } from "../../../../graphql/project";
 import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
 import PieCharts from "../../../Charts/Pie/PieChart";
-import { IFUNDS } from "./models/funds";
+import { IFunds } from "./models/funds";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -31,19 +31,19 @@ const createFundDetails = (
 	amountReceived: number,
 	theme: Theme
 ) => {
-	const FUNDS_APPROVED: IFUNDS = {
+	const FUNDS_APPROVED: IFunds = {
 		name: "Approved",
 		amountToShow: undefined,
 		color: theme.palette.secondary.main,
 	};
 
-	const FUNDS_SPENT: IFUNDS = {
+	const FUNDS_SPENT: IFunds = {
 		name: "SPEND",
 		amountToShow: undefined,
 		color: theme.palette.primary.main,
 	};
 
-	const FUNDS_RECEIVED: IFUNDS = {
+	const FUNDS_RECEIVED: IFunds = {
 		name: "Received",
 		amountToShow: undefined,
 		color: theme.palette.grey[200],
@@ -91,7 +91,7 @@ export default function FundStatus() {
 	const classes = useStyles();
 	const theme = useTheme();
 
-	const [FUND_DETAILS, setFUND_DETAILS] = useState<IFUNDS[]>();
+	const [FUND_DETAILS, setFUND_DETAILS] = useState<IFunds[]>();
 
 	// console.log("fund card render");
 
@@ -166,7 +166,7 @@ export default function FundStatus() {
 						</React.Fragment>
 					))}
 				</Grid>
-				<Grid item xs={7} alignContent="center">
+				<Grid item xs={7}>
 					<PieCharts data={chartData} />
 				</Grid>
 			</Grid>

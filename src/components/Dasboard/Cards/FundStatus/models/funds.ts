@@ -1,4 +1,4 @@
-export interface IFUNDS {
+export interface IFunds {
 	amountToShow?: string;
 	name: string;
 	color: string;
