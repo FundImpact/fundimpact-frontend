@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	TextField,
 	FormControl,
@@ -8,6 +8,9 @@ import {
 	FormHelperText,
 	makeStyles,
 	createStyles,
+	Checkbox,
+	ListItemText,
+	Chip,
 } from "@material-ui/core";
 import { IInputFields } from "../../models";
 
@@ -18,6 +21,13 @@ const useStyles = makeStyles(() =>
 		},
 		formControl: {
 			width: "100%",
+		},
+		chips: {
+			display: "flex",
+			flexWrap: "wrap",
+		},
+		chip: {
+			margin: 2,
 		},
 	})
 );
@@ -38,8 +48,27 @@ const InputFields = ({
 	selectLabelId,
 	selectId,
 	getInputValue,
+	multiple = false,
 }: IInputFields) => {
 	const classes = useStyles();
+	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
+
+	useEffect(() => {
+		if (optionsArray?.length)
+			setOptionsArrayHash(() => {
+				return optionsArray?.reduce(
+					(
+						accumulator: { [key: string]: string },
+						current: { id: string; name: string }
+					) => {
+						accumulator[current.id] = current.name;
+						return accumulator;
+					},
+					{}
+				);
+			});
+	}, [optionsArray]);
+
 	if (inputType === "select") {
 		return (
 			<FormControl variant="outlined" className={classes.formControl}>
@@ -65,16 +94,44 @@ const InputFields = ({
 					inputProps={{
 						"data-testid": testId,
 					}}
+					multiple={multiple}
+					renderValue={(selected) => {
+						return multiple ? (
+							<div className={classes.chips}>
+								{(selected as string[])
+									.filter((selected) => selected)
+									.map((value, index) => (
+										<Chip
+											key={index}
+											label={optionsArrayHash[value]}
+											className={classes.chip}
+										/>
+									))}
+							</div>
+						) : (
+							optionsArrayHash[selected as string]
+						);
+					}}
 				>
-					{optionsArray && !optionsArray.length && (
+					{!optionsArray?.length && (
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
 					)}
-					{optionsArray &&
-						optionsArray.map((elem: any, index: number) => (
+					{!multiple &&
+						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
 							<MenuItem key={index} value={elem.id}>
 								{elem.name}
+							</MenuItem>
+						))}
+					{multiple &&
+						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
+							<MenuItem key={index} value={elem.id}>
+								<Checkbox
+									color="primary"
+									checked={formik.values[name].indexOf(elem.id) > -1}
+								/>
+								<ListItemText primary={elem.name} />
 							</MenuItem>
 						))}
 				</Select>
