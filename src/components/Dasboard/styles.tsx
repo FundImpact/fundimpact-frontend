@@ -1,6 +1,9 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
-export const useStyles = makeStyles((theme: Theme) =>
+/**
+ * @description Keep the Styles related to left blue panel and sidebars only.
+ */
+export const sidePanelStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			height: "100vh",
@@ -11,10 +14,18 @@ export const useStyles = makeStyles((theme: Theme) =>
 			background: theme.palette.primary.main,
 		},
 		leftPanelContent: {},
+		leftPanelActiveLink: {
+			background: "white",
+			display: "block",
+			color: "red",
+		},
 		sidePanel: {
 			height: "100vh",
 			background: theme.palette.background.paper,
 			overflowY: "scroll",
+		},
+		sidePanelActiveLink: {
+			background: "rgb(204, 204, 204)",
 		},
 		card: {
 			boxShadow: "none",

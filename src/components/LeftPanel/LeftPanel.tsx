@@ -1,27 +1,31 @@
-import { useStyles } from "../Dasboard/styles";
 import {
 	Avatar,
 	Box,
 	Button,
+	Divider,
 	Grid,
+	IconButton,
 	List,
-	ListItem,
+	ListItemIcon,
 	Menu,
 	MenuItem,
 	useTheme,
-	Divider,
-	ListItemIcon,
-	IconButton,
 } from "@material-ui/core";
-import React from "react";
-import { UserDispatchContext } from "../../contexts/userContext";
-import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
+import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
 import MonetizationOnOutlinedIcon from "@material-ui/icons/MonetizationOnOutlined";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
+import { UserDispatchContext } from "../../contexts/userContext";
+import { sidePanelStyles } from "../Dasboard/styles";
+
+/**
+ * @description This is the Blue sidebar the we see on the left most side of the window.
+ */
 export default function LeftPanel() {
-	const classes = useStyles();
+	const classes = sidePanelStyles();
 	const theme = useTheme();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const userDispatch = React.useContext(UserDispatchContext);
@@ -45,17 +49,36 @@ export default function LeftPanel() {
 				<Divider />
 				<List>
 					{[
-						{ name: "Dashboard", Icon: DashboardOutlinedIcon, color: "#fafafa" },
-						{ name: "Briefcase", Icon: BusinessCenterOutlinedIcon, color: "#bdbdbd" },
-						{ name: "Star", Icon: GradeOutlinedIcon, color: "#bdbdbd" },
+						{
+							name: "Dashboard",
+							Icon: DashboardOutlinedIcon,
+							color: "#bdbdbd",
+							to: "/dashboard",
+						},
+						{
+							name: "Briefcase",
+							Icon: BusinessCenterOutlinedIcon,
+							color: "#bdbdbd",
+							to: "/settings",
+						},
+						{
+							name: "Star",
+							Icon: GradeOutlinedIcon,
+							color: "#bdbdbd",
+							to: "/asd",
+						},
 					].map((item, index) => (
-						<ListItem button key={item.name}>
+						<NavLink to={item.to} activeClassName={classes.leftPanelActiveLink}>
 							<ListItemIcon>
 								<item.Icon
-									style={{ color: item.color, fontSize: "1.7rem", margin: "5px" }}
+									style={{
+										color: item.color,
+										fontSize: "3rem",
+										margin: "5px",
+									}}
 								/>
 							</ListItemIcon>
-						</ListItem>
+						</NavLink>
 					))}
 				</List>
 				<Divider />

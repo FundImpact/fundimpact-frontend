@@ -134,7 +134,7 @@ export default function WorkspaceList({
 													closeMenuItems(index);
 												}}
 											>
-												Edit Workspace{" "}
+												Edit Workspace
 											</MenuItem>
 											<MenuItem
 												onClick={() => {

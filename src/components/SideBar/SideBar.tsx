@@ -9,7 +9,7 @@ import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboard
 import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
-import { useStyles } from "../Dasboard/styles";
+import { sidePanelStyles } from "../Dasboard/styles";
 import SimpleMenu from "../Menu/Menu";
 import SidebarSkeleton from "../Skeletons/SidebarSkeleton";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
@@ -17,7 +17,7 @@ import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 
 export default function SideBar({ children }: { children?: Function }) {
-	const classes = useStyles();
+	const classes = sidePanelStyles();
 	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();

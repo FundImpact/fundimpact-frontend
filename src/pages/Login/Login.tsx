@@ -1,15 +1,15 @@
-import { Box } from "@material-ui/core";
-import { FormikHelpers } from "formik";
-import React from "react";
+import { Box } from '@material-ui/core';
+import { FormikHelpers } from 'formik';
+import React from 'react';
 
-import AlertMsg from "../../components/AlertMessage/AlertMessage";
-import GlobalLoader from "../../components/commons/GlobalLoader";
-import LoginForm from "../../components/Forms/Login/LoginForm";
-import { UserDispatchContext } from "../../contexts/userContext";
-import { usePostFetch } from "../../hooks/fetch/usePostFetch";
-import { ILoginForm } from "../../models";
-import { setUser } from "../../reducers/userReducer";
-import { LOGIN_API } from "../../utils/endpoints.util";
+import AlertMsg from '../../components/AlertMessage/AlertMessage';
+import GlobalLoader from '../../components/commons/GlobalLoader';
+import LoginForm from '../../components/Forms/Login/LoginForm';
+import { UserDispatchContext } from '../../contexts/userContext';
+import { usePostFetch } from '../../hooks/fetch/usePostFetch';
+import { ILoginForm } from '../../models';
+import { setUser } from '../../reducers/userReducer';
+import { LOGIN_API } from '../../utils/endpoints.util';
 
 // const useStyles = makeStyles((theme: Theme) =>
 // 	createStyles({

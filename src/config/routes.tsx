@@ -1,14 +1,15 @@
-import { ApolloProvider } from "@apollo/client";
-import React from "react";
-import { RouteProps } from "react-router";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ApolloProvider } from '@apollo/client';
+import React from 'react';
+import { RouteProps } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
-import DashboardTableContainer from "../components/Dasboard/Table/DashboardTableContainer";
-import { useAuth } from "../contexts/userContext";
-import LandingPage from "../pages/Landing/Landing";
-import { client } from "./grapql";
-import { DashboardProvider } from "../contexts/dashboardContext";
-import { NotificationProvider } from "../contexts/notificationContext";
+import DashboardTableContainer from '../components/Dasboard/Table/DashboardTableContainer';
+import { DashboardProvider } from '../contexts/dashboardContext';
+import { NotificationProvider } from '../contexts/notificationContext';
+import { useAuth } from '../contexts/userContext';
+import LandingPage from '../pages/Landing/Landing';
+import SettingsContainer from '../pages/settings/settings';
+import { client } from './grapql';
 
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
 const Login = React.lazy(() => import("../pages/Login/Login"));
@@ -35,6 +36,18 @@ function AppRoutes() {
 										left={null}
 										main={<DashboardTableContainer />}
 									/>
+								</DashboardProvider>
+							</NotificationProvider>
+						</ApolloProvider>
+					}
+				/>
+				<PrivateRoute
+					path="settings/*"
+					element={
+						<ApolloProvider client={client}>
+							<NotificationProvider>
+								<DashboardProvider>
+									<SettingsContainer></SettingsContainer>
 								</DashboardProvider>
 							</NotificationProvider>
 						</ApolloProvider>
