@@ -131,21 +131,22 @@ function WorkspaceForm({
 			{children ? children : null}
 			<DialogActions>
 				<Button
+					className={classes.button}
+					data-testid="submit"
+					form="workspace_form"
+					type="submit"
 					color="secondary"
+					variant="contained"
+				>
+					{formState === WORKSPACE_ACTIONS.CREATE ? "Create" : "Update"}
+				</Button>
+				<Button
+					color="primary"
 					className={classes.button}
 					onClick={() => setShowForm(false)}
 					variant="contained"
 				>
 					Cancel
-				</Button>
-				<Button
-					data-testid="submit"
-					form="workspace_form"
-					type="submit"
-					color="primary"
-					variant="contained"
-				>
-					{formState === WORKSPACE_ACTIONS.CREATE ? "Create" : "Update"}
 				</Button>
 			</DialogActions>
 		</Dialog>
