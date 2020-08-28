@@ -11,10 +11,9 @@ import {
 	MenuItem,
 	useTheme,
 } from "@material-ui/core";
-import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
-import MonetizationOnOutlinedIcon from "@material-ui/icons/MonetizationOnOutlined";
+import SettingsIcon from "@material-ui/icons/Settings";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -41,8 +40,9 @@ export default function LeftPanel() {
 			<Grid xs item>
 				<Box mb={1} mt={1}>
 					<IconButton>
-						<MonetizationOnOutlinedIcon
-							style={{ color: "white", fontSize: "2rem", margin: "5px" }}
+						<Avatar
+							variant="square"
+							src={require("../../assets/icons/Fundimpact-logo.png")}
 						/>
 					</IconButton>
 				</Box>
@@ -57,7 +57,7 @@ export default function LeftPanel() {
 						},
 						{
 							name: "Briefcase",
-							Icon: BusinessCenterOutlinedIcon,
+							Icon: SettingsIcon,
 							color: "#bdbdbd",
 							to: "/settings",
 						},
