@@ -1,30 +1,36 @@
-import React, { useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
+import {
+	GET_BUDGET_TARGET_PROJECT,
+	GET_ORGANIZATION_BUDGET_CATEGORY,
+} from "../../../graphql/Budget";
 import {
 	CREATE_PROJECT_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/Budget";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGET_BUDGET_TARGET_PROJECT, IBudgetTargetProjectResponse } from "../../../models/budget/query";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
+import {
+	IBudgetTargetProjectResponse,
+	IGET_BUDGET_TARGET_PROJECT,
+} from "../../../models/budget/query";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { compareObjectKeys } from "../../../utils";
 import {
-	createBudgetTargetFormSelectFields,
 	createBudgetTargetForm,
+	createBudgetTargetFormSelectFields,
 } from "../../../utils/inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
-import { compareObjectKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -103,13 +109,12 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	}, [orgCurrencies]);
 
 	useEffect(() => {
-		if (donors) {
-			createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors.map(
-				({ donor }: { donor: { id: string; name: string } }) => {
-					return { id: donor.id, name: donor.name };
-				}
-			);
-		}
+		if (!donors?.id) return;
+		createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors.map(
+			({ donor }: { donor: { id: string; name: string } }) => {
+				return { id: donor.id, name: donor.name };
+			}
+		);
 	}, [donors]);
 
 	useEffect(() => {
@@ -137,7 +142,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 						});
-						let budgetTargets : IBudgetTargetProjectResponse[] = dataRead?.projectBudgetTargets
+						let budgetTargets: IBudgetTargetProjectResponse[] = dataRead?.projectBudgetTargets
 							? dataRead?.projectBudgetTargets
 							: [];
 						store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
@@ -148,10 +153,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 							data: {
-								projectBudgetTargets: [
-									...budgetTargets,
-									projectCreated,
-								],
+								projectBudgetTargets: [...budgetTargets, projectCreated],
 							},
 						});
 					} catch (err) {}
