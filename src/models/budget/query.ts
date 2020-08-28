@@ -20,7 +20,7 @@ export interface IBudgetTargetProjectResponse {
 	};
 }
 
-export interface IBUDGET_TRACKING_LINE_ITEM_RESPONSE {
+export interface IBUDGET_LINE_ITEM_RESPONSE {
 	amount: number;
 	note: string;
 	budget_targets_project: {
@@ -54,5 +54,5 @@ export interface IGET_BUDGET_CATEGORY {
 }
 
 export interface IGET_BUDGET_TARCKING_LINE_ITEM {
-	projBudgetTrackings: IBUDGET_TRACKING_LINE_ITEM_RESPONSE[];
+	projBudgetTrackings: IBUDGET_LINE_ITEM_RESPONSE[];
 }

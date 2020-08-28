@@ -43,37 +43,31 @@ const defaultFormValues: IBudgetTrackingLineitemForm = {
 	budget_targets_project: "",
 	annual_year: "",
 	reporting_date: getTodaysDate(),
+	fy_donor: "",
+	fy_org: "",
+	grant_periods_project: "",
 };
 
-const validate = (values: IBudgetTrackingLineitemForm) => {
-	let errors: Partial<IBudgetTrackingLineitemForm> = {};
-	if (!values.amount) {
-		errors.amount = "Amount is required";
-	}
-	if (!values.note) {
-		errors.note = "Note is required";
-	}
-	if (!values.budget_targets_project) {
-		errors.budget_targets_project = "Budget project is required";
-	}
-	if (!values.annual_year) {
-		errors.annual_year = "Annual year is required";
-	}
-	if (!values.reporting_date) {
-		errors.reporting_date = "Reporting date is required";
-	}
-	return errors;
-};
+let budgetTargetHash: {
+	[key: string]: {
+		id: string;
+		country: { id: string };
+	};
+} = {};
 
 function BudgetLineitem(props: IBudgetLineitemProps) {
 	const apolloClient = useApolloClient();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
+	const [selectedDonor, setSelectedDonor] = useState<{
+		id: string;
+		country: { id: string };
+	} | null>(null);
 
 	const currentProject = dashboardData?.project;
 	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
 
-	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
+	const [createProjectBudgetTracking, { loading: creatingLineItem, data }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING
 	);
 	const [updateProjectBudgetTracking, { loading: updatingLineItem }] = useMutation(
@@ -81,6 +75,76 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	);
 	const [getBudgetTargetProject] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
 	const { data: annualYears } = useQuery(GET_ANNUAL_YEAR_LIST);
+
+	const closeDialog = useCallback(() => {
+		createBudgetTrackingLineitemFormSelectFields[2].hidden = false;
+		props.handleClose();
+	}, []);
+
+	const validate = useCallback(
+		(values: IBudgetTrackingLineitemForm) => {
+			let errors: Partial<IBudgetTrackingLineitemForm> = {};
+			if (values.budget_targets_project) {
+				setSelectedDonor(budgetTargetHash[values.budget_targets_project]);
+				if (
+					budgetTargetHash[values.budget_targets_project].country.id ==
+					dashboardData?.organization?.country?.id
+				) {
+					createBudgetTrackingLineitemFormSelectFields[2].hidden = true;
+				} else {
+					createBudgetTrackingLineitemFormSelectFields[2].hidden = false;
+				}
+			}
+
+			if (!values.amount) {
+				errors.amount = "Amount is required";
+			}
+			if (!values.note) {
+				errors.note = "Note is required";
+			}
+			if (!values.budget_targets_project) {
+				errors.budget_targets_project = "Budget project is required";
+			}
+			if (!values.annual_year) {
+				errors.annual_year = "Annual year is required";
+			}
+			if (!values.reporting_date) {
+				errors.reporting_date = "Reporting date is required";
+			}
+			if (!values.grant_periods_project) {
+				errors.grant_periods_project = "Grant period is required";
+			}
+			if (!values.fy_donor && !createBudgetTrackingLineitemFormSelectFields[2].hidden) {
+				errors.fy_donor = "Financial year of donor is required";
+			}
+			if (!values.fy_org) {
+				errors.fy_org = "Financial year of organization is required";
+			}
+
+			return errors;
+		},
+		[setErrorNotification, dashboardData]
+	);
+
+	const { data: grantPeriodProject } = useQuery(GET_GRANT_PERIODS_PROJECT_LIST, {
+		variables: {
+			filter: {
+				project: currentProject?.id,
+			},
+		},
+	});
+
+	const { data: financialYearOrg } = useQuery(GET_FINANCIAL_YEARS_ORG_LIST_BY_ORG, {
+		variables: {
+			filter: {
+				organization: dashboardData?.organization?.id,
+			},
+		},
+	});
+
+	const [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(
+		GET_FINANCIAL_YEARS_DONOR_LIST_BY_DONOR
+	);
 
 	let oldCachedBudgetTargetProjectData: IGET_BUDGET_TARGET_PROJECT | null = null;
 	try {
@@ -116,7 +180,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [oldCachedBudgetTargetProjectData, currentProject, getBudgetTargetProject]);
 
 	useEffect(() => {
-		if (orgCurrencies?.orgCurrencies?.length) {
+		if (orgCurrencies && orgCurrencies.orgCurrencies.length) {
 			createBudgetTrackingLineitemForm[1].endAdornment =
 				orgCurrencies.orgCurrencies[0].currency.code;
 		}
@@ -125,6 +189,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	useEffect(() => {
 		if (oldCachedBudgetTargetProjectData) {
 			createBudgetTrackingLineitemFormSelectFields[0].optionsArray = oldCachedBudgetTargetProjectData.projectBudgetTargets as any;
+			budgetTargetHash = oldCachedBudgetTargetProjectData.projectBudgetTargets.reduce(
+				(accunulator, current) => {
+					accunulator[current.id] = current.donor;
+					return accunulator;
+				},
+				{} as { [key: string]: { id: string; country: { id: string } } }
+			);
 		}
 	}, [oldCachedBudgetTargetProjectData]);
 
@@ -135,9 +206,46 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [annualYears]);
 
+	useEffect(() => {
+		if (financialYearDonor) {
+			createBudgetTrackingLineitemFormSelectFields[2].optionsArray =
+				financialYearDonor.financialYearsDonorList;
+		}
+	}, [financialYearDonor]);
+
+	useEffect(() => {
+		if (financialYearOrg) {
+			createBudgetTrackingLineitemFormSelectFields[3].optionsArray =
+				financialYearOrg.financialYearsOrgList;
+		}
+	}, [financialYearOrg]);
+
+	useEffect(() => {
+		if (grantPeriodProject) {
+			createBudgetTrackingLineitemFormSelectFields[4].optionsArray =
+				grantPeriodProject.grantPeriodsProjectList;
+		}
+	}, [grantPeriodProject]);
+
+	useEffect(() => {
+		if (selectedDonor) {
+			getFinancialYearDonor({
+				variables: {
+					filter: {
+						donor: selectedDonor.id,
+					},
+				},
+			});
+		}
+	}, [selectedDonor]);
+
 	const onCreate = async (values: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(values.reporting_date);
+
 		try {
+			if (createBudgetTrackingLineitemFormSelectFields[2].hidden) {
+				values.fy_donor = values.fy_org;
+			}
 			await createProjectBudgetTracking({
 				variables: {
 					input: {
@@ -156,9 +264,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								},
 							},
 						});
-						let budgetLineItems: IBUDGET_TRACKING_LINE_ITEM_RESPONSE[] = data?.projBudgetTrackings
-							? data?.projBudgetTrackings
-							: [];
 						store.writeQuery({
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
@@ -168,7 +273,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								},
 							},
 							data: {
-								projBudgetTrackings: [...budgetLineItems, lineItemCreated],
+								projBudgetTrackings: [
+									...data!.projBudgetTrackings,
+									lineItemCreated,
+								],
 							},
 						});
 					} catch (err) {}
@@ -193,9 +301,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							},
 							data: {
 								projBudgetTrackingsTotalAmount:
-									(amountSpentData?.projBudgetTrackingsTotalAmount
-										? amountSpentData?.projBudgetTrackingsTotalAmount
-										: 0) + lineItemCreated.amount,
+									amountSpentData!.projBudgetTrackingsTotalAmount +
+									lineItemCreated.amount,
 							},
 						});
 					} catch (err) {}
@@ -204,12 +311,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			notificationDispatch(
 				setSuccessNotification("Budget Tracking Line Item Creation Success")
 			);
-			props.handleClose();
 		} catch (err) {
 			notificationDispatch(
 				setErrorNotification("Budget Tracking Line Item Creation Failure")
 			);
-			props.handleClose();
+		} finally {
+			closeDialog();
 		}
 	};
 
@@ -217,7 +324,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		try {
 			const reporting_date = new Date(values.reporting_date);
 			if (compareObjectKeys(values, initialValues)) {
-				props.handleClose();
+				closeDialog();
 				return;
 			}
 			delete values.id;
@@ -251,31 +358,26 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							},
 							data: {
 								projBudgetTrackingsTotalAmount:
-									(amountSpentData?.projBudgetTrackingsTotalAmount
-										? amountSpentData?.projBudgetTrackingsTotalAmount
-										: 0) + change,
+									amountSpentData!.projBudgetTrackingsTotalAmount + change,
 							},
 						});
-					} catch (err) {
-						console.log("err :>> ", err);
-						// throw err;
-					}
+					} catch (err) {}
 				},
 			});
 			notificationDispatch(
 				setSuccessNotification("Budget Tracking Line Item Updation Success")
 			);
-			props.handleClose();
 		} catch (err) {
 			notificationDispatch(
 				setErrorNotification("Budget Tracking Line Item Updation Failure")
 			);
-			props.handleClose();
+		} finally {
+			closeDialog();
 		}
 	};
 	return (
 		<FormDialog
-			handleClose={props.handleClose}
+			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
 			title="Report Expenditure"

@@ -20,7 +20,6 @@ import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetFor
 import { getTodaysDate } from "../../../../utils";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
-import AmountSpent from "./AmountSpent";
 import pagination from "../../../../hooks/pagination";
 import TablePagination from "@material-ui/core/TablePagination";
 import BudgetTargetTableRow from "./BudgetTargetTableRow";
@@ -62,18 +61,16 @@ const getBudgetTrackingLineitemInitialvalues = (
 	};
 };
 
-function getInitialValues(
-	budgetTargetsProject: IBudgetTargetProjectResponse | null
-): IBudgetTargetForm {
+function getInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IBudgetTargetForm {
 	return {
-		name: budgetTargetsProject ? budgetTargetsProject.name : "",
-		description: budgetTargetsProject ? budgetTargetsProject.description : "",
-		total_target_amount: budgetTargetsProject ? budgetTargetsProject.total_target_amount : "",
-		id: budgetTargetsProject ? budgetTargetsProject.id : "",
-		budget_category_organization: budgetTargetsProject
-			? budgetTargetsProject?.budget_category_organization?.id
+		name: budgetTarget ? budgetTarget.name : "",
+		description: budgetTarget ? budgetTarget.description : "",
+		total_target_amount: budgetTarget ? budgetTarget.total_target_amount : "",
+		id: budgetTarget ? budgetTarget.id : "",
+		budget_category_organization: budgetTarget
+			? budgetTarget?.budget_category_organization?.id
 			: "",
-		donor: budgetTargetsProject ? budgetTargetsProject?.donor?.id : "",
+		donor: budgetTarget ? budgetTarget?.donor?.id : "",
 	};
 }
 
@@ -101,7 +98,7 @@ function BudgetTargetTable() {
 	const [openBudgetLineItem, setOpenBudgetLineItem] = useState(false);
 	const [page, setPage] = React.useState(0);
 
-	let { count, queryData: budgetTargetProjectData, changePage } = pagination({
+	let { count, queryData: budgetTargetData, changePage } = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
 		countFilter: {
@@ -182,32 +179,26 @@ function BudgetTargetTable() {
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
-					{/* {wirte here loading} */}
-					{budgetTargetProjectData
-						? budgetTargetProjectData.projectBudgetTargets.map(
-								(
-									budgetTargetsProject: IBudgetTargetProjectResponse,
-									index: number
-								) => (
-									<BudgetTargetTableRow
-										budgetTarget={budgetTargetsProject}
-										key={budgetTargetsProject.id}
-										currency={
-											orgCurrencies?.orgCurrencies[0]?.currency.code
-												? orgCurrencies?.orgCurrencies[0]?.currency.code
-												: ""
-										}
-										serialNo={page * 10 + index + 1}
-										menuId={menuId}
-										selectedTargetBudget={selectedTargetBudget}
-										setOpenBudgetLineItem={setOpenBudgetLineItem}
-										setOpenBudgetCategory={setOpenBudgetTarget}
-									/>
-								)
-						  )
-						: null}
+					{budgetTargetData?.projectBudgetTargets?.map(
+						(budgetTarget: IBudgetTargetProjectResponse, index: number) => (
+							<BudgetTargetTableRow
+								budgetTarget={budgetTarget}
+								key={budgetTarget.id}
+								currency={
+									orgCurrencies?.orgCurrencies[0]?.currency.code
+										? orgCurrencies?.orgCurrencies[0]?.currency.code
+										: ""
+								}
+								serialNo={page * 10 + index + 1}
+								menuId={menuId}
+								selectedTargetBudget={selectedTargetBudget}
+								setOpenBudgetLineItem={setOpenBudgetLineItem}
+								setOpenBudgetCategory={setOpenBudgetTarget}
+							/>
+						)
+					)}
 				</TableBody>
-				{budgetTargetProjectData?.projectBudgetTargets?.length ? (
+				{budgetTargetData?.projectBudgetTargets?.length ? (
 					<TableFooter>
 						<TableRow>
 							<TablePagination

@@ -86,9 +86,11 @@ function BudgetTargetTableRow({
 						{openRow ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 					</IconButton>
 				</TableCell>
+
 				<TableCell component="td" scope="row">
 					{serialNo}
 				</TableCell>
+
 				<TableCell align="left">{budgetTarget.name}</TableCell>
 				<TableCell align="left">
 					{budgetTarget?.budget_category_organization?.name}
@@ -116,6 +118,7 @@ function BudgetTargetTableRow({
 						}}
 					</AmountSpent>
 				</TableCell>
+				
 				<TableCell>
 					<IconButton aria-haspopup="true" onClick={handleClick}>
 						<MoreVertIcon />

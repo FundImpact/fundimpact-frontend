@@ -19,7 +19,7 @@ import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
-import { IBUDGET_TRACKING_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
+import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import {
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
@@ -57,26 +57,28 @@ const tableHeading = [
 	{ label: "" },
 ];
 
+let keyNames = [
+	"reporting_date",
+	"note",
+	"amount",
+	"fy_org,name",
+	"fy_donor,name",
+	"grant_periods_project,name",
+];
+
 const getInitialValues = (
-	budgetTrackingLineItem: IBUDGET_TRACKING_LINE_ITEM_RESPONSE | null
+	budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE | null
 ): IBudgetTrackingLineitem => {
-	console.log("budgetTrackingLineItem :>> ", budgetTrackingLineItem);
 	return {
-		amount: budgetTrackingLineItem ? budgetTrackingLineItem.amount : 0,
-		note: budgetTrackingLineItem ? budgetTrackingLineItem.note : "",
-		budget_targets_project: budgetTrackingLineItem
-			? budgetTrackingLineItem.budget_targets_project.id
-			: "",
-		annual_year: budgetTrackingLineItem ? budgetTrackingLineItem.annual_year.id : "",
-		reporting_date: getTodaysDate(
-			budgetTrackingLineItem ? budgetTrackingLineItem.reporting_date : undefined
-		),
-		id: budgetTrackingLineItem ? budgetTrackingLineItem.id : "",
-		grant_periods_project: budgetTrackingLineItem
-			? budgetTrackingLineItem.grant_periods_project.id
-			: "",
-		fy_org: budgetTrackingLineItem ? budgetTrackingLineItem?.fy_org?.id : "",
-		fy_donor: budgetTrackingLineItem ? budgetTrackingLineItem?.fy_donor?.id : "",
+		amount: budgetLineItem ? budgetLineItem.amount : 0,
+		note: budgetLineItem ? budgetLineItem.note : "",
+		budget_targets_project: budgetLineItem ? budgetLineItem.budget_targets_project.id : "",
+		annual_year: budgetLineItem ? budgetLineItem.annual_year.id : "",
+		reporting_date: getTodaysDate(budgetLineItem ? budgetLineItem.reporting_date : undefined),
+		id: budgetLineItem ? budgetLineItem.id : "",
+		grant_periods_project: budgetLineItem ? budgetLineItem.grant_periods_project.id : "",
+		fy_org: budgetLineItem ? budgetLineItem?.fy_org?.id : "",
+		fy_donor: budgetLineItem ? budgetLineItem?.fy_donor?.id : "",
 	};
 };
 
@@ -89,9 +91,7 @@ function BudgetLineItemTable({
 }) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
-	const selectedBudgetTrackingLineItem = React.useRef<IBUDGET_TRACKING_LINE_ITEM_RESPONSE | null>(
-		null
-	);
+	const selectedBudgetTrackingLineItem = React.useRef<IBUDGET_LINE_ITEM_RESPONSE | null>(null);
 	const menuId = React.useRef("");
 
 	const [openDialog, setOpenDialog] = useState(false);
@@ -162,31 +162,25 @@ function BudgetLineItemTable({
 				<TableBody className={tableHeader.tbody}>
 					{budgetLineitemData &&
 						budgetLineitemData.projBudgetTrackings.map(
-							(
-								budgetTrackingLineItem: IBUDGET_TRACKING_LINE_ITEM_RESPONSE,
-								index: number
-							) => (
-								<TableRow key={budgetTrackingLineItem.id}>
+							(budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE, index: number) => (
+								<TableRow key={budgetLineItem.id}>
 									<TableCell component="td" scope="row">
 										{index + 1}
 									</TableCell>
+									
 									<TableCell align="left">
-										{getTodaysDate(budgetTrackingLineItem.reporting_date)}
+										{getTodaysDate(budgetLineItem.reporting_date)}
+									</TableCell>
+									<TableCell align="left">{budgetLineItem.note}</TableCell>
+									<TableCell align="left">{budgetLineItem.amount}</TableCell>
+									<TableCell align="left">
+										{budgetLineItem?.fy_org?.name}
 									</TableCell>
 									<TableCell align="left">
-										{budgetTrackingLineItem.note}
+										{budgetLineItem?.fy_donor?.name}
 									</TableCell>
 									<TableCell align="left">
-										{budgetTrackingLineItem.amount}
-									</TableCell>
-									<TableCell align="left">
-										{budgetTrackingLineItem?.fy_org?.name}
-									</TableCell>
-									<TableCell align="left">
-										{budgetTrackingLineItem?.fy_donor?.name}
-									</TableCell>
-									<TableCell align="left">
-										{budgetTrackingLineItem?.grant_periods_project?.name}
+										{budgetLineItem?.grant_periods_project?.name}
 									</TableCell>
 
 									<TableCell>
@@ -195,8 +189,8 @@ function BudgetLineItemTable({
 											onClick={(
 												event: React.MouseEvent<HTMLButtonElement>
 											) => {
-												menuId.current = budgetTrackingLineItem.id;
-												selectedBudgetTrackingLineItem.current = budgetTrackingLineItem;
+												menuId.current = budgetLineItem.id;
+												selectedBudgetTrackingLineItem.current = budgetLineItem;
 												handleClick(event);
 											}}
 										>
@@ -204,9 +198,9 @@ function BudgetLineItemTable({
 										</IconButton>
 										<SimpleMenu
 											handleClose={handleClose}
-											id={`organizationMenu-${budgetTrackingLineItem.id}`}
+											id={`organizationMenu-${budgetLineItem.id}`}
 											anchorEl={
-												menuId.current === budgetTrackingLineItem.id
+												menuId.current === budgetLineItem.id
 													? anchorEl
 													: null
 											}
