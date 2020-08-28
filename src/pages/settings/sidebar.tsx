@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { Box, Divider, ListItem, ListItemText, Typography } from "@material-ui/core";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -61,30 +60,16 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
-			{!dashboardData ? (
-				<Box mt={6}>
-					<LinearProgress style={{ marginBottom: "3px" }} />
-					<LinearProgress color="secondary" />
+			<Box display="flex" m={2}>
+				<Box flexGrow={1} ml={1}>
+					<Typography color="primary" gutterBottom variant="h6">
+						{dashboardData?.organization?.name || "Organization name is not available"}
+					</Typography>
 				</Box>
-			) : (
-				<div>
-					<Box display="flex" m={2}>
-						<Box flexGrow={1} ml={1}>
-							<Typography color="primary" gutterBottom variant="h6">
-								{dashboardData?.organization?.name ||
-									"Organization name is not available"}
-							</Typography>
-						</Box>
-					</Box>
-					<Divider />
+			</Box>
+			<Divider />
 
-					<ListItemLink
-						to="donors"
-						data-testid="donor-link"
-						primary="Donors"
-					></ListItemLink>
-				</div>
-			)}
+			<ListItemLink to="donors" data-testid="donor-link" primary="Donors"></ListItemLink>
 		</Box>
 	);
 }
