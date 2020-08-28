@@ -127,6 +127,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	}, [orgCurrencies]);
 
 	useEffect(() => {
+		if (!donors?.id) return;
 		if (donors) {
 			budgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
 				.filter(({ donor }: { donor: { id: string; name: string } }) => donor)

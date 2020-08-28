@@ -73,7 +73,7 @@ export default function LeftPanel() {
 								<item.Icon
 									style={{
 										color: item.color,
-										fontSize: "3rem",
+										fontSize: "2rem",
 										margin: "5px",
 									}}
 								/>
