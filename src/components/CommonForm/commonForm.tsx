@@ -11,6 +11,13 @@ const useStyles = makeStyles((theme: Theme) =>
 			color: theme.palette.background.paper,
 			marginRight: theme.spacing(2),
 		},
+		cancelButton: {
+			marginRight: theme.spacing(2),
+			padding: theme.spacing(1),
+			"&:hover": {
+				color: "#d32f2f !important",
+			},
+		},
 	})
 );
 
@@ -44,7 +51,7 @@ function CommonInputForm({
 						<Grid container spacing={2}>
 							{inputFields.map((element: IInputFields, index: number) => {
 								return (
-									<Grid item xs={12} key={index}>
+									<Grid item xs={element.size} key={index}>
 										<InputFields
 											inputType={element.inputType}
 											formik={formik}
@@ -71,6 +78,7 @@ function CommonInputForm({
 											getInputValue={
 												element.getInputValue ? element.getInputValue : null
 											}
+											required={element.required ? true : false}
 										/>
 									</Grid>
 								);
@@ -78,6 +86,9 @@ function CommonInputForm({
 
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
+									<Button className={classes.cancelButton} onClick={onCancel}>
+										Cancel
+									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -88,14 +99,6 @@ function CommonInputForm({
 										disabled={!formik.isValid}
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
-									</Button>
-									<Button
-										color="primary"
-										className={classes.button}
-										onClick={onCancel}
-										variant="contained"
-									>
-										Cancel
 									</Button>
 								</Box>
 							</Grid>

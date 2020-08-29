@@ -5,10 +5,9 @@ export interface IImpactTargetLine {
 	impact_target_project: number | string | undefined;
 	annual_year: string;
 	value: number | string;
-	financial_years_org?: number | string;
-	financial_years_donor?: number | string;
-	grant_period?: number | string;
+	financial_year: string;
 	reporting_date: Date | string;
+	donors?: { id: string; name: string; country: { id: string; name: string } }[] | [];
 	note?: string;
 }
 

@@ -103,7 +103,7 @@ function BudgetTargetProjectDialog(props: ICreateBudgetTargetProjectDialogProps)
 	}, [orgCurrencies]);
 
 	useEffect(() => {
-		if (donors) {
+		if (donors && donors.length) {
 			createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors.map(
 				({ donor }: { donor: { id: string; name: string } }) => {
 					return { id: donor.id, name: donor.name };

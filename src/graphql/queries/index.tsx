@@ -10,6 +10,10 @@ export const GET_ORGANISATIONS = gql`
 				id
 				reg_type
 			}
+			country {
+				id
+				name
+			}
 			account {
 				id
 				name
@@ -115,6 +119,85 @@ export const GET_ANNUAL_YEARS = gql`
 			id
 			name
 			short_name
+		}
+	}
+`;
+
+export const GET_FINANCIAL_YEARS = gql`
+	query getFinancialYearListBycountry($filter: JSON) {
+		financialYearList(where: $filter) {
+			id
+			name
+			short_name
+			start_date
+			end_date
+			country {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_PROJECT_DONORS = gql`
+	query getProjDonorsByDonor($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		projDonors(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			donor {
+				id
+				name
+				country {
+					id
+					name
+				}
+			}
+			project {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_GRANT_PERIOD = gql`
+	query getGrantPeriodsProjectByProjectDonor($filter: JSON) {
+		grantPeriodsProjectList(where: $filter) {
+			id
+			name
+			short_name
+			start_date
+			end_date
+			description
+			donor {
+				id
+				name
+				short_name
+				legal_name
+				organization {
+					id
+					name
+					address
+					account {
+						id
+						name
+						description
+						account_no
+					}
+					short_name
+					legal_name
+					description
+					organization_registration_type {
+						id
+						reg_type
+					}
+				}
+			}
+			project {
+				id
+				name
+				short_name
+				description
+			}
 		}
 	}
 `;

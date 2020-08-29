@@ -47,7 +47,7 @@ function CommonForm({
 						<Grid container spacing={4}>
 							{inputFields.map((element: IInputField, index: number) => {
 								return (
-									<Grid item xs={element.size} key={index}>
+									<Grid item xs={element.size ? element.size : 12} key={index}>
 										<InputField
 											formik={formik}
 											name={element.name}

@@ -8,6 +8,7 @@ import {
 	FormHelperText,
 	makeStyles,
 	createStyles,
+	Checkbox,
 } from "@material-ui/core";
 import { IInputFields } from "../../models";
 
@@ -38,29 +39,54 @@ const InputFields = ({
 	selectLabelId,
 	selectId,
 	getInputValue,
+	required,
 }: IInputFields) => {
 	const classes = useStyles();
-	if (inputType === "select") {
+	const [elemName, setElemName] = React.useState<string[]>([]);
+
+	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
+		setElemName(event.target.value.map((elem: any) => elem.name) as string[]);
+	};
+
+	if (inputType === "select" || inputType === "multiSelect") {
+		let multiSelect: boolean = inputType === "multiSelect" ? true : false;
+
+		let onChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+			if (inputType === "multiSelect") {
+				elemHandleChange(event);
+				formik.handleChange(event);
+			}
+			if (inputType === "select") {
+				if (getInputValue) {
+					getInputValue(event.target.value);
+					formik.handleChange(event);
+				} else formik.handleChange(event);
+			}
+		};
+
 		return (
 			<FormControl variant="outlined" className={classes.formControl}>
-				<InputLabel id={inputLabelId}>{label}</InputLabel>
+				<InputLabel id={inputLabelId}>{required ? label : label + " ( opt )"}</InputLabel>
 
 				<Select
 					labelId={selectLabelId}
 					id={selectId}
 					error={!!formik.errors[name] && !!formik.touched[name]}
 					value={formik.values[name]}
-					onChange={
-						getInputValue
-							? (event) => {
-									getInputValue(event.target.value);
-									formik.handleChange(event);
-							  }
-							: formik.handleChange
-					}
+					multiple={multiSelect}
+					onChange={onChange}
+					required={required}
 					onBlur={formik.handleBlur}
-					label={label}
+					label={required ? label : label + " ( opt )"}
 					name={name}
+					renderValue={
+						multiSelect
+							? (selected: any) => {
+									let arr: any = selected.map((elem: any) => elem.name);
+									return arr.join(", ");
+							  }
+							: undefined
+					}
 					data-testid={dataTestId}
 					inputProps={{
 						"data-testid": testId,
@@ -73,7 +99,13 @@ const InputFields = ({
 					)}
 					{optionsArray &&
 						optionsArray.map((elem: any, index: number) => (
-							<MenuItem key={index} value={elem.id}>
+							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
+								{multiSelect ? (
+									<Checkbox
+										color="primary"
+										checked={elemName.indexOf(elem.name) > -1}
+									/>
+								) : null}
 								{elem.name}
 							</MenuItem>
 						))}
@@ -97,12 +129,12 @@ const InputFields = ({
 					  }
 					: formik.handleChange
 			}
-			label={label}
+			label={required ? label : label + " ( opt )"}
 			data-testid={dataTestId}
 			inputProps={{
 				"data-testid": testId,
 			}}
-			required
+			required={required}
 			fullWidth
 			name={`${name}`}
 			variant="outlined"

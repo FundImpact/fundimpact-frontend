@@ -42,9 +42,11 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 							id: impactTargetLine.id,
 							impact_target_project: impactTargetLine.impact_target_project.id,
 							annual_year: impactTargetLine.annual_year.id,
-							reporting_date: impactTargetLine.reporting_date,
+							reporting_date: getTodaysDate(impactTargetLine.reporting_date),
 							value: impactTargetLine.value,
 							note: impactTargetLine.note,
+							financial_year: impactTargetLine.financial_year,
+							donors: [],
 						});
 						handleMenuClose();
 					}}

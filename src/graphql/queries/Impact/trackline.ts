@@ -80,24 +80,15 @@ export const CREATE_IMPACT_TRACKLINE = gql`
 				start_date
 				end_date
 			}
-			financial_years_org {
+			financial_year {
 				id
 				name
 				short_name
 				start_date
 				end_date
-			}
-			financial_years_donor {
-				id
-				name
-				short_name
-				start_date
-				end_date
-				donor {
+				country {
 					id
 					name
-					short_name
-					legal_name
 				}
 			}
 			grant_periods_project {
@@ -196,24 +187,15 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 				start_date
 				end_date
 			}
-			financial_years_org {
+			financial_year {
 				id
 				name
 				short_name
 				start_date
 				end_date
-			}
-			financial_years_donor {
-				id
-				name
-				short_name
-				start_date
-				end_date
-				donor {
+				country {
 					id
 					name
-					short_name
-					legal_name
 				}
 			}
 			grant_periods_project {
@@ -233,12 +215,16 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 `;
 
 export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
-	query getImpactTrackingLimeItemByImpactTargetProject($filter: JSON) {
-		impactTrackingLineitemList(where: $filter) {
+	query getImpactTrackingLimeItemByImpactTargetProject(
+		$sort: String
+		$limit: Int
+		$start: Int
+		$filter: JSON
+	) {
+		impactTrackingLineitemList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			value
 			note
-			reporting_date
 			impact_target_project {
 				id
 				name
@@ -313,24 +299,70 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 				start_date
 				end_date
 			}
-			financial_years_org {
+			financial_year {
 				id
 				name
 				short_name
 				start_date
 				end_date
-			}
-			financial_years_donor {
-				id
-				name
-				short_name
-				start_date
-				end_date
-				donor {
+				country {
 					id
 					name
-					short_name
-					legal_name
+				}
+			}
+			grant_periods_project {
+				id
+				name
+				description
+				short_name
+				start_date
+				end_date
+				project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const CREATE_IMPACT_LINEITEM_FYDONOR = gql`
+	mutation createImpactLinitemFyDonorInput($input: ImpactLinitemFyDonorInput!) {
+		createImpactLinitemFyDonorInput(input: $input) {
+			id
+			impact_tracking_lineitem {
+				id
+				note
+				reporting_date
+				value
+				impact_target_project {
+					id
+				}
+				annual_year {
+					id
+				}
+				grant_periods_project {
+					id
+				}
+			}
+			project_donor {
+				id
+				project {
+					id
+				}
+				donor {
+					id
+				}
+			}
+			financial_year {
+				id
+				name
+				short_name
+				start_date
+				end_date
+				country {
+					id
+					name
 				}
 			}
 			grant_periods_project {

@@ -96,7 +96,16 @@
 			"testId": "impactTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 12
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
+			"size": 6
 		},
 		{
 			"name": "impactCategory",
@@ -110,17 +119,9 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"getInputValue": {},
-			"size": 12
-		},
-		{
-			"name": "target_value",
-			"id": "target_value",
-			"dataTestId": "impactTargetTargetValue",
-			"testId": "impactTargetTargetValueInput",
-			"label": "Target Value",
-			"inputType": "textarea",
 			"size": 6
 		},
+
 		{
 			"name": "impactUnit",
 			"id": "impactUnit",
@@ -154,7 +155,7 @@
 			"testId": "impactTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 12
+			"size": 6
 		},
 		{
 			"name": "target_value",
@@ -200,6 +201,29 @@
 			"type": "number",
 			"size": 6
 		},
+
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"dataTestId": "impactTracklineDate",
+			"testId": "impactTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "donors",
+			"id": "donors",
+			"label": "Select Donors",
+			"size": 6,
+			"dataTestId": "impactTracklineDonor",
+			"testId": "impactTracklineDateInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-mutiple-name-label",
+			"selectLabelId": "demo-mutiple-name-label",
+			"selectId": "demo-mutiple-name",
+			"inputType": "multiSelect"
+		},
 		{
 			"name": "annual_year",
 			"id": "annual_year",
@@ -207,6 +231,19 @@
 			"size": 6,
 			"dataTestId": "impactTracklineAnnualYear",
 			"testId": "impactTracklineAnnualYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_year",
+			"id": "financial_year",
+			"label": "Financial Year",
+			"size": 6,
+			"dataTestId": "ImpactTracklineFinancialYear",
+			"testId": "ImpactTracklineFinancialYearInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -222,15 +259,6 @@
 			"multiline": true,
 			"rows": 2,
 			"size": 12
-		},
-		{
-			"name": "reporting_date",
-			"id": "reporting_date",
-			"dataTestId": "impactTracklineDate",
-			"testId": "impactTracklineDateInput",
-			"label": "Reporting Date",
-			"type": "date",
-			"size": 6
 		}
 	]
 }

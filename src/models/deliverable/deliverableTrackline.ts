@@ -5,10 +5,16 @@ export interface IDeliverableTargetLine {
 	deliverable_target_project: number | string | undefined;
 	annual_year: string;
 	value: number;
-	financial_years_org?: number | string;
-	financial_years_donor?: number | string;
-	grant_period?: number | string;
+	financial_year: string;
 	reporting_date: Date | string;
+	donors?:
+		| {
+				id: string;
+				name: string;
+				donor: { id: string; name: string; country: { id: string; name: string } };
+		  }[]
+		| [];
+	donorMapValues?: object;
 	note?: string;
 }
 

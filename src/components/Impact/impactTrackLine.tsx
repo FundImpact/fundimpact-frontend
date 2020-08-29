@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
-import { FullScreenLoader } from "../Loader/Loader";
+import FullScreenLoader from "../commons/GlobalLoader";
 import { IMPACT_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -14,23 +14,28 @@ import {
 	GET_IMPACT_TARGET_BY_PROJECT,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 } from "../../graphql/queries/Impact/target";
-import { GET_ANNUAL_YEARS } from "../../graphql/queries/index";
+import {
+	GET_ANNUAL_YEARS,
+	GET_FINANCIAL_YEARS,
+	GET_PROJECT_DONORS,
+} from "../../graphql/queries/index";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { impactTragetLineForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { getTodaysDate } from "../../utils/index";
+import ImpacTracklineDonorYearTags from "./impactTracklineDonor";
+import Stepper from "../Stepper/Stepper";
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		impact_target_project: props.impactTarget,
 		annual_year: "",
 		value: 0,
-		grant_period: "",
-		financial_years_org: "",
-		financial_years_donor: "",
+		financial_year: "",
 		reporting_date: getTodaysDate(),
 		note: "",
+		donors: [],
 	};
 }
 
@@ -40,98 +45,150 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	let initialValues: IImpactTargetLine = getInitialValues(props);
 	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
 
+	const { data: impactFyData } = useQuery(GET_FINANCIAL_YEARS, {
+		variables: { filter: { country: DashBoardData?.organization?.country?.id } },
+	});
+
+	const { data: impactProjectDonors } = useQuery(GET_PROJECT_DONORS, {
+		variables: { filter: { project: DashBoardData?.project?.id } },
+	});
+	const [stepperActiveStep, setStepperActiveStep] = React.useState(0);
+
 	const { data: impactTargets } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 
+	const [donors, setDonors] = React.useState<
+		{ id: string; name: string; country: { id: string; name: string } }[]
+	>();
+	const [createdImpactTracklineId, setCreatedImpactTracklineId] = React.useState<string>("");
+
+	const handleNext = () => {
+		setStepperActiveStep((prevActiveStep) => prevActiveStep + 1);
+	};
+	const handleBack = () => {
+		setStepperActiveStep((prevActiveStep) => prevActiveStep - 1);
+	};
+	const handleReset = () => {
+		setStepperActiveStep(0);
+	};
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = () => {
+		props.handleClose();
+		handleReset();
+	};
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
-		onError(err) {
-			console.log(err);
+		onCompleted(data) {
+			console.log("it", data);
+			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
+			setCreatedImpactTracklineId(data.createImpactTrackingLineitemInput.id);
+			handleNext();
+		},
+		onError(data) {
+			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
 		},
 	});
 
 	const [updateImpactTrackLine, { loading: updateImpactTrackLineLoading }] = useMutation(
-		UPDATE_IMPACT_TRACKLINE
+		UPDATE_IMPACT_TRACKLINE,
+		{
+			onCompleted(data) {
+				notificationDispatch(
+					setSuccessNotification("Impact Trackline Updated successfully!")
+				);
+				onCancel();
+			},
+			onError(data) {
+				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
+			},
+		}
 	);
-
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (getAnnualYears) {
-			impactTragetLineForm[2].optionsArray = getAnnualYears.annualYears;
+			impactTragetLineForm[4].optionsArray = getAnnualYears.annualYears;
 		}
 	}, [getAnnualYears]);
 
-	// updating annaul year field with fetched annual year list
+	// updating Impact Target field with fetched Target list
 	useEffect(() => {
 		if (impactTargets) {
 			impactTragetLineForm[0].optionsArray = impactTargets.impactTargetProjectList;
 		}
 	}, [impactTargets]);
 
-	const onCreate = async (value: IImpactTargetLine) => {
-		delete value.financial_years_donor;
-		delete value.financial_years_org;
-		delete value.grant_period;
-		value.reporting_date = new Date(value.reporting_date);
-		console.log(value);
-		try {
-			await createImpactTrackline({
-				variables: { input: value },
-				refetchQueries: [
-					{
-						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-						variables: {
-							filter: { impact_target_project: value.impact_target_project },
-						},
-					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { impactTargetProject: value.impact_target_project },
-						},
-					},
-				],
-			});
-			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
-			onCancel();
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
+	useEffect(() => {
+		if (impactProjectDonors) {
+			let array: any = [];
+			impactProjectDonors.projDonors.forEach(
+				(elem: {
+					id: string;
+					donor: { id: string; name: string; country: { id: string; name: string } };
+				}) => {
+					array.push(elem.donor);
+				}
+			);
+			impactTragetLineForm[3].optionsArray = array;
 		}
+	}, [impactProjectDonors]);
+
+	// updating financial year field with fetched financial year list
+	useEffect(() => {
+		if (impactFyData) {
+			impactTragetLineForm[5].optionsArray = impactFyData.financialYearList;
+		}
+	}, [impactFyData]);
+
+	const onCreate = (value: IImpactTargetLine) => {
+		value.reporting_date = new Date(value.reporting_date);
+		console.log(`on Created is called with: `, value);
+		setDonors(value.donors);
+		let input = { ...value };
+		delete input.donors;
+		createImpactTrackline({
+			variables: { input },
+			refetchQueries: [
+				{
+					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+					variables: {
+						filter: { impact_target_project: value.impact_target_project },
+					},
+				},
+				{
+					query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					variables: {
+						filter: { impactTargetProject: value.impact_target_project },
+					},
+				},
+			],
+		});
 	};
 
-	const onUpdate = async (value: IImpactTargetLine) => {
+	const onUpdate = (value: IImpactTargetLine) => {
 		let impactTargetLineId = value.id;
 		delete value.id;
-		try {
-			await updateImpactTrackLine({
-				variables: {
-					id: impactTargetLineId,
-					input: value,
+		updateImpactTrackLine({
+			variables: {
+				id: impactTargetLineId,
+				input: value,
+			},
+			refetchQueries: [
+				{
+					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+					variables: {
+						filter: { impact_target_project: value.impact_target_project },
+					},
 				},
-				refetchQueries: [
-					{
-						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-						variables: {
-							filter: { impact_target_project: value.impact_target_project },
-						},
+				{
+					query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					variables: {
+						filter: { impactTargetProject: value.impact_target_project },
 					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { impactTargetProject: value.impact_target_project },
-						},
-					},
-				],
-			});
-			notificationDispatch(setSuccessNotification("Impact Trackline updated successfully !"));
-			onCancel();
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
-		}
+				},
+			],
+		});
 	};
 
 	const validate = (values: IImpactTargetLine) => {
@@ -148,26 +205,50 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 		return errors;
 	};
-
+	let basicForm = (
+		<CommonForm
+			{...{
+				initialValues,
+				validate,
+				onCreate,
+				onCancel,
+				formAction,
+				onUpdate,
+				inputFields: impactTragetLineForm,
+			}}
+		/>
+	);
+	let donorForm = (
+		<ImpacTracklineDonorYearTags
+			donors={donors}
+			impactTracklineId={createdImpactTracklineId}
+			onCancel={onCancel}
+			type={IMPACT_ACTIONS.CREATE}
+		/>
+	);
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={"Report Achievement"}
-				subtitle={"Manage Targets"}
-				workspace={"workspace"}
+				title={
+					(formAction === IMPACT_ACTIONS.CREATE ? "Report" : "Edit") +
+					" Target Achievement"
+				}
+				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				workspace={DashBoardData?.workspace?.name}
+				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>
-				<CommonForm
-					{...{
-						initialValues,
-						validate,
-						onCreate,
-						onCancel,
-						formAction,
-						onUpdate,
-						inputFields: impactTragetLineForm,
+				<Stepper
+					stepperHelpers={{
+						activeStep: stepperActiveStep,
+						setActiveStep: setStepperActiveStep,
+						handleNext,
+						handleBack,
+						handleReset,
 					}}
+					basicForm={basicForm}
+					donorForm={donorForm}
 				/>
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}

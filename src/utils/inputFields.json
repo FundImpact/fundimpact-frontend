@@ -6,6 +6,7 @@
 			"dataTestId": "createProjectName",
 			"testId": "createProjectNameInput",
 			"label": "Name",
+			"required": true,
 			"size": 12
 		},
 		{

@@ -10,6 +10,7 @@ import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -22,6 +23,7 @@ function getInitialValues(props: ProjectProps) {
 }
 
 function Project(props: ProjectProps) {
+	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IProject = getInitialValues(props);
 	const [createNewproject, { data: response, loading: createLoading, error }] = useMutation(
@@ -78,9 +80,10 @@ function Project(props: ProjectProps) {
 	return (
 		<>
 			<FormDialog
-				title={"New Project"}
-				subtitle={"create a new Project"}
-				workspace={"workspace"}
+				title={(formAction === PROJECT_ACTIONS.CREATE ? "New" : "Edit") + " Project"}
+				subtitle={"Project"}
+				workspace={DashBoardData?.workspace?.name}
+				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

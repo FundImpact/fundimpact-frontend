@@ -5,7 +5,8 @@ import React from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries";
-import { setProject } from "../../../reducers/dashboardReducer";
+import { setProject, setActiveWorkSpace } from "../../../reducers/dashboardReducer";
+import { IOrganisationWorkspaces } from "../../../models/workspace/query";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -33,26 +34,32 @@ export default function ProjectList({
 	React.useEffect(() => {
 		if (data && projectIndex === 0) {
 			dispatch(setProject(data.orgProject[0]));
+			dispatch(setActiveWorkSpace(data.orgProject[0]?.workspace));
 		}
 	}, [data, dispatch, projectIndex]);
 	return (
 		<List>
 			{data &&
 				data.orgProject &&
-				data.orgProject.map((project: { id: number; name: string }) => (
-					<ListItem
-						className={
-							dashboardData?.project?.id === project.id ? classes.selectedProject : ""
-						}
-						button
-						key={project.id}
-						onClick={() => {
-							dispatch(setProject(project));
-						}}
-					>
-						<ListItemText primary={project.name} />
-					</ListItem>
-				))}
+				data.orgProject.map(
+					(project: { id: number; name: string; workspace: IOrganisationWorkspaces }) => (
+						<ListItem
+							className={
+								dashboardData?.project?.id === project.id
+									? classes.selectedProject
+									: ""
+							}
+							button
+							key={project.id}
+							onClick={() => {
+								dispatch(setProject(project));
+								dispatch(setActiveWorkSpace(project.workspace));
+							}}
+						>
+							<ListItemText primary={project.name} />
+						</ListItem>
+					)
+				)}
 		</List>
 	);
 }
