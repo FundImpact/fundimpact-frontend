@@ -82,7 +82,6 @@ function CommonForm({
 												inputLabelId={element.inputLabelId}
 												selectLabelId={element.selectLabelId}
 												selectId={element.selectId}
-												multiple={element.multiple ? element.multiple : false}
 											/>
 										</Grid>
 									)
