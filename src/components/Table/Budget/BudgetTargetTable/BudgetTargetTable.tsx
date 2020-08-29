@@ -109,7 +109,6 @@ function BudgetTargetTable() {
 		},
 		sort: "created_at:DESC",
 	});
-
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
 		variables: {
 			filter: {

@@ -7,6 +7,7 @@ import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
 import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
+	GET_PROJECT_BUDGET_TARGETS_COUNT,
 } from "../../../graphql/Budget";
 import {
 	CREATE_PROJECT_BUDGET_TARGET,
@@ -25,10 +26,7 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys } from "../../../utils";
-import {
-	createBudgetTargetForm,
-	createBudgetTargetFormSelectFields,
-} from "../../../utils/inputFields.json";
+import { budgetTargetFormSelectFields, budgetTargetFormInputFields } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 
@@ -104,13 +102,14 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	useEffect(() => {
 		if (orgCurrencies?.orgCurrencies?.length) {
-			createBudgetTargetForm[1].endAdornment = orgCurrencies.orgCurrencies[0].currency.code;
+			budgetTargetFormInputFields[1].endAdornment =
+				orgCurrencies.orgCurrencies[0].currency.code;
 		}
 	}, [orgCurrencies]);
 
 	useEffect(() => {
 		if (donors) {
-			createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
+			budgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
 				.filter(({ donor }: { donor: { id: string; name: string } }) => donor)
 				.map(({ donor }: { donor: { id: string; name: string } }) => {
 					return { id: donor.id, name: donor.name };
@@ -120,7 +119,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	useEffect(() => {
 		if (budgetCategory) {
-			createBudgetTargetFormSelectFields[0].optionsArray = budgetCategory.orgBudgetCategory;
+			budgetTargetFormSelectFields[0].optionsArray = budgetCategory.orgBudgetCategory;
 		}
 	}, [budgetCategory]);
 
@@ -135,12 +134,27 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				},
 				update: async (store, { data: { createProjectBudgetTarget: projectCreated } }) => {
 					try {
+						const count = await store.readQuery<{ projectBudgetTargetsCount: number }>({
+							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+						});
+						let limit = 0;
+						if (count) {
+							limit = count.projectBudgetTargetsCount;
+						}
 						const dataRead = await store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
 									project: dashboardData?.project?.id,
 								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
 							},
 						});
 						let budgetTargets: IBudgetTargetProjectResponse[] = dataRead?.projectBudgetTargets
@@ -152,6 +166,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								filter: {
 									project: dashboardData?.project?.id,
 								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
 							},
 							data: {
 								projectBudgetTargets: [...budgetTargets, projectCreated],
@@ -210,8 +227,8 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				validate={validate}
 				onSubmit={onCreate}
 				onCancel={props.handleClose}
-				inputFields={createBudgetTargetForm}
-				selectFields={createBudgetTargetFormSelectFields}
+				inputFields={budgetTargetFormInputFields}
+				selectFields={budgetTargetFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
 			/>

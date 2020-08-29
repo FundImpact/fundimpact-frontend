@@ -4,7 +4,7 @@ import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	UPDATE_PROJECT_BUDGET_TRACKING,
 } from "../../../graphql/Budget/mutation";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
+import { GET_BUDGET_TARGET_PROJECT, GET_PROJ_BUDGET_TRACINGS_COUNT } from "../../../graphql/Budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IBudgetLineitemProps } from "../../../models/budget/";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
@@ -13,10 +13,7 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import {
-	createBudgetTrackingLineitemFormSelectFields,
-	createBudgetTrackingLineitemForm,
-} from "../../../utils/inputFields.json";
+import { budgetLineitemFormSelectFields, budgetLineitemFormInputFields } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import {
@@ -26,11 +23,10 @@ import {
 } from "../../../graphql/Budget";
 import {
 	GET_ANNUAL_YEAR_LIST,
-	GET_FINANCIAL_YEARS_ORG_LIST_BY_ORG,
-	GET_FINANCIAL_YEARS_DONOR_LIST_BY_DONOR,
+	GET_FINANCIAL_YEARS,
+	GET_ORG_CURRENCIES_BY_ORG,
 } from "../../../graphql/";
 import { getTodaysDate } from "../../../utils/index";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
 import {
 	IGET_BUDGET_TARGET_PROJECT,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
@@ -73,11 +69,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const [updateProjectBudgetTracking, { loading: updatingLineItem }] = useMutation(
 		UPDATE_PROJECT_BUDGET_TRACKING
 	);
-	const [getBudgetTargetProject] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
+	const [getBudgetTargetProject] = useLazyQuery(GET_BUDGET_TARGET_PROJECT, {
+		variables: {
+			filter: {
+				project: currentProject?.id,
+			},
+		},
+	});
+
 	const { data: annualYears } = useQuery(GET_ANNUAL_YEAR_LIST);
 
 	const closeDialog = useCallback(() => {
-		createBudgetTrackingLineitemFormSelectFields[2].hidden = false;
+		budgetLineitemFormSelectFields[2].hidden = false;
 		props.handleClose();
 	}, []);
 
@@ -87,12 +90,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			if (values.budget_targets_project) {
 				setSelectedDonor(budgetTargetHash[values.budget_targets_project]);
 				if (
-					budgetTargetHash[values.budget_targets_project].country.id ==
+					budgetTargetHash[values.budget_targets_project]?.country?.id ==
 					dashboardData?.organization?.country?.id
 				) {
-					createBudgetTrackingLineitemFormSelectFields[2].hidden = true;
+					budgetLineitemFormSelectFields[2].hidden = true;
 				} else {
-					createBudgetTrackingLineitemFormSelectFields[2].hidden = false;
+					budgetLineitemFormSelectFields[2].hidden = false;
 				}
 			}
 
@@ -114,7 +117,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			if (!values.grant_periods_project) {
 				errors.grant_periods_project = "Grant period is required";
 			}
-			if (!values.fy_donor && !createBudgetTrackingLineitemFormSelectFields[2].hidden) {
+			if (!values.fy_donor && !budgetLineitemFormSelectFields[2].hidden) {
 				errors.fy_donor = "Financial year of donor is required";
 			}
 			if (!values.fy_org) {
@@ -134,17 +137,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		},
 	});
 
-	const { data: financialYearOrg } = useQuery(GET_FINANCIAL_YEARS_ORG_LIST_BY_ORG, {
+	const { data: financialYearOrg } = useQuery(GET_FINANCIAL_YEARS, {
 		variables: {
 			filter: {
-				organization: dashboardData?.organization?.id,
+				country: dashboardData?.organization?.country?.id,
 			},
 		},
 	});
 
-	const [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(
-		GET_FINANCIAL_YEARS_DONOR_LIST_BY_DONOR
-	);
+	const [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
 
 	let oldCachedBudgetTargetProjectData: IGET_BUDGET_TARGET_PROJECT | null = null;
 	try {
@@ -169,26 +170,20 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	useEffect(() => {
 		if (!oldCachedBudgetTargetProjectData && currentProject) {
-			getBudgetTargetProject({
-				variables: {
-					filter: {
-						project: currentProject?.id,
-					},
-				},
-			});
+			getBudgetTargetProject();
 		}
 	}, [oldCachedBudgetTargetProjectData, currentProject, getBudgetTargetProject]);
 
 	useEffect(() => {
 		if (orgCurrencies && orgCurrencies.orgCurrencies.length) {
-			createBudgetTrackingLineitemForm[1].endAdornment =
+			budgetLineitemFormInputFields[1].endAdornment =
 				orgCurrencies.orgCurrencies[0].currency.code;
 		}
 	}, [orgCurrencies]);
 
 	useEffect(() => {
 		if (oldCachedBudgetTargetProjectData) {
-			createBudgetTrackingLineitemFormSelectFields[0].optionsArray = oldCachedBudgetTargetProjectData.projectBudgetTargets as any;
+			budgetLineitemFormSelectFields[0].optionsArray = oldCachedBudgetTargetProjectData.projectBudgetTargets as any;
 			budgetTargetHash = oldCachedBudgetTargetProjectData.projectBudgetTargets.reduce(
 				(accunulator, current) => {
 					accunulator[current.id] = current.donor;
@@ -201,28 +196,29 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	useEffect(() => {
 		if (annualYears) {
-			createBudgetTrackingLineitemFormSelectFields[1].optionsArray =
-				annualYears.annualYearList;
+			budgetLineitemFormSelectFields[1].optionsArray = annualYears.annualYearList;
 		}
 	}, [annualYears]);
 
 	useEffect(() => {
 		if (financialYearDonor) {
-			createBudgetTrackingLineitemFormSelectFields[2].optionsArray =
-				financialYearDonor.financialYearsDonorList;
+			budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYears
+				? financialYearDonor?.financialYears
+				: [];
 		}
 	}, [financialYearDonor]);
 
 	useEffect(() => {
 		if (financialYearOrg) {
-			createBudgetTrackingLineitemFormSelectFields[3].optionsArray =
-				financialYearOrg.financialYearsOrgList;
+			budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYears
+				? financialYearOrg?.financialYears
+				: [];
 		}
 	}, [financialYearOrg]);
 
 	useEffect(() => {
 		if (grantPeriodProject) {
-			createBudgetTrackingLineitemFormSelectFields[4].optionsArray =
+			budgetLineitemFormSelectFields[4].optionsArray =
 				grantPeriodProject.grantPeriodsProjectList;
 		}
 	}, [grantPeriodProject]);
@@ -232,7 +228,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			getFinancialYearDonor({
 				variables: {
 					filter: {
-						donor: selectedDonor.id,
+						country: selectedDonor.country.id,
 					},
 				},
 			});
@@ -241,9 +237,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onCreate = async (values: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(values.reporting_date);
-
 		try {
-			if (createBudgetTrackingLineitemFormSelectFields[2].hidden) {
+			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
 			}
 			await createProjectBudgetTracking({
@@ -253,15 +248,31 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						reporting_date,
 					},
 				},
-				update: (store, { data: { createProjBudgetTracking: lineItemCreated } }) => {
+				update: async (store, { data: { createProjBudgetTracking: lineItemCreated } }) => {
 					try {
-						const data = store.readQuery<IGET_BUDGET_TARCKING_LINE_ITEM>({
+						const count = await store.readQuery<{ projBudgetTrackingsCount: number }>({
+							query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+							variables: {
+								filter: {
+									budget_targets_project:
+										lineItemCreated.budget_targets_project.id,
+								},
+							},
+						});
+						let limit = 0;
+						if (count) {
+							limit = count.projBudgetTrackingsCount;
+						}
+						const data = await store.readQuery<IGET_BUDGET_TARCKING_LINE_ITEM>({
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
 								filter: {
 									budget_targets_project:
 										lineItemCreated.budget_targets_project.id,
 								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
 							},
 						});
 						store.writeQuery({
@@ -271,15 +282,20 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 									budget_targets_project:
 										lineItemCreated.budget_targets_project.id,
 								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
 							},
 							data: {
 								projBudgetTrackings: [
-									...data!.projBudgetTrackings,
 									lineItemCreated,
+									...data!.projBudgetTrackings,
 								],
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.log("err :>> ", err);
+					}
 
 					try {
 						const amountSpentData = store.readQuery<{
@@ -305,16 +321,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 									lineItemCreated.amount,
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.log("err :>> ", err);
+					}
 				},
 			});
-			notificationDispatch(
-				setSuccessNotification("Budget Tracking Line Item Creation Success")
-			);
+			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));
 		} catch (err) {
-			notificationDispatch(
-				setErrorNotification("Budget Tracking Line Item Creation Failure")
-			);
+			notificationDispatch(setErrorNotification("Budget Line Item Creation Failure"));
 		} finally {
 			closeDialog();
 		}
@@ -364,13 +378,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					} catch (err) {}
 				},
 			});
-			notificationDispatch(
-				setSuccessNotification("Budget Tracking Line Item Updation Success")
-			);
+			notificationDispatch(setSuccessNotification("Budget  Line Item Updation Success"));
 		} catch (err) {
-			notificationDispatch(
-				setErrorNotification("Budget Tracking Line Item Updation Failure")
-			);
+			notificationDispatch(setErrorNotification("Budget  Line Item Updation Failure"));
 		} finally {
 			closeDialog();
 		}
@@ -390,8 +400,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				validate={validate}
 				onSubmit={onCreate}
 				onCancel={props.handleClose}
-				inputFields={createBudgetTrackingLineitemForm}
-				selectFields={createBudgetTrackingLineitemFormSelectFields}
+				inputFields={budgetLineitemFormInputFields}
+				selectFields={budgetLineitemFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
 			/>
