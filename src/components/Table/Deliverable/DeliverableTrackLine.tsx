@@ -24,7 +24,7 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		}[]
 	>([]);
 
-	const { loading } = useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
+	useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
 		onCompleted(data) {
 			let obj: any = {};

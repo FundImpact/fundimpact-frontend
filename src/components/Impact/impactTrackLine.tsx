@@ -26,6 +26,8 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { getTodaysDate } from "../../utils/index";
 import ImpacTracklineDonorYearTags from "./impactTracklineDonor";
 import Stepper from "../Stepper/Stepper";
+import { FORM_ACTIONS } from "../Forms/constant";
+
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -59,10 +61,14 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	});
 
 	const [donors, setDonors] = React.useState<
-		{ id: string; name: string; country: { id: string; name: string } }[]
+		{
+			id: string;
+			name: string;
+			donor: { id: string; name: string; country: { id: string; name: string } };
+		}[]
 	>();
-	const [createdImpactTracklineId, setCreatedImpactTracklineId] = React.useState<string>("");
-
+	const [impactDonorForm, setImpactDonorForm] = React.useState<React.ReactNode | undefined>();
+	const [impactDonorFormData, setImpactDonorFormData] = React.useState<any>();
 	const handleNext = () => {
 		setStepperActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
@@ -81,8 +87,16 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
 			console.log("it", data);
+			setImpactDonorForm(
+				<ImpacTracklineDonorYearTags
+					donors={donors}
+					TracklineId={data.createImpactTrackingLineitemInput.id}
+					TracklineFyId={data.createImpactTrackingLineitemInput.financial_year?.id}
+					onCancel={onCancel}
+					type={FORM_ACTIONS.CREATE}
+				/>
+			);
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
-			setCreatedImpactTracklineId(data.createImpactTrackingLineitemInput.id);
 			handleNext();
 		},
 		onError(data) {
@@ -94,10 +108,20 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		UPDATE_IMPACT_TRACKLINE,
 		{
 			onCompleted(data) {
+				setImpactDonorForm(
+					<ImpacTracklineDonorYearTags
+						donors={donors}
+						TracklineId={data.updateImpactTrackingLineitemInput.id}
+						TracklineFyId={data.updateImpactTrackingLineitemInput.financial_year?.id}
+						onCancel={onCancel}
+						data={impactDonorFormData}
+						type={FORM_ACTIONS.UPDATE}
+					/>
+				);
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
-				onCancel();
+				handleNext();
 			},
 			onError(data) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
@@ -127,7 +151,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					id: string;
 					donor: { id: string; name: string; country: { id: string; name: string } };
 				}) => {
-					array.push(elem.donor);
+					array.push({ ...elem, name: elem.donor.name });
 				}
 			);
 			impactTragetLineForm[3].optionsArray = array;
@@ -169,10 +193,17 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const onUpdate = (value: IImpactTargetLine) => {
 		let impactTargetLineId = value.id;
 		delete value.id;
+		value.reporting_date = new Date(value.reporting_date);
+		console.log(`on update is called with: `, value);
+		setDonors(value.donors);
+		setImpactDonorFormData(value.impactDonorMapValues);
+		let input = { ...value };
+		delete input.donors;
+		delete input.impactDonorMapValues;
 		updateImpactTrackLine({
 			variables: {
 				id: impactTargetLineId,
-				input: value,
+				input,
 			},
 			refetchQueries: [
 				{
@@ -193,16 +224,15 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	const validate = (values: IImpactTargetLine) => {
 		let errors: Partial<IImpactTargetLine> = {};
-		if (!values.annual_year) {
-			errors.annual_year = "Annual year is required";
-		}
 		if (!values.impact_target_project) {
 			errors.impact_target_project = "Target is required";
+		}
+		if (!values.reporting_date) {
+			errors.reporting_date = "Date is required";
 		}
 		if (!values.value) {
 			errors.value = "Value is required";
 		}
-
 		return errors;
 	};
 	let basicForm = (
@@ -216,14 +246,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				onUpdate,
 				inputFields: impactTragetLineForm,
 			}}
-		/>
-	);
-	let donorForm = (
-		<ImpacTracklineDonorYearTags
-			donors={donors}
-			impactTracklineId={createdImpactTracklineId}
-			onCancel={onCancel}
-			type={IMPACT_ACTIONS.CREATE}
 		/>
 	);
 	return (
@@ -248,7 +270,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						handleReset,
 					}}
 					basicForm={basicForm}
-					donorForm={donorForm}
+					donorForm={impactDonorForm}
 				/>
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}

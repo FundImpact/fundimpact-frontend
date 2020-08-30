@@ -7,7 +7,14 @@ export interface IImpactTargetLine {
 	value: number | string;
 	financial_year: string;
 	reporting_date: Date | string;
-	donors?: { id: string; name: string; country: { id: string; name: string } }[] | [];
+	impactDonorMapValues?: object;
+	donors?:
+		| {
+				id: string;
+				name: string;
+				donor: { id: string; name: string; country: { id: string; name: string } };
+		  }[]
+		| [];
 	note?: string;
 }
 

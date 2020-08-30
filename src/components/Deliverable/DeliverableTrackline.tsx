@@ -12,7 +12,6 @@ import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
-	GET_DELIVERABLE_LINEITEM_FYDONOR,
 } from "../../graphql/queries/Deliverable/trackline";
 import {
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
@@ -96,7 +95,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				<DeliverableTracklineDonorYearTags
 					donors={donors}
 					TracklineId={data.createDeliverableTrackingLineitemDetail.id}
-					TracklineFyId={data.createDeliverableTrackingLineitemDetail.financial_year.id}
+					TracklineFyId={data.createDeliverableTrackingLineitemDetail.financial_year?.id}
 					onCancel={onCancel}
 					type={FORM_ACTIONS.CREATE}
 				/>
@@ -246,9 +245,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (!values.reporting_date) {
 			errors.reporting_date = "Date is required";
 		}
-		// if (!values.value) {
-		// 	errors.value = "Value is required";
-		// }
+		if (!values.value) {
+			errors.value = "Value is required";
+		}
 		// if (!values.financial_year) {
 		// 	errors.financial_year = "Financial Year is required";
 		// }

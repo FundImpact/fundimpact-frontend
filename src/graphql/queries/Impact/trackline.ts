@@ -380,3 +380,113 @@ export const CREATE_IMPACT_LINEITEM_FYDONOR = gql`
 		}
 	}
 `;
+
+export const UPDATE_IMPACT_LINEITEM_FYDONOR = gql`
+	mutation updateImpactLinitemFyDonorInput($id: ID!, $input: ImpactLinitemFyDonorInput!) {
+		updateImpactLinitemFyDonorInput(id: $id, input: $input) {
+			id
+			impact_tracking_lineitem {
+				id
+				note
+				reporting_date
+				value
+				impact_target_project {
+					id
+				}
+				annual_year {
+					id
+				}
+				grant_periods_project {
+					id
+				}
+			}
+			project_donor {
+				id
+				project {
+					id
+				}
+				donor {
+					id
+				}
+			}
+			financial_year {
+				id
+				name
+				short_name
+				start_date
+				end_date
+				country {
+					id
+					name
+				}
+			}
+			grant_periods_project {
+				id
+				name
+				description
+				short_name
+				start_date
+				end_date
+				project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const GET_IMPACT_LINEITEM_FYDONOR = gql`
+	query impactLinitemFyDonorList($filter: JSON) {
+		impactLinitemFyDonorList(where: $filter) {
+			id
+			impact_tracking_lineitem {
+				id
+				note
+				reporting_date
+				value
+				impact_target_project {
+					id
+				}
+				annual_year {
+					id
+				}
+				grant_periods_project {
+					id
+				}
+			}
+			project_donor {
+				id
+				project {
+					id
+				}
+				donor {
+					id
+				}
+			}
+			financial_year {
+				id
+				name
+				short_name
+				start_date
+				end_date
+				country {
+					id
+					name
+				}
+			}
+			grant_periods_project {
+				id
+				name
+				description
+				short_name
+				start_date
+				end_date
+				project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;

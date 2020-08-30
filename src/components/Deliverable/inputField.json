@@ -37,7 +37,7 @@
 			"label": "Name",
 			"inputType": "textarea",
 			"required": true,
-			"size": 12
+			"size": 6
 		},
 		{
 			"name": "target_value",
@@ -47,7 +47,7 @@
 			"label": "Target Value",
 			"required": true,
 			"inputType": "textarea",
-			"size": 12,
+			"size": 6,
 			"type": "number"
 		},
 		{
@@ -254,7 +254,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
+			"inputType": "select",
+			"required": true
 		},
 		{
 			"name": "financial_year",

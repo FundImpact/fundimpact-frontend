@@ -13,6 +13,13 @@ const useStyles = makeStyles((theme: Theme) =>
 		button: {
 			color: theme.palette.background.paper,
 		},
+		myCancelButton: {
+			"&:hover": {
+				color: "#d32f2f !important",
+			},
+			padding: theme.spacing(1),
+			marginRight: theme.spacing(2),
+		},
 	})
 );
 
@@ -67,7 +74,6 @@ function CommonForm({
 									</Grid>
 								);
 							})}
-
 							{selectFields.map((element: ISelectField, index: number) => {
 								return (
 									<Grid item xs={element.size} key={index}>
@@ -85,9 +91,11 @@ function CommonForm({
 									</Grid>
 								);
 							})}
-
 							<Grid item xs={12}>
-								<Box component="span" mr={2}>
+								<Box display="flex" m={1}>
+									<Button className={classes.myCancelButton} onClick={onCancel}>
+										Cancel
+									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -97,19 +105,9 @@ function CommonForm({
 										data-testid="createSaveButton"
 										disabled={!formik.isValid}
 									>
-										Save
+										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
 									</Button>
 								</Box>
-								<Button
-									className={classes.button}
-									variant="contained"
-									color="primary"
-									data-testid="createCancelButton"
-									disableRipple
-									onClick={onCancel}
-								>
-									Cancel
-								</Button>
 							</Grid>
 						</Grid>
 					</Form>

@@ -4,7 +4,7 @@ export interface IDeliverableTargetLine {
 	id?: number;
 	deliverable_target_project: number | string | undefined;
 	annual_year: string;
-	value: number;
+	value: number | string;
 	financial_year: string;
 	reporting_date: Date | string;
 	donors?:

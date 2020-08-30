@@ -17,7 +17,6 @@ import { GET_IMPACT_CATEGORY } from "../../graphql/queries/Impact/category";
 import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/queries/Impact/target";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
 import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardContext";
-import { FORM_ACTIONS } from "../../models/budget/constants";
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -185,10 +184,10 @@ function ImpactTarget(props: ImpactTargetProps) {
 				errors.target_value = "Target value is required here";
 			}
 			if (!values.impactCategory) {
-				errors.deliverableCategory = "Deliverable Category is required here";
+				errors.deliverableCategory = "Category is required here";
 			}
 			if (!values.impactUnit) {
-				errors.deliverableUnit = "Deliverable Unit is required here";
+				errors.deliverableUnit = "Unit is required here";
 			}
 		}
 

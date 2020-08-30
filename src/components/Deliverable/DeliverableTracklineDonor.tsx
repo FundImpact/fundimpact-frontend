@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Formik, Form } from "formik";
 import {
@@ -37,6 +37,13 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		formControl: {
 			width: "100%",
+		},
+		cancelButton: {
+			marginRight: theme.spacing(2),
+			padding: theme.spacing(1),
+			"&:hover": {
+				color: "#d32f2f !important",
+			},
 		},
 	})
 );
@@ -213,6 +220,9 @@ function DonorYearTagForm({
 							)}
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
+									<Button className={classes.cancelButton} onClick={onCancel}>
+										Cancel
+									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -220,19 +230,9 @@ function DonorYearTagForm({
 										color="secondary"
 										type="submit"
 										data-testid="createSaveButton"
-										// disabled={!formik.isValid}
+										disabled={!formik.isValid}
 									>
-										{formAction === DELIVERABLE_ACTIONS.CREATE
-											? "Create"
-											: "Update"}
-									</Button>
-									<Button
-										color="primary"
-										className={classes.button}
-										onClick={onCancel}
-										variant="contained"
-									>
-										Cancel
+										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
 									</Button>
 								</Box>
 							</Grid>
@@ -375,6 +375,7 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 	return (
 		<>
 			{loading ? <FullScreenLoader /> : null}
+			{updateLoading ? <FullScreenLoader /> : null}
 			{props.donors && (
 				<DonorYearTagForm
 					{...{
