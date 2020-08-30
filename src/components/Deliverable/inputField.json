@@ -6,6 +6,7 @@
 			"dataTestId": "deliverableFormName",
 			"testId": "deliverableFormNameInput",
 			"label": "Name",
+			"required": true,
 			"size": 12
 		},
 		{
@@ -35,7 +36,19 @@
 			"testId": "deliverableTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 12
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "deliverableTargetTargetValue",
+			"testId": "deliverableTargetTargetValueInput",
+			"label": "Target Value",
+			"required": true,
+			"inputType": "textarea",
+			"size": 6,
+			"type": "number"
 		},
 		{
 			"name": "deliverableCategory",
@@ -49,18 +62,10 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"getInputValue": {},
-			"size": 12
+			"required": true,
+			"size": 6
 		},
-		{
-			"name": "target_value",
-			"id": "target_value",
-			"dataTestId": "deliverableTargetTargetValue",
-			"testId": "deliverableTargetTargetValueInput",
-			"label": "Target Value",
-			"inputType": "textarea",
-			"size": 6,
-			"type": "number"
-		},
+
 		{
 			"name": "deliverableUnit",
 			"id": "deliverableUnit",
@@ -72,6 +77,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
+			"required": true,
 			"size": 6
 		},
 		{
@@ -94,7 +100,8 @@
 			"testId": "deliverableTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 12
+			"required": true,
+			"size": 6
 		},
 		{
 			"name": "target_value",
@@ -103,6 +110,7 @@
 			"testId": "deliverableTargetTargetValueInput",
 			"label": "Target Value",
 			"inputType": "textarea",
+			"required": true,
 			"size": 6,
 			"type": "number"
 		},
@@ -125,6 +133,21 @@
 			"dataTestId": "deliverableUnitName",
 			"testId": "deliverableUnitNameInput",
 			"label": "Name",
+			"required": true,
+			"size": 12
+		},
+		{
+			"name": "deliverableCategory",
+			"id": "deliverableCategory",
+			"dataTestId": "deliverableUnitCategory",
+			"testId": "deliverableUnitCategoryInput",
+			"label": "Deliverable Category",
+			"required": true,
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
 			"size": 6
 		},
 		{
@@ -136,25 +159,12 @@
 			"size": 6
 		},
 		{
-			"name": "deliverableCategory",
-			"id": "deliverableCategory",
-			"dataTestId": "deliverableUnitCategory",
-			"testId": "deliverableUnitCategoryInput",
-			"label": "Deliverable Category",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"size": 6
-		},
-		{
 			"name": "unit_type",
 			"id": "unit-type",
 			"dataTestId": "deliverableUnitUnitType",
 			"testId": "deliverableUnitUnitTypeInput",
 			"label": "Unit Type",
-			"size": 6
+			"size": 4
 		},
 		{
 			"name": "prefix_label",
@@ -162,7 +172,7 @@
 			"dataTestId": "deliverableUnitPrefixLabel",
 			"testId": "deliverableUnitPrefixLabelInput",
 			"label": "Prefix Label",
-			"size": 6
+			"size": 4
 		},
 		{
 			"name": "suffix_label",
@@ -170,7 +180,7 @@
 			"dataTestId": "deliverableUnitSuffixLabel",
 			"testId": "deliverableUnitSuffixLabelInput",
 			"label": "Suffix Label",
-			"size": 6
+			"size": 4
 		},
 
 		{
@@ -196,7 +206,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
+			"inputType": "select",
+			"required": true
 		},
 		{
 			"name": "value",
@@ -205,7 +216,32 @@
 			"testId": "deliverableTracklineValueInput",
 			"label": "Value",
 			"type": "number",
-			"size": 6
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "donors",
+			"id": "donors",
+			"label": "Select Donors",
+			"size": 6,
+			"dataTestId": "deliverableTracklineDonors",
+			"testId": "deliverableTracklineDonorsInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-mutiple-name-label",
+			"selectLabelId": "demo-mutiple-name-label",
+			"selectId": "demo-mutiple-name",
+			"inputType": "multiSelect",
+			"required": true
 		},
 		{
 			"name": "annual_year",
@@ -218,7 +254,22 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
+			"inputType": "select",
+			"required": true
+		},
+		{
+			"name": "financial_year",
+			"id": "financial_year",
+			"label": "Financial Year",
+			"size": 6,
+			"dataTestId": "deliverableTracklineFinancialYear",
+			"testId": "deliverableTracklineFinancialYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true
 		},
 		{
 			"name": "note",
@@ -229,15 +280,6 @@
 			"multiline": true,
 			"rows": 2,
 			"size": 12
-		},
-		{
-			"name": "reporting_date",
-			"id": "reporting_date",
-			"dataTestId": "deliverableTracklineDate",
-			"testId": "deliverableTracklineDateInput",
-			"label": "Reporting Date",
-			"type": "date",
-			"size": 6
 		}
 	]
 }

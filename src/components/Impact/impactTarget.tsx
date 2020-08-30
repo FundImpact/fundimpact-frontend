@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
-import { DashboardProvider } from "../../contexts/dashboardContext";
+import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
@@ -19,6 +19,7 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
 
+// import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -33,6 +34,7 @@ function getInitialValues(props: ImpactTargetProps) {
 }
 function ImpactTarget(props: ImpactTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY);
 	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
 
@@ -88,8 +90,8 @@ function ImpactTarget(props: ImpactTargetProps) {
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (categories) {
-			impactTargetForm[1].optionsArray = categories.impactCategoryOrgList;
-			impactTargetForm[1].getInputValue = setCurrentCategoryId;
+			impactTargetForm[2].optionsArray = categories.impactCategoryOrgList;
+			impactTargetForm[2].getInputValue = setCurrentCategoryId;
 		}
 	}, [categories]);
 
@@ -185,10 +187,10 @@ function ImpactTarget(props: ImpactTargetProps) {
 				errors.target_value = "Target value is required here";
 			}
 			if (!values.impactCategory) {
-				errors.deliverableCategory = "Deliverable Category is required here";
+				errors.deliverableCategory = "Category is required here";
 			}
 			if (!values.impactUnit) {
-				errors.deliverableUnit = "Deliverable Unit is required here";
+				errors.deliverableUnit = "Unit is required here";
 			}
 		}
 
@@ -209,9 +211,10 @@ function ImpactTarget(props: ImpactTargetProps) {
 	return (
 		<DashboardProvider>
 			<FormDialog
-				title={"New Impact Target"}
+				title={(formAction === IMPACT_ACTIONS.CREATE ? "New" : "Edit") + " Impact Target"}
 				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
-				workspace={"workspace"}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

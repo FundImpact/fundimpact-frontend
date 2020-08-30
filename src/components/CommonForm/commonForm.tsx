@@ -1,15 +1,24 @@
+import { Box, Button, createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
+import { Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form } from "formik";
-import { Grid, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
-import { IInputFields } from "../../models/index";
-import InputFields from "../InputFields/inputField";
+
+import { IInputFields } from "../../models";
 import { FORM_ACTIONS } from "../Forms/constant";
+import InputFields from "../InputFields/inputField";
 import { ICommonForm } from "./model";
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
 			color: theme.palette.background.paper,
 			marginRight: theme.spacing(2),
+		},
+		cancelButton: {
+			marginRight: theme.spacing(2),
+			padding: theme.spacing(1),
+			"&:hover": {
+				color: "#d32f2f !important",
+			},
 		},
 	})
 );
@@ -44,7 +53,7 @@ function CommonInputForm({
 						<Grid container spacing={2}>
 							{inputFields.map((element: IInputFields, index: number) => {
 								return (
-									<Grid item xs={12} key={index}>
+									<Grid item xs={element.size} key={index}>
 										<InputFields
 											inputType={element.inputType}
 											formik={formik}
@@ -71,6 +80,7 @@ function CommonInputForm({
 											getInputValue={
 												element.getInputValue ? element.getInputValue : null
 											}
+											required={element.required ? true : false}
 											multiple={element.multiple ? element.multiple : false}
 										/>
 									</Grid>
@@ -79,6 +89,9 @@ function CommonInputForm({
 
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
+									<Button className={classes.cancelButton} onClick={onCancel}>
+										Cancel
+									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -89,14 +102,6 @@ function CommonInputForm({
 										disabled={!formik.isValid}
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
-									</Button>
-									<Button
-										color="primary"
-										className={classes.button}
-										onClick={onCancel}
-										variant="contained"
-									>
-										Cancel
 									</Button>
 								</Box>
 							</Grid>

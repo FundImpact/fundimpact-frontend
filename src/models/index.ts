@@ -94,11 +94,13 @@ export interface IInputFields {
 	rows?: number;
 	formik?: any;
 	type?: string;
+	size?: any;
 	optionsArray?: any[];
 	inputLabelId?: string;
 	selectLabelId?: string;
 	selectId?: string;
 	getInputValue?: any;
+	required?: boolean;
 	multiple?: boolean;
 }
 

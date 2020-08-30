@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
 import {
-	TextField,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	FormHelperText,
-	makeStyles,
-	createStyles,
 	Checkbox,
-	ListItemText,
 	Chip,
+	createStyles,
+	FormControl,
+	FormHelperText,
+	InputLabel,
+	ListItemText,
+	makeStyles,
+	MenuItem,
+	Select,
+	TextField,
 } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+
 import { IInputFields } from "../../models";
 
 const useStyles = makeStyles(() =>
@@ -48,6 +49,7 @@ const InputFields = ({
 	selectLabelId,
 	selectId,
 	getInputValue,
+	required,
 	multiple = false,
 }: IInputFields) => {
 	const classes = useStyles();
@@ -68,33 +70,44 @@ const InputFields = ({
 				);
 			});
 	}, [optionsArray]);
+	// const classes = useStyles();
+	const [elemName, setElemName] = React.useState<string[]>([]);
 
-	if (inputType === "select") {
+	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
+		setElemName(event.target.value.map((elem: any) => elem.name) as string[]);
+	};
+
+	if (inputType === "select" || inputType === "multiSelect") {
+		let multiSelect: boolean = inputType === "multiSelect" ? true : false;
+
+		let onChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+			if (inputType === "multiSelect") {
+				elemHandleChange(event);
+				formik.handleChange(event);
+			}
+			if (inputType === "select") {
+				if (getInputValue) {
+					getInputValue(event.target.value);
+					formik.handleChange(event);
+				} else formik.handleChange(event);
+			}
+		};
+
 		return (
 			<FormControl variant="outlined" className={classes.formControl}>
-				<InputLabel id={inputLabelId}>{label}</InputLabel>
+				<InputLabel id={inputLabelId}>{required ? label : label + " ( opt )"}</InputLabel>
 
 				<Select
 					labelId={selectLabelId}
 					id={selectId}
 					error={!!formik.errors[name] && !!formik.touched[name]}
 					value={formik.values[name]}
-					onChange={
-						getInputValue
-							? (event) => {
-									getInputValue(event.target.value);
-									formik.handleChange(event);
-							  }
-							: formik.handleChange
-					}
+					multiple={multiSelect || multiple}
+					onChange={onChange}
+					required={required}
 					onBlur={formik.handleBlur}
-					label={label}
+					label={required ? label : label + " ( opt )"}
 					name={name}
-					data-testid={dataTestId}
-					inputProps={{
-						"data-testid": testId,
-					}}
-					multiple={multiple}
 					renderValue={(selected) => {
 						return multiple ? (
 							<div className={classes.chips}>
@@ -108,9 +121,25 @@ const InputFields = ({
 										/>
 									))}
 							</div>
-						) : (
-							optionsArrayHash[selected as string]
-						);
+						) : multiSelect ? (
+							(selected: any) => {
+								let arr: any = selected.map((elem: any) => elem.name);
+								return arr.join(", ");
+							}
+						) : undefined;
+						// optionsArrayHash[selected as string]
+					}}
+					// renderValue={
+					// 	multiSelect
+					// 		? (selected: any) => {
+					// 				let arr: any = selected.map((elem: any) => elem.name);
+					// 				return arr.join(", ");
+					// 		  }
+					// 		: undefined
+					// }
+					data-testid={dataTestId}
+					inputProps={{
+						"data-testid": testId,
 					}}
 				>
 					{!optionsArray?.length && (
@@ -118,6 +147,15 @@ const InputFields = ({
 							<em>None</em>
 						</MenuItem>
 					)}
+					{/* {optionsArray &&
+						optionsArray.map((elem: any, index: number) => (
+							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
+								{multiSelect ? (
+									<Checkbox
+										color="primary"
+										checked={elemName.indexOf(elem.name) > -1}
+									/>
+								) : null} */}
 					{!multiple &&
 						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
 							<MenuItem key={index} value={elem.id}>
@@ -154,12 +192,12 @@ const InputFields = ({
 					  }
 					: formik.handleChange
 			}
-			label={label}
+			label={required ? label : label + " ( opt )"}
 			data-testid={dataTestId}
 			inputProps={{
 				"data-testid": testId,
 			}}
-			required
+			required={required}
 			fullWidth
 			name={`${name}`}
 			variant="outlined"

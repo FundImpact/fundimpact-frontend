@@ -28,6 +28,7 @@ function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 }
 
 function Project(props: ProjectProps) {
+	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IPROJECT_FORM = getInitialValues(props);
@@ -127,9 +128,10 @@ function Project(props: ProjectProps) {
 	return (
 		<>
 			<FormDialog
-				title={"New Project"}
-				subtitle={"create a new Project"}
-				workspace={"workspace"}
+				title={(formAction === PROJECT_ACTIONS.CREATE ? "New" : "Edit") + " Project"}
+				subtitle={"Project"}
+				workspace={DashBoardData?.workspace?.name}
+				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

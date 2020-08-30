@@ -9,6 +9,7 @@ import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/Deliverable/category"
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableCategoryForm } from "./inputField.json";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -22,6 +23,7 @@ function getInitialValues(props: DeliverableProps) {
 
 function Deliverable(props: DeliverableProps) {
 	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
 	let initialValues: IDeliverable = getInitialValues(props);
 	const [createDeliverableCategory, { loading }] = useMutation(CREATE_DELIVERABLE_CATEGORY);
 	const formAction = props.type;
@@ -54,9 +56,13 @@ function Deliverable(props: DeliverableProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={"New Deliverable Category"}
-				subtitle={"create a new deliverable category"}
-				workspace={"workspace"}
+				title={
+					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") +
+					" Deliverable Category"
+				}
+				subtitle={"Manage Deliverable Category"}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

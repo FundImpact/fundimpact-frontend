@@ -100,8 +100,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
-			deliverableTargetForm[1].optionsArray = deliverableCategories.deliverableCategory;
-			deliverableTargetForm[1].getInputValue = setcurrentCategory;
+			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
+			deliverableTargetForm[2].getInputValue = setcurrentCategory;
 		}
 	}, [deliverableCategories]);
 
@@ -220,9 +220,13 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={"New Deliverable Target"}
+				title={
+					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") +
+					" Deliverable Target"
+				}
 				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
-				workspace={"workspace"}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>
