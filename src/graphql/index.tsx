@@ -200,7 +200,10 @@ export const GET_GRANT_PERIOD = gql`
 				name
 				short_name
 				description
-			}`;
+			}
+		}
+	}
+`;
 export const GET_COUNTRY_LIST = gql`
 	query {
 		countryList {

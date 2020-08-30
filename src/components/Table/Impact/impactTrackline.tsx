@@ -15,8 +15,6 @@ import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
 
-// import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/queries/Impact/trackline";
-// import { GET_IMPACT_LINEITEM_FYDONOR } from "../../../graphql/queries/Impact/trackline";
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
 	const [impactTracklineDonors, setImpactTracklineDonors] = useState<

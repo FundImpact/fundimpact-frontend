@@ -30,20 +30,7 @@ import { impactTragetLineForm } from "./inputField.json";
 // 	GET_ACHIEVED_VALLUE_BY_TARGET,
 // 	GET_IMPACT_TARGET_BY_PROJECT,
 // } from "../../graphql/Impact/target";
-// import {
-// 	CREATE_IMPACT_TRACKLINE,
-// 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-// } from "../../graphql/queries/Impact/trackline";
-// import {
-// 	GET_IMPACT_TARGET_BY_PROJECT,
-// 	GET_ACHIEVED_VALLUE_BY_TARGET,
-// } from "../../graphql/queries/Impact/target";
-// import {
-// 	GET_ANNUAL_YEARS,
-// 	GET_FINANCIAL_YEARS,
-// 	GET_PROJECT_DONORS,
-// } from "../../graphql/queries/index";
-// import FormDialog from "../FormDialog/FormDialog";
+
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {

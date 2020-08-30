@@ -1,21 +1,22 @@
-import React from "react";
 import { useQuery } from "@apollo/client";
-import { Formik, Form } from "formik";
 import {
-	Grid,
-	Button,
 	Box,
-	makeStyles,
+	Button,
 	createStyles,
-	Theme,
 	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
 	FormHelperText,
+	Grid,
+	InputLabel,
+	makeStyles,
+	MenuItem,
+	Select,
+	Theme,
 	Typography,
 } from "@material-ui/core";
-import { GET_FINANCIAL_YEARS, GET_GRANT_PERIOD } from "../../../graphql/queries/index";
+import { Form, Formik } from "formik";
+import React from "react";
+
+import { GET_FINANCIAL_YEARS, GET_GRANT_PERIOD } from "../../../graphql";
 import { FORM_ACTIONS } from "../constant";
 
 const useStyles = makeStyles((theme: Theme) =>

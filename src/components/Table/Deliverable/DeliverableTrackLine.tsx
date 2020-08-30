@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import {
 	GET_DELIVERABLE_LINEITEM_FYDONOR,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-} from "../../../graphql/queries/Deliverable/trackline";
+} from "../../../graphql/Deliverable/trackline";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { getTodaysDate } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
@@ -15,6 +15,10 @@ import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
 
+// import {
+// 	GET_DELIVERABLE_LINEITEM_FYDONOR,
+// 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+// } from "../../../graphql/Deliverable/trackline";
 function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTrackline: any }) {
 	const [tracklineDonorsMapValues, setTracklineDonorsMapValues] = useState<any>({});
 	const [tracklineDonors, setTracklineDonors] = useState<
