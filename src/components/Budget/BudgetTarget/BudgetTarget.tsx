@@ -14,6 +14,7 @@ import {
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
+import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
@@ -26,10 +27,9 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys } from "../../../utils";
-import { budgetTargetFormSelectFields, budgetTargetFormInputFields } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
-import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
+import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",

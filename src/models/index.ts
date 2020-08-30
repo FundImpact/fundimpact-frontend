@@ -99,6 +99,7 @@ export interface IInputFields {
 	selectLabelId?: string;
 	selectId?: string;
 	getInputValue?: any;
+	multiple?: boolean;
 }
 
 export interface ISelectField {
