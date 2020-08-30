@@ -1,20 +1,5 @@
 import React from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { Formik, Form } from "formik";
-import {
-	Grid,
-	Button,
-	Box,
-	makeStyles,
-	createStyles,
-	Theme,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	FormHelperText,
-	Typography,
-} from "@material-ui/core";
+import { useMutation } from "@apollo/client";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import {
@@ -22,8 +7,6 @@ import {
 	UPDATE_DELIVERABLE_LINEITEM_FYDONOR,
 	GET_DELIVERABLE_LINEITEM_FYDONOR,
 } from "../../graphql/queries/Deliverable/trackline";
-import { GET_FINANCIAL_YEARS, GET_GRANT_PERIOD } from "../../graphql/queries/index";
-import { DELIVERABLE_ACTIONS } from "./constants";
 import FullScreenLoader from "../commons/GlobalLoader";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { TracklineDonorFormProps } from "../../models/TracklineDonor/tracklineDonor";
@@ -34,18 +17,19 @@ function getInitialValues(props: TracklineDonorFormProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) return { ...props.data };
 	let initialValuesObj: any = {};
 	props.donors?.forEach(
-		(elem: {
+		(element: {
 			id: string;
 			name: string;
 			donor: { id: string; name: string; country: { id: string; name: string } };
 		}) => {
-			initialValuesObj[`${elem.id}mapValues`] = {
+			initialValuesObj[`${element.id}mapValues`] = {
 				financial_year:
-					props.organizationCountry && props.organizationCountry === elem.donor.country.id
+					props.organizationCountry &&
+					props.organizationCountry === element.donor.country.id
 						? props.TracklineFyId
 						: "", //
 				grant_periods_project: "",
-				project_donor: elem.id,
+				project_donor: element.id,
 				deliverable_tracking_lineitem: props.TracklineId,
 			};
 		}
@@ -137,19 +121,19 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 	const validate = (values: any) => {
 		let errors: Partial<any> = {};
 		props.donors?.forEach(
-			(elem: {
+			(element: {
 				id: string;
 				name: string;
 				donor: { id: string; name: string; country: { id: string; name: string } };
 			}) => {
-				if (!values[`${elem.id}mapValues.financial_year`]) {
-					errors[`${elem.id}mapValues`] = {};
-					errors[`${elem.id}mapValues.financial_year`] = "Financial Year is required";
-				}
-				if (!values[`${elem.id}mapValues.grant_periods_project`]) {
-					errors[`${elem.id}mapValues`] = {};
-					errors[`${elem.id}mapValues.grant_periods_project`] =
+				if (!values[`${element.id}mapValues.grant_periods_project`]) {
+					errors[`${element.id}mapValues`] = {};
+					errors[`${element.id}mapValues.grant_periods_project`] =
 						"Grant Period is required";
+				}
+				if (!values[`${element.id}mapValues.financial_year`]) {
+					errors[`${element.id}mapValues`] = {};
+					errors[`${element.id}mapValues.financial_year`] = "Financial Year is required";
 				}
 			}
 		);
