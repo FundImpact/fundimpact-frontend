@@ -31,5 +31,14 @@ export const sidePanelStyles = makeStyles((theme: Theme) =>
 			boxShadow: "none",
 			margin: theme.spacing(0, 2),
 		},
+		expanded: {
+			top: "50%",
+			right: -10,
+			transform: "translateY(-50%)",
+			position: "absolute",
+		},
+		collapsed: {
+			position: "absolute",
+		},
 	})
 );

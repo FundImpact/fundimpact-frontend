@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Container, Fab, Grid, IconButton, Typography } from "@material-ui/core";
 import React from "react";
 
 import Achievement from "../../components/Dasboard/Cards/Achievement/Achievement";
@@ -10,6 +10,8 @@ import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import SideBar from "../../components/SideBar/SideBar";
 import { DashboardProvider } from "../../contexts/dashboardContext";
+import useLocalStorage from "../../hooks/storage/useLocalStorage";
+import { inspect } from "util";
 
 interface IDashboardContainer {
 	left: React.ReactNode;
@@ -19,6 +21,7 @@ interface IDashboardContainer {
 
 export default function DashboardContainer({ left, main, top }: IDashboardContainer) {
 	const classes = sidePanelStyles();
+	const [isSideBarOpen, setSideBarOpen] = useLocalStorage("isSideBarOpen", false);
 	return (
 		<DashboardProvider>
 			<Container
@@ -29,59 +32,92 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 				component={Grid}
 			>
 				<Grid container>
-					<Grid item xs={12} md={3}>
+					<Grid item xs={12} md={isSideBarOpen ? 3 : "auto"}>
 						<Box position="sticky" top={0} left={0} style={{ width: "100%" }}>
 							<Grid container>
-								<Grid item xs={2}>
+								<Grid item xs={isSideBarOpen ? 2 : "auto"}>
 									<LeftPanel />
 								</Grid>
-								<Grid item xs={10}>
-									<SideBar>
-										{(
-											organization: { name: string; id: string | null },
-											workspaces: { name: string; id: string | number }[]
-										) => {
-											return (
-												<Grid container direction="column">
-													<Grid item>
-														<Typography
-															variant="h5"
-															gutterBottom
-															noWrap={true}
-														>
-															<Box color="primary.main">
-																{organization.name}
+								{isSideBarOpen ? (
+									<Grid item xs={10}>
+										<SideBar>
+											{(
+												organization: { name: string; id: string | null },
+												workspaces: { name: string; id: string | number }[]
+											) => {
+												return (
+													<Grid container direction="column">
+														<Grid item>
+															<Typography
+																variant="h5"
+																gutterBottom
+																noWrap={true}
+															>
+																<Box color="primary.main">
+																	{organization.name}
+																</Box>
+															</Typography>
+														</Grid>
+														<Grid item>
+															<Box mt={5}>
+																{workspaces.map((workspace) => {
+																	return (
+																		<Typography
+																			key={workspace.id}
+																			variant="subtitle1"
+																			gutterBottom
+																			noWrap={true}
+																		>
+																			<Box color="primary.main">
+																				{workspace.name}
+																			</Box>
+																		</Typography>
+																	);
+																})}
 															</Box>
-														</Typography>
+														</Grid>
 													</Grid>
-													<Grid item>
-														<Box mt={5}>
-															{workspaces.map((workspace) => {
-																return (
-																	<Typography
-																		key={workspace.id}
-																		variant="subtitle1"
-																		gutterBottom
-																		noWrap={true}
-																	>
-																		<Box color="primary.main">
-																			{workspace.name}
-																		</Box>
-																	</Typography>
-																);
-															})}
-														</Box>
-													</Grid>
-												</Grid>
-											);
-										}}
-									</SideBar>
-								</Grid>
+												);
+											}}
+										</SideBar>
+										<Fab
+											className={classes.expanded}
+											color="primary"
+											size="small"
+											style={{
+												top: "50%",
+												right: -10,
+												transform: "translateY(-50%)",
+												position: "absolute",
+											}}
+											onClick={() =>
+												setSideBarOpen((state: boolean) => !state)
+											}
+										>
+											<span className="material-icons">arrow_back_ios</span>
+										</Fab>
+									</Grid>
+								) : (
+									<Box width={40} mx={2} display="flex" alignItems="center">
+										<Fab
+											className={classes.collapsed}
+											color="primary"
+											size="small"
+											onClick={() =>
+												setSideBarOpen((state: boolean) => !state)
+											}
+										>
+											<span className="material-icons">
+												arrow_forward_ios
+											</span>
+										</Fab>
+									</Box>
+								)}
 							</Grid>
 						</Box>
 					</Grid>
 
-					<Grid item xs md={9} container direction="column">
+					<Grid item xs md={isSideBarOpen ? 9 : 11} container direction="column">
 						<Grid item>
 							<ProjectName />
 						</Grid>

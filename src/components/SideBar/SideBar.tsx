@@ -94,13 +94,12 @@ export default function SideBar({ children }: { children?: Function }) {
 						<WorkspaceList organizationId={dashboardData?.organization?.id} />
 					)}
 
-					<List></List>
 					{shouldCreateWorkspace && data ? (
 						<Workspace
 							organizationId={data.organizationList[0].id}
 							type={WORKSPACE_ACTIONS.CREATE}
 							close={() => setViewWorkspace(false)}
-						></Workspace>
+						/>
 					) : null}
 				</div>
 			)}
