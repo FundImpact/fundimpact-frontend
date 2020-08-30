@@ -6,7 +6,7 @@ import { Grid, ClickAwayListener } from "@material-ui/core";
 import SlidingButton from "./SlidingButton";
 import { CreateButton } from "../../../models/addButton";
 
-function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
+function AddButton({ createButtons = [] }: { createButtons?: CreateButton[] }) {
 	const [openSlider, setOpenSlider] = useState<boolean>(false);
 
 	return (

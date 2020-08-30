@@ -118,7 +118,7 @@ function BudgetTargetTableRow({
 						}}
 					</AmountSpent>
 				</TableCell>
-				
+
 				<TableCell>
 					<IconButton aria-haspopup="true" onClick={handleClick}>
 						<MoreVertIcon />
@@ -165,4 +165,4 @@ function BudgetTargetTableRow({
 	);
 }
 
-export default React.memo(BudgetTargetTableRow);
+export default BudgetTargetTableRow;

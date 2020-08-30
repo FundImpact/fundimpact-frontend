@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useMutation, useQuery, useApolloClient, useLazyQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	UPDATE_PROJECT_BUDGET_TRACKING,
@@ -27,11 +27,9 @@ import {
 	GET_ORG_CURRENCIES_BY_ORG,
 } from "../../../graphql/";
 import { getTodaysDate } from "../../../utils/index";
-import {
-	IGET_BUDGET_TARGET_PROJECT,
-	IGET_BUDGET_TARCKING_LINE_ITEM,
-} from "../../../models/budget/query";
+import { IGET_BUDGET_TARCKING_LINE_ITEM } from "../../../models/budget/query";
 import { compareObjectKeys } from "../../../utils";
+import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -52,7 +50,6 @@ let budgetTargetHash: {
 } = {};
 
 function BudgetLineitem(props: IBudgetLineitemProps) {
-	const apolloClient = useApolloClient();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [selectedDonor, setSelectedDonor] = useState<{
@@ -63,21 +60,46 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const currentProject = dashboardData?.project;
 	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
 
-	const [createProjectBudgetTracking, { loading: creatingLineItem, data }] = useMutation(
+	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING
 	);
 	const [updateProjectBudgetTracking, { loading: updatingLineItem }] = useMutation(
 		UPDATE_PROJECT_BUDGET_TRACKING
 	);
-	const [getBudgetTargetProject] = useLazyQuery(GET_BUDGET_TARGET_PROJECT, {
-		variables: {
-			filter: {
-				project: currentProject?.id,
-			},
-		},
+
+	let { fetchData: getBudgetTargetProject, data: budgetTargets } = useLazyQueryCustom({
+		query: GET_BUDGET_TARGET_PROJECT,
 	});
 
-	const { data: annualYears } = useQuery(GET_ANNUAL_YEAR_LIST);
+	let { fetchData: getAnnualYears, data: annualYears } = useLazyQueryCustom({
+		query: GET_ANNUAL_YEAR_LIST,
+	});
+
+	let { fetchData: getGrantPeriodProject, data: grantPeriodProject } = useLazyQueryCustom({
+		query: GET_GRANT_PERIODS_PROJECT_LIST,
+	});
+
+	let { fetchData: getFinancialYearOrg, data: financialYearOrg } = useLazyQueryCustom({
+		query: GET_FINANCIAL_YEARS,
+	});
+
+	let { fetchData: getFinancialYearDonor, data: financialYearDonor } = useLazyQueryCustom({
+		query: GET_FINANCIAL_YEARS,
+	});
+
+	let { fetchData: getOrgCurrencies, data: orgCurrencies } = useLazyQueryCustom({
+		query: GET_ORG_CURRENCIES_BY_ORG,
+	});
+
+	useEffect(() => {
+		if (currentProject) {
+			getBudgetTargetProject({
+				filter: {
+					project: currentProject?.id,
+				},
+			});
+		}
+	}, [currentProject, getBudgetTargetProject]);
 
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormSelectFields[2].hidden = false;
@@ -126,53 +148,53 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 			return errors;
 		},
-		[setErrorNotification, dashboardData]
+		[setSelectedDonor, dashboardData]
 	);
 
-	const { data: grantPeriodProject } = useQuery(GET_GRANT_PERIODS_PROJECT_LIST, {
-		variables: {
-			filter: {
-				project: currentProject?.id,
-			},
-		},
-	});
+	useEffect(() => {
+		getAnnualYears();
+	}, []);
 
-	const { data: financialYearOrg } = useQuery(GET_FINANCIAL_YEARS, {
-		variables: {
-			filter: {
-				country: dashboardData?.organization?.country?.id,
-			},
-		},
-	});
-
-	const [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
-
-	let oldCachedBudgetTargetProjectData: IGET_BUDGET_TARGET_PROJECT | null = null;
-	try {
-		oldCachedBudgetTargetProjectData = apolloClient.readQuery<IGET_BUDGET_TARGET_PROJECT>({
-			query: GET_BUDGET_TARGET_PROJECT,
-			variables: {
+	useEffect(() => {
+		if (currentProject) {
+			getGrantPeriodProject({
 				filter: {
 					project: currentProject?.id,
 				},
-			},
-		});
-	} catch (error) {}
-
-	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
-		variables: {
-			filter: {
-				organization: dashboardData?.organization?.id,
-				isHomeCurrency: true,
-			},
-		},
-	});
+			});
+		}
+	}, [currentProject, getGrantPeriodProject]);
 
 	useEffect(() => {
-		if (!oldCachedBudgetTargetProjectData && currentProject) {
-			getBudgetTargetProject();
+		if (dashboardData?.organization) {
+			getFinancialYearOrg({
+				filter: {
+					country: dashboardData?.organization?.country?.id,
+				},
+			});
 		}
-	}, [oldCachedBudgetTargetProjectData, currentProject, getBudgetTargetProject]);
+	}, [dashboardData?.organization, getFinancialYearOrg]);
+
+	useEffect(() => {
+		if (selectedDonor) {
+			getFinancialYearDonor({
+				filter: {
+					country: selectedDonor.country.id,
+				},
+			});
+		}
+	}, [selectedDonor, getFinancialYearDonor]);
+
+	useEffect(() => {
+		if (dashboardData?.organization) {
+			getOrgCurrencies({
+				filter: {
+					organization: dashboardData?.organization?.id,
+					isHomeCurrency: true,
+				},
+			});
+		}
+	}, [getOrgCurrencies, dashboardData?.organization]);
 
 	useEffect(() => {
 		if (orgCurrencies && orgCurrencies.orgCurrencies.length) {
@@ -180,19 +202,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				orgCurrencies.orgCurrencies[0].currency.code;
 		}
 	}, [orgCurrencies]);
-
-	useEffect(() => {
-		if (oldCachedBudgetTargetProjectData) {
-			budgetLineitemFormSelectFields[0].optionsArray = oldCachedBudgetTargetProjectData.projectBudgetTargets as any;
-			budgetTargetHash = oldCachedBudgetTargetProjectData.projectBudgetTargets.reduce(
-				(accunulator, current) => {
-					accunulator[current.id] = current.donor;
-					return accunulator;
-				},
-				{} as { [key: string]: { id: string; country: { id: string } } }
-			);
-		}
-	}, [oldCachedBudgetTargetProjectData]);
 
 	useEffect(() => {
 		if (annualYears) {
@@ -224,16 +233,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [grantPeriodProject]);
 
 	useEffect(() => {
-		if (selectedDonor) {
-			getFinancialYearDonor({
-				variables: {
-					filter: {
-						country: selectedDonor.country.id,
-					},
+		if (budgetTargets) {
+			budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets as any;
+			budgetTargetHash = budgetTargets.projectBudgetTargets.reduce(
+				(accunulator: any, current: any) => {
+					accunulator[current.id] = current.donor;
+					return accunulator;
 				},
-			});
+				{} as { [key: string]: { id: string; country: { id: string } } }
+			);
 		}
-	}, [selectedDonor]);
+	}, [budgetTargets]);
 
 	const onCreate = async (values: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(values.reporting_date);
@@ -293,9 +303,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								],
 							},
 						});
-					} catch (err) {
-						console.log("err :>> ", err);
-					}
+					} catch (err) {}
 
 					try {
 						const amountSpentData = store.readQuery<{
@@ -321,9 +329,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 									lineItemCreated.amount,
 							},
 						});
-					} catch (err) {
-						console.log("err :>> ", err);
-					}
+					} catch (err) {}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));

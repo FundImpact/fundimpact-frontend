@@ -46,7 +46,7 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 	})
 );
 
-const getBudgetTrackingLineitemInitialvalues = (
+const getBudgetLineitemInitialvalues = (
 	budget_targets_project: string
 ): IBudgetTrackingLineitemForm => {
 	return {
@@ -157,7 +157,7 @@ function BudgetTargetTable() {
 					reInitializeRef();
 				}}
 				formAction={FORM_ACTIONS.CREATE}
-				initialValues={getBudgetTrackingLineitemInitialvalues(
+				initialValues={getBudgetLineitemInitialvalues(
 					selectedTargetBudget.current ? selectedTargetBudget.current.id : ""
 				)}
 			/>
