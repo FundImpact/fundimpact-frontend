@@ -4,7 +4,7 @@ export interface IImpactTargetLine {
 	id?: number;
 	impact_target_project: number | string | undefined;
 	annual_year: string;
-	value: string;
+	value: number | string;
 	financial_years_org?: number | string;
 	financial_years_donor?: number | string;
 	grant_period?: number | string;

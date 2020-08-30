@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import React, { useEffect } from "react";
+import React from "react";
 import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
@@ -23,28 +23,22 @@ function getInitialValues(props: DeliverableProps) {
 function Deliverable(props: DeliverableProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverable = getInitialValues(props);
-	const [createDeliverableCategory, { data: response, loading }] = useMutation(
-		CREATE_DELIVERABLE_CATEGORY
-	);
+	const [createDeliverableCategory, { loading }] = useMutation(CREATE_DELIVERABLE_CATEGORY);
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 
-	useEffect(() => {
-		if (response) {
-			notificationDispatch(setSuccessNotification("Deliverable category created !"));
-			props.handleClose();
-		}
-	}, [response]);
-	const onCreate = (value: IDeliverable) => {
-		console.log(`on Created is called with: `, value);
+	const onCreate = async (value: IDeliverable) => {
 		try {
-			createDeliverableCategory({ variables: { input: value } });
+			await createDeliverableCategory({ variables: { input: value } });
+			notificationDispatch(setSuccessNotification("Deliverable category created !"));
+			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
 		}
 	};
 
 	const onUpdate = (value: IDeliverable) => {};
-
-	const clearErrors = (values: IDeliverable) => {};
 
 	const validate = (values: IDeliverable) => {
 		let errors: Partial<IDeliverable> = {};
@@ -57,9 +51,6 @@ function Deliverable(props: DeliverableProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog

@@ -8,18 +8,23 @@ import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/categ
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetails } from "../../../utils/testMock.json";
+import { organizationDetail } from "../../../utils/testMock.json";
+import { deliverableCategoryMock } from "./testHelp";
 
-const categoryMock = [
-	{ id: 1, name: "SONG" },
-	{ id: 1, name: "SONG" },
-];
 const mocks = [
 	{
 		request: {
 			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: { filter: {} },
 		},
-		result: { data: { deliverableCategory: categoryMock } },
+		result: { data: { deliverableCategory: [] } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { deliverableCategory: deliverableCategoryMock } },
 	},
 ];
 let handleClose = jest.fn();
@@ -28,7 +33,7 @@ let deliverableUnit: RenderResult<typeof queries>;
 beforeEach(() => {
 	act(() => {
 		deliverableUnit = renderApollo(
-			<DashboardProvider>
+			<DashboardProvider defaultState={{ organization: organizationDetail }}>
 				<NotificationProvider>
 					<DeliverableUnit
 						type={DELIVERABLE_ACTIONS.CREATE}

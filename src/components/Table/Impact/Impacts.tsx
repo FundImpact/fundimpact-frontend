@@ -1,38 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/Impact/target";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useLazyQuery } from "@apollo/client";
-import { deliverableAndImpactHeadings } from "../constants";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import FICollaspeTable from "../FICollapseTable";
+import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
+} from "../../../graphql/Impact/target";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
-import ImpactTrackLine from "../../Impact/impactTrackLine";
-import ImpactTarget from "../../Impact/impactTarget";
-import { IMPACT_ACTIONS } from "../../Impact/constants";
-import ImpactTrackLineTable from "./impactTrackline";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import { IMPACT_ACTIONS } from "../../Impact/constants";
+import ImpactTarget from "../../Impact/impactTarget";
+import ImpactTrackLine from "../../Impact/impactTrackLine";
+import { deliverableAndImpactHeadings } from "../constants";
+import FICollaspeTable from "../FICollapseTable";
+import ImpactTrackLineTable from "./impactTrackline";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
-	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
 	const [impactTargetData, setImpactTargetData] = useState<IImpactTarget | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
+		setImpactTargetMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setMenuAnchor(null);
+		setImpactTargetMenuAnchor(null);
 	};
 	return (
 		<>
-			<IconButton aria-label="delete" onClick={handleMenuClick}>
-				<MoreVertIcon />
-			</IconButton>
+			<TableCell>
+				<IconButton aria-label="impact-target-edit" onClick={handleMenuClick}>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
 			<Menu
 				id="impact-target-simple-menu"
-				anchorEl={menuAnchor}
+				anchorEl={impactTargetMenuAnchor}
 				keepMounted
-				open={Boolean(menuAnchor)}
+				open={Boolean(impactTargetMenuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem
@@ -79,28 +85,60 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		</>
 	);
 }
+
+function ImpactTargetAchievementAndProgress({
+	impactTargetId,
+	impactTargetValue,
+	impactTargetUnit,
+}: {
+	impactTargetId: string;
+	impactTargetValue: number;
+	impactTargetUnit: string;
+}) {
+	const { data } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+		variables: { filter: { impactTargetProject: impactTargetId } },
+	});
+	const [impactTargetAchieved, setImpactTargetAchieved] = useState<number>();
+	const [impactTargetProgess, setImpactTargetProgess] = useState<string>();
+	useEffect(() => {
+		if (data) {
+			setImpactTargetAchieved(data.impactTrackingSpendValue);
+			setImpactTargetProgess(
+				((data.impactTrackingSpendValue / impactTargetValue) * 100).toFixed(2)
+			);
+		}
+	}, [data, impactTargetValue]);
+	return (
+		<>
+			<TableCell>{`${impactTargetAchieved} ${impactTargetUnit}`}</TableCell>
+			<TableCell>{impactTargetProgess} %</TableCell>
+		</>
+	);
+}
+
 export default function ImpactsTable() {
 	const [getImpactTargetByProject, { loading, data }] = useLazyQuery(
 		GET_IMPACT_TARGET_BY_PROJECT
 	);
 	const dashboardData = useDashBoardData();
-	const [rows, setRows] = useState<any>([]);
+	const [rows, setRows] = useState<
+		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
+	>([]);
 
 	useEffect(() => {
 		if (dashboardData?.project) {
-			console.log("project", dashboardData?.project);
 			getImpactTargetByProject({
 				variables: { filter: { project: dashboardData?.project.id } },
 			});
 		}
-	}, [dashboardData, dashboardData?.project]);
+	}, [dashboardData, getImpactTargetByProject]);
 
 	useEffect(() => {
 		if (data) {
 			let impactTargetProjectList = data.impactTargetProjectList;
-			let array: { collaspeTable: any; column: any[] }[] = [];
+			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {
-				let row: { collaspeTable: any; column: any[] } = {
+				let row: { collaspeTable: React.ReactNode; column: React.ReactNode[] } = {
 					collaspeTable: null,
 					column: [],
 				};
@@ -111,13 +149,25 @@ export default function ImpactsTable() {
 
 				if (impactTargetProjectList[i].impact_category_unit) {
 					let column = [
-						impactTargetProjectList[i].name,
-						impactTargetProjectList[i].impact_category_unit.impact_category_org.name,
-						`${impactTargetProjectList[i].target_value}
-						${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`,
-						`xx ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`,
-						"50%",
+						<TableCell>{impactTargetProjectList[i].name}</TableCell>,
+						<TableCell>
+							{
+								impactTargetProjectList[i].impact_category_unit.impact_category_org
+									.name
+							}
+						</TableCell>,
+						<TableCell>{`${impactTargetProjectList[i].target_value} ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`}</TableCell>,
 					];
+					column.push(
+						<ImpactTargetAchievementAndProgress
+							impactTargetId={impactTargetProjectList[i].id}
+							impactTargetValue={impactTargetProjectList[i].target_value}
+							impactTargetUnit={
+								impactTargetProjectList[i].impact_category_unit.impact_units_org
+									.name
+							}
+						/>
+					);
 					column.push(<EditImpactTargetIcon impactTarget={impactTargetProjectList[i]} />);
 
 					row.column = column;

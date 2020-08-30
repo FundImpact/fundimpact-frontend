@@ -183,8 +183,8 @@
 			"id": "impact_target_project",
 			"label": "Impact Target",
 			"size": 6,
-			"dataTestId": "impactTargetLineTarget",
-			"testId": "impactTargetLineTargetInput",
+			"dataTestId": "impactTracklineTarget",
+			"testId": "impactTracklineTargetInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -194,9 +194,10 @@
 		{
 			"name": "value",
 			"id": "value",
-			"dataTestId": "impactValue",
-			"testId": "impactValueInput",
+			"dataTestId": "impactTracklineValue",
+			"testId": "impactTracklineValueInput",
 			"label": "Value",
+			"type": "number",
 			"size": 6
 		},
 		{
@@ -204,8 +205,8 @@
 			"id": "annual_year",
 			"label": "Annual Year",
 			"size": 6,
-			"dataTestId": "impactAnnualYear",
-			"testId": "impactAnnualYearInput",
+			"dataTestId": "impactTracklineAnnualYear",
+			"testId": "impactTracklineAnnualYearInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -215,12 +216,21 @@
 		{
 			"name": "note",
 			"id": "note",
-			"dataTestId": "impactNote",
-			"testId": "impactNoteInput",
+			"dataTestId": "impactTracklineNote",
+			"testId": "impactTracklineNoteInput",
 			"label": "Note",
 			"multiline": true,
 			"rows": 2,
 			"size": 12
+		},
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"dataTestId": "impactTracklineDate",
+			"testId": "impactTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6
 		}
 	]
 }
