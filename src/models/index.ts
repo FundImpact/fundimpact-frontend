@@ -1,4 +1,4 @@
-import { FORM_ACTIONS } from "./budget/constants";
+import { FORM_ACTIONS } from "./constants";
 import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
 
@@ -101,6 +101,7 @@ export interface IInputFields {
 	selectId?: string;
 	getInputValue?: any;
 	required?: boolean;
+	multiple?: boolean;
 }
 
 export interface ISelectField {
@@ -114,6 +115,7 @@ export interface ISelectField {
 	selectLabelId: string;
 	selectId: string;
 	size: any;
+	hidden?: boolean;
 }
 
 export interface IFormDialog {

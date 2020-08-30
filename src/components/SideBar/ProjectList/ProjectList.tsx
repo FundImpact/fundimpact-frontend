@@ -4,10 +4,13 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
-import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/queries";
-import { setProject, setActiveWorkSpace } from "../../../reducers/dashboardReducer";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
 import { IOrganisationWorkspaces } from "../../../models/workspace/query";
+import { setActiveWorkSpace, setProject } from "../../../reducers/dashboardReducer";
+import ProjectListSkeleton from "../../Skeletons/projectList";
 
+// import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
+// import { setProject } from "../../../reducers/dashboardReducer";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		selectedProject: {
@@ -37,6 +40,8 @@ export default function ProjectList({
 			dispatch(setActiveWorkSpace(data.orgProject[0]?.workspace));
 		}
 	}, [data, dispatch, projectIndex]);
+
+	if (!data?.orgProject) return <ProjectListSkeleton />;
 	return (
 		<List>
 			{data &&

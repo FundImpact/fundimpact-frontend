@@ -5,7 +5,7 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/queries/Deliverable/category";
+import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableCategoryForm } from "./inputField.json";

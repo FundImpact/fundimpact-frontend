@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import {
-	GET_IMPACT_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../../graphql/queries/Impact/target";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { deliverableAndImpactHeadings } from "../constants";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import FICollaspeTable from "../FICollapseTable";
+import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
+} from "../../../graphql/Impact/target";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
-import ImpactTrackLine from "../../Impact/impactTrackLine";
-import ImpactTarget from "../../Impact/impactTarget";
-import { IMPACT_ACTIONS } from "../../Impact/constants";
-import ImpactTrackLineTable from "./impactTrackline";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import { IMPACT_ACTIONS } from "../../Impact/constants";
+import ImpactTarget from "../../Impact/impactTarget";
+import ImpactTrackLine from "../../Impact/impactTrackLine";
+import { deliverableAndImpactHeadings } from "../constants";
+import FICollaspeTable from "../FICollapseTable";
+import ImpactTrackLineTable from "./impactTrackline";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);

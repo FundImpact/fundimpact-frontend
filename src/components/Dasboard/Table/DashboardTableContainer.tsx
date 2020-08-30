@@ -2,13 +2,13 @@ import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
-import BudgetCategoryDialog from "../../Budget/Dialog/BudgetCategoryDialog";
-import BudgetTargetDialog from "../../Budget/Dialog/BudgetTargetDialog";
-import BudgetTargetTable from "../../Table/BudgetTargetTable";
+import BudgetCategory from "../../Budget/BudgetCategory";
+import BudgetTarget from "../../Budget/BudgetTarget";
+import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
-import BudgetLineitemDialog from "../../Budget/Dialog/BudgetLineitemDialog";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
+import BudgetLineitem from "../../Budget/BudgetLineitem";
+import { FORM_ACTIONS } from "../../../models/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
 
 import AddButton from "../../Dasboard/AddButton";
@@ -23,6 +23,8 @@ import Snackbar from "../../Snackbar/Snackbar";
 import DeliverablesTable from "../../Table/Deliverable/Deliverable";
 import ImpactsTable from "../../Table/Impact/Impacts";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
+import Donor from "../../Donor";
+import DonorTable from "../../Table/Donor";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -86,13 +88,13 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategoryDialog open={open} handleClose={handleClose} />
+						<BudgetCategory open={open} handleClose={handleClose} />
 					),
 				},
 				{
 					text: "Create Budget Target",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetTargetDialog
+						<BudgetTarget
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
@@ -103,7 +105,7 @@ export default function DashboardTableContainer() {
 				{
 					text: "Report Budget Spend",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetLineitemDialog
+						<BudgetLineitem
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
@@ -200,7 +202,16 @@ export default function DashboardTableContainer() {
 				},
 			],
 		},
-		{ label: "Documents", createButtons: [] },
+		{
+			label: "Documents",
+			table: <DonorTable />,
+			createButtons: [],
+			buttonAction: {
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					<Donor open={open} handleClose={handleClose} formAction={FORM_ACTIONS.CREATE} />
+				),
+			},
+		},
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
@@ -240,7 +251,7 @@ export default function DashboardTableContainer() {
 					</Box> */}
 					{tab.table}
 					{/* {GetTable(tab.label)} */}
-					<AddButton createButtons={tab.createButtons} />
+					<AddButton createButtons={tab.createButtons} buttonAction={tab.buttonAction} />
 				</TabContent>
 			))}
 			{notificationData!.successNotification && (

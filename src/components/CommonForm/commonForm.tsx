@@ -1,10 +1,12 @@
+import { Box, Button, createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
+import { Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form } from "formik";
-import { Grid, Button, Box, makeStyles, createStyles, Theme } from "@material-ui/core";
-import { IInputFields } from "../../models/index";
-import InputFields from "../InputFields/inputField";
+
+import { IInputFields } from "../../models";
 import { FORM_ACTIONS } from "../Forms/constant";
+import InputFields from "../InputFields/inputField";
 import { ICommonForm } from "./model";
+
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
@@ -79,6 +81,7 @@ function CommonInputForm({
 												element.getInputValue ? element.getInputValue : null
 											}
 											required={element.required ? true : false}
+											multiple={element.multiple ? element.multiple : false}
 										/>
 									</Grid>
 								);

@@ -1,35 +1,41 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import {
-	IDeliverableTargetLine,
-	DeliverableTargetLineProps,
-} from "../../models/deliverable/deliverableTrackline";
-import FullScreenLoader from "../commons/GlobalLoader";
-import { DELIVERABLE_ACTIONS } from "./constants";
+
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS, GET_PROJECT_DONORS } from "../../graphql";
+import {
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+} from "../../graphql/Deliverable/target";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
-} from "../../graphql/queries/Deliverable/trackline";
+} from "../../graphql/Deliverable/trackline";
 import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
-	GET_ACHIEVED_VALLUE_BY_TARGET,
-} from "../../graphql/queries/Deliverable/target";
-import {
-	GET_ANNUAL_YEARS,
-	GET_FINANCIAL_YEARS,
-	GET_PROJECT_DONORS,
-} from "../../graphql/queries/index";
-import FormDialog from "../FormDialog/FormDialog";
+	DeliverableTargetLineProps,
+	IDeliverableTargetLine,
+} from "../../models/deliverable/deliverableTrackline";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { getTodaysDate } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
-import { deliverableTragetLineForm } from "./inputField.json";
-import { useDashBoardData } from "../../contexts/dashboardContext";
-import { getTodaysDate } from "../../utils/index";
-import DeliverableStepper from "../Stepper/Stepper";
-import DeliverableTracklineDonorYearTags from "./DeliverableTracklineDonor";
+import FormDialog from "../FormDialog/FormDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
+import { FullScreenLoader } from "../Loader/Loader";
+import DeliverableStepper from "../Stepper/Stepper";
+import { DELIVERABLE_ACTIONS } from "./constants";
+import DeliverableTracklineDonorYearTags from "./DeliverableTracklineDonor";
+import { deliverableTragetLineForm } from "./inputField.json";
+
+// import FullScreenLoader from "../commons/GlobalLoader";
+// import { DELIVERABLE_ACTIONS } from "./constants";
+// import { GET_ANNUAL_YEARS } from "../../graphql";
+// import {
+// 	DeliverableTargetLineProps,
+// 	IDeliverableTargetLine,
+// } from "../../models/deliverable/deliverableTrackline";
+// import { getTodaysDate } from "../../utils/index";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {

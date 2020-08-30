@@ -1,15 +1,18 @@
-import React from "react";
 import {
-	TextField,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	FormHelperText,
-	makeStyles,
-	createStyles,
 	Checkbox,
+	Chip,
+	createStyles,
+	FormControl,
+	FormHelperText,
+	InputLabel,
+	ListItemText,
+	makeStyles,
+	MenuItem,
+	Select,
+	TextField,
 } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+
 import { IInputFields } from "../../models";
 
 const useStyles = makeStyles(() =>
@@ -19,6 +22,13 @@ const useStyles = makeStyles(() =>
 		},
 		formControl: {
 			width: "100%",
+		},
+		chips: {
+			display: "flex",
+			flexWrap: "wrap",
+		},
+		chip: {
+			margin: 2,
 		},
 	})
 );
@@ -40,8 +50,27 @@ const InputFields = ({
 	selectId,
 	getInputValue,
 	required,
+	multiple = false,
 }: IInputFields) => {
 	const classes = useStyles();
+	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
+
+	useEffect(() => {
+		if (optionsArray?.length)
+			setOptionsArrayHash(() => {
+				return optionsArray?.reduce(
+					(
+						accumulator: { [key: string]: string },
+						current: { id: string; name: string }
+					) => {
+						accumulator[current.id] = current.name;
+						return accumulator;
+					},
+					{}
+				);
+			});
+	}, [optionsArray]);
+	// const classes = useStyles();
 	const [elemName, setElemName] = React.useState<string[]>([]);
 
 	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
@@ -73,31 +102,52 @@ const InputFields = ({
 					id={selectId}
 					error={!!formik.errors[name] && !!formik.touched[name]}
 					value={formik.values[name]}
-					multiple={multiSelect}
+					multiple={multiSelect || multiple}
 					onChange={onChange}
 					required={required}
 					onBlur={formik.handleBlur}
 					label={required ? label : label + " ( opt )"}
 					name={name}
-					renderValue={
-						multiSelect
-							? (selected: any) => {
-									let arr: any = selected.map((elem: any) => elem.name);
-									return arr.join(", ");
-							  }
-							: undefined
-					}
+					renderValue={(selected) => {
+						return multiple ? (
+							<div className={classes.chips}>
+								{(selected as string[])
+									.filter((selectedValue) => selectedValue)
+									.map((value, index) => (
+										<Chip
+											key={index}
+											label={optionsArrayHash[value]}
+											className={classes.chip}
+										/>
+									))}
+							</div>
+						) : multiSelect ? (
+							(selected: any) => {
+								let arr: any = selected.map((elem: any) => elem.name);
+								return arr.join(", ");
+							}
+						) : undefined;
+						// optionsArrayHash[selected as string]
+					}}
+					// renderValue={
+					// 	multiSelect
+					// 		? (selected: any) => {
+					// 				let arr: any = selected.map((elem: any) => elem.name);
+					// 				return arr.join(", ");
+					// 		  }
+					// 		: undefined
+					// }
 					data-testid={dataTestId}
 					inputProps={{
 						"data-testid": testId,
 					}}
 				>
-					{optionsArray && !optionsArray.length && (
+					{!optionsArray?.length && (
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
 					)}
-					{optionsArray &&
+					{/* {optionsArray &&
 						optionsArray.map((elem: any, index: number) => (
 							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
 								{multiSelect ? (
@@ -105,8 +155,21 @@ const InputFields = ({
 										color="primary"
 										checked={elemName.indexOf(elem.name) > -1}
 									/>
-								) : null}
+								) : null} */}
+					{!multiple &&
+						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
+							<MenuItem key={index} value={elem.id}>
 								{elem.name}
+							</MenuItem>
+						))}
+					{multiple &&
+						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
+							<MenuItem key={index} value={elem.id}>
+								<Checkbox
+									color="primary"
+									checked={formik.values[name].indexOf(elem.id) > -1}
+								/>
+								<ListItemText primary={elem.name} />
 							</MenuItem>
 						))}
 				</Select>

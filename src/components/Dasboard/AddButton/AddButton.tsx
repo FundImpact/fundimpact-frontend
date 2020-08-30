@@ -6,11 +6,33 @@ import { Grid, ClickAwayListener } from "@material-ui/core";
 import SlidingButton from "./SlidingButton";
 import { CreateButton } from "../../../models/addButton";
 
-function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
+function AddButton({
+	createButtons,
+	buttonAction,
+}: {
+	createButtons: CreateButton[];
+	buttonAction?: {
+		dialog: ({
+			open,
+			handleClose,
+		}: {
+			open: boolean;
+			handleClose: () => void;
+		}) => React.ReactNode | void;
+	};
+}) {
 	const [openSlider, setOpenSlider] = useState<boolean>(false);
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
 
 	return (
 		<>
+			{buttonAction?.dialog({
+				open: openDialog,
+				handleClose: () => {
+					setOpenDialog(false);
+				},
+			})}
+
 			<ClickAwayListener onClickAway={() => setOpenSlider(false)}>
 				<Fab
 					style={{ position: "fixed", right: "10px", bottom: "10px" }}
@@ -19,6 +41,7 @@ function AddButton({ createButtons }: { createButtons: CreateButton[] }) {
 					aria-label="add"
 					onClick={() => {
 						setOpenSlider((open) => !open);
+						buttonAction && setOpenDialog(true);
 					}}
 					disableRipple
 				>

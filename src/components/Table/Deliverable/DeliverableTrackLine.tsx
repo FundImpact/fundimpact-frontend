@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
-import {
-	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-	GET_DELIVERABLE_LINEITEM_FYDONOR,
-} from "../../../graphql/queries/Deliverable/trackline";
 import { useQuery } from "@apollo/client";
-import { deliverableAndimpactTracklineHeading } from "../constants";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
-import FITable from "../FITable";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import React, { useEffect, useState } from "react";
+
+import {
+	GET_DELIVERABLE_LINEITEM_FYDONOR,
+	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+} from "../../../graphql/queries/Deliverable/trackline";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import FullScreenLoader from "../../commons/GlobalLoader";
 import { getTodaysDate } from "../../../utils";
+import FullScreenLoader from "../../commons/GlobalLoader";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
+import { deliverableAndimpactTracklineHeading } from "../constants";
+import FITable from "../FITable";
 
 function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTrackline: any }) {
 	const [tracklineDonorsMapValues, setTracklineDonorsMapValues] = useState<any>({});

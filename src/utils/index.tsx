@@ -16,5 +16,7 @@ export const getTodaysDate = (dateArg?: Date): string => {
 };
 
 export const compareObjectKeys = (obj1: any, obj2: any): boolean =>
-	Object.keys(obj1).length == Object.keys(obj2).length &&
-	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] == obj1[key]);
+	Object.keys(obj1).length === Object.keys(obj2).length &&
+	Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && obj2[key] === obj1[key]);
+
+export const isEmptyObject = (obj: object) => Object.keys(obj).length == 0;

@@ -1,5 +1,5 @@
 import { IProject } from "../project/project";
-import { IBudget } from "../budget/budget";
+import { IBudgetCategory } from ".";
 
 export interface IBudgetTargetProjectResponse {
 	id: string;
@@ -14,10 +14,13 @@ export interface IBudgetTargetProjectResponse {
 	donor: {
 		name: string;
 		id: string;
-	}
+		country: {
+			id: string;
+		};
+	};
 }
 
-export interface IBUDGET_TRACKING_LINE_ITEM_RESPONSE {
+export interface IBUDGET_LINE_ITEM_RESPONSE {
 	amount: number;
 	note: string;
 	budget_targets_project: {
@@ -28,6 +31,18 @@ export interface IBUDGET_TRACKING_LINE_ITEM_RESPONSE {
 	};
 	reporting_date: Date;
 	id: string;
+	fy_org: {
+		id: string;
+		name: string;
+	};
+	grant_periods_project: {
+		id: string;
+		name: string;
+	};
+	fy_donor: {
+		id: string;
+		name: string;
+	};
 }
 
 export interface IGET_BUDGET_TARGET_PROJECT {
@@ -35,9 +50,9 @@ export interface IGET_BUDGET_TARGET_PROJECT {
 }
 
 export interface IGET_BUDGET_CATEGORY {
-	orgBudgetCategory: Partial<IBudget>[];
+	orgBudgetCategory: Partial<IBudgetCategory>[];
 }
 
 export interface IGET_BUDGET_TARCKING_LINE_ITEM {
-	projBudgetTrackings: IBUDGET_TRACKING_LINE_ITEM_RESPONSE[];
+	projBudgetTrackings: IBUDGET_LINE_ITEM_RESPONSE[];
 }
