@@ -52,7 +52,7 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
 
-	// if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
+	if (!dashboardData?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			{!dashboardData ? (
