@@ -14,6 +14,9 @@ export const GET_ORGANISATIONS = gql`
 				id
 				name
 			}
+			country {
+				id
+			}
 		}
 	}
 `;
@@ -119,3 +122,20 @@ export const GET_ANNUAL_YEARS = gql`
 	}
 `;
 
+export const GET_FINANCIAL_YEARS = gql`
+	query financialYears($filter: JSON) {
+		financialYears(where: $filter) {
+			id
+			name
+		}
+	}
+`;
+
+export const GET_COUNTRY_LIST = gql`
+	query {
+		countryList {
+			id
+			name
+		}
+	}
+`;
