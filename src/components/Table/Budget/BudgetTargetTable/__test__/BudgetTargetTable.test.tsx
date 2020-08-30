@@ -201,23 +201,23 @@ const mocks = [
 	},
 ];
 
-// beforeEach(() => {
-// 	act(() => {
-// 		table = renderApollo(
-// 			<DashboardProvider
-// 				defaultState={{ project: projectDetails, organization: organizationDetails }}
-// 			>
-// 				<NotificationProvider>
-// 					<BudgetTargetTable />
-// 				</NotificationProvider>
-// 			</DashboardProvider>,
-// 			{
-// 				mocks,
-// 				addTypename: false,
-// 			}
-// 		);
-// 	});
-// });
+beforeEach(() => {
+	act(() => {
+		table = renderApollo(
+			<DashboardProvider
+				defaultState={{ project: projectDetails, organization: organizationDetails }}
+			>
+				<NotificationProvider>
+					<BudgetTargetTable />
+				</NotificationProvider>
+			</DashboardProvider>,
+			{
+				mocks,
+				addTypename: false,
+			}
+		);
+	});
+});
 
 describe("Budget Target Table tests", () => {
 	test("renders correctly", async () => {

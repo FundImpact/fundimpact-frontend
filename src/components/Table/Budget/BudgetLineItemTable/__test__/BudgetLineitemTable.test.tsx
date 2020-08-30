@@ -138,27 +138,27 @@ const mocks = [
 	},
 ];
 
-// beforeEach(() => {
-// 	act(() => {
-// 		table = renderApollo(
-// 			<DashboardProvider
-// 				defaultState={{ project: projectDetails, organization: organizationDetails }}
-// 			>
-// 				<NotificationProvider>
-// 					<BudgetLineItemTable budgetTargetId="1" currency="INR" />
-// 				</NotificationProvider>
-// 			</DashboardProvider>,
-// 			{
-// 				mocks,
-// 				addTypename: false,
-// 			}
-// 		);
-// 	});
-// });
+beforeEach(() => {
+	act(() => {
+		table = renderApollo(
+			<DashboardProvider
+				defaultState={{ project: projectDetails, organization: organizationDetails }}
+			>
+				<NotificationProvider>
+					<BudgetLineItemTable budgetTargetId="1" currency="INR" />
+				</NotificationProvider>
+			</DashboardProvider>,
+			{
+				mocks,
+				addTypename: false,
+			}
+		);
+	});
+});
 
 describe("Budget Line Item Table tests", () => {
 	test("renders correctly", async () => {
-		// await waitForElement(() => table.getByText(/500/i));
-		// await waitForElement(() => table.getByText(/note 1/i));
+		await waitForElement(() => table.getByText(/500/i));
+		await waitForElement(() => table.getByText(/note 1/i));
 	});
 });

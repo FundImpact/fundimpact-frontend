@@ -9,7 +9,7 @@ export interface IDONOR {
 	country: string;
 }
 
-export type IDONOR_PROPS =
+export type IDonorProps =
 	| {
 			open: boolean;
 			handleClose: () => void;

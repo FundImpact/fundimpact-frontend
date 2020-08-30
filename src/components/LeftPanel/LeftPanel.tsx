@@ -67,7 +67,11 @@ export default function LeftPanel() {
 						// 	to: "/asd",
 						// },
 					].map((item, index) => (
-						<NavLink to={item.to} activeClassName={classes.leftPanelActiveLink}>
+						<NavLink
+							to={item.to}
+							key={index}
+							activeClassName={classes.leftPanelActiveLink}
+						>
 							<ListItemIcon>
 								<item.Icon
 									style={{

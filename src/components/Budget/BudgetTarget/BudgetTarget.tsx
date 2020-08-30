@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -97,7 +97,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				},
 			});
 		}
-	}, [getOrgCurrencies, dashboardData?.organization]);
+	}, [getOrgCurrencies, dashboardData]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -107,7 +107,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				},
 			});
 		}
-	}, [getBudgetCategory, dashboardData?.organization]);
+	}, [getBudgetCategory, dashboardData]);
 
 	useEffect(() => {
 		if (dashboardData?.project) {
@@ -117,7 +117,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				},
 			});
 		}
-	}, [getDonors, dashboardData?.project]);
+	}, [getDonors, dashboardData]);
 
 	useEffect(() => {
 		if (orgCurrencies?.orgCurrencies?.length) {

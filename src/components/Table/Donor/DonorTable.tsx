@@ -19,7 +19,6 @@ import Donor from "../../Donor";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IDONOR_RESPONSE } from "../../../models/donor/query";
 import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
-import { useQuery } from "@apollo/client";
 import { IDONOR } from "../../../models/donor";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -145,11 +144,11 @@ function DonorTable() {
 					{donorList?.orgDonors?.map((donor: IDONOR_RESPONSE, index: number) => (
 						<TableRow key={donor.id}>
 							<TableCell component="td" scope="row">
-								{index + 1}
+								{page * 10 + index + 1}
 							</TableCell>
-							{keyNames.map((keyName: string, ind: number) => {
+							{keyNames.map((keyName: string, i: number) => {
 								return (
-									<TableCell align="left">
+									<TableCell key={i} align="left">
 										{getValue(donor, keyName.split(","))}
 									</TableCell>
 								);
