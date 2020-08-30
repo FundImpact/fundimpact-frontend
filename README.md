@@ -4,7 +4,8 @@
 ![Continuous Integration](https://github.com/FundImpact/fundimpact-frontend/workflows/Continuous%20Integration/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=FundImpact_fundimpact-frontend&metric=alert_status)](https://sonarcloud.io/dashboard?id=FundImpact_fundimpact-frontend)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=FundImpact_fundimpact-frontend&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=FundImpact_fundimpact-frontend)
-
+[![npm](https://img.shields.io/npm/v/npm)](https://blog.npmjs.org/post/626732790304686080/release-6148)
+[![node](https://img.shields.io/npm/v/npm)](https://blog.npmjs.org/post/626732790304686080/release-6148)
 The FundImpact Platform will support NGOs in their most crucial operations of managing project funds, donor relations and tracking project's operations and impact on a single platform. It aims to streamline workflows and help adopt a good practice, thereby saving time, efforts and money.
 
 The FundImpact project envisions a single control center for organizations to manage their project operations, funding from various donors, and most important – tracking the impact of the project. It’ll greatly increase the organization’s capacity in bringing transparency in its operation, speed up the reporting process, make the processes audit friendly, manage donor relations & compliances without additional overheads and at the same time measure the impact of the project.
