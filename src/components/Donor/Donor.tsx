@@ -42,8 +42,8 @@ const validate = (values: IDONOR) => {
 };
 
 function Donor(props: IDonorProps) {
-	const [createOrgDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
-	const [updateOrgDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
+	const [createDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
+	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
 	const [getCountryList] = useLazyQuery(GET_COUNTRY_LIST, {
 		onCompleted: ({ countryList }) => {
 			addDonorFormSelectFields[0].optionsArray = countryList;
@@ -59,7 +59,7 @@ function Donor(props: IDonorProps) {
 
 	const onCreate = async (values: IDONOR) => {
 		try {
-			await createOrgDonor({
+			await createDonor({
 				variables: {
 					input: { ...values, organization: dashboardData?.organization?.id },
 				},
@@ -125,7 +125,7 @@ function Donor(props: IDonorProps) {
 			}
 			delete values.id;
 
-			await updateOrgDonor({
+			await updateDonor({
 				variables: {
 					id: initialValues.id,
 					input: {
