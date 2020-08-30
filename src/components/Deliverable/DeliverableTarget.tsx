@@ -87,9 +87,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	//  fetching category_unit id and on completion creating deliverable target
 	const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
 		onCompleted(data) {
-			if (data.deliverableCategoryUnitList && data.deliverableCategoryUnitList.length) {
-				createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id); //deliverable_category_unit id
-			}
+			if (!data?.deliverableCategoryUnitList) return;
+			if (!data.deliverableCategoryUnitList.length) return;
+
+			createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id); //deliverable_category_unit id
 		},
 		onError(err) {
 			notificationDispatch(setErrorNotification("Unit not match with category !"));
@@ -106,7 +107,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	// handling category change
 	useEffect(() => {
-		console.log("hey", currentCategory);
 		if (currentCategory) {
 			getUnitsByCategory({
 				variables: { filter: { deliverable_category_org: currentCategory } },
