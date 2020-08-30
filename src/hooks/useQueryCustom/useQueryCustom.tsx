@@ -10,7 +10,7 @@ function UseQueryCustom<T>({ query, variables }: { query: any; variables: any })
 	try {
 		cachedQueryData = apolloClient.readQuery<T>({
 			query,
-      variables,
+			variables,
 		});
 	} catch (err) {}
 

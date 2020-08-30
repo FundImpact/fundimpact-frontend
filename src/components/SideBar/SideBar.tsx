@@ -90,8 +90,8 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
-					{dashboardData?.organization?.id  && (
-						<WorkspaceList organizationId={dashboardData?.organization?.id } />
+					{dashboardData?.organization?.id && (
+						<WorkspaceList organizationId={dashboardData?.organization?.id} />
 					)}
 
 					<List></List>

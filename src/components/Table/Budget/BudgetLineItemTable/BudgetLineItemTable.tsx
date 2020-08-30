@@ -167,7 +167,7 @@ function BudgetLineItemTable({
 									<TableCell component="td" scope="row">
 										{index + 1}
 									</TableCell>
-									
+
 									<TableCell align="left">
 										{getTodaysDate(budgetLineItem.reporting_date)}
 									</TableCell>
