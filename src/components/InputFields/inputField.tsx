@@ -122,10 +122,7 @@ const InputFields = ({
 									))}
 							</div>
 						) : multiSelect ? (
-							(selected: any) => {
-								let arr: any = selected.map((elem: any) => elem.name);
-								return arr.join(", ");
-							}
+							(selected as any[]).map((elem: any) => elem.name).join(",")
 						) : undefined;
 						// optionsArrayHash[selected as string]
 					}}
@@ -142,12 +139,13 @@ const InputFields = ({
 						"data-testid": testId,
 					}}
 				>
-					{!optionsArray?.length && (
+					{multiSelect && !optionsArray?.length && (
 						<MenuItem value="">
 							<em>None</em>
 						</MenuItem>
 					)}
-					{/* {optionsArray &&
+					{multiSelect &&
+						optionsArray &&
 						optionsArray.map((elem: any, index: number) => (
 							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
 								{multiSelect ? (
@@ -155,8 +153,12 @@ const InputFields = ({
 										color="primary"
 										checked={elemName.indexOf(elem.name) > -1}
 									/>
-								) : null} */}
+								) : null}
+								{elem.name}
+							</MenuItem>
+						))}
 					{!multiple &&
+						!multiSelect &&
 						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
 							<MenuItem key={index} value={elem.id}>
 								{elem.name}
