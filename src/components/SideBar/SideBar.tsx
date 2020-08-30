@@ -52,7 +52,7 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
 
-	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
+	// if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			{!dashboardData ? (
@@ -64,7 +64,7 @@ export default function SideBar({ children }: { children?: Function }) {
 				<div>
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1}>
-							{data.organizationList[0]?.name && (
+							{dashboardData?.organization?.name && (
 								<Typography color="primary" gutterBottom variant="h6">
 									{dashboardData?.organization?.name}
 								</Typography>
@@ -90,8 +90,8 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
-					{data.organizationList[0]?.id && (
-						<WorkspaceList organizationId={data.organizationList[0].id} />
+					{dashboardData?.organization?.id  && (
+						<WorkspaceList organizationId={dashboardData?.organization?.id } />
 					)}
 
 					<List></List>
