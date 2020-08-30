@@ -4,11 +4,12 @@ import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import DashboardTableContainer from "../components/Dasboard/Table/DashboardTableContainer";
-import { useAuth } from "../contexts/userContext";
-import LandingPage from "../pages/Landing/Landing";
-import { client } from "./grapql";
 import { DashboardProvider } from "../contexts/dashboardContext";
 import { NotificationProvider } from "../contexts/notificationContext";
+import { useAuth } from "../contexts/userContext";
+import LandingPage from "../pages/Landing/Landing";
+import SettingsContainer from "../pages/settings/settings";
+import { client } from "./grapql";
 
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
 const Login = React.lazy(() => import("../pages/Login/Login"));
@@ -24,29 +25,33 @@ function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | n
 function AppRoutes() {
 	return (
 		<BrowserRouter>
-			<Routes>
-				<PrivateRoute
-					path="dashboard"
-					element={
-						<ApolloProvider client={client}>
-							<NotificationProvider>
-								<DashboardProvider>
+			<ApolloProvider client={client}>
+				<NotificationProvider>
+					<DashboardProvider>
+						<Routes>
+							<PrivateRoute
+								path="dashboard"
+								element={
 									<DashboardContainer
 										left={null}
 										main={<DashboardTableContainer />}
 									/>
-								</DashboardProvider>
-							</NotificationProvider>
-						</ApolloProvider>
-					}
-				/>
+								}
+							/>
+							<PrivateRoute
+								path="settings/*"
+								element={<SettingsContainer></SettingsContainer>}
+							/>
 
-				<Route path="" element={<LandingPage />}>
-					<Route path="login" element={<Login />} />
-					<Route path="signup/:id" element={<SignUp />} />
-					<Route path="signup" element={<SignUp />} />
-				</Route>
-			</Routes>
+							<Route path="" element={<LandingPage />}>
+								<Route path="login" element={<Login />} />
+								<Route path="signup/:id" element={<SignUp />} />
+								<Route path="signup" element={<SignUp />} />
+							</Route>
+						</Routes>
+					</DashboardProvider>
+				</NotificationProvider>
+			</ApolloProvider>
 		</BrowserRouter>
 	);
 }

@@ -38,6 +38,18 @@ export const CREATE_PROJECT_BUDGET_TRACKING = gql`
 				id
 				name
 			}
+			fy_org {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+			}
+			fy_donor {
+				id
+				name
+			}
 		}
 	}
 `;

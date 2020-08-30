@@ -130,7 +130,7 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 													closeMenuItems(index);
 												}}
 											>
-												Edit Workspace{" "}
+												Edit Workspace
 											</MenuItem>
 											<MenuItem
 												onClick={() => {

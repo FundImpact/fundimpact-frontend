@@ -10,12 +10,12 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import dataInputFields from "../../../utils/inputFields.json";
+import { budgetCategoryFormInputFields } from "./inputFields.json";
 import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 
-let inputFields: IInputField[] = dataInputFields.createBudgetForm;
+let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
 const initialValues: IBudgetCategory = {
 	name: "",

@@ -1,30 +1,35 @@
+import { useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
+import {
+	GET_BUDGET_TARGET_PROJECT,
+	GET_ORGANIZATION_BUDGET_CATEGORY,
+	GET_PROJECT_BUDGET_TARGETS_COUNT,
+} from "../../../graphql/Budget";
 import {
 	CREATE_PROJECT_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/Budget";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGET_BUDGET_TARGET_PROJECT, IBudgetTargetProjectResponse } from "../../../models/budget/query";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
+import { FORM_ACTIONS } from "../../../models/budget/constants";
+import {
+	IBudgetTargetProjectResponse,
+	IGET_BUDGET_TARGET_PROJECT,
+} from "../../../models/budget/query";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import {
-	createBudgetTargetFormSelectFields,
-	createBudgetTargetForm,
-} from "../../../utils/inputFields.json";
+import { compareObjectKeys } from "../../../utils";
+import { budgetTargetFormSelectFields, budgetTargetFormInputFields } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
-import { compareObjectKeys } from "../../../utils";
+import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -71,50 +76,69 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		UPDATE_PROJECT_BUDGET_TARGET
 	);
 
-	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
-		variables: {
-			filter: {
-				organization: dashboardData?.organization?.id,
-				isHomeCurrency: true,
-			},
-		},
+	let { fetchData: getOrgCurrencies, data: orgCurrencies } = useLazyQueryCustom({
+		query: GET_ORG_CURRENCIES_BY_ORG,
 	});
 
-	const { data: budgetCategory } = useQuery(GET_ORGANIZATION_BUDGET_CATEGORY, {
-		variables: {
-			filter: {
-				organization: dashboardData?.organization?.id,
-			},
-		},
+	let { fetchData: getBudgetCategory, data: budgetCategory } = useLazyQueryCustom({
+		query: GET_ORGANIZATION_BUDGET_CATEGORY,
 	});
 
-	const { data: donors } = useQuery(GET_PROJ_DONORS, {
-		variables: {
-			filter: {
-				project: dashboardData?.project?.id,
-			},
-		},
+	let { fetchData: getDonors, data: donors } = useLazyQueryCustom({
+		query: GET_PROJ_DONORS,
 	});
 
 	useEffect(() => {
+		if (dashboardData?.organization) {
+			getOrgCurrencies({
+				filter: {
+					organization: dashboardData?.organization?.id,
+					isHomeCurrency: true,
+				},
+			});
+		}
+	}, [getOrgCurrencies, dashboardData]);
+
+	useEffect(() => {
+		if (dashboardData?.organization) {
+			getBudgetCategory({
+				filter: {
+					organization: dashboardData?.organization?.id,
+				},
+			});
+		}
+	}, [getBudgetCategory, dashboardData]);
+
+	useEffect(() => {
+		if (dashboardData?.project) {
+			getDonors({
+				filter: {
+					project: dashboardData?.project?.id,
+				},
+			});
+		}
+	}, [getDonors, dashboardData]);
+
+	useEffect(() => {
 		if (orgCurrencies?.orgCurrencies?.length) {
-			createBudgetTargetForm[1].endAdornment = orgCurrencies.orgCurrencies[0].currency.code;
+			budgetTargetFormInputFields[1].endAdornment =
+				orgCurrencies.orgCurrencies[0].currency.code;
 		}
 	}, [orgCurrencies]);
 
 	useEffect(() => {
 		if (donors) {
-			createBudgetTargetFormSelectFields[1].optionsArray = donors.projectDonors.map(
-				({ donor }: { donor: { id: string; name: string } }) => {
+			budgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
+				.filter(({ donor }: { donor: { id: string; name: string } }) => donor)
+				.map(({ donor }: { donor: { id: string; name: string } }) => {
 					return { id: donor.id, name: donor.name };
-				}
-			);
+				});
 		}
 	}, [donors]);
 
 	useEffect(() => {
 		if (budgetCategory) {
-			createBudgetTargetFormSelectFields[0].optionsArray = budgetCategory.orgBudgetCategory;
+			budgetTargetFormSelectFields[0].optionsArray = budgetCategory.orgBudgetCategory;
 		}
 	}, [budgetCategory]);
 
@@ -129,17 +153,48 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				},
 				update: async (store, { data: { createProjectBudgetTarget: projectCreated } }) => {
 					try {
-						const dataRead = await store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
-							query: GET_BUDGET_TARGET_PROJECT,
+						const count = await store.readQuery<{ projectBudgetTargetsCount: number }>({
+							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 							variables: {
 								filter: {
 									project: dashboardData?.project?.id,
 								},
 							},
 						});
-						let budgetTargets : IBudgetTargetProjectResponse[] = dataRead?.projectBudgetTargets
+						let limit = 0;
+						if (count) {
+							limit = count.projectBudgetTargetsCount;
+						}
+						const dataRead = await store.readQuery<IGET_BUDGET_TARGET_PROJECT>({
+							query: GET_BUDGET_TARGET_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let budgetTargets: IBudgetTargetProjectResponse[] = dataRead?.projectBudgetTargets
 							? dataRead?.projectBudgetTargets
 							: [];
+
+						store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
+							query: GET_BUDGET_TARGET_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								projectBudgetTargets: [...budgetTargets, projectCreated],
+							},
+						});
+
 						store.writeQuery<IGET_BUDGET_TARGET_PROJECT>({
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
@@ -148,10 +203,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 							data: {
-								projectBudgetTargets: [
-									...budgetTargets,
-									projectCreated,
-								],
+								projectBudgetTargets: [...budgetTargets, projectCreated],
 							},
 						});
 					} catch (err) {}
@@ -207,8 +259,8 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				validate={validate}
 				onSubmit={onCreate}
 				onCancel={props.handleClose}
-				inputFields={createBudgetTargetForm}
-				selectFields={createBudgetTargetFormSelectFields}
+				inputFields={budgetTargetFormInputFields}
+				selectFields={budgetTargetFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
 			/>

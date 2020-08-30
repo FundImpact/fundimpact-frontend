@@ -9,4 +9,7 @@ export interface IOrganisation {
 	name: string;
 	short_name: string;
 	organization_registration_type: IOrganisationType;
+	country: {
+		id: string;
+	};
 }

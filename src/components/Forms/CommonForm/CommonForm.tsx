@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import React from "react";
 
 import { IInputField, ISelectField } from "../../../models";
-import { FORM_ACTIONS } from "../../../models/budget/constants";
+import { FORM_ACTIONS } from "../../../models/constants";
 import InputField from "../../InputField";
 import SelectField from "../../SelectField";
 import { ICommonForm } from "../../../models";
@@ -70,19 +70,21 @@ function CommonForm({
 
 							{selectFields.map((element: ISelectField, index: number) => {
 								return (
-									<Grid item xs={element.size} key={index}>
-										<SelectField
-											formik={formik}
-											name={element.name}
-											dataTestId={element.dataTestId}
-											testId={element.testId}
-											label={element.label}
-											optionsArray={element.optionsArray}
-											inputLabelId={element.inputLabelId}
-											selectLabelId={element.selectLabelId}
-											selectId={element.selectId}
-										/>
-									</Grid>
+									!element.hidden && (
+										<Grid item xs={element.size} key={index}>
+											<SelectField
+												formik={formik}
+												name={element.name}
+												dataTestId={element.dataTestId}
+												testId={element.testId}
+												label={element.label}
+												optionsArray={element.optionsArray}
+												inputLabelId={element.inputLabelId}
+												selectLabelId={element.selectLabelId}
+												selectId={element.selectId}
+											/>
+										</Grid>
+									)
 								);
 							})}
 

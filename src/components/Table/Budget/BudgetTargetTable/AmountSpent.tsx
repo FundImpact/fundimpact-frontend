@@ -7,7 +7,7 @@ const AmountSpent = ({
 	children,
 }: {
 	budgetTargetId: string;
-	children: (props: number) => React.ReactNode
+	children: (props: number) => React.ReactNode;
 }) => {
 	const apolloClient = useApolloClient();
 	let [getSpentAmount] = useLazyQuery(GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM);

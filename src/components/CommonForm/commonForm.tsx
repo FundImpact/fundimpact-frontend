@@ -71,6 +71,7 @@ function CommonInputForm({
 											getInputValue={
 												element.getInputValue ? element.getInputValue : null
 											}
+											multiple={element.multiple ? element.multiple : false}
 										/>
 									</Grid>
 								);

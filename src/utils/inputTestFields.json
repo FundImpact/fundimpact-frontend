@@ -30,6 +30,9 @@
 		{ "id": "createBudgetLineitemAmountInput", "key": "amount" },
 		{ "id": "createBudgetLineitemNoteInput", "key": "note" },
 		{ "id": "createBudgetLineitemAnnualYearOption", "key": "annual_year" },
-		{ "id": "createBudgetLineitemBudgetTargetsOption", "key": "budget_targets_project" }
+		{ "id": "createBudgetLineitemBudgetTargetsOption", "key": "budget_targets_project" },
+		{ "id": "createBudgetLineitemFinancialYearOrgOption", "key": "fy_org" },
+		{ "id": "createBudgetLineitemFinancialYearDonorOption", "key": "fy_donor" },
+		{ "id": "createBudgetLineitemGrantPeriodProjectOption", "key": "grant_periods_project" }
 	]
 }
