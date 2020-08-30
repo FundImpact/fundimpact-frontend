@@ -68,9 +68,8 @@ function Project(props: ProjectProps) {
 	};
 
 	const onCreate = async (value: IPROJECT_FORM) => {
-		let org: any = dashboardData?.organization?.id;
 		const formData = { ...value };
-		let donors = value.donor;
+		let selectDonors = value.donor;
 		delete formData.donor;
 		try {
 			const createdProject = await createNewproject({
@@ -82,7 +81,7 @@ function Project(props: ProjectProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
-			donors.forEach(async (donorId) => {
+			selectDonors.forEach(async (donorId) => {
 				await createDonors({
 					projectId: createdProject.data.createOrgProject.id,
 					donorId,

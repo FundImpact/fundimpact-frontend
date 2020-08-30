@@ -99,7 +99,7 @@ const InputFields = ({
 						return multiple ? (
 							<div className={classes.chips}>
 								{(selected as string[])
-									.filter((selected) => selected)
+									.filter((selectedValue) => selectedValue)
 									.map((value, index) => (
 										<Chip
 											key={index}
