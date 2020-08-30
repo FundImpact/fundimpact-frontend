@@ -78,9 +78,12 @@ function Pagination({
 			return;
 		}
 
-		let start = getStartValue(startingValue.current, limit, prev);
+		let correctStartingValue = getStartValue(startingValue.current, limit, prev);
 
-		let currentLimit = start + limit > count.current ? count.current - start : limit;
+		let currentLimit =
+			correctStartingValue + limit > count.current
+				? count.current - correctStartingValue
+				: limit;
 
 		let oldCacheQueryData: any = null;
 		try {
@@ -89,11 +92,11 @@ function Pagination({
 				variables: {
 					filter: queryFilter,
 					limit: currentLimit,
-					start,
+					start: correctStartingValue,
 					sort,
 				},
 			});
-		} catch (error) {}
+		} catch (err) {}
 
 		setOldCache(oldCacheQueryData);
 
@@ -102,14 +105,16 @@ function Pagination({
 				variables: {
 					filter: queryFilter,
 					limit: currentLimit,
-					start,
+					start: correctStartingValue,
 					sort,
 				},
 			});
 		}
 
 		startingValue.current =
-			start + currentLimit > count.current ? count.current : start + currentLimit;
+			correctStartingValue + currentLimit > count.current
+				? count.current
+				: correctStartingValue + currentLimit;
 	}
 
 	return {

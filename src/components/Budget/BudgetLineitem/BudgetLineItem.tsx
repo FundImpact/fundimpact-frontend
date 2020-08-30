@@ -27,7 +27,7 @@ import {
 	GET_ORG_CURRENCIES_BY_ORG,
 } from "../../../graphql/";
 import { getTodaysDate } from "../../../utils/index";
-import { IGET_BUDGET_TARCKING_LINE_ITEM } from "../../../models/budget/query";
+import { IGET_BUDGET_TARCKING_LINE_ITEM, IBUDGET_LINE_ITEM_RESPONSE } from "../../../models/budget/query";
 import { compareObjectKeys } from "../../../utils";
 import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
 
@@ -234,7 +234,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	useEffect(() => {
 		if (budgetTargets) {
-			budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets as any;
+			budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
 			budgetTargetHash = budgetTargets.projectBudgetTargets.reduce(
 				(accunulator: any, current: any) => {
 					accunulator[current.id] = current.donor;
@@ -285,6 +285,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								sort: "created_at:DESC",
 							},
 						});
+						let budgetLineItems: IBUDGET_LINE_ITEM_RESPONSE[] = data?.projBudgetTrackings
+							? data?.projBudgetTrackings
+							: [];
 						store.writeQuery({
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
@@ -297,10 +300,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								sort: "created_at:DESC",
 							},
 							data: {
-								projBudgetTrackings: [
-									lineItemCreated,
-									...data!.projBudgetTrackings,
-								],
+								projBudgetTrackings: [lineItemCreated, ...budgetLineItems],
 							},
 						});
 					} catch (err) {}
@@ -325,8 +325,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							},
 							data: {
 								projBudgetTrackingsTotalAmount:
-									amountSpentData!.projBudgetTrackingsTotalAmount +
-									lineItemCreated.amount,
+									(amountSpentData?.projBudgetTrackingsTotalAmount
+										? amountSpentData?.projBudgetTrackingsTotalAmount
+										: 0) + lineItemCreated.amount,
 							},
 						});
 					} catch (err) {}
@@ -378,7 +379,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							},
 							data: {
 								projBudgetTrackingsTotalAmount:
-									amountSpentData!.projBudgetTrackingsTotalAmount + change,
+									(amountSpentData?.projBudgetTrackingsTotalAmount
+										? amountSpentData?.projBudgetTrackingsTotalAmount
+										: 0) + change,
 							},
 						});
 					} catch (err) {}

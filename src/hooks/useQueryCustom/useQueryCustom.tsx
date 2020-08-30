@@ -12,7 +12,7 @@ function UseQueryCustom<T>({ query, variables }: { query: any; variables: any })
 			query,
       variables,
 		});
-	} catch (error) {}
+	} catch (err) {}
 
 	useEffect(() => {
 		if (!cachedQueryData) {

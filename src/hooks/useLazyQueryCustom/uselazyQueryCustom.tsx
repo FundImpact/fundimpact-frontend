@@ -6,7 +6,6 @@ function UseLazyQueryCustom<T>({ query }: { query: any }) {
 
 	let [getQueryData, { data, loading, error }] = useLazyQuery(query);
 	const [cachedData, setCachedData] = useState<T | null>(null);
-
 	const fetchData = useCallback(
 		(variables = {}) => {
 			let cachedQueryData: T | null = null;
@@ -15,7 +14,7 @@ function UseLazyQueryCustom<T>({ query }: { query: any }) {
 					query,
 					variables,
 				});
-			} catch (error) {}
+			} catch (err) {}
 
 			setCachedData(cachedQueryData);
 

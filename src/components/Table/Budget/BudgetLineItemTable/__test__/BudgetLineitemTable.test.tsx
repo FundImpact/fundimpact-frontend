@@ -5,7 +5,6 @@ import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_GRANT_PERIODS_PROJECT_LIST,
-	GET_PROJECT_BUDGET_TARGETS_COUNT,
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
 } from "../../../../../graphql/Budget";
 import { renderApollo } from "../../../../../utils/test.util";
