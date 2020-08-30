@@ -15,6 +15,9 @@ export interface IBudgetTrackingLineitem {
 	budget_targets_project: string;
 	annual_year: string;
 	reporting_date: string;
+	fy_donor: string;
+	fy_org: string;
+	grant_periods_project: string;
 }
 
 export interface IBudgetTarget {
@@ -23,7 +26,7 @@ export interface IBudgetTarget {
 	total_target_amount: number;
 	budget_category_organization: string;
 	id?: string;
-	donor: string
+	donor: string;
 }
 
 export type IBudgetTargetProjectProps =
@@ -37,8 +40,8 @@ export type IBudgetTargetProjectProps =
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
-		};
-		
+	  };
+
 export type IBudgetLineitemProps =
 	| {
 			open: boolean;

@@ -7,6 +7,10 @@ import { GET_WORKSPACES_BY_ORG } from "../../../graphql/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
+import { organizationDetail } from "../../../utils/testMock.json";
+import { act } from "react-dom/test-utils";
+
+let sidebar: any;
 
 const OrgMock = [
 	{
@@ -54,50 +58,57 @@ const ProjectMockTwo = [
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
 	},
 ];
-describe("SideBar Component Graphql Calls and data listing", () => {
-	test("renders correctly", async () => {
-		const mocks = [
-			{
-				request: { query: GET_ORGANISATIONS },
-				result: { data: { organizationList: OrgMock } },
-			},
-			{
-				request: {
-					query: GET_WORKSPACES_BY_ORG,
-					variables: { filter: { organization: "13" } },
-				},
-				result: { data: { orgWorkspaces: WSMock } },
-			},
-			{
-				request: {
-					query: GET_PROJECTS_BY_WORKSPACE,
-					variables: { filter: { workspace: "5" } },
-				},
-				result: { data: { orgProject: ProjectMockOne } },
-			},
-			{
-				request: {
-					query: GET_PROJECTS_BY_WORKSPACE,
-					variables: { filter: { workspace: "13" } },
-				},
-				result: { data: { orgProject: ProjectMockTwo } },
-			},
-		];
-		const { getByText } = await renderApollo(
-			<NotificationProvider>
-				<DashboardProvider>
+
+const mocks = [
+	{
+		request: { query: GET_ORGANISATIONS },
+		result: { data: { organizationList: OrgMock } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { filter: { workspace: "5" } },
+		},
+		result: { data: { orgProject: ProjectMockOne } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { filter: { workspace: "13" } },
+		},
+		result: { data: { orgProject: ProjectMockTwo } },
+	},
+];
+
+beforeEach(() => {
+	act(() => {
+		sidebar = renderApollo(
+			<DashboardProvider defaultState={{ organization: organizationDetail }}>
+				<NotificationProvider>
 					<SideBar />
-				</DashboardProvider>
-			</NotificationProvider>,
+				</NotificationProvider>
+			</DashboardProvider>,
 			{
 				mocks,
-				resolvers: {},
+				addTypename: false,
 			}
 		);
-		await waitForElement(() => getByText(/TSERIES/i));
-		await waitForElement(() => getByText(/INSTAGRAM/i));
-		await waitForElement(() => getByText(/FACEBOOK/i));
-		await waitForElement(() => getByText(/ARTISTAAN/i));
-		await waitForElement(() => getByText(/KALAMKAAR/i));
+	});
+});
+
+describe("SideBar Component Graphql Calls and data listing", () => {
+	test("renders correctly", async () => {
+		await waitForElement(() => sidebar.getByText(/TSERIES/i));
+		await waitForElement(() => sidebar.getByText(/INSTAGRAM/i));
+		await waitForElement(() => sidebar.getByText(/FACEBOOK/i));
+		await waitForElement(() => sidebar.getByText(/ARTISTAAN/i));
+		await waitForElement(() => sidebar.getByText(/KALAMKAAR/i));
 	});
 });

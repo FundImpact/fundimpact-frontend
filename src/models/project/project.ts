@@ -1,5 +1,6 @@
 import { PROJECT_ACTIONS } from "../../components/Project/constants";
 import { IWorkspace } from "../workspace/workspace";
+import { IPROJECT_FORM } from "./projectForm";
 
 export interface IProject {
 	id?: number;
@@ -19,6 +20,6 @@ export type ProjectProps = {
 	  }
 	| {
 			type: PROJECT_ACTIONS.UPDATE;
-			data: IProject;
+			data: IPROJECT_FORM;
 	  }
 );
