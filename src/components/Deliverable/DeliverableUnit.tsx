@@ -11,32 +11,58 @@ import FormDialog from "../FormDialog/FormDialog";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableUnitForm } from "./inputField.json";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Test Deliverable",
+		name: "",
 		code: "",
-		description: "This is a sample deliverable",
+		description: "",
 		unit_type: "",
-		prefix_label: "XX",
-		suffix_label: "YY",
+		prefix_label: "",
+		suffix_label: "",
 		organization: props.organization,
 	};
 }
+
 function DeliverableUnit(props: DeliverableUnitProps) {
-	const [deliverableCategory, setDeliverableCategory] = useState<number>();
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
-	const [
-		createUnit,
-		{ data: createUnitResponse, loading: createDeliverableLoading },
-	] = useMutation(CREATE_DELIVERABLE_UNIT);
-
-	const [createCategoryUnit, { data: createCategoryUnitResponse }] = useMutation(
-		CREATE_CATEGORY_UNIT
-	);
 	const notificationDispatch = useNotificationDispatch();
+	const dashboardData = useDashBoardData();
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 
+	const [deliverableCategory, setDeliverableCategory] = useState<number>();
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
+	const [createCategoryUnit] = useMutation(CREATE_CATEGORY_UNIT);
+
+	const createCategoryUnitHelper = async (deliverableUnitId: string) => {
+		try {
+			await createCategoryUnit({
+				variables: {
+					input: {
+						deliverable_category_org: deliverableCategory,
+						deliverable_units_org: deliverableUnitId,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Deliverable unit created successfully !"));
+			onCancel();
+		} catch (error) {
+			notificationDispatch(
+				setErrorNotification("Deliverable unit linked to category Failed !")
+			);
+		}
+	};
+
+	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
+		onCompleted(data) {
+			createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
+		},
+	});
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
@@ -44,44 +70,19 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		}
 	}, [deliverableCategories]);
 
-	useEffect(() => {
-		if (createUnitResponse) {
-			try {
-				createCategoryUnit({
-					variables: {
-						input: {
-							deliverable_category_org: deliverableCategory,
-							deliverable_units_org: createUnitResponse.createDeliverableUnitOrg.id,
-						},
-					},
-				});
-			} catch (error) {
-				notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
-			}
-		}
-	}, [createUnitResponse]);
-
-	useEffect(() => {
-		if (createCategoryUnitResponse) {
-			notificationDispatch(setSuccessNotification("Deliverable Unit Successfully created !"));
-			props.handleClose();
-		}
-	}, [createCategoryUnitResponse]);
-
 	let initialValues: IDeliverableUnit = getInitialValues(props);
-	const onCreate = (value: IDeliverableUnit) => {
+
+	const onCreate = async (value: IDeliverableUnit) => {
 		setDeliverableCategory(Number(value.deliverableCategory));
 		delete value.deliverableCategory;
 		try {
-			createUnit({ variables: { input: value } });
+			await createUnit({ variables: { input: value } });
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
 		}
 	};
 
 	const onUpdate = (value: IDeliverableUnit) => {};
-
-	const clearErrors = (values: IDeliverableUnit) => {};
 
 	const validate = (values: IDeliverableUnit) => {
 		let errors: Partial<IDeliverableUnit> = {};
@@ -103,9 +104,6 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		return errors;
 	};
 
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -127,7 +125,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 					}}
 				/>
 			</FormDialog>
-			{createDeliverableLoading ? <FullScreenLoader /> : null}
+			{createUnitLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

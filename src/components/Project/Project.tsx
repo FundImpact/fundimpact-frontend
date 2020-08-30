@@ -1,21 +1,22 @@
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
+
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ORGANISATIONS } from "../../graphql";
+import { GET_ORG_DONOR } from "../../graphql/donor";
+import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/project";
 import { IProject, ProjectProps } from "../../models/project/project";
+import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { projectForm } from "./inputField.json";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
-import { IPROJECT_FORM } from "../../models/project/projectForm";
-import { GET_ORG_DONOR } from "../../graphql/donor";
-import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { projectForm } from "./inputField.json";
 
-function getInitialValues(props: ProjectProps) {
+function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",

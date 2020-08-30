@@ -1,18 +1,24 @@
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+
+import { DashboardProvider } from "../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
+import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
+import {
+	CREATE_IMPACT_TARGET,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
+	UPDATE_IMAPACT_TARGET,
+} from "../../graphql/Impact/target";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import CommonForm from "../CommonForm/commonForm";
+import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
-import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
-import { CREATE_IMPACT_TARGET, UPDATE_IMAPACT_TARGET } from "../../graphql/Impact/target";
-import { useMutation, useLazyQuery, useQuery } from "@apollo/client";
-import FormDialog from "../FormDialog/FormDialog";
-import CommonForm from "../CommonForm/commonForm";
-import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/Impact/target";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
-import { DashboardProvider } from "../../contexts/dashboardContext";
+
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -30,19 +36,55 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY);
 	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
 
-	const [getUnitsAndCategory, { data: unitAndcategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); //for fetching category_unit id
 	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
 
 	const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
-	const [createImpactTarget, { data: impact, loading: impactLoading }] = useMutation(
-		CREATE_IMPACT_TARGET
+	const [createImpactTarget, { loading: impactLoading }] = useMutation(CREATE_IMPACT_TARGET);
+
+	const [updateImpactTarget, { loading: updateImpactTargetLoading }] = useMutation(
+		UPDATE_IMAPACT_TARGET
 	);
 
-	const [
-		updateImpactTarget,
-		{ data: updateImpactTargetRes, loading: updateImpactTargetLoading },
-	] = useMutation(UPDATE_IMAPACT_TARGET);
+	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 
+	//for fetching category_unit id and creating impact target
+	const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
+		onCompleted(data) {
+			if (data.impactCategoryUnitList && data.impactCategoryUnitList.length) {
+				createImpactTargetHelper(data.impactCategoryUnitList[0].id);
+			}
+		},
+		onError() {
+			notificationDispatch(setErrorNotification("No units found for category!"));
+		},
+	});
+
+	const createImpactTargetHelper = async (impactCategoryUnitId: string) => {
+		try {
+			let createInputTarget = {
+				...impactTarget,
+				impact_category_unit: impactCategoryUnitId,
+			};
+
+			createImpactTarget({
+				variables: {
+					input: createInputTarget,
+				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
+			onCancel();
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
+		}
+	};
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (categories) {
@@ -54,15 +96,11 @@ function ImpactTarget(props: ImpactTargetProps) {
 	// handling category change
 	useEffect(() => {
 		if (currCategoryId) {
-			try {
-				getUnitsByCategory({
-					variables: { filter: { impact_category_org: currCategoryId } },
-				});
-			} catch (error) {
-				notificationDispatch(setErrorNotification("Categories fetching failed !"));
-			}
+			getUnitsByCategory({
+				variables: { filter: { impact_category_org: currCategoryId } },
+			});
 		}
-	}, [currCategoryId]);
+	}, [currCategoryId, getUnitsByCategory]);
 
 	// updating units field with fetched units list
 	useEffect(() => {
@@ -80,46 +118,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 	}, [unitByCategory]);
 
-	useEffect(() => {
-		if (unitAndcategory) {
-			// successfully fetched impact_category_unit_id
-			let createInputTarget = {
-				...impactTarget,
-				impact_category_unit: unitAndcategory.impactCategoryUnitList[0].id,
-			};
-			try {
-				createImpactTarget({
-					variables: {
-						input: createInputTarget,
-					},
-					refetchQueries: [
-						{
-							query: GET_IMPACT_TARGET_BY_PROJECT,
-							variables: { filter: { project: props.project } },
-						},
-					],
-				});
-			} catch (error) {
-				notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
-			}
-		}
-	}, [unitAndcategory]);
-
-	useEffect(() => {
-		if (impact) {
-			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
-			props.handleClose();
-		}
-	}, [impact]);
-
-	useEffect(() => {
-		if (updateImpactTargetRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
-			props.handleClose();
-		}
-	}, [updateImpactTargetRes]);
 	let initialValues: IImpactTarget = getInitialValues(props);
 
 	const onCreate = (value: IImpactTarget) => {
@@ -131,26 +129,21 @@ function ImpactTarget(props: ImpactTargetProps) {
 			project: value.project,
 			impact_category_unit: -1,
 		});
-
-		try {
-			getUnitsAndCategory({
-				variables: {
-					filter: {
-						impact_category_org: value.impactCategory,
-						impact_units_org: value.impactUnit,
-					},
+		// Query call for fetching impact_categroy_unit_id
+		getUnitsAndCategory({
+			variables: {
+				filter: {
+					impact_category_org: value.impactCategory,
+					impact_units_org: value.impactUnit,
 				},
-			});
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
-		}
+			},
+		});
 	};
 
 	const onUpdate = (value: IImpactTarget) => {
 		let impactId = value.id;
 		delete value.id;
 		value.target_value = Number(value.target_value);
-		console.log(value, props);
 		try {
 			updateImpactTarget({
 				variables: {
@@ -162,14 +155,22 @@ function ImpactTarget(props: ImpactTargetProps) {
 						query: GET_IMPACT_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },
 					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { impactTargetProject: impactId },
+						},
+					},
 				],
 			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
 		}
 	};
-
-	const clearErrors = (values: IImpactTarget) => {};
 
 	const validate = (values: IImpactTarget) => {
 		let errors: Partial<any> = {};
@@ -204,10 +205,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 		return errors;
 	};
-
-	const formAction = props.type;
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 
 	return (
 		<DashboardProvider>

@@ -1,11 +1,13 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { GET_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_TARGET,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	UPDATE_DELIVERABLE_TARGET,
 } from "../../graphql/Deliverable/target";
@@ -14,11 +16,11 @@ import {
 	IDeliverableTarget,
 } from "../../models/deliverable/deliverableTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { deliverableTargetForm, deliverableTargetUpdateForm } from "./inputField.json";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
+import { deliverableTargetForm, deliverableTargetUpdateForm } from "./inputField.json";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -34,24 +36,66 @@ function getInitialValues(props: DeliverableTargetProps) {
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
-
-	const [getCategoryUnit, { data: categoryUnit }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching category_unit id
+	const dashboardData = useDashBoardData();
 	const [getUnitsByCategory, { data: unitsBycategory }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching units by category
 
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY);
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
 
 	const [currentCategory, setcurrentCategory] = useState<any>();
 	const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
 
-	const [
-		createDeliverableTarget,
-		{ data: createDeliverableTargetRes, loading: createDeliverableTargetLoading },
-	] = useMutation(CREATE_DELIVERABLE_TARGET);
+	const [createDeliverableTarget, { loading: createDeliverableTargetLoading }] = useMutation(
+		CREATE_DELIVERABLE_TARGET
+	);
 
-	const [
-		updateDeliverableTarget,
-		{ data: updateDeliverableTargetRes, loading: updateDeliverableTargetLoading },
-	] = useMutation(UPDATE_DELIVERABLE_TARGET);
+	const [updateDeliverableTarget, { loading: updateDeliverableTargetLoading }] = useMutation(
+		UPDATE_DELIVERABLE_TARGET
+	);
+
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
+	const formAction = props.type;
+
+	const createDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
+		try {
+			let createInputTarget = {
+				...deliverbaleTarget,
+				deliverable_category_unit: deliverableCategoryUnitId,
+			};
+			await createDeliverableTarget({
+				variables: {
+					input: createInputTarget,
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
+					},
+				],
+			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target created successfully !")
+			);
+			onCancel();
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
+		}
+	};
+
+	//  fetching category_unit id and on completion creating deliverable target
+	const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
+		onCompleted(data) {
+			if (!data?.deliverableCategoryUnitList) return;
+			if (!data.deliverableCategoryUnitList.length) return;
+
+			createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id); //deliverable_category_unit id
+		},
+		onError(err) {
+			notificationDispatch(setErrorNotification("Unit not match with category !"));
+		},
+	});
 
 	// updating categories field with fetched categories list
 	useEffect(() => {
@@ -60,25 +104,23 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			deliverableTargetForm[1].getInputValue = setcurrentCategory;
 		}
 	}, [deliverableCategories]);
+
 	// handling category change
 	useEffect(() => {
 		if (currentCategory) {
-			try {
-				getUnitsByCategory({
-					variables: { filter: { deliverable_category_org: currentCategory } },
-				});
-			} catch (error) {
-				notificationDispatch(setErrorNotification("Categories fetching failed !"));
-			}
+			getUnitsByCategory({
+				variables: { filter: { deliverable_category_org: currentCategory } },
+			});
 		}
-	}, [currentCategory]);
+	}, [currentCategory, getUnitsByCategory]);
 
 	// updating units field with fetched units list
 	useEffect(() => {
 		if (unitsBycategory) {
 			let arr: any = [];
+			console.log(unitsBycategory);
 			unitsBycategory.deliverableCategoryUnitList.forEach(
-				(elem: { deliverable_units_org: { id: number; name: string } }) => {
+				(elem: { deliverable_units_org: { id: string; name: string } }) => {
 					arr.push({
 						id: elem.deliverable_units_org.id,
 						name: elem.deliverable_units_org.name,
@@ -89,51 +131,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	}, [unitsBycategory]);
 
-	useEffect(() => {
-		if (categoryUnit) {
-			// successfully fetched impact_category_unit_id
-			let createInputTarget = {
-				...deliverbaleTarget,
-				deliverable_category_unit: categoryUnit.deliverableCategoryUnitList[0].id,
-			};
-			try {
-				createDeliverableTarget({
-					variables: {
-						input: createInputTarget,
-					},
-					refetchQueries: [
-						{
-							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-							variables: { filter: { project: props.project } },
-						},
-					],
-				});
-			} catch (error) {
-				notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
-			}
-		}
-	}, [categoryUnit]);
-
-	useEffect(() => {
-		if (createDeliverableTargetRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target Successfully created !")
-			);
-			props.handleClose();
-		}
-	}, [createDeliverableTargetRes]);
-
-	useEffect(() => {
-		if (updateDeliverableTargetRes) {
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
-			props.handleClose();
-		}
-	}, [updateDeliverableTargetRes]);
-
 	let initialValues: IDeliverableTarget = getInitialValues(props);
-	const onCreate = (value: IDeliverableTarget) => {
+	const onCreate = async (value: IDeliverableTarget) => {
 		setDeliverableTarget({
 			name: value.name,
 			target_value: Number(value.target_value),
@@ -141,26 +140,23 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			project: value.project,
 			deliverable_category_unit: -1,
 		});
-		try {
-			getCategoryUnit({
-				variables: {
-					filter: {
-						deliverable_category_org: value.deliverableCategory,
-						deliverable_units_org: value.deliverableUnit,
-					},
+
+		// fetching deliverable_category_unit before creating deliverable Target
+		getCategoryUnit({
+			variables: {
+				filter: {
+					deliverable_category_org: value.deliverableCategory,
+					deliverable_units_org: value.deliverableUnit,
 				},
-			});
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
-		}
+			},
+		});
 	};
 
-	const onUpdate = (value: IDeliverableTarget) => {
+	const onUpdate = async (value: IDeliverableTarget) => {
 		let deliverableId = value.id;
 		delete value.id;
-		console.log(value, props);
 		try {
-			updateDeliverableTarget({
+			await updateDeliverableTarget({
 				variables: {
 					id: deliverableId,
 					input: value,
@@ -170,14 +166,22 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },
 					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: deliverableId },
+						},
+					},
 				],
 			});
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
 		}
 	};
-
-	const clearErrors = (values: IDeliverableTarget) => {};
 
 	const validate = (values: IDeliverableTarget) => {
 		let errors: Partial<any> = {};
@@ -212,9 +216,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 		return errors;
 	};
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
-	const formAction = props.type;
 
 	return (
 		<React.Fragment>
@@ -241,6 +242,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				/>
 			</FormDialog>
 			{createDeliverableTargetLoading ? <FullScreenLoader /> : null}
+			{updateDeliverableTargetLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

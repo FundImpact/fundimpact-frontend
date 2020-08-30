@@ -190,8 +190,8 @@
 			"id": "deliverable_target_project",
 			"label": "Deliverable Target",
 			"size": 6,
-			"dataTestId": "deliverableTargetLineTarget",
-			"testId": "deliverableTargetLineTargetInput",
+			"dataTestId": "deliverableTracklineTarget",
+			"testId": "deliverableTracklineTargetInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -201,8 +201,8 @@
 		{
 			"name": "value",
 			"id": "value",
-			"dataTestId": "deliverableValue",
-			"testId": "deliverableValueInput",
+			"dataTestId": "deliverableTracklineValue",
+			"testId": "deliverableTracklineValueInput",
 			"label": "Value",
 			"type": "number",
 			"size": 6
@@ -212,8 +212,8 @@
 			"id": "annual_year",
 			"label": "Annual Year",
 			"size": 6,
-			"dataTestId": "deliverableAnnualYear",
-			"testId": "deliverableAnnualYearInput",
+			"dataTestId": "deliverableTracklineAnnualYear",
+			"testId": "deliverableTracklineAnnualYearInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -223,12 +223,21 @@
 		{
 			"name": "note",
 			"id": "note",
-			"dataTestId": "deliverableNote",
-			"testId": "deliverableNoteInput",
+			"dataTestId": "deliverableTracklineNote",
+			"testId": "deliverableTracklineNoteInput",
 			"label": "Note",
 			"multiline": true,
 			"rows": 2,
 			"size": 12
+		},
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6
 		}
 	]
 }
