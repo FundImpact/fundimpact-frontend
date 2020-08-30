@@ -55,7 +55,7 @@ export default function SideBar({ children }: { children?: Function }) {
 	if (!dashboardData?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
-			{!dashboardData ? (
+			{!dashboardData?.organization ? (
 				<Box mt={6}>
 					<LinearProgress style={{ marginBottom: "3px" }} />
 					<LinearProgress color="secondary" />
