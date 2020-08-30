@@ -462,6 +462,11 @@ export const GET_IMPACT_LINEITEM_FYDONOR = gql`
 				}
 				donor {
 					id
+					name
+					country {
+						id
+						name
+					}
 				}
 			}
 			financial_year {

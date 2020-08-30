@@ -259,6 +259,11 @@ export const CREATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 				}
 				donor {
 					id
+					name
+					country {
+						id
+						name
+					}
 				}
 			}
 			grant_periods_project {
@@ -316,6 +321,11 @@ export const UPDATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 				}
 				donor {
 					id
+					name
+					country {
+						id
+						name
+					}
 				}
 			}
 			grant_periods_project {
