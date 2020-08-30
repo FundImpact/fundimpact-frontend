@@ -20,9 +20,20 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 			amount
 			note
 			reporting_date
-
 			annual_year {
 				id
+			}
+			fy_org {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+			}
+			fy_donor {
+				id
+				name
 			}
 		}
 	}
@@ -35,8 +46,8 @@ export const GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM = gql`
 `;
 
 export const GET_BUDGET_TARGET_PROJECT = gql`
-	query getBudgettargetProject($filter: JSON) {
-		projectBudgetTargets(where: $filter) {
+	query getProjectBudgetTargetsByProject($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		projectBudgetTargets(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			project {
@@ -52,8 +63,23 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 			donor {
 				name
 				id
+				country{
+					id
+				}
 			}
 		}
+	}
+`;
+
+export const GET_PROJECT_BUDGET_TARGETS_COUNT = gql`
+	query getProjectBudgetTargetsCount($filter: JSON) {
+		projectBudgetTargetsCount(where: $filter)
+	}
+`;
+
+export const GET_PROJ_BUDGET_TRACINGS_COUNT = gql`
+	query getProjBudgetTrackingsCount($filter: JSON) {
+		projBudgetTrackingsCount(where: $filter)
 	}
 `;
 

@@ -9,7 +9,7 @@ import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboard
 import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
-import { useStyles } from "../Dasboard/styles";
+import { sidePanelStyles } from "../Dasboard/styles";
 import SimpleMenu from "../Menu/Menu";
 import SidebarSkeleton from "../Skeletons/SidebarSkeleton";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
@@ -17,7 +17,7 @@ import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 
 export default function SideBar({ children }: { children?: Function }) {
-	const classes = useStyles();
+	const classes = sidePanelStyles();
 	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
@@ -52,10 +52,10 @@ export default function SideBar({ children }: { children?: Function }) {
 		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
 	];
 
-	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
+	if (!dashboardData?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
-			{!dashboardData ? (
+			{!dashboardData?.organization ? (
 				<Box mt={6}>
 					<LinearProgress style={{ marginBottom: "3px" }} />
 					<LinearProgress color="secondary" />
@@ -64,7 +64,7 @@ export default function SideBar({ children }: { children?: Function }) {
 				<div>
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1}>
-							{data.organizationList[0]?.name && (
+							{dashboardData?.organization?.name && (
 								<Typography color="primary" gutterBottom variant="h6">
 									{dashboardData?.organization?.name}
 								</Typography>
@@ -90,8 +90,8 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
-					{data.organizationList[0]?.id && (
-						<WorkspaceList organizationId={data.organizationList[0].id} />
+					{dashboardData?.organization?.id  && (
+						<WorkspaceList organizationId={dashboardData?.organization?.id } />
 					)}
 
 					<List></List>

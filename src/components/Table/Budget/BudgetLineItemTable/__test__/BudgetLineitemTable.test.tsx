@@ -1,55 +1,36 @@
 import React from "react";
 import { waitForElement } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import { GET_BUDGET_TARGET_PROJECT, GET_PROJECT_BUDGET_TARCKING } from "../../../../../graphql/Budget";
+import {
+	GET_BUDGET_TARGET_PROJECT,
+	GET_PROJECT_BUDGET_TARCKING,
+	GET_GRANT_PERIODS_PROJECT_LIST,
+	GET_PROJ_BUDGET_TRACINGS_COUNT,
+} from "../../../../../graphql/Budget";
 import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../../contexts/notificationContext";
-import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_ANNUAL_YEAR_LIST } from "../../../../../graphql";
+import {
+	projectDetails,
+	organizationDetails,
+	mockAnnualYearList,
+	mockOrgHomeCurrency,
+	mockOrgBudgetTargetProject,
+	mockBudgetLineItem,
+	mockGrantPeriodsProjectList,
+	mockFinancialYears,
+	mockBudgetTrackingsCount
+} from "../../../../../utils/testMock.json";
+import {
+	GET_ORG_CURRENCIES_BY_ORG,
+	GET_ANNUAL_YEAR_LIST,
+	GET_FINANCIAL_YEARS,
+} from "../../../../../graphql";
 import BudgetLineItemTable from "../BudgetLineItemTable";
 
 let table: any;
 
-const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
-
-const mockAnnualYearList = [
-	{
-		id: "ay",
-		name: "year 1",
-		short_name: "sh1",
-		start_date: "2020-03-03",
-		end_date: "2020-04-04",
-	},
-];
-
-const mockBudgetLineItem = [
-	{
-		id: "1",
-		budget_targets_project: {
-			id: "1",
-			name: "budget target 1",
-		},
-		amount: 500,
-		note: "note 1",
-		reporting_date: new Date(),
-		annual_year: {
-			id: "1",
-		},
-	},
-];
-
-const mockBudgetTarget = [
-	{
-		id: "1",
-		name: "Budget target 1",
-		project: { id: 3, name: "my project" },
-		budget_category_organization: { id: "1", name: "military 1", code: "m5" },
-		description: "Description 1",
-		total_target_amount: 100,
-		donor: { name: "donor 1", id: "1" },
-	},
-];
+mockBudgetLineItem.reporting_date = new Date();
 
 const mocks = [
 	{
@@ -86,6 +67,9 @@ const mocks = [
 				filter: {
 					budget_targets_project: "1",
 				},
+				limit: 10,
+				start: 0,
+				sort: "created_at:DESC",
 			},
 		},
 		result: {
@@ -105,8 +89,51 @@ const mocks = [
 		},
 		result: {
 			data: {
-				projectBudgetTargets: mockBudgetTarget,
+				projectBudgetTargets: mockOrgBudgetTargetProject,
 			},
+		},
+	},
+	{
+		request: {
+			query: GET_GRANT_PERIODS_PROJECT_LIST,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				grantPeriodsProjectList: mockGrantPeriodsProjectList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_FINANCIAL_YEARS,
+			variables: {
+				filter: {
+					country: "1",
+				},
+			},
+		},
+		result: {
+			data: {
+				financialYears: mockFinancialYears,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+			variables: {
+				filter: {
+					budget_targets_project: "1",
+				},
+			},
+		},
+		result: {
+			data: mockBudgetTrackingsCount,
 		},
 	},
 ];

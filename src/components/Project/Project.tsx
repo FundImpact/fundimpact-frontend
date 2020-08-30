@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -6,11 +6,14 @@ import { GET_ORGANISATIONS } from "../../graphql";
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { projectForm } from "../../utils/inputFields.json";
+import { projectForm } from "./inputField.json";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
+import { IPROJECT_FORM } from "../../models/project/projectForm";
+import { GET_ORG_DONOR } from "../../graphql/donor";
+import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 
 function getInitialValues(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -19,37 +22,75 @@ function getInitialValues(props: ProjectProps) {
 		short_name: "",
 		description: "",
 		workspace: props.workspaces[0].id,
+		donor: [],
 	};
 }
 
 function Project(props: ProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	let initialValues: IProject = getInitialValues(props);
-	const [createNewproject, { data: response, loading: createLoading }] = useMutation(
-		CREATE_PROJECT
+	let initialValues: IPROJECT_FORM = getInitialValues(props);
+	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT);
+	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
+		CREATE_PROJECT_DONOR
 	);
 
-	useEffect(() => {
-		if (response) {
-			notificationDispatch(setSuccessNotification("Project Successfully created !"));
-			props.handleClose();
-		}
-	}, [response]);
+	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
+		onError: (err) =>
+			notificationDispatch(setErrorNotification("Error Occured While Fetching Donors")),
+	});
 
-	const onCreate = (value: IProject) => {
-		let org: any = dashboardData?.organization?.id;
+	useEffect(() => {
+		if (dashboardData?.organization) {
+			getOrganizationDonors({
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+		}
+	}, [dashboardData]);
+
+	const createDonors = async ({ projectId, donorId }: { projectId: string; donorId: string }) => {
 		try {
-			createNewproject({
-				variables: { input: value },
+			await createProjectDonor({
+				variables: {
+					input: {
+						project: projectId,
+						donor: donorId,
+					},
+				},
+			});
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Donor creation Failed !"));
+		}
+	};
+
+	const onCreate = async (value: IPROJECT_FORM) => {
+		const formData = { ...value };
+		let selectDonors = value.donor;
+		delete formData.donor;
+		try {
+			const createdProject = await createNewproject({
+				variables: { input: formData },
 				refetchQueries: [
 					{
 						query: GET_ORGANISATIONS,
 					},
 				],
 			});
+			notificationDispatch(setSuccessNotification("Project Successfully created !"));
+			selectDonors.forEach(async (donorId) => {
+				await createDonors({
+					projectId: createdProject.data.createOrgProject.id,
+					donorId,
+				});
+			});
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Project creation Failed !"));
+		} finally {
+			props.handleClose();
 		}
 	};
 
@@ -65,8 +106,8 @@ function Project(props: ProjectProps) {
 
 	const clearErrors = (values: IProject) => {};
 
-	const validate = (values: IProject) => {
-		let errors: Partial<IProject> = {};
+	const validate = (values: IPROJECT_FORM) => {
+		let errors: Partial<IPROJECT_FORM> = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
@@ -81,6 +122,7 @@ function Project(props: ProjectProps) {
 	const onCancel = props.handleClose;
 	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
+	projectForm[4].optionsArray = donors?.orgDonors ? donors.orgDonors : [];
 	return (
 		<>
 			<FormDialog
@@ -104,6 +146,7 @@ function Project(props: ProjectProps) {
 			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
+			{creatingProjectDonors ? <FullScreenLoader /> : null}
 		</>
 	);
 }

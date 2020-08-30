@@ -1,51 +1,41 @@
 import React from "react";
 import { waitForElement } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../../graphql/Budget";
-import { GET_BUDGET_TARGET_PROJECT, GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../../graphql/Budget";
+import {
+	GET_ORGANIZATION_BUDGET_CATEGORY,
+	GET_GRANT_PERIODS_PROJECT_LIST,
+	GET_PROJECT_BUDGET_TARGETS_COUNT,
+} from "../../../../../graphql/Budget";
+import {
+	GET_BUDGET_TARGET_PROJECT,
+	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+} from "../../../../../graphql/Budget";
+// import {GET_} from '../../../../../graphql';
 import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../../contexts/notificationContext";
-import { projectDetails, organizationDetails } from "../../../../../utils/testMock.json";
+import {
+	projectDetails,
+	organizationDetails,
+	mockOrgHomeCurrency,
+	mockDonors,
+	mockOrgBudgetCategory,
+	mockAnnualYearList,
+	mockOrgBudgetTargetProject,
+	mockGrantPeriodsProjectList,
+	mockFinancialYears,
+	mockBudgetTargetAmountSum,
+	mockBudgetTargetCount,
+} from "../../../../../utils/testMock.json";
 import { GET_PROJ_DONORS } from "../../../../../graphql/project";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_ANNUAL_YEAR_LIST } from "../../../../../graphql";
+import {
+	GET_ORG_CURRENCIES_BY_ORG,
+	GET_ANNUAL_YEAR_LIST,
+	GET_FINANCIAL_YEARS,
+} from "../../../../../graphql";
 import BudgetTargetTable from "..";
 
 let table: any;
-
-const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
-
-const mockDonors = [
-	{ id: "1", donor: { id: "1", name: "donor 1" } },
-	{ id: "2", donor: { id: "2", name: "donor 2" } },
-];
-
-const mockOrgBudgetCategory = [
-	{ id: "1", name: "military 1", code: "m5" },
-	{ id: "2", name: "military 2", code: "m6" },
-];
-
-const mockAnnualYearList = [
-	{
-		id: "ay",
-		name: "year 1",
-		short_name: "sh1",
-		start_date: "2020-03-03",
-		end_date: "2020-04-04",
-	},
-];
-
-const mockBudgetTarget = [
-	{
-		id: "1",
-		name: "Budget target 1",
-		project: { id: 3, name: "my project" },
-		budget_category_organization: { id: "1", name: "military 1", code: "m5" },
-		description: "Description 1",
-		total_target_amount: 100,
-		donor: { name: "donor 1", id: "1" },
-	},
-];
 
 const mocks = [
 	{
@@ -100,11 +90,29 @@ const mocks = [
 				filter: {
 					project: 3,
 				},
+				limit: 10,
+				start: 0,
+				sort: "created_at:DESC",
 			},
 		},
 		result: {
 			data: {
-				projectBudgetTargets: mockBudgetTarget,
+				projectBudgetTargets: mockOrgBudgetTargetProject,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_BUDGET_TARGET_PROJECT,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectBudgetTargets: mockOrgBudgetTargetProject,
 			},
 		},
 	},
@@ -135,6 +143,62 @@ const mocks = [
 			},
 		},
 	},
+	{
+		request: {
+			query: GET_GRANT_PERIODS_PROJECT_LIST,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				grantPeriodsProjectList: mockGrantPeriodsProjectList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_FINANCIAL_YEARS,
+			variables: {
+				filter: {
+					country: "1",
+				},
+			},
+		},
+		result: {
+			data: {
+				financialYears: mockFinancialYears,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARGETS_COUNT,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: mockBudgetTargetCount,
+		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+			variables: {
+				filter: {
+					budgetTargetsProject: "3",
+				},
+			},
+		},
+		result: {
+			data: mockBudgetTargetAmountSum,
+		},
+	},
 ];
 
 beforeEach(() => {
@@ -157,8 +221,8 @@ beforeEach(() => {
 
 describe("Budget Target Table tests", () => {
 	test("renders correctly", async () => {
-		await waitForElement(() => table.getByText(/Budget target 1/i));
-		await waitForElement(() => table.getByText(/100/i));
-		await waitForElement(() => table.getByText(/military 1/i));
+		await waitForElement(() => table.getByText(/target1/i));
+		await waitForElement(() => table.getByText(/water supply/i));
+		await waitForElement(() => table.getByText(/donor 1/i));
 	});
 });

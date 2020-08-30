@@ -38,14 +38,16 @@ function FormDialog({
 						<Typography variant="subtitle2" color="textSecondary" gutterBottom>
 							{subtitle}
 						</Typography>
-						<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>
-							<Typography color="primary" gutterBottom>
-								{workspace}
-							</Typography>
-							<Box mt={1}>
-								<Typography variant="subtitle2">{project}</Typography>
+						{(workspace || project) && (
+							<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>
+								<Typography color="primary" gutterBottom>
+									{workspace}
+								</Typography>
+								<Box mt={1}>
+									<Typography variant="subtitle2">{project}</Typography>
+								</Box>
 							</Box>
-						</Box>
+						)}
 					</Grid>
 					<Grid item xs={8}>
 						{children}
