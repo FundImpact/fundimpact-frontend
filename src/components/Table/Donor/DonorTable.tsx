@@ -43,15 +43,6 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 	})
 );
 
-const tableHeading = [
-	{ label: "S.no" },
-	{ label: "Name" },
-	{ label: "Legal Name" },
-	{ label: "Short Name" },
-	{ label: "Country" },
-	{ label: "" },
-];
-
 const keyNames = ["name", "legal_name", "short_name", "country,name"];
 
 const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
@@ -73,6 +64,15 @@ function getValue(obj: any, key: string[]): any {
 	}
 	return getValue(obj[key[0]], key.slice(1));
 }
+
+const tableHeading = [
+	{ label: "S.no" },
+	{ label: "Name" },
+	{ label: "Legal Name" },
+	{ label: "Short Name" },
+	{ label: "Country" },
+	{ label: "" },
+];
 
 function DonorTable() {
 	const classes = useStyles();
