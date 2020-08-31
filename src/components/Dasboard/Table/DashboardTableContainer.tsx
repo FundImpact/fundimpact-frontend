@@ -82,9 +82,6 @@ export default function DashboardTableContainer() {
 			label: "Budget",
 			table: <BudgetTargetTable />,
 			createButtons: [
-				{ text: "Create Deliverable Target" },
-				{ text: "Create Impact Target" },
-				{ text: "Add Donor" },
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (

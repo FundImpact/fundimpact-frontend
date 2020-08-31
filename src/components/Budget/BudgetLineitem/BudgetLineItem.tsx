@@ -159,14 +159,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, []);
 
 	useEffect(() => {
-		if (currentProject) {
+		if (selectedDonor) {
 			getGrantPeriodProject({
 				filter: {
+					donor: selectedDonor?.id,
 					project: currentProject?.id,
 				},
 			});
 		}
-	}, [currentProject, getGrantPeriodProject]);
+	}, [selectedDonor, getGrantPeriodProject]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -214,16 +215,16 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	useEffect(() => {
 		if (financialYearDonor) {
-			budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYears
-				? financialYearDonor?.financialYears
+			budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYearList
+				? financialYearDonor?.financialYearList
 				: [];
 		}
 	}, [financialYearDonor]);
 
 	useEffect(() => {
 		if (financialYearOrg) {
-			budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYears
-				? financialYearOrg?.financialYears
+			budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYearList
+				? financialYearOrg?.financialYearList
 				: [];
 		}
 	}, [financialYearOrg]);

@@ -73,6 +73,19 @@ function Donor(props: IDonorProps) {
 								},
 							},
 						});
+
+						store.writeQuery<{ orgDonorsCount: number }>({
+							query: GET_DONOR_COUNT,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+							data: {
+								orgDonorsCount: count!.orgDonorsCount + 1,
+							},
+						});
+
 						let limit = 0;
 						if (count) {
 							limit = count.orgDonorsCount;
@@ -89,7 +102,7 @@ function Donor(props: IDonorProps) {
 								sort: "created_at:DESC",
 							},
 						});
-						console.log("data :>> ", data);
+
 						let orgDonors = data?.orgDonors ? data?.orgDonors : [];
 
 						store.writeQuery<IGET_DONOR>({
@@ -101,6 +114,18 @@ function Donor(props: IDonorProps) {
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
 								sort: "created_at:DESC",
+							},
+							data: {
+								orgDonors: [createOrgDonor, ...orgDonors],
+							},
+						});
+
+						store.writeQuery<IGET_DONOR>({
+							query: GET_ORG_DONOR,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
 							},
 							data: {
 								orgDonors: [createOrgDonor, ...orgDonors],

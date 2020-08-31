@@ -108,7 +108,10 @@ function BudgetTargetTable() {
 			project: currentProject?.id,
 		},
 		sort: "created_at:DESC",
+		fireRequest: Boolean(currentProject),
 	});
+
+	
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
 		variables: {
 			filter: {
