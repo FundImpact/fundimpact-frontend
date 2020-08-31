@@ -37,7 +37,6 @@ interface IIndicatorProps_PROPS {
 }
 
 const ISTATUS = (props: IIndicatorProps_PROPS) => {
-	console.log({ props });
 	if (props.percentage === null || props.percentage === undefined)
 		return (
 			<>

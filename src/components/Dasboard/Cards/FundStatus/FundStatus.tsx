@@ -38,7 +38,7 @@ const createFundDetails = (
 	};
 
 	const FUNDS_SPENT: IFunds = {
-		name: "SPEND",
+		name: "Spend",
 		amountToShow: undefined,
 		color: theme.palette.primary.main,
 	};
