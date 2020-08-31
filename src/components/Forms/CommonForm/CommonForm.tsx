@@ -71,6 +71,7 @@ function CommonForm({
 											endAdornment={
 												element.endAdornment ? element.endAdornment : ""
 											}
+											required={element.required ? element.required : false}
 										/>
 									</Grid>
 								);
@@ -90,6 +91,9 @@ function CommonForm({
 												selectLabelId={element.selectLabelId}
 												selectId={element.selectId}
 												displayName={element.displayName}
+												required={
+													element.required ? element.required : false
+												}
 											/>
 										</Grid>
 									)

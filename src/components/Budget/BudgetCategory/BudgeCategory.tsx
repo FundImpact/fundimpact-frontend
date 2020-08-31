@@ -29,12 +29,6 @@ const validate = (values: IBudgetCategory) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.description) {
-		errors.description = "Description is required";
-	}
-	if (!values.code) {
-		errors.code = "Budget code is required";
-	}
 	return errors;
 };
 

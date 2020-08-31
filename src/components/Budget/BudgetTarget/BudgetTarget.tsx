@@ -44,9 +44,6 @@ const validate = (values: IBudgetTargetForm) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.description) {
-		errors.description = "Description is required";
-	}
 	if (!values.total_target_amount) {
 		errors.total_target_amount = "Total target amount is required";
 	}

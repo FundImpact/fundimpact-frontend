@@ -65,7 +65,7 @@ const getBudgetLineitemInitialvalues = (
 function getInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IBudgetTargetForm {
 	return {
 		name: budgetTarget ? budgetTarget.name : "",
-		description: budgetTarget ? budgetTarget.description : "",
+		description: budgetTarget ? budgetTarget?.description : "",
 		total_target_amount: budgetTarget ? budgetTarget.total_target_amount : "",
 		id: budgetTarget ? budgetTarget.id : "",
 		budget_category_organization: budgetTarget
