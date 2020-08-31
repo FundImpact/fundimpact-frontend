@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			},
 			padding: theme.spacing(1),
 			marginRight: theme.spacing(2),
-		}
+		},
 	})
 );
 
@@ -50,9 +50,6 @@ function CommonForm({
 			isInitialValid={() => validateInitialValue(initialValues)}
 		>
 			{(formik) => {
-				{
-					console.log("formik :>> ", formik);
-				}
 				return (
 					<Form>
 						<Grid container spacing={4}>
