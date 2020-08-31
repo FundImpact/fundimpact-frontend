@@ -14,4 +14,5 @@ export interface IImpactUnit {
 	target_unit: number;
 	prefix_label: string;
 	suffix_label: string;
+	impactCategory: string;
 }

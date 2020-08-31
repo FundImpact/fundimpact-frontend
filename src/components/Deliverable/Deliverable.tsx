@@ -5,7 +5,10 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { CREATE_DELIVERABLE_CATEGORY } from "../../graphql/Deliverable/category";
+import {
+	CREATE_DELIVERABLE_CATEGORY,
+	GET_DELIVERABLE_ORG_CATEGORY,
+} from "../../graphql/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableCategoryForm } from "./inputField.json";
@@ -32,7 +35,15 @@ function Deliverable(props: DeliverableProps) {
 
 	const onCreate = async (value: IDeliverable) => {
 		try {
-			await createDeliverableCategory({ variables: { input: value } });
+			await createDeliverableCategory({
+				variables: { input: value },
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_ORG_CATEGORY,
+						variables: { filter: { organization: value.organization } },
+					},
+				],
+			});
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			onCancel();
 		} catch (error) {

@@ -1,36 +1,41 @@
-import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import TableCell from "@material-ui/core/TableCell";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
-
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
-	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/target";
-import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
-import FullScreenLoader from "../../commons/GlobalLoader";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
+import { useQuery } from "@apollo/client";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { deliverableAndImpactHeadings } from "../constants";
-import FICollaspeTable from "../FICollapseTable";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import {
+	IconButton,
+	Menu,
+	MenuItem,
+	TableRow,
+	TableCell,
+	TablePagination,
+} from "@material-ui/core";
+import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
+import FICollaspeTable from "../FICollapseTable";
+import FullScreenLoader from "../../commons/GlobalLoader";
+import pagination from "../../../hooks/pagination/pagination";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
-	const [
-		deliverableTargetMenuAnchor,
-		setDeliverableTargetMenuAnchor,
-	] = useState<null | HTMLElement>(null);
+	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
 	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setDeliverableTargetMenuAnchor(event.currentTarget);
+		setMenuAnchor(event.currentTarget);
 	};
 	const handleMenuClose = () => {
-		setDeliverableTargetMenuAnchor(null);
+		setMenuAnchor(null);
 	};
+
 	return (
 		<>
 			<TableCell>
@@ -40,9 +45,9 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 			</TableCell>
 			<Menu
 				id="deliverable-target-simple-menu"
-				anchorEl={deliverableTargetMenuAnchor}
+				anchorEl={menuAnchor}
 				keepMounted
-				open={Boolean(deliverableTargetMenuAnchor)}
+				open={Boolean(menuAnchor)}
 				onClose={handleMenuClose}
 			>
 				<MenuItem
@@ -105,6 +110,7 @@ function DeliverableTargetAchievementAndProgress({
 	});
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
+
 	useEffect(() => {
 		if (data) {
 			setDeliverableTargetAchieved(data.deliverableTrackingTotalValue);
@@ -126,17 +132,40 @@ export default function DeliverablesTable() {
 	const { loading, data } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: { filter: { project: dashboardData?.project?.id } },
 	});
+	const [page, setPage] = React.useState(0);
 
-	const [rows, setRows] = useState<
-		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
-	>([]);
-	console.log("dashboardData", dashboardData);
+	const handleChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > page) {
+			changePage();
+		} else {
+			changePage(true);
+		}
+		setPage(newPage);
+	};
+
+	let { count, queryData: deliverableTargetData, changePage } = pagination({
+		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
+		countFilter: {
+			project: dashboardData?.project?.id,
+		},
+		queryFilter: {
+			project: dashboardData?.project?.id,
+		},
+		sort: "created_at:DESC",
+	});
+	console.log(deliverableTargetData);
+
+	const [rows, setRows] = useState<any>([]);
 	useEffect(() => {
 		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
 			let deliverableTargetList = data.deliverableTargetList;
-			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
+			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
-				let row: { collaspeTable: React.ReactNode; column: React.ReactNode[] } = {
+				let row: { collaspeTable: any; column: any[] } = {
 					collaspeTable: null,
 					column: [],
 				};
@@ -176,6 +205,7 @@ export default function DeliverablesTable() {
 					array.push(row);
 				}
 			}
+
 			setRows(array);
 		} else {
 			setRows([]);
@@ -186,6 +216,16 @@ export default function DeliverablesTable() {
 		<>
 			{loading ? <FullScreenLoader /> : null}
 			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+			<TablePagination
+				rowsPerPageOptions={[]}
+				colSpan={9}
+				count={count}
+				rowsPerPage={count > 10 ? 10 : count}
+				page={page}
+				onChangePage={handleChangePage}
+				onChangeRowsPerPage={() => {}}
+				style={{ paddingRight: "40px" }}
+			/>
 		</>
 	);
 }
