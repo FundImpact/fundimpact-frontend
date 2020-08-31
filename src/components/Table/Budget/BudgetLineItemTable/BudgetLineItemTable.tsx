@@ -152,7 +152,7 @@ function BudgetLineItemTable({
 							? tableHeading.map((heading: { label: string }, index: number) => (
 									<TableCell className={tableHeader.th} key={index} align="left">
 										{heading.label === "Amount"
-											? `Amount (${currency})`
+											? `Amount ${currency ? "(" + currency + ")" : ""}`
 											: heading.label}
 									</TableCell>
 							  ))

@@ -273,6 +273,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 								},
 							},
 						});
+						store.writeQuery<{ projBudgetTrackingsCount: number }>({
+							query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+							variables: {
+								filter: {
+									budget_targets_project:
+										lineItemCreated.budget_targets_project.id,
+								},
+							},
+							data: {
+								projBudgetTrackingsCount: count!.projBudgetTrackingsCount + 1,
+							},
+						});
 						let limit = 0;
 						if (count) {
 							limit = count.projBudgetTrackingsCount;
