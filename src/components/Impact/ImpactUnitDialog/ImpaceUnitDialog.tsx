@@ -64,7 +64,6 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 
 	const [createImpactUnitsOrgInput, { loading }] = useMutation(CREATE_IMPACT_UNITS_ORG_INPUT, {
 		onCompleted(data) {
-			console.log(data.createImpactUnitsOrgInput);
 			createImpactCategoryUnit({
 				variables: {
 					input: {
@@ -83,7 +82,8 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 	});
 	useEffect(() => {
 		if (impactCategories) {
-			impactUnitSelect[0].optionsArray = impactCategories.impactCategoryOrgList;
+			console.log("impactCategories", impactCategories);
+			impactUnitSelect[0].optionsArray = impactCategories?.impactCategoryOrgList;
 		}
 	}, [impactCategories]);
 
