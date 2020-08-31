@@ -10,10 +10,13 @@ import {
 	FormHelperText,
 	MenuItem,
 	Box,
+	OutlinedInput,
+	InputAdornment,
+	IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
-import React from "react";
+import React, { useState } from "react";
 
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { usePostFetch } from "../../../hooks/fetch/usePostFetch";
@@ -26,7 +29,8 @@ import { getDefaultBasicInformation } from "../../../utils/signup.util";
 import AlertMsg from "../../AlertMessage/AlertMessage";
 import GlobalLoader from "../../commons/GlobalLoader";
 import { useGetFetch } from "../../../hooks/fetch/useFetch";
-
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 // import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const BasicDetailsForm = () => {
+	const [showPassword, setShowPassword] = useState(false);
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
 
@@ -71,7 +76,6 @@ const BasicDetailsForm = () => {
 		formikHelpers: FormikHelpers<IBasicInformation>
 	) => {
 		setPayload(values);
-
 		// navigate(`/signup/${SignUpSteps.SET_ORG}`);
 	};
 	const clearErrors = () => {
@@ -138,38 +142,47 @@ const BasicDetailsForm = () => {
 									variant="outlined"
 								/>
 							</Grid> */}
-								<Grid item xs={6}>
-									<TextField
-										style={{ margin: "0px" }}
-										error={!!formik.errors.password}
-										helperText={
-											formik.touched.password && formik.errors.password
-										}
-										onChange={formik.handleChange}
-										label="Password"
-										required
-										fullWidth
-										name="password"
-										variant="outlined"
-										type="password"
-									/>
-								</Grid>
-								<Grid item xs={6}>
-									<TextField
-										style={{ margin: "0px" }}
-										error={!!formik.errors.confirmPassword}
-										helperText={
-											formik.touched.confirmPassword &&
-											formik.errors.confirmPassword
-										}
-										onChange={formik.handleChange}
-										label="Confirm Password"
-										required
-										fullWidth
-										name="confirmPassword"
-										variant="outlined"
-										type="password"
-									/>
+
+								<Grid item xs={12} md={12}>
+									<FormControl variant="outlined" fullWidth>
+										<InputLabel required htmlFor="outlined-adornment-password">
+											Password
+										</InputLabel>
+										<OutlinedInput
+											id="outlined-adornment-password"
+											type={showPassword ? "text" : "password"}
+											data-testid="signup-password"
+											onChange={formik.handleChange}
+											error={!!formik.errors.password}
+											required
+											label="Password"
+											name="password"
+											endAdornment={
+												<InputAdornment position="end">
+													<IconButton
+														aria-label="toggle password visibility"
+														onClick={() => {
+															setShowPassword(!showPassword);
+														}}
+														onMouseDown={(e) => {
+															e.preventDefault();
+														}}
+														edge="end"
+													>
+														{showPassword ? (
+															<Visibility />
+														) : (
+															<VisibilityOff />
+														)}
+													</IconButton>
+												</InputAdornment>
+											}
+											labelWidth={70}
+										/>
+										<FormHelperText error>
+											{formik.touched.password && formik.errors.password}
+										</FormHelperText>
+									</FormControl>
 								</Grid>
 
 								<Grid item xs={12} md={12}>
@@ -229,7 +242,6 @@ const BasicDetailsForm = () => {
 													<em>No country available</em>
 												</MenuItem>
 											) : null}
-											
 										</Select>
 										<FormHelperText error>
 											{formik.touched.organization?.country &&

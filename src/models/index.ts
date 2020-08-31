@@ -30,7 +30,6 @@ export interface IUserSignUp {
 export interface IBasicInformation {
 	email: string;
 	password: string;
-	confirmPassword: string;
 	provider: "local";
 	organization: {
 		name: string;
