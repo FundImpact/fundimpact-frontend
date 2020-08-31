@@ -32,6 +32,7 @@ const SelectField = ({
 	inputLabelId,
 	selectLabelId,
 	selectId,
+	displayName = "data",
 }: Omit<ISelectField, "size" | "type">) => {
 	const classes = useStyles();
 	return (
@@ -52,7 +53,13 @@ const SelectField = ({
 					"data-testid": testId,
 				}}
 			>
-				{optionsArray.map((elem: any, index: number) => (
+				{!optionsArray?.length ? (
+					<MenuItem>
+						<em>No {displayName} available</em>
+					</MenuItem>
+				) : null}
+
+				{optionsArray?.map((elem: any, index: number) => (
 					<MenuItem key={index} value={elem.id}>
 						{elem.name}
 					</MenuItem>
