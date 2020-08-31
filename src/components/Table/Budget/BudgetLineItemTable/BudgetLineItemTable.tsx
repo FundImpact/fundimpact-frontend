@@ -25,6 +25,7 @@ import {
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
 } from "../../../../graphql/Budget";
 import pagination from "../../../../hooks/pagination";
+import TableSkeleton from "../../../Skeletons/TableSkeleton";
 
 const useStyles = makeStyles({
 	table: {
@@ -98,7 +99,13 @@ function BudgetLineItemTable({
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [page, setPage] = React.useState(0);
 
-	let { count, queryData: budgetLineitemData, changePage } = pagination({
+	let {
+		count,
+		queryData: budgetLineitemData,
+		changePage,
+		countQueryLoading,
+		queryLoading,
+	} = pagination({
 		query: GET_PROJECT_BUDGET_TARCKING,
 		countQuery: GET_PROJ_BUDGET_TRACINGS_COUNT,
 		countFilter: {
@@ -132,6 +139,10 @@ function BudgetLineItemTable({
 			),
 		},
 	];
+
+	if (countQueryLoading || queryLoading) {
+		return <TableSkeleton lines={3} />;
+	}
 
 	return (
 		<TableContainer component={Paper}>
