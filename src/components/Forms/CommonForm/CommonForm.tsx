@@ -20,13 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			},
 			padding: theme.spacing(1),
 			marginRight: theme.spacing(2),
-		},
-		myResetButton: {
-			"&:hover": {
-				color: "#d32f2f !important",
-			},
-			padding: theme.spacing(1),
-		},
+		}
 	})
 );
 
@@ -118,14 +112,6 @@ function CommonForm({
 									</Button>
 									<Button className={classes.myCancelButton} onClick={onCancel}>
 										Cancel
-									</Button>
-									<Button
-										className={classes.myResetButton}
-										onClick={() => {
-											formik.resetForm();
-										}}
-									>
-										Reset
 									</Button>
 								</Box>
 							</Grid>
