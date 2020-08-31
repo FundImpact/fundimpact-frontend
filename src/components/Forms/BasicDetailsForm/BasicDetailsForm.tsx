@@ -45,6 +45,33 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
+const validate = (values: IBasicInformation) => {
+	let errors: Partial<IBasicInformation> = {};
+
+	if (!values.email) {
+		errors.email = "Email is required";
+	}
+	if (!values.organization.name) {
+		if (!errors.organization) {
+			errors.organization = { name: "", country: "" };
+		}
+		errors.organization.name = "Organization name is required";
+	}
+	if (!values.organization.country) {
+		if (!errors.organization) {
+			errors.organization = { name: "", country: "" };
+		}
+		errors.organization.country = "Organization country is required";
+	}
+	if (!values.password) {
+		errors.password = "Password is required";
+	}
+	if (!values.password) {
+		errors.password = "Password is required";
+	}
+	return errors;
+};
+
 const BasicDetailsForm = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
@@ -81,9 +108,20 @@ const BasicDetailsForm = () => {
 	const clearErrors = () => {
 		if (error) error = "";
 	};
+	const validateInitialValue = (initialValue: any) => {
+		const errors = validate(initialValue) as object;
+		if (!errors) return true;
+		return Object.keys(errors).length ? false : true;
+	};
+
 	return (
 		<div onChange={clearErrors}>
-			<Formik initialValues={initialValues} onSubmit={OnSubmit}>
+			<Formik
+				initialValues={initialValues}
+				onSubmit={OnSubmit}
+				validate={validate}
+				isInitialValid={() => validateInitialValue(initialValues)}
+			>
 				{(formik) => {
 					return (
 						<Form className={classes.form}>
@@ -105,9 +143,10 @@ const BasicDetailsForm = () => {
 								<Grid item xs={12} md={12}>
 									<TextField
 										style={{ margin: "0px" }}
-										error={!!formik.errors.email}
+										error={!!formik.errors.email && !!formik.touched.email}
 										helperText={formik.touched.email && formik.errors.email}
 										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										label="Email"
 										required
 										fullWidth
@@ -153,7 +192,11 @@ const BasicDetailsForm = () => {
 											type={showPassword ? "text" : "password"}
 											data-testid="signup-password"
 											onChange={formik.handleChange}
-											error={!!formik.errors.password}
+											error={
+												!!formik.errors.password &&
+												!!formik.touched.password
+											}
+											onBlur={formik.handleBlur}
 											required
 											label="Password"
 											name="password"
@@ -187,13 +230,17 @@ const BasicDetailsForm = () => {
 
 								<Grid item xs={12} md={6}>
 									<TextField
-										error={!!formik.errors.organization?.name}
+										error={
+											!!formik.errors.organization?.name &&
+											!!formik.touched.organization?.name
+										}
 										helperText={
 											formik.touched.organization?.name &&
 											formik.errors.organization?.name
 										}
 										onChange={formik.handleChange}
 										label="Organization Name"
+										onBlur={formik.handleBlur}
 										required
 										fullWidth
 										name="organization.name"

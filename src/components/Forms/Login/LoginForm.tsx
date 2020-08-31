@@ -47,17 +47,13 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 		>
 			{(formik) => {
 				return (
-					<Form
-						className={classes.root}
-						autoComplete="off"
-						data-testid="form"
-						onChange={clearErrors}
-					>
+					<Form className={classes.root} autoComplete="off" data-testid="form">
 						<TextField
 							value={formik.values.email}
-							error={!!formik.errors.email}
+							error={!!formik.errors.email && !!formik.touched.email}
 							helperText={formik.touched.email && formik.errors.email}
 							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
 							label="Email"
 							required
 							name="email"
@@ -67,8 +63,10 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 						/>
 						<TextField
 							value={formik.values.password}
-							error={!!formik.errors.password}
+							error={!!formik.errors.password && !!formik.touched.password}
+							helperText={formik.touched.password && formik.errors.password}
 							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
 							label="Password"
 							required
 							name="password"
