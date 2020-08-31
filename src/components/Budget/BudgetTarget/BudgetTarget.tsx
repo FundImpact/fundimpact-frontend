@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -14,7 +14,6 @@ import {
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
-import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
@@ -76,24 +75,22 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		UPDATE_PROJECT_BUDGET_TARGET
 	);
 
-	let { fetchData: getOrgCurrencies, data: orgCurrencies } = useLazyQueryCustom({
-		query: GET_ORG_CURRENCIES_BY_ORG,
-	});
+	let [getOrgCurrencies, { data: orgCurrencies }] = useLazyQuery(GET_ORG_CURRENCIES_BY_ORG);
 
-	let { fetchData: getBudgetCategory, data: budgetCategory } = useLazyQueryCustom({
-		query: GET_ORGANIZATION_BUDGET_CATEGORY,
-	});
+	let [getBudgetCategory, { data: budgetCategory }] = useLazyQuery(
+		GET_ORGANIZATION_BUDGET_CATEGORY
+	);
 
-	let { fetchData: getDonors, data: donors } = useLazyQueryCustom({
-		query: GET_PROJ_DONORS,
-	});
+	let [getDonors, { data: donors }] = useLazyQuery(GET_PROJ_DONORS);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getOrgCurrencies({
-				filter: {
-					organization: dashboardData?.organization?.id,
-					isHomeCurrency: true,
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+						isHomeCurrency: true,
+					},
 				},
 			});
 		}
@@ -102,8 +99,10 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getBudgetCategory({
-				filter: {
-					organization: dashboardData?.organization?.id,
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
 				},
 			});
 		}
@@ -112,8 +111,10 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	useEffect(() => {
 		if (dashboardData?.project) {
 			getDonors({
-				filter: {
-					project: dashboardData?.project?.id,
+				variables: {
+					filter: {
+						project: dashboardData?.project?.id,
+					},
 				},
 			});
 		}
