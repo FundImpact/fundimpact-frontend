@@ -117,6 +117,7 @@ export interface ISelectField {
 	selectId: string;
 	size: any;
 	hidden?: boolean;
+	displayName?: string;
 }
 
 export interface IFormDialog {

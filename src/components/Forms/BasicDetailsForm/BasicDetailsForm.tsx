@@ -52,7 +52,6 @@ const BasicDetailsForm = () => {
 	let { error: countryListFetchError, data: countryList } = useGetFetch({
 		url: COUNTRY_LIST_API,
 	});
-
 	// let { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
 	// 	url: ORGANISATION_TYPES_API,
 	// });
@@ -224,6 +223,13 @@ const BasicDetailsForm = () => {
 													</MenuItem>
 												)
 											)}
+
+											{!countryList?.length ? (
+												<MenuItem>
+													<em>No country available</em>
+												</MenuItem>
+											) : null}
+											
 										</Select>
 										<FormHelperText error>
 											{formik.touched.organization?.country &&
