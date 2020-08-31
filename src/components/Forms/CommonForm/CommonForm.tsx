@@ -92,6 +92,7 @@ function CommonForm({
 												inputLabelId={element.inputLabelId}
 												selectLabelId={element.selectLabelId}
 												selectId={element.selectId}
+												displayName={element.displayName}
 											/>
 										</Grid>
 									)

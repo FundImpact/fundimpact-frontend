@@ -40,7 +40,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
-			"type": "select"
+			"type": "select",
+			"displayName": "budget category"
 		},
 		{
 			"name": "donor",
@@ -52,7 +53,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
-			"type": "select"
+			"type": "select",
+			"displayName": "donor"
 		}
 	]
 }

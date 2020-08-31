@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	UPDATE_PROJECT_BUDGET_TRACKING,
@@ -32,7 +32,6 @@ import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 } from "../../../models/budget/query";
 import { compareObjectKeys } from "../../../utils";
-import useLazyQueryCustom from "../../../hooks/useLazyQueryCustom";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -70,35 +69,27 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		UPDATE_PROJECT_BUDGET_TRACKING
 	);
 
-	let { fetchData: getBudgetTargetProject, data: budgetTargets } = useLazyQueryCustom({
-		query: GET_BUDGET_TARGET_PROJECT,
-	});
+	let [getBudgetTargetProject, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
 
-	let { fetchData: getAnnualYears, data: annualYears } = useLazyQueryCustom({
-		query: GET_ANNUAL_YEAR_LIST,
-	});
+	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST);
 
-	let { fetchData: getGrantPeriodProject, data: grantPeriodProject } = useLazyQueryCustom({
-		query: GET_GRANT_PERIODS_PROJECT_LIST,
-	});
+	let [getGrantPeriodProject, { data: grantPeriodProject }] = useLazyQuery(
+		GET_GRANT_PERIODS_PROJECT_LIST
+	);
 
-	let { fetchData: getFinancialYearOrg, data: financialYearOrg } = useLazyQueryCustom({
-		query: GET_FINANCIAL_YEARS,
-	});
+	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
 
-	let { fetchData: getFinancialYearDonor, data: financialYearDonor } = useLazyQueryCustom({
-		query: GET_FINANCIAL_YEARS,
-	});
+	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
 
-	let { fetchData: getOrgCurrencies, data: orgCurrencies } = useLazyQueryCustom({
-		query: GET_ORG_CURRENCIES_BY_ORG,
-	});
+	let [getOrgCurrencies, { data: orgCurrencies }] = useLazyQuery(GET_ORG_CURRENCIES_BY_ORG);
 
 	useEffect(() => {
 		if (currentProject) {
 			getBudgetTargetProject({
-				filter: {
-					project: currentProject?.id,
+				variables: {
+					filter: {
+						project: currentProject?.id,
+					},
 				},
 			});
 		}
@@ -161,9 +152,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	useEffect(() => {
 		if (selectedDonor) {
 			getGrantPeriodProject({
-				filter: {
-					donor: selectedDonor?.id,
-					project: currentProject?.id,
+				variables: {
+					filter: {
+						donor: selectedDonor?.id,
+						project: currentProject?.id,
+					},
 				},
 			});
 		}
@@ -172,8 +165,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getFinancialYearOrg({
-				filter: {
-					country: dashboardData?.organization?.country?.id,
+				variables: {
+					filter: {
+						country: dashboardData?.organization?.country?.id,
+					},
 				},
 			});
 		}
@@ -182,8 +177,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	useEffect(() => {
 		if (selectedDonor) {
 			getFinancialYearDonor({
-				filter: {
-					country: selectedDonor.country.id,
+				variables: {
+					filter: {
+						country: selectedDonor.country.id,
+					},
 				},
 			});
 		}
@@ -192,9 +189,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getOrgCurrencies({
-				filter: {
-					organization: dashboardData?.organization?.id,
-					isHomeCurrency: true,
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+						isHomeCurrency: true,
+					},
 				},
 			});
 		}
