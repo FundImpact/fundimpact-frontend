@@ -414,7 +414,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
-			title="Report Expenditure"
+			title="Report Budget Spend"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
