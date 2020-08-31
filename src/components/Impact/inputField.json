@@ -95,22 +95,9 @@
 			"dataTestId": "impactTargetName",
 			"testId": "impactTargetNameInput",
 			"label": "Name",
+			"required": true,
 			"inputType": "textarea",
-			"size": 12
-		},
-		{
-			"name": "impactCategory",
-			"id": "impactCategory",
-			"dataTestId": "impactTargetCategory",
-			"testId": "impactTargetCategoryInput",
-			"label": "Impact Category",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"getInputValue": {},
-			"size": 12
+			"size": 6
 		},
 		{
 			"name": "target_value",
@@ -118,15 +105,33 @@
 			"dataTestId": "impactTargetTargetValue",
 			"testId": "impactTargetTargetValueInput",
 			"label": "Target Value",
+			"required": true,
 			"inputType": "textarea",
 			"size": 6
 		},
+		{
+			"name": "impactCategory",
+			"id": "impactCategory",
+			"dataTestId": "impactTargetCategory",
+			"testId": "impactTargetCategoryInput",
+			"label": "Impact Category",
+			"required": true,
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"getInputValue": {},
+			"size": 6
+		},
+
 		{
 			"name": "impactUnit",
 			"id": "impactUnit",
 			"dataTestId": "impactTargetUnit",
 			"testId": "impactTargetUnitInput",
 			"label": "Impact Unit",
+			"required": true,
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -154,7 +159,8 @@
 			"testId": "impactTargetNameInput",
 			"label": "Name",
 			"inputType": "textarea",
-			"size": 12
+			"required": true,
+			"size": 6
 		},
 		{
 			"name": "target_value",
@@ -162,6 +168,7 @@
 			"dataTestId": "impactTargetTargetValue",
 			"testId": "impactTargetTargetValueInput",
 			"label": "Target Value",
+			"required": true,
 			"inputType": "textarea",
 			"size": 6
 		},
@@ -183,6 +190,7 @@
 			"id": "impact_target_project",
 			"label": "Impact Target",
 			"size": 6,
+			"required": true,
 			"dataTestId": "impactTracklineTarget",
 			"testId": "impactTracklineTargetInput",
 			"optionsArray": [],
@@ -194,19 +202,60 @@
 		{
 			"name": "value",
 			"id": "value",
+			"required": true,
 			"dataTestId": "impactTracklineValue",
 			"testId": "impactTracklineValueInput",
 			"label": "Value",
 			"type": "number",
 			"size": 6
 		},
+
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"required": true,
+			"dataTestId": "impactTracklineDate",
+			"testId": "impactTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "donors",
+			"id": "donors",
+			"label": "Select Donors",
+			"required": true,
+			"size": 6,
+			"dataTestId": "impactTracklineDonor",
+			"testId": "impactTracklineDateInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-mutiple-name-label",
+			"selectLabelId": "demo-mutiple-name-label",
+			"selectId": "demo-mutiple-name",
+			"inputType": "multiSelect"
+		},
 		{
 			"name": "annual_year",
 			"id": "annual_year",
 			"label": "Annual Year",
+			"required": true,
 			"size": 6,
 			"dataTestId": "impactTracklineAnnualYear",
 			"testId": "impactTracklineAnnualYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_year",
+			"id": "financial_year",
+			"required": true,
+			"label": "Financial Year",
+			"size": 6,
+			"dataTestId": "ImpactTracklineFinancialYear",
+			"testId": "ImpactTracklineFinancialYearInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -222,15 +271,6 @@
 			"multiline": true,
 			"rows": 2,
 			"size": 12
-		},
-		{
-			"name": "reporting_date",
-			"id": "reporting_date",
-			"dataTestId": "impactTracklineDate",
-			"testId": "impactTracklineDateInput",
-			"label": "Reporting Date",
-			"type": "date",
-			"size": 6
 		}
 	]
 }

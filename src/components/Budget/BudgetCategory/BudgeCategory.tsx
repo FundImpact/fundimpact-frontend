@@ -71,7 +71,7 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 								},
 							},
 							data: {
-								orgBudgetCategory: [...budgetCategory, createOrgBudgetCategory],
+								orgBudgetCategory: [createOrgBudgetCategory, ...budgetCategory],
 							},
 						});
 					} catch (err) {}

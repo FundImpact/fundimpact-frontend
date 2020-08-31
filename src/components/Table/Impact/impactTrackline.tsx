@@ -1,17 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/Impact/trackline";
 import { useQuery } from "@apollo/client";
-import { deliverableAndimpactTracklineHeading } from "../constants";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
-import FITable from "../FITable";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import React, { useEffect, useState } from "react";
+
+import {
+	GET_IMPACT_LINEITEM_FYDONOR,
+	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+} from "../../../graphql/Impact/trackline";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
-import { IMPACT_ACTIONS } from "../../Impact/constants";
-import FullScreenLoader from "../../commons/GlobalLoader";
 import { getTodaysDate } from "../../../utils";
+import FullScreenLoader from "../../commons/GlobalLoader";
+import { IMPACT_ACTIONS } from "../../Impact/constants";
+import ImpactTrackLine from "../../Impact/impactTrackLine";
+import { deliverableAndimpactTracklineHeading } from "../constants";
+import FITable from "../FITable";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
+	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
+	const [impactTracklineDonors, setImpactTracklineDonors] = useState<
+		{
+			id: string;
+			name: string;
+			donor: { id: string; name: string; country: { id: string; name: string } };
+		}[]
+	>([]);
+
+	useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
+		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
+		onCompleted(data) {
+			let impactMapValueobj: any = {};
+			let impactProjectDonors: any = [];
+			data.impactLinitemFyDonorList.forEach((elem: any) => {
+				impactMapValueobj[`${elem.project_donor.id}mapValues`] = {
+					id: elem.id,
+					financial_year: elem.financial_year?.id,
+					grant_periods_project: elem.grant_periods_project?.id,
+					impact_tracking_lineitem: elem.impact_tracking_lineitem?.id,
+					project_donor: elem.project_donor?.id,
+				};
+				impactProjectDonors.push({
+					id: elem.project_donor?.id,
+					name: elem.project_donor?.donor?.name,
+					donor: elem.project_donor?.donor,
+				});
+			});
+			setImpactTracklineDonors(impactProjectDonors);
+			setImpactTracklineDonorsMapValues(impactMapValueobj);
+		},
+		onError(data) {
+			console.log("errrr", data);
+		},
+	});
 	const [impactTracklineMenuAnchor, setImpactTracklineMenuAnchor] = useState<null | HTMLElement>(
 		null
 	);
@@ -40,16 +79,19 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 					onClick={() => {
 						setImpactTargetLineData({
 							id: impactTargetLine.id,
-							impact_target_project: impactTargetLine.impact_target_project.id,
-							annual_year: impactTargetLine.annual_year.id,
-							reporting_date: impactTargetLine.reporting_date,
-							value: impactTargetLine.value,
-							note: impactTargetLine.note,
+							impact_target_project: impactTargetLine.impact_target_project?.id,
+							annual_year: impactTargetLine.annual_year?.id,
+							reporting_date: getTodaysDate(impactTargetLine?.reporting_date),
+							value: impactTargetLine?.value,
+							note: impactTargetLine?.note,
+							financial_year: impactTargetLine.financial_year?.id,
+							donors: impactTracklineDonors,
+							impactDonorMapValues: impactTracklineDonorsMapValues,
 						});
 						handleMenuClose();
 					}}
 				>
-					Edit Target Line
+					Edit Achievement
 				</MenuItem>
 			</Menu>
 			{impactTargetLineData && (

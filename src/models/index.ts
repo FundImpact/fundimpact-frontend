@@ -38,6 +38,7 @@ export interface IBasicInformation {
 		legal_name?: string;
 		description?: string;
 		type?: string;
+		country: string;
 	};
 }
 
@@ -94,11 +95,13 @@ export interface IInputFields {
 	rows?: number;
 	formik?: any;
 	type?: string;
+	size?: any;
 	optionsArray?: any[];
 	inputLabelId?: string;
 	selectLabelId?: string;
 	selectId?: string;
 	getInputValue?: any;
+	required?: boolean;
 	multiple?: boolean;
 }
 
@@ -114,6 +117,7 @@ export interface ISelectField {
 	selectId: string;
 	size: any;
 	hidden?: boolean;
+	displayName?: string;
 }
 
 export interface IFormDialog {

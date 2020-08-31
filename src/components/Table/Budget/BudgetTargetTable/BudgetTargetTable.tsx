@@ -1,4 +1,4 @@
-import { Table, TableFooter } from "@material-ui/core";
+import { Table, TableFooter, Typography, Box } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -23,6 +23,7 @@ import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import pagination from "../../../../hooks/pagination";
 import TablePagination from "@material-ui/core/TablePagination";
 import BudgetTargetTableRow from "./BudgetTargetTableRow";
+import TableSkeleton from "../../../Skeletons/TableSkeleton";
 
 const useStyles = makeStyles({
 	table: {
@@ -98,7 +99,13 @@ function BudgetTargetTable() {
 	const [openBudgetLineItem, setOpenBudgetLineItem] = useState(false);
 	const [page, setPage] = React.useState(0);
 
-	let { count, queryData: budgetTargetData, changePage } = pagination({
+	let {
+		count,
+		queryData: budgetTargetData,
+		changePage,
+		queryLoading,
+		countQueryLoading,
+	} = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
 		countFilter: {
@@ -108,7 +115,9 @@ function BudgetTargetTable() {
 			project: currentProject?.id,
 		},
 		sort: "created_at:DESC",
+		fireRequest: Boolean(currentProject),
 	});
+
 	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
 		variables: {
 			filter: {
@@ -139,6 +148,18 @@ function BudgetTargetTable() {
 		setPage(newPage);
 	};
 
+	if (countQueryLoading || queryLoading) {
+		return <TableSkeleton />;
+	}
+
+	if (!budgetTargetData?.projectBudgetTargets?.length) {
+		return (
+			<Box p={2}>
+				<Typography align="center">No Budget Target Created </Typography>
+			</Box>
+		);
+	}
+
 	return (
 		<TableContainer component={Paper}>
 			<BudgetTarget
@@ -167,11 +188,13 @@ function BudgetTargetTable() {
 						{tableHeading.map((heading: { label: string }, index: number) => (
 							<TableCell className={tableHeader.th} key={index} align="left">
 								{heading.label === "Total Amount"
-									? `Total Amount (${
+									? `Total Amount ${
 											orgCurrencies?.orgCurrencies[0]?.currency.code
-												? orgCurrencies?.orgCurrencies[0]?.currency.code
+												? "(" +
+												  orgCurrencies?.orgCurrencies[0]?.currency.code +
+												  ")"
 												: ""
-									  })`
+									  }`
 									: heading.label}
 							</TableCell>
 						))}

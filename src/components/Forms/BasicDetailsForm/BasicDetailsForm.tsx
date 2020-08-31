@@ -1,4 +1,16 @@
-import { Button, createStyles, Grid, TextField, Theme } from "@material-ui/core";
+import {
+	Button,
+	createStyles,
+	Grid,
+	TextField,
+	Theme,
+	FormControl,
+	InputLabel,
+	Select,
+	FormHelperText,
+	MenuItem,
+	Box,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
@@ -9,10 +21,11 @@ import useRouteResolver from "../../../hooks/routes/useRouteResolver";
 import { IBasicInformation } from "../../../models";
 import { IUserSignupResponse } from "../../../models/signup/userSignUpResponse";
 import { setUser } from "../../../reducers/userReducer";
-import { SIGNUP_API } from "../../../utils/endpoints.util";
+import { SIGNUP_API, COUNTRY_LIST_API } from "../../../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../../../utils/signup.util";
 import AlertMsg from "../../AlertMessage/AlertMessage";
 import GlobalLoader from "../../commons/GlobalLoader";
+import { useGetFetch } from "../../../hooks/fetch/useFetch";
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -35,6 +48,10 @@ const BasicDetailsForm = () => {
 	let { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
 	>({ body: null, url: SIGNUP_API });
+
+	let { error: countryListFetchError, data: countryList } = useGetFetch({
+		url: COUNTRY_LIST_API,
+	});
 	// let { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
 	// 	url: ORGANISATION_TYPES_API,
 	// });
@@ -83,7 +100,7 @@ const BasicDetailsForm = () => {
 							</Grid> */}
 								<Grid item xs={12} md={12}>
 									<TextField
-										style={{ width: "100%" }}
+										style={{ margin: "0px" }}
 										error={!!formik.errors.email}
 										helperText={formik.touched.email && formik.errors.email}
 										onChange={formik.handleChange}
@@ -123,7 +140,7 @@ const BasicDetailsForm = () => {
 							</Grid> */}
 								<Grid item xs={6}>
 									<TextField
-										style={{ width: "100%" }}
+										style={{ margin: "0px" }}
 										error={!!formik.errors.password}
 										helperText={
 											formik.touched.password && formik.errors.password
@@ -139,7 +156,7 @@ const BasicDetailsForm = () => {
 								</Grid>
 								<Grid item xs={6}>
 									<TextField
-										style={{ width: "100%" }}
+										style={{ margin: "0px" }}
 										error={!!formik.errors.confirmPassword}
 										helperText={
 											formik.touched.confirmPassword &&
@@ -168,7 +185,57 @@ const BasicDetailsForm = () => {
 										fullWidth
 										name="organization.name"
 										variant="outlined"
+										style={{ margin: "0px" }}
 									/>
+								</Grid>
+
+								<Grid item xs={12} md={12}>
+									<FormControl variant="outlined" fullWidth>
+										<InputLabel id="demo-simple-select-outlined-label" required>
+											Select Country
+										</InputLabel>
+
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											error={
+												!!formik.errors.organization?.country &&
+												!!formik.touched.organization?.country
+											}
+											value={formik.values.organization?.country}
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											label={"Select Country"}
+											name="organization.country"
+											data-testid="signupCountry"
+											inputProps={{
+												"data-testid": "signupCountryInput",
+											}}
+											required
+										>
+											{countryList?.map(
+												(
+													elem: { name: string; id: string },
+													index: number
+												) => (
+													<MenuItem key={index} value={elem.id}>
+														{elem.name}
+													</MenuItem>
+												)
+											)}
+
+											{!countryList?.length ? (
+												<MenuItem>
+													<em>No country available</em>
+												</MenuItem>
+											) : null}
+											
+										</Select>
+										<FormHelperText error>
+											{formik.touched.organization?.country &&
+												formik.errors.organization?.country}
+										</FormHelperText>
+									</FormControl>
 								</Grid>
 
 								{/* <Grid item xs={12} md={6}>
@@ -269,6 +336,9 @@ const BasicDetailsForm = () => {
 									) : null}
 
 									{error ? <AlertMsg severity="error" msg={error} /> : null}
+									{countryListFetchError ? (
+										<AlertMsg severity="error" msg={countryListFetchError} />
+									) : null}
 								</Grid>
 							</Grid>
 						</Form>

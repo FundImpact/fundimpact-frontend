@@ -8,25 +8,23 @@ function UseLazyQueryCustom<T>({ query }: { query: any }) {
 	const [cachedData, setCachedData] = useState<T | null>(null);
 	const fetchData = useCallback(
 		(variables = {}) => {
-			let cachedQueryData: T | null = null;
-			try {
-				cachedQueryData = apolloClient.readQuery<T>({
-					query,
-					variables,
-				});
-			} catch (err) {}
+			// let cachedQueryData: T | null = null;
+			// try {
+			// 	cachedQueryData = apolloClient.readQuery<T>({
+			// 		query,
+			// 		variables,
+			// 	});
+			// } catch (err) {}
 
-			setCachedData(cachedQueryData);
-
-			if (!cachedQueryData) {
+			// if (!cachedQueryData) {
 				getQueryData({ variables });
-			}
+			// }
 		},
 		[query, getQueryData, setCachedData, apolloClient]
 	);
 
 	return {
-		data: cachedData ? cachedData : data,
+		data: data ? data : cachedData,
 		error,
 		loading,
 		fetchData,

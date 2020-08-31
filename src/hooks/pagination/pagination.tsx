@@ -21,6 +21,7 @@ function Pagination({
 	queryFilter,
 	countQuery,
 	countFilter,
+	fireRequest = true,
 }: {
 	limit?: number;
 	start?: number;
@@ -29,6 +30,7 @@ function Pagination({
 	queryFilter: any;
 	countQuery: any;
 	countFilter: any;
+	fireRequest?: boolean;
 }) {
 	const startingValue = React.useRef<number>(start);
 	const count = React.useRef<number>(0);
@@ -52,8 +54,10 @@ function Pagination({
 	] = useLazyQuery(query);
 
 	useEffect(() => {
-		getRequestedDataLength();
-	}, []);
+		if (fireRequest) {
+			getRequestedDataLength();
+		}
+	}, [fireRequest]);
 
 	useEffect(() => {
 		if (countData) {

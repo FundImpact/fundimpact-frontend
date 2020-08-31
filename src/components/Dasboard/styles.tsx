@@ -17,7 +17,6 @@ export const sidePanelStyles = makeStyles((theme: Theme) =>
 		leftPanelActiveLink: {
 			background: theme.palette.primary.contrastText,
 			display: "block",
-			color: "red",
 		},
 		sidePanel: {
 			height: "100vh",

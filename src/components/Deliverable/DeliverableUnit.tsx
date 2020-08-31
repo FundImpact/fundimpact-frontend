@@ -66,7 +66,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
-			deliverableUnitForm[2].optionsArray = deliverableCategories.deliverableCategory;
+			deliverableUnitForm[1].optionsArray = deliverableCategories.deliverableCategory;
 		}
 	}, [deliverableCategories]);
 
@@ -89,12 +89,6 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.prefix_label) {
-			errors.prefix_label = "prefix Label is required";
-		}
-		if (!values.suffix_label) {
-			errors.suffix_label = "Suffix Label is required";
-		}
 		if (!values.deliverableCategory) {
 			errors.deliverableCategory = "Category is required";
 		}
@@ -107,9 +101,12 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={"New Deliverable Unit"}
-				subtitle={"create a new deliverable unit"}
-				workspace={"workspace"}
+				title={
+					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") + " Target unit"
+				}
+				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

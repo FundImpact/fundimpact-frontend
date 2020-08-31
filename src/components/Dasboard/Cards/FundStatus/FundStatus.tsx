@@ -151,10 +151,10 @@ export default function FundStatus() {
 	return (
 		<Box mt={1} className={classes.root}>
 			<Grid container spacing={0} direction="row">
-				<Grid item xs={5} container={true} alignContent="center">
+				<Grid item xs={6} container={true} alignContent="center">
 					{FUND_DETAILS.map((fund, index) => (
 						<React.Fragment key={fund.name}>
-							<Box m={0} display="inline">
+							<Box m={0} width="100%" display="inline">
 								<Typography variant="subtitle1">
 									<FiberManualRecordIcon
 										className={classes.fundTextIcon}
@@ -166,7 +166,7 @@ export default function FundStatus() {
 						</React.Fragment>
 					))}
 				</Grid>
-				<Grid item xs={7}>
+				<Grid item xs={6}>
 					<PieCharts data={chartData} />
 				</Grid>
 			</Grid>

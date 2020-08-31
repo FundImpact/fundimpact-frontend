@@ -130,7 +130,7 @@ export default function DeliverablesTable() {
 	const [rows, setRows] = useState<
 		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
 	>([]);
-
+	console.log("dashboardData", dashboardData);
 	useEffect(() => {
 		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
 			let deliverableTargetList = data.deliverableTargetList;
