@@ -185,7 +185,7 @@ const BasicDetailsForm = () => {
 									</FormControl>
 								</Grid>
 
-								<Grid item xs={12} md={12}>
+								<Grid item xs={12} md={6}>
 									<TextField
 										error={!!formik.errors.organization?.name}
 										helperText={
@@ -202,7 +202,7 @@ const BasicDetailsForm = () => {
 									/>
 								</Grid>
 
-								<Grid item xs={12} md={12}>
+								<Grid item xs={12} md={6}>
 									<FormControl variant="outlined" fullWidth>
 										<InputLabel id="demo-simple-select-outlined-label" required>
 											Select Country
