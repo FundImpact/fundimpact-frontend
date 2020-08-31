@@ -37,6 +37,7 @@ interface IIndicatorProps_PROPS {
 }
 
 const ISTATUS = (props: IIndicatorProps_PROPS) => {
+	console.log({ props });
 	if (props.percentage === null || props.percentage === undefined)
 		return (
 			<>
@@ -108,30 +109,40 @@ export default function Achievement() {
 	});
 
 	useEffect(() => {
-		const TargetAmount = DeliverableAmountTarget
+		let TargetAmount = DeliverableAmountTarget
 			? DeliverableAmountTarget?.deliverableTargetTotalAmount
 			: null;
-		const AmoundSpend = DeliverableAmountSpend
+		let AmountSpend = DeliverableAmountSpend
 			? DeliverableAmountSpend.deliverableTrackingTotalSpendAmount
 			: null;
-		if (TargetAmount === undefined || TargetAmount === null) return;
-		if (AmoundSpend === undefined || AmoundSpend === null) return;
 
-		const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		if (TargetAmount === undefined || TargetAmount === null) return;
+		if (AmountSpend === undefined || AmountSpend === null) return;
+		if (TargetAmount === 0 && AmountSpend === 0) {
+			TargetAmount = 100;
+			AmountSpend = 1;
+		}
+
+		const totalPercentageSpend = ((AmountSpend / TargetAmount) * 100).toFixed(2);
 		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS, percentage: +totalPercentageSpend });
 	}, [DeliverableAmountTarget, DeliverableAmountSpend]);
 
 	useEffect(() => {
-		const TargetAmount = ImpactAmountTarget
+		let TargetAmount = ImpactAmountTarget
 			? ImpactAmountTarget?.impactTargetProjectTotalAmount
 			: null;
-		const AmoundSpend = ImpactAmountSpend
+		let AmountSpend = ImpactAmountSpend
 			? ImpactAmountSpend.deliverableTrackingTotalSpendAmount
 			: null;
 		if (TargetAmount === undefined || TargetAmount === null) return;
-		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		if (AmountSpend === undefined || AmountSpend === null) return;
 
-		const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		if (TargetAmount === 0 && AmountSpend === 0) {
+			TargetAmount = 100;
+			AmountSpend = 1;
+		}
+
+		const totalPercentageSpend = ((AmountSpend / TargetAmount) * 100).toFixed(2);
 		setIMPACT_STATUS({ ...IMPACT_STATUS, percentage: +totalPercentageSpend });
 	}, [ImpactAmountSpend, ImpactAmountTarget]);
 
