@@ -38,6 +38,7 @@ export const getDefaultBasicInformation = (): IBasicInformation => {
 			short_name: "",
 			description: "",
 			type: "",
+			country: "",
 		},
 	};
 };
