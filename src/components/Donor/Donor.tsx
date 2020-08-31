@@ -32,12 +32,6 @@ const validate = (values: IDONOR) => {
 	if (!values.country) {
 		errors.country = "Country is required";
 	}
-	if (!values.legal_name) {
-		errors.legal_name = "Legal name is required";
-	}
-	if (!values.short_name) {
-		errors.short_name = "Short name is required";
-	}
 	return errors;
 };
 

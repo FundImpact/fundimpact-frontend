@@ -47,16 +47,16 @@ const keyNames = ["name", "legal_name", "short_name", "country,name"];
 
 const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 	return {
-		country: donor ? donor.country.id : "",
-		legal_name: donor ? donor.legal_name : "",
-		name: donor ? donor.name : "",
-		short_name: donor ? donor.short_name : "",
-		id: donor ? donor.id : "",
+		country: donor?.country.id ? donor?.country.id : "",
+		legal_name: donor?.legal_name ? donor?.legal_name : "",
+		name: donor?.name  ? donor?.name : "",
+		short_name: donor?.short_name ? donor?.short_name : "",
+		id: donor?.id ? donor?.id : "",
 	};
 };
 
 function getValue(obj: any, key: string[]): any {
-	if (!obj.hasOwnProperty(key[0])) {
+	if (!obj?.hasOwnProperty(key[0])) {
 		return "";
 	}
 	if (key.length == 1) {
