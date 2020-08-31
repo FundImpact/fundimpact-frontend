@@ -38,6 +38,7 @@ export interface IBasicInformation {
 		legal_name?: string;
 		description?: string;
 		type?: string;
+		country: string;
 	};
 }
 
