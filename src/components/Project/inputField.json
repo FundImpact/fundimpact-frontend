@@ -42,7 +42,7 @@
 		{
 			"name": "donor",
 			"label": "Choose Donor",
-			"size": 6,
+			"size": 12,
 			"testId": "createDonorOption",
 			"dataTestId": "createDonor",
 			"optionsArray": [],

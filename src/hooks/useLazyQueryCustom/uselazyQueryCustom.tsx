@@ -26,7 +26,7 @@ function UseLazyQueryCustom<T>({ query }: { query: any }) {
 	);
 
 	return {
-		data: cachedData ? cachedData : data,
+		data: data ? data : cachedData,
 		error,
 		loading,
 		fetchData,

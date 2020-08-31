@@ -127,7 +127,6 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	}, [orgCurrencies]);
 
 	useEffect(() => {
-		if (!donors?.id) return;
 		if (donors) {
 			budgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
 				.filter(({ donor }: { donor: { id: string; name: string } }) => donor)
@@ -162,6 +161,19 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 						});
+
+						store.writeQuery<{ projectBudgetTargetsCount: number }>({
+							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+							data: {
+								projectBudgetTargetsCount: count!.projectBudgetTargetsCount + 1,
+							},
+						});
+
 						let limit = 0;
 						if (count) {
 							limit = count.projectBudgetTargetsCount;
