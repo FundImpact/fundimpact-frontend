@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
 			color: theme.palette.background.paper,
+			marginRight: theme.spacing(2),
 		},
 		myCancelButton: {
 			"&:hover": {
@@ -19,6 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
 			},
 			padding: theme.spacing(1),
 			marginRight: theme.spacing(2),
+		},
+		myResetButton: {
+			"&:hover": {
+				color: "#d32f2f !important",
+			},
+			padding: theme.spacing(1),
 		},
 	})
 );
@@ -49,6 +56,9 @@ function CommonForm({
 			isInitialValid={() => validateInitialValue(initialValues)}
 		>
 			{(formik) => {
+				{
+					console.log("formik :>> ", formik);
+				}
 				return (
 					<Form>
 						<Grid container spacing={4}>
@@ -95,9 +105,6 @@ function CommonForm({
 							})}
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
-									<Button className={classes.myCancelButton} onClick={onCancel}>
-										Cancel
-									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -108,6 +115,17 @@ function CommonForm({
 										disabled={!formik.isValid}
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
+									</Button>
+									<Button className={classes.myCancelButton} onClick={onCancel}>
+										Cancel
+									</Button>
+									<Button
+										className={classes.myResetButton}
+										onClick={() => {
+											formik.resetForm();
+										}}
+									>
+										Reset
 									</Button>
 								</Box>
 							</Grid>
