@@ -81,7 +81,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						});
 
 						store.writeQuery<{ deliverableTargetCount: number }>({
-							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+							query: GET_DELIVERABLE_TARGETS_COUNT,
 							variables: {
 								filter: {
 									project: dashboardData?.project?.id,
@@ -233,6 +233,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					input: value,
 				},
 				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: {
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+							filter: { project: props.project },
+						},
+					},
 					{
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },

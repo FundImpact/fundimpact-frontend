@@ -4,12 +4,15 @@ import React, { useEffect } from "react";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS, GET_PROJECT_DONORS } from "../../graphql";
-import { GET_ACHIEVED_VALLUE_BY_TARGET } from "../../graphql/Deliverable/target";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../graphql/Impact/target";
+import {
+	GET_IMPACT_TARGET_BY_PROJECT,
+	GET_ACHIEVED_VALLUE_BY_TARGET,
+} from "../../graphql/Impact/target";
 import {
 	CREATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 	UPDATE_IMPACT_TRACKLINE,
+	GET_IMPACT_TRACKLINE_COUNT,
 } from "../../graphql/Impact/trackline";
 import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -89,7 +92,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	};
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
-			console.log("it", data);
 			setImpactDonorForm(
 				<ImpacTracklineDonorYearTags
 					donors={donors}
@@ -142,7 +144,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	// updating Impact Target field with fetched Target list
 	useEffect(() => {
 		if (impactTargets) {
-			impactTragetLineForm[0].optionsArray = impactTargets.impactTargetProjectList;
+			impactTragetLineForm[0].optionsArray = impactTargets.impactTrackingLineitemList;
 		}
 	}, [impactTargets]);
 
@@ -170,12 +172,93 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	const onCreate = (value: IImpactTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
-		console.log(`on Created is called with: `, value);
 		setDonors(value.donors);
 		let input = { ...value };
 		delete input.donors;
 		createImpactTrackline({
 			variables: { input },
+			update: async (
+				store,
+				{ data: { createImpactTrackingLineitemInput: tracklineCreated } }
+			) => {
+				try {
+					const count = await store.readQuery<{
+						impactTrackingLineitemListCount: number;
+					}>({
+						query: GET_IMPACT_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								impact_target_project: value.impact_target_project,
+							},
+						},
+					});
+
+					store.writeQuery<{ impactTrackingLineitemListCount: number }>({
+						query: GET_IMPACT_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								impact_target_project: value.impact_target_project,
+							},
+						},
+						data: {
+							impactTrackingLineitemListCount:
+								count!.impactTrackingLineitemListCount + 1,
+						},
+					});
+
+					let limit = 0;
+					if (count) {
+						limit = count.impactTrackingLineitemListCount;
+					}
+					const dataRead = await store.readQuery<any>({
+						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+						variables: {
+							filter: {
+								impact_target_project: value.impact_target_project,
+							},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+					});
+					let impactTrackingLineitemList: any[] = dataRead?.impactTrackingLineitemList
+						? dataRead?.impactTrackingLineitemList
+						: [];
+
+					store.writeQuery<any>({
+						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+						variables: {
+							filter: {
+								impact_target_project: value.impact_target_project,
+							},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+						data: {
+							impactTrackingLineitemList: [
+								...impactTrackingLineitemList,
+								tracklineCreated,
+							],
+						},
+					});
+
+					store.writeQuery<any>({
+						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+						variables: {
+							filter: {
+								impact_target_project: value.impact_target_project,
+							},
+						},
+						data: {
+							impactTrackingLineitemList: [
+								...impactTrackingLineitemList,
+								tracklineCreated,
+							],
+						},
+					});
+				} catch (err) {}
+			},
 			refetchQueries: [
 				{
 					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
@@ -197,7 +280,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		let impactTargetLineId = value.id;
 		delete value.id;
 		value.reporting_date = new Date(value.reporting_date);
-		console.log(`on update is called with: `, value);
 		setDonors(value.donors);
 		setImpactDonorFormData(value.impactDonorMapValues);
 		let input = { ...value };
@@ -209,6 +291,15 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				input,
 			},
 			refetchQueries: [
+				{
+					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+					variables: {
+						limit: 10,
+						start: 0,
+						sort: "created_at:DESC",
+						filter: { impact_target_project: value.impact_target_project },
+					},
+				},
 				{
 					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 					variables: {

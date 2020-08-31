@@ -495,3 +495,9 @@ export const GET_IMPACT_LINEITEM_FYDONOR = gql`
 		}
 	}
 `;
+
+export const GET_IMPACT_TRACKLINE_COUNT = gql`
+	query getImpactTrackingLimeItemByImpactTargetProject($filter: JSON) {
+		impactTrackingLineitemListCount(where: $filter)
+	}
+`;

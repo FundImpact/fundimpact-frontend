@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination, Box } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
 import {
 	GET_DELIVERABLE_LINEITEM_FYDONOR,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+	GET_DELIVERABLE_TRACKLINE_COUNT,
 } from "../../../graphql/Deliverable/trackline";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { getTodaysDate } from "../../../utils";
@@ -14,6 +15,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
+import pagination from "../../../hooks/pagination/pagination";
 
 // import {
 // 	GET_DELIVERABLE_LINEITEM_FYDONOR,
@@ -124,15 +126,48 @@ export default function DeliverablesTrackLineTable({
 	const { loading, data } = useQuery(GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET, {
 		variables: { filter: { deliverable_target_project: deliverableTargetId } },
 	});
-	console.log("hey", deliverableTargetId, data);
+
+	const [TracklinePage, setTracklinePage] = React.useState(0);
+
+	const handleDeliverableLineChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > TracklinePage) {
+			changePage();
+		} else {
+			changePage(true);
+		}
+		setTracklinePage(newPage);
+	};
+
+	let {
+		count,
+		queryData: deliverableTracklineData,
+		changePage,
+		countQueryLoading,
+		queryLoading,
+	} = pagination({
+		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
+		countFilter: {
+			deliverable_target_project: deliverableTargetId,
+		},
+		queryFilter: {
+			deliverable_target_project: deliverableTargetId,
+		},
+		sort: "created_at:DESC",
+	});
+
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (
-			data &&
-			data.deliverableTrackingLineitemList &&
-			data.deliverableTrackingLineitemList.length
+			deliverableTracklineData &&
+			deliverableTracklineData.deliverableTrackingLineitemList &&
+			deliverableTracklineData.deliverableTrackingLineitemList.length
 		) {
-			let deliverableTrackingLineitemList = data.deliverableTrackingLineitemList;
+			let deliverableTrackingLineitemList =
+				deliverableTracklineData.deliverableTrackingLineitemList;
 			let arr = [];
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
@@ -155,12 +190,26 @@ export default function DeliverablesTrackLineTable({
 		} else {
 			setRows([]);
 		}
-	}, [data]);
+	}, [deliverableTracklineData]);
 
 	return (
 		<>
 			{loading ? <FullScreenLoader /> : null}
 			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
+			{rows.length > 0 && (
+				<Box mt={1}>
+					<TablePagination
+						rowsPerPageOptions={[]}
+						colSpan={9}
+						count={count}
+						rowsPerPage={count > 10 ? 10 : count}
+						page={TracklinePage}
+						onChangePage={handleDeliverableLineChangePage}
+						onChangeRowsPerPage={() => {}}
+						style={{ paddingRight: "40px" }}
+					/>
+				</Box>
+			)}
 		</>
 	);
 }

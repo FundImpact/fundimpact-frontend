@@ -10,6 +10,7 @@ import {
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_IMPACT_TARGET_BY_PROJECT,
 	UPDATE_IMAPACT_TARGET,
+	GET_IMPACT_TARGETS_COUNT,
 } from "../../graphql/Impact/target";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -75,6 +76,85 @@ function ImpactTarget(props: ImpactTargetProps) {
 			createImpactTarget({
 				variables: {
 					input: createInputTarget,
+				},
+				update: async (
+					store,
+					{ data: { createImpactTargetProjectInput: targetCreated } }
+				) => {
+					try {
+						const count = await store.readQuery<{ impactTargetProjectCount: number }>({
+							query: GET_IMPACT_TARGETS_COUNT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+						});
+
+						store.writeQuery<{ impactTargetProjectCount: number }>({
+							query: GET_IMPACT_TARGETS_COUNT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+							data: {
+								impactTargetProjectCount: count!.impactTargetProjectCount + 1,
+							},
+						});
+
+						let limit = 0;
+						if (count) {
+							limit = count.impactTargetProjectCount;
+						}
+						const dataRead = await store.readQuery<any>({
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let impactTargetProjectList: any[] = dataRead?.impactTargetProjectList
+							? dataRead?.impactTargetProjectList
+							: [];
+
+						store.writeQuery<any>({
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								impactTargetProjectList: [
+									...impactTargetProjectList,
+									targetCreated,
+								],
+							},
+						});
+
+						store.writeQuery<any>({
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+							data: {
+								impactTargetProjectList: [
+									...impactTargetProjectList,
+									targetCreated,
+								],
+							},
+						});
+					} catch (err) {}
 				},
 				refetchQueries: [
 					{
@@ -157,7 +237,18 @@ function ImpactTarget(props: ImpactTargetProps) {
 				refetchQueries: [
 					{
 						query: GET_IMPACT_TARGET_BY_PROJECT,
-						variables: { filter: { project: props.project } },
+						variables: {
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+							filter: { project: props.project },
+						},
+					},
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: {
+							filter: { project: props.project },
+						},
 					},
 					{
 						query: GET_ACHIEVED_VALLUE_BY_TARGET,

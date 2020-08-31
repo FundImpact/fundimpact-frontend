@@ -412,3 +412,9 @@ export const GET_DELIVERABLE_LINEITEM_FYDONOR = gql`
 		}
 	}
 `;
+
+export const GET_DELIVERABLE_TRACKLINE_COUNT = gql`
+	query getDeliverableTrackingLineitemListCountByTarget($filter: JSON) {
+		deliverableTrackingLineitemCount(where: $filter)
+	}
+`;
