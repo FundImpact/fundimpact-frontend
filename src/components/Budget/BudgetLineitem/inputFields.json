@@ -10,7 +10,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"type": "select"
+			"type": "select",
+			"displayName": "budget target"
 		},
 		{
 			"name": "annual_year",
@@ -22,7 +23,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-2",
-			"type": "select"
+			"type": "select",
+			"displayName": "annual year"
 		},
 		{
 			"name": "fy_donor",
@@ -35,7 +37,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-2",
 			"type": "select",
-			"hidden": false
+			"hidden": false,
+			"displayName": "donor financial year"
 		},
 		{
 			"name": "fy_org",
@@ -47,7 +50,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-2",
-			"type": "select"
+			"type": "select",
+			"displayName": "organization financial year"
 		},
 		{
 			"name": "grant_periods_project",
@@ -59,7 +63,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-2",
-			"type": "select"
+			"type": "select",
+			"displayName": "grant period"
 		}
 	],
 	"budgetLineitemFormInputFields": [

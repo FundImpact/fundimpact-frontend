@@ -23,6 +23,7 @@ import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import pagination from "../../../../hooks/pagination";
 import TablePagination from "@material-ui/core/TablePagination";
 import BudgetTargetTableRow from "./BudgetTargetTableRow";
+import TableSkeleton from "../../../Skeletons/TableSkeleton";
 
 const useStyles = makeStyles({
 	table: {
@@ -98,7 +99,13 @@ function BudgetTargetTable() {
 	const [openBudgetLineItem, setOpenBudgetLineItem] = useState(false);
 	const [page, setPage] = React.useState(0);
 
-	let { count, queryData: budgetTargetData, changePage } = pagination({
+	let {
+		count,
+		queryData: budgetTargetData,
+		changePage,
+		queryLoading,
+		countQueryLoading,
+	} = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
 		countFilter: {
@@ -140,6 +147,10 @@ function BudgetTargetTable() {
 		}
 		setPage(newPage);
 	};
+
+	if (countQueryLoading || queryLoading) {
+		return <TableSkeleton />;
+	}
 
 	if (!budgetTargetData?.projectBudgetTargets?.length) {
 		return (

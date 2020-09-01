@@ -6,9 +6,37 @@ import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../../graphql/Impact/mutation";
 import { impactUnitDialogFields } from "../../../../utils/inputTestFields.json";
-
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../../graphql/Impact/query";
+import { organizationDetail } from "../../../../utils/testMock.json";
 const handleClose = jest.fn();
 
+const impactCategoryMock = [
+	{
+		id: "2",
+		name: "SONG",
+		code: "ICO",
+		shortname: "IMORG",
+		description: "createImpactCategoryOrgInput",
+		organization: {
+			id: "2",
+			name: "TSERIES",
+			address: null,
+			account: {
+				id: "2",
+				name: "rahul@gmail.com",
+				description: null,
+				account_no: "a8c1e362-405f-4572-a849-eb8094ffa550",
+			},
+			short_name: "TS",
+			legal_name: "",
+			description: null,
+			organization_registration_type: {
+				id: "1",
+				reg_type: "Trusts",
+			},
+		},
+	},
+];
 let dialog: any;
 
 const initialValues: any = {
@@ -35,12 +63,19 @@ const mocks = [
 			return {};
 		},
 	},
+	{
+		request: {
+			query: GET_IMPACT_CATEGORY_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { impactCategoryOrgList: impactCategoryMock } },
+	},
 ];
 
 beforeEach(() => {
 	act(() => {
 		dialog = renderApollo(
-			<DashboardProvider>
+			<DashboardProvider defaultState={{ organization: organizationDetail }}>
 				<NotificationProvider>
 					<ImpaceUnitDialog open={true} handleClose={handleClose} />
 				</NotificationProvider>

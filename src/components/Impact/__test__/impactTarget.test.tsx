@@ -3,11 +3,11 @@ import ImpactTarget from "../impactTarget";
 import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
 import { IMPACT_ACTIONS } from "../constants";
-import { GET_IMPACT_CATEGORY } from "../../../graphql/Impact/category";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetails } from "../../../utils/testMock.json";
+import { organizationDetail } from "../../../utils/testMock.json";
 
 const intialFormValue: IImpactTarget = {
 	name: "Impact TARGET",
@@ -52,7 +52,8 @@ const categoryMock = [
 const mocks = [
 	{
 		request: {
-			query: GET_IMPACT_CATEGORY,
+			query: GET_IMPACT_CATEGORY_BY_ORG,
+			variables: { filter: { organization: "13" } },
 		},
 		result: { data: { impactCategoryOrgList: categoryMock } },
 	},
@@ -64,7 +65,7 @@ let handleClose = jest.fn();
 beforeEach(() => {
 	act(() => {
 		impactTarget = renderApollo(
-			<DashboardProvider>
+			<DashboardProvider defaultState={{ organization: organizationDetail }}>
 				<NotificationProvider>
 					<ImpactTarget
 						type={IMPACT_ACTIONS.CREATE}

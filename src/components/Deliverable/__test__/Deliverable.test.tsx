@@ -6,8 +6,12 @@ import { DELIVERABLE_ACTIONS } from "../constants";
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetails } from "../../../utils/testMock.json";
-import { CREATE_DELIVERABLE_CATEGORY } from "../../../graphql/Deliverable/category";
+import { organizationDetail } from "../../../utils/testMock.json";
+import {
+	CREATE_DELIVERABLE_CATEGORY,
+	GET_DELIVERABLE_ORG_CATEGORY,
+} from "../../../graphql/Deliverable/category";
+import { deliverableCategoryMock } from "./testHelp";
 let deliverableMutation = false;
 
 const mocks = [
@@ -15,13 +19,20 @@ const mocks = [
 		request: {
 			query: CREATE_DELIVERABLE_CATEGORY,
 			variables: {
-				input: { name: "SONG", code: "", description: "", organization: 2 }, // TODO change according to current organization
+				input: { name: "SONG", code: "", description: "", organization: "13" }, // TODO change according to current organization
 			},
 		},
 		result: () => {
 			deliverableMutation = true;
 			return {};
 		},
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { impactCategoryOrgList: deliverableCategoryMock } },
 	},
 ];
 
@@ -44,7 +55,7 @@ beforeEach(() => {
 						type={DELIVERABLE_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}
-						organization={2}
+						organization={"13"}
 					/>
 				</NotificationProvider>
 			</DashboardProvider>,
