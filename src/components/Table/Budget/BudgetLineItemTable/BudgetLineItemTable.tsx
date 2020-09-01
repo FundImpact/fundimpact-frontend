@@ -188,7 +188,7 @@ function BudgetLineItemTable({
 								(budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE, index: number) => (
 									<TableRow key={budgetLineItem.id}>
 										<TableCell component="td" scope="row">
-											{index + 1}
+											{page * 10 + index + 1}
 										</TableCell>
 
 										<TableCell align="left">
