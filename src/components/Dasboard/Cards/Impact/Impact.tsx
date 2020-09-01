@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
@@ -20,13 +20,13 @@ export default function Impact() {
 	const classes = useStyles();
 	return (
 		<Box className={classes.root}>
-			{impacts.map((impact, index) => {
+			{/* {impacts.map((impact, index) => {
 				return (
 					<Typography variant="subtitle1" gutterBottom key={index}>
 						{`#${index + 1} ${impact}`}
 					</Typography>
 				);
-			})}
+			})} */}
 		</Box>
 	);
 }
