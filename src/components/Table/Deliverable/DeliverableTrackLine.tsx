@@ -45,10 +45,10 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	});
 
 	useEffect(() => {
-		let obj: any = {};
+		let deliverableTracklineMapValueObj: any = {};
 		let donors: any = [];
 		data?.deliverableLinitemFyDonorList?.forEach((elem: any) => {
-			obj[`${elem.project_donor.id}mapValues`] = {
+			deliverableTracklineMapValueObj[`${elem.project_donor.id}mapValues`] = {
 				id: elem.id,
 				financial_year: elem.financial_year?.id,
 				grant_periods_project: elem.grant_periods_project?.id,
@@ -62,7 +62,7 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 			});
 		});
 		setTracklineDonors(donors);
-		setTracklineDonorsMapValues(obj);
+		setTracklineDonorsMapValues(deliverableTracklineMapValueObj);
 	}, [data]);
 
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
