@@ -314,6 +314,17 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					},
 				},
 				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						limit: 10,
+						start: 0,
+						sort: "created_at:DESC",
+						filter: {
+							deliverable_target_project: value.deliverable_target_project,
+						},
+					},
+				},
+				{
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {
 						filter: { deliverableTargetProject: value.deliverable_target_project },
