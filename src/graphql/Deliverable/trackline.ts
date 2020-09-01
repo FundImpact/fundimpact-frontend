@@ -198,6 +198,11 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 				name
 				description
 				target_value
+				deliverable_category_unit {
+					deliverable_units_org {
+						name
+					}
+				}
 			}
 			annual_year {
 				id

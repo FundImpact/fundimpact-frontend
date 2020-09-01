@@ -1,4 +1,4 @@
-import { Typography, Table, Grid, Box } from "@material-ui/core";
+import { Box, Grid, Table, Typography } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,6 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import React from "react";
+
 const useStyles = makeStyles({
 	table: {},
 });
@@ -38,7 +39,7 @@ export default function FITable({
 		<>
 			{!rows.length ? (
 				<Grid container style={{ backgroundColor: "#F5F6FA" }}>
-					<Grid xs={12}>
+					<Grid item xs={12}>
 						<Box>
 							<Typography
 								align="center"

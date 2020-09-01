@@ -1,5 +1,5 @@
+import { Box, CircularProgress, Dialog, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { Dialog, Box, Grid, Typography, CircularProgress } from "@material-ui/core";
 
 function FormDialog({
 	open,
@@ -55,7 +55,12 @@ function FormDialog({
 				</Grid>
 			</Box>
 			{loading ? (
-				<Box position="fixed" bottom={0} alignSelf="center">
+				<Box
+					position="fixed"
+					left="50%"
+					top="50%"
+					style={{ transform: "translate(-50%, -50%)" }}
+				>
 					<CircularProgress />
 				</Box>
 			) : null}

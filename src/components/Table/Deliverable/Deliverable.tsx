@@ -1,22 +1,23 @@
+import { useQuery } from "@apollo/client";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	GET_DELIVERABLE_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/target";
-import { useQuery } from "@apollo/client";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { deliverableAndImpactHeadings } from "../constants";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
-import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DeliverableTracklineTable from "./DeliverableTrackLine";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { deliverableAndImpactHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
-import FullScreenLoader from "../../commons/GlobalLoader";
-import pagination from "../../../hooks/pagination/pagination";
+import DeliverableTracklineTable from "./DeliverableTrackLine";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -168,27 +169,36 @@ export default function DeliverablesTable() {
 					collaspeTable: null,
 					column: [],
 				};
-
 				row.collaspeTable = (
 					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 				);
 
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
-						<TableCell>{deliverableTargetList[i].name}</TableCell>,
-						<TableCell>
+						<TableCell key={deliverableTargetList[i].name}>
+							{deliverableTargetList[i].name}
+						</TableCell>,
+						<TableCell
+							key={
+								deliverableTargetList[i].deliverable_category_unit
+									.deliverable_category_org.name
+							}
+						>
 							{
 								deliverableTargetList[i].deliverable_category_unit
 									.deliverable_category_org.name
 							}
 						</TableCell>,
-						<TableCell>
+						<TableCell key={deliverableTargetList[i].target_value}>
 							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}
 							`}
 						</TableCell>,
 					];
+
+					// Columsn
 					column.push(
 						<DeliverableTargetAchievementAndProgress
+							key={Math.random()}
 							deliverableTargetId={deliverableTargetList[i].id}
 							deliverableTargetValue={deliverableTargetList[i].target_value}
 							deliverableTargetUnit={
@@ -197,8 +207,13 @@ export default function DeliverablesTable() {
 							}
 						/>
 					);
+
+					// Action Columns
 					column.push(
-						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
+						<EditDeliverableTargetIcon
+							key={Math.random()}
+							deliverableTarget={deliverableTargetList[i]}
+						/>
 					);
 					row.column = column;
 					array.push(row);
@@ -213,20 +228,24 @@ export default function DeliverablesTable() {
 
 	return (
 		<>
-			{countQueryLoading ? <FullScreenLoader /> : null}
-			{queryLoading ? <FullScreenLoader /> : null}
-			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-			{rows.length > 0 && (
-				<TablePagination
-					rowsPerPageOptions={[]}
-					colSpan={9}
-					count={count}
-					rowsPerPage={count > 10 ? 10 : count}
-					page={page}
-					onChangePage={handleChangePage}
-					onChangeRowsPerPage={() => {}}
-					style={{ paddingRight: "40px" }}
-				/>
+			{countQueryLoading || queryLoading ? (
+				<TableSkeleton />
+			) : (
+				<>
+					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+					{rows.length > 0 && (
+						<TablePagination
+							rowsPerPageOptions={[]}
+							colSpan={9}
+							count={count}
+							rowsPerPage={count > 10 ? 10 : count}
+							page={page}
+							onChangePage={handleChangePage}
+							onChangeRowsPerPage={() => {}}
+							style={{ paddingRight: "40px" }}
+						/>
+					)}
+				</>
 			)}
 		</>
 	);

@@ -26,8 +26,8 @@ import { deliverableTargetForm, deliverableTargetUpdateForm } from "./inputField
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Test Deliverable Target",
-		description: "This is a sample deliverable",
+		name: "",
+		description: "",
 		target_value: 0,
 		deliverableCategory: "",
 		deliverableUnit: "",
@@ -146,6 +146,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					},
 				],
 			});
+			deliverableTargetForm[3].optionsArray = []; // set empty units after creation
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target created successfully !")
 			);
@@ -211,7 +212,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			project: value.project,
 			deliverable_category_unit: -1,
 		});
-
+		let unitValue = value.deliverableUnit;
 		// fetching deliverable_category_unit before creating deliverable Target
 		getCategoryUnit({
 			variables: {

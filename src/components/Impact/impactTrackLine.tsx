@@ -119,8 +119,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						TracklineId={data.updateImpactTrackingLineitemInput.id}
 						TracklineFyId={data.updateImpactTrackingLineitemInput.financial_year?.id}
 						onCancel={onCancel}
-						data={impactDonorFormData}
-						type={FORM_ACTIONS.UPDATE}
+						data={Object.keys(impactDonorFormData).length ? impactDonorFormData : {}}
+						type={
+							Object.keys(impactDonorFormData).length
+								? FORM_ACTIONS.UPDATE
+								: FORM_ACTIONS.CREATE
+						}
 					/>
 				);
 				notificationDispatch(
@@ -144,7 +148,8 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	// updating Impact Target field with fetched Target list
 	useEffect(() => {
 		if (impactTargets) {
-			impactTragetLineForm[0].optionsArray = impactTargets.impactTrackingLineitemList;
+			console.log(impactTargets);
+			impactTragetLineForm[0].optionsArray = impactTargets.impactTargetProjectList;
 		}
 	}, [impactTargets]);
 

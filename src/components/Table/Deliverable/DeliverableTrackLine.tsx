@@ -1,5 +1,14 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination, Box } from "@material-ui/core";
+import {
+	Avatar,
+	Box,
+	Chip,
+	IconButton,
+	Menu,
+	MenuItem,
+	TableCell,
+	TablePagination,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -8,6 +17,7 @@ import {
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
 } from "../../../graphql/Deliverable/trackline";
+import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { getTodaysDate } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
@@ -15,7 +25,6 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
-import pagination from "../../../hooks/pagination/pagination";
 
 // import {
 // 	GET_DELIVERABLE_LINEITEM_FYDONOR,
@@ -31,33 +40,31 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		}[]
 	>([]);
 
-	useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
+	const { data } = useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
-		onCompleted(data) {
-			let obj: any = {};
-			let donors: any = [];
-			data.deliverableLinitemFyDonorList.forEach((elem: any) => {
-				obj[`${elem.project_donor.id}mapValues`] = {
-					id: elem.id,
-					financial_year: elem.financial_year?.id,
-					grant_periods_project: elem.grant_periods_project?.id,
-					deliverable_tracking_lineitem: elem.deliverable_tracking_lineitem?.id,
-					project_donor: elem.project_donor?.id,
-				};
-				donors.push({
-					id: elem.project_donor?.id,
-					name: elem.project_donor?.donor?.name,
-					donor: elem.project_donor?.donor,
-				});
-			});
-			setTracklineDonors(donors);
-			setTracklineDonorsMapValues(obj);
-		},
-		onError(data) {
-			console.log("errrr", data);
-		},
 	});
-	useEffect(() => {});
+
+	useEffect(() => {
+		let deliverableTracklineMapValueObj: any = {};
+		let donors: any = [];
+		data?.deliverableLinitemFyDonorList?.forEach((elem: any) => {
+			deliverableTracklineMapValueObj[`${elem.project_donor.id}mapValues`] = {
+				id: elem.id,
+				financial_year: elem.financial_year?.id,
+				grant_periods_project: elem.grant_periods_project?.id,
+				deliverable_tracking_lineitem: elem.deliverable_tracking_lineitem?.id,
+				project_donor: elem.project_donor?.id,
+			};
+			donors.push({
+				id: elem.project_donor?.id,
+				name: elem.project_donor?.donor?.name,
+				donor: elem.project_donor?.donor,
+			});
+		});
+		setTracklineDonors(donors);
+		setTracklineDonorsMapValues(deliverableTracklineMapValueObj);
+	}, [data]);
+
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [
 		deliverableTracklineData,
@@ -167,14 +174,50 @@ export default function DeliverablesTrackLineTable({
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
 					let row = [
-						<TableCell>
+						<TableCell
+							key={getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
+						>
 							{getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
 						</TableCell>,
-						<TableCell>{deliverableTrackingLineitemList[i]?.note}</TableCell>,
-						<TableCell>{deliverableTrackingLineitemList[i]?.value}</TableCell>,
+						<TableCell key={deliverableTrackingLineitemList[i]?.note}>
+							{deliverableTrackingLineitemList[i]?.note
+								? deliverableTrackingLineitemList[i]?.note
+								: "-"}
+						</TableCell>,
+						<TableCell
+							key={deliverableTrackingLineitemList[i]?.value}
+						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_category_unit?.deliverable_units_org?.name}`}</TableCell>,
+						<TableCell key={deliverableTrackingLineitemList[i]?.financial_year?.name}>
+							<Box display="flex">
+								<Box mr={1}>
+									<Chip
+										avatar={<Avatar>FY</Avatar>}
+										label={
+											deliverableTrackingLineitemList[i]?.financial_year
+												? deliverableTrackingLineitemList[i]?.financial_year
+														?.name
+												: "-"
+										}
+										size="small"
+										color="primary"
+									/>
+								</Box>
+								<Chip
+									avatar={<Avatar>AY</Avatar>}
+									label={
+										deliverableTrackingLineitemList[i]?.annual_year
+											? deliverableTrackingLineitemList[i]?.annual_year?.name
+											: "-"
+									}
+									size="small"
+									color="primary"
+								/>
+							</Box>
+						</TableCell>,
 					];
 					row.push(
 						<EditDeliverableTrackLineIcon
+							key={deliverableTrackingLineitemList[i]}
 							deliverableTrackline={deliverableTrackingLineitemList[i]}
 						/>
 					);

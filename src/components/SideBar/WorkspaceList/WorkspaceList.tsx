@@ -143,7 +143,11 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 										</SimpleMenu>
 									</Box>
 								</Box>
-								<ProjectList workspaceId={workspace.id} projectIndex={index} />
+								<ProjectList
+									workspaceId={workspace.id}
+									workspaces={cachedWorkspaces?.orgWorkspaces}
+									projectIndex={index}
+								/>
 								<Divider />
 							</ListItem>
 						);
