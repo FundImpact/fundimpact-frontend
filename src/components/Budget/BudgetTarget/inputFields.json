@@ -43,7 +43,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
 			"type": "select",
-			"displayName": "budget category"
+			"displayName": "budget category",
 			"required": true
 		},
 		{
@@ -57,7 +57,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
 			"type": "select",
-			"displayName": "donor"
+			"displayName": "donor",
 			"required": true
 		}
 	]

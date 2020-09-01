@@ -11,7 +11,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"type": "select",
-			"displayName": "budget target"
+			"displayName": "budget target",
 			"required": true
 		},
 		{
