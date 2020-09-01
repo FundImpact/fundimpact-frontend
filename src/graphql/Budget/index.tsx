@@ -5,6 +5,18 @@ export const GET_GRANT_PERIODS_PROJECT_LIST = gql`
 		grantPeriodsProjectList(where: $filter) {
 			id
 			name
+			short_name
+			start_date
+			end_date
+			description
+			donor {
+				id
+				name
+			}
+			project {
+				id
+				name
+			}
 		}
 	}
 `;

@@ -46,7 +46,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 	const { data: donorList } = useQuery(GET_PROJECT_DONORS, {
 		variables: { filter: { project: dashboardData?.project?.id } },
 	});
-
+	console.log("donorList :>> ", donorList);
 	useEffect(() => {}, [donorList]);
 
 	const validate = (values: any) => {
@@ -106,7 +106,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 
 				console.log(`values from form`, { ...values });
 
-				values = { ...values, donor: mapingFound?.donor?.id };
+				values = { ...values, project: dashboardData?.project?.id };
 				props.onSubmit(values);
 			}}
 		>
@@ -174,14 +174,17 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									fullWidth
 									labelId="demo-simple-select-label"
 									id="demo-simple-select"
-									name="project"
-									value={formik.values["project"]}
+									name="donor"
+									value={formik.values["donor"]}
 									onChange={(event) => {
 										formik.handleChange(event);
 									}}
 								>
 									{donorList?.projDonors?.map((project: any) => (
-										<MenuItem key={project.id} value={project?.project?.id}>
+										<MenuItem
+											key={project?.donor?.id}
+											value={project?.donor?.id}
+										>
 											{project.donor.name}
 										</MenuItem>
 									))}
