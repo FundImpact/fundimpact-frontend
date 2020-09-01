@@ -1,30 +1,29 @@
 import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React from "react";
+
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-
-import BudgetCategory from "../../Budget/BudgetCategory";
-import BudgetTarget from "../../Budget/BudgetTarget";
-import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
-import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
-import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
-import BudgetLineitem from "../../Budget/BudgetLineitem";
-import { FORM_ACTIONS } from "../../../models/constants";
 import { useNotificationData } from "../../../contexts/notificationContext";
-
+import { FORM_ACTIONS } from "../../../models/constants";
+import BudgetCategory from "../../Budget/BudgetCategory";
+import BudgetLineitem from "../../Budget/BudgetLineitem";
+import BudgetTarget from "../../Budget/BudgetTarget";
 import AddButton from "../../Dasboard/AddButton";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
+import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
+import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import ImpactTarget from "../../Impact/impactTarget";
-import Snackbar from "../../Snackbar/Snackbar";
-import DeliverablesTable from "../../Table/Deliverable/Deliverable";
-import ImpactsTable from "../../Table/Impact/Impacts";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
-import Donor from "../../Donor";
-import DonorTable from "../../Table/Donor";
+import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
+import Snackbar from "../../Snackbar/Snackbar";
+import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
+import DeliverablesTable from "../../Table/Deliverable/Deliverable";
+import GrantPeriodTable from "../../Table/GrantPeriod/GrantPeriodTable";
+import ImpactsTable from "../../Table/Impact/Impacts";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -200,9 +199,20 @@ export default function DashboardTableContainer() {
 			],
 		},
 		{
-			label: "Documents",
-			table: "",
-			createButtons: [],
+			label: "Grant Periods",
+			table: <GrantPeriodTable />,
+			createButtons: [
+				{
+					text: "Create Grant Period",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<GrantPeriodDialog
+							open={open}
+							onClose={handleClose}
+							action={FORM_ACTIONS.CREATE}
+						/>
+					),
+				},
+			],
 		},
 	];
 	const classes = useStyles();

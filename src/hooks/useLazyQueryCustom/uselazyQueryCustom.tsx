@@ -17,7 +17,7 @@ function UseLazyQueryCustom<T>({ query }: { query: any }) {
 			// } catch (err) {}
 
 			// if (!cachedQueryData) {
-				getQueryData({ variables });
+			getQueryData({ variables });
 			// }
 		},
 		[query, getQueryData, setCachedData, apolloClient]
