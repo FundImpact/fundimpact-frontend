@@ -3,7 +3,7 @@ import { renderApollo } from "../../../utils/test.util";
 import { fireEvent } from "@testing-library/react";
 import Project from "../Project";
 import { CREATE_PROJECT } from "../../../graphql/project";
-import { GET_ORGANISATIONS } from "../../../graphql/index";
+import { GET_ORGANISATIONS, GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { act } from "react-dom/test-utils";
 import { PROJECT_ACTIONS } from "../constants";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
@@ -25,6 +25,14 @@ const OrgMock = [
 	},
 ];
 
+const ProjectMockData = [
+	{
+		id: "1",
+		name: "ARTISTAAN",
+		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+	},
+];
+
 const mocks = [
 	{
 		request: {
@@ -41,6 +49,13 @@ const mocks = [
 	{
 		request: { query: GET_ORGANISATIONS },
 		result: { data: { organizationList: OrgMock } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { filter: { workspace: "1" } },
+		},
+		result: { data: { orgProject: ProjectMockData } },
 	},
 ];
 

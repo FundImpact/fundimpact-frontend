@@ -98,7 +98,7 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
-				{ text: "Report Fund Receipt" },
+				// { text: "Report Fund Receipt" },
 				{
 					text: "Report Budget Spend",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -201,13 +201,8 @@ export default function DashboardTableContainer() {
 		},
 		{
 			label: "Documents",
-			table: <DonorTable />,
+			table: "",
 			createButtons: [],
-			buttonAction: {
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<Donor open={open} handleClose={handleClose} formAction={FORM_ACTIONS.CREATE} />
-				),
-			},
 		},
 	];
 	const classes = useStyles();
@@ -248,7 +243,7 @@ export default function DashboardTableContainer() {
 					</Box> */}
 					{tab.table}
 					{/* {GetTable(tab.label)} */}
-					<AddButton createButtons={tab.createButtons} buttonAction={tab.buttonAction} />
+					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
 			{notificationData!.successNotification && (

@@ -28,7 +28,6 @@ export function getSteps(): ISignUpStep[] {
 
 export const getDefaultBasicInformation = (): IBasicInformation => {
 	return {
-		confirmPassword: "",
 		email: "",
 		password: "",
 		provider: "local",

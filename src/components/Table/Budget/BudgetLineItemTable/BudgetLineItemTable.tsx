@@ -10,6 +10,8 @@ import {
 	MenuItem,
 	TableFooter,
 	TablePagination,
+	Typography,
+	Box,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -145,114 +147,125 @@ function BudgetLineItemTable({
 	}
 
 	return (
-		<TableContainer component={Paper}>
-			<BudgetLineitem
-				open={openDialog}
-				handleClose={() => {
-					setOpenDialog(false);
-					selectedBudgetTrackingLineItem.current = null;
-					menuId.current = "";
-				}}
-				formAction={FORM_ACTIONS.UPDATE}
-				initialValues={getInitialValues(selectedBudgetTrackingLineItem.current)}
-			/>
-			<Table className={classes.table} aria-label="simple table">
-				<TableHead>
-					<TableRow color="primary">
-						{budgetLineitemData?.projBudgetTrackings?.length
-							? tableHeading.map((heading: { label: string }, index: number) => (
-									<TableCell className={tableHeader.th} key={index} align="left">
-										{heading.label === "Amount"
-											? `Amount ${currency ? "(" + currency + ")" : ""}`
-											: heading.label}
-									</TableCell>
-							  ))
-							: null}
-					</TableRow>
-				</TableHead>
-				<TableBody className={tableHeader.tbody}>
-					{budgetLineitemData &&
-						budgetLineitemData.projBudgetTrackings.map(
-							(budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE, index: number) => (
-								<TableRow key={budgetLineItem.id}>
-									<TableCell component="td" scope="row">
-										{index + 1}
-									</TableCell>
-
-									<TableCell align="left">
-										{getTodaysDate(budgetLineItem.reporting_date)}
-									</TableCell>
-									<TableCell align="left">{budgetLineItem.note}</TableCell>
-									<TableCell align="left">{budgetLineItem.amount}</TableCell>
-									<TableCell align="left">
-										{budgetLineItem?.fy_org?.name}
-									</TableCell>
-									<TableCell align="left">
-										{budgetLineItem?.fy_donor?.name}
-									</TableCell>
-									<TableCell align="left">
-										{budgetLineItem?.grant_periods_project?.name}
-									</TableCell>
-
-									<TableCell>
-										<IconButton
-											aria-haspopup="true"
-											onClick={(
-												event: React.MouseEvent<HTMLButtonElement>
-											) => {
-												menuId.current = budgetLineItem.id;
-												selectedBudgetTrackingLineItem.current = budgetLineItem;
-												handleClick(event);
-											}}
+		<>
+			{budgetLineitemData && budgetLineitemData?.projBudgetTrackings?.length === 0 && (
+				<Box>
+					<Typography align="center">No Budget Line Item Available</Typography>
+				</Box>
+			)}
+			<TableContainer component={Paper}>
+				<BudgetLineitem
+					open={openDialog}
+					handleClose={() => {
+						setOpenDialog(false);
+						selectedBudgetTrackingLineItem.current = null;
+						menuId.current = "";
+					}}
+					formAction={FORM_ACTIONS.UPDATE}
+					initialValues={getInitialValues(selectedBudgetTrackingLineItem.current)}
+				/>
+				<Table className={classes.table} aria-label="simple table">
+					<TableHead>
+						<TableRow color="primary">
+							{budgetLineitemData?.projBudgetTrackings?.length
+								? tableHeading.map((heading: { label: string }, index: number) => (
+										<TableCell
+											className={tableHeader.th}
+											key={index}
+											align="left"
 										>
-											<MoreVertIcon />
-										</IconButton>
-										<SimpleMenu
-											handleClose={handleClose}
-											id={`organizationMenu-${budgetLineItem.id}`}
-											anchorEl={
-												menuId.current === budgetLineItem.id
-													? anchorEl
-													: null
-											}
-											menuList={menuList}
-										/>
-									</TableCell>
-								</TableRow>
-							)
-						)}
-				</TableBody>
-				{budgetLineitemData?.projBudgetTrackings?.length ? (
-					<TableFooter>
-						<TableRow>
-							<TablePagination
-								rowsPerPageOptions={[]}
-								colSpan={8}
-								count={count}
-								rowsPerPage={count > 10 ? 10 : count}
-								page={page}
-								SelectProps={{
-									inputProps: { "aria-label": "rows per page" },
-									native: true,
-								}}
-								onChangePage={(
-									event: React.MouseEvent<HTMLButtonElement> | null,
-									newPage: number
-								) => {
-									if (newPage > page) {
-										changePage();
-									} else {
-										changePage(true);
-									}
-									setPage(newPage);
-								}}
-								onChangeRowsPerPage={() => {}}
-							/>
+											{heading.label === "Amount"
+												? `Amount ${currency ? "(" + currency + ")" : ""}`
+												: heading.label}
+										</TableCell>
+								  ))
+								: null}
 						</TableRow>
-					</TableFooter>
-				) : null}
-			</Table>
-		</TableContainer>
+					</TableHead>
+					<TableBody className={tableHeader.tbody}>
+						{budgetLineitemData &&
+							budgetLineitemData.projBudgetTrackings.map(
+								(budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE, index: number) => (
+									<TableRow key={budgetLineItem.id}>
+										<TableCell component="td" scope="row">
+											{page * 10 + index + 1}
+										</TableCell>
+
+										<TableCell align="left">
+											{getTodaysDate(budgetLineItem.reporting_date)}
+										</TableCell>
+										<TableCell align="left">{budgetLineItem.note}</TableCell>
+										<TableCell align="left">{budgetLineItem.amount}</TableCell>
+										<TableCell align="left">
+											{budgetLineItem?.fy_org?.name}
+										</TableCell>
+										<TableCell align="left">
+											{budgetLineItem?.fy_donor?.name}
+										</TableCell>
+										<TableCell align="left">
+											{budgetLineItem?.grant_periods_project?.name}
+										</TableCell>
+
+										<TableCell>
+											<IconButton
+												aria-haspopup="true"
+												onClick={(
+													event: React.MouseEvent<HTMLButtonElement>
+												) => {
+													menuId.current = budgetLineItem.id;
+													selectedBudgetTrackingLineItem.current = budgetLineItem;
+													handleClick(event);
+												}}
+											>
+												<MoreVertIcon />
+											</IconButton>
+											<SimpleMenu
+												handleClose={handleClose}
+												id={`organizationMenu-${budgetLineItem.id}`}
+												anchorEl={
+													menuId.current === budgetLineItem.id
+														? anchorEl
+														: null
+												}
+												menuList={menuList}
+											/>
+										</TableCell>
+									</TableRow>
+								)
+							)}
+					</TableBody>
+					{budgetLineitemData?.projBudgetTrackings?.length ? (
+						<TableFooter>
+							<TableRow>
+								<TablePagination
+									rowsPerPageOptions={[]}
+									colSpan={8}
+									count={count}
+									rowsPerPage={count > 10 ? 10 : count}
+									page={page}
+									SelectProps={{
+										inputProps: { "aria-label": "rows per page" },
+										native: true,
+									}}
+									onChangePage={(
+										event: React.MouseEvent<HTMLButtonElement> | null,
+										newPage: number
+									) => {
+										if (newPage > page) {
+											changePage();
+										} else {
+											changePage(true);
+										}
+										setPage(newPage);
+									}}
+									onChangeRowsPerPage={() => {}}
+								/>
+							</TableRow>
+						</TableFooter>
+					) : null}
+				</Table>
+			</TableContainer>
+		</>
 	);
 }
 

@@ -200,44 +200,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [getOrgCurrencies, dashboardData?.organization]);
 
 	useEffect(() => {
-		if (orgCurrencies && orgCurrencies.orgCurrencies.length) {
-			budgetLineitemFormInputFields[1].endAdornment =
-				orgCurrencies.orgCurrencies[0].currency.code;
-		}
-	}, [orgCurrencies]);
-
-	useEffect(() => {
-		if (annualYears) {
-			budgetLineitemFormSelectFields[1].optionsArray = annualYears.annualYearList;
-		}
-	}, [annualYears]);
-
-	useEffect(() => {
-		if (financialYearDonor) {
-			budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYearList
-				? financialYearDonor?.financialYearList
-				: [];
-		}
-	}, [financialYearDonor]);
-
-	useEffect(() => {
-		if (financialYearOrg) {
-			budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYearList
-				? financialYearOrg?.financialYearList
-				: [];
-		}
-	}, [financialYearOrg]);
-
-	useEffect(() => {
-		if (grantPeriodProject) {
-			budgetLineitemFormSelectFields[4].optionsArray =
-				grantPeriodProject.grantPeriodsProjectList;
-		}
-	}, [grantPeriodProject]);
-
-	useEffect(() => {
 		if (budgetTargets) {
-			budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
 			budgetTargetHash = budgetTargets.projectBudgetTargets.reduce(
 				(accunulator: any, current: any) => {
 					accunulator[current.id] = current.donor;
@@ -409,12 +372,42 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			closeDialog();
 		}
 	};
+
+	if (grantPeriodProject) {
+		budgetLineitemFormSelectFields[4].optionsArray = grantPeriodProject.grantPeriodsProjectList;
+	}
+
+	if (financialYearOrg) {
+		budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYearList
+			? financialYearOrg?.financialYearList
+			: [];
+	}
+
+	if (orgCurrencies?.orgCurrencies?.length) {
+		budgetLineitemFormInputFields[1].endAdornment =
+			orgCurrencies.orgCurrencies[0].currency.code;
+	}
+
+	if (annualYears) {
+		budgetLineitemFormSelectFields[1].optionsArray = annualYears.annualYearList;
+	}
+
+	if (budgetTargets) {
+		budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
+	}
+
+	if (financialYearDonor) {
+		budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYearList
+			? financialYearDonor?.financialYearList
+			: [];
+	}
+
 	return (
 		<FormDialog
 			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
-			title="Report Expenditure"
+			title="Report Budget Spend"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}

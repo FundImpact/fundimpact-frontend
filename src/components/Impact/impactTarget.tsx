@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 
 import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../graphql/Impact/query";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
 import {
 	CREATE_IMPACT_TARGET,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_IMPACT_TARGET_BY_PROJECT,
 	UPDATE_IMAPACT_TARGET,
+	GET_IMPACT_TARGETS_COUNT,
 } from "../../graphql/Impact/target";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -35,7 +36,9 @@ function getInitialValues(props: ImpactTargetProps) {
 function ImpactTarget(props: ImpactTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	const { data: categories } = useQuery(GET_IMPACT_CATEGORY);
+	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
 	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
 
 	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
@@ -73,6 +76,85 @@ function ImpactTarget(props: ImpactTargetProps) {
 			createImpactTarget({
 				variables: {
 					input: createInputTarget,
+				},
+				update: async (
+					store,
+					{ data: { createImpactTargetProjectInput: targetCreated } }
+				) => {
+					try {
+						const count = await store.readQuery<{ impactTargetProjectCount: number }>({
+							query: GET_IMPACT_TARGETS_COUNT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+						});
+
+						store.writeQuery<{ impactTargetProjectCount: number }>({
+							query: GET_IMPACT_TARGETS_COUNT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+							data: {
+								impactTargetProjectCount: count!.impactTargetProjectCount + 1,
+							},
+						});
+
+						let limit = 0;
+						if (count) {
+							limit = count.impactTargetProjectCount;
+						}
+						const dataRead = await store.readQuery<any>({
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let impactTargetProjectList: any[] = dataRead?.impactTargetProjectList
+							? dataRead?.impactTargetProjectList
+							: [];
+
+						store.writeQuery<any>({
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								impactTargetProjectList: [
+									...impactTargetProjectList,
+									targetCreated,
+								],
+							},
+						});
+
+						store.writeQuery<any>({
+							query: GET_IMPACT_TARGET_BY_PROJECT,
+							variables: {
+								filter: {
+									project: dashboardData?.project?.id,
+								},
+							},
+							data: {
+								impactTargetProjectList: [
+									...impactTargetProjectList,
+									targetCreated,
+								],
+							},
+						});
+					} catch (err) {}
 				},
 				refetchQueries: [
 					{
@@ -155,7 +237,18 @@ function ImpactTarget(props: ImpactTargetProps) {
 				refetchQueries: [
 					{
 						query: GET_IMPACT_TARGET_BY_PROJECT,
-						variables: { filter: { project: props.project } },
+						variables: {
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+							filter: { project: props.project },
+						},
+					},
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: {
+							filter: { project: props.project },
+						},
 					},
 					{
 						query: GET_ACHIEVED_VALLUE_BY_TARGET,

@@ -6,7 +6,8 @@ import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/Impact/mutation";
 import { impactCategoeyDialogFields } from "../../../../utils/inputTestFields.json";
-import { organizationDetails } from "../../../../utils/testMock.json";
+import { organizationDetail } from "../../../../utils/testMock.json";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../../graphql/Impact/query";
 
 const handleClose = jest.fn();
 
@@ -20,12 +21,17 @@ const initialValues: any = {
 	shortname: "sh name",
 };
 
+const categoryMock = [
+	{ id: 1, name: "Category" },
+	{ id: 2, name: "Supply" },
+];
+
 const mocks = [
 	{
 		request: {
 			query: CREATE_IMPACT_CATEGORY_ORG_INPUT,
 			variables: {
-				input: { ...initialValues, organization: "3" },
+				input: { ...initialValues, organization: "13" },
 			},
 		},
 		result: () => {
@@ -33,12 +39,19 @@ const mocks = [
 			return {};
 		},
 	},
+	{
+		request: {
+			query: GET_IMPACT_CATEGORY_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { impactCategoryOrgList: categoryMock } },
+	},
 ];
 
 beforeEach(() => {
 	act(() => {
 		dialog = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetails }}>
+			<DashboardProvider defaultState={{ organization: organizationDetail }}>
 				<NotificationProvider>
 					<ImpactCategoryDialog open={true} handleClose={handleClose} />
 				</NotificationProvider>
