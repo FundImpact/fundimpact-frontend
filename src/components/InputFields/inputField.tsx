@@ -144,7 +144,7 @@ const InputFields = ({
 					{multiSelect &&
 						optionsArray &&
 						optionsArray.map((elem: any, index: number) => (
-							<MenuItem key={index} value={multiSelect ? elem : elem}>
+							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
 								{multiSelect ? (
 									<Checkbox
 										color="primary"
