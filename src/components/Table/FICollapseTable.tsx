@@ -1,17 +1,17 @@
-import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
+import Paper from "@material-ui/core/Paper";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import React from "react";
 
 const useStyles = makeStyles({
 	table: {
@@ -97,9 +97,9 @@ export default function CollapsibleTable({
 						<TableRow color="primary">
 							{rows &&
 								rows.length > 0 &&
-								tableHeading.map((heading) => (
+								tableHeading.map((heading, index) => (
 									<TableCell
-										key={heading.label}
+										key={heading.label + index}
 										align="left"
 										className={tableHeader.th}
 									>
