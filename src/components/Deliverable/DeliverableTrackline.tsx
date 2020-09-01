@@ -12,6 +12,7 @@ import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
+	GET_DELIVERABLE_TRACKLINE_COUNT,
 } from "../../graphql/Deliverable/trackline";
 import {
 	DeliverableTargetLineProps,
@@ -96,7 +97,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	});
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
-			console.log("ssssss", data);
 			setDonorForm(
 				<DeliverableTracklineDonorYearTags
 					donors={donors}
@@ -113,7 +113,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			handleNext();
 		},
 		onError(data) {
-			console.log("err", data);
 			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
 		},
 	});
@@ -123,15 +122,18 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		{ loading: updateDeliverableTrackLineLoading },
 	] = useMutation(UPDATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
-			console.log("ssssss", data);
 			setDonorForm(
 				<DeliverableTracklineDonorYearTags
 					donors={donors}
 					TracklineId={data.updateDeliverableTrackingLineitemDetail.id}
 					TracklineFyId={data.updateDeliverableTrackingLineitemDetail.financial_year?.id}
-					data={donorFormData}
+					data={Object.keys(donorFormData).length ? donorFormData : {}}
 					onCancel={onCancel}
-					type={FORM_ACTIONS.UPDATE}
+					type={
+						Object.keys(donorFormData).length
+							? FORM_ACTIONS.UPDATE
+							: FORM_ACTIONS.CREATE
+					}
 				/>
 			);
 			notificationDispatch(
@@ -191,6 +193,72 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 		createDeliverableTrackline({
 			variables: { input },
+			update: async (
+				store,
+				{ data: { createDeliverableTrackingLineitemDetail: lineItemCreated } }
+			) => {
+				try {
+					const count = await store.readQuery<{
+						deliverableTrackingLineitemCount: number;
+					}>({
+						query: GET_DELIVERABLE_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+						},
+					});
+					store.writeQuery<{ deliverableTrackingLineitemCount: number }>({
+						query: GET_DELIVERABLE_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+						},
+						data: {
+							deliverableTrackingLineitemCount:
+								count!.deliverableTrackingLineitemCount + 1,
+						},
+					});
+					let limit = 0;
+					if (count) {
+						limit = count.deliverableTrackingLineitemCount;
+					}
+					const data = await store.readQuery<any>({
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+					});
+					let deliverableTrackingLineitemList: any[] = data?.deliverableTrackingLineitemList
+						? data?.deliverableTrackingLineitemList
+						: [];
+					store.writeQuery({
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+						data: {
+							deliverableTrackingLineitemList: [
+								lineItemCreated,
+								...deliverableTrackingLineitemList,
+							],
+						},
+					});
+				} catch (err) {
+					throw err;
+				}
+			},
 			refetchQueries: [
 				{
 					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
@@ -229,6 +297,28 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				{
 					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 					variables: {
+						filter: {
+							deliverable_target_project: value.deliverable_target_project,
+						},
+					},
+				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						limit: 10,
+						start: 0,
+						sort: "created_at:DESC",
+						filter: {
+							deliverable_target_project: value.deliverable_target_project,
+						},
+					},
+				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						limit: 10,
+						start: 0,
+						sort: "created_at:DESC",
 						filter: {
 							deliverable_target_project: value.deliverable_target_project,
 						},

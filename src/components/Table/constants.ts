@@ -15,5 +15,6 @@ export const deliverableAndimpactTracklineHeading = [
 	{ label: "Date" },
 	{ label: "Note" },
 	{ label: "Achieved" },
+	{ label: "Year" },
 	{ label: "" }, //edit icon
 ];

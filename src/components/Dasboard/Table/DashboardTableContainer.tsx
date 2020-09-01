@@ -97,7 +97,7 @@ export default function DashboardTableContainer() {
 						/>
 					),
 				},
-				{ text: "Report Fund Receipt" },
+				// { text: "Report Fund Receipt" },
 				{
 					text: "Report Budget Spend",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (

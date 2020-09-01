@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_ORGANISATIONS } from "../../graphql";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/project";
@@ -78,7 +78,8 @@ function Project(props: ProjectProps) {
 				variables: { input: formData },
 				refetchQueries: [
 					{
-						query: GET_ORGANISATIONS,
+						query: GET_PROJECTS_BY_WORKSPACE,
+						variables: { filter: { workspace: value.workspace } },
 					},
 				],
 			});

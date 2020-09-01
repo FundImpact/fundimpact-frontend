@@ -1,11 +1,21 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
+import {
+	IconButton,
+	Menu,
+	MenuItem,
+	TableCell,
+	Box,
+	TablePagination,
+	Chip,
+	Avatar,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
 import {
 	GET_IMPACT_LINEITEM_FYDONOR,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+	GET_IMPACT_TRACKLINE_COUNT,
 } from "../../../graphql/Impact/trackline";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
 import { getTodaysDate } from "../../../utils";
@@ -14,6 +24,7 @@ import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
+import pagination from "../../../hooks/pagination/pagination";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
@@ -25,7 +36,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 		}[]
 	>([]);
 
-	useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
+	const { data } = useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
 		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
 		onCompleted(data) {
 			let impactMapValueobj: any = {};
@@ -47,10 +58,28 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			setImpactTracklineDonors(impactProjectDonors);
 			setImpactTracklineDonorsMapValues(impactMapValueobj);
 		},
-		onError(data) {
-			console.log("errrr", data);
-		},
+		onError(data) {},
 	});
+	useEffect(() => {
+		let impactMapValueobj: any = {};
+		let impactProjectDonors: any = [];
+		data?.impactLinitemFyDonorList?.forEach((elem: any) => {
+			impactMapValueobj[`${elem.project_donor.id}mapValues`] = {
+				id: elem.id,
+				financial_year: elem.financial_year?.id,
+				grant_periods_project: elem.grant_periods_project?.id,
+				impact_tracking_lineitem: elem.impact_tracking_lineitem?.id,
+				project_donor: elem.project_donor?.id,
+			};
+			impactProjectDonors.push({
+				id: elem.project_donor?.id,
+				name: elem.project_donor?.donor?.name,
+				donor: elem.project_donor?.donor,
+			});
+		});
+		setImpactTracklineDonors(impactProjectDonors);
+		setImpactTracklineDonorsMapValues(impactMapValueobj);
+	}, [data]);
 	const [impactTracklineMenuAnchor, setImpactTracklineMenuAnchor] = useState<null | HTMLElement>(
 		null
 	);
@@ -108,23 +137,91 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 }
 
 export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetId: string }) {
-	const { loading, data } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
-		variables: { filter: { impact_target_project: impactTargetId } },
+	// const { loading, data } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
+	// 	variables: { filter: { impact_target_project: impactTargetId } },
+	// });
+
+	const [impactTracklinePage, setImpactTracklinePage] = React.useState(0);
+
+	const handleImpactLineChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > impactTracklinePage) {
+			changePage();
+		} else {
+			changePage(true);
+		}
+		setImpactTracklinePage(newPage);
+	};
+
+	let {
+		count,
+		queryData: impactTracklineData,
+		changePage,
+		countQueryLoading: countLoading,
+		queryLoading: loading,
+	} = pagination({
+		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+		countQuery: GET_IMPACT_TRACKLINE_COUNT,
+		countFilter: {
+			impact_target_project: impactTargetId,
+		},
+		queryFilter: {
+			impact_target_project: impactTargetId,
+		},
+		sort: "created_at:DESC",
 	});
 
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
-		if (data && data.impactTrackingLineitemList && data.impactTrackingLineitemList.length) {
-			let impactTrackingLineitemList = data.impactTrackingLineitemList;
+		if (
+			impactTracklineData &&
+			impactTracklineData.impactTrackingLineitemList &&
+			impactTracklineData.impactTrackingLineitemList.length
+		) {
+			let impactTrackingLineitemList = impactTracklineData.impactTrackingLineitemList;
 			let arr = [];
 			for (let i = 0; i < impactTrackingLineitemList.length; i++) {
 				if (impactTrackingLineitemList[i]) {
 					let row = [
 						<TableCell>
-							{getTodaysDate(impactTrackingLineitemList[i].reporting_date)}
+							{getTodaysDate(impactTrackingLineitemList[i]?.reporting_date)}
 						</TableCell>,
-						<TableCell>{impactTrackingLineitemList[i].note}</TableCell>,
-						<TableCell>{impactTrackingLineitemList[i].value}</TableCell>,
+						<TableCell>
+							{impactTrackingLineitemList[i]?.note
+								? impactTrackingLineitemList[i]?.note
+								: "-"}
+						</TableCell>,
+						<TableCell>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
+						<TableCell>
+							{" "}
+							<Box display="flex">
+								<Box mr={1}>
+									<Chip
+										avatar={<Avatar>FY</Avatar>}
+										label={
+											impactTrackingLineitemList[i]?.financial_year
+												? impactTrackingLineitemList[i]?.financial_year
+														?.name
+												: "-"
+										}
+										size="small"
+										color="primary"
+									/>
+								</Box>
+								<Chip
+									avatar={<Avatar>AY</Avatar>}
+									label={
+										impactTrackingLineitemList[i]?.annual_year
+											? impactTrackingLineitemList[i]?.annual_year?.name
+											: "-"
+									}
+									size="small"
+									color="primary"
+								/>
+							</Box>
+						</TableCell>,
 					];
 					row.push(
 						<EditImpactTargetLineIcon
@@ -138,12 +235,27 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		} else {
 			setRows([]);
 		}
-	}, [data]);
+	}, [impactTracklineData]);
 
 	return (
 		<>
+			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
+			{rows.length > 0 && (
+				<Box mt={1}>
+					<TablePagination
+						rowsPerPageOptions={[]}
+						colSpan={9}
+						count={count}
+						rowsPerPage={count > 10 ? 10 : count}
+						page={impactTracklinePage}
+						onChangePage={handleImpactLineChangePage}
+						onChangeRowsPerPage={() => {}}
+						style={{ paddingRight: "40px" }}
+					/>
+				</Box>
+			)}
 		</>
 	);
 }

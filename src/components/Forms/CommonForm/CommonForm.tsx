@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		button: {
 			color: theme.palette.background.paper,
+			marginRight: theme.spacing(2),
 		},
 		myCancelButton: {
 			"&:hover": {
@@ -96,9 +97,6 @@ function CommonForm({
 							})}
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
-									<Button className={classes.myCancelButton} onClick={onCancel}>
-										Cancel
-									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -109,6 +107,9 @@ function CommonForm({
 										disabled={!formik.isValid}
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
+									</Button>
+									<Button className={classes.myCancelButton} onClick={onCancel}>
+										Cancel
 									</Button>
 								</Box>
 							</Grid>

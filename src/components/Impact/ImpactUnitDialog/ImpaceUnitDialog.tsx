@@ -1,19 +1,23 @@
-import React from "react";
-import { useMutation } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
-import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../graphql/Impact/mutation";
+import {
+	CREATE_IMPACT_UNITS_ORG_INPUT,
+	CREATE_IMPACT_CATEGORY_UNIT,
+} from "../../../graphql/Impact/mutation";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import dataInputFields from "../inputField.json";
+import { impactUnitForm, impactUnitSelect } from "../inputField.json";
 import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
-let inputFields: IInputField[] = dataInputFields.impactUnitForm;
+let inputFields: IInputField[] = impactUnitForm;
 
 const initialValues: IImpactUnitFormInput = {
 	name: "",
@@ -22,6 +26,7 @@ const initialValues: IImpactUnitFormInput = {
 	target_unit: "",
 	prefix_label: "",
 	suffix_label: "",
+	impactCategory: "",
 };
 
 const validate = (values: IImpactUnitFormInput) => {
@@ -48,25 +53,51 @@ const validate = (values: IImpactUnitFormInput) => {
 };
 
 function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-	const [createImpactUnitsOrgInput, { loading }] = useMutation(CREATE_IMPACT_UNITS_ORG_INPUT);
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
+	const [impactCategory, setImpactCategory] = useState<string>();
 
-	const onSubmit = async (values: IImpactUnitFormInput) => {
-		try {
-			createImpactUnitsOrgInput({
+	const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
+	const [createImpactCategoryUnit] = useMutation(CREATE_IMPACT_CATEGORY_UNIT);
+
+	const [createImpactUnitsOrgInput, { loading }] = useMutation(CREATE_IMPACT_UNITS_ORG_INPUT, {
+		onCompleted(data) {
+			createImpactCategoryUnit({
 				variables: {
 					input: {
-						...values,
+						impact_category_org: impactCategory,
+						impact_units_org: data.createImpactUnitsOrgInput?.id,
 					},
 				},
 			});
 			notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
 			handleClose();
-		} catch (err) {
+		},
+		onError() {
 			notificationDispatch(setErrorNotification("Impact Unit Creation Failure"));
 			handleClose();
+		},
+	});
+	useEffect(() => {
+		if (impactCategories) {
+			console.log("impactCategories", impactCategories);
+			impactUnitSelect[0].optionsArray = impactCategories?.impactCategoryOrgList;
 		}
+	}, [impactCategories]);
+
+	const onSubmit = async (values: IImpactUnitFormInput) => {
+		setImpactCategory(values.impactCategory);
+		delete values.impactCategory;
+
+		createImpactUnitsOrgInput({
+			variables: {
+				input: {
+					...values,
+				},
+			},
+		});
 	};
 
 	return (
@@ -85,6 +116,7 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 				onSubmit={onSubmit}
 				onCancel={handleClose}
 				inputFields={inputFields}
+				selectFields={impactUnitSelect}
 			/>
 		</FormDialog>
 	);

@@ -55,7 +55,12 @@ function FormDialog({
 				</Grid>
 			</Box>
 			{loading ? (
-				<Box position="fixed" bottom={0} alignSelf="center">
+				<Box
+					position="fixed"
+					left="50%"
+					top="50%"
+					style={{ transform: "translate(-50%, -50%)" }}
+				>
 					<CircularProgress />
 				</Box>
 			) : null}

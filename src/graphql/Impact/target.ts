@@ -150,8 +150,8 @@ export const GET_ACHIEVED_VALLUE_BY_TARGET = gql`
 	}
 `;
 export const GET_IMPACT_TARGET_BY_PROJECT = gql`
-	query getImpactTargetProjectByImpactCategoryUnit($filter: JSON) {
-		impactTargetProjectList(where: $filter) {
+	query getImpactTargetProjectByProject($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		impactTargetProjectList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			target_value
@@ -218,5 +218,11 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 				}
 			}
 		}
+	}
+`;
+
+export const GET_IMPACT_TARGETS_COUNT = gql`
+	query getImpactTargetProjectByProject($filter: JSON) {
+		impactTargetProjectCount(where: $filter)
 	}
 `;

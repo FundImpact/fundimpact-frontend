@@ -12,12 +12,6 @@ export type TracklineDonorFormProps = {
 	onCancel: () => void;
 	TracklineFyId: string;
 	organizationCountry?: string;
-} & (
-	| {
-			type: FORM_ACTIONS.CREATE;
-	  }
-	| {
-			type: FORM_ACTIONS.UPDATE;
-			data: any;
-	  }
-);
+	type: FORM_ACTIONS.CREATE | FORM_ACTIONS.UPDATE;
+	data?: any;
+};

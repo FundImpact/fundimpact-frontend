@@ -1,5 +1,5 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
+import { useQuery } from "@apollo/client";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -7,15 +7,17 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_IMPACT_TARGET_BY_PROJECT,
+	GET_IMPACT_TARGETS_COUNT,
 } from "../../../graphql/Impact/target";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
-import FullScreenLoader from "../../commons/GlobalLoader";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTarget from "../../Impact/impactTarget";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndImpactHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
 import ImpactTrackLineTable from "./impactTrackline";
+import pagination from "../../../hooks/pagination/pagination";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
@@ -117,25 +119,46 @@ function ImpactTargetAchievementAndProgress({
 }
 
 export default function ImpactsTable() {
-	const [getImpactTargetByProject, { loading, data }] = useLazyQuery(
-		GET_IMPACT_TARGET_BY_PROJECT
-	);
 	const dashboardData = useDashBoardData();
 	const [rows, setRows] = useState<
 		{ collaspeTable: React.ReactNode; column: React.ReactNode[] }[]
 	>([]);
 
-	useEffect(() => {
-		if (dashboardData?.project) {
-			getImpactTargetByProject({
-				variables: { filter: { project: dashboardData?.project.id } },
-			});
+	const [impactPage, setImpactPage] = React.useState(0);
+
+	let {
+		count,
+		queryData: impactTargets,
+		changePage,
+		countQueryLoading,
+		queryLoading,
+	} = pagination({
+		query: GET_IMPACT_TARGET_BY_PROJECT,
+		countQuery: GET_IMPACT_TARGETS_COUNT,
+		countFilter: {
+			project: dashboardData?.project?.id,
+		},
+		queryFilter: {
+			project: dashboardData?.project?.id,
+		},
+		sort: "created_at:DESC",
+	});
+
+	const handleChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > impactPage) {
+			changePage();
+		} else {
+			changePage(true);
 		}
-	}, [dashboardData, getImpactTargetByProject]);
+		setImpactPage(newPage);
+	};
 
 	useEffect(() => {
-		if (data) {
-			let impactTargetProjectList = data.impactTargetProjectList;
+		if (impactTargets) {
+			let impactTargetProjectList = impactTargets.impactTargetProjectList;
 			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {
 				let row: { collaspeTable: React.ReactNode; column: React.ReactNode[] } = {
@@ -178,12 +201,29 @@ export default function ImpactsTable() {
 		} else {
 			setRows([]);
 		}
-	}, [data]);
+	}, [impactTargets]);
 
 	return (
 		<>
-			{loading ? <FullScreenLoader /> : null}
-			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+			{queryLoading || countQueryLoading ? (
+				<TableSkeleton />
+			) : (
+				<>
+					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+					{rows.length > 0 && (
+						<TablePagination
+							rowsPerPageOptions={[]}
+							colSpan={9}
+							count={count}
+							rowsPerPage={count > 10 ? 10 : count}
+							page={impactPage}
+							onChangePage={handleChangePage}
+							onChangeRowsPerPage={() => {}}
+							style={{ paddingRight: "40px" }}
+						/>
+					)}
+				</>
+			)}
 		</>
 	);
 }

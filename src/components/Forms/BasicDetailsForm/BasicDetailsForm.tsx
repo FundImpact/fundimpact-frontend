@@ -10,10 +10,13 @@ import {
 	FormHelperText,
 	MenuItem,
 	Box,
+	OutlinedInput,
+	InputAdornment,
+	IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikHelpers } from "formik";
-import React from "react";
+import React, { useState } from "react";
 
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { usePostFetch } from "../../../hooks/fetch/usePostFetch";
@@ -26,7 +29,8 @@ import { getDefaultBasicInformation } from "../../../utils/signup.util";
 import AlertMsg from "../../AlertMessage/AlertMessage";
 import GlobalLoader from "../../commons/GlobalLoader";
 import { useGetFetch } from "../../../hooks/fetch/useFetch";
-
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 // import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,7 +45,35 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
+const validate = (values: IBasicInformation) => {
+	let errors: Partial<IBasicInformation> = {};
+
+	if (!values.email) {
+		errors.email = "Email is required";
+	}
+	if (!values.organization.name) {
+		if (!errors.organization) {
+			errors.organization = { name: "", country: "" };
+		}
+		errors.organization.name = "Organization name is required";
+	}
+	if (!values.organization.country) {
+		if (!errors.organization) {
+			errors.organization = { name: "", country: "" };
+		}
+		errors.organization.country = "Organization country is required";
+	}
+	if (!values.password) {
+		errors.password = "Password is required";
+	}
+	if (!values.password) {
+		errors.password = "Password is required";
+	}
+	return errors;
+};
+
 const BasicDetailsForm = () => {
+	const [showPassword, setShowPassword] = useState(false);
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
 
@@ -71,15 +103,25 @@ const BasicDetailsForm = () => {
 		formikHelpers: FormikHelpers<IBasicInformation>
 	) => {
 		setPayload(values);
-
 		// navigate(`/signup/${SignUpSteps.SET_ORG}`);
 	};
 	const clearErrors = () => {
 		if (error) error = "";
 	};
+	const validateInitialValue = (initialValue: any) => {
+		const errors = validate(initialValue) as object;
+		if (!errors) return true;
+		return Object.keys(errors).length ? false : true;
+	};
+
 	return (
 		<div onChange={clearErrors}>
-			<Formik initialValues={initialValues} onSubmit={OnSubmit}>
+			<Formik
+				initialValues={initialValues}
+				onSubmit={OnSubmit}
+				validate={validate}
+				isInitialValid={() => validateInitialValue(initialValues)}
+			>
 				{(formik) => {
 					return (
 						<Form className={classes.form}>
@@ -101,9 +143,10 @@ const BasicDetailsForm = () => {
 								<Grid item xs={12} md={12}>
 									<TextField
 										style={{ margin: "0px" }}
-										error={!!formik.errors.email}
+										error={!!formik.errors.email && !!formik.touched.email}
 										helperText={formik.touched.email && formik.errors.email}
 										onChange={formik.handleChange}
+										onBlur={formik.handleBlur}
 										label="Email"
 										required
 										fullWidth
@@ -138,49 +181,66 @@ const BasicDetailsForm = () => {
 									variant="outlined"
 								/>
 							</Grid> */}
-								<Grid item xs={6}>
-									<TextField
-										style={{ margin: "0px" }}
-										error={!!formik.errors.password}
-										helperText={
-											formik.touched.password && formik.errors.password
-										}
-										onChange={formik.handleChange}
-										label="Password"
-										required
-										fullWidth
-										name="password"
-										variant="outlined"
-										type="password"
-									/>
-								</Grid>
-								<Grid item xs={6}>
-									<TextField
-										style={{ margin: "0px" }}
-										error={!!formik.errors.confirmPassword}
-										helperText={
-											formik.touched.confirmPassword &&
-											formik.errors.confirmPassword
-										}
-										onChange={formik.handleChange}
-										label="Confirm Password"
-										required
-										fullWidth
-										name="confirmPassword"
-										variant="outlined"
-										type="password"
-									/>
-								</Grid>
 
 								<Grid item xs={12} md={12}>
+									<FormControl variant="outlined" fullWidth>
+										<InputLabel required htmlFor="outlined-adornment-password">
+											Password
+										</InputLabel>
+										<OutlinedInput
+											id="outlined-adornment-password"
+											type={showPassword ? "text" : "password"}
+											data-testid="signup-password"
+											onChange={formik.handleChange}
+											error={
+												!!formik.errors.password &&
+												!!formik.touched.password
+											}
+											onBlur={formik.handleBlur}
+											required
+											label="Password"
+											name="password"
+											endAdornment={
+												<InputAdornment position="end">
+													<IconButton
+														aria-label="toggle password visibility"
+														onClick={() => {
+															setShowPassword(!showPassword);
+														}}
+														onMouseDown={(e) => {
+															e.preventDefault();
+														}}
+														edge="end"
+													>
+														{showPassword ? (
+															<Visibility />
+														) : (
+															<VisibilityOff />
+														)}
+													</IconButton>
+												</InputAdornment>
+											}
+											labelWidth={70}
+										/>
+										<FormHelperText error>
+											{formik.touched.password && formik.errors.password}
+										</FormHelperText>
+									</FormControl>
+								</Grid>
+
+								<Grid item xs={12} md={6}>
 									<TextField
-										error={!!formik.errors.organization?.name}
+										error={
+											!!formik.errors.organization?.name &&
+											!!formik.touched.organization?.name
+										}
 										helperText={
 											formik.touched.organization?.name &&
 											formik.errors.organization?.name
 										}
 										onChange={formik.handleChange}
 										label="Organization Name"
+										onBlur={formik.handleBlur}
 										required
 										fullWidth
 										name="organization.name"
@@ -189,7 +249,7 @@ const BasicDetailsForm = () => {
 									/>
 								</Grid>
 
-								<Grid item xs={12} md={12}>
+								<Grid item xs={12} md={6}>
 									<FormControl variant="outlined" fullWidth>
 										<InputLabel id="demo-simple-select-outlined-label" required>
 											Select Country
@@ -229,7 +289,6 @@ const BasicDetailsForm = () => {
 													<em>No country available</em>
 												</MenuItem>
 											) : null}
-											
 										</Select>
 										<FormHelperText error>
 											{formik.touched.organization?.country &&
