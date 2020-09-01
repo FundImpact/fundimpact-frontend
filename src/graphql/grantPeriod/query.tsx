@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_GRANT_PERIODS = gql`
-	query {
-		grantPeriodsProjectList {
+	query getGrantPeriodsProjectByProjectDonor($filter: JSON) {
+		grantPeriodsProjectList(where: $filter) {
 			id
 			name
 			short_name

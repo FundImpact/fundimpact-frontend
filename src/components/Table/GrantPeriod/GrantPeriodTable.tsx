@@ -135,14 +135,17 @@ const headers: ISImpleTableProps["headers"] = [
 export default function GrantPeriodTable() {
 	const apolloClient = useApolloClient();
 
-	let [getProjectGrantPeriods, { loading, data }] = useLazyQuery(FETCH_GRANT_PERIODS);
+	let [getProjectGrantPeriods, { loading, data }] = useLazyQuery(FETCH_GRANT_PERIODS, {
+		notifyOnNetworkStatusChange: true,
+	});
 	const dashboardData = useDashBoardData();
-	const filter = { project: dashboardData?.project?.id };
+	let filter = { project: dashboardData?.project?.id };
 	try {
 		data = apolloClient.readQuery(
 			{
 				query: FETCH_GRANT_PERIODS,
-				variables: { filter },
+
+				variables: { filter: { project: dashboardData?.project?.id } },
 			},
 			true
 		);
@@ -150,8 +153,10 @@ export default function GrantPeriodTable() {
 
 	useEffect(() => {
 		if (!dashboardData?.project?.id) return;
+		filter = { ...filter, project: dashboardData?.project?.id };
+		console.log(`fecthing new list for project`, dashboardData?.project?.id, { ...filter });
 		getProjectGrantPeriods({
-			variables: { filter },
+			variables: { filter: { project: dashboardData?.project?.id } },
 		});
 	}, [dashboardData?.project?.id, getProjectGrantPeriods]);
 
