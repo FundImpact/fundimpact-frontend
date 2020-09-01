@@ -34,8 +34,8 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 	const initialValues: ILoginForm = props.intialFormValue
 		? props.intialFormValue
 		: {
-				email: "vinitkumar12@gmail.com",
-				password: "vinit@123",
+				email: "",
+				password: "",
 		  };
 
 	const userDispatch = React.useContext(UserDispatchContext);
