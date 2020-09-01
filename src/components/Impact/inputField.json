@@ -52,6 +52,20 @@
 			"multiline": true
 		}
 	],
+	"impactUnitSelect": [
+		{
+			"name": "impactCategory",
+			"label": "Choose Impact Category",
+			"size": 12,
+			"testId": "createImpactUnitImpactCategory",
+			"dataTestId": "createImpactUnitImpactCategoryInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"type": "select"
+		}
+	],
 	"impactCategoryForm": [
 		{
 			"name": "name",

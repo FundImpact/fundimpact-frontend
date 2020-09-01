@@ -12,6 +12,7 @@ import dataInputFields from "../inputField.json";
 import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -55,6 +56,12 @@ function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClos
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_CATEGORY_BY_ORG,
+						variables: { filter: { organization: dashboardData?.organization?.id } },
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Category Creation Success"));
 			handleClose();

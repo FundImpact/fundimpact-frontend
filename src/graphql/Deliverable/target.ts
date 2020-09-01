@@ -107,14 +107,19 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 `;
 
 export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
-	query getDeliverableTargetListByProject($filter: JSON) {
-		deliverableTargetList(where: $filter) {
+	query getDeliverableTargetListByProject(
+		$sort: String
+		$limit: Int
+		$start: Int
+		$filter: JSON
+	) {
+		deliverableTargetList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			description
 			target_value
+
 			deliverable_category_unit {
-				id
 				deliverable_category_org {
 					id
 					name
@@ -215,5 +220,11 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 export const GET_ACHIEVED_VALLUE_BY_TARGET = gql`
 	query getDeliverableTrackingTotalValueByProject($filter: JSON) {
 		deliverableTrackingTotalValue(where: $filter)
+	}
+`;
+
+export const GET_DELIVERABLE_TARGETS_COUNT = gql`
+	query getDeliverableTargetCountByProject($filter: JSON) {
+		deliverableTargetCount(where: $filter)
 	}
 `;

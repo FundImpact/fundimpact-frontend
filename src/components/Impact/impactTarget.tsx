@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_IMPACT_CATEGORY } from "../../graphql/Impact/category";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../graphql/Impact/query";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
 import {
 	CREATE_IMPACT_TARGET,
@@ -35,7 +35,9 @@ function getInitialValues(props: ImpactTargetProps) {
 function ImpactTarget(props: ImpactTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	const { data: categories } = useQuery(GET_IMPACT_CATEGORY);
+	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
 	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
 
 	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
