@@ -76,6 +76,22 @@ const InputFields = ({
 	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
 		setElemName(event.target.value.map((elem: any) => elem.name) as string[]);
 	};
+	let renderValue;
+	if (multiple) {
+		renderValue = (selected: any) => (
+			<div className={classes.chips}>
+				{(selected as string[])
+					.filter((selectedValue) => selectedValue)
+					.map((value, index) => (
+						<Chip
+							key={index}
+							label={optionsArrayHash[value]}
+							className={classes.chip}
+						/>
+					))}
+			</div>
+		);
+	}
 
 	if (inputType === "select" || inputType === "multiSelect") {
 		let multiSelect: boolean = inputType === "multiSelect" ? true : false;
@@ -93,9 +109,15 @@ const InputFields = ({
 			}
 		};
 
+		if (multiSelect) {
+			renderValue = (selected: any) => {
+				let arr: any = selected.map((elem: any) => elem.name);
+				return arr.join(", ");
+			};
+		}
 		return (
 			<FormControl variant="outlined" className={classes.formControl}>
-				<InputLabel id={inputLabelId}>{required ? label : label + " ( opt )"}</InputLabel>
+				<InputLabel id={inputLabelId}>{label}</InputLabel>
 
 				<Select
 					labelId={selectLabelId}
@@ -106,34 +128,9 @@ const InputFields = ({
 					onChange={onChange}
 					required={required}
 					onBlur={formik.handleBlur}
-					label={required ? label : label + " ( opt )"}
+					label={label}
 					name={name}
-					renderValue={(selected) => {
-						return multiple ? (
-							<div className={classes.chips}>
-								{(selected as string[])
-									.filter((selectedValue) => selectedValue)
-									.map((value, index) => (
-										<Chip
-											key={index}
-											label={optionsArrayHash[value]}
-											className={classes.chip}
-										/>
-									))}
-							</div>
-						) : multiSelect ? (
-							(selected as any[]).map((elem: any) => elem.name).join(",")
-						) : undefined;
-						// optionsArrayHash[selected as string]
-					}}
-					// renderValue={
-					// 	multiSelect
-					// 		? (selected: any) => {
-					// 				let arr: any = selected.map((elem: any) => elem.name);
-					// 				return arr.join(", ");
-					// 		  }
-					// 		: undefined
-					// }
+					renderValue={renderValue}
 					data-testid={dataTestId}
 					inputProps={{
 						"data-testid": testId,
@@ -147,7 +144,7 @@ const InputFields = ({
 					{multiSelect &&
 						optionsArray &&
 						optionsArray.map((elem: any, index: number) => (
-							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
+							<MenuItem key={index} value={multiSelect ? elem : elem}>
 								{multiSelect ? (
 									<Checkbox
 										color="primary"
@@ -194,7 +191,7 @@ const InputFields = ({
 					  }
 					: formik.handleChange
 			}
-			label={required ? label : label + " ( opt )"}
+			label={label}
 			data-testid={dataTestId}
 			inputProps={{
 				"data-testid": testId,
