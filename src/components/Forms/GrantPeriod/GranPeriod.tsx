@@ -2,7 +2,6 @@ import { useQuery } from "@apollo/client";
 import {
 	Button,
 	createStyles,
-	FormControl,
 	Grid,
 	InputLabel,
 	makeStyles,
@@ -18,6 +17,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_PROJECT_DONORS } from "../../../graphql";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { GrantPeriodFormProps, IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
+import InputField from "../../InputField/InputField";
 import BasicDateRangePicker from "./dateRange";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
 			minWidth: 120,
 			width: "100%",
 		},
+		cancelButton: {
+			marginLeft: theme.spacing(1),
+		},
 	})
 );
 
@@ -44,12 +47,9 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 		variables: { filter: { project: dashboardData?.project?.id } },
 	});
 
-	useEffect(() => {
-		console.log(`project list`, donorList);
-	}, [donorList]);
+	useEffect(() => {}, [donorList]);
 
 	const validate = (values: any) => {
-		console.log("validate");
 		return {};
 	};
 
@@ -57,12 +57,14 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 		return null;
 	};
 
-	let initialValues: IGrantPeriod = {
+	let initialValues: Partial<IGrantPeriod> = {
 		name: "",
 		short_name: "",
 		description: "",
 		start_date: "",
-		project: "",
+		end_date: "",
+		project: undefined,
+		donor: undefined,
 	};
 	if (props.action === FORM_ACTIONS.UPDATE) {
 		initialValues = { ...props.initialValues };
@@ -70,16 +72,25 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 
 	let startDate = {
 		text: "Start Date",
+		preFilledValue: undefined,
 	};
 
 	let endData = {
 		text: "End Date",
+		preFilledValue: undefined,
 	};
 
-	// const onValueChanges = (values: IGrantPeriod, ss: any) => {
-	// 	console.log(values, ss);
-	// };
+	if (props.action === FORM_ACTIONS.UPDATE) {
+		if (initialValues.start_date) {
+			startDate["preFilledValue"] = new Date(initialValues.start_date) as any;
+		}
 
+		if (initialValues.end_date) {
+			endData["preFilledValue"] = new Date(initialValues.end_date) as any;
+		}
+	}
+
+	console.log(`forms initial value`, initialValues);
 	return (
 		<Formik
 			validateOnBlur
@@ -92,17 +103,32 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 				const mapingFound = donorList.projDonors.find(
 					(mapping: any) => mapping.project.id === values.project
 				);
-				values = { ...values, donor: mapingFound?.donor?.id };
 
+				console.log(`values from form`, { ...values });
+
+				values = { ...values, donor: mapingFound?.donor?.id };
 				props.onSubmit(values);
 			}}
 		>
 			{(formik) => {
 				return (
 					<Form autoComplete="off" data-testid="form" onChange={clearErrors}>
-						<Grid container spacing={2}>
-							<Grid item xs={6}>
-								<TextField
+						<Grid container spacing={4}>
+							<Grid item xs={12} md={6}>
+								<InputField
+									formik={formik}
+									name={"name"}
+									id={"name"}
+									dataTestId="name"
+									testId="name"
+									label="Name"
+									multiline={false}
+									rows={1}
+									type="text"
+									endAdornment={""}
+								/>
+								{/* <TextField
+									fullWidth
 									value={formik.values.name}
 									error={!!formik.errors.name}
 									onChange={formik.handleChange}
@@ -111,11 +137,12 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									name="name"
 									type="text"
 									variant="outlined"
-								/>
+								/> */}
 							</Grid>
 
-							<Grid item xs={6}>
+							<Grid item xs={12} md={6}>
 								<TextField
+									fullWidth
 									value={formik.values.short_name}
 									error={!!formik.errors.short_name}
 									onChange={formik.handleChange}
@@ -128,7 +155,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 
 							<Grid item xs={12} md={12}>
 								<TextField
-									className={classes.formControl}
+									fullWidth
 									value={formik.values.description}
 									error={!!formik.errors.description}
 									onChange={formik.handleChange}
@@ -139,9 +166,12 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 								/>
 							</Grid>
 
-							<FormControl variant="outlined" className={classes.formControl}>
+							<Grid item xs={12} md={12}>
 								<InputLabel id="demo-simple-select-label">Select Donor</InputLabel>
 								<Select
+									required
+									variant="outlined"
+									fullWidth
 									labelId="demo-simple-select-label"
 									id="demo-simple-select"
 									name="project"
@@ -159,7 +189,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 										<MenuItem disabled>No Donors availabel</MenuItem>
 									) : null}
 								</Select>
-							</FormControl>
+							</Grid>
 
 							<Grid item xs={12} md={12}>
 								<BasicDateRangePicker
@@ -167,7 +197,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									to={endData}
 									onChange={(from, to) => {
 										formik.setFieldValue("start_date", from?.toISOString());
-										formik.setFieldValue("end_date", to?.toISOString);
+										formik.setFieldValue("end_date", to?.toISOString());
 									}}
 								/>
 							</Grid>
@@ -180,6 +210,9 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 								color="primary"
 							>
 								Submit
+							</Button>
+							<Button onClick={props.onCancel} className={classes.cancelButton}>
+								Cancel
 							</Button>
 						</Grid>
 					</Form>

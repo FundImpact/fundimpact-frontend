@@ -1,4 +1,5 @@
 import { FORM_ACTIONS } from "../constants";
+import { IDONOR } from "../donor";
 
 export interface IGrantPeriod {
 	id?: string;
@@ -6,7 +7,9 @@ export interface IGrantPeriod {
 	short_name?: string;
 	description?: string;
 	start_date?: string;
-	end_Date?: string;
+	end_date?: string;
+	donor: IDONOR["id"];
+	// project: IProject["id"];
 	project: string;
 }
 export type GrantPeriodFormProps = {
@@ -14,5 +17,5 @@ export type GrantPeriodFormProps = {
 	onSubmit: (values: IGrantPeriod) => void;
 } & (
 	| { action: FORM_ACTIONS.CREATE }
-	| { action: FORM_ACTIONS.UPDATE; initialValues: IGrantPeriod & { id: string } }
+	| { action: FORM_ACTIONS.UPDATE; initialValues: IGrantPeriod }
 );

@@ -16,7 +16,6 @@ import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndImpactHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
-import DeliverableTracklineTable from "./DeliverableTrackLine";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [
@@ -141,10 +140,6 @@ export default function DeliverablesTable() {
 					column: [],
 				};
 
-				row.collaspeTable = (
-					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
-				);
-
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
 						<TableCell>{deliverableTargetList[i].name}</TableCell>,
@@ -159,6 +154,8 @@ export default function DeliverablesTable() {
 							`}
 						</TableCell>,
 					];
+
+					// Columsn
 					column.push(
 						<DeliverableTargetAchievementAndProgress
 							deliverableTargetId={deliverableTargetList[i].id}
@@ -169,6 +166,8 @@ export default function DeliverablesTable() {
 							}
 						/>
 					);
+
+					// Action Columns
 					column.push(
 						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
 					);

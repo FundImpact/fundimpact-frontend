@@ -13,7 +13,6 @@ import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
-import Donor from "../../Donor";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
@@ -23,7 +22,7 @@ import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
 import Snackbar from "../../Snackbar/Snackbar";
 import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import DeliverablesTable from "../../Table/Deliverable/Deliverable";
-import DonorTable from "../../Table/Donor";
+import GrantPeriodTable from "../../Table/GrantPeriod/GrantPeriodTable";
 import ImpactsTable from "../../Table/Impact/Impacts";
 
 interface TabPanelProps {
@@ -86,16 +85,6 @@ export default function DashboardTableContainer() {
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<BudgetCategory open={open} handleClose={handleClose} />
-					),
-				},
-				{
-					text: "Create Grant Period",
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<GrantPeriodDialog
-							open={open}
-							onClose={handleClose}
-							action={FORM_ACTIONS.CREATE}
-						/>
 					),
 				},
 				{
@@ -210,14 +199,20 @@ export default function DashboardTableContainer() {
 			],
 		},
 		{
-			label: "Documents",
-			table: <DonorTable />,
-			createButtons: [],
-			buttonAction: {
-				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<Donor open={open} handleClose={handleClose} formAction={FORM_ACTIONS.CREATE} />
-				),
-			},
+			label: "Grant Periods",
+			table: <GrantPeriodTable />,
+			createButtons: [
+				{
+					text: "Create Grant Period",
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<GrantPeriodDialog
+							open={open}
+							onClose={handleClose}
+							action={FORM_ACTIONS.CREATE}
+						/>
+					),
+				},
+			],
 		},
 	];
 	const classes = useStyles();
@@ -258,7 +253,7 @@ export default function DashboardTableContainer() {
 					</Box> */}
 					{tab.table}
 					{/* {GetTable(tab.label)} */}
-					<AddButton createButtons={tab.createButtons} buttonAction={tab.buttonAction} />
+					<AddButton createButtons={tab.createButtons} />
 				</TabContent>
 			))}
 			{notificationData!.successNotification && (

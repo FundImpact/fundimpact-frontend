@@ -12,14 +12,31 @@ export const CREATE_GRANT_PERIOD = gql`
 			donor {
 				id
 				name
-				short_name
-				legal_name
 			}
 			project {
 				id
 				name
-				short_name
-				description
+			}
+		}
+	}
+`;
+
+export const UPDATE_GRANT_PERIOD = gql`
+	mutation updateGrantPeriodsProjectDetail($id: ID!, $input: GrantPeriodsProjectInput!) {
+		updateGrantPeriodsProjectDetail(id: $id, input: $input) {
+			id
+			name
+			short_name
+			start_date
+			end_date
+			description
+			donor {
+				id
+				name
+			}
+			project {
+				id
+				name
 			}
 		}
 	}

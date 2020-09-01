@@ -1,5 +1,5 @@
+import { Box, CircularProgress, Dialog, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { Dialog, Box, Grid, Typography, CircularProgress } from "@material-ui/core";
 
 function FormDialog({
 	open,
