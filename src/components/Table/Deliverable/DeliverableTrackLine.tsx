@@ -63,7 +63,6 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		deliverableTracklineData,
 		setDeliverableTracklineData,
 	] = useState<IDeliverableTargetLine | null>();
-	console.log("tracklineDonors", deliverableTracklineData);
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setMenuAnchor(event.currentTarget);
 	};
@@ -123,10 +122,6 @@ export default function DeliverablesTrackLineTable({
 }: {
 	deliverableTargetId: string;
 }) {
-	const { loading, data } = useQuery(GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET, {
-		variables: { filter: { deliverable_target_project: deliverableTargetId } },
-	});
-
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 
 	const handleDeliverableLineChangePage = (
@@ -146,7 +141,7 @@ export default function DeliverablesTrackLineTable({
 		queryData: deliverableTracklineData,
 		changePage,
 		countQueryLoading,
-		queryLoading,
+		queryLoading: loading,
 	} = pagination({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
@@ -194,6 +189,7 @@ export default function DeliverablesTrackLineTable({
 
 	return (
 		<>
+			{countQueryLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
 			{rows.length > 0 && (
