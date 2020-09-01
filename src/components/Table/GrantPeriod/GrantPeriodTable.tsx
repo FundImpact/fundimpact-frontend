@@ -22,6 +22,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { FETCH_GRANT_PERIODS } from "../../../graphql/grantPeriod/query";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
+import { resolveJSON } from "../../../utils/jsonUtils";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import SimpleMenu from "../../Menu/Menu";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
@@ -43,10 +44,6 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 		},
 	})
 );
-
-function resolveJSON(obj: { [key: string]: any }, keys: string) {
-	return keys.split(".").reduce((o, key) => o && o[key], obj);
-}
 
 interface ISImpleTableProps {
 	headers: { label: string; key: string }[];
