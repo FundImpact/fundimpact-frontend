@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -17,6 +17,7 @@ import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { deliverableAndImpactHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
+import DeliverableTracklineTable from "./DeliverableTrackLine";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -168,17 +169,27 @@ export default function DeliverablesTable() {
 					collaspeTable: null,
 					column: [],
 				};
+				row.collaspeTable = (
+					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
+				);
 
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
-						<TableCell>{deliverableTargetList[i].name}</TableCell>,
-						<TableCell>
+						<TableCell key={deliverableTargetList[i].name}>
+							{deliverableTargetList[i].name}
+						</TableCell>,
+						<TableCell
+							key={
+								deliverableTargetList[i].deliverable_category_unit
+									.deliverable_category_org.name
+							}
+						>
 							{
 								deliverableTargetList[i].deliverable_category_unit
 									.deliverable_category_org.name
 							}
 						</TableCell>,
-						<TableCell>
+						<TableCell key={deliverableTargetList[i].target_value}>
 							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}
 							`}
 						</TableCell>,
@@ -187,6 +198,7 @@ export default function DeliverablesTable() {
 					// Columsn
 					column.push(
 						<DeliverableTargetAchievementAndProgress
+							key={Math.random()}
 							deliverableTargetId={deliverableTargetList[i].id}
 							deliverableTargetValue={deliverableTargetList[i].target_value}
 							deliverableTargetUnit={
@@ -198,7 +210,10 @@ export default function DeliverablesTable() {
 
 					// Action Columns
 					column.push(
-						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
+						<EditDeliverableTargetIcon
+							key={Math.random()}
+							deliverableTarget={deliverableTargetList[i]}
+						/>
 					);
 					row.column = column;
 					array.push(row);
@@ -218,7 +233,7 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-					{rows.length > 0 && (
+					{/* {rows.length > 0 && (
 						<TablePagination
 							rowsPerPageOptions={[]}
 							colSpan={9}
@@ -229,7 +244,7 @@ export default function DeliverablesTable() {
 							onChangeRowsPerPage={() => {}}
 							style={{ paddingRight: "40px" }}
 						/>
-					)}
+					)} */}
 				</>
 			)}
 		</>
