@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -233,7 +233,7 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-					{/* {rows.length > 0 && (
+					{rows.length > 0 && (
 						<TablePagination
 							rowsPerPageOptions={[]}
 							colSpan={9}
@@ -244,7 +244,7 @@ export default function DeliverablesTable() {
 							onChangeRowsPerPage={() => {}}
 							style={{ paddingRight: "40px" }}
 						/>
-					)} */}
+					)}
 				</>
 			)}
 		</>
