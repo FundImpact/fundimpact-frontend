@@ -76,7 +76,6 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				props.onCancel();
 			},
 			onError(data) {
-				console.log("err", data);
 				notificationDispatch(
 					setErrorNotification(
 						"Deliverable Trackline Financial year tags updation Failed !"
@@ -87,7 +86,6 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 	);
 
 	const onCreate = (value: any) => {
-		console.log("formik", value);
 		let finalvalues = Object.values(value);
 		console.log(finalvalues);
 		for (let i = 0; i < finalvalues.length; i++) {
@@ -96,7 +94,9 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				refetchQueries: [
 					{
 						query: GET_DELIVERABLE_LINEITEM_FYDONOR,
-						variables: { filter: { deliverable_tracking_lineitem: props.TracklineId } },
+						variables: {
+							filter: { deliverable_tracking_lineitem: props.TracklineId },
+						},
 					},
 				],
 			});

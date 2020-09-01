@@ -119,8 +119,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						TracklineId={data.updateImpactTrackingLineitemInput.id}
 						TracklineFyId={data.updateImpactTrackingLineitemInput.financial_year?.id}
 						onCancel={onCancel}
-						data={impactDonorFormData}
-						type={FORM_ACTIONS.UPDATE}
+						data={Object.keys(impactDonorFormData).length ? impactDonorFormData : {}}
+						type={
+							Object.keys(impactDonorFormData).length
+								? FORM_ACTIONS.UPDATE
+								: FORM_ACTIONS.CREATE
+						}
 					/>
 				);
 				notificationDispatch(
