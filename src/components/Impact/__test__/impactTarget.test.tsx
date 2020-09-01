@@ -109,33 +109,6 @@ describe("Impact Target Form", () => {
 		expect(submitButton).toBeInTheDocument();
 	});
 
-	test("should have initial values", () => {
-		let impactTargetName = impactTarget.getByTestId(
-			"impactTargetNameInput"
-		) as HTMLInputElement;
-		expect(impactTargetName.value).toBe(intialFormValue.name);
-
-		let impactTargetTargetValue = impactTarget.getByTestId(
-			"impactTargetTargetValueInput"
-		) as HTMLInputElement;
-		expect(impactTargetTargetValue.value).toBe(intialFormValue.target_value);
-
-		let impactTargetCategory = impactTarget.getByTestId(
-			"impactTargetCategoryInput"
-		) as HTMLInputElement;
-		expect(impactTargetCategory.value).toBe(intialFormValue.impactCategory);
-
-		let impactTargetUnit = impactTarget.getByTestId(
-			"impactTargetUnitInput"
-		) as HTMLInputElement;
-		expect(impactTargetUnit.value).toBe(intialFormValue.impactUnit);
-
-		let impacttargetDescription = impactTarget.getByTestId(
-			"impactTargetDescriptionInput"
-		) as HTMLInputElement;
-		expect(impacttargetDescription.value).toBe(intialFormValue.description);
-	});
-
 	test("Submit Button should be disabled if either of name,targetValue,category,unit fields is empty", async () => {
 		let impactTargetName = impactTarget.getByTestId(
 			"impactTargetNameInput"
