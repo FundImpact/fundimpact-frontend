@@ -20,13 +20,8 @@ describe("Basic Details Form (Signup Page)", () => {
 	});
 
 	test("should have password Field", async () => {
-		let passwordField = await signupComponent.findByText("Password");
+		let passwordField = await signupComponent.findByTestId("signup-password");
 		expect(passwordField).toBeInTheDocument();
-	});
-
-	test("should have confirm password Field", async () => {
-		let confirmPasswordField = await signupComponent.findByText("Confirm Password");
-		expect(confirmPasswordField).toBeInTheDocument();
 	});
 
 	test("should have organisation name Field", async () => {
