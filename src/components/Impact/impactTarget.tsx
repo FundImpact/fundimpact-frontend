@@ -24,8 +24,8 @@ import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
 function getInitialValues(props: ImpactTargetProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Impact TARGET",
-		description: "This is a sample Impact TARGET",
+		name: "",
+		description: "",
 		target_value: "",
 		impactCategory: "",
 		impactUnit: "",
@@ -163,6 +163,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 					},
 				],
 			});
+			impactTargetForm[3].optionsArray = []; // set empty units after creation
 			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
 			onCancel();
 		} catch (error) {
