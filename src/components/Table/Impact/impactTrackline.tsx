@@ -1,11 +1,12 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell, Box, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
 import {
 	GET_IMPACT_LINEITEM_FYDONOR,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+	GET_IMPACT_TRACKLINE_COUNT,
 } from "../../../graphql/Impact/trackline";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
 import { getTodaysDate } from "../../../utils";
@@ -14,6 +15,7 @@ import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
+import pagination from "../../../hooks/pagination/pagination";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
@@ -47,9 +49,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			setImpactTracklineDonors(impactProjectDonors);
 			setImpactTracklineDonorsMapValues(impactMapValueobj);
 		},
-		onError(data) {
-			console.log("errrr", data);
-		},
+		onError(data) {},
 	});
 	const [impactTracklineMenuAnchor, setImpactTracklineMenuAnchor] = useState<null | HTMLElement>(
 		null
@@ -108,14 +108,50 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 }
 
 export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetId: string }) {
-	const { loading, data } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
-		variables: { filter: { impact_target_project: impactTargetId } },
+	// const { loading, data } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
+	// 	variables: { filter: { impact_target_project: impactTargetId } },
+	// });
+
+	const [impactTracklinePage, setImpactTracklinePage] = React.useState(0);
+
+	const handleImpactLineChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > impactTracklinePage) {
+			changePage();
+		} else {
+			changePage(true);
+		}
+		setImpactTracklinePage(newPage);
+	};
+
+	let {
+		count,
+		queryData: impactTracklineData,
+		changePage,
+		countQueryLoading: countLoading,
+		queryLoading: loading,
+	} = pagination({
+		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+		countQuery: GET_IMPACT_TRACKLINE_COUNT,
+		countFilter: {
+			impact_target_project: impactTargetId,
+		},
+		queryFilter: {
+			impact_target_project: impactTargetId,
+		},
+		sort: "created_at:DESC",
 	});
 
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
-		if (data && data.impactTrackingLineitemList && data.impactTrackingLineitemList.length) {
-			let impactTrackingLineitemList = data.impactTrackingLineitemList;
+		if (
+			impactTracklineData &&
+			impactTracklineData.impactTrackingLineitemList &&
+			impactTracklineData.impactTrackingLineitemList.length
+		) {
+			let impactTrackingLineitemList = impactTracklineData.impactTrackingLineitemList;
 			let arr = [];
 			for (let i = 0; i < impactTrackingLineitemList.length; i++) {
 				if (impactTrackingLineitemList[i]) {
@@ -138,12 +174,27 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		} else {
 			setRows([]);
 		}
-	}, [data]);
+	}, [impactTracklineData]);
 
 	return (
 		<>
+			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
+			{rows.length > 0 && (
+				<Box mt={1}>
+					<TablePagination
+						rowsPerPageOptions={[]}
+						colSpan={9}
+						count={count}
+						rowsPerPage={count > 10 ? 10 : count}
+						page={impactTracklinePage}
+						onChangePage={handleImpactLineChangePage}
+						onChangeRowsPerPage={() => {}}
+						style={{ paddingRight: "40px" }}
+					/>
+				</Box>
+			)}
 		</>
 	);
 }

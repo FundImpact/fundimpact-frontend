@@ -10,14 +10,7 @@ import { deliverableAndImpactHeadings } from "../constants";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import {
-	IconButton,
-	Menu,
-	MenuItem,
-	TableRow,
-	TableCell,
-	TablePagination,
-} from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
 import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
@@ -129,9 +122,6 @@ function DeliverableTargetAchievementAndProgress({
 
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
-	const { loading, data } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
-		variables: { filter: { project: dashboardData?.project?.id } },
-	});
 	const [page, setPage] = React.useState(0);
 
 	const handleChangePage = (
@@ -146,7 +136,13 @@ export default function DeliverablesTable() {
 		setPage(newPage);
 	};
 
-	let { count, queryData: deliverableTargetData, changePage } = pagination({
+	let {
+		count,
+		queryData: deliverableTargetData,
+		changePage,
+		countQueryLoading,
+		queryLoading,
+	} = pagination({
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
 		countFilter: {
@@ -157,12 +153,15 @@ export default function DeliverablesTable() {
 		},
 		sort: "created_at:DESC",
 	});
-	console.log(deliverableTargetData);
 
 	const [rows, setRows] = useState<any>([]);
 	useEffect(() => {
-		if (data && data.deliverableTargetList && data.deliverableTargetList.length) {
-			let deliverableTargetList = data.deliverableTargetList;
+		if (
+			deliverableTargetData &&
+			deliverableTargetData.deliverableTargetList &&
+			deliverableTargetData.deliverableTargetList.length
+		) {
+			let deliverableTargetList = deliverableTargetData.deliverableTargetList;
 			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
 				let row: { collaspeTable: any; column: any[] } = {
@@ -210,22 +209,25 @@ export default function DeliverablesTable() {
 		} else {
 			setRows([]);
 		}
-	}, [data]);
+	}, [deliverableTargetData]);
 
 	return (
 		<>
-			{loading ? <FullScreenLoader /> : null}
+			{countQueryLoading ? <FullScreenLoader /> : null}
+			{queryLoading ? <FullScreenLoader /> : null}
 			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-			<TablePagination
-				rowsPerPageOptions={[]}
-				colSpan={9}
-				count={count}
-				rowsPerPage={count > 10 ? 10 : count}
-				page={page}
-				onChangePage={handleChangePage}
-				onChangeRowsPerPage={() => {}}
-				style={{ paddingRight: "40px" }}
-			/>
+			{rows.length > 0 && (
+				<TablePagination
+					rowsPerPageOptions={[]}
+					colSpan={9}
+					count={count}
+					rowsPerPage={count > 10 ? 10 : count}
+					page={page}
+					onChangePage={handleChangePage}
+					onChangeRowsPerPage={() => {}}
+					style={{ paddingRight: "40px" }}
+				/>
+			)}
 		</>
 	);
 }
