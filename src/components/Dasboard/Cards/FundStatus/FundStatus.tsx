@@ -34,7 +34,7 @@ const createFundDetails = (
 	const FUNDS_APPROVED: IFunds = {
 		name: "Approved",
 		amountToShow: undefined,
-		color: theme.palette.secondary.main,
+		color: theme.palette.grey[200],
 	};
 
 	const FUNDS_SPENT: IFunds = {
@@ -46,7 +46,7 @@ const createFundDetails = (
 	const FUNDS_RECEIVED: IFunds = {
 		name: "Received",
 		amountToShow: undefined,
-		color: theme.palette.grey[200],
+		color: theme.palette.secondary.main,
 	};
 	let pieData = {
 		datasets: [
