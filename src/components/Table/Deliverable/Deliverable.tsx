@@ -1,22 +1,22 @@
+import { useQuery } from "@apollo/client";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
-	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	GET_DELIVERABLE_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/target";
-import { useQuery } from "@apollo/client";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { deliverableAndImpactHeadings } from "../constants";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
-import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DeliverableTracklineTable from "./DeliverableTrackLine";
-import FICollaspeTable from "../FICollapseTable";
-import pagination from "../../../hooks/pagination/pagination";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { deliverableAndImpactHeadings } from "../constants";
+import FICollaspeTable from "../FICollapseTable";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -169,10 +169,6 @@ export default function DeliverablesTable() {
 					column: [],
 				};
 
-				row.collaspeTable = (
-					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
-				);
-
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
 						<TableCell>{deliverableTargetList[i].name}</TableCell>,
@@ -187,6 +183,8 @@ export default function DeliverablesTable() {
 							`}
 						</TableCell>,
 					];
+
+					// Columsn
 					column.push(
 						<DeliverableTargetAchievementAndProgress
 							deliverableTargetId={deliverableTargetList[i].id}
@@ -197,6 +195,8 @@ export default function DeliverablesTable() {
 							}
 						/>
 					);
+
+					// Action Columns
 					column.push(
 						<EditDeliverableTargetIcon deliverableTarget={deliverableTargetList[i]} />
 					);
