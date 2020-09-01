@@ -10,7 +10,6 @@ import {
 	GET_IMPACT_TARGETS_COUNT,
 } from "../../../graphql/Impact/target";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
-import FullScreenLoader from "../../commons/GlobalLoader";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTarget from "../../Impact/impactTarget";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
@@ -18,6 +17,8 @@ import { deliverableAndImpactHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
 import ImpactTrackLineTable from "./impactTrackline";
 import pagination from "../../../hooks/pagination/pagination";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
+
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
@@ -204,20 +205,24 @@ export default function ImpactsTable() {
 
 	return (
 		<>
-			{queryLoading ? <FullScreenLoader /> : null}
-			{countQueryLoading ? <FullScreenLoader /> : null}
-			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-			{rows.length > 0 && (
-				<TablePagination
-					rowsPerPageOptions={[]}
-					colSpan={9}
-					count={count}
-					rowsPerPage={count > 10 ? 10 : count}
-					page={impactPage}
-					onChangePage={handleChangePage}
-					onChangeRowsPerPage={() => {}}
-					style={{ paddingRight: "40px" }}
-				/>
+			{queryLoading || countQueryLoading ? (
+				<TableSkeleton />
+			) : (
+				<>
+					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+					{rows.length > 0 && (
+						<TablePagination
+							rowsPerPageOptions={[]}
+							colSpan={9}
+							count={count}
+							rowsPerPage={count > 10 ? 10 : count}
+							page={impactPage}
+							onChangePage={handleChangePage}
+							onChangeRowsPerPage={() => {}}
+							style={{ paddingRight: "40px" }}
+						/>
+					)}
+				</>
 			)}
 		</>
 	);

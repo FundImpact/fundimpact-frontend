@@ -13,7 +13,6 @@ import {
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	UPDATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
-	GET_DELIVERABLE_LINEITEM_FYDONOR,
 } from "../../graphql/Deliverable/trackline";
 import {
 	DeliverableTargetLineProps,
@@ -128,9 +127,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					donors={donors}
 					TracklineId={data.updateDeliverableTrackingLineitemDetail.id}
 					TracklineFyId={data.updateDeliverableTrackingLineitemDetail.financial_year?.id}
-					data={donorFormData}
+					data={Object.keys(donorFormData).length ? donorFormData : {}}
 					onCancel={onCancel}
-					type={FORM_ACTIONS.UPDATE}
+					type={
+						Object.keys(donorFormData).length
+							? FORM_ACTIONS.UPDATE
+							: FORM_ACTIONS.CREATE
+					}
 				/>
 			);
 			notificationDispatch(
@@ -291,10 +294,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				input,
 			},
 			refetchQueries: [
-				{
-					query: GET_DELIVERABLE_LINEITEM_FYDONOR,
-					variables: {},
-				},
 				{
 					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 					variables: {

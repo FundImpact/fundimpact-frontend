@@ -1,5 +1,14 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell, Box, TablePagination } from "@material-ui/core";
+import {
+	IconButton,
+	Menu,
+	MenuItem,
+	TableCell,
+	Box,
+	TablePagination,
+	Chip,
+	Avatar,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -27,7 +36,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 		}[]
 	>([]);
 
-	useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
+	const { data } = useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
 		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
 		onCompleted(data) {
 			let impactMapValueobj: any = {};
@@ -51,6 +60,26 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 		},
 		onError(data) {},
 	});
+	useEffect(() => {
+		let impactMapValueobj: any = {};
+		let impactProjectDonors: any = [];
+		data?.impactLinitemFyDonorList?.forEach((elem: any) => {
+			impactMapValueobj[`${elem.project_donor.id}mapValues`] = {
+				id: elem.id,
+				financial_year: elem.financial_year?.id,
+				grant_periods_project: elem.grant_periods_project?.id,
+				impact_tracking_lineitem: elem.impact_tracking_lineitem?.id,
+				project_donor: elem.project_donor?.id,
+			};
+			impactProjectDonors.push({
+				id: elem.project_donor?.id,
+				name: elem.project_donor?.donor?.name,
+				donor: elem.project_donor?.donor,
+			});
+		});
+		setImpactTracklineDonors(impactProjectDonors);
+		setImpactTracklineDonorsMapValues(impactMapValueobj);
+	}, [data]);
 	const [impactTracklineMenuAnchor, setImpactTracklineMenuAnchor] = useState<null | HTMLElement>(
 		null
 	);
@@ -157,10 +186,42 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				if (impactTrackingLineitemList[i]) {
 					let row = [
 						<TableCell>
-							{getTodaysDate(impactTrackingLineitemList[i].reporting_date)}
+							{getTodaysDate(impactTrackingLineitemList[i]?.reporting_date)}
 						</TableCell>,
-						<TableCell>{impactTrackingLineitemList[i].note}</TableCell>,
-						<TableCell>{impactTrackingLineitemList[i].value}</TableCell>,
+						<TableCell>
+							{impactTrackingLineitemList[i]?.note
+								? impactTrackingLineitemList[i]?.note
+								: "-"}
+						</TableCell>,
+						<TableCell>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
+						<TableCell>
+							{" "}
+							<Box display="flex">
+								<Box mr={1}>
+									<Chip
+										avatar={<Avatar>FY</Avatar>}
+										label={
+											impactTrackingLineitemList[i]?.financial_year
+												? impactTrackingLineitemList[i]?.financial_year
+														?.name
+												: "-"
+										}
+										size="small"
+										color="primary"
+									/>
+								</Box>
+								<Chip
+									avatar={<Avatar>AY</Avatar>}
+									label={
+										impactTrackingLineitemList[i]?.annual_year
+											? impactTrackingLineitemList[i]?.annual_year?.name
+											: "-"
+									}
+									size="small"
+									color="primary"
+								/>
+							</Box>
+						</TableCell>,
 					];
 					row.push(
 						<EditImpactTargetLineIcon

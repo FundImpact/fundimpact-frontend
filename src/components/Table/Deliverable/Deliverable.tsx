@@ -15,8 +15,8 @@ import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarge
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
 import FICollaspeTable from "../FICollapseTable";
-import FullScreenLoader from "../../commons/GlobalLoader";
 import pagination from "../../../hooks/pagination/pagination";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -213,20 +213,24 @@ export default function DeliverablesTable() {
 
 	return (
 		<>
-			{countQueryLoading ? <FullScreenLoader /> : null}
-			{queryLoading ? <FullScreenLoader /> : null}
-			<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-			{rows.length > 0 && (
-				<TablePagination
-					rowsPerPageOptions={[]}
-					colSpan={9}
-					count={count}
-					rowsPerPage={count > 10 ? 10 : count}
-					page={page}
-					onChangePage={handleChangePage}
-					onChangeRowsPerPage={() => {}}
-					style={{ paddingRight: "40px" }}
-				/>
+			{countQueryLoading || queryLoading ? (
+				<TableSkeleton />
+			) : (
+				<>
+					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
+					{rows.length > 0 && (
+						<TablePagination
+							rowsPerPageOptions={[]}
+							colSpan={9}
+							count={count}
+							rowsPerPage={count > 10 ? 10 : count}
+							page={page}
+							onChangePage={handleChangePage}
+							onChangeRowsPerPage={() => {}}
+							style={{ paddingRight: "40px" }}
+						/>
+					)}
+				</>
 			)}
 		</>
 	);
