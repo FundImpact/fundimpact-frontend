@@ -29,6 +29,7 @@ import { compareObjectKeys } from "../../../utils";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
+import { removeEmptyKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -140,8 +141,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	}, [budgetCategory]);
 
-	const onCreate = async (values: IBudgetTargetForm) => {
+	const onCreate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {
+			let values = removeEmptyKeys<IBudgetTargetForm>(valuesSubmitted);
 			await createProjectBudgetTarget({
 				variables: {
 					input: {
@@ -228,8 +230,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	};
 
-	const onUpdate = async (values: IBudgetTargetForm) => {
+	const onUpdate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {
+			let values = removeEmptyKeys<IBudgetTargetForm>(valuesSubmitted);
 			if (compareObjectKeys(values, initialValues)) {
 				props.handleClose();
 				return;

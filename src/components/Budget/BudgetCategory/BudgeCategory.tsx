@@ -15,6 +15,7 @@ import {
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
+import { removeEmptyKeys } from "../../../utils";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -39,7 +40,8 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 
 	const dashboardData = useDashBoardData();
 
-	const onSubmit = async (values: IBudgetCategory) => {
+	const onSubmit = async (valuesSubmitted: IBudgetCategory) => {
+		let values = removeEmptyKeys<IBudgetCategory>(valuesSubmitted);
 		try {
 			await createNewOrgBudgetCategory({
 				variables: {

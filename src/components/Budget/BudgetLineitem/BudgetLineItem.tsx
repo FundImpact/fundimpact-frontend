@@ -32,6 +32,7 @@ import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 } from "../../../models/budget/query";
 import { compareObjectKeys } from "../../../utils";
+import { removeEmptyKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -198,8 +199,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [budgetTargets]);
 
-	const onCreate = async (values: IBudgetTrackingLineitemForm) => {
-		const reporting_date = new Date(values.reporting_date);
+	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
+		const reporting_date = new Date(valuesSubmitted.reporting_date);
+		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>(valuesSubmitted);
 		try {
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
@@ -306,9 +308,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	};
 
-	const onUpdate = async (values: IBudgetTrackingLineitemForm) => {
+	const onUpdate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		try {
-			const reporting_date = new Date(values.reporting_date);
+			const reporting_date = new Date(valuesSubmitted.reporting_date);
+			let values = removeEmptyKeys<IBudgetTrackingLineitemForm>(valuesSubmitted);
 			if (compareObjectKeys(values, initialValues)) {
 				closeDialog();
 				return;

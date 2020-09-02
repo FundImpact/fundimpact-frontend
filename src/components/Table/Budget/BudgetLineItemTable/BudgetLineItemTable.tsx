@@ -78,13 +78,13 @@ const getInitialValues = (
 		budget_targets_project: budgetLineItem?.budget_targets_project.id
 			? budgetLineItem?.budget_targets_project.id
 			: "",
-		annual_year: budgetLineItem?.annual_year.id ? budgetLineItem?.annual_year.id : "",
+		annual_year: budgetLineItem?.annual_year?.id ? budgetLineItem?.annual_year?.id : "",
 		reporting_date: getTodaysDate(
 			budgetLineItem?.reporting_date ? budgetLineItem?.reporting_date : undefined
 		),
 		id: budgetLineItem?.id ? budgetLineItem?.id : "",
-		grant_periods_project: budgetLineItem?.grant_periods_project.id
-			? budgetLineItem?.grant_periods_project.id
+		grant_periods_project: budgetLineItem?.grant_periods_project?.id
+			? budgetLineItem?.grant_periods_project?.id
 			: "",
 		fy_org: budgetLineItem?.fy_org?.id ? budgetLineItem?.fy_org?.id : "",
 		fy_donor: budgetLineItem?.fy_donor?.id ? budgetLineItem?.fy_donor?.id : "",

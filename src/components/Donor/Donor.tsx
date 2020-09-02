@@ -14,6 +14,7 @@ import { FORM_ACTIONS } from "../../models/constants";
 import { compareObjectKeys } from "../../utils/index";
 import { IGET_DONOR } from "../../models/donor/query";
 import { GET_COUNTRY_LIST } from "../../graphql/";
+import { removeEmptyKeys } from "../../utils";
 
 let inputFields: IInputField[] = addDonorForm;
 
@@ -51,8 +52,10 @@ function Donor(props: IDonorProps) {
 
 	const dashboardData = useDashBoardData();
 
-	const onCreate = async (values: IDONOR) => {
+	const onCreate = async (valuesSubmitted: IDONOR) => {
 		try {
+			let values = removeEmptyKeys<IDONOR>(valuesSubmitted);
+
 			await createDonor({
 				variables: {
 					input: { ...values, organization: dashboardData?.organization?.id },
@@ -136,8 +139,10 @@ function Donor(props: IDonorProps) {
 		}
 	};
 
-	const onUpdate = async (values: IDONOR) => {
+	const onUpdate = async (valuesSubmitted: IDONOR) => {
 		try {
+			let values = removeEmptyKeys<IDONOR>(valuesSubmitted);
+
 			if (compareObjectKeys(values, initialValues)) {
 				props.handleClose();
 				return;

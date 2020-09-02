@@ -47,7 +47,7 @@ const keyNames = ["name", "legal_name", "short_name", "country,name"];
 
 const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 	return {
-		country: donor?.country.id ? donor?.country.id : "",
+		country: donor?.country?.id ? donor?.country?.id : "",
 		legal_name: donor?.legal_name ? donor?.legal_name : "",
 		name: donor?.name  ? donor?.name : "",
 		short_name: donor?.short_name ? donor?.short_name : "",
