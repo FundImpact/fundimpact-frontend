@@ -54,7 +54,7 @@ const SelectField = ({
 				}}
 			>
 				{!optionsArray?.length ? (
-					<MenuItem>
+					<MenuItem disabled>
 						<em>No {displayName} available</em>
 					</MenuItem>
 				) : null}
