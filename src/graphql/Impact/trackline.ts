@@ -225,6 +225,7 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 			id
 			value
 			note
+			reporting_date
 			impact_target_project {
 				id
 				name
