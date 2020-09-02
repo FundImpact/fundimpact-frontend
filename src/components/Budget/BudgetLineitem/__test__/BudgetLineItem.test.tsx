@@ -215,8 +215,8 @@ describe("Budget Line Item Dialog tests", () => {
 	test("Mock response", async () => {
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
 			let value = intialFormValue[inputIds[i].key];
+			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
 			await act(async () => {
 				await fireEvent.change(fieldName, { target: { value } });
 			});
