@@ -14,7 +14,6 @@ import {
 	GET_FINANCIAL_YEARS,
 } from "../../../../graphql";
 import { renderApollo } from "../../../../utils/test.util";
-import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
 import { budgetLineItemInputFields } from "../../../../utils/inputTestFields.json";
@@ -29,6 +28,7 @@ import {
 } from "../../../../utils/testMock.json";
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
+import { act } from "react-dom/test-utils";
 
 const handleClose = jest.fn();
 
@@ -100,7 +100,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				financialYears: mockFinancialYears,
+				financialYearList: mockFinancialYears,
 			},
 		},
 	},
@@ -115,7 +115,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				financialYears: mockFinancialYears,
+				financialYearList: mockFinancialYears,
 			},
 		},
 	},
@@ -209,24 +209,26 @@ beforeEach(() => {
 });
 
 const inputIds = budgetLineItemInputFields;
+jest.setTimeout(30000);
 
 describe("Budget Line Item Dialog tests", () => {
 	test("Mock response", async () => {
-		// 	for (let i = 0; i < inputIds.length; i++) {
-		// 		let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-		// 		let value = intialFormValue[inputIds[i].key];
-		// 		await act(async () => {
-		// 			await fireEvent.change(fieldName, { target: { value } });
-		// 		});
-		// 		await expect(fieldName.value).toBe(value);
-		// 	}
-		// 	await act(async () => {
-		// 		let saveButton = await dialog.getByTestId("createSaveButton");
-		// 		expect(saveButton).toBeEnabled();
-		// 		fireEvent.click(saveButton);
-		// 		await wait();
-		// 	});
-		// 	await new Promise((resolve) => setTimeout(resolve, 1000));
-		// 	expect(creationOccured).toBe(true);
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].key];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
+			await expect(fieldName.value).toBe(value);
+		}
+		await act(async () => {
+		let saveButton = await dialog.getByTestId("createSaveButton");
+		expect(saveButton).toBeEnabled();
+		fireEvent.click(saveButton);
+		await wait();
+		});
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		expect(creationOccured).toBe(true);
 	});
 });

@@ -79,9 +79,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	);
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
-
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
-
 	let [getOrgCurrencies, { data: orgCurrencies }] = useLazyQuery(GET_ORG_CURRENCIES_BY_ORG);
 
 	useEffect(() => {

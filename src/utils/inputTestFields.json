@@ -26,7 +26,7 @@
 		{ "id": "createImpactUnitDescriptionInput", "key": "description" }
 	],
 	"budgetLineItemInputFields": [
-		{ "id": "createBudgetLineitemConversionFactorInput", "key": "reporting_date" },
+		{ "id": "createBudgetLineitemReportingDateInput", "key": "reporting_date" },
 		{ "id": "createBudgetLineitemAmountInput", "key": "amount" },
 		{ "id": "createBudgetLineitemNoteInput", "key": "note" },
 		{ "id": "createBudgetLineitemAnnualYearOption", "key": "annual_year" },
@@ -34,5 +34,11 @@
 		{ "id": "createBudgetLineitemFinancialYearOrgOption", "key": "fy_org" },
 		{ "id": "createBudgetLineitemFinancialYearDonorOption", "key": "fy_donor" },
 		{ "id": "createBudgetLineitemGrantPeriodProjectOption", "key": "grant_periods_project" }
+	],
+	"donorInputFields": [
+		{ "id": "donorNameInput", "key": "name" },
+		{ "id": "donorLegalNameInput", "key": "legal_name" },
+		{ "id": "donorShortNameInput", "key": "short_name" },
+		{ "id": "donorCountryOption", "key": "country" }
 	]
 }

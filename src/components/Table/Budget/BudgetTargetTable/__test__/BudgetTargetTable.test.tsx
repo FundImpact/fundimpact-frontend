@@ -169,7 +169,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				financialYears: mockFinancialYears,
+				financialYearList: mockFinancialYears,
 			},
 		},
 	},
@@ -221,8 +221,8 @@ beforeEach(() => {
 
 describe("Budget Target Table tests", () => {
 	test("renders correctly", async () => {
-	// 	await waitForElement(() => table.getByText(/target1/i));
-	// 	await waitForElement(() => table.getByText(/water supply/i));
-	// 	await waitForElement(() => table.getByText(/donor 1/i));
+		await waitForElement(() => table.getByText(/target1/i));
+		await waitForElement(() => table.getByText(/water supply/i));
+		await waitForElement(() => table.getByText(/donor 1/i));
 	});
 });

@@ -1,10 +1,17 @@
 import React from "react";
-
+import { fireEvent, wait } from "@testing-library/react";
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
 import { BudgetTargetinputFields } from "../../../../utils/inputTestFields.json";
+import { organizationDetails, projectDetails } from "../../../../utils/testMock.json";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { act } from "react-dom/test-utils";
+import { renderApollo } from "../../../../utils/test.util";
+import BudgetTarget from "../BudgetTarget";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { FORM_ACTIONS } from "../../../../models/constants";
 
 const handleClose = jest.fn();
 
@@ -111,49 +118,48 @@ const mocks = [
 	},
 ];
 
-// beforeEach(() => {
-// 	act(() => {
-// 		dialog = renderApollo(
-// 			<DashboardProvider
-// 				defaultState={{ project: projectDetails, organization: organizationDetail }}
-// 			>
-// 				<NotificationProvider>
-// 					<BudgetTarget
-// 						formAction={FORM_ACTIONS.CREATE}
-// 						open={true}
-// 						handleClose={handleClose}
-// 					/>
-// 				</NotificationProvider>
-// 			</DashboardProvider>,
-// 			{
-// 				mocks,
-// 				addTypename: false,
-// 			}
-// 		);
-// 	});
-// });
+beforeEach(() => {
+	act(() => {
+		dialog = renderApollo(
+			<DashboardProvider
+				defaultState={{ project: projectDetails, organization: organizationDetails }}
+			>
+				<NotificationProvider>
+					<BudgetTarget
+						formAction={FORM_ACTIONS.CREATE}
+						open={true}
+						handleClose={handleClose}
+					/>
+				</NotificationProvider>
+			</DashboardProvider>,
+			{
+				mocks,
+				addTypename: false,
+			}
+		);
+	});
+});
 
 const inputIds = BudgetTargetinputFields;
 
 describe("Budget Target Dialog tests", () => {
 	test("Mock response", async () => {
-		// NOTE: TO BE FIXED
-		// await new Promise((resolve) => setTimeout(resolve, 1000));
-		// for (let i = 0; i < inputIds.length; i++) {
-		// 	let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-		// 	let value = intialFormValue[inputIds[i].key];
-		// 	await act(async () => {
-		// 		await fireEvent.change(fieldName, { target: { value } });
-		// 	});
-		// 	expect(fieldName.value).toBe(value);
-		// }
-		// await act(async () => {
-		// 	let saveButton = await dialog.getByTestId("createSaveButton");
-		// 	expect(saveButton).toBeEnabled();
-		// 	fireEvent.click(saveButton);
-		// 	await wait();
-		// });
-		// await new Promise((resolve) => setTimeout(resolve, 1000));
-		// expect(creationOccured).toBe(true);
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].key];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
+			expect(fieldName.value).toBe(value);
+		}
+		await act(async () => {
+			let saveButton = await dialog.getByTestId("createSaveButton");
+			expect(saveButton).toBeEnabled();
+			fireEvent.click(saveButton);
+			await wait();
+		});
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		expect(creationOccured).toBe(true);
 	});
 });
