@@ -140,23 +140,23 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = BudgetTargetinputFields;
+const budgetTargetInputIds = BudgetTargetinputFields;
 
 describe("Budget Target Dialog tests", () => {
 	test("Mock response", async () => {
 		await new Promise((resolve) => setTimeout(resolve, 1000));
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].key];
+		for (let i = 0; i < budgetTargetInputIds.length; i++) {
+			let budgetCategoryFieldName = (await dialog.findByTestId(budgetTargetInputIds[i].id)) as HTMLInputElement;
+			let value = intialFormValue[budgetTargetInputIds[i].key];
 			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
+				await fireEvent.change(budgetCategoryFieldName, { target: { value } });
 			});
-			expect(fieldName.value).toBe(value);
+			expect(budgetCategoryFieldName.value).toBe(value);
 		}
 		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
-			expect(saveButton).toBeEnabled();
-			fireEvent.click(saveButton);
+			let budgetTargetSaveButton = await dialog.getByTestId("createSaveButton");
+			expect(budgetTargetSaveButton).toBeEnabled();
+			fireEvent.click(budgetTargetSaveButton);
 			await wait();
 		});
 		await new Promise((resolve) => setTimeout(resolve, 1000));
