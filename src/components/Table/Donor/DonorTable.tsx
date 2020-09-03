@@ -22,6 +22,7 @@ import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
 import { IDONOR } from "../../../models/donor";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 const useStyles = makeStyles({
 	table: {
@@ -85,7 +86,7 @@ function DonorTable() {
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	let { changePage, count, queryData: donorList } = pagination({
+	let { changePage, count, queryData: donorList, queryLoading, countQueryLoading } = pagination({
 		countQuery: GET_DONOR_COUNT,
 		countFilter: {
 			organization: dashboardData?.organization?.id,
@@ -119,6 +120,10 @@ function DonorTable() {
 			),
 		},
 	];
+
+	if (countQueryLoading || queryLoading) {
+		return <TableSkeleton />;
+	}
 
 	return (
 		<TableContainer component={Paper}>

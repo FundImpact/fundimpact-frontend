@@ -58,7 +58,7 @@ const SelectField = ({
 				required={required}
 			>
 				{!optionsArray?.length ? (
-					<MenuItem>
+					<MenuItem disabled>
 						<em>No {displayName} available</em>
 					</MenuItem>
 				) : null}
