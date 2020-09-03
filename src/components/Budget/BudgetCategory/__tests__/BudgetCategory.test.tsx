@@ -8,13 +8,20 @@ import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { organizationDetails } from "../../../../utils/testMock.json";
 import { budgetCategoryFormInputFields } from "../inputFields.json";
+import {
+	checkElementHaveCorrectValue,
+	checkSubmitButtonIsEnabled,
+	requiredFieldTestForInputElement,
+	triggerMutation,
+} from "../../../../utils/commonFormTest.util";
+import { IBudgetCategory } from "../../../../models/budget";
 
 const handleClose = jest.fn();
 
 let dialog: any;
-let updationDone = false;
+let creationOccured = false;
 
-const intialFormValue: any = {
+const intialFormValue: IBudgetCategory = {
 	code: "new code",
 	description: "new desc",
 	name: "new name",
@@ -36,7 +43,7 @@ const mocks = [
 			},
 		},
 		result: () => {
-			updationDone = true;
+			creationOccured = true;
 			return {};
 		},
 	},
@@ -63,76 +70,39 @@ let inputIds = budgetCategoryFormInputFields;
 describe("Budget Category Dialog tests", () => {
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
-			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].name];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: dialog,
+				value: intialFormValue[inputIds[i].name],
 			});
-			await expect(fieldName.value).toBe(value);
 		});
 	}
 
 	test("Submit button enabled", async () => {
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].name];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
-			});
-		}
-		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
-			expect(saveButton).toBeEnabled();
+		await checkSubmitButtonIsEnabled<IBudgetCategory>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
 		});
 	});
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`Required Field test for ${inputIds[i].name}`, async () => {
-			for (let j = 0; j < inputIds.length; j++) {
-				if (i == j) {
-					let fieldName = (await dialog.findByTestId(
-						inputIds[i].testId
-					)) as HTMLInputElement;
-					await act(async () => {
-						await fireEvent.change(fieldName, { target: { value: "" } });
-					});
-					continue;
-				}
-				let fieldName = (await dialog.findByTestId(inputIds[j].testId)) as HTMLInputElement;
-				let value = intialFormValue[inputIds[j].name];
-				await act(async () => {
-					await fireEvent.change(fieldName, { target: { value } });
-				});
-			}
-			if (inputIds[i].required) {
-				await act(async () => {
-					let saveButton = await dialog.getByTestId("createSaveButton");
-					expect(saveButton).not.toBeEnabled();
-				});
-			} else {
-				await act(async () => {
-					let saveButton = await dialog.getByTestId("createSaveButton");
-					expect(saveButton).toBeEnabled();
-				});
-			}
+			await requiredFieldTestForInputElement<IBudgetCategory>({
+				inputFields: inputIds,
+				reactElement: dialog,
+				intialFormValue,
+				inputElement: inputIds[i],
+			});
 		});
 	}
 
-	test("Create Budget Category", async () => {
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].name];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
-			});
-		}
-
-		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
-			fireEvent.click(saveButton);
-			await wait();
+	test("Mock response", async () => {
+		await triggerMutation<IBudgetCategory>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-		expect(updationDone).toBe(true);
+		expect(creationOccured).toBe(true);
 	});
 });

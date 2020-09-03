@@ -1,7 +1,5 @@
 import React from "react";
-import { fireEvent, wait } from "@testing-library/react";
 import { GET_COUNTRY_LIST } from "../../../graphql";
-import { donorInputFields } from "../../../utils/inputTestFields.json";
 import { organizationDetails, projectDetails } from "../../../utils/testMock.json";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -13,6 +11,12 @@ import { mockCountryList } from "../../../utils/testMock.json";
 import { IDONOR } from "../../../models/donor/";
 import { CREATE_ORG_DONOR } from "../../../graphql/donor/mutation";
 import { addDonorForm, addDonorFormSelectFields } from "../inputField.json";
+import {
+	checkElementHaveCorrectValue,
+	checkSubmitButtonIsEnabled,
+	requiredFieldTestForInputElement,
+	triggerMutation,
+} from "../../../utils/commonFormTest.util";
 
 const handleClose = jest.fn();
 
@@ -83,79 +87,42 @@ beforeEach(() => {
 
 const inputIds = [...addDonorForm, ...addDonorFormSelectFields];
 
-describe("Donor tests", () => {
+describe("Donor Dialog tests", () => {
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
-			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].name];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: dialog,
+				value: intialFormValue[inputIds[i].name],
 			});
-			await expect(fieldName.value).toBe(value);
 		});
 	}
 
 	test("Submit button enabled", async () => {
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].name];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
-			});
-		}
-		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
-			expect(saveButton).toBeEnabled();
+		await checkSubmitButtonIsEnabled<IDONOR>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
 		});
 	});
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`Required Field test for ${inputIds[i].name}`, async () => {
-			for (let j = 0; j < inputIds.length; j++) {
-				if (i == j) {
-					let fieldName = (await dialog.findByTestId(
-						inputIds[i].testId
-					)) as HTMLInputElement;
-					await act(async () => {
-						await fireEvent.change(fieldName, { target: { value: "" } });
-					});
-					continue;
-				}
-				let fieldName = (await dialog.findByTestId(inputIds[j].testId)) as HTMLInputElement;
-				let value = intialFormValue[inputIds[j].name];
-				await act(async () => {
-					await fireEvent.change(fieldName, { target: { value } });
-				});
-			}
-			if (inputIds[i].required) {
-				await act(async () => {
-					let saveButton = await dialog.getByTestId("createSaveButton");
-					expect(saveButton).not.toBeEnabled();
-				});
-			} else {
-				await act(async () => {
-					let saveButton = await dialog.getByTestId("createSaveButton");
-					expect(saveButton).toBeEnabled();
-				});
-			}
+			await requiredFieldTestForInputElement<IDONOR>({
+				inputFields: inputIds,
+				reactElement: dialog,
+				intialFormValue,
+				inputElement: inputIds[i],
+			});
 		});
 	}
 
 	test("Mock response", async () => {
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].name];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
-			});
-		}
-		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
-			expect(saveButton).toBeEnabled();
-			fireEvent.click(saveButton);
-			await wait();
+		await triggerMutation<IDONOR>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000));
 		expect(creationOccured).toBe(true);
 	});
 });
