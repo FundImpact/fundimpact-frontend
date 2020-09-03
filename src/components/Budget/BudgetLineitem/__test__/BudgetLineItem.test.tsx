@@ -212,7 +212,6 @@ const budgetLineItemInputIds = budgetLineItemInputFields;
 
 describe("Budget Line Item Dialog tests", () => {
 	test("Mock response", async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000));
 		for (let i = 0; i < budgetLineItemInputIds.length; i++) {
 			let budgetLineItemValue = intialFormValue[budgetLineItemInputIds[i].key];
 			let budgetLineItemFieldName = (await dialog.findByTestId(

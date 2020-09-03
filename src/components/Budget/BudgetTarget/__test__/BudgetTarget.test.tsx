@@ -144,7 +144,6 @@ const budgetTargetInputIds = BudgetTargetinputFields;
 
 describe("Budget Target Dialog tests", () => {
 	test("Mock response", async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000));
 		for (let i = 0; i < budgetTargetInputIds.length; i++) {
 			let budgetCategoryFieldName = (await dialog.findByTestId(budgetTargetInputIds[i].id)) as HTMLInputElement;
 			let value = intialFormValue[budgetTargetInputIds[i].key];

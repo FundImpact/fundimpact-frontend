@@ -62,7 +62,6 @@ let inputIds = BudgetCategoryInputFields;
 
 describe("Budget Category Dialog tests", () => {
 	test("Create Budget Category", async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000));
 		for (let i = 0; i < inputIds.length; i++) {
 			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
 			let value = intialFormValue[inputIds[i].key];
