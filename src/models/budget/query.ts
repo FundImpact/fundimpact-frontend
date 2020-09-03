@@ -28,6 +28,7 @@ export interface IBUDGET_LINE_ITEM_RESPONSE {
 	};
 	annual_year: {
 		id: string;
+		name: string;
 	};
 	reporting_date: Date;
 	id: string;

@@ -102,7 +102,8 @@
 			"note": "note 1",
 			"reporting_date": "",
 			"annual_year": {
-				"id": "1"
+				"id": "1",
+				"name": "ay 2020"
 			},
 			"fy_org": {
 				"id": "1",

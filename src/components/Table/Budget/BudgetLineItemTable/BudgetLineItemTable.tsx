@@ -12,6 +12,8 @@ import {
 	TablePagination,
 	Typography,
 	Box,
+	Chip,
+	Avatar,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -54,9 +56,8 @@ const tableHeading = [
 	{ label: "Date" },
 	{ label: "Note" },
 	{ label: "Amount" },
-	{ label: "Financial Year Organization" },
-	{ label: "Financial Year Donor" },
 	{ label: "Grant Period" },
+	{ label: "Year" },
 	{ label: "" },
 ];
 
@@ -197,13 +198,41 @@ function BudgetLineItemTable({
 										<TableCell align="left">{budgetLineItem.note}</TableCell>
 										<TableCell align="left">{budgetLineItem.amount}</TableCell>
 										<TableCell align="left">
-											{budgetLineItem?.fy_org?.name}
-										</TableCell>
-										<TableCell align="left">
-											{budgetLineItem?.fy_donor?.name}
-										</TableCell>
-										<TableCell align="left">
 											{budgetLineItem?.grant_periods_project?.name}
+										</TableCell>
+
+										<TableCell align="left">
+											<Box display="flex">
+												{budgetLineItem?.fy_org?.name && (
+													<Box mr={1}>
+														<Chip
+															avatar={<Avatar>FYO</Avatar>}
+															label={budgetLineItem?.fy_org?.name}
+															size="small"
+															color="primary"
+														/>
+													</Box>
+												)}
+												{budgetLineItem?.fy_donor?.name && (
+													<Box mr={1}>
+														<Chip
+															avatar={<Avatar>FYD</Avatar>}
+															label={budgetLineItem?.fy_donor?.name}
+															size="small"
+															color="primary"
+														/>
+													</Box>
+												)}
+
+												{budgetLineItem?.annual_year?.name && (
+													<Chip
+														avatar={<Avatar>AY</Avatar>}
+														label={budgetLineItem?.annual_year?.name}
+														size="small"
+														color="primary"
+													/>
+												)}
+											</Box>
 										</TableCell>
 
 										<TableCell>
