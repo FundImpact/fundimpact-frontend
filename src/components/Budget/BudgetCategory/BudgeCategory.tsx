@@ -41,7 +41,7 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 	const dashboardData = useDashBoardData();
 
 	const onSubmit = async (valuesSubmitted: IBudgetCategory) => {
-		let values = removeEmptyKeys<IBudgetCategory>(valuesSubmitted);
+		let values = removeEmptyKeys<IBudgetCategory>({ objectToCheck: valuesSubmitted });
 		try {
 			await createNewOrgBudgetCategory({
 				variables: {

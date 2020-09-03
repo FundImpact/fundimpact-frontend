@@ -21,24 +21,28 @@ export const compareObjectKeys = (obj1: any, obj2: any): boolean =>
 
 export const isEmptyObject = (obj: object) => Object.keys(obj).length == 0;
 
-interface IObject {
-	[key: string]: any;
-}
-
-export const removeEmptyKeys = <T extends IObject>(
-	obj: T,
-	restrictedKeys: IObject = {
+export const removeEmptyKeys = <T extends { [key: string]: any }>({
+	objectToCheck,
+	restrictedKeys = {
 		false: 1,
 		0: 1,
 		null: 1,
 		undefined: 1,
 		"": 1,
 		NaN: 1,
-	}
-) =>
-	Object.keys(obj).reduce((accumulator: Partial<T>, current: keyof Partial<T>) => {
-		if (obj.hasOwnProperty(current) && !restrictedKeys[obj[current]]) {
-			accumulator[current] = obj[current];
+	},
+	keysToRemainUnchecked = {},
+}: {
+	objectToCheck: T;
+	restrictedKeys?: { [key: string]: any };
+	keysToRemainUnchecked?: { [keys: string]: number };
+}) =>
+	Object.keys(objectToCheck).reduce((accumulator: Partial<T>, current: keyof Partial<T>) => {
+		if (
+			keysToRemainUnchecked[current as string] ||
+			(objectToCheck.hasOwnProperty(current) && !restrictedKeys[objectToCheck[current]])
+		) {
+			accumulator[current] = objectToCheck[current];
 		}
 		return accumulator;
 	}, {});

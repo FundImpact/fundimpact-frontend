@@ -201,7 +201,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
-		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>(valuesSubmitted);
+		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
+			objectToCheck: valuesSubmitted,
+		});
 		try {
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
@@ -311,7 +313,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const onUpdate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		try {
 			const reporting_date = new Date(valuesSubmitted.reporting_date);
-			let values = removeEmptyKeys<IBudgetTrackingLineitemForm>(valuesSubmitted);
+			let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
+				objectToCheck: valuesSubmitted,
+				keysToRemainUnchecked: {
+					note: 1,
+				},
+			});
 			if (compareObjectKeys(values, initialValues)) {
 				closeDialog();
 				return;

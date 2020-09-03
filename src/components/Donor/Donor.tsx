@@ -54,7 +54,7 @@ function Donor(props: IDonorProps) {
 
 	const onCreate = async (valuesSubmitted: IDONOR) => {
 		try {
-			let values = removeEmptyKeys<IDONOR>(valuesSubmitted);
+			let values = removeEmptyKeys<IDONOR>({ objectToCheck: valuesSubmitted });
 
 			await createDonor({
 				variables: {
@@ -141,7 +141,13 @@ function Donor(props: IDonorProps) {
 
 	const onUpdate = async (valuesSubmitted: IDONOR) => {
 		try {
-			let values = removeEmptyKeys<IDONOR>(valuesSubmitted);
+			let values = removeEmptyKeys<IDONOR>({
+				objectToCheck: valuesSubmitted,
+				keysToRemainUnchecked: {
+					legal_name: 1,
+					short_name: 1,
+				},
+			});
 
 			if (compareObjectKeys(values, initialValues)) {
 				props.handleClose();

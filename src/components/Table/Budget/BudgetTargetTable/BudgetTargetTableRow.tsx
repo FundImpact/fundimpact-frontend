@@ -148,9 +148,7 @@ function BudgetTargetTableRow({
 												subtitle1: "h1",
 											}}
 										>
-											{budgetTarget?.description
-												? budgetTarget?.description
-												: ""}
+											{budgetTarget?.description || ""}
 										</Typography>
 									</Box>
 								</Grid>

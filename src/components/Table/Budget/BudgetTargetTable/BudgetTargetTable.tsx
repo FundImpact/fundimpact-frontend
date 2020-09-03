@@ -64,14 +64,12 @@ const getBudgetLineitemInitialvalues = (
 
 function getInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IBudgetTargetForm {
 	return {
-		name: budgetTarget ? budgetTarget.name : "",
-		description: budgetTarget ? budgetTarget?.description : "",
-		total_target_amount: budgetTarget ? budgetTarget.total_target_amount : "",
-		id: budgetTarget ? budgetTarget.id : "",
-		budget_category_organization: budgetTarget
-			? budgetTarget?.budget_category_organization?.id
-			: "",
-		donor: budgetTarget ? budgetTarget?.donor?.id : "",
+		name: budgetTarget?.name || "",
+		description: budgetTarget?.description || "",
+		total_target_amount: budgetTarget?.total_target_amount || "",
+		id: budgetTarget?.id || "",
+		budget_category_organization: budgetTarget?.budget_category_organization?.id || "",
+		donor: budgetTarget?.donor?.id || "",
 	};
 }
 
@@ -179,7 +177,7 @@ function BudgetTargetTable() {
 				}}
 				formAction={FORM_ACTIONS.CREATE}
 				initialValues={getBudgetLineitemInitialvalues(
-					selectedTargetBudget.current ? selectedTargetBudget.current.id : ""
+					selectedTargetBudget.current?.id || ""
 				)}
 			/>
 			<Table className={classes.table} aria-label="simple table">
@@ -206,11 +204,7 @@ function BudgetTargetTable() {
 							<BudgetTargetTableRow
 								budgetTarget={budgetTarget}
 								key={budgetTarget.id}
-								currency={
-									orgCurrencies?.orgCurrencies[0]?.currency.code
-										? orgCurrencies?.orgCurrencies[0]?.currency.code
-										: ""
-								}
+								currency={orgCurrencies?.orgCurrencies[0]?.currency.code || ""}
 								serialNo={page * 10 + index + 1}
 								menuId={menuId}
 								selectedTargetBudget={selectedTargetBudget}

@@ -143,7 +143,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {
-			let values = removeEmptyKeys<IBudgetTargetForm>(valuesSubmitted);
+			let values = removeEmptyKeys<IBudgetTargetForm>({ objectToCheck: valuesSubmitted });
 			await createProjectBudgetTarget({
 				variables: {
 					input: {
@@ -232,7 +232,12 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	const onUpdate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {
-			let values = removeEmptyKeys<IBudgetTargetForm>(valuesSubmitted);
+			let values = removeEmptyKeys<IBudgetTargetForm>({
+				objectToCheck: valuesSubmitted,
+				keysToRemainUnchecked: {
+					description: 1,
+				},
+			});
 			if (compareObjectKeys(values, initialValues)) {
 				props.handleClose();
 				return;
