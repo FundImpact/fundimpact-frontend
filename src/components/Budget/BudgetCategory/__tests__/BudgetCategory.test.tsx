@@ -6,8 +6,8 @@ import { CREATE_ORG_BUDGET_CATEGORY } from "../../../../graphql/Budget/mutation"
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
-import { BudgetCategoryInputFields } from "../../../../utils/inputTestFields.json";
 import { organizationDetails } from "../../../../utils/testMock.json";
+import { budgetCategoryFormInputFields } from "../inputFields.json";
 
 const handleClose = jest.fn();
 
@@ -58,22 +58,77 @@ beforeEach(() => {
 	});
 });
 
-let inputIds = BudgetCategoryInputFields;
+let inputIds = budgetCategoryFormInputFields;
 
 describe("Budget Category Dialog tests", () => {
-	test("Create Budget Category", async () => {
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].key];
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].name];
 			await act(async () => {
 				await fireEvent.change(fieldName, { target: { value } });
 			});
 			await expect(fieldName.value).toBe(value);
+		});
+	}
+
+	test("Submit button enabled", async () => {
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].name];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
+		}
+		await act(async () => {
+			let saveButton = await dialog.getByTestId("createSaveButton");
+			expect(saveButton).toBeEnabled();
+		});
+	});
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`Required Field test for ${inputIds[i].name}`, async () => {
+			for (let j = 0; j < inputIds.length; j++) {
+				if (i == j) {
+					let fieldName = (await dialog.findByTestId(
+						inputIds[i].testId
+					)) as HTMLInputElement;
+					await act(async () => {
+						await fireEvent.change(fieldName, { target: { value: "" } });
+					});
+					continue;
+				}
+				let fieldName = (await dialog.findByTestId(inputIds[j].testId)) as HTMLInputElement;
+				let value = intialFormValue[inputIds[j].name];
+				await act(async () => {
+					await fireEvent.change(fieldName, { target: { value } });
+				});
+			}
+			if (inputIds[i].required) {
+				await act(async () => {
+					let saveButton = await dialog.getByTestId("createSaveButton");
+					expect(saveButton).not.toBeEnabled();
+				});
+			} else {
+				await act(async () => {
+					let saveButton = await dialog.getByTestId("createSaveButton");
+					expect(saveButton).toBeEnabled();
+				});
+			}
+		});
+	}
+
+	test("Create Budget Category", async () => {
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].name];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
 		}
 
 		await act(async () => {
 			let saveButton = await dialog.getByTestId("createSaveButton");
-			expect(saveButton).toBeEnabled();
 			fireEvent.click(saveButton);
 			await wait();
 		});

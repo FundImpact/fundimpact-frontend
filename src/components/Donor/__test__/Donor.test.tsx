@@ -12,6 +12,7 @@ import Donor from "../Donor";
 import { mockCountryList } from "../../../utils/testMock.json";
 import { IDONOR } from "../../../models/donor/";
 import { CREATE_ORG_DONOR } from "../../../graphql/donor/mutation";
+import { addDonorForm, addDonorFormSelectFields } from "../inputField.json";
 
 const handleClose = jest.fn();
 
@@ -80,17 +81,73 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = donorInputFields;
+const inputIds = [...addDonorForm, ...addDonorFormSelectFields];
 
 describe("Donor tests", () => {
-	test("Mock response", async () => {
-		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-			let value = intialFormValue[inputIds[i].key];
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].name];
 			await act(async () => {
 				await fireEvent.change(fieldName, { target: { value } });
 			});
-			expect(fieldName.value).toBe(value);
+			await expect(fieldName.value).toBe(value);
+		});
+	}
+
+	test("Submit button enabled", async () => {
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].name];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
+		}
+		await act(async () => {
+			let saveButton = await dialog.getByTestId("createSaveButton");
+			expect(saveButton).toBeEnabled();
+		});
+	});
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`Required Field test for ${inputIds[i].name}`, async () => {
+			for (let j = 0; j < inputIds.length; j++) {
+				if (i == j) {
+					let fieldName = (await dialog.findByTestId(
+						inputIds[i].testId
+					)) as HTMLInputElement;
+					await act(async () => {
+						await fireEvent.change(fieldName, { target: { value: "" } });
+					});
+					continue;
+				}
+				let fieldName = (await dialog.findByTestId(inputIds[j].testId)) as HTMLInputElement;
+				let value = intialFormValue[inputIds[j].name];
+				await act(async () => {
+					await fireEvent.change(fieldName, { target: { value } });
+				});
+			}
+			if (inputIds[i].required) {
+				await act(async () => {
+					let saveButton = await dialog.getByTestId("createSaveButton");
+					expect(saveButton).not.toBeEnabled();
+				});
+			} else {
+				await act(async () => {
+					let saveButton = await dialog.getByTestId("createSaveButton");
+					expect(saveButton).toBeEnabled();
+				});
+			}
+		});
+	}
+
+	test("Mock response", async () => {
+		for (let i = 0; i < inputIds.length; i++) {
+			let fieldName = (await dialog.findByTestId(inputIds[i].testId)) as HTMLInputElement;
+			let value = intialFormValue[inputIds[i].name];
+			await act(async () => {
+				await fireEvent.change(fieldName, { target: { value } });
+			});
 		}
 		await act(async () => {
 			let saveButton = await dialog.getByTestId("createSaveButton");

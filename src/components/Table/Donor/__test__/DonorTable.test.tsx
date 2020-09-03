@@ -13,6 +13,7 @@ import {
 } from "../../../../utils/testMock.json";
 import { GET_COUNTRY_LIST } from "../../../../graphql";
 import DonorTable from "../DonorTable";
+import { donorTableHeading } from "../../constants";
 
 let table: any;
 
@@ -81,10 +82,25 @@ beforeEach(() => {
 });
 
 describe("Budget Target Table tests", () => {
+	for (let i = 0; i < donorTableHeading.length; i++) {
+		test(`Table Headings ${donorTableHeading[i].label} for Budget Target Table`, async () => {
+			await waitForElement(() => table.getAllByText(donorTableHeading[i].label));
+		});
+	}
+
 	test("renders correctly", async () => {
-		await waitForElement(() => table.getByText(/vikram pathak/i));
-		await waitForElement(() => table.getByText(/India/i));
-		await waitForElement(() => table.getByText(/vikram legal 001/i));
-		await waitForElement(() => table.getByText(/vikram short 100/i));
+		await waitForElement(() =>
+			table.getByText(new RegExp("" + mockOrgDonor[0].country.name, "i"))
+		);
+
+		await waitForElement(() =>
+			table.getByText(new RegExp("" + mockOrgDonor[0].legal_name, "i"))
+		);
+		await waitForElement(() =>
+			table.getAllByText(new RegExp("" + mockOrgDonor[0].short_name, "i"))
+		);
+		await waitForElement(() =>
+			table.getAllByText(new RegExp("" + mockOrgDonor[0].name, "i"))
+		);
 	});
 });
