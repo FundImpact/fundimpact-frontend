@@ -38,6 +38,7 @@ import {
 } from "../../../../../graphql";
 import BudgetTargetTable from "..";
 import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../../constants";
+import { getTodaysDate } from "../../../../../utils";
 
 let table: any;
 
@@ -309,21 +310,28 @@ describe("Budget Target Table tests", () => {
 		for (let i = 0; i < budgetLineItemTableHeading.length; i++) {
 			await waitForElement(() => table.findAllByText(budgetLineItemTableHeading[i].label));
 		}
-		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
-		);
 
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockBudgetLineItem[0].note, "i"))
-		);
-		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_donor.name, "i"))
+			table.getAllByText(
+				new RegExp("" + mockBudgetLineItem[0].grant_periods_project.name, "i")
+			)
 		);
 		await waitForElement(() =>
 			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_org.name, "i"))
 		);
 		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].grant_periods_project.name, "i"))
+			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_donor.name, "i"))
+		);
+		await waitForElement(() =>
+			table.getByText(new RegExp("" + mockBudgetLineItem[0].note, "i"))
+		);
+		await waitForElement(() =>
+			table.getByText(
+				new RegExp("" + getTodaysDate(mockBudgetLineItem[0].reporting_date), "i")
+			)
+		);
+		await waitForElement(() =>
+			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
 		);
 	});
 });

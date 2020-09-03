@@ -19,7 +19,7 @@ export const checkElementHaveCorrectValue = async ({
 	await expect(fieldName.value).toBe(value);
 };
 
-export const checkSubmitButtonIsEnabled = async <T,>({
+export const checkSubmitButtonIsEnabled = async <T extends { [key: string]: any }>({
 	inputFields,
 	reactElement,
 	intialFormValue,
@@ -41,7 +41,7 @@ export const checkSubmitButtonIsEnabled = async <T,>({
 	});
 };
 
-export const requiredFieldTestForInputElement = async <T,>({
+export const requiredFieldTestForInputElement = async <T extends { [key: string]: any }>({
 	inputFields,
 	reactElement,
 	intialFormValue,
@@ -80,7 +80,7 @@ export const requiredFieldTestForInputElement = async <T,>({
 	}
 };
 
-export const triggerMutation = async <T,>({
+export const triggerMutation = async <T extends { [key: string]: any }>({
 	inputFields,
 	reactElement,
 	intialFormValue,
