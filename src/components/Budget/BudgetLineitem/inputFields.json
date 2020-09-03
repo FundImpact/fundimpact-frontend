@@ -11,7 +11,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"type": "select",
-			"displayName": "budget target"
+			"displayName": "budget target",
+			"required": true
 		},
 		{
 			"name": "annual_year",
@@ -75,7 +76,8 @@
 			"testId": "createBudgetLineitemConversionFactorInput",
 			"label": "Reporting date",
 			"size": 6,
-			"type": "date"
+			"type": "date",
+			"required": true
 		},
 		{
 			"name": "amount",
@@ -85,7 +87,8 @@
 			"label": "Amount",
 			"size": 6,
 			"type": "number",
-			"endAdornment": ""
+			"endAdornment": "",
+			"required": true
 		},
 		{
 			"name": "note",

@@ -13,6 +13,7 @@ const InputField = ({
 	rows = 1,
 	type = "text",
 	endAdornment,
+	required = false
 }: Omit<IInputField, "size">) => {
 	return (
 		<TextField
@@ -32,7 +33,7 @@ const InputField = ({
 					<InputAdornment position="end">{endAdornment}</InputAdornment>
 				),
 			}}
-			required
+			required={required}
 			fullWidth
 			name={`${name}`}
 			variant="outlined"

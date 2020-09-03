@@ -14,6 +14,7 @@ import { FORM_ACTIONS } from "../../models/constants";
 import { compareObjectKeys } from "../../utils/index";
 import { IGET_DONOR } from "../../models/donor/query";
 import { GET_COUNTRY_LIST } from "../../graphql/";
+import { removeEmptyKeys } from "../../utils";
 
 let inputFields: IInputField[] = addDonorForm;
 
@@ -31,12 +32,6 @@ const validate = (values: IDONOR) => {
 	}
 	if (!values.country) {
 		errors.country = "Country is required";
-	}
-	if (!values.legal_name) {
-		errors.legal_name = "Legal name is required";
-	}
-	if (!values.short_name) {
-		errors.short_name = "Short name is required";
 	}
 	return errors;
 };
@@ -57,8 +52,10 @@ function Donor(props: IDonorProps) {
 
 	const dashboardData = useDashBoardData();
 
-	const onCreate = async (values: IDONOR) => {
+	const onCreate = async (valuesSubmitted: IDONOR) => {
 		try {
+			let values = removeEmptyKeys<IDONOR>({ objectToCheck: valuesSubmitted });
+
 			await createDonor({
 				variables: {
 					input: { ...values, organization: dashboardData?.organization?.id },
@@ -142,8 +139,16 @@ function Donor(props: IDonorProps) {
 		}
 	};
 
-	const onUpdate = async (values: IDONOR) => {
+	const onUpdate = async (valuesSubmitted: IDONOR) => {
 		try {
+			let values = removeEmptyKeys<IDONOR>({
+				objectToCheck: valuesSubmitted,
+				keysToRemainUnchecked: {
+					legal_name: 1,
+					short_name: 1,
+				},
+			});
+
 			if (compareObjectKeys(values, initialValues)) {
 				props.handleClose();
 				return;

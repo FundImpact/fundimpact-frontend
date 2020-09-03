@@ -81,6 +81,7 @@ export interface IInputField {
 	formik?: any;
 	type?: string;
 	size: any;
+	required?: boolean;
 }
 
 export interface IInputFields {
@@ -117,6 +118,7 @@ export interface ISelectField {
 	size: any;
 	hidden?: boolean;
 	displayName?: string;
+	required?: boolean;
 }
 
 export interface IFormDialog {
