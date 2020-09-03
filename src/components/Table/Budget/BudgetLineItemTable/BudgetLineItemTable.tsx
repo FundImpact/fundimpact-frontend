@@ -73,15 +73,15 @@ const getInitialValues = (
 	budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE | null
 ): IBudgetTrackingLineitem => {
 	return {
-		amount: budgetLineItem ? budgetLineItem.amount : 0,
-		note: budgetLineItem ? budgetLineItem.note : "",
-		budget_targets_project: budgetLineItem ? budgetLineItem.budget_targets_project.id : "",
-		annual_year: budgetLineItem ? budgetLineItem.annual_year.id : "",
-		reporting_date: getTodaysDate(budgetLineItem ? budgetLineItem.reporting_date : undefined),
-		id: budgetLineItem ? budgetLineItem.id : "",
-		grant_periods_project: budgetLineItem ? budgetLineItem.grant_periods_project.id : "",
-		fy_org: budgetLineItem ? budgetLineItem?.fy_org?.id : "",
-		fy_donor: budgetLineItem ? budgetLineItem?.fy_donor?.id : "",
+		amount: budgetLineItem?.amount || 0,
+		note: budgetLineItem?.note || "",
+		budget_targets_project: budgetLineItem?.budget_targets_project?.id || "",
+		annual_year: budgetLineItem?.annual_year?.id || "",
+		reporting_date: getTodaysDate(budgetLineItem?.reporting_date || undefined),
+		id: budgetLineItem?.id || "",
+		grant_periods_project: budgetLineItem?.grant_periods_project?.id || "",
+		fy_org: budgetLineItem?.fy_org?.id || "",
+		fy_donor: budgetLineItem?.fy_donor?.id || "",
 	};
 };
 
@@ -197,13 +197,13 @@ function BudgetLineItemTable({
 										<TableCell align="left">{budgetLineItem.note}</TableCell>
 										<TableCell align="left">{budgetLineItem.amount}</TableCell>
 										<TableCell align="left">
-											{budgetLineItem?.fy_org?.name}
+											{budgetLineItem?.fy_org?.name || ""}
 										</TableCell>
 										<TableCell align="left">
-											{budgetLineItem?.fy_donor?.name}
+											{budgetLineItem?.fy_donor?.name || ""}
 										</TableCell>
 										<TableCell align="left">
-											{budgetLineItem?.grant_periods_project?.name}
+											{budgetLineItem?.grant_periods_project?.name || ""}
 										</TableCell>
 
 										<TableCell>

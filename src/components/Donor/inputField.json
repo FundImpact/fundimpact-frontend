@@ -6,7 +6,8 @@
 			"dataTestId": "donorName",
 			"testId": "donorNameInput",
 			"label": "Name",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "legal_name",
@@ -37,7 +38,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
 			"type": "select",
-			"displayName": "country"
+			"displayName": "country",
+			"required": true
 		}
 	]
 }

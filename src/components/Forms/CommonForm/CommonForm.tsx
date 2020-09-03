@@ -66,11 +66,10 @@ function CommonForm({
 											multiline={
 												element.multiline ? element.multiline : false
 											}
-											rows={element.rows ? element.rows : 1}
-											type={element.type ? element.type : "text"}
-											endAdornment={
-												element.endAdornment ? element.endAdornment : ""
-											}
+											rows={element.rows || 1}
+											type={element.type || "text"}
+											endAdornment={element.endAdornment || ""}
+											required={element.required || !!element.required}
 										/>
 									</Grid>
 								);
@@ -90,6 +89,7 @@ function CommonForm({
 												selectLabelId={element.selectLabelId}
 												selectId={element.selectId}
 												displayName={element.displayName}
+												required={element.required || !!element.required}
 											/>
 										</Grid>
 									)

@@ -23,10 +23,9 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		onClose();
 	};
 
-	const onCreatingNewGrantPeriodSuccess = (
-		newGrantPeriod: IGrantPeriod,
-		action: FORM_ACTIONS
-	) => {
+	//change type
+	const onCreatingNewGrantPeriodSuccess = (newGrantPeriod: any, action: FORM_ACTIONS) => {
+		console.log('newGrantPeriod :>> ', newGrantPeriod);
 		const cacheData = cache.readQuery({
 			query: FETCH_GRANT_PERIODS,
 			variables: { filter: { project: dashboardData?.project?.id } },
@@ -47,6 +46,37 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 			variables: { filter: { project: dashboardData?.project?.id } },
 			broadcast: true,
 		});
+		try {
+			const garntPeriodList: any = cache.readQuery({
+				query: FETCH_GRANT_PERIODS,
+				variables: {
+					filter: { project: dashboardData?.project?.id, donor: newGrantPeriod.donor.id },
+				},
+			});
+			let newGrantPeriodList = garntPeriodList
+				? [...garntPeriodList!.grantPeriodsProjectList]
+				: [];
+			if (FORM_ACTIONS.CREATE)
+				newGrantPeriodList = [{ ...newGrantPeriod }, ...newGrantPeriodList];
+			else {
+				const indexFound = newGrantPeriodList.find((data) => data.id === newGrantPeriod.id);
+				if (indexFound > -1) {
+					newGrantPeriodList[indexFound] = { ...newGrantPeriod };
+				}
+			}
+			cache.writeQuery({
+				query: FETCH_GRANT_PERIODS,
+				variables: {
+					filter: { project: dashboardData?.project?.id, donor: newGrantPeriod.donor.id },
+				},
+				data: {
+					grantPeriodsProjectList: newGrantPeriodList,
+				},
+			});
+			// console.log("garntPeriodList :>> ", garntPeriodList);
+		} catch (err) {
+			console.log("err :>> ", err);
+		}
 
 		setTimeout(() => {
 			onClose();

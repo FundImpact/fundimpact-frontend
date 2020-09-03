@@ -77,8 +77,17 @@ export const DeliverableTracklineByTargetMock = [
 			start_date: "2020-08-13T06:30:00.000Z",
 			end_date: "2020-08-13T06:30:00.000Z",
 		},
-		financial_years_org: null,
-		financial_years_donor: null,
+		financial_year: {
+			id: "1",
+			name: "FY 2019-20",
+			short_name: "FY2019-20",
+			start_date: "2019-04-01T06:30:00.000Z",
+			end_date: "2020-03-31T06:30:00.000Z",
+			country: {
+				id: "1",
+				name: "India",
+			},
+		},
 		grant_periods_project: null,
 	},
 ];
@@ -211,6 +220,48 @@ export const deliverableCategoryUnitListMock = [
 					id: "1",
 					reg_type: "Trusts",
 				},
+			},
+		},
+	},
+];
+
+export const deliverableLineitemFyDonorListMock = [
+	{
+		id: "17",
+		deliverable_tracking_lineitem: DeliverableTracklineByTargetMock[0],
+		project_donor: {
+			id: "1",
+			project: {
+				id: "21",
+			},
+			donor: {
+				id: "1",
+				name: "HUL",
+				country: {
+					id: "1",
+				},
+			},
+		},
+		grant_periods_project: {
+			id: "1",
+			name: "Quater 1",
+			description: ": grant-periods-projectSsdsad",
+			short_name: "g1",
+			start_date: "2020-08-02T06:30:00.000Z",
+			end_date: "2020-08-29T06:30:00.000Z",
+			project: {
+				id: "30",
+				name: "HUL Food Drive 2020",
+			},
+		},
+		financial_year: {
+			id: "1",
+			name: "FY 2019-20",
+			short_name: "FY2019-20",
+			start_date: "2019-04-01T06:30:00.000Z",
+			end_date: "2020-03-31T06:30:00.000Z",
+			country: {
+				id: "1",
 			},
 		},
 	},
