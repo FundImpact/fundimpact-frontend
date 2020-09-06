@@ -111,7 +111,7 @@ describe("Donor Dialog tests", () => {
 	}
 
 	for (let i = 0; i < inputIds.length; i++) {
-		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to provided value`, async () => {
 			await checkElementHaveCorrectValue({
 				inputElement: inputIds[i],
 				reactElement: dialog,
