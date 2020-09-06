@@ -211,13 +211,21 @@ beforeEach(() => {
 
 const inputIds = [...budgetLineitemFormInputFields, ...budgetLineitemFormSelectFields];
 
+const {
+	checkElementHaveCorrectValue,
+	checkSubmitButtonIsEnabled,
+	requiredFieldTestForInputElement,
+	triggerMutation,
+} = commonFormTestUtil(fireEvent, wait, act);
+
 describe("Budget Line Item Dialog tests", () => {
-	const {
-		checkElementHaveCorrectValue,
-		checkSubmitButtonIsEnabled,
-		requiredFieldTestForInputElement,
-		triggerMutation,
-	} = commonFormTestUtil(fireEvent, wait, act);
+	test("Submit button enabled", async () => {
+		await checkSubmitButtonIsEnabled<IBudgetTrackingLineitemForm>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
+		});
+	});
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
@@ -228,14 +236,6 @@ describe("Budget Line Item Dialog tests", () => {
 			});
 		});
 	}
-
-	test("Submit button enabled", async () => {
-		await checkSubmitButtonIsEnabled<IBudgetTrackingLineitemForm>({
-			inputFields: inputIds,
-			reactElement: dialog,
-			intialFormValue,
-		});
-	});
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`Required Field test for ${inputIds[i].name}`, async () => {

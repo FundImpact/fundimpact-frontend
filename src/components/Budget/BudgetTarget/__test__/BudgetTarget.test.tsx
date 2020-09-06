@@ -152,17 +152,6 @@ const {
 } = commonFormTestUtil(fireEvent, wait, act);
 
 describe("Budget Target Dialog tests", () => {
-
-	for (let i = 0; i < inputIds.length; i++) {
-		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
-			await checkElementHaveCorrectValue({
-				inputElement: inputIds[i],
-				reactElement: dialog,
-				value: intialFormValue[inputIds[i].name],
-			});
-		});
-	}
-
 	test("Submit button enabled", async () => {
 		await checkSubmitButtonIsEnabled<IBudgetTargetForm>({
 			inputFields: inputIds,
@@ -178,6 +167,16 @@ describe("Budget Target Dialog tests", () => {
 				reactElement: dialog,
 				intialFormValue,
 				inputElement: inputIds[i],
+			});
+		});
+	}
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: dialog,
+				value: intialFormValue[inputIds[i].name],
 			});
 		});
 	}

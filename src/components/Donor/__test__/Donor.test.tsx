@@ -91,17 +91,6 @@ const {
 } = commonFormTestUtil(fireEvent, wait, act);
 
 describe("Donor Dialog tests", () => {
-
-	for (let i = 0; i < inputIds.length; i++) {
-		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
-			await checkElementHaveCorrectValue({
-				inputElement: inputIds[i],
-				reactElement: dialog,
-				value: intialFormValue[inputIds[i].name],
-			});
-		});
-	}
-
 	test("Submit button enabled", async () => {
 		await checkSubmitButtonIsEnabled<IDONOR>({
 			inputFields: inputIds,
@@ -117,6 +106,16 @@ describe("Donor Dialog tests", () => {
 				reactElement: dialog,
 				intialFormValue,
 				inputElement: inputIds[i],
+			});
+		});
+	}
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: dialog,
+				value: intialFormValue[inputIds[i].name],
 			});
 		});
 	}
