@@ -1,7 +1,7 @@
-import { RenderResult, FireFunction, FireObject } from "@testing-library/react";
+import { RenderResult } from "@testing-library/react";
 import { IInputField, ISelectField } from "../models/index";
 
-export const commonFormTestUtil = (fireEvent: FireFunction & FireObject, wait: any, act: any) => {
+export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 	const checkElementHaveCorrectValue = async ({
 		inputElement,
 		reactElement,
