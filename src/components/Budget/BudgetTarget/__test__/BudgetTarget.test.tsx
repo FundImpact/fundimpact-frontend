@@ -144,13 +144,14 @@ beforeEach(() => {
 
 const inputIds = [...budgetTargetFormInputFields, ...budgetTargetFormSelectFields];
 
+const {
+	checkElementHaveCorrectValue,
+	checkSubmitButtonIsEnabled,
+	requiredFieldTestForInputElement,
+	triggerMutation,
+} = commonFormTestUtil(fireEvent, wait, act);
+
 describe("Budget Target Dialog tests", () => {
-	const {
-		checkElementHaveCorrectValue,
-		checkSubmitButtonIsEnabled,
-		requiredFieldTestForInputElement,
-		triggerMutation,
-	} = commonFormTestUtil(fireEvent, wait, act);
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
