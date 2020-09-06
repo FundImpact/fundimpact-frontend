@@ -11,13 +11,9 @@ import BudgetTarget from "../BudgetTarget";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { FORM_ACTIONS } from "../../../../models/constants";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "../inputFields.json";
-import {
-	checkElementHaveCorrectValue,
-	checkSubmitButtonIsEnabled,
-	requiredFieldTestForInputElement,
-	triggerMutation,
-} from "../../../../utils/commonFormTest.util";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
+import { fireEvent, wait } from "@testing-library/dom";
 
 const handleClose = jest.fn();
 
@@ -149,6 +145,13 @@ beforeEach(() => {
 const inputIds = [...budgetTargetFormInputFields, ...budgetTargetFormSelectFields];
 
 describe("Budget Target Dialog tests", () => {
+	const {
+		checkElementHaveCorrectValue,
+		checkSubmitButtonIsEnabled,
+		requiredFieldTestForInputElement,
+		triggerMutation,
+	} = commonFormTestUtil(fireEvent, wait, act);
+
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
 			await checkElementHaveCorrectValue({

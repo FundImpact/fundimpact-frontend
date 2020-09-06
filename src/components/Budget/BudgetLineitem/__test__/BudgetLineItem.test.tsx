@@ -28,12 +28,8 @@ import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
 import { act } from "react-dom/test-utils";
 import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "../inputFields.json";
-import {
-	checkElementHaveCorrectValue,
-	checkSubmitButtonIsEnabled,
-	requiredFieldTestForInputElement,
-	triggerMutation,
-} from "../../../../utils/commonFormTest.util";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+import { fireEvent, wait } from "@testing-library/dom";
 
 const handleClose = jest.fn();
 
@@ -216,6 +212,13 @@ beforeEach(() => {
 const inputIds = [...budgetLineitemFormInputFields, ...budgetLineitemFormSelectFields];
 
 describe("Budget Line Item Dialog tests", () => {
+	const {
+		checkElementHaveCorrectValue,
+		checkSubmitButtonIsEnabled,
+		requiredFieldTestForInputElement,
+		triggerMutation,
+	} = commonFormTestUtil(fireEvent, wait, act);
+
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
 			await checkElementHaveCorrectValue({

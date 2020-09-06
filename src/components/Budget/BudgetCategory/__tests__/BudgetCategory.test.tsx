@@ -8,12 +8,7 @@ import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { organizationDetails } from "../../../../utils/testMock.json";
 import { budgetCategoryFormInputFields } from "../inputFields.json";
-import {
-	checkElementHaveCorrectValue,
-	checkSubmitButtonIsEnabled,
-	requiredFieldTestForInputElement,
-	triggerMutation,
-} from "../../../../utils/commonFormTest.util";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { IBudgetCategory } from "../../../../models/budget";
 
 const handleClose = jest.fn();
@@ -68,6 +63,13 @@ beforeEach(() => {
 let inputIds = budgetCategoryFormInputFields;
 
 describe("Budget Category Dialog tests", () => {
+	const {
+		checkElementHaveCorrectValue,
+		checkSubmitButtonIsEnabled,
+		requiredFieldTestForInputElement,
+		triggerMutation,
+	} = commonFormTestUtil(fireEvent, wait, act);
+	
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
 			await checkElementHaveCorrectValue({

@@ -11,12 +11,8 @@ import { mockCountryList } from "../../../utils/testMock.json";
 import { IDONOR } from "../../../models/donor/";
 import { CREATE_ORG_DONOR } from "../../../graphql/donor/mutation";
 import { addDonorForm, addDonorFormSelectFields } from "../inputField.json";
-import {
-	checkElementHaveCorrectValue,
-	checkSubmitButtonIsEnabled,
-	requiredFieldTestForInputElement,
-	triggerMutation,
-} from "../../../utils/commonFormTest.util";
+import { commonFormTestUtil } from "../../../utils/commonFormTest.util";
+import { fireEvent, wait } from "@testing-library/dom";
 
 const handleClose = jest.fn();
 
@@ -88,6 +84,13 @@ beforeEach(() => {
 const inputIds = [...addDonorForm, ...addDonorFormSelectFields];
 
 describe("Donor Dialog tests", () => {
+	const {
+		checkElementHaveCorrectValue,
+		checkSubmitButtonIsEnabled,
+		requiredFieldTestForInputElement,
+		triggerMutation,
+	} = commonFormTestUtil(fireEvent, wait, act);
+
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
 			await checkElementHaveCorrectValue({
