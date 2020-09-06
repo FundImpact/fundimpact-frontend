@@ -13,9 +13,9 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { budgetLineitemFormSelectFields, budgetLineitemFormInputFields } from "./inputFields.json";
+import { budgetLineitemFormInputFields } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
+import CommonForm from "../../CommonForm";
 import {
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
@@ -97,7 +97,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [currentProject, getBudgetTargetProject]);
 
 	const closeDialog = useCallback(() => {
-		budgetLineitemFormSelectFields[2].hidden = false;
+		budgetLineitemFormInputFields[5].hidden = false;
 		props.handleClose();
 	}, []);
 
@@ -110,9 +110,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					budgetTargetHash[values.budget_targets_project]?.country?.id ==
 					dashboardData?.organization?.country?.id
 				) {
-					budgetLineitemFormSelectFields[2].hidden = true;
+					budgetLineitemFormInputFields[5].hidden = true;
 				} else {
-					budgetLineitemFormSelectFields[2].hidden = false;
+					budgetLineitemFormInputFields[5].hidden = false;
 				}
 			}
 
@@ -205,7 +205,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			objectToCheck: valuesSubmitted,
 		});
 		try {
-			if (budgetLineitemFormSelectFields[2].hidden) {
+			if (budgetLineitemFormInputFields[5].hidden) {
 				values.fy_donor = values.fy_org;
 			}
 			await createProjectBudgetTracking({
@@ -371,11 +371,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	};
 
 	if (grantPeriodProject) {
-		budgetLineitemFormSelectFields[4].optionsArray = grantPeriodProject.grantPeriodsProjectList;
+		budgetLineitemFormInputFields[7].optionsArray = grantPeriodProject.grantPeriodsProjectList;
 	}
 
 	if (financialYearOrg) {
-		budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYearList
+		budgetLineitemFormInputFields[6].optionsArray = financialYearOrg?.financialYearList
 			? financialYearOrg?.financialYearList
 			: [];
 	}
@@ -386,15 +386,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}
 
 	if (annualYears) {
-		budgetLineitemFormSelectFields[1].optionsArray = annualYears.annualYearList;
+		budgetLineitemFormInputFields[4].optionsArray = annualYears.annualYearList;
 	}
 
 	if (budgetTargets) {
-		budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
+		budgetLineitemFormInputFields[3].optionsArray = budgetTargets.projectBudgetTargets;
 	}
 
 	if (financialYearDonor) {
-		budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYearList
+		budgetLineitemFormInputFields[5].optionsArray = financialYearDonor?.financialYearList
 			? financialYearDonor?.financialYearList
 			: [];
 	}
@@ -412,10 +412,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
-				onSubmit={onCreate}
+				onCreate={onCreate}
 				onCancel={props.handleClose}
 				inputFields={budgetLineitemFormInputFields}
-				selectFields={budgetLineitemFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
 			/>

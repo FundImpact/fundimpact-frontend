@@ -103,6 +103,8 @@ export interface IInputFields {
 	getInputValue?: any;
 	required?: boolean;
 	multiple?: boolean;
+	displayName?: string;
+	hidden?: boolean;
 }
 
 export interface ISelectField {

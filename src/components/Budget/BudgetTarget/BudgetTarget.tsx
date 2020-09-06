@@ -27,8 +27,8 @@ import {
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys } from "../../../utils";
 import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
-import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
+import CommonForm from "../../CommonForm";
+import { budgetTargetFormInputFields } from "./inputFields.json";
 import { removeEmptyKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTargetForm = {
@@ -127,7 +127,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	useEffect(() => {
 		if (donors) {
-			budgetTargetFormSelectFields[1].optionsArray = donors.projectDonors
+			budgetTargetFormInputFields[4].optionsArray = donors.projectDonors
 				.filter(({ donor }: { donor: { id: string; name: string } }) => donor)
 				.map(({ donor }: { donor: { id: string; name: string } }) => {
 					return { id: donor.id, name: donor.name };
@@ -137,7 +137,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	useEffect(() => {
 		if (budgetCategory) {
-			budgetTargetFormSelectFields[0].optionsArray = budgetCategory.orgBudgetCategory;
+			budgetTargetFormInputFields[3].optionsArray = budgetCategory.orgBudgetCategory;
 		}
 	}, [budgetCategory]);
 
@@ -276,10 +276,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
-				onSubmit={onCreate}
+				onCreate={onCreate}
 				onCancel={props.handleClose}
 				inputFields={budgetTargetFormInputFields}
-				selectFields={budgetTargetFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
 			/>

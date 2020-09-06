@@ -51,6 +51,7 @@ const InputFields = ({
 	getInputValue,
 	required,
 	multiple = false,
+	displayName,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -136,9 +137,9 @@ const InputFields = ({
 						"data-testid": testId,
 					}}
 				>
-					{multiSelect && !optionsArray?.length && (
-						<MenuItem value="">
-							<em>None</em>
+					{!optionsArray?.length && (
+						<MenuItem disabled value="">
+							<em>{displayName ? `No ${displayName} available` : "None"}</em>
 						</MenuItem>
 					)}
 					{multiSelect &&

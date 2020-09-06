@@ -13,9 +13,10 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
+import CommonForm from "../../CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
 import { removeEmptyKeys } from "../../../utils";
+import { FORM_ACTIONS } from "../../Forms/constant";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -96,9 +97,10 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onSubmit}
+					onCreate={onSubmit}
 					onCancel={handleClose}
 					inputFields={inputFields}
+					formAction={FORM_ACTIONS.CREATE}
 				/>
 			</FormDialog>
 		</>

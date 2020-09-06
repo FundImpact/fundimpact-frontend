@@ -4,10 +4,10 @@ import { IDONOR, IDonorProps } from "../../models/donor";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
+import { addDonorForm } from "./inputField.json";
 import { IInputField } from "../../models";
 import FormDialog from "../FormDialog";
-import CommonForm from "../Forms/CommonForm";
+import CommonForm from "../CommonForm";
 import { CREATE_ORG_DONOR, UPDATE_ORG_DONOR } from "../../graphql/donor/mutation";
 import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../graphql/donor";
 import { FORM_ACTIONS } from "../../models/constants";
@@ -41,7 +41,7 @@ function Donor(props: IDonorProps) {
 	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
 	const [getCountryList] = useLazyQuery(GET_COUNTRY_LIST, {
 		onCompleted: ({ countryList }) => {
-			addDonorFormSelectFields[0].optionsArray = countryList;
+			addDonorForm[3].optionsArray = countryList;
 		},
 	});
 
@@ -190,10 +190,9 @@ function Donor(props: IDonorProps) {
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onCreate}
+					onCreate={onCreate}
 					onCancel={props.handleClose}
 					inputFields={inputFields}
-					selectFields={addDonorFormSelectFields}
 					formAction={props.formAction}
 					onUpdate={onUpdate}
 				/>
