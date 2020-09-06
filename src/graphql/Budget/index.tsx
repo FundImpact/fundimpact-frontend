@@ -33,6 +33,7 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 			note
 			reporting_date
 			annual_year {
+				name
 				id
 			}
 			fy_org {
