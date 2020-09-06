@@ -221,13 +221,13 @@ function BudgetLineItemTable({
 										<TableCell align="left">
 											<Box display="flex">
 												{Object.entries(yearTags).map(
-													([objKey, objVal], index) => {
+													([objKey, objVal], arrIndex) => {
 														return (
 															getValue(
 																budgetLineItem,
 																objVal.split(",")
 															) && (
-																<Box mr={1} key={index}>
+																<Box mr={1} key={arrIndex}>
 																	<Chip
 																		classes={{
 																			avatar:
