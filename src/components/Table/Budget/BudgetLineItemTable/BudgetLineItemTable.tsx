@@ -201,7 +201,7 @@ function BudgetLineItemTable({
 										</TableCell>
 
 										<TableCell align="left">
-											{getTodaysDate(budgetLineItem.reporting_date)}
+											{getTodaysDate(budgetLineItem.reporting_date, true)}
 										</TableCell>
 										<TableCell align="left">{budgetLineItem.note}</TableCell>
 										<TableCell align="left">{budgetLineItem.amount}</TableCell>
