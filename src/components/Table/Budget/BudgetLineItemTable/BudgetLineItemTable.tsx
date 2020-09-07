@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	TableContainer,
 	Table,
@@ -12,6 +12,8 @@ import {
 	TablePagination,
 	Typography,
 	Box,
+	Chip,
+	Avatar,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -29,11 +31,19 @@ import {
 import pagination from "../../../../hooks/pagination";
 import TableSkeleton from "../../../Skeletons/TableSkeleton";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
 	table: {
 		minWidth: 650,
 	},
-});
+	chipColor: {
+		backgroundColor: theme.palette.grey[500],
+		color: theme.palette.background.paper,
+	},
+	avatarColor: {
+		backgroundColor: theme.palette.grey[600],
+		color: theme.palette.background.paper,
+	},
+}));
 
 const StyledTableHeader = makeStyles((theme: Theme) =>
 	createStyles({
@@ -54,20 +64,28 @@ const tableHeading = [
 	{ label: "Date" },
 	{ label: "Note" },
 	{ label: "Amount" },
-	{ label: "Financial Year Organization" },
-	{ label: "Financial Year Donor" },
 	{ label: "Grant Period" },
+	{ label: "Year" },
 	{ label: "" },
 ];
 
-let keyNames = [
-	"reporting_date",
-	"note",
-	"amount",
-	"fy_org,name",
-	"fy_donor,name",
-	"grant_periods_project,name",
-];
+//The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
+//that we want to display in the chip
+const yearTags = {
+	FYO: "fy_org,name",
+	FYD: "fy_donor,name",
+	AY: "annual_year,name",
+};
+
+function getValue(obj: any, key: string[]): any {
+	if (!obj?.hasOwnProperty(key[0])) {
+		return "";
+	}
+	if (key.length == 1) {
+		return obj[key[0]];
+	}
+	return getValue(obj[key[0]], key.slice(1));
+}
 
 const getInitialValues = (
 	budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE | null
@@ -197,13 +215,48 @@ function BudgetLineItemTable({
 										<TableCell align="left">{budgetLineItem.note}</TableCell>
 										<TableCell align="left">{budgetLineItem.amount}</TableCell>
 										<TableCell align="left">
-											{budgetLineItem?.fy_org?.name || ""}
+											{budgetLineItem?.grant_periods_project?.name}
 										</TableCell>
+
 										<TableCell align="left">
-											{budgetLineItem?.fy_donor?.name || ""}
-										</TableCell>
-										<TableCell align="left">
-											{budgetLineItem?.grant_periods_project?.name || ""}
+											<Box display="flex">
+												{Object.entries(yearTags).map(
+													([objKey, objVal], arrIndex) => {
+														return (
+															getValue(
+																budgetLineItem,
+																objVal.split(",")
+															) && (
+																<Box mr={1} key={arrIndex}>
+																	<Chip
+																		classes={{
+																			avatar:
+																				classes.avatarColor,
+																			root: classes.chipColor,
+																		}}
+																		avatar={
+																			<Avatar>
+																				<span
+																					className={
+																						classes.avatarColor
+																					}
+																				>
+																					{objKey}
+																				</span>
+																			</Avatar>
+																		}
+																		label={getValue(
+																			budgetLineItem,
+																			objVal.split(",")
+																		)}
+																		size="small"
+																	/>
+																</Box>
+															)
+														);
+													}
+												)}
+											</Box>
 										</TableCell>
 
 										<TableCell>
