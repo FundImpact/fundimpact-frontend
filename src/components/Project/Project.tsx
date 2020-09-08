@@ -132,7 +132,6 @@ function Project(props: ProjectProps) {
 				title={(formAction === PROJECT_ACTIONS.CREATE ? "New" : "Edit") + " Project"}
 				subtitle={"Project"}
 				workspace={DashBoardData?.workspace?.name}
-				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

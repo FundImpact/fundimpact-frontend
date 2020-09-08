@@ -89,9 +89,6 @@ function CommonInputForm({
 
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
-									<Button className={classes.cancelButton} onClick={onCancel}>
-										Cancel
-									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -102,6 +99,9 @@ function CommonInputForm({
 										disabled={!formik.isValid}
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
+									</Button>
+									<Button className={classes.cancelButton} onClick={onCancel}>
+										Cancel
 									</Button>
 								</Box>
 							</Grid>
