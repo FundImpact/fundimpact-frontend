@@ -52,7 +52,11 @@
 		"buildCI": "CI= react-scripts build",
 		"testCI": "CI=true react-scripts test",
 		"test": "react-scripts test --coverage=true ",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"extract": "formatjs extract",
+		"compile": "formatjs compile",
+		"compileToEnLng": "npm run compile -- src/lang/en.json --ast --out-file src/compiled-lang/en.json",
+		"ExtractToEnLng": "npm run extract -- 'src/**/*.tsx' --out-file src/lang/en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'"
 	},
 	"husky": {
 		"hooks": {
