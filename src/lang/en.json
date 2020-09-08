@@ -1,0 +1,34 @@
+{
+	"alreadyHaveAccount": {
+		"defaultMessage": "Already have account?",
+		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"dontHaveAccount": {
+		"defaultMessage": "Dont have account?",
+		"description": "This text will be show on login page on left side over blue cover"
+	},
+	"loginBtnText": {
+		"defaultMessage": "Login",
+		"description": "This text is to be shown on Login Button"
+	},
+	"loginDescription": {
+		"defaultMessage": "Get started in few minutes and start analyzing your funds or some more lines to make user confident.",
+		"description": "This text will be shown on login page over blue cover"
+	},
+	"loginLabel": {
+		"defaultMessage": "Login",
+		"description": "This text will be shown on login page over blue cover"
+	},
+	"signupDescription": {
+		"defaultMessage": "Get started in minutes",
+		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"signupLabel": {
+		"defaultMessage": "Singup",
+		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"singupBtnText": {
+		"defaultMessage": "Signup",
+		"description": "This text is to be shown on Signup button"
+	}
+}

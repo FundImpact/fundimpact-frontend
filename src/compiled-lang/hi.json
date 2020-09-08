@@ -1,0 +1,50 @@
+{
+	"alreadyHaveAccount": [
+		{
+			"type": 0,
+			"value": "पहले से ही खाता है?"
+		}
+	],
+	"dontHaveAccount": [
+		{
+			"type": 0,
+			"value": "खाता नहीं है?"
+		}
+	],
+	"loginBtnText": [
+		{
+			"type": 0,
+			"value": "लॉग इन करें"
+		}
+	],
+	"loginDescription": [
+		{
+			"type": 0,
+			"value": "कुछ मिनटों में आरंभ करें और उपयोगकर्ता को आश्वस्त करने के लिए अपने फंड या कुछ और लाइनों का विश्लेषण करना शुरू करें।"
+		}
+	],
+	"loginLabel": [
+		{
+			"type": 0,
+			"value": "लॉग इन करें"
+		}
+	],
+	"signupDescription": [
+		{
+			"type": 0,
+			"value": "मिनटों में शुरू करें"
+		}
+	],
+	"signupLabel": [
+		{
+			"type": 0,
+			"value": "जोर से गाना"
+		}
+	],
+	"singupBtnText": [
+		{
+			"type": 0,
+			"value": "साइन अप करें"
+		}
+	]
+}

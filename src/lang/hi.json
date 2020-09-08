@@ -1,0 +1,34 @@
+{
+	"alreadyHaveAccount": {
+		"defaultMessage": "पहले से ही खाता है?",
+		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"dontHaveAccount": {
+		"defaultMessage": "खाता नहीं है?",
+		"description": "This text will be show on login page on left side over blue cover"
+	},
+	"loginDescription": {
+		"defaultMessage": "कुछ मिनटों में आरंभ करें और उपयोगकर्ता को आश्वस्त करने के लिए अपने फंड या कुछ और लाइनों का विश्लेषण करना शुरू करें।",
+		"description": "This text will be shown on login page over blue cover"
+	},
+	"loginLabel": {
+		"defaultMessage": "लॉग इन करें",
+		"description": "This text will be shown on login page over blue cover"
+	},
+	"loginBtnText": {
+		"defaultMessage": "लॉग इन करें",
+		"description": "This text is to be shown on Login Button"
+	},
+	"signupDescription": {
+		"defaultMessage": "मिनटों में शुरू करें",
+		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"signupLabel": {
+		"defaultMessage": "जोर से गाना",
+		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"singupBtnText": {
+		"defaultMessage": "साइन अप करें",
+		"description": "This text is to be shown on Signup button"
+	}
+}
