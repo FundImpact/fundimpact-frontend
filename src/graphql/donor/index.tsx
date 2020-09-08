@@ -11,10 +11,6 @@ export const GET_ORG_DONOR = gql`
 			}
 			legal_name
 			short_name
-			country {
-				id
-				name
-			}
 		}
 	}
 `;

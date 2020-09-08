@@ -1,17 +1,26 @@
 import React from "react";
-
 import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
-import { BudgetTargetinputFields } from "../../../../utils/inputTestFields.json";
+import { organizationDetails, projectDetails } from "../../../../utils/testMock.json";
+import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { act } from "react-dom/test-utils";
+import { renderApollo } from "../../../../utils/test.util";
+import BudgetTarget from "../BudgetTarget";
+import { DashboardProvider } from "../../../../contexts/dashboardContext";
+import { FORM_ACTIONS } from "../../../../models/constants";
+import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "../inputFields.json";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
+import { fireEvent, wait } from "@testing-library/dom";
 
 const handleClose = jest.fn();
 
 let dialog: any;
 let creationOccured = false;
 
-const intialFormValue: any = {
+const intialFormValue: IBudgetTargetForm = {
 	name: "bud tar",
 	total_target_amount: "213",
 	description: "desc",
@@ -111,49 +120,73 @@ const mocks = [
 	},
 ];
 
-// beforeEach(() => {
-// 	act(() => {
-// 		dialog = renderApollo(
-// 			<DashboardProvider
-// 				defaultState={{ project: projectDetails, organization: organizationDetail }}
-// 			>
-// 				<NotificationProvider>
-// 					<BudgetTarget
-// 						formAction={FORM_ACTIONS.CREATE}
-// 						open={true}
-// 						handleClose={handleClose}
-// 					/>
-// 				</NotificationProvider>
-// 			</DashboardProvider>,
-// 			{
-// 				mocks,
-// 				addTypename: false,
-// 			}
-// 		);
-// 	});
-// });
+beforeEach(() => {
+	act(() => {
+		dialog = renderApollo(
+			<DashboardProvider
+				defaultState={{ project: projectDetails, organization: organizationDetails }}
+			>
+				<NotificationProvider>
+					<BudgetTarget
+						formAction={FORM_ACTIONS.CREATE}
+						open={true}
+						handleClose={handleClose}
+					/>
+				</NotificationProvider>
+			</DashboardProvider>,
+			{
+				mocks,
+				addTypename: false,
+			}
+		);
+	});
+});
 
-const inputIds = BudgetTargetinputFields;
+const inputIds = [...budgetTargetFormInputFields, ...budgetTargetFormSelectFields];
+
+const {
+	checkElementHaveCorrectValue,
+	checkSubmitButtonIsEnabled,
+	requiredFieldTestForInputElement,
+	triggerMutation,
+} = commonFormTestUtil(fireEvent, wait, act);
 
 describe("Budget Target Dialog tests", () => {
+	test("Submit button enabled", async () => {
+		await checkSubmitButtonIsEnabled<IBudgetTargetForm>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
+		});
+	});
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`Required Field test for ${inputIds[i].name}`, async () => {
+			await requiredFieldTestForInputElement<IBudgetTargetForm>({
+				inputFields: inputIds,
+				reactElement: dialog,
+				intialFormValue,
+				inputElement: inputIds[i],
+			});
+		});
+	}
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: dialog,
+				value: intialFormValue[inputIds[i].name],
+			});
+		});
+	}
+
 	test("Mock response", async () => {
-		// NOTE: TO BE FIXED
-		// await new Promise((resolve) => setTimeout(resolve, 1000));
-		// for (let i = 0; i < inputIds.length; i++) {
-		// 	let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-		// 	let value = intialFormValue[inputIds[i].key];
-		// 	await act(async () => {
-		// 		await fireEvent.change(fieldName, { target: { value } });
-		// 	});
-		// 	expect(fieldName.value).toBe(value);
-		// }
-		// await act(async () => {
-		// 	let saveButton = await dialog.getByTestId("createSaveButton");
-		// 	expect(saveButton).toBeEnabled();
-		// 	fireEvent.click(saveButton);
-		// 	await wait();
-		// });
-		// await new Promise((resolve) => setTimeout(resolve, 1000));
-		// expect(creationOccured).toBe(true);
+		await triggerMutation<IBudgetTargetForm>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
+		});
+		expect(creationOccured).toBe(true);
 	});
 });

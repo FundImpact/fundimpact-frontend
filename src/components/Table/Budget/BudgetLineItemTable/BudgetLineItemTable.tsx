@@ -30,6 +30,7 @@ import {
 } from "../../../../graphql/Budget";
 import pagination from "../../../../hooks/pagination";
 import TableSkeleton from "../../../Skeletons/TableSkeleton";
+import { budgetLineItemTableHeading as tableHeading } from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	table: {
@@ -58,16 +59,6 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 		},
 	})
 );
-
-const tableHeading = [
-	{ label: "S.no" },
-	{ label: "Date" },
-	{ label: "Note" },
-	{ label: "Amount" },
-	{ label: "Grant Period" },
-	{ label: "Year" },
-	{ label: "" },
-];
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
