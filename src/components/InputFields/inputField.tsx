@@ -117,7 +117,9 @@ const InputFields = ({
 		}
 		return (
 			<FormControl variant="outlined" className={classes.formControl}>
-				<InputLabel id={inputLabelId}>{label}</InputLabel>
+				<InputLabel required={required} id={inputLabelId}>
+					{label}
+				</InputLabel>
 
 				<Select
 					labelId={selectLabelId}

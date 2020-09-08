@@ -1,0 +1,88 @@
+{
+	"organizationFormInputFields": [
+		{
+			"name": "icon",
+			"id": "icon",
+			"dataTestId": "createOrganizationIcon",
+			"testId": "createOrganizationIconInput",
+			"label": "Logo",
+			"size": 12,
+			"endAdornment": "",
+			"required": false
+		},
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createOrganizationName",
+			"testId": "createOrganizationNameInput",
+			"label": "Name",
+			"size": 12,
+			"required": true,
+			"helperText": "Full name of the organization"
+		},
+		{
+			"name": "legal_name",
+			"id": "legal-name",
+			"dataTestId": "createOrganizationLegalName",
+			"testId": "createOrganizationLegalNameInput",
+			"label": "Legal Name",
+			"size": 12,
+			"required": true,
+			"helperText": "Registered or legal name of the organization"
+		},
+		{
+			"name": "short_name",
+			"id": "short-name",
+			"dataTestId": "createOrganizationShortName",
+			"testId": "createOrganizationShortNameInput",
+			"label": "Short Name",
+			"size": 12,
+			"required": true,
+			"helperText": "Short or abbreviated name of the organization"
+		},
+		{
+			"name": "reg_type",
+			"label": "Choose registration type",
+			"size": 12,
+			"testId": "createOrganizationRegistrationTypeOption",
+			"dataTestId": "createOrganizationRegistrationType",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"inputType": "select",
+			"displayName": "registration type",
+			"required": true
+		},
+		{
+			"name": "country",
+			"label": "Choose country",
+			"size": 12,
+			"testId": "createOrganizationCountryOption",
+			"dataTestId": "createOrganizationCountry",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"inputType": "select",
+			"displayName": "country",
+			"required": true,
+			"helperText": "Select home country of the organization"
+		},
+		{
+			"name": "currency",
+			"label": "Choose home currency",
+			"size": 12,
+			"testId": "createOrganizationCurrencyOption",
+			"dataTestId": "createOrganizationCurrency",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"inputType": "select",
+			"displayName": "currency",
+			"required": true,
+			"helperText": "Default currency of the portal"
+		}
+	]
+}
