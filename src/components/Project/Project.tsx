@@ -72,7 +72,7 @@ function Project(props: ProjectProps) {
 	const onCreate = async (value: IPROJECT_FORM) => {
 		const formData = { ...value };
 		let selectDonors = value.donor;
-		delete formData.donor;
+		delete (formData as any).donor;
 		try {
 			const createdProject = await createNewproject({
 				variables: { input: formData },

@@ -5,14 +5,14 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS, GET_PROJECT_DONORS } from "../../graphql";
 import {
-	GET_IMPACT_TARGET_BY_PROJECT,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
+	GET_IMPACT_TARGET_BY_PROJECT,
 } from "../../graphql/Impact/target";
 import {
 	CREATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-	UPDATE_IMPACT_TRACKLINE,
 	GET_IMPACT_TRACKLINE_COUNT,
+	UPDATE_IMPACT_TRACKLINE,
 } from "../../graphql/Impact/trackline";
 import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -179,7 +179,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		value.reporting_date = new Date(value.reporting_date);
 		setDonors(value.donors);
 		let input = { ...value };
-		delete input.donors;
+		delete (input as any).donors;
 		createImpactTrackline({
 			variables: { input },
 			update: async (
@@ -283,13 +283,13 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	const onUpdate = (value: IImpactTargetLine) => {
 		let impactTargetLineId = value.id;
-		delete value.id;
+		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
 		setDonors(value.donors);
 		setImpactDonorFormData(value.impactDonorMapValues);
 		let input = { ...value };
-		delete input.donors;
-		delete input.impactDonorMapValues;
+		delete (input as any).donors;
+		delete (input as any).impactDonorMapValues;
 		updateImpactTrackLine({
 			variables: {
 				id: impactTargetLineId,

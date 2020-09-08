@@ -106,7 +106,7 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 		let finalvalues: any = Object.values(value);
 		for (let i = 0; i < finalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = finalvalues[i]?.id;
-			delete finalvalues[i].id;
+			delete (finalvalues[i] as any).id;
 			updateDeliverableLineitemFydonor({
 				variables: { id: deliverable_lineitem_fy_id, input: finalvalues[i] },
 				refetchQueries: [
