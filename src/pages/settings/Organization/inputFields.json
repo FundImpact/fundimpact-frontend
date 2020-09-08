@@ -68,21 +68,6 @@
 			"displayName": "country",
 			"required": true,
 			"helperText": "Select home country of the organization"
-		},
-		{
-			"name": "currency",
-			"label": "Choose home currency",
-			"size": 12,
-			"testId": "createOrganizationCurrencyOption",
-			"dataTestId": "createOrganizationCurrency",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined",
-			"inputType": "select",
-			"displayName": "currency",
-			"required": true,
-			"helperText": "Default currency of the portal"
 		}
 	]
 }
