@@ -33,11 +33,14 @@ const SelectField = ({
 	selectLabelId,
 	selectId,
 	displayName = "data",
+	required = false,
 }: Omit<ISelectField, "size" | "type">) => {
 	const classes = useStyles();
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
-			<InputLabel id={inputLabelId}>{label}</InputLabel>
+			<InputLabel id={inputLabelId} required={required}>
+				{label}
+			</InputLabel>
 
 			<Select
 				labelId={selectLabelId}
@@ -52,9 +55,10 @@ const SelectField = ({
 				inputProps={{
 					"data-testid": testId,
 				}}
+				required={required}
 			>
 				{!optionsArray?.length ? (
-					<MenuItem>
+					<MenuItem disabled>
 						<em>No {displayName} available</em>
 					</MenuItem>
 				) : null}

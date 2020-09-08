@@ -6,7 +6,8 @@
 			"dataTestId": "createBudgetTargetName",
 			"testId": "createBudgetTargetNameInput",
 			"label": "Name",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "total_target_amount",
@@ -16,7 +17,8 @@
 			"label": "Total Taget Amount",
 			"size": 6,
 			"type": "number",
-			"endAdornment": ""
+			"endAdornment": "",
+			"required": true
 		},
 		{
 			"name": "description",
@@ -41,7 +43,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
 			"type": "select",
-			"displayName": "budget category"
+			"displayName": "budget category",
+			"required": true
 		},
 		{
 			"name": "donor",
@@ -54,7 +57,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
 			"type": "select",
-			"displayName": "donor"
+			"displayName": "donor",
+			"required": true
 		}
 	]
 }

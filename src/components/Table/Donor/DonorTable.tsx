@@ -22,6 +22,7 @@ import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
 import { IDONOR } from "../../../models/donor";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 const useStyles = makeStyles({
 	table: {
@@ -47,16 +48,16 @@ const keyNames = ["name", "legal_name", "short_name", "country,name"];
 
 const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 	return {
-		country: donor ? donor.country.id : "",
-		legal_name: donor ? donor.legal_name : "",
-		name: donor ? donor.name : "",
-		short_name: donor ? donor.short_name : "",
-		id: donor ? donor.id : "",
+		country: donor?.country?.id || "",
+		legal_name: donor?.legal_name || "",
+		name: donor?.name || "",
+		short_name: donor?.short_name || "",
+		id: donor?.id || "",
 	};
 };
 
 function getValue(obj: any, key: string[]): any {
-	if (!obj.hasOwnProperty(key[0])) {
+	if (!obj?.hasOwnProperty(key[0])) {
 		return "";
 	}
 	if (key.length == 1) {
@@ -85,7 +86,7 @@ function DonorTable() {
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	let { changePage, count, queryData: donorList } = pagination({
+	let { changePage, count, queryData: donorList, queryLoading, countQueryLoading } = pagination({
 		countQuery: GET_DONOR_COUNT,
 		countFilter: {
 			organization: dashboardData?.organization?.id,
@@ -119,6 +120,10 @@ function DonorTable() {
 			),
 		},
 	];
+
+	if (countQueryLoading || queryLoading) {
+		return <TableSkeleton />;
+	}
 
 	return (
 		<TableContainer component={Paper}>

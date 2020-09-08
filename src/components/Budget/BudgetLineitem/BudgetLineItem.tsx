@@ -32,6 +32,7 @@ import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 } from "../../../models/budget/query";
 import { compareObjectKeys } from "../../../utils";
+import { removeEmptyKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -118,26 +119,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			if (!values.amount) {
 				errors.amount = "Amount is required";
 			}
-			if (!values.note) {
-				errors.note = "Note is required";
-			}
+
 			if (!values.budget_targets_project) {
 				errors.budget_targets_project = "Budget project is required";
 			}
-			if (!values.annual_year) {
-				errors.annual_year = "Annual year is required";
-			}
+
 			if (!values.reporting_date) {
 				errors.reporting_date = "Reporting date is required";
-			}
-			if (!values.grant_periods_project) {
-				errors.grant_periods_project = "Grant period is required";
-			}
-			if (!values.fy_donor && !budgetLineitemFormSelectFields[2].hidden) {
-				errors.fy_donor = "Financial year of donor is required";
-			}
-			if (!values.fy_org) {
-				errors.fy_org = "Financial year of organization is required";
 			}
 
 			return errors;
@@ -211,8 +199,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [budgetTargets]);
 
-	const onCreate = async (values: IBudgetTrackingLineitemForm) => {
-		const reporting_date = new Date(values.reporting_date);
+	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
+		const reporting_date = new Date(valuesSubmitted.reporting_date);
+		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
+			objectToCheck: valuesSubmitted,
+		});
 		try {
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
@@ -319,9 +310,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	};
 
-	const onUpdate = async (values: IBudgetTrackingLineitemForm) => {
+	const onUpdate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		try {
-			const reporting_date = new Date(values.reporting_date);
+			const reporting_date = new Date(valuesSubmitted.reporting_date);
+			let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
+				objectToCheck: valuesSubmitted,
+				keysToRemainUnchecked: {
+					note: 1,
+				},
+			});
 			if (compareObjectKeys(values, initialValues)) {
 				closeDialog();
 				return;
