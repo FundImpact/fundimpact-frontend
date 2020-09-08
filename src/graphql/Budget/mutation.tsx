@@ -103,3 +103,14 @@ export const UPDATE_PROJECT_BUDGET_TARGET = gql`
 		}
 	}
 `;
+
+export const UPDATE_ORG_BUDGET_CATEGORY = gql`
+	mutation updateOrgBudgetCategory($id: ID!, $input: BudgetCategoryOrganizationInput) {
+		updateOrgBudgetCategory(id: $id, input: $input) {
+			id
+			name
+			code
+			description
+		}
+	}
+`;

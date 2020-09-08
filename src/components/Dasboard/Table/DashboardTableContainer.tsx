@@ -85,7 +85,11 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategory open={open} handleClose={handleClose} />
+						<BudgetCategory
+							open={open}
+							handleClose={handleClose}
+							formAction={FORM_ACTIONS.CREATE}
+						/>
 					),
 				},
 				{

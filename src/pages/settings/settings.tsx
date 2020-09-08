@@ -9,6 +9,7 @@ import { useNotificationData } from "../../contexts/notificationContext";
 import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
 import Organization from "./Organization";
+import BudgetCategory from "./BudgetCategory";
 import SettingsSidebar from "./sidebar";
 import { ProfileContainer } from "./user/container";
 
@@ -42,6 +43,7 @@ export default function SettingContainer() {
 						<Route path="donors" element={<DonorContainer />} />
 						<Route path="/profile" element={<ProfileContainer />} />
 						<Route path="organization" element={<Organization />} />
+						<Route path="budget-category" element={<BudgetCategory />} />
 						<Route path="/" element={<IDefaultView />} />
 					</Routes>
 				</Grid>
