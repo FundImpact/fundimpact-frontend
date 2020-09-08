@@ -79,6 +79,7 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							name="password"
 							type="password"
 							variant="outlined"
+							data-testid="password"
 						/>
 						<Button
 							disabled={!formik.isValid}
