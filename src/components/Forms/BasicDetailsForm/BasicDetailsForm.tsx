@@ -156,6 +156,7 @@ const BasicDetailsForm = () => {
 										variant="outlined"
 										type={"email"}
 										id="email"
+										data-testid="email"
 									/>
 								</Grid>
 
@@ -242,6 +243,7 @@ const BasicDetailsForm = () => {
 										}
 										onChange={formik.handleChange}
 										label="Organization Name"
+										data-testid="organisationName"
 										onBlur={formik.handleBlur}
 										required
 										fullWidth
