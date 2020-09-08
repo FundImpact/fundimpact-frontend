@@ -8,7 +8,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import React, { useState } from "react";
 
-import { useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql";
 import { IOrganisation } from "../../../models/organisation/types";
 import { IGET_WORKSPACES_BY_ORG, IOrganisationWorkspaces } from "../../../models/workspace/query";
@@ -55,6 +55,8 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 	const [projectDialogOpen, setProjectDialogOpen] = useState<boolean>(false);
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
 	const dispatch = useDashboardDispatch();
+	// const [selectedWorkspace, setSelectedWorkspace] = useState<string>();
+	const dashboardData = useDashBoardData();
 
 	useQuery(GET_WORKSPACES_BY_ORG, filter);
 
@@ -94,7 +96,11 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 				{cachedWorkspaces.orgWorkspaces.map(
 					(workspace: IOrganisationWorkspaces, index: number) => {
 						return (
-							<ListItem className={classes.workspaceList} key={workspace.id}>
+							<ListItem
+								className={classes.workspaceList}
+								key={workspace.id}
+								onClick={() => dispatch(setActiveWorkSpace(workspace))}
+							>
 								<Box display="flex">
 									<Box flexGrow={1}>
 										<ListItemText
@@ -109,7 +115,6 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 											aria-haspopup="true"
 											onClick={(e) => {
 												handleClick(e, index);
-												dispatch(setActiveWorkSpace(workspace));
 											}}
 										>
 											<EditOutlinedIcon fontSize="small" />
@@ -160,6 +165,7 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 					type={PROJECT_ACTIONS.CREATE}
 					workspaces={cachedWorkspaces.orgWorkspaces}
 					open={projectDialogOpen}
+					workspace={dashboardData?.workspace?.id}
 					handleClose={() => setProjectDialogOpen(false)}
 				/>
 			) : null}

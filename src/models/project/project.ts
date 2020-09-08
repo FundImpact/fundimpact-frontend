@@ -14,6 +14,7 @@ export type ProjectProps = {
 	workspaces: NonNullable<Pick<IWorkspace, "id" | "name">>[];
 	open: boolean;
 	handleClose: () => void;
+	workspace: string;
 } & (
 	| {
 			type: PROJECT_ACTIONS.CREATE;

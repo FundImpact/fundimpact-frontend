@@ -22,7 +22,7 @@ function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 		name: "",
 		short_name: "",
 		description: "",
-		workspace: props.workspaces[0].id,
+		workspace: props.workspace,
 		donor: [],
 	};
 }
