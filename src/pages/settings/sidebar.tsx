@@ -10,6 +10,8 @@ import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
 import { useIntl } from "react-intl";
+import sideBarList from "./sidebarList.json";
+
 /**
  *
  * @description The to url must be relative to the /settings.
@@ -87,6 +89,34 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 					description: `This text will be shown for profile link on setting page`,
 				})}
 			></ListItemLink>
+			{sideBarList.map(
+				(
+					listItem: {
+						mainHeading: string;
+						subHeadings: { to: string; dataTestId: string; title: string }[];
+					},
+					index
+				) => (
+					<>
+						<Box display="flex" key={index}>
+							<Box p={2}>
+								<ListItemText
+									primary={listItem.mainHeading}
+									className={classes.mainHeading}
+								/>
+							</Box>
+						</Box>
+						{listItem.subHeadings.map((subHeading, subHeadingIndex) => (
+							<ListItemLink
+								to={subHeading.to}
+								data-testid={subHeading.dataTestId}
+								primary={subHeading.title}
+								key={subHeadingIndex}
+							/>
+						))}
+					</>
+				)
+			)}
 		</Box>
 	);
 }
