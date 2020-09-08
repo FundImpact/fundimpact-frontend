@@ -102,6 +102,13 @@ export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
 			id
 			name
 			code
+			description
 		}
+	}
+`;
+
+export const GET_ORG_BUDGET_CATEGORY_COUNT = gql`
+	query getorgBudgetCategoryCountByOrg($filter: JSON) {
+		orgBudgetCategoryCount(where: $filter)
 	}
 `;

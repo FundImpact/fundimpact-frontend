@@ -9,5 +9,15 @@
 				"title": "Organization Info"
 			}
 		]
+	},
+	{
+		"mainHeading": "Manage Masters",
+		"subHeadings": [
+			{
+				"to": "budget-category",
+				"dataTestId": "budget-category-link",
+				"title": "Budget Categories"
+			}
+		]
 	}
 ]
