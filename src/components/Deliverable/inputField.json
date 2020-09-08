@@ -240,8 +240,7 @@
 			"inputLabelId": "demo-mutiple-name-label",
 			"selectLabelId": "demo-mutiple-name-label",
 			"selectId": "demo-mutiple-name",
-			"inputType": "multiSelect",
-			"required": true
+			"inputType": "multiSelect"
 		},
 		{
 			"name": "annual_year",

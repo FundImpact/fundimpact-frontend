@@ -1,0 +1,42 @@
+{
+	"deliverableTracklineForm": [
+		{
+			"name": "deliverable_target_project",
+			"dataTestId": "deliverableTracklineTarget",
+			"testId": "deliverableTracklineTargetInput"
+		},
+		{
+			"name": "value",
+			"dataTestId": "deliverableTracklineValue",
+			"testId": "deliverableTracklineValueInput",
+			"value": "5000"
+		},
+		{
+			"name": "reporting_date",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput"
+		},
+		{
+			"name": "donors",
+			"dataTestId": "deliverableTracklineDonors",
+			"testId": "deliverableTracklineDonorsInput"
+		},
+		{
+			"name": "annual_year",
+			"dataTestId": "deliverableTracklineAnnualYear",
+			"testId": "deliverableTracklineAnnualYearInput",
+			"value": "1"
+		},
+		{
+			"name": "financial_year",
+			"dataTestId": "deliverableTracklineFinancialYear",
+			"testId": "deliverableTracklineFinancialYearInput",
+			"value": "1"
+		},
+		{
+			"name": "note",
+			"dataTestId": "deliverableTracklineNote",
+			"testId": "deliverableTracklineNoteInput"
+		}
+	]
+}

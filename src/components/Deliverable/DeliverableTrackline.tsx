@@ -29,14 +29,6 @@ import { DELIVERABLE_ACTIONS } from "./constants";
 import DeliverableTracklineDonorYearTags from "./DeliverableTracklineDonor";
 import { deliverableTragetLineForm } from "./inputField.json";
 
-// import FullScreenLoader from "../commons/GlobalLoader";
-// import { DELIVERABLE_ACTIONS } from "./constants";
-// import { GET_ANNUAL_YEARS } from "../../graphql";
-// import {
-// 	DeliverableTargetLineProps,
-// 	IDeliverableTargetLine,
-// } from "../../models/deliverable/deliverableTrackline";
-// import { getTodaysDate } from "../../utils/index";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -127,7 +119,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					donors={donors}
 					TracklineId={data.updateDeliverableTrackingLineitemDetail.id}
 					TracklineFyId={data.updateDeliverableTrackingLineitemDetail.financial_year?.id}
-					data={Object.keys(donorFormData).length ? donorFormData : {}}
+					data={Object.keys(donorFormData).length ? donorFormData : {}} // stores dynamic key values with use of donorId
 					onCancel={onCancel}
 					type={
 						Object.keys(donorFormData).length
@@ -255,9 +247,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							],
 						},
 					});
-				} catch (err) {
-					throw err;
-				}
+				} catch (err) {}
 			},
 			refetchQueries: [
 				{
