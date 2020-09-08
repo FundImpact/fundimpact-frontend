@@ -93,7 +93,7 @@ const FinancialYearAndGrantPeriodFields = ({
 					>
 						{!fyData && (
 							<MenuItem value="">
-								<em>None</em>
+								<em>No (context) available</em>
 							</MenuItem>
 						)}
 						{fyData &&
@@ -139,7 +139,7 @@ const FinancialYearAndGrantPeriodFields = ({
 					>
 						{!grantPeriods && (
 							<MenuItem value="">
-								<em>None</em>
+								<em>No (context) available</em>
 							</MenuItem>
 						)}
 						{grantPeriods &&
@@ -210,9 +210,6 @@ function DonorYearTagForm({
 							)}
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>
-									<Button className={classes.cancelButton} onClick={onCancel}>
-										Cancel
-									</Button>
 									<Button
 										className={classes.button}
 										disableRipple
@@ -222,6 +219,9 @@ function DonorYearTagForm({
 										data-testid="createSaveButton"
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
+									</Button>
+									<Button className={classes.cancelButton} onClick={onCancel}>
+										Cancel
 									</Button>
 								</Box>
 							</Grid>

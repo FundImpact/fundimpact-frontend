@@ -136,9 +136,9 @@ const InputFields = ({
 						"data-testid": testId,
 					}}
 				>
-					{multiSelect && !optionsArray?.length && (
+					{!optionsArray?.length && (
 						<MenuItem value="">
-							<em>None</em>
+							<em>No (context) available</em>
 						</MenuItem>
 					)}
 					{multiSelect &&

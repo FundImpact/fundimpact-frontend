@@ -25,6 +25,10 @@ import Stepper from "../Stepper/Stepper";
 import { IMPACT_ACTIONS } from "./constants";
 import ImpacTracklineDonorYearTags from "./impactTracklineDonor";
 import { impactTragetLineForm } from "./inputField.json";
+import {
+	IGET_IMPACT_TRACKLINE_BY_TARGET,
+	IImpactTracklineByTargetResponse,
+} from "../../models/impact/query";
 
 // import FullScreenLoader from "../commons/GlobalLoader";
 // import { IMPACT_ACTIONS } from "./constants";
@@ -215,7 +219,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					if (count) {
 						limit = count.impactTrackingLineitemListCount;
 					}
-					const dataRead = await store.readQuery<any>({
+					const dataRead = await store.readQuery<IGET_IMPACT_TRACKLINE_BY_TARGET>({
 						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 						variables: {
 							filter: {
@@ -226,11 +230,11 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 							sort: "created_at:DESC",
 						},
 					});
-					let impactTrackingLineitemList: any[] = dataRead?.impactTrackingLineitemList
+					let impactTrackingLineitemList: IImpactTracklineByTargetResponse[] = dataRead?.impactTrackingLineitemList
 						? dataRead?.impactTrackingLineitemList
 						: [];
 
-					store.writeQuery<any>({
+					store.writeQuery<IGET_IMPACT_TRACKLINE_BY_TARGET>({
 						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 						variables: {
 							filter: {
@@ -248,7 +252,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						},
 					});
 
-					store.writeQuery<any>({
+					store.writeQuery<IGET_IMPACT_TRACKLINE_BY_TARGET>({
 						query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 						variables: {
 							filter: {

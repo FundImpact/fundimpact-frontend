@@ -19,6 +19,10 @@ import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
 import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
+import {
+	IGET_IMPACT_TARGET_BY_PROJECT,
+	IImpactTargetByProjectResponse,
+} from "../../models/impact/query";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -107,7 +111,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 						if (count) {
 							limit = count.impactTargetProjectCount;
 						}
-						const dataRead = await store.readQuery<any>({
+						const dataRead = await store.readQuery<IGET_IMPACT_TARGET_BY_PROJECT>({
 							query: GET_IMPACT_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
@@ -118,11 +122,11 @@ function ImpactTarget(props: ImpactTargetProps) {
 								sort: "created_at:DESC",
 							},
 						});
-						let impactTargetProjectList: any[] = dataRead?.impactTargetProjectList
+						let impactTargetProjectList: IImpactTargetByProjectResponse[] = dataRead?.impactTargetProjectList
 							? dataRead?.impactTargetProjectList
 							: [];
 
-						store.writeQuery<any>({
+						store.writeQuery<IGET_IMPACT_TARGET_BY_PROJECT>({
 							query: GET_IMPACT_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
@@ -140,7 +144,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 							},
 						});
 
-						store.writeQuery<any>({
+						store.writeQuery<IGET_IMPACT_TARGET_BY_PROJECT>({
 							query: GET_IMPACT_TARGET_BY_PROJECT,
 							variables: {
 								filter: {

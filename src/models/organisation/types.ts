@@ -10,4 +10,10 @@ export interface IOrganisation {
 	short_name: string;
 	organization_registration_type: IOrganisationType;
 	country?: { id: string; name: string };
+	account?: {
+		id: string;
+		name: string;
+		description: string;
+		account_no: string;
+	};
 }
