@@ -1,6 +1,4 @@
 import React, { useCallback } from "react";
-import CommonForm from "../../../components/CommonForm/";
-import { FORM_ACTIONS } from "../../../models/constants";
 import { IOrganisationForm } from "../../../models/organisation/types";
 import {
 	Grid,
@@ -11,7 +9,6 @@ import {
 	Theme,
 	TextField,
 	FormControl,
-	FormLabel,
 	RadioGroup,
 	FormControlLabel,
 	Radio,
@@ -22,11 +19,9 @@ import {
 	Button,
 	Divider,
 } from "@material-ui/core";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { IInputFields } from "../../../models";
 import UploadFile from "../../../components/UploadFile";
 import { Form, Formik } from "formik";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	uploadBox: {
@@ -51,11 +46,7 @@ interface IOrganizationInputFields extends IInputFields {
 	displayName?: string;
 }
 
-//all key to all array map
-//add divider line
-//add key every where
 //check required
-//remove gender 1 from name
 function OrganizationView({
 	validate,
 	inputFields,
@@ -67,7 +58,7 @@ function OrganizationView({
 	inputFields: IOrganizationInputFields[];
 	registrationTypes: { id: string; reg_type: string }[];
 	initialValues: IOrganisationForm;
-	onSubmit: (value: IOrganisationForm) => void;
+	onSubmit: (value: IOrganisationForm) => Promise<void>;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -116,9 +107,10 @@ function OrganizationView({
 															.slice(1, 4)
 															.map(
 																(
-																	element: IOrganizationInputFields
+																	element: IOrganizationInputFields,
+																	index
 																) => (
-																	<Box pl={1} mt={2}>
+																	<Box pl={1} mt={2} key={index}>
 																		<TextField
 																			value={
 																				formik.values[
@@ -211,9 +203,10 @@ function OrganizationView({
 														<Typography className={classes.subHeading}>
 															Home country settings
 														</Typography>
-														{inputFields.slice(5).map((element) => (
-															<>
-																<Box mt={2} pl={1}>
+														{inputFields
+															.slice(5)
+															.map((element, index) => (
+																<Box mt={2} pl={1} key={index}>
 																	<Grid container>
 																		<Grid item xs={7}>
 																			<Typography>
@@ -340,8 +333,7 @@ function OrganizationView({
 																		</Grid>
 																	</Grid>
 																</Box>
-															</>
-														))}
+															))}
 													</Grid>
 													<Grid item xs={12}>
 														<Box display="flex">

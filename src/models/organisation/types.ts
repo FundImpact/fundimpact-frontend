@@ -18,15 +18,19 @@ export interface IOrganisationForm
 	organization_registration_type: string;
 	country: string;
 	icon: string;
-	currency: string;
 }
 
 export interface IOrganizationCurrency {
 	id: string;
 	isHomeCurrency: boolean;
 	currency: {
-		id: string
+		id: string;
 		name: string;
 		code: string;
 	};
+}
+
+export interface IOrganizationRegistrationType {
+	id: string;
+	reg_type: string;
 }
