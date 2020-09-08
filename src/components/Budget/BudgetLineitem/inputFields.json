@@ -73,7 +73,7 @@
 			"name": "reporting_date",
 			"id": "reporting-date",
 			"dataTestId": "createBudgetLineitemReportingDate",
-			"testId": "createBudgetLineitemConversionFactorInput",
+			"testId": "createBudgetLineitemReportingDateInput",
 			"label": "Reporting date",
 			"size": 6,
 			"type": "date",

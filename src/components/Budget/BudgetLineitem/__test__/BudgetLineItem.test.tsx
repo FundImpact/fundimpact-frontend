@@ -1,6 +1,5 @@
 import React from "react";
 import BudgetLineitem from "../BudgetLineItem";
-import { fireEvent, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { CREATE_PROJECT_BUDGET_TRACKING } from "../../../../graphql/Budget/mutation";
@@ -14,10 +13,8 @@ import {
 	GET_FINANCIAL_YEARS,
 } from "../../../../graphql";
 import { renderApollo } from "../../../../utils/test.util";
-import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
-import { budgetLineItemInputFields } from "../../../../utils/inputTestFields.json";
 import {
 	projectDetails,
 	organizationDetails,
@@ -29,6 +26,10 @@ import {
 } from "../../../../utils/testMock.json";
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
+import { act } from "react-dom/test-utils";
+import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "../inputFields.json";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+import { fireEvent, wait } from "@testing-library/dom";
 
 const handleClose = jest.fn();
 
@@ -100,7 +101,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				financialYears: mockFinancialYears,
+				financialYearList: mockFinancialYears,
 			},
 		},
 	},
@@ -115,7 +116,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				financialYears: mockFinancialYears,
+				financialYearList: mockFinancialYears,
 			},
 		},
 	},
@@ -208,25 +209,51 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = budgetLineItemInputFields;
+const inputIds = [...budgetLineitemFormInputFields, ...budgetLineitemFormSelectFields];
+
+const {
+	checkElementHaveCorrectValue,
+	checkSubmitButtonIsEnabled,
+	requiredFieldTestForInputElement,
+	triggerMutation,
+} = commonFormTestUtil(fireEvent, wait, act);
 
 describe("Budget Line Item Dialog tests", () => {
+	test("Submit button enabled", async () => {
+		await checkSubmitButtonIsEnabled<IBudgetTrackingLineitemForm>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
+		});
+	});
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: dialog,
+				value: intialFormValue[inputIds[i].name],
+			});
+		});
+	}
+
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`Required Field test for ${inputIds[i].name}`, async () => {
+			await requiredFieldTestForInputElement<IBudgetTrackingLineitemForm>({
+				inputFields: inputIds,
+				reactElement: dialog,
+				intialFormValue,
+				inputElement: inputIds[i],
+			});
+		});
+	}
+
 	test("Mock response", async () => {
-		// 	for (let i = 0; i < inputIds.length; i++) {
-		// 		let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
-		// 		let value = intialFormValue[inputIds[i].key];
-		// 		await act(async () => {
-		// 			await fireEvent.change(fieldName, { target: { value } });
-		// 		});
-		// 		await expect(fieldName.value).toBe(value);
-		// 	}
-		// 	await act(async () => {
-		// 		let saveButton = await dialog.getByTestId("createSaveButton");
-		// 		expect(saveButton).toBeEnabled();
-		// 		fireEvent.click(saveButton);
-		// 		await wait();
-		// 	});
-		// 	await new Promise((resolve) => setTimeout(resolve, 1000));
-		// 	expect(creationOccured).toBe(true);
+		await triggerMutation<IBudgetTrackingLineitemForm>({
+			inputFields: inputIds,
+			reactElement: dialog,
+			intialFormValue,
+		});
+		expect(creationOccured).toBe(true);
 	});
 });

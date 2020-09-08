@@ -24,6 +24,7 @@ import pagination from "../../../../hooks/pagination";
 import TablePagination from "@material-ui/core/TablePagination";
 import BudgetTargetTableRow from "./BudgetTargetTableRow";
 import TableSkeleton from "../../../Skeletons/TableSkeleton";
+import { budgetTargetTableHeading as tableHeading } from "../../constants";
 
 const useStyles = makeStyles({
 	table: {
@@ -72,18 +73,6 @@ function getInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IB
 		donor: budgetTarget?.donor?.id || "",
 	};
 }
-
-const tableHeading = [
-	{ label: "" },
-	{ label: "S.no" },
-	{ label: "Target Name" },
-	{ label: "Budget Category" },
-	{ label: "Donor" },
-	{ label: "Total Amount" },
-	{ label: "Spent" },
-	{ label: "Progress %" },
-	{ label: "" },
-];
 
 function BudgetTargetTable() {
 	const classes = useStyles();
