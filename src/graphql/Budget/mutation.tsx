@@ -64,9 +64,20 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 			budget_targets_project {
 				id
 				name
-				description
 			}
 			annual_year {
+				id
+				name
+			}
+			fy_org {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+			}
+			fy_donor {
 				id
 				name
 			}

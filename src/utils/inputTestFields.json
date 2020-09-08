@@ -1,38 +1,80 @@
 {
 	"BudgetCategoryInputFields": [
-		{ "id": "createBudgetNameInput", "key": "name" },
-		{ "id": "createBudgetCodeInput", "key": "code" },
-		{ "id": "createBudgetDescriptionInput", "key": "description" }
+		{ "id": "createBudgetNameInput", "key": "name", "name": "Budget Name" },
+		{ "id": "createBudgetCodeInput", "key": "code", "name": "Budget Code" },
+		{ "id": "createBudgetDescriptionInput", "key": "description", "name": "Description" }
 	],
 	"BudgetTargetinputFields": [
-		{ "id": "createBudgetTargetNameInput", "key": "name" },
-		{ "id": "createBudgetTargetTotalTargetAmountInput", "key": "total_target_amount" },
-		{ "id": "createBudgetTargetDescriptionInput", "key": "description" },
-		{ "id": "createBudgetTargetBudgetCategoryOption", "key": "budget_category_organization" },
-		{ "id": "createBudgetTargetDonorOption", "key": "donor" }
+		{ "id": "createBudgetTargetNameInput", "key": "name", "name": "Budget Target Name" },
+		{
+			"id": "createBudgetTargetTotalTargetAmountInput",
+			"key": "total_target_amount",
+			"name": "Budget Target Amount"
+		},
+		{ "id": "createBudgetTargetDescriptionInput", "key": "description", "name": "Description" },
+		{
+			"id": "createBudgetTargetBudgetCategoryOption",
+			"key": "budget_category_organization",
+			"name": "Budget Category"
+		},
+		{ "id": "createBudgetTargetDonorOption", "key": "donor", "name": "Budget Donor" }
 	],
 	"impactCategoeyDialogFields": [
-		{ "id": "createImpactNameInput", "key": "name" },
-		{ "id": "createImpactShortNameInput", "key": "shortname" },
-		{ "id": "createImpactCodeInput", "key": "code" },
-		{ "id": "createImpactCategoryDescriptionInput", "key": "description" }
+		{ "id": "createImpactNameInput", "key": "name", "name": "Name" },
+		{ "id": "createImpactShortNameInput", "key": "shortname", "name": "Short name" },
+		{ "id": "createImpactCodeInput", "key": "code", "name": "Code" },
+		{
+			"id": "createImpactCategoryDescriptionInput",
+			"key": "description",
+			"name": "Description"
+		}
 	],
 	"impactUnitDialogFields": [
-		{ "id": "createInpactUnitNameInput", "key": "name" },
-		{ "id": "createImpactUnitPrefixLabelInput", "key": "prefix_label" },
-		{ "id": "createImpactUnitSuffixLabelInput", "key": "suffix_label" },
-		{ "id": "createImpactUnitCodeInput", "key": "code" },
-		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit" },
-		{ "id": "createImpactUnitDescriptionInput", "key": "description" }
+		{ "id": "createInpactUnitNameInput", "key": "name", "name": "Name" },
+		{ "id": "createImpactUnitPrefixLabelInput", "key": "prefix_label", "name": "Prefix Label" },
+		{ "id": "createImpactUnitSuffixLabelInput", "key": "suffix_label", "name": "Suffix Label" },
+		{ "id": "createImpactUnitCodeInput", "key": "code", "name": "Code" },
+		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit", "name": "target unit" },
+		{ "id": "createImpactUnitDescriptionInput", "key": "description", "name": "Description" }
 	],
 	"budgetLineItemInputFields": [
-		{ "id": "createBudgetLineitemConversionFactorInput", "key": "reporting_date" },
-		{ "id": "createBudgetLineitemAmountInput", "key": "amount" },
-		{ "id": "createBudgetLineitemNoteInput", "key": "note" },
-		{ "id": "createBudgetLineitemAnnualYearOption", "key": "annual_year" },
-		{ "id": "createBudgetLineitemBudgetTargetsOption", "key": "budget_targets_project" },
-		{ "id": "createBudgetLineitemFinancialYearOrgOption", "key": "fy_org" },
-		{ "id": "createBudgetLineitemFinancialYearDonorOption", "key": "fy_donor" },
-		{ "id": "createBudgetLineitemGrantPeriodProjectOption", "key": "grant_periods_project" }
+		{
+			"id": "createBudgetLineitemReportingDateInput",
+			"key": "reporting_date",
+			"name": "Reporting Date"
+		},
+		{ "id": "createBudgetLineitemAmountInput", "key": "amount", "name": "Amount" },
+		{ "id": "createBudgetLineitemNoteInput", "key": "note", "name": "Note" },
+		{
+			"id": "createBudgetLineitemAnnualYearOption",
+			"key": "annual_year",
+			"name": "Annual year"
+		},
+		{
+			"id": "createBudgetLineitemBudgetTargetsOption",
+			"key": "budget_targets_project",
+			"name": "Budget Target"
+		},
+		{
+			"id": "createBudgetLineitemFinancialYearOrgOption",
+			"key": "fy_org",
+			"name": "Financial year org"
+		},
+		{
+			"id": "createBudgetLineitemFinancialYearDonorOption",
+			"key": "fy_donor",
+			"name": "Financial year Donor"
+		},
+		{
+			"id": "createBudgetLineitemGrantPeriodProjectOption",
+			"key": "grant_periods_project",
+			"name": "Grant Period"
+		}
+	],
+	"donorInputFields": [
+		{ "id": "donorNameInput", "key": "name", "name": "Name" },
+		{ "id": "donorLegalNameInput", "key": "legal_name", "name": "Legal name" },
+		{ "id": "donorShortNameInput", "key": "short_name", "name": "Short name" },
+		{ "id": "donorCountryOption", "key": "country", "name": "Country" }
 	]
 }
