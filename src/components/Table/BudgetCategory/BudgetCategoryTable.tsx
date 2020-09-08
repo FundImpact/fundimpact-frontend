@@ -15,14 +15,17 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
-import Donor from "../../Donor";
 import { FORM_ACTIONS } from "../../../models/constants";
-import { IDONOR_RESPONSE } from "../../../models/donor/query";
-import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
-import { IDONOR } from "../../../models/donor";
+import {
+	GET_ORGANIZATION_BUDGET_CATEGORY,
+	GET_ORG_BUDGET_CATEGORY_COUNT,
+} from "../../../graphql/Budget";
+import { IBudgetCategory } from "../../../models/budget";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import BudgetCategory from "../../Budget/BudgetCategory";
+import { budgetCategoryHeading as tableHeading } from "../constants";
 
 const useStyles = makeStyles({
 	table: {
@@ -44,15 +47,14 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 	})
 );
 
-const keyNames = ["name", "legal_name", "short_name", "country,name"];
+const keyNames = ["name", "code", "description"];
 
-const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
+const getInitialValues = (budgetCategory: IBudgetCategory | null): IBudgetCategory => {
 	return {
-		country: donor?.country?.id || "",
-		legal_name: donor?.legal_name || "",
-		name: donor?.name || "",
-		short_name: donor?.short_name || "",
-		id: donor?.id || "",
+		code: budgetCategory?.code || "",
+		description: budgetCategory?.description || "",
+		id: budgetCategory?.id || "",
+		name: budgetCategory?.name || "",
 	};
 };
 
@@ -66,19 +68,10 @@ function getValue(obj: any, key: string[]): any {
 	return getValue(obj[key[0]], key.slice(1));
 }
 
-const tableHeading = [
-	{ label: "#" },
-	{ label: "Name" },
-	{ label: "Legal Name" },
-	{ label: "Short Name" },
-	{ label: "Country" },
-	{ label: "" },
-];
-
-function DonorTable() {
+function BudgetCategoryTable() {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
-	const selectedDonor = React.useRef<IDONOR_RESPONSE | null>(null);
+	const selectedBudgetCategory = React.useRef<IBudgetCategory | null>(null);
 	const [page, setPage] = useState<number>(0);
 
 	const dashboardData = useDashBoardData();
@@ -86,12 +79,18 @@ function DonorTable() {
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	let { changePage, count, queryData: donorList, queryLoading, countQueryLoading } = pagination({
-		countQuery: GET_DONOR_COUNT,
+	let {
+		changePage,
+		count,
+		queryData: budgetCategoryList,
+		queryLoading,
+		countQueryLoading,
+	} = pagination({
+		countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
 		countFilter: {
 			organization: dashboardData?.organization?.id,
 		},
-		query: GET_ORG_DONOR,
+		query: GET_ORGANIZATION_BUDGET_CATEGORY,
 		queryFilter: {
 			organization: dashboardData?.organization?.id,
 		},
@@ -115,7 +114,7 @@ function DonorTable() {
 						handleClose();
 					}}
 				>
-					Edit Donor
+					Edit Budget Category
 				</MenuItem>
 			),
 		},
@@ -127,16 +126,16 @@ function DonorTable() {
 
 	return (
 		<TableContainer component={Paper}>
-			<Donor
+			<BudgetCategory
 				formAction={FORM_ACTIONS.UPDATE}
 				handleClose={() => setOpenDialog(false)}
-				initialValues={getInitialValues(selectedDonor.current)}
+				initialValues={getInitialValues(selectedBudgetCategory.current)}
 				open={openDialog}
 			/>
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						{donorList?.orgDonors?.length
+						{budgetCategoryList?.orgBudgetCategory?.length
 							? tableHeading.map((heading: { label: string }, index: number) => (
 									<TableCell className={tableHeader.th} key={index} align="left">
 										{heading.label}
@@ -146,41 +145,46 @@ function DonorTable() {
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
-					{donorList?.orgDonors?.map((donor: IDONOR_RESPONSE, index: number) => (
-						<TableRow key={donor.id}>
-							<TableCell component="td" scope="row">
-								{page * 10 + index + 1}
-							</TableCell>
-							{keyNames.map((keyName: string, i: number) => {
-								return (
-									<TableCell key={i} align="left">
-										{getValue(donor, keyName.split(","))}
-									</TableCell>
-								);
-							})}
-							<TableCell>
-								<IconButton
-									aria-haspopup="true"
-									onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-										selectedDonor.current = donor;
-										handleClick(event);
-									}}
-								>
-									<MoreVertIcon />
-								</IconButton>
-								<SimpleMenu
-									handleClose={handleClose}
-									id={`organizationMenu-${donor.id}`}
-									anchorEl={
-										selectedDonor?.current?.id === donor.id ? anchorEl : null
-									}
-									menuList={menuList}
-								/>
-							</TableCell>
-						</TableRow>
-					))}
+					{budgetCategoryList?.orgBudgetCategory?.map(
+						(budgetCategory: IBudgetCategory, index: number) => (
+							<TableRow key={budgetCategory.id}>
+								<TableCell component="td" scope="row">
+									{page * 10 + index + 1}
+								</TableCell>
+								{keyNames.map((keyName: string, i: number) => {
+									return (
+										<TableCell key={i} align="left">
+											{getValue(budgetCategory, keyName.split(","))}
+										</TableCell>
+									);
+								})}
+								<TableCell>
+									<IconButton
+										aria-haspopup="true"
+										onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+											selectedBudgetCategory.current = budgetCategory;
+											handleClick(event);
+										}}
+									>
+										<MoreVertIcon />
+									</IconButton>
+									<SimpleMenu
+										handleClose={handleClose}
+										id={`organizationMenu-${budgetCategory.id}`}
+										anchorEl={
+											selectedBudgetCategory?.current?.id ===
+											budgetCategory.id
+												? anchorEl
+												: null
+										}
+										menuList={menuList}
+									/>
+								</TableCell>
+							</TableRow>
+						)
+					)}
 				</TableBody>
-				{donorList?.orgDonors?.length ? (
+				{budgetCategoryList?.orgBudgetCategory?.length ? (
 					<TableFooter>
 						<TableRow>
 							<TablePagination
@@ -215,4 +219,4 @@ function DonorTable() {
 	);
 }
 
-export default React.memo(DonorTable);
+export default React.memo(BudgetCategoryTable);

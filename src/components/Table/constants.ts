@@ -18,3 +18,11 @@ export const deliverableAndimpactTracklineHeading = [
 	{ label: "Year" },
 	{ label: "" }, //edit icon
 ];
+
+export const budgetCategoryHeading = [
+	{ label: "#" },
+	{ label: "Budget Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "" },
+];

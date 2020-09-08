@@ -60,7 +60,7 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 );
 
 const tableHeading = [
-	{ label: "S.no" },
+	{ label: "#" },
 	{ label: "Date" },
 	{ label: "Note" },
 	{ label: "Amount" },

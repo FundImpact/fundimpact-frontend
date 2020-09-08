@@ -75,7 +75,7 @@ function getInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IB
 
 const tableHeading = [
 	{ label: "" },
-	{ label: "S.no" },
+	{ label: "#" },
 	{ label: "Target Name" },
 	{ label: "Budget Category" },
 	{ label: "Donor" },

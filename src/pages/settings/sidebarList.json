@@ -1,0 +1,16 @@
+[
+	{
+		"mainHeading": "Manage Portal",
+		"subHeadings": [{ "to": "donors", "dataTestId": "donor-link", "title": "Manage Donors" }]
+	},
+	{
+		"mainHeading": "Manage Masters",
+		"subHeadings": [
+			{
+				"to": "budget-category",
+				"dataTestId": "budget-category-link",
+				"title": "Budget Categories"
+			}
+		]
+	}
+]
