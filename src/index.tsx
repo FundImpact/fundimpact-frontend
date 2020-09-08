@@ -8,14 +8,28 @@ import { UIProvider } from "./contexts/uiContext";
 import { UserProvider } from "./contexts/userContext";
 import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render(
-	<UIProvider>
-		<UserProvider>
-			<App />
-		</UserProvider>
-	</UIProvider>,
-	document.getElementById("root")
-);
+function loadLocaleData(locale: string) {
+	switch (
+		locale
+		// case 'fr':
+		//   return import('compiled-lang/fr.json')
+		// default:
+		//   return import('compiled-lang/en.json')
+	) {
+	}
+}
+
+(function () {
+	const locale = navigator.languages[0] || navigator.language;
+	ReactDOM.render(
+		<UIProvider>
+			<UserProvider>
+				<App />
+			</UserProvider>
+		</UIProvider>,
+		document.getElementById("root")
+	);
+})();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
