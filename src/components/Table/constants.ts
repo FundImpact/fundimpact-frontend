@@ -18,3 +18,34 @@ export const deliverableAndimpactTracklineHeading = [
 	{ label: "Year" },
 	{ label: "" }, //edit icon
 ];
+
+export const budgetTargetTableHeading = [
+	{ label: "" },
+	{ label: "S.no" },
+	{ label: "Target Name" },
+	{ label: "Budget Category" },
+	{ label: "Donor" },
+	{ label: "Total Amount" },
+	{ label: "Spent" },
+	{ label: "Progress %" },
+	{ label: "" },
+];
+
+export const budgetLineItemTableHeading = [
+	{ label: "S.no" },
+	{ label: "Date" },
+	{ label: "Note" },
+	{ label: "Amount" },
+	{ label: "Grant Period" },
+	{ label: "Year" },
+	{ label: "" },
+];
+
+export const donorTableHeading = [
+	{ label: "S.no" },
+	{ label: "Name" },
+	{ label: "Legal Name" },
+	{ label: "Short Name" },
+	{ label: "Country" },
+	{ label: "" },
+];

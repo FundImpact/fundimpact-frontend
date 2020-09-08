@@ -82,6 +82,7 @@ function BudgetTargetTableRow({
 						aria-label="expand row"
 						size="small"
 						onClick={() => setOpenRow(!openRow)}
+						data-testid={`collaspeButton-${serialNo}`}
 					>
 						{openRow ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 					</IconButton>

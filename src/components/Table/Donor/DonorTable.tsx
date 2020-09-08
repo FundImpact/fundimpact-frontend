@@ -23,6 +23,7 @@ import { IDONOR } from "../../../models/donor";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { donorTableHeading as tableHeading } from "../constants";
 
 const useStyles = makeStyles({
 	table: {
@@ -65,15 +66,6 @@ function getValue(obj: any, key: string[]): any {
 	}
 	return getValue(obj[key[0]], key.slice(1));
 }
-
-const tableHeading = [
-	{ label: "S.no" },
-	{ label: "Name" },
-	{ label: "Legal Name" },
-	{ label: "Short Name" },
-	{ label: "Country" },
-	{ label: "" },
-];
 
 function DonorTable() {
 	const classes = useStyles();
