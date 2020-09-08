@@ -1,6 +1,6 @@
 import React from "react";
 import DeliverableTrackline from "../DeliverableTrackline";
-import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
+import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import {

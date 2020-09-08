@@ -1,6 +1,6 @@
 import React from "react";
 import ImpactTrackline from "../impactTrackLine";
-import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
+import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { IMPACT_ACTIONS } from "../constants";
 import {
@@ -47,26 +47,6 @@ const mocks = [
 			},
 		},
 		result: { data: { impactTargetProjectList: impactTargetMock } },
-	},
-	{
-		request: {
-			query: GET_ANNUAL_YEARS,
-		},
-		result: { data: { annualYears: annualYearListMock } },
-	},
-	{
-		request: {
-			query: GET_FINANCIAL_YEARS,
-			variables: { filter: { country: "1" } },
-		},
-		result: { data: { financialYearList: financialYearListMock } },
-	},
-	{
-		request: {
-			query: GET_PROJECT_DONORS,
-			variables: { filter: { project: 2 } },
-		},
-		result: { data: { projDonors: projectDonorMock } },
 	},
 	{
 		request: {
@@ -119,6 +99,26 @@ const mocks = [
 			variables: { filter: { impactTargetProject: "14" } },
 		},
 		result: {},
+	},
+	{
+		request: {
+			query: GET_PROJECT_DONORS,
+			variables: { filter: { project: 2 } },
+		},
+		result: { data: { projDonors: projectDonorMock } },
+	},
+	{
+		request: {
+			query: GET_FINANCIAL_YEARS,
+			variables: { filter: { country: "1" } },
+		},
+		result: { data: { financialYearList: financialYearListMock } },
+	},
+	{
+		request: {
+			query: GET_ANNUAL_YEARS,
+		},
+		result: { data: { annualYears: annualYearListMock } },
 	},
 ];
 let handleClose = jest.fn();
