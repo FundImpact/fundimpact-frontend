@@ -322,6 +322,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				return;
 			}
 			delete values.id;
+			if (budgetLineitemFormSelectFields[2].hidden) {
+				values.fy_donor = values.fy_org;
+			}
 			await updateProjectBudgetTracking({
 				variables: {
 					id: initialValues.id,

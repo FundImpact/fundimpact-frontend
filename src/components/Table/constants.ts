@@ -36,9 +36,8 @@ export const budgetLineItemTableHeading = [
 	{ label: "Date" },
 	{ label: "Note" },
 	{ label: "Amount" },
-	{ label: "Financial Year Organization" },
-	{ label: "Financial Year Donor" },
 	{ label: "Grant Period" },
+	{ label: "Year" },
 	{ label: "" },
 ];
 
