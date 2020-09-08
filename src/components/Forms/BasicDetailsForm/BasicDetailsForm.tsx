@@ -18,6 +18,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { useGetFetch } from "../../../hooks/fetch/useFetch";
@@ -76,6 +77,7 @@ const BasicDetailsForm = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
+	const intl = useIntl();
 
 	let { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
@@ -386,12 +388,23 @@ const BasicDetailsForm = () => {
 										variant="contained"
 										color="primary"
 									>
-										Submit
+										<FormattedMessage
+											id="SubmitLabel"
+											defaultMessage="Submit"
+											description="This label is used to display on Submit button"
+										/>
 									</Button>
 
 									{loading ? <GlobalLoader /> : null}
 									{singupSuccessfulResponse ? (
-										<p className="text-center"> Singgup Successfull </p>
+										<p className="text-center">
+											{" "}
+											<FormattedMessage
+												id="signupSuccess"
+												defaultMessage="Signup Successfull"
+												description="This label is used to display if signup is successfull"
+											/>{" "}
+										</p>
 									) : null}
 
 									{error ? <AlertMsg severity="error" msg={error} /> : null}

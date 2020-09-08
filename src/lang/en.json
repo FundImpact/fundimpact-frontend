@@ -1,4 +1,8 @@
 {
+	"SubmitLabel": {
+		"defaultMessage": "Submit",
+		"description": "This label is used to display on Submit button"
+	},
 	"alreadyHaveAccount": {
 		"defaultMessage": "Already have account?",
 		"description": "This text will be show on signup page on left side over blue cover"
@@ -6,6 +10,10 @@
 	"dontHaveAccount": {
 		"defaultMessage": "Dont have account?",
 		"description": "This text will be show on login page on left side over blue cover"
+	},
+	"emailPlaceholder": {
+		"defaultMessage": "Email",
+		"description": "This label is to be used for text `Email`"
 	},
 	"loginBtnText": {
 		"defaultMessage": "Login",
@@ -19,6 +27,10 @@
 		"defaultMessage": "Login",
 		"description": "This text will be shown on login page over blue cover"
 	},
+	"passwordPlaceholder": {
+		"defaultMessage": "Password",
+		"description": "This label is to be used for text `Password`"
+	},
 	"signupDescription": {
 		"defaultMessage": "Get started in minutes",
 		"description": "This text will be show on signup page on left side over blue cover"
@@ -26,6 +38,10 @@
 	"signupLabel": {
 		"defaultMessage": "Singup",
 		"description": "This text will be show on signup page on left side over blue cover"
+	},
+	"signupSuccess": {
+		"defaultMessage": "Signup Successfull",
+		"description": "This label is used to display if signup is successfull"
 	},
 	"singupBtnText": {
 		"defaultMessage": "Signup",

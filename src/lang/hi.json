@@ -7,6 +7,14 @@
 		"defaultMessage": "खाता नहीं है?",
 		"description": "This text will be show on login page on left side over blue cover"
 	},
+	"emailPlaceholder": {
+		"defaultMessage": "ईमेल",
+		"description": "This label is to be used for text `Email`"
+	},
+	"passwordPlaceholder": {
+		"defaultMessage": "कुंजिका",
+		"description": "This label is to be used for text `Password`"
+	},
 	"loginDescription": {
 		"defaultMessage": "कुछ मिनटों में आरंभ करें और उपयोगकर्ता को आश्वस्त करने के लिए अपने फंड या कुछ और लाइनों का विश्लेषण करना शुरू करें।",
 		"description": "This text will be shown on login page over blue cover"

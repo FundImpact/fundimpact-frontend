@@ -1,8 +1,10 @@
 import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core";
 import { Form, Formik, FormikErrors, FormikHelpers } from "formik";
 import React from "react";
+import { useIntl } from "react-intl";
 
 import { ILoginForm } from "../../../models";
+import { placeholders } from "../../Placeholders/placeholder";
 
 export interface Props {
 	onSubmit: (values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) => any;
@@ -35,6 +37,11 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
 	};
+
+	const intl = useIntl();
+
+	const emailPlaceholder = intl.formatMessage(placeholders.email);
+	const passwordPlaceholder = intl.formatMessage(placeholders.password);
 	return (
 		<Formik
 			validateOnBlur
@@ -54,7 +61,7 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							helperText={formik.touched.email && formik.errors.email}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
-							label="Email"
+							label={emailPlaceholder}
 							required
 							name="email"
 							type="email"
@@ -67,7 +74,7 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							helperText={formik.touched.password && formik.errors.password}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
-							label="Password"
+							label={passwordPlaceholder}
 							required
 							name="password"
 							type="password"

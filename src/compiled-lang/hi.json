@@ -11,6 +11,12 @@
 			"value": "खाता नहीं है?"
 		}
 	],
+	"emailPlaceholder": [
+		{
+			"type": 0,
+			"value": "ईमेल"
+		}
+	],
 	"loginBtnText": [
 		{
 			"type": 0,
@@ -27,6 +33,12 @@
 		{
 			"type": 0,
 			"value": "लॉग इन करें"
+		}
+	],
+	"passwordPlaceholder": [
+		{
+			"type": 0,
+			"value": "कुंजिका"
 		}
 	],
 	"signupDescription": [
