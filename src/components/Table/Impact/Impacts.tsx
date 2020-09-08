@@ -172,17 +172,30 @@ export default function ImpactsTable() {
 
 				if (impactTargetProjectList[i].impact_category_unit) {
 					let column = [
-						<TableCell>{impactTargetProjectList[i].name}</TableCell>,
-						<TableCell>
+						<TableCell component="td" scope="row" key={impactTargetProjectList[i]?.id}>
+							{impactPage * 10 + i + 1}
+						</TableCell>,
+						<TableCell key={impactTargetProjectList[i]?.name}>
+							{impactTargetProjectList[i].name}
+						</TableCell>,
+						<TableCell
+							key={
+								impactTargetProjectList[i]?.impact_category_unit.impact_category_org
+									.name
+							}
+						>
 							{
 								impactTargetProjectList[i].impact_category_unit.impact_category_org
 									.name
 							}
 						</TableCell>,
-						<TableCell>{`${impactTargetProjectList[i].target_value} ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`}</TableCell>,
+						<TableCell
+							key={impactTargetProjectList[i]?.target_value}
+						>{`${impactTargetProjectList[i].target_value} ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`}</TableCell>,
 					];
 					column.push(
 						<ImpactTargetAchievementAndProgress
+							key={Math.random()}
 							impactTargetId={impactTargetProjectList[i].id}
 							impactTargetValue={impactTargetProjectList[i].target_value}
 							impactTargetUnit={
@@ -191,7 +204,12 @@ export default function ImpactsTable() {
 							}
 						/>
 					);
-					column.push(<EditImpactTargetIcon impactTarget={impactTargetProjectList[i]} />);
+					column.push(
+						<EditImpactTargetIcon
+							key={Math.random()}
+							impactTarget={impactTargetProjectList[i]}
+						/>
+					);
 
 					row.column = column;
 					array.push(row);
@@ -203,25 +221,29 @@ export default function ImpactsTable() {
 		}
 	}, [impactTargets]);
 
+	let impactTablePagination = (
+		<TablePagination
+			rowsPerPageOptions={[]}
+			colSpan={9}
+			count={count}
+			rowsPerPage={count > 10 ? 10 : count}
+			page={impactPage}
+			onChangePage={handleChangePage}
+			onChangeRowsPerPage={() => {}}
+			style={{ paddingRight: "40px" }}
+		/>
+	);
 	return (
 		<>
 			{queryLoading || countQueryLoading ? (
 				<TableSkeleton />
 			) : (
 				<>
-					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-					{rows.length > 0 && (
-						<TablePagination
-							rowsPerPageOptions={[]}
-							colSpan={9}
-							count={count}
-							rowsPerPage={count > 10 ? 10 : count}
-							page={impactPage}
-							onChangePage={handleChangePage}
-							onChangeRowsPerPage={() => {}}
-							style={{ paddingRight: "40px" }}
-						/>
-					)}
+					<FICollaspeTable
+						tableHeading={deliverableAndImpactHeadings}
+						rows={rows}
+						pagination={impactTablePagination}
+					/>
 				</>
 			)}
 		</>
