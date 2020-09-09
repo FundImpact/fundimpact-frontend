@@ -1,5 +1,5 @@
 import React from "react";
-import { IImpactCategory } from "../../../models/impact/impact";
+import { IImpactCategory, IImpactCategoryProps } from "../../../models/impact/impact";
 import { useMutation } from "@apollo/client";
 import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../graphql/Impact/mutation";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -13,10 +13,11 @@ import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
+import { FORM_ACTIONS } from "../../../models/constants";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
-const initialValues: IImpactCategory = {
+const defauleValues: IImpactCategory = {
 	name: "",
 	description: "",
 	code: "",
@@ -40,12 +41,19 @@ const validate = (values: IImpactCategory) => {
 	return errors;
 };
 
-function ImpactCategoryDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+function ImpactCategoryDialog({
+	open,
+	handleClose,
+	formAction,
+	initialValues: formValues,
+}: IImpactCategoryProps) {
 	const [createImpactCategoryOrgInput, { loading }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
 	);
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
+
+	const initialValues = formAction == FORM_ACTIONS.CREATE ? defauleValues : formValues;
 
 	const onSubmit = async (values: IImpactCategory) => {
 		try {

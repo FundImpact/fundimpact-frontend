@@ -5,6 +5,9 @@ export const GET_IMPACT_CATEGORY_BY_ORG = gql`
 		impactCategoryOrgList(where: $filter) {
 			id
 			name
+			code
+			description
+			shortname
 		}
 	}
 `;

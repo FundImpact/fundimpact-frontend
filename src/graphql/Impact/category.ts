@@ -6,8 +6,8 @@ export const GET_IMPACT_CATEGORY = gql`
 			id
 			name
 			code
-			shortname
 			description
+			shortname
 			organization {
 				id
 				name

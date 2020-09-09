@@ -148,3 +148,6 @@ export interface ICountry {
 	id: string;
 	name: string;
 }
+export type ICommonTableRow = {
+	valueAccessKey: string;
+};

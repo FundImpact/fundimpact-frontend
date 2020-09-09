@@ -187,7 +187,11 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Impact Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactCategoryDialog open={open} handleClose={handleClose} />
+						<ImpactCategoryDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose} 
+						/>
 					),
 				},
 				{
