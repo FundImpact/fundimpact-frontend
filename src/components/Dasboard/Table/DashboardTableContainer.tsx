@@ -181,7 +181,11 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Impact Unit",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactUnitDialog open={open} handleClose={handleClose} />
+						<ImpactUnitDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
 					),
 				},
 				{
@@ -190,7 +194,7 @@ export default function DashboardTableContainer() {
 						<ImpactCategoryDialog
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
-							handleClose={handleClose} 
+							handleClose={handleClose}
 						/>
 					),
 				},

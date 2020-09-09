@@ -1,6 +1,7 @@
 import React from "react";
 import AddButton from "../../../components/Dasboard/AddButton";
 import ImpactCategoryTable from "../../../components/Table/ImpactCategory";
+import ImpactUnitTable from "../../../components/Table/ImpactUnit";
 import { Box } from "@material-ui/core";
 import ImpactUnitDialog from "../../../components/Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import ImpactCategoryDialog from "../../../components/Impact/ImpactCategoryDialog";
@@ -12,6 +13,7 @@ const ImpactCategoryView = () => {
 			<Box p={2}>
 				<h1>Impact Categories</h1>
 				<ImpactCategoryTable />
+				<ImpactUnitTable />
 				<AddButton
 					createButtons={[
 						{
@@ -22,7 +24,13 @@ const ImpactCategoryView = () => {
 							}: {
 								open: boolean;
 								handleClose: () => void;
-							}) => <ImpactUnitDialog open={open} handleClose={handleClose} />,
+							}) => (
+								<ImpactUnitDialog
+									formAction={FORM_ACTIONS.CREATE}
+									open={open}
+									handleClose={handleClose}
+								/>
+							),
 						},
 						{
 							text: "Create Impact Category",

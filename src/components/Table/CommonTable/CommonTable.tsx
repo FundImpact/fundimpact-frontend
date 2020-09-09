@@ -51,6 +51,7 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 	})
 );
 
+//change any
 function getValue<U extends { [key: string]: any }>(
 	obj: U,
 	key: string[]
@@ -120,7 +121,12 @@ function CommonTableRow<T extends { id: string }>({
 			<TableRow>
 				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
 					<Collapse in={openRow} timeout="auto" unmountOnExit>
-						<Box m={1}>{childrenArr[1]}</Box>
+						<Box m={1}>
+							{childrenArr[1] &&
+								React.cloneElement(childrenArr[1] as any, {
+									rowId: rowData.id,
+								})}
+						</Box>
 					</Collapse>
 				</TableCell>
 			</TableRow>
@@ -233,6 +239,7 @@ function CommonTable<T extends { id: string }>({
 									menuList={menuList}
 								/>
 							</TableCell>
+
 							{childrenArr[1]}
 						</CommonTableRow>
 					))}
