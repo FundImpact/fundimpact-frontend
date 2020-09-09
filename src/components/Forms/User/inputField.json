@@ -1,0 +1,39 @@
+{
+	"updateUserForm": [
+		{
+			"name": "email",
+			"id": "email",
+			"dataTestId": "deliverableFormDescription",
+			"testId": "deliverableFormDescriptionInput",
+			"label": "Email",
+			"size": 6
+		},
+		{
+			"name": "username",
+			"id": "username",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Username",
+			"required": true,
+			"size": 6
+		},
+
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Name",
+			"size": 6
+		},
+
+		{
+			"name": "organizationName",
+			"id": "organizationName",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Organization Name",
+			"size": 6
+		}
+	]
+}

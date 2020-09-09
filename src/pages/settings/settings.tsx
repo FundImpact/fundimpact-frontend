@@ -9,6 +9,7 @@ import { useNotificationData } from "../../contexts/notificationContext";
 import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
 import SettingsSidebar from "./sidebar";
+import { PaperContainer } from "./user/container";
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
@@ -38,6 +39,7 @@ export default function SettingContainer() {
 				<Grid item xs={12} md={9}>
 					<Routes>
 						<Route path="donors" element={<DonorContainer />} />
+						<Route path="/profile" element={<PaperContainer />} />
 						<Route path="/" element={<IDefaultView />} />
 					</Routes>
 				</Grid>

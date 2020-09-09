@@ -70,6 +70,11 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 			<Divider />
 
 			<ListItemLink to="donors" data-testid="donor-link" primary="Donors"></ListItemLink>
+			<ListItemLink
+				to="profile"
+				data-testid="update-user-link"
+				primary="Update Profile"
+			></ListItemLink>
 		</Box>
 	);
 }

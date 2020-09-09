@@ -12,6 +12,7 @@ import {
 	UPDATE_IMAPACT_TARGET,
 	GET_IMPACT_TARGETS_COUNT,
 } from "../../graphql/Impact/target";
+import { GET_SDG } from "../../graphql/SDG/query";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import CommonForm from "../CommonForm/commonForm";
@@ -30,6 +31,7 @@ function getInitialValues(props: ImpactTargetProps) {
 		impactCategory: "",
 		impactUnit: "",
 		impact_category_unit: "",
+		sustainable_development_goal: "",
 		project: props.project,
 	};
 }
@@ -39,6 +41,8 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
+	const { data: sdgList } = useQuery(GET_SDG);
+
 	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
 
 	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
@@ -178,6 +182,14 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 	}, [categories]);
 
+	// updating sdg field with fetched sdg list
+	useEffect(() => {
+		console.log(sdgList);
+		if (sdgList) {
+			impactTargetForm[4].optionsArray = sdgList.sustainableDevelopmentGoalList;
+		}
+	}, [sdgList]);
+
 	// handling category change
 	useEffect(() => {
 		if (currCategoryId) {
@@ -206,6 +218,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 	let initialValues: IImpactTarget = getInitialValues(props);
 
 	const onCreate = (value: IImpactTarget) => {
+		console.log("vaal", value);
 		// fetch impact_category_unit_id
 		setImpactTarget({
 			name: value.name,
