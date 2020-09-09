@@ -72,6 +72,7 @@ beforeEach(() => {
 						open={true}
 						handleClose={handleClose}
 						workspaces={[{ id: "1", name: "XYZ" }]}
+						workspace={"1"}
 					/>
 				</NotificationProvider>
 			</DashboardProvider>,

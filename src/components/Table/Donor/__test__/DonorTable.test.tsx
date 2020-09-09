@@ -99,8 +99,6 @@ describe("Budget Target Table tests", () => {
 		await waitForElement(() =>
 			table.getAllByText(new RegExp("" + mockOrgDonor[0].short_name, "i"))
 		);
-		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockOrgDonor[0].name, "i"))
-		);
+		await waitForElement(() => table.getAllByText(new RegExp("" + mockOrgDonor[0].name, "i")));
 	});
 });

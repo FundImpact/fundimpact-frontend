@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { List, ListItem, ListItemText, Button, Box } from "@material-ui/core";
+import { List, ListItem, ListItemText, Button } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
@@ -41,7 +41,6 @@ export default function ProjectList({
 	React.useEffect(() => {
 		if (data && projectIndex === 0) {
 			dispatch(setProject(data.orgProject[0]));
-			dispatch(setActiveWorkSpace(data.orgProject[0]?.workspace));
 		}
 	}, [data, dispatch, projectIndex]);
 
@@ -81,7 +80,6 @@ export default function ProjectList({
 										key={project.id}
 										onClick={() => {
 											dispatch(setProject(project));
-											dispatch(setActiveWorkSpace(project.workspace));
 										}}
 									>
 										<ListItemText primary={project.name} />
@@ -92,6 +90,7 @@ export default function ProjectList({
 					{openFormDialog && (
 						<Project
 							workspaces={workspaces}
+							workspace={dashboardData?.workspace?.id}
 							open={openFormDialog}
 							handleClose={() => setOpenFormDialog(false)}
 							type={PROJECT_ACTIONS.CREATE}

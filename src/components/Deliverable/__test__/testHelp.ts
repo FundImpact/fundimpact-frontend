@@ -100,23 +100,6 @@ export const DeliverableTracklineMock = {
 	reporting_date: "2020-08-25T00:00:00.000Z",
 };
 
-export const annualYearListMock = [
-	{
-		id: "1",
-		name: "2016",
-		short_name: "2016",
-		start_date: "2016-01-01T06:30:00.000Z",
-		end_date: "2016-12-31T06:30:00.000Z",
-	},
-	{
-		id: "2",
-		name: "2015",
-		short_name: "an",
-		start_date: "2020-08-13T06:30:00.000Z",
-		end_date: "2020-08-13T06:30:00.000Z",
-	},
-];
-
 export const deliverableCategoryMock = [
 	{
 		id: "1",

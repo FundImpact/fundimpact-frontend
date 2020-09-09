@@ -1,0 +1,43 @@
+{
+	"impactTracklineTestFields": [
+		{
+			"name": "impact_target_project",
+			"dataTestId": "impactTracklineTarget",
+			"testId": "impactTracklineTargetInput"
+		},
+		{
+			"name": "value",
+			"dataTestId": "impactTracklineValue",
+			"testId": "impactTracklineValueInput",
+			"value": "5000"
+		},
+
+		{
+			"name": "reporting_date",
+			"dataTestId": "impactTracklineDate",
+			"testId": "impactTracklineDateInput"
+		},
+		{
+			"name": "donors",
+			"dataTestId": "impactTracklineDonor",
+			"testId": "impactTracklineDateInput"
+		},
+		{
+			"name": "annual_year",
+			"dataTestId": "impactTracklineAnnualYear",
+			"testId": "impactTracklineAnnualYearInput",
+			"value": "1"
+		},
+		{
+			"name": "financial_year",
+			"dataTestId": "ImpactTracklineFinancialYear",
+			"testId": "ImpactTracklineFinancialYearInput",
+			"value": "1"
+		},
+		{
+			"name": "note",
+			"dataTestId": "impactTracklineNote",
+			"testId": "impactTracklineNoteInput"
+		}
+	]
+}
