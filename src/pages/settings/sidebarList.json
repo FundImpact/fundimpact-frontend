@@ -17,6 +17,11 @@
 				"to": "budget-category",
 				"dataTestId": "budget-category-link",
 				"title": "Budget Categories"
+			},
+			{
+				"to": "impact-category",
+				"dataTestId": "impact-category-link",
+				"title": "Impact Categories"
 			}
 		]
 	}

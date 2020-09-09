@@ -12,6 +12,7 @@ import Organization from "./Organization";
 import BudgetCategory from "./BudgetCategory";
 import SettingsSidebar from "./sidebar";
 import { ProfileContainer } from "./user/container";
+import ImpactCategoryView from "./ImpactCategory";
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
@@ -44,6 +45,7 @@ export default function SettingContainer() {
 						<Route path="/profile" element={<ProfileContainer />} />
 						<Route path="organization" element={<Organization />} />
 						<Route path="budget-category" element={<BudgetCategory />} />
+						<Route path="impact-category" element={<ImpactCategoryView />} />
 						<Route path="/" element={<IDefaultView />} />
 					</Routes>
 				</Grid>

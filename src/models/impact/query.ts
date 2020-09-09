@@ -1,5 +1,6 @@
 import { IProject } from "../project/project";
 import { IOrganisation } from "../organisation/types";
+import { IImpactCategoryData } from "./impact";
 
 export interface IImpactCategoryUnitResponse {
 	id: string;
@@ -55,4 +56,15 @@ export interface IGET_IMPACT_TARGET_BY_PROJECT {
 
 export interface IGET_IMPACT_TRACKLINE_BY_TARGET {
 	impactTrackingLineitemList: IImpactTracklineByTargetResponse[];
+}
+
+
+export interface IGetImpactCategory {
+	impactCategoryOrgList: IImpactCategoryData[];
+}
+
+export interface IGetImpactCategoryVariables {
+	filter: {
+		organization: string;
+	};
 }
