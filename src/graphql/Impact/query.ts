@@ -23,3 +23,17 @@ export const GET_ALL_IMPACT_AMOUNT_SPEND = gql`
 		impactTrackingLineitemTotalSpendAmount(where: $filter)
 	}
 `;
+
+export const GET_IMPACT_UNIT_BY_ORG = gql`
+	query getImpactUnitByOrg($filter: JSON) {
+		impactUnitsOrgList(where: $filter) {
+			id
+			name
+			code
+			description
+			target_unit
+			prefix_label
+			suffix_label
+		}
+	}
+`;

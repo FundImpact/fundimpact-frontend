@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
-import ImpactCategoryContainer from "./ImpactCategoryContainer";
+import ImpactUnitContainer from "./ImpactUnitContainer";
 import { useLazyQuery } from "@apollo/client";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
+import { GET_IMPACT_UNIT_BY_ORG } from "../../../graphql/Impact/query";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
-	IGetImpactCategory,
-	IGetImpactCategoryVariables,
+	IGetImpactUnit,
+	IGetImpactUnitVariables,
 	IGetImpactCategoryUnit,
 	IGetImpactCategoryUnitVariables,
 } from "../../../models/impact/query";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../../graphql/Impact/categoryUnit";
-import { IImpactCategoryData, IImpactUnitData } from "../../../models/impact/impact";
+import { IImpactUnitData, IImpactCategoryData } from "../../../models/impact/impact";
 
-function ImpactCategoryGraphql({
+function ImpactUnitGraphql({
 	collapsableTable = true,
-	rowId: impactUnitId,
+	rowId: impactCategoryId,
 }: {
 	collapsableTable?: boolean;
 	rowId?: string;
 }) {
-	const [getImpactCategoryList, { data: impactCategoryListData }] = useLazyQuery<
-		IGetImpactCategory,
-		IGetImpactCategoryVariables
-	>(GET_IMPACT_CATEGORY_BY_ORG, {
+	const [impactUnitList, setImpactUnitList] = useState<IImpactUnitData[]>([]);
+
+	const [getImpactUnitList] = useLazyQuery<
+		IGetImpactUnit,
+		IGetImpactUnitVariables
+	>(GET_IMPACT_UNIT_BY_ORG, {
 		onCompleted: (data) => {
 			if (collapsableTable) {
-				setImpactCategoryList(data?.impactCategoryOrgList || []);
+				setImpactUnitList(data?.impactUnitsOrgList || []);
 			}
 		},
 	});
@@ -36,24 +38,23 @@ function ImpactCategoryGraphql({
 	>(GET_IMPACT_CATEGORY_UNIT, {
 		onCompleted: (data) => {
 			if (!collapsableTable) {
-				setImpactCategoryList(
+				setImpactUnitList(
 					data?.impactCategoryUnitList?.map(
 						(element: {
 							impact_category_org: IImpactCategoryData;
 							impact_units_org: IImpactUnitData;
-						}) => element?.impact_category_org
+						}) => element?.impact_units_org
 					) || []
 				);
 			}
 		},
 	});
-	const dashboardData = useDashBoardData();
 
-	const [impactCategoryList, setImpactCategoryList] = useState<IImpactCategoryData[]>([]);
+	const dashboardData = useDashBoardData();
 
 	useEffect(() => {
 		if (dashboardData?.organization && collapsableTable) {
-			getImpactCategoryList({
+			getImpactUnitList({
 				variables: {
 					filter: {
 						organization: dashboardData?.organization?.id,
@@ -64,23 +65,20 @@ function ImpactCategoryGraphql({
 	}, [dashboardData]);
 
 	useEffect(() => {
-		if (impactUnitId && !collapsableTable) {
+		if (impactCategoryId && !collapsableTable) {
 			getImpactCategoryUnitList({
 				variables: {
 					filter: {
-						impact_units_org: impactUnitId,
+						impact_category_org: impactCategoryId
 					},
 				},
 			});
 		}
-	}, [impactUnitId]);
+	}, [impactCategoryId]);
 
 	return (
-		<ImpactCategoryContainer
-			impactCategoryList={impactCategoryList}
-			collapsableTable={collapsableTable}
-		/>
+		<ImpactUnitContainer impactUnitList={impactUnitList} collapsableTable={collapsableTable} />
 	);
 }
 
-export default ImpactCategoryGraphql;
+export default ImpactUnitGraphql;

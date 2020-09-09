@@ -3,16 +3,18 @@ import CommonTable from "../CommonTable";
 import BudgetCategory from "../../Budget/BudgetCategory";
 import { FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
-import { IImpactCategoryData } from "../../../models/impact/impact";
-import { IGetImpactCategory } from "../../../models/impact/query";
+import { IImpactUnitData } from "../../../models/impact/impact";
+import { IGetImpactUnit } from "../../../models/impact/query";
 import AmountSpent from "../Budget/BudgetTargetTable/AmountSpent";
-import ImpactUnit from "../ImpactUnit";
+import ImpactUnitDialog from "../../Impact/ImpactUnitDialog/ImpaceUnitDialog";
+import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
+import ImpactCategory from "../ImpactCategory";
 
 //try to shift it to constants
 const tableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Category" },
+	{ label: "Impact Unit" },
 	{ label: "Code" },
 	{ label: "Description" },
 	{ label: "" },
@@ -26,40 +28,41 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
-function ImpactCategoryView({
+function ImpactUnitView({
 	setOpenDialog,
 	openDialog,
-	selectedImpactCategory,
+	selectedImpactUnit,
 	initialValues,
-	impactCategoryList,
+	impactUnitList,
 	collapsableTable,
 }: {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	openDialog: boolean;
-	selectedImpactCategory: React.MutableRefObject<IImpactCategoryData | null>;
-	initialValues: IImpactCategoryData;
-	impactCategoryList: IImpactCategoryData[];
+	selectedImpactUnit: React.MutableRefObject<IImpactUnitData | null>;
+	initialValues: IImpactUnitFormInput;
+	impactUnitList: IImpactUnitData[];
 	collapsableTable: boolean;
 }) {
+	console.log("impactUnitList :>> ", impactUnitList);
 	return (
 		<CommonTable
 			tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
-			valuesList={impactCategoryList}
+			valuesList={impactUnitList}
 			rows={rows}
-			selectedRow={selectedImpactCategory}
-			setOpenDialog={setOpenDialog}
-			editMenuName={"Edit Impact Category"}
+			selectedRow={selectedImpactUnit}
+			setOpenDialog={setOpenDialog}	
+			editMenuName={"Edit Impact Unit"}
 			collapsableTable={collapsableTable}
 		>
-			<ImpactCategoryDialog
+			<ImpactUnitDialog
 				formAction={FORM_ACTIONS.UPDATE}
 				handleClose={() => setOpenDialog(false)}
 				open={openDialog}
 				initialValues={initialValues}
 			/>
-			<ImpactUnit collapsableTable={false} />
+			<ImpactCategory collapsableTable={false} />
 		</CommonTable>
 	);
 }
 
-export default ImpactCategoryView;
+export default ImpactUnitView;
