@@ -251,7 +251,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							],
 						},
 					});
-				} catch (err) {}
+				} catch (err) {
+					console.error(err);
+				}
 			},
 			refetchQueries: [
 				{

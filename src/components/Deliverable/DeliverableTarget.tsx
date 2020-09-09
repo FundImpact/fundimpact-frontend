@@ -140,7 +140,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								deliverableTargetList: [...deliverableTargets, targetCreated],
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.error(err);
+					}
 				},
 				refetchQueries: [
 					{

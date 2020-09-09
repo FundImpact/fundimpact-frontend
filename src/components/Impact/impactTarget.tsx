@@ -158,7 +158,9 @@ function ImpactTarget(props: ImpactTargetProps) {
 								],
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.error(err);
+					}
 				},
 				refetchQueries: [
 					{

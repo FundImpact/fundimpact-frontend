@@ -266,7 +266,9 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 							],
 						},
 					});
-				} catch (err) {}
+				} catch (err) {
+					console.error(err);
+				}
 			},
 			refetchQueries: [
 				{
