@@ -21,7 +21,7 @@
 			"id": "suffix-label",
 			"dataTestId": "createImpactUnitSuffixLabel",
 			"testId": "createImpactUnitSuffixLabelInput",
-			"label": "Impact Code",
+			"label": "Suffix Label",
 			"size": 6
 		},
 		{
@@ -29,7 +29,7 @@
 			"id": "impact-code",
 			"dataTestId": "createImpactUnitCode",
 			"testId": "createImpactUnitCodeInput",
-			"label": "Suffix Label",
+			"label": "Impact Code ",
 			"size": 6
 		},
 		{
@@ -63,7 +63,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
-			"type": "select"
+			"type": "select",
+			"hidden": false
 		}
 	],
 	"impactCategoryForm": [
