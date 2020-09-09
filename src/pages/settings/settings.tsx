@@ -10,6 +10,7 @@ import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
 import BudgetCategory from "./BudgetCategory";
 import SettingsSidebar from "./sidebar";
+import ImpactCategoryView from "./ImpactCategory";
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
@@ -40,6 +41,7 @@ export default function SettingContainer() {
 					<Routes>
 						<Route path="donors" element={<DonorContainer />} />
 						<Route path="budget-category" element={<BudgetCategory />} />
+						<Route path="impact-category" element={<ImpactCategoryView />} />
 						<Route path="/" element={<IDefaultView />} />
 					</Routes>
 				</Grid>

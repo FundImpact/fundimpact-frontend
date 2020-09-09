@@ -143,3 +143,7 @@ export interface ICommonForm {
 	initialValues: any;
 	formAction?: FORM_ACTIONS;
 }
+
+export type ICommonTableRow = {
+	valueAccessKey: string;
+};
