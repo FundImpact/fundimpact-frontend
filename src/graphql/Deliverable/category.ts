@@ -57,3 +57,20 @@ export const CREATE_DELIVERABLE_CATEGORY = gql`
 		}
 	}
 `;
+
+export const UPDATE_DELIVERABLE_CATEGORY = gql`
+	mutation updateDeliverableCategory($id: ID!, $input: DeliverableCategoryOrgInput!) {
+		updateDeliverableCategory(id: $id, input: $input) {
+			id
+			name
+			description
+			code
+		}
+	}
+`;
+
+export const GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG = gql`
+	query getDeliverableCategoryByOrg($filter: JSON) {
+		deliverableCategoryCount(where: $filter)
+	}
+`;

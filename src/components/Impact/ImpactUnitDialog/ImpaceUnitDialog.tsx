@@ -14,7 +14,11 @@ import { IInputField } from "../../../models";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 	UPDATE_IMPACT_UNIT_ORG,
 } from "../../../graphql/Impact/mutation";
-import { GET_IMPACT_UNIT_BY_ORG, GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
+import {
+	GET_IMPACT_UNIT_BY_ORG,
+	GET_IMPACT_CATEGORY_BY_ORG,
+	GET_IMPACT_UNIT_COUNT_BY_ORG,
+} from "../../../graphql/Impact/query";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 
 
@@ -32,6 +36,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IImpactUnitProps, IImpactUnitData } from "../../../models/impact/impact";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactUnit } from "../../../models/impact/query";
+import { GET_IMPACT_CATEGORY_UNIT_COUNT } from "../../../graphql/Impact/categoryUnit";
 
 let inputFields: IInputField[] = impactUnitForm;
 
@@ -150,8 +155,63 @@ function ImpactUnitDialog({
 						organization: dashboardData?.organization?.id,
 					},
 				},
-				update: (store, { data: { createImpactUnitsOrgInput } }) => {
+				update: async (store, { data: { createImpactUnitsOrgInput } }) => {
 					try {
+						const count = await store.readQuery<{ impactUnitsOrgCount: number }>({
+							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+						});
+
+						store.writeQuery<{ impactUnitsOrgCount: number }>({
+							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+							data: {
+								impactUnitsOrgCount: count!.impactUnitsOrgCount + 1,
+							},
+						});
+
+						let limit = 0;
+						if (count) {
+							limit = count.impactUnitsOrgCount;
+						}
+						const dataRead = await store.readQuery<IGetImpactUnit>({
+							query: GET_IMPACT_UNIT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let impactUnits: IImpactUnitData[] = dataRead?.impactUnitsOrgList
+							? dataRead?.impactUnitsOrgList
+							: [];
+
+						store.writeQuery<IGetImpactUnit>({
+							query: GET_IMPACT_UNIT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								impactUnitsOrgList: [createImpactUnitsOrgInput, ...impactUnits],
+							},
+						});
+
 						const cachedData = store.readQuery<IGetImpactUnit>({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
@@ -186,7 +246,6 @@ function ImpactUnitDialog({
 			setImpactCategory(values.impactCategory);
 			delete values.impactCategory;
 			delete values.id;
-			console.log("initialValues?.id :>> ", initialValues?.id);
 			await updateImpactUnitsOrgInput({
 				variables: {
 					id: initialValues?.id,
@@ -204,7 +263,7 @@ function ImpactUnitDialog({
 			handleClose={handleClose}
 			open={open}
 			loading={creatingInpactUnit || updatingImpactUnit}
-			title="New Impact Unit"
+			title="Impact Unit"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}

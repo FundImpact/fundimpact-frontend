@@ -20,9 +20,15 @@ const getInitialValues = (impactUnit: IImpactUnitData | null): IImpactUnitFormIn
 function ImpactUnitContainer({
 	impactUnitList,
 	collapsableTable,
+	changePage,
+	loading,
+	count,
 }: {
 	impactUnitList: IImpactUnitData[];
-	collapsableTable: boolean
+	collapsableTable: boolean;
+	changePage: (prev?: boolean) => void;
+	count: number;
+	loading: boolean;
 }) {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedImpactUnit = useRef<IImpactUnitData | null>(null);
@@ -35,6 +41,9 @@ function ImpactUnitContainer({
 			initialValues={getInitialValues(selectedImpactUnit.current)}
 			impactUnitList={impactUnitList}
 			collapsableTable={collapsableTable}
+			changePage={changePage}
+			loading={loading}
+			count={count}
 		/>
 	);
 }

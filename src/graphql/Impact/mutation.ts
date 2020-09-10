@@ -19,7 +19,6 @@ export const CREATE_IMPACT_UNITS_ORG_INPUT = gql`
 			description
 			target_unit
 			prefix_label
-			suffix_label
 		}
 	}
 `;

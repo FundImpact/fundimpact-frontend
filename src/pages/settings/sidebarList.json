@@ -14,14 +14,19 @@
 		"mainHeading": "Manage Masters",
 		"subHeadings": [
 			{
-				"to": "budget-category",
+				"to": "budget",
 				"dataTestId": "budget-category-link",
 				"title": "Budget Categories"
 			},
 			{
-				"to": "impact-category",
+				"to": "impact",
 				"dataTestId": "impact-category-link",
-				"title": "Impact Categories"
+				"title": "Impact Categories And Units"
+			},
+			{
+				"to": "deliverable",
+				"dataTestId": "deliverable-category-link",
+				"title": "Deliverable Categories And Units"
 			}
 		]
 	}

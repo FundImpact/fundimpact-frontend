@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_IMPACT_CATEGORY_BY_ORG = gql`
-	query getImpactCategoryByOrg($filter: JSON) {
-		impactCategoryOrgList(where: $filter) {
+	query getImpactCategoryByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		impactCategoryOrgList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			code
@@ -25,8 +25,8 @@ export const GET_ALL_IMPACT_AMOUNT_SPEND = gql`
 `;
 
 export const GET_IMPACT_UNIT_BY_ORG = gql`
-	query getImpactUnitByOrg($filter: JSON) {
-		impactUnitsOrgList(where: $filter) {
+	query getImpactUnitByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		impactUnitsOrgList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
 			code
@@ -35,5 +35,17 @@ export const GET_IMPACT_UNIT_BY_ORG = gql`
 			prefix_label
 			suffix_label
 		}
+	}
+`;
+
+export const GET_IMPACT_CATEGORY_COUNT_BY_ORG = gql`
+	query getimpactCategoryOrgCountByOrg($filter: JSON) {
+		impactCategoryOrgCount(where: $filter)
+	}
+`;
+
+export const GET_IMPACT_UNIT_COUNT_BY_ORG = gql`
+	query getimpactUnitsOrgCount($filter: JSON) {
+		impactUnitsOrgCount(where: $filter)
 	}
 `;

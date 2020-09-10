@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_IMPACT_CATEGORY_UNIT = gql`
-	query getImpactUnitByCategory($filter: JSON) {
-		impactCategoryUnitList(where: $filter) {
+	query getImpactUnitByCategory($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		impactCategoryUnitList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			impact_category_org {
 				id
@@ -21,5 +21,11 @@ export const GET_IMPACT_CATEGORY_UNIT = gql`
 				suffix_label
 			}
 		}
+	}
+`;
+
+export const GET_IMPACT_CATEGORY_UNIT_COUNT = gql`
+	query getimpactCategoryUnitListCountByCategory($filter: JSON) {
+		impactCategoryUnitListCount(where: $filter)
 	}
 `;
