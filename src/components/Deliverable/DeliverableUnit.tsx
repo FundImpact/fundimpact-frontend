@@ -1,17 +1,18 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { IDeliverableUnit, DeliverableUnitProps } from "../../models/deliverable/deliverableUnit";
-import { FullScreenLoader } from "../Loader/Loader";
+
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { CREATE_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
 import { CREATE_DELIVERABLE_UNIT } from "../../graphql/Deliverable/unit";
-import { DELIVERABLE_ACTIONS } from "./constants";
-import FormDialog from "../FormDialog/FormDialog";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
+import { DeliverableUnitProps, IDeliverableUnit } from "../../models/deliverable/deliverableUnit";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import CommonForm from "../CommonForm/commonForm";
+import FormDialog from "../FormDialog/FormDialog";
+import { FullScreenLoader } from "../Loader/Loader";
+import { DELIVERABLE_ACTIONS } from "./constants";
 import { deliverableUnitForm } from "./inputField.json";
-import { useDashBoardData } from "../../contexts/dashboardContext";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -74,7 +75,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 
 	const onCreate = async (value: IDeliverableUnit) => {
 		setDeliverableCategory(Number(value.deliverableCategory));
-		delete value.deliverableCategory;
+		delete (value as any).deliverableCategory;
 		try {
 			await createUnit({ variables: { input: value } });
 		} catch (error) {

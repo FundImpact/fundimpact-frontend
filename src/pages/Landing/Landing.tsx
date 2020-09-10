@@ -2,6 +2,7 @@ import "./index.css";
 
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import useRouteResolver from "../../hooks/routes/useRouteResolver";
@@ -16,12 +17,22 @@ function ActionDescription({ stepNumber }: { stepNumber: number | undefined }) {
 		return (
 			<Box color={"white"}>
 				<Typography component="h4" variant="h4">
-					<Box m={1}>Login</Box>
+					<Box m={1}>
+						{" "}
+						<FormattedMessage
+							id="loginLabel"
+							defaultMessage="Login"
+							description="This text will be shown on login page over blue cover"
+						/>
+					</Box>
 				</Typography>
 				<Typography component="div">
 					<Box fontSize="" m={1}>
-						Get started in few minutes and start analyzing your funds or some more lines
-						to make user confident.
+						<FormattedMessage
+							id="loginDescription"
+							defaultMessage="Get started in few minutes and start analyzing your funds or some more lines to make user confident."
+							description="This text will be shown on login page over blue cover"
+						/>
 					</Box>
 				</Typography>
 			</Box>
@@ -66,9 +77,19 @@ function LandingPage() {
 					<Box>
 						<Typography component="h6">
 							<Box>
-								{loginPathMatch
-									? "Don't have an account?"
-									: "Already have an account?"}
+								{loginPathMatch ? (
+									<FormattedMessage
+										id="dontHaveAccount"
+										defaultMessage="Dont have account?"
+										description="This text will be show on login page on left side over blue cover"
+									/>
+								) : (
+									<FormattedMessage
+										id="alreadyHaveAccount"
+										defaultMessage="Already have account?"
+										description="This text will be show on signup page on left side over blue cover"
+									/>
+								)}
 							</Box>
 						</Typography>
 						{loginPathMatch ? (
@@ -77,7 +98,11 @@ function LandingPage() {
 								variant={"contained"}
 								color="secondary"
 							>
-								Sign Up
+								<FormattedMessage
+									id="singupBtnText"
+									defaultMessage="Signup"
+									description="This text is to be shown on Signup button"
+								/>
 							</Button>
 						) : (
 							<Button
@@ -85,7 +110,11 @@ function LandingPage() {
 								variant={"contained"}
 								color="secondary"
 							>
-								Login
+								<FormattedMessage
+									id="loginBtnText"
+									defaultMessage="Login"
+									description="This text is to be shown on Login Button"
+								/>
 							</Button>
 						)}
 					</Box>

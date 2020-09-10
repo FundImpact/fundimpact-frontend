@@ -1,20 +1,21 @@
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
-import { useMutation, useLazyQuery } from "@apollo/client";
-import { IDONOR, IDonorProps } from "../../models/donor";
+
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
+import { GET_COUNTRY_LIST } from "../../graphql/";
+import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../graphql/donor";
+import { CREATE_ORG_DONOR, UPDATE_ORG_DONOR } from "../../graphql/donor/mutation";
 import { IInputField } from "../../models";
+import { FORM_ACTIONS } from "../../models/constants";
+import { IDONOR, IDonorProps } from "../../models/donor";
+import { IGET_DONOR } from "../../models/donor/query";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { compareObjectKeys } from "../../utils";
+import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
 import CommonForm from "../Forms/CommonForm";
-import { CREATE_ORG_DONOR, UPDATE_ORG_DONOR } from "../../graphql/donor/mutation";
-import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../graphql/donor";
-import { FORM_ACTIONS } from "../../models/constants";
-import { compareObjectKeys } from "../../utils/index";
-import { IGET_DONOR } from "../../models/donor/query";
-import { GET_COUNTRY_LIST } from "../../graphql/";
-import { removeEmptyKeys } from "../../utils";
+import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
 
 let inputFields: IInputField[] = addDonorForm;
 
@@ -153,7 +154,7 @@ function Donor(props: IDonorProps) {
 				props.handleClose();
 				return;
 			}
-			delete values.id;
+			delete (values as any).id;
 
 			await updateDonor({
 				variables: {

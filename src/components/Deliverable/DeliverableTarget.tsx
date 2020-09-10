@@ -9,8 +9,8 @@ import {
 	CREATE_DELIVERABLE_TARGET,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
-	UPDATE_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TARGETS_COUNT,
+	UPDATE_DELIVERABLE_TARGET,
 } from "../../graphql/Deliverable/target";
 import {
 	DeliverableTargetProps,
@@ -226,7 +226,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	const onUpdate = async (value: IDeliverableTarget) => {
 		let deliverableId = value.id;
-		delete value.id;
+		delete (value as any).id;
 		try {
 			await updateDeliverableTarget({
 				variables: {

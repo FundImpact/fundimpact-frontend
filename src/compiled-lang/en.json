@@ -1,0 +1,38 @@
+{
+	"alreadyHaveAccount": [
+		{
+			"type": 0,
+			"value": "Already have account?"
+		}
+	],
+	"dontHaveAccount": [
+		{
+			"type": 0,
+			"value": "Dont have account?"
+		}
+	],
+	"loginDescription": [
+		{
+			"type": 0,
+			"value": "Get started in few minutes and start analyzing your funds or some more lines to make user confident."
+		}
+	],
+	"loginLabel": [
+		{
+			"type": 0,
+			"value": "Login"
+		}
+	],
+	"signupDescription": [
+		{
+			"type": 0,
+			"value": "Get started in minutes"
+		}
+	],
+	"signupLabel": [
+		{
+			"type": 0,
+			"value": "Singup"
+		}
+	]
+}

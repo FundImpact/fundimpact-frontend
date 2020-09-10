@@ -96,7 +96,7 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 		let impactFyDonorFinalvalues: any = Object.values(value);
 		for (let i = 0; i < impactFyDonorFinalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = impactFyDonorFinalvalues[i]?.id;
-			delete impactFyDonorFinalvalues[i].id;
+			delete (impactFyDonorFinalvalues[i] as any).id;
 			updateImpactLineitemFydonor({
 				variables: { id: deliverable_lineitem_fy_id, input: impactFyDonorFinalvalues[i] },
 				refetchQueries: [

@@ -11,8 +11,8 @@ import {
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-	UPDATE_DELIVERABLE_TRACKLINE,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
+	UPDATE_DELIVERABLE_TRACKLINE,
 } from "../../graphql/Deliverable/trackline";
 import {
 	DeliverableTargetLineProps,
@@ -181,7 +181,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		setDonors(value.donors);
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
-		delete input.donors;
+		delete (input as any).donors;
 
 		createDeliverableTrackline({
 			variables: { input },
@@ -270,14 +270,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const onUpdate = (value: IDeliverableTargetLine) => {
 		let DeliverableTargetLineId = value.id;
-		delete value.id;
+		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
 		console.log(`on update is called with: `, value);
 		setDonors(value.donors);
 		setDonorFormData(value.donorMapValues);
 		let input = { ...value };
-		delete input.donors;
-		delete input.donorMapValues;
+		delete (input as any).donors;
+		delete (input as any).donorMapValues;
 		updateDeliverableTrackLine({
 			variables: {
 				id: DeliverableTargetLineId,
