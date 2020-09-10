@@ -1,4 +1,4 @@
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -25,11 +25,10 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { compareObjectKeys } from "../../../utils";
+import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
-import { removeEmptyKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -243,7 +242,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				return;
 			}
 
-			delete values.id;
+			delete (values as any).id;
 
 			await updateProjectBudgetTarget({
 				variables: {
