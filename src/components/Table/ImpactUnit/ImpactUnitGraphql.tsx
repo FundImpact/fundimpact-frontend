@@ -46,7 +46,7 @@ function ImpactUnitGraphql({
 		sort: "created_at:DESC",
 		fireRequest: Boolean(impactCategoryId && !collapsableTable),
 	});
-
+	
 	let {
 		changePage: changeImpactUnitPage,
 		count: impactUnitCount,
@@ -147,9 +147,7 @@ function ImpactUnitGraphql({
 				impactCategoryUnitLoading ||
 				impactCategoryUnitCountLoading
 			}
-			count={
-				dashboardData && collapsableTable ? impactUnitCount : impactCategoryUnitCount
-			}
+			count={dashboardData && collapsableTable ? impactUnitCount : impactCategoryUnitCount}
 		/>
 	);
 }

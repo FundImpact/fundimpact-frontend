@@ -40,15 +40,6 @@ const validate = (values: IImpactCategory) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.description) {
-		errors.description = "Description is required";
-	}
-	if (!values.code) {
-		errors.code = "Impact Code is required";
-	}
-	if (!values.shortname) {
-		errors.shortname = "Shortname is required";
-	}
 	return errors;
 };
 

@@ -37,10 +37,9 @@ function ImpactUnitContainer({
 }) {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedImpactUnit = useRef<IImpactUnitData | null>(null);
-	const [
-		getImpactCategoryUnit,
-		{ data: impactCategoryUnitList, loading: fetchingImpactCategoryUnit },
-	] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT);
+	const [getImpactCategoryUnit, { data: impactCategoryUnitList }] = useLazyQuery(
+		GET_IMPACT_CATEGORY_UNIT
+	);
 
 	useEffect(() => {
 		if (selectedImpactUnit.current) {

@@ -6,7 +6,7 @@ export interface IDeliverableUnit {
 	name: string;
 	description?: string;
 	code: string;
-	deliverableCategory?: IDeliverable[];
+	deliverableCategory?: string[];
 	unit_type: number | string;
 	prefix_label: number | string;
 	suffix_label: number | string;

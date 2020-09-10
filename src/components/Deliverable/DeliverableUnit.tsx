@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, ApolloCache } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 
@@ -22,6 +22,12 @@ import { CREATE_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
 import { CREATE_DELIVERABLE_UNIT } from "../../graphql/Deliverable/unit";
 import { DeliverableUnitProps, IDeliverableUnit } from "../../models/deliverable/deliverableUnit";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import {
+	CREATE_CATEGORY_UNIT,
+	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
+	GET_CATEGORY_UNIT,
+} from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_UNIT,
 	UPDATE_DELIVERABLE_UNIT_ORG,
@@ -41,7 +47,7 @@ import { deliverableUnitForm } from "./inputField.json";
 
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
-import { IGetDeliverablUnit } from "../../models/deliverable/query";
+import { IGetDeliverablUnit, IGetDeliverableCategoryUnit } from "../../models/deliverable/query";
 import { IDeliverableCategoryData, IDeliverable } from "../../models/deliverable/deliverable";
 
 function getInitialValues(props: DeliverableUnitProps) {
@@ -69,7 +75,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [deliverableCategory, setDeliverableCategory] = useState<IDeliverable[]>([]);
+	const [deliverableCategory, setDeliverableCategory] = useState<string[]>([]);
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
@@ -77,15 +83,124 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		CREATE_CATEGORY_UNIT
 	);
 
+	const updateDeliverableCategoryUnitCount = async (store: ApolloCache<any>, filter: object) => {
+		try {
+			const deliverableCategoryUnitCount = await store.readQuery<{
+				deliverableCategoryUnitCount: number;
+			}>({
+				query: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
+				variables: {
+					filter,
+				},
+			});
+
+			store.writeQuery<{ deliverableCategoryUnitCount: number }>({
+				query: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
+				variables: {
+					filter,
+				},
+				data: {
+					deliverableCategoryUnitCount:
+						deliverableCategoryUnitCount!.deliverableCategoryUnitCount + 1,
+				},
+			});
+			return deliverableCategoryUnitCount;
+		} catch (err) {}
+	};
+
+	const updateDeliverableCategoryUnitList = async ({
+		limit,
+		filter,
+		store,
+		createdDeliverableCategoryUnit,
+	}: {
+		limit?: number;
+		filter: object;
+		store: ApolloCache<any>;
+		createdDeliverableCategoryUnit: any;
+	}) => {
+		try {
+			const variables = (limit && {
+				filter,
+				limit: limit > 10 ? 10 : limit,
+				start: 0,
+				sort: "created_at:DESC",
+			}) || { filter };
+
+			const deliverableCategoryUnitCacheByUnit = await store.readQuery<
+				IGetDeliverableCategoryUnit
+			>({
+				query: GET_CATEGORY_UNIT,
+				variables,
+			});
+
+			store.writeQuery<IGetDeliverableCategoryUnit>({
+				query: GET_CATEGORY_UNIT,
+				variables,
+				data: {
+					deliverableCategoryUnitList: [
+						createdDeliverableCategoryUnit,
+						...deliverableCategoryUnitCacheByUnit!.deliverableCategoryUnitList,
+					],
+				},
+			});
+		} catch (err) {}
+	};
+
 	const createCategoryUnitHelper = async (deliverableUnitId: string) => {
 		try {
 			for (let i = 0; i < deliverableCategory.length; i++) {
 				await createCategoryUnit({
 					variables: {
 						input: {
-							deliverable_category_org: deliverableCategory[i].id,
+							deliverable_category_org: deliverableCategory[i],
 							deliverable_units_org: deliverableUnitId,
 						},
+					},
+					update: async (store, { data: createdDeliverableCategoryUnit }) => {
+						const deliverableCategoryUnitByUnitCount = await updateDeliverableCategoryUnitCount(
+							store,
+							{
+								deliverable_units_org: deliverableUnitId,
+							}
+						);
+
+						const deliverableCategoryUnitByCategoryCount = await updateDeliverableCategoryUnitCount(
+							store,
+							{
+								deliverable_category_org: deliverableCategory[i],
+							}
+						);
+
+						let limit = 0;
+						if (deliverableCategoryUnitByUnitCount) {
+							limit = deliverableCategoryUnitByUnitCount.deliverableCategoryUnitCount;
+						}
+
+						await updateDeliverableCategoryUnitList({
+							createdDeliverableCategoryUnit,
+							limit,
+							filter: { deliverable_units_org: deliverableUnitId },
+							store,
+						});
+
+						if (deliverableCategoryUnitByCategoryCount) {
+							limit =
+								deliverableCategoryUnitByCategoryCount.deliverableCategoryUnitCount;
+						}
+
+						await updateDeliverableCategoryUnitList({
+							createdDeliverableCategoryUnit,
+							limit,
+							filter: { deliverable_category_org: deliverableCategory[i] },
+							store,
+						});
+
+						await updateDeliverableCategoryUnitList({
+							createdDeliverableCategoryUnit,
+							filter: { deliverable_units_org: deliverableUnitId },
+							store,
+						});
 					},
 				});
 			}
@@ -198,8 +313,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 			const id = submittedValue.id;
 			setDeliverableCategory(
 				submittedValue?.deliverableCategory?.filter(
-					(element: IDeliverable) =>
-						initialValues?.deliverableCategory?.indexOf(element) == -1
+					(element: string) => initialValues?.deliverableCategory?.indexOf(element) == -1
 				) || []
 			);
 			delete submittedValue.id;
@@ -243,6 +357,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 				project={dashboardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
+				loading={createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit}
 			>
 				<CommonForm
 					{...{
@@ -256,9 +371,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 					}}
 				/>
 			</FormDialog>
-			{createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit ? (
+			{/* {createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit ? (
 				<FullScreenLoader />
-			) : null}
+			) : null} */}
 		</React.Fragment>
 	);
 }
