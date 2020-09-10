@@ -32,6 +32,10 @@ import CommonForm from "../../Forms/CommonForm";
 
 
 import { impactUnitForm, impactUnitSelect } from "../inputField.json";
+import { impactUnitForm } from "./inputFields.json";
+import { IInputField } from "../../../models";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../CommonForm/commonForm";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IImpactUnitProps, IImpactUnitData } from "../../../models/impact/impact";
 import { FORM_ACTIONS } from "../../../models/constants";
@@ -47,7 +51,7 @@ const defaultValues: IImpactUnitFormInput = {
 	target_unit: "",
 	prefix_label: "",
 	suffix_label: "",
-	impactCategory: "",
+	impactCategory: [],
 };
 
 const validate = (values: IImpactUnitFormInput) => {
@@ -55,20 +59,8 @@ const validate = (values: IImpactUnitFormInput) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.description) {
-		errors.description = "Description is required";
-	}
-	if (!values.code) {
-		errors.code = "Impact Code is required";
-	}
 	if (!values.target_unit) {
 		errors.target_unit = "Target unit is required";
-	}
-	if (!values.prefix_label) {
-		errors.prefix_label = "Prefix label is required";
-	}
-	if (!values.suffix_label) {
-		errors.suffix_label = "Suffix label is required";
 	}
 	return errors;
 };
@@ -81,26 +73,39 @@ function ImpactUnitDialog({
 }: IImpactUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	const [impactCategory, setImpactCategory] = useState<string>();
+	const [impactCategory, setImpactCategory] = useState<string[]>([]);
 
 	const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
-	const [createImpactCategoryUnit] = useMutation(CREATE_IMPACT_CATEGORY_UNIT);
+	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnitI }] = useMutation(
+		CREATE_IMPACT_CATEGORY_UNIT
+	);
+
+	const impactCategoryUnitHelper = async (impactUnitId: string) => {
+		try {
+			console.log("here", impactCategory);
+			for (let i = 0; i < impactCategory.length; i++) {
+				await createImpactCategoryUnit({
+					variables: {
+						input: {
+							impact_category_org: impactCategory[i],
+							impact_units_org: impactUnitId,
+						},
+					},
+				});
+			}
+		} catch (err) {
+			console.log("err :>> ", err);
+		}
+	};
 
 	const [createImpactUnitsOrgInput, { loading: creatingInpactUnit }] = useMutation(
 		CREATE_IMPACT_UNITS_ORG_INPUT,
 		{
-			onCompleted(data) {
+			async onCompleted(data) {
 				if (impactCategory) {
-					createImpactCategoryUnit({
-						variables: {
-							input: {
-								impact_category_org: impactCategory,
-								impact_units_org: data.createImpactUnitsOrgInput?.id,
-							},
-						},
-					});
+					await impactCategoryUnitHelper(data.createImpactUnitsOrgInput?.id);
 				}
 				notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
 				handleClose();
@@ -115,16 +120,9 @@ function ImpactUnitDialog({
 	const [updateImpactUnitsOrgInput, { loading: updatingImpactUnit }] = useMutation(
 		UPDATE_IMPACT_UNIT_ORG,
 		{
-			onCompleted(data) {
+			async onCompleted(data) {
 				if (impactCategory) {
-					createImpactCategoryUnit({
-						variables: {
-							input: {
-								impact_category_org: impactCategory,
-								impact_units_org: data.updateImpactUnitsOrgInput?.id,
-							},
-						},
-					});
+					await impactCategoryUnitHelper(data.updateImpactUnitsOrgInput?.id);
 				}
 				notificationDispatch(setSuccessNotification("Impact Unit Updation Success"));
 				handleClose();
@@ -137,15 +135,15 @@ function ImpactUnitDialog({
 	);
 
 	const initialValues = formAction == FORM_ACTIONS.CREATE ? defaultValues : formValues;
-
 	useEffect(() => {
 		if (impactCategories) {
-			impactUnitSelect[0].optionsArray = impactCategories?.impactCategoryOrgList;
+			impactUnitForm[6].optionsArray = impactCategories?.impactCategoryOrgList;
 		}
 	}, [impactCategories]);
 
-	const onSubmit = async (values: IImpactUnitFormInput) => {
+	const onSubmit = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
+			const values = Object.assign({}, valuesSubmitted);
 			setImpactCategory(values.impactCategory);
 			delete values.impactCategory;
 			await createImpactUnitsOrgInput({
@@ -241,9 +239,14 @@ function ImpactUnitDialog({
 		} catch (err) {}
 	};
 
-	const onUpdate = async (values: IImpactUnitFormInput) => {
+	const onUpdate = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
-			setImpactCategory(values.impactCategory);
+			const values = Object.assign({}, valuesSubmitted);
+			setImpactCategory(
+				values?.impactCategory?.filter(
+					(element: string) => initialValues?.impactCategory?.indexOf(element) == -1
+				) || []
+			);
 			delete values.impactCategory;
 			delete values.id;
 			await updateImpactUnitsOrgInput({
@@ -262,7 +265,7 @@ function ImpactUnitDialog({
 		<FormDialog
 			handleClose={handleClose}
 			open={open}
-			loading={creatingInpactUnit || updatingImpactUnit}
+			loading={creatingInpactUnit || updatingImpactUnit || creatingImpactCategoryUnitI}
 			title="Impact Unit"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace={dashboardData?.workspace?.name}
@@ -271,10 +274,9 @@ function ImpactUnitDialog({
 			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
-				onSubmit={onSubmit}
+				onCreate={onSubmit}
 				onCancel={handleClose}
 				inputFields={inputFields}
-				selectFields={impactUnitSelect}
 				onUpdate={onUpdate}
 				formAction={formAction}
 			/>

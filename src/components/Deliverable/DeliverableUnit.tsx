@@ -6,6 +6,11 @@ import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IDeliverableUnit, DeliverableUnitProps, IDeliverableUnitData } from "../../models/deliverable/deliverableUnit";
+import {
+	IDeliverableUnit,
+	DeliverableUnitProps,
+	IDeliverableUnitData,
+} from "../../models/deliverable/deliverableUnit";
 import { FullScreenLoader } from "../Loader/Loader";
 
 
@@ -37,6 +42,7 @@ import { deliverableUnitForm } from "./inputField.json";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IGetDeliverablUnit } from "../../models/deliverable/query";
+import { IDeliverableCategoryData, IDeliverable } from "../../models/deliverable/deliverable";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -48,7 +54,12 @@ function getInitialValues(props: DeliverableUnitProps) {
 		prefix_label: "",
 		suffix_label: "",
 		organization: props.organization,
+		deliverableCategory: [],
 	};
+}
+
+interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
+	deliverableCategory?: string;
 }
 
 function DeliverableUnit(props: DeliverableUnitProps) {
@@ -58,22 +69,26 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [deliverableCategory, setDeliverableCategory] = useState<number>();
+	const [deliverableCategory, setDeliverableCategory] = useState<IDeliverable[]>([]);
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
-	const [createCategoryUnit] = useMutation(CREATE_CATEGORY_UNIT);
+	const [createCategoryUnit, { loading: creatingCategoryUnit }] = useMutation(
+		CREATE_CATEGORY_UNIT
+	);
 
 	const createCategoryUnitHelper = async (deliverableUnitId: string) => {
 		try {
-			await createCategoryUnit({
-				variables: {
-					input: {
-						deliverable_category_org: deliverableCategory,
-						deliverable_units_org: deliverableUnitId,
+			for (let i = 0; i < deliverableCategory.length; i++) {
+				await createCategoryUnit({
+					variables: {
+						input: {
+							deliverable_category_org: deliverableCategory[i].id,
+							deliverable_units_org: deliverableUnitId,
+						},
 					},
-				},
-			});
+				});
+			}
 			notificationDispatch(setSuccessNotification("Deliverable unit created successfully !"));
 			onCancel();
 		} catch (error) {
@@ -90,21 +105,24 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	});
 
 	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_DELIVERABLE_UNIT_ORG
+		UPDATE_DELIVERABLE_UNIT_ORG,
+		{
+			onCompleted(data) {
+				createCategoryUnitHelper(data.updateDeliverableUnitOrg.id); // deliverable unit id
+			},
+		}
 	);
 
 	// updating categories field with fetched categories list
-	useEffect(() => {
-		if (deliverableCategories) {
-			deliverableUnitForm[1].optionsArray = deliverableCategories.deliverableCategory;
-		}
-	}, [deliverableCategories]);
+	if (deliverableCategories) {
+		deliverableUnitForm[1].optionsArray = deliverableCategories.deliverableCategory;
+	}
 
 	let initialValues: IDeliverableUnit = getInitialValues(props);
-
-	const onCreate = async (value: IDeliverableUnit) => {
-		setDeliverableCategory(Number(value.deliverableCategory));
-		delete (value as any).deliverableCategory;
+	const onCreate = async (valueSubmitted: IDeliverableUnit) => {
+		const value = Object.assign({}, valueSubmitted);
+		setDeliverableCategory(value.deliverableCategory || []);
+		delete value.deliverableCategory;
 		try {
 			await createUnit({
 				variables: { input: value },
@@ -161,10 +179,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 								sort: "created_at:DESC",
 							},
 							data: {
-								deliverableUnitOrg: [
-									createDeliverableUnitOrg,
-									...deliverableUnits,
-								],
+								deliverableUnitOrg: [createDeliverableUnitOrg, ...deliverableUnits],
 							},
 						});
 					} catch (err) {
@@ -181,7 +196,14 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		try {
 			const submittedValue = Object.assign({}, value);
 			const id = submittedValue.id;
+			setDeliverableCategory(
+				submittedValue?.deliverableCategory?.filter(
+					(element: IDeliverable) =>
+						initialValues?.deliverableCategory?.indexOf(element) == -1
+				) || []
+			);
 			delete submittedValue.id;
+			delete submittedValue.deliverableCategory;
 			await updateDeliverableUnit({
 				variables: {
 					id,
@@ -197,12 +219,12 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	};
 
 	const validate = (values: IDeliverableUnit) => {
-		let errors: Partial<IDeliverableUnit> = {};
+		let errors: IError = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.deliverableCategory) {
-			errors.deliverableCategory = "Category is required";
+		if (!values.deliverableCategory?.length) {
+			errors.deliverableCategory = "Deliverable Category is required";
 		}
 		if (!values.organization) {
 			errors.organization = "Organization is required";
@@ -234,7 +256,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 					}}
 				/>
 			</FormDialog>
-			{createUnitLoading || updatingDeliverableUnit ? <FullScreenLoader /> : null}
+			{createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit ? (
+				<FullScreenLoader />
+			) : null}
 		</React.Fragment>
 	);
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import DeliverableUnitView from "./DeliverableUnitView";
 import { IGetImpactUnit } from "../../../models/impact/query";
 import { IImpactUnitData } from "../../../models/impact/impact";
@@ -8,10 +8,14 @@ import {
 	IDeliverableUnit,
 } from "../../../models/deliverable/deliverableUnit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useLazyQuery } from "@apollo/client";
+import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
+import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 
 const getInitialValues = (
 	deliverableUnit: IDeliverableUnitData | null,
-	organization: string | number
+	organization: string | number,
+	deliverableCategory: IDeliverable[]
 ): IDeliverableUnit => {
 	return {
 		code: deliverableUnit?.code || "",
@@ -21,7 +25,7 @@ const getInitialValues = (
 		prefix_label: deliverableUnit?.prefix_label || "",
 		suffix_label: deliverableUnit?.suffix_label || "",
 		unit_type: deliverableUnit?.unit_type || "",
-		deliverableCategory: "",
+		deliverableCategory,
 		organization,
 	};
 };
@@ -42,6 +46,34 @@ function DeliverableUnitContainer({
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
 	const dashboardData = useDashBoardData();
+	const [
+		getcategoryUnit,
+		{ data: deliverableCategoryUnitList, loading: fetchingCategoryUnit },
+	] = useLazyQuery(GET_CATEGORY_UNIT);
+
+	useEffect(() => {
+		if (selectedDeliverableUnit.current) {
+			getcategoryUnit({
+				variables: {
+					filter: {
+						deliverable_units_org: selectedDeliverableUnit.current.id,
+					},
+				},
+			});
+		}
+	}, [getcategoryUnit, selectedDeliverableUnit.current]);
+
+	const deliverableCategoryMemoized = useMemo(
+		() =>
+			deliverableCategoryUnitList?.deliverableCategoryUnitList.map(
+				(element: {
+					deliverable_category_org: IDeliverableCategoryData;
+					deliverable_units_org: IDeliverableUnitData;
+				}) => element.deliverable_category_org
+			),
+		[deliverableCategoryUnitList]
+	);
+
 	return (
 		<DeliverableUnitView
 			openDialog={openDialog}
@@ -49,7 +81,8 @@ function DeliverableUnitContainer({
 			selectedDeliverableUnit={selectedDeliverableUnit}
 			initialValues={getInitialValues(
 				selectedDeliverableUnit.current,
-				dashboardData?.organization?.id || ""
+				dashboardData?.organization?.id || "",
+				deliverableCategoryMemoized || []
 			)}
 			deliverableUnitList={deliverableUnitList}
 			collapsableTable={collapsableTable}
