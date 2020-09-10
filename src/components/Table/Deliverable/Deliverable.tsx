@@ -15,7 +15,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { deliverableAndImpactHeadings } from "../constants";
+import { deliverableHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
 
@@ -248,7 +248,7 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<FICollaspeTable
-						tableHeading={deliverableAndImpactHeadings}
+						tableHeading={deliverableHeadings}
 						rows={rows}
 						pagination={deliverableTablePagination}
 					/>

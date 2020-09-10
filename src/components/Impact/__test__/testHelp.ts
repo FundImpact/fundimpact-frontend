@@ -16,6 +16,13 @@ export const impactTargetMock = [
 			short_name: "",
 			description: "",
 		},
+		sustainable_development_goal: {
+			id: "4",
+			name: "Goal 3",
+			short_name: "SDG",
+			icon:
+				"https://e7.pngegg.com/pngimages/863/694/png-clipart-person-holding-soil-and-plant-illustration-sustainable-agriculture-sustainability-computer-icons-agriculture-miscellaneous-leaf.png",
+		},
 		impact_category_unit: {
 			id: "1",
 			impact_category_org: {

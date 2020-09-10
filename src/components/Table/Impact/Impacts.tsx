@@ -1,5 +1,13 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import {
+	IconButton,
+	Menu,
+	MenuItem,
+	TableCell,
+	TablePagination,
+	Chip,
+	Avatar,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -13,7 +21,7 @@ import { IImpactTarget } from "../../../models/impact/impactTarget";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTarget from "../../Impact/impactTarget";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
-import { deliverableAndImpactHeadings } from "../constants";
+import { ImpactHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
 import ImpactTrackLineTable from "./impactTrackline";
 import pagination from "../../../hooks/pagination/pagination";
@@ -158,6 +166,7 @@ export default function ImpactsTable() {
 
 	useEffect(() => {
 		if (impactTargets) {
+			console.log(impactTargets);
 			let impactTargetProjectList = impactTargets.impactTargetProjectList;
 			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {
@@ -204,6 +213,26 @@ export default function ImpactsTable() {
 							}
 						/>
 					);
+
+					column.push(
+						<TableCell
+							key={impactTargetProjectList[i]?.sustainable_development_goal?.id}
+						>
+							{impactTargetProjectList[i]?.sustainable_development_goal?.name ? (
+								<Avatar
+									alt="SD"
+									src={
+										impactTargetProjectList[i]?.sustainable_development_goal
+											?.icon
+									}
+								/>
+							) : (
+								"-"
+							)}
+							{}
+						</TableCell>
+					);
+
 					column.push(
 						<EditImpactTargetIcon
 							key={Math.random()}
@@ -240,7 +269,7 @@ export default function ImpactsTable() {
 			) : (
 				<>
 					<FICollaspeTable
-						tableHeading={deliverableAndImpactHeadings}
+						tableHeading={ImpactHeadings}
 						rows={rows}
 						pagination={impactTablePagination}
 					/>

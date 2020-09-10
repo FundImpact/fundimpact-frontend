@@ -1,4 +1,4 @@
-export const deliverableAndImpactHeadings = [
+export const deliverableHeadings = [
 	{ label: "" },
 	{ label: "S.no" },
 	{ label: "Name" },
@@ -7,6 +7,18 @@ export const deliverableAndImpactHeadings = [
 	{ label: "Achieved" },
 	{ label: "Progess" },
 
+	{ label: "" }, //edit icon
+];
+
+export const ImpactHeadings = [
+	{ label: "" },
+	{ label: "S.no" },
+	{ label: "Name" },
+	{ label: "Category" },
+	{ label: "Target" },
+	{ label: "Achieved" },
+	{ label: "Progess" },
+	{ label: "SDG" },
 	{ label: "" }, //edit icon
 ];
 

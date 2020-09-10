@@ -232,6 +232,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			description: value.description,
 			project: value.project,
 			impact_category_unit: -1,
+			sustainable_development_goal: value.sustainable_development_goal,
 		});
 		// Query call for fetching impact_categroy_unit_id
 		getUnitsAndCategory({
