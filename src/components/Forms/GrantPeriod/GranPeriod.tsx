@@ -18,7 +18,9 @@ import { GET_PROJECT_DONORS } from "../../../graphql";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { GrantPeriodFormProps, IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
 import InputField from "../../InputField/InputField";
-import BasicDateRangePicker from "./dateRange";
+import { ICustomDatePicker } from "./BasicDateRangePicker";
+
+// import { BasicDateRangePicker } from './dateRange';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -195,7 +197,30 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 							</Grid>
 
 							<Grid item xs={12} md={12}>
-								<BasicDateRangePicker
+								{/* <DateRangePicker
+									disableCloseOnSelect={true}
+									startText={from.text}
+									endText={to.text}
+									value={[fromDateSelected, toDateSelected]}
+									inputFormat="dd/MM/yyyy"
+									onChange={handleDateChange}
+									renderInput={(startProps, endProps) => (
+										<>
+											<TextField {...startProps} />
+											<DateRangeDelimiter> to </DateRangeDelimiter>
+											<TextField {...endProps} />
+										</>
+									)}
+								/> */}
+
+								{/* <Field
+									name="date"
+									disablePast
+									component={DatePickerField}
+									shouldDisableDate={false}
+									getShouldDisableDateError={false}
+								/> */}
+								<ICustomDatePicker
 									from={startDate}
 									to={endData}
 									onChange={(from, to) => {
