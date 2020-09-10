@@ -175,6 +175,9 @@ export default function DeliverablesTable() {
 
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
+						<TableCell component="td" scope="row" key={deliverableTargetList[i]?.id}>
+							{page * 10 + i + 1}
+						</TableCell>,
 						<TableCell key={deliverableTargetList[i].name}>
 							{deliverableTargetList[i].name}
 						</TableCell>,
@@ -226,25 +229,29 @@ export default function DeliverablesTable() {
 		}
 	}, [deliverableTargetData]);
 
+	let deliverableTablePagination = (
+		<TablePagination
+			rowsPerPageOptions={[]}
+			colSpan={9}
+			count={count}
+			rowsPerPage={count > 10 ? 10 : count}
+			page={page}
+			onChangePage={handleChangePage}
+			onChangeRowsPerPage={() => {}}
+			style={{ paddingRight: "40px" }}
+		/>
+	);
 	return (
 		<>
 			{countQueryLoading || queryLoading ? (
 				<TableSkeleton />
 			) : (
 				<>
-					<FICollaspeTable tableHeading={deliverableAndImpactHeadings} rows={rows} />
-					{rows.length > 0 && (
-						<TablePagination
-							rowsPerPageOptions={[]}
-							colSpan={9}
-							count={count}
-							rowsPerPage={count > 10 ? 10 : count}
-							page={page}
-							onChangePage={handleChangePage}
-							onChangeRowsPerPage={() => {}}
-							style={{ paddingRight: "40px" }}
-						/>
-					)}
+					<FICollaspeTable
+						tableHeading={deliverableAndImpactHeadings}
+						rows={rows}
+						pagination={deliverableTablePagination}
+					/>
 				</>
 			)}
 		</>

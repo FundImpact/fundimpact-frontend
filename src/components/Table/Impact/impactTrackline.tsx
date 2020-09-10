@@ -185,16 +185,25 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			for (let i = 0; i < impactTrackingLineitemList.length; i++) {
 				if (impactTrackingLineitemList[i]) {
 					let row = [
-						<TableCell>
+						<TableCell
+							component="td"
+							scope="row"
+							key={impactTrackingLineitemList[i]?.id}
+						>
+							{impactTracklinePage * 10 + i + 1}
+						</TableCell>,
+						<TableCell key={impactTrackingLineitemList[i]?.reporting_date}>
 							{getTodaysDate(impactTrackingLineitemList[i]?.reporting_date)}
 						</TableCell>,
-						<TableCell>
+						<TableCell key={impactTrackingLineitemList[i]?.note}>
 							{impactTrackingLineitemList[i]?.note
 								? impactTrackingLineitemList[i]?.note
 								: "-"}
 						</TableCell>,
-						<TableCell>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
-						<TableCell>
+						<TableCell
+							key={impactTrackingLineitemList[i]?.value}
+						>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
+						<TableCell key={Math.random()}>
 							{" "}
 							<Box display="flex">
 								<Box mr={1}>
@@ -225,6 +234,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 					];
 					row.push(
 						<EditImpactTargetLineIcon
+							key={Math.random()}
 							impactTargetLine={impactTrackingLineitemList[i]}
 						/>
 					);
@@ -237,25 +247,27 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		}
 	}, [impactTracklineData]);
 
+	let tablePagination = (
+		<TablePagination
+			rowsPerPageOptions={[]}
+			colSpan={9}
+			count={count}
+			rowsPerPage={count > 10 ? 10 : count}
+			page={impactTracklinePage}
+			onChangePage={handleImpactLineChangePage}
+			onChangeRowsPerPage={() => {}}
+			style={{ paddingRight: "40px" }}
+		/>
+	);
 	return (
 		<>
 			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
-			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
-			{rows.length > 0 && (
-				<Box mt={1}>
-					<TablePagination
-						rowsPerPageOptions={[]}
-						colSpan={9}
-						count={count}
-						rowsPerPage={count > 10 ? 10 : count}
-						page={impactTracklinePage}
-						onChangePage={handleImpactLineChangePage}
-						onChangeRowsPerPage={() => {}}
-						style={{ paddingRight: "40px" }}
-					/>
-				</Box>
-			)}
+			<FITable
+				tableHeading={deliverableAndimpactTracklineHeading}
+				rows={rows}
+				pagination={tablePagination}
+			/>
 		</>
 	);
 }

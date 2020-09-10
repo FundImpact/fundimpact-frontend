@@ -28,6 +28,10 @@ import DeliverableStepper from "../Stepper/Stepper";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import DeliverableTracklineDonorYearTags from "./DeliverableTracklineDonor";
 import { deliverableTragetLineForm } from "./inputField.json";
+import {
+	IDeliverableTracklineByTargetResponse,
+	IGET_DELIVERABLE_TRACKLINE_BY_TARGET,
+} from "../../models/deliverable/query";
 
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -216,7 +220,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					if (count) {
 						limit = count.deliverableTrackingLineitemCount;
 					}
-					const data = await store.readQuery<any>({
+					const data = await store.readQuery<IGET_DELIVERABLE_TRACKLINE_BY_TARGET>({
 						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 						variables: {
 							filter: {
@@ -227,10 +231,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							sort: "created_at:DESC",
 						},
 					});
-					let deliverableTrackingLineitemList: any[] = data?.deliverableTrackingLineitemList
+					let deliverableTrackingLineitemList: IDeliverableTracklineByTargetResponse[] = data?.deliverableTrackingLineitemList
 						? data?.deliverableTrackingLineitemList
 						: [];
-					store.writeQuery({
+					store.writeQuery<IGET_DELIVERABLE_TRACKLINE_BY_TARGET>({
 						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 						variables: {
 							filter: {
@@ -247,7 +251,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							],
 						},
 					});
-				} catch (err) {}
+				} catch (err) {
+					console.error(err);
+				}
 			},
 			refetchQueries: [
 				{
