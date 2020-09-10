@@ -197,6 +197,29 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 							</Grid>
 
 							<Grid item xs={12} md={12}>
+								{/* <DateRangePicker
+									disableCloseOnSelect={true}
+									startText={from.text}
+									endText={to.text}
+									value={[fromDateSelected, toDateSelected]}
+									inputFormat="dd/MM/yyyy"
+									onChange={handleDateChange}
+									renderInput={(startProps, endProps) => (
+										<>
+											<TextField {...startProps} />
+											<DateRangeDelimiter> to </DateRangeDelimiter>
+											<TextField {...endProps} />
+										</>
+									)}
+								/> */}
+
+								{/* <Field
+									name="date"
+									disablePast
+									component={DatePickerField}
+									shouldDisableDate={false}
+									getShouldDisableDateError={false}
+								/> */}
 								<ICustomDatePicker
 									from={startDate}
 									to={endData}
@@ -205,11 +228,6 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 										formik.setFieldValue("end_date", to?.toISOString());
 									}}
 								/>
-								{/* <ICustomDatePicker
-									from={startDate}
-									to={endData}
-									onChange={(from, to) => console.log(`from`, "to")}
-								/> */}
 							</Grid>
 
 							<Button

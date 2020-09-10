@@ -9,27 +9,6 @@ import { UIProvider } from "./contexts/uiContext";
 import { UserProvider } from "./contexts/userContext";
 import * as serviceWorker from "./serviceWorker";
 
-// function loadLocaleData(locale: string) {
-// 	switch (locale) {
-// 		case "fr":
-// 			return import("../src/compiled-lang/en.json");
-// 		default:
-// 			return import("../src/compiled-lang/en.json");
-// 	}
-// }
-
-// function App(props) {
-// 	return (
-// 		<IntlProvider locale={props.locale} defaultLocale="en" messages={props.messages}>
-// 		</IntlProvider>
-// 	);
-// }
-
-// async function bootstrapApplication(locale, mainDiv) {
-// 	const messages = await loadLocaleData(locale);
-// 	ReactDOM.render(<App locale={locale} messages={messages} />, mainDiv);
-// }
-
 function loadLocaleData(locale: string) {
 	const defaultLocal = import(`../src/compiled-lang/en.json`);
 	if (!locale) return defaultLocal;
@@ -57,7 +36,7 @@ function loadLocaleData(locale: string) {
 
 (async function () {
 	const locale = navigator.languages[0] || navigator.language;
-	const messages = await loadLocaleData("hi");
+	const messages = await loadLocaleData(locale);
 	ReactDOM.render(
 		<IntlProvider messages={messages.default} locale={locale} defaultLocale="en">
 			<UIProvider>
