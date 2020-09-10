@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import React, { useEffect, useState } from "react";
+import { useMutation, useQuery, ApolloCache } from "@apollo/client";
+import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import {
 	CREATE_IMPACT_CATEGORY_UNIT,
 
@@ -37,10 +40,17 @@ import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm/commonForm";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IImpactUnitProps, IImpactUnitData } from "../../../models/impact/impact";
+import {
+	IImpactUnitProps,
+	IImpactUnitData,
+	IImpactCategoryData,
+} from "../../../models/impact/impact";
 import { FORM_ACTIONS } from "../../../models/constants";
-import { IGetImpactUnit } from "../../../models/impact/query";
-import { GET_IMPACT_CATEGORY_UNIT_COUNT } from "../../../graphql/Impact/categoryUnit";
+import { IGetImpactUnit, IGetImpactCategoryUnit } from "../../../models/impact/query";
+import {
+	GET_IMPACT_CATEGORY_UNIT_COUNT,
+	GET_IMPACT_CATEGORY_UNIT,
+} from "../../../graphql/Impact/categoryUnit";
 
 let inputFields: IInputField[] = impactUnitForm;
 
@@ -78,13 +88,79 @@ function ImpactUnitDialog({
 	const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
-	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnitI }] = useMutation(
+	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
 		CREATE_IMPACT_CATEGORY_UNIT
 	);
 
+	const updateImpactCategoryUnitCount = async (
+		store: ApolloCache<any>,
+		filter: { [key: string]: string }
+	) => {
+		try {
+			const impactCategoryUnitCount = await store.readQuery<{
+				impactCategoryUnitListCount: number;
+			}>({
+				query: GET_IMPACT_CATEGORY_UNIT_COUNT,
+				variables: {
+					filter,
+				},
+			});
+
+			store.writeQuery<{ impactCategoryUnitListCount: number }>({
+				query: GET_IMPACT_CATEGORY_UNIT_COUNT,
+				variables: {
+					filter,
+				},
+				data: {
+					impactCategoryUnitListCount:
+						impactCategoryUnitCount!.impactCategoryUnitListCount + 1,
+				},
+			});
+			return impactCategoryUnitCount;
+		} catch (err) {}
+	};
+
+	const updateImpactCategoryUnitList = async ({
+		limit,
+		filter,
+		store,
+		createdImpactCategoryUnit,
+	}: {
+		limit?: number;
+		filter: { [key: string]: string };
+		store: ApolloCache<any>;
+		createdImpactCategoryUnit: any;
+	}) => {
+		try {
+			const variables = (limit && {
+				filter,
+				limit: limit > 10 ? 10 : limit,
+				start: 0,
+				sort: "created_at:DESC",
+			}) || { filter };
+
+			const impactCategoryUnitCacheByUnit = await store.readQuery<IGetImpactCategoryUnit>({
+				query: GET_IMPACT_CATEGORY_UNIT,
+				variables,
+			});
+
+			store.writeQuery<IGetImpactCategoryUnit>({
+				query: GET_IMPACT_CATEGORY_UNIT,
+				variables,
+				data: {
+					impactCategoryUnitList: [
+						createdImpactCategoryUnit,
+						...impactCategoryUnitCacheByUnit!.impactCategoryUnitList,
+					],
+				},
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	const impactCategoryUnitHelper = async (impactUnitId: string) => {
 		try {
-			console.log("here", impactCategory);
 			for (let i = 0; i < impactCategory.length; i++) {
 				await createImpactCategoryUnit({
 					variables: {
@@ -92,6 +168,52 @@ function ImpactUnitDialog({
 							impact_category_org: impactCategory[i],
 							impact_units_org: impactUnitId,
 						},
+					},
+					refetchQueries: [],
+					update: async (store, { data: createdImpactCategoryUnit }) => {
+						const impactCategoryUnitByUnitCount = await updateImpactCategoryUnitCount(
+							store,
+							{
+								impact_units_org: impactUnitId,
+							}
+						);
+
+						const impactCategoryUnitByCategoryCount = await updateImpactCategoryUnitCount(
+							store,
+							{
+								impact_category_org: impactCategory[i],
+							}
+						);
+
+						let limit = 0;
+						if (impactCategoryUnitByUnitCount) {
+							limit = impactCategoryUnitByUnitCount.impactCategoryUnitListCount;
+						}
+
+						await updateImpactCategoryUnitList({
+							createdImpactCategoryUnit,
+							limit,
+							filter: { impact_units_org: impactUnitId },
+							store,
+						});
+
+						if (impactCategoryUnitByCategoryCount) {
+							limit = impactCategoryUnitByCategoryCount.impactCategoryUnitListCount;
+						}
+
+						await updateImpactCategoryUnitList({
+							createdImpactCategoryUnit,
+							limit,
+							filter: { impact_category_org: impactCategory[i] },
+							store,
+						});
+
+						await updateImpactCategoryUnitList({
+							createdImpactCategoryUnit,
+							filter: { impact_units_org: impactUnitId },
+							store,
+						});
+
 					},
 				});
 			}
@@ -137,7 +259,7 @@ function ImpactUnitDialog({
 	const initialValues = formAction == FORM_ACTIONS.CREATE ? defaultValues : formValues;
 	useEffect(() => {
 		if (impactCategories) {
-			impactUnitForm[6].optionsArray = impactCategories?.impactCategoryOrgList;
+			impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
 		}
 	}, [impactCategories]);
 
@@ -265,7 +387,7 @@ function ImpactUnitDialog({
 		<FormDialog
 			handleClose={handleClose}
 			open={open}
-			loading={creatingInpactUnit || updatingImpactUnit || creatingImpactCategoryUnitI}
+			loading={creatingInpactUnit || updatingImpactUnit || creatingImpactCategoryUnit}
 			title="Impact Unit"
 			subtitle="Physical addresses of your organizatin like headquater, branch etc."
 			workspace={dashboardData?.workspace?.name}

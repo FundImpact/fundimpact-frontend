@@ -12,6 +12,7 @@ import {
 	TablePagination,
 	Collapse,
 	Box,
+	Typography,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -96,7 +97,7 @@ function CommonTableRow<T extends { id: string }>({
 	let childrenArr = React.Children.toArray(children);
 	return (
 		<>
-			<TableRow key={rowData.id}>
+			<TableRow>
 				{collapsableTable && (
 					<TableCell>
 						<IconButton
@@ -185,6 +186,10 @@ function CommonTable<T extends { id: string }>({
 	}
 	let childrenArr = React.Children.toArray(children);
 
+	if (!valuesList.length) {
+		return <Typography align="center">No Data</Typography>;
+	}
+
 	return (
 		<TableContainer component={Paper}>
 			{childrenArr[0]}
@@ -201,37 +206,41 @@ function CommonTable<T extends { id: string }>({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>
-					{valuesList.map((rowData: T, index: number) => (
-						<CommonTableRow
-							key={rowData.id}
-							collapsableTable={collapsableTable}
-							rowData={rowData}
-							rows={rows}
-							serialNo={page * defaultRows + index + 1}
-						>
-							<TableCell>
-								<IconButton
-									aria-haspopup="true"
-									onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-										selectedRow.current = rowData;
-										handleClick(event);
-									}}
-								>
-									<MoreVertIcon />
-								</IconButton>
-								<SimpleMenu
-									handleClose={handleClose}
-									id={`organizationMenu-${rowData.id}`}
-									anchorEl={
-										selectedRow?.current?.id === rowData.id ? anchorEl : null
-									}
-									menuList={menuList}
-								/>
-							</TableCell>
+					{valuesList
+						.filter((element) => element)
+						.map((rowData: T, index: number) => (
+							<CommonTableRow
+								key={rowData?.id}
+								collapsableTable={collapsableTable}
+								rowData={rowData}
+								rows={rows}
+								serialNo={page * defaultRows + index + 1}
+							>
+								<TableCell>
+									<IconButton
+										aria-haspopup="true"
+										onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+											selectedRow.current = rowData;
+											handleClick(event);
+										}}
+									>
+										<MoreVertIcon />
+									</IconButton>
+									<SimpleMenu
+										handleClose={handleClose}
+										id={`organizationMenu-${rowData?.id}`}
+										anchorEl={
+											selectedRow?.current?.id === rowData?.id
+												? anchorEl
+												: null
+										}
+										menuList={menuList}
+									/>
+								</TableCell>
 
-							{childrenArr[1]}
-						</CommonTableRow>
-					))}
+								{childrenArr[1]}
+							</CommonTableRow>
+						))}
 				</TableBody>
 				{valuesList.length && count ? (
 					<TableFooter>

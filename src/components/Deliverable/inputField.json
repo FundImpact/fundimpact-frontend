@@ -147,8 +147,9 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "multiSelect",
-			"size": 6
+			"inputType": "select",
+			"size": 6,
+			"multiple": true
 		},
 		{
 			"name": "code",

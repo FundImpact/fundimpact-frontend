@@ -50,7 +50,6 @@ function ImpactUnitView({
 	count: number;
 	loading: boolean;
 }) {
-	console.log("impactUnitList :>> ", impactUnitList);
 	return (
 		<CommonTable
 			tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}

@@ -94,6 +94,7 @@ const InputFields = ({
 	}
 
 	if (inputType === "select" || inputType === "multiSelect") {
+	
 		let multiSelect: boolean = inputType === "multiSelect" ? true : false;
 		let onChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 			if (inputType === "multiSelect") {

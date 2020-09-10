@@ -1,5 +1,4 @@
 {
-
 	"impactCategoryForm": [
 		{
 			"name": "name",
@@ -7,7 +6,8 @@
 			"dataTestId": "createImpactName",
 			"testId": "createImpactNameInput",
 			"label": "Name",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "shortname",

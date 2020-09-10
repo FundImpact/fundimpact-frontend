@@ -15,7 +15,7 @@ import { IDeliverableCategoryData, IDeliverable } from "../../../models/delivera
 const getInitialValues = (
 	deliverableUnit: IDeliverableUnitData | null,
 	organization: string | number,
-	deliverableCategory: IDeliverable[]
+	deliverableCategory: string[]
 ): IDeliverableUnit => {
 	return {
 		code: deliverableUnit?.code || "",
@@ -63,13 +63,13 @@ function DeliverableUnitContainer({
 		}
 	}, [getcategoryUnit, selectedDeliverableUnit.current]);
 
-	const deliverableCategoryMemoized = useMemo(
+	const deliverableCategoryMemoized = useMemo<string[]>(
 		() =>
 			deliverableCategoryUnitList?.deliverableCategoryUnitList.map(
 				(element: {
 					deliverable_category_org: IDeliverableCategoryData;
 					deliverable_units_org: IDeliverableUnitData;
-				}) => element.deliverable_category_org
+				}) => element.deliverable_category_org.id
 			),
 		[deliverableCategoryUnitList]
 	);
