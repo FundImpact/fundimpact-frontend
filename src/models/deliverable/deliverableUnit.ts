@@ -12,6 +12,10 @@ export interface IDeliverableUnit {
 	organization?: number | string;
 }
 
+export interface IDeliverableUnitData extends Omit<IDeliverableUnit, "organization" | "id"> {
+	id: string;
+}
+
 export type DeliverableUnitProps = {
 	open: boolean;
 	handleClose: () => void;

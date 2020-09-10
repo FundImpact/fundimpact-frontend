@@ -1,6 +1,10 @@
 import { useMutation } from "@apollo/client";
 import React from "react";
-import { IDeliverable, DeliverableProps } from "../../models/deliverable/deliverable";
+import {
+	IDeliverable,
+	DeliverableProps,
+	IDeliverableCategoryData,
+} from "../../models/deliverable/deliverable";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -8,11 +12,14 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import {
 	CREATE_DELIVERABLE_CATEGORY,
 	GET_DELIVERABLE_ORG_CATEGORY,
+	UPDATE_DELIVERABLE_CATEGORY,
+	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 } from "../../graphql/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableCategoryForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
+import { IGetDeliverableCategory } from "../../models/deliverable/query";
 
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -28,7 +35,12 @@ function Deliverable(props: DeliverableProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IDeliverable = getInitialValues(props);
-	const [createDeliverableCategory, { loading }] = useMutation(CREATE_DELIVERABLE_CATEGORY);
+	const [createDeliverableCategory, { loading: creatingDeliverableCategory }] = useMutation(
+		CREATE_DELIVERABLE_CATEGORY
+	);
+	const [updateDeliverableCategory, { loading: updatingDeliverableCategory }] = useMutation(
+		UPDATE_DELIVERABLE_CATEGORY
+	);
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
@@ -43,6 +55,69 @@ function Deliverable(props: DeliverableProps) {
 						variables: { filter: { organization: value.organization } },
 					},
 				],
+				update: async (store, { data: createDeliverableCategory }) => {
+					try {
+						const count = await store.readQuery<{ deliverableCategoryCount: number }>({
+							query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+						});
+
+						store.writeQuery<{ deliverableCategoryCount: number }>({
+							query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+							data: {
+								deliverableCategoryCount: count!.deliverableCategoryCount + 1,
+							},
+						});
+
+						let limit = 0;
+						if (count) {
+							limit = count.deliverableCategoryCount;
+						}
+						const dataRead = await store.readQuery<IGetDeliverableCategory>({
+							query: GET_DELIVERABLE_ORG_CATEGORY,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let deliverableCategories: IDeliverableCategoryData[] = dataRead?.deliverableCategory
+							? dataRead?.deliverableCategory
+							: [];
+
+						store.writeQuery<IGetDeliverableCategory>({
+							query: GET_DELIVERABLE_ORG_CATEGORY,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								deliverableCategory: [
+									createDeliverableCategory,
+									...deliverableCategories,
+								],
+							},
+						});
+					} catch (err) {
+						console.error(err);
+					}
+				},
 			});
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			onCancel();
@@ -51,7 +126,24 @@ function Deliverable(props: DeliverableProps) {
 		}
 	};
 
-	const onUpdate = (value: IDeliverable) => {};
+	const onUpdate = async (value: IDeliverable) => {
+		try {
+			const submittedValue = Object.assign({}, value);
+			const id = submittedValue.id;
+			delete submittedValue.id;
+			await updateDeliverableCategory({
+				variables: {
+					id,
+					input: submittedValue,
+				},
+			});
+			notificationDispatch(setSuccessNotification("Deliverable category updated !"));
+			onCancel();
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Deliverable category updation Failed !"));
+			onCancel();
+		}
+	};
 
 	const validate = (values: IDeliverable) => {
 		let errors: Partial<IDeliverable> = {};
@@ -89,7 +181,9 @@ function Deliverable(props: DeliverableProps) {
 					}}
 				/>
 			</FormDialog>
-			{loading ? <FullScreenLoader /> : null}
+			{creatingDeliverableCategory || updatingDeliverableCategory ? (
+				<FullScreenLoader />
+			) : null}
 		</React.Fragment>
 	);
 }

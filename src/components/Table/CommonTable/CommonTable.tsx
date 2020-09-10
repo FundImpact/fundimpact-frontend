@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MutableRefObject } from "react";
+import React, { useState, ReactNode, MutableRefObject, useEffect } from "react";
 import {
 	TableContainer,
 	Table,
@@ -39,13 +39,12 @@ const useStyles = makeStyles({
 
 const StyledTableHeader = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main, fontSize: "13px" },
+		th: { color: theme.palette.primary.main },
 		tbody: {
 			"& tr:nth-child(even) td": { background: "#F5F6FA" },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
-				fontSize: "13px",
 			},
 		},
 	})
@@ -74,6 +73,9 @@ interface ICommonTable<T> {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	editMenuName: string;
 	collapsableTable?: boolean;
+	changePage?: (prev?: boolean) => void;
+	count?: number;
+	loading?: boolean;
 }
 
 function CommonTableRow<T extends { id: string }>({
@@ -90,8 +92,9 @@ function CommonTableRow<T extends { id: string }>({
 	collapsableTable?: boolean;
 }) {
 	const [openRow, setOpenRow] = useState(false);
-	let childrenArr = React.Children.toArray(children);
 
+	let childrenArr = React.Children.toArray(children);
+	console.log("openRow :>> ", openRow);
 	return (
 		<>
 			<TableRow key={rowData.id}>
@@ -134,6 +137,8 @@ function CommonTableRow<T extends { id: string }>({
 	);
 }
 
+const defaultRows = 10;
+
 //check how to set the value of T
 function CommonTable<T extends { id: string }>({
 	tableHeadings,
@@ -144,30 +149,14 @@ function CommonTable<T extends { id: string }>({
 	setOpenDialog,
 	editMenuName,
 	collapsableTable = false,
+	changePage,
+	count,
+	loading,
 }: ICommonTable<T>) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
 	const [page, setPage] = useState<number>(0);
-
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-	// let {
-	// 	changePage,
-	// 	count,
-	// 	queryData: budgetCategoryList,
-	// 	queryLoading,
-	// 	countQueryLoading,
-	// } = pagination({
-	// 	countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
-	// 	countFilter: {
-	// 		organization: dashboardData?.organization?.id,
-	// 	},
-	// 	query: GET_ORGANIZATION_BUDGET_CATEGORY,
-	// 	queryFilter: {
-	// 		organization: dashboardData?.organization?.id,
-	// 	},
-	// 	sort: "created_at:DESC",
-	// });
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -192,9 +181,9 @@ function CommonTable<T extends { id: string }>({
 		},
 	];
 
-	// if (countQueryLoading || queryLoading) {
-	// 	return <TableSkeleton />;
-	// }
+	if (loading) {
+		return <TableSkeleton />;
+	}
 	let childrenArr = React.Children.toArray(children);
 
 	return (
@@ -215,10 +204,11 @@ function CommonTable<T extends { id: string }>({
 				<TableBody className={tableHeader.tbody}>
 					{valuesList.map((rowData: T, index: number) => (
 						<CommonTableRow
+							key={rowData.id}
 							collapsableTable={collapsableTable}
 							rowData={rowData}
 							rows={rows}
-							serialNo={page * 10 + index + 1}
+							serialNo={page * defaultRows + index + 1}
 						>
 							<TableCell>
 								<IconButton
@@ -244,14 +234,14 @@ function CommonTable<T extends { id: string }>({
 						</CommonTableRow>
 					))}
 				</TableBody>
-				{/* {rowDataList?.orgrowData?.length ? (
+				{valuesList.length && count ? (
 					<TableFooter>
 						<TableRow>
 							<TablePagination
 								rowsPerPageOptions={[]}
 								colSpan={8}
 								count={count}
-								rowsPerPage={count > 10 ? 10 : count}
+								rowsPerPage={count > defaultRows ? defaultRows : count}
 								page={page}
 								SelectProps={{
 									inputProps: { "aria-label": "rows per page" },
@@ -262,9 +252,9 @@ function CommonTable<T extends { id: string }>({
 									newPage: number
 								) => {
 									if (newPage > page) {
-										changePage();
+										changePage && changePage();
 									} else {
-										changePage(true);
+										changePage && changePage(true);
 									}
 									setPage(newPage);
 								}}
@@ -273,7 +263,7 @@ function CommonTable<T extends { id: string }>({
 							/>
 						</TableRow>
 					</TableFooter>
-				) : null} */}
+				) : null}
 			</Table>
 		</TableContainer>
 	);

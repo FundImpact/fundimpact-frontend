@@ -9,13 +9,21 @@ import AmountSpent from "../Budget/BudgetTargetTable/AmountSpent";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import ImpactCategory from "../ImpactCategory";
-import { Box, Typography } from "@material-ui/core";
+import {
+	IDeliverableUnitData,
+	IDeliverableUnit,
+} from "../../../models/deliverable/deliverableUnit";
+import DeliverableUnit from "../../Deliverable/DeliverableUnit";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import DeliverableCategory from "../DeliverableCategory";
+import { Typography, Box } from "@material-ui/core";
 
 //try to shift it to constants
 const tableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Unit" },
+	{ label: "Deliverable Unit" },
 	{ label: "Code" },
 	{ label: "Description" },
 	{ label: "" },
@@ -29,12 +37,12 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
-function ImpactUnitView({
+function DeliverableUnitView({
 	setOpenDialog,
 	openDialog,
-	selectedImpactUnit,
+	selectedDeliverableUnit,
 	initialValues,
-	impactUnitList,
+	deliverableUnitList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -42,37 +50,39 @@ function ImpactUnitView({
 }: {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	openDialog: boolean;
-	selectedImpactUnit: React.MutableRefObject<IImpactUnitData | null>;
-	initialValues: IImpactUnitFormInput;
-	impactUnitList: IImpactUnitData[];
+	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
+	initialValues: IDeliverableUnit;
+	deliverableUnitList: IDeliverableUnitData[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
 }) {
-	console.log("impactUnitList :>> ", impactUnitList);
+	const dashboardData = useDashBoardData();
 	return (
 		<CommonTable
 			tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
-			valuesList={impactUnitList}
+			valuesList={deliverableUnitList}
 			rows={rows}
-			selectedRow={selectedImpactUnit}
+			selectedRow={selectedDeliverableUnit}
 			setOpenDialog={setOpenDialog}
-			editMenuName={"Edit Impact Unit"}
+			editMenuName={"Edit Deliverable Unit"}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}
 			count={count}
 		>
-			<ImpactUnitDialog
-				formAction={FORM_ACTIONS.UPDATE}
+			<DeliverableUnit
+				type={DELIVERABLE_ACTIONS.UPDATE}
 				handleClose={() => setOpenDialog(false)}
 				open={openDialog}
-				initialValues={initialValues}
+				data={initialValues}
+				organization={dashboardData?.organization?.id || ""}
 			/>
-			<ImpactCategory collapsableTable={false} />
+
+			<DeliverableCategory collapsableTable={false} />
 		</CommonTable>
 	);
 }
 
-export default ImpactUnitView;
+export default DeliverableUnitView;

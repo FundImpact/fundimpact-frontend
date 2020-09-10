@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import BudgetCategory from "../../Budget/BudgetCategory";
 import { FORM_ACTIONS } from "../../../models/constants";
@@ -7,13 +7,18 @@ import { IImpactCategoryData } from "../../../models/impact/impact";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import AmountSpent from "../Budget/BudgetTargetTable/AmountSpent";
 import ImpactUnit from "../ImpactUnit";
-import { Box, Typography } from "@material-ui/core";
+import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
+import Deliverable from "../../Deliverable/Deliverable";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import DeliverableUnit from "../DeliverableUnit";
+import { Typography, Box } from "@material-ui/core";
 
 //try to shift it to constants
 const tableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Category" },
+	{ label: "Deliverable Category" },
 	{ label: "Code" },
 	{ label: "Description" },
 	{ label: "" },
@@ -27,12 +32,12 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
-function ImpactCategoryView({
+function DeliverableCategoryView({
 	setOpenDialog,
 	openDialog,
-	selectedImpactCategory,
+	selectedDeliverableCategory,
 	initialValues,
-	impactCategoryList,
+	deliverableCategoryList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -40,9 +45,9 @@ function ImpactCategoryView({
 }: {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	openDialog: boolean;
-	selectedImpactCategory: React.MutableRefObject<IImpactCategoryData | null>;
-	initialValues: IImpactCategoryData;
-	impactCategoryList: IImpactCategoryData[];
+	selectedDeliverableCategory: React.MutableRefObject<IDeliverableCategoryData | null>;
+	initialValues: IDeliverable;
+	deliverableCategoryList: IDeliverableCategoryData[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
@@ -51,25 +56,26 @@ function ImpactCategoryView({
 	return (
 		<CommonTable
 			tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
-			valuesList={impactCategoryList}
+			valuesList={deliverableCategoryList}
 			rows={rows}
-			selectedRow={selectedImpactCategory}
+			selectedRow={selectedDeliverableCategory}
 			setOpenDialog={setOpenDialog}
-			editMenuName={"Edit Impact Category"}
+			editMenuName={"Edit Deliverable Category"}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}
 			count={count}
 		>
-			<ImpactCategoryDialog
-				formAction={FORM_ACTIONS.UPDATE}
+			<Deliverable
+				type={DELIVERABLE_ACTIONS.UPDATE}
 				handleClose={() => setOpenDialog(false)}
 				open={openDialog}
-				initialValues={initialValues}
+				data={initialValues}
 			/>
-			<ImpactUnit collapsableTable={false} />
+
+			<DeliverableUnit collapsableTable={false} />
 		</CommonTable>
 	);
 }
 
-export default ImpactCategoryView;
+export default DeliverableCategoryView;

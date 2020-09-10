@@ -15,10 +15,16 @@ const getInitialValues = (impactCategory: IImpactCategoryData | null): IImpactCa
 
 function ImpactCategoryContainer({
 	impactCategoryList,
-	collapsableTable
+	collapsableTable,
+	changePage,
+	loading,
+	count,
 }: {
 	impactCategoryList: IImpactCategoryData[];
-	collapsableTable: boolean
+	collapsableTable: boolean;
+	changePage: (prev?: boolean) => void;
+	count: number;
+	loading: boolean;
 }) {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedImpactCategory = useRef<IImpactCategoryData | null>(null);
@@ -31,6 +37,9 @@ function ImpactCategoryContainer({
 			initialValues={getInitialValues(selectedImpactCategory.current)}
 			impactCategoryList={impactCategoryList}
 			collapsableTable={collapsableTable}
+			changePage={changePage}
+			loading={loading}
+			count={count}
 		/>
 	);
 }

@@ -1,11 +1,16 @@
 import React from "react";
 import AddButton from "../../../components/Dasboard/AddButton";
-import ImpactCategoryTable from "../../../components/Table/ImpactCategory";
-import ImpactUnitTable from "../../../components/Table/ImpactUnit";
-import { Box, Tabs, Tab, makeStyles, Theme } from "@material-ui/core";
+import DeliverableCategory from "../../../components/Table/DeliverableCategory";
+import DeliverableUnitTable from "../../../components/Table/DeliverableUnit";
+import { Box, Tabs, Tab, Theme } from "@material-ui/core";
 import ImpactUnitDialog from "../../../components/Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import ImpactCategoryDialog from "../../../components/Impact/ImpactCategoryDialog";
 import { FORM_ACTIONS } from "../../../models/constants";
+import DeliverableUnit from "../../../components/Deliverable/DeliverableUnit";
+import Deliverable from "../../../components/Deliverable/Deliverable";
+import { DELIVERABLE_ACTIONS } from "../../../components/Deliverable/constants";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { makeStyles } from "@material-ui/styles";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -56,7 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-const ImpactCategoryView = () => {
+//change all names
+const DeliverableCategoryView = () => {
+	const dashboardData = useDashBoardData();
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
 
@@ -66,29 +73,31 @@ const ImpactCategoryView = () => {
 
 	const tabs = [
 		{
-			label: "Impact Category",
-			table: <ImpactCategoryTable />,
+			label: "Deliverable Category",
+			table: <DeliverableCategory />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<ImpactCategoryDialog
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
-						formAction={FORM_ACTIONS.CREATE}
+						organization={dashboardData?.organization?.id}
 					/>
 				),
 			},
 		},
 		{
-			label: "Impact Unit",
-			table: <ImpactUnitTable />,
+			label: "Deliverable Unit",
+			table: <DeliverableUnitTable />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<ImpactUnitDialog
+					<DeliverableUnit
+						type={DELIVERABLE_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
-						formAction={FORM_ACTIONS.CREATE}
+						organization={dashboardData?.organization?.id}
 					/>
 				),
 			},
@@ -98,7 +107,7 @@ const ImpactCategoryView = () => {
 	return (
 		<>
 			<Box p={2}>
-				<h1>Impact {value==0 ? "Categories" : "Unit"}</h1>
+				<h1>Deliverable {value == 0 ? "Categories" : "Unit"}</h1>
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
@@ -136,4 +145,4 @@ const ImpactCategoryView = () => {
 	);
 };
 
-export default ImpactCategoryView;
+export default DeliverableCategoryView;

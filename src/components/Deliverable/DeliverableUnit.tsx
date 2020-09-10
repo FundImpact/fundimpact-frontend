@@ -1,18 +1,42 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
+
+
+
 import { useDashBoardData } from "../../contexts/dashboardContext";
+import { IDeliverableUnit, DeliverableUnitProps, IDeliverableUnitData } from "../../models/deliverable/deliverableUnit";
+import { FullScreenLoader } from "../Loader/Loader";
+
+
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { CREATE_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
+
+
 import { CREATE_DELIVERABLE_UNIT } from "../../graphql/Deliverable/unit";
 import { DeliverableUnitProps, IDeliverableUnit } from "../../models/deliverable/deliverableUnit";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import {
+	CREATE_DELIVERABLE_UNIT,
+	UPDATE_DELIVERABLE_UNIT_ORG,
+	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+	GET_DELIVERABLE_UNIT_BY_ORG,
+} from "../../graphql/Deliverable/unit";
+import { DELIVERABLE_ACTIONS } from "./constants";
+import FormDialog from "../FormDialog/FormDialog";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
+
+
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { deliverableUnitForm } from "./inputField.json";
+
+
+import { useDashBoardData } from "../../contexts/dashboardContext";
+import { IGetDeliverablUnit } from "../../models/deliverable/query";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -64,6 +88,11 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 			createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
 		},
 	});
+
+	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
+		UPDATE_DELIVERABLE_UNIT_ORG
+	);
+
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
@@ -77,13 +106,95 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		setDeliverableCategory(Number(value.deliverableCategory));
 		delete (value as any).deliverableCategory;
 		try {
-			await createUnit({ variables: { input: value } });
+			await createUnit({
+				variables: { input: value },
+				update: async (store, { data: createDeliverableUnitOrg }) => {
+					try {
+						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
+							query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+						});
+
+						store.writeQuery<{ deliverableUnitOrgCount: number }>({
+							query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+							data: {
+								deliverableUnitOrgCount: count!.deliverableUnitOrgCount + 1,
+							},
+						});
+
+						let limit = 0;
+						if (count) {
+							limit = count.deliverableUnitOrgCount;
+						}
+						const dataRead = await store.readQuery<IGetDeliverablUnit>({
+							query: GET_DELIVERABLE_UNIT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let deliverableUnits: IDeliverableUnitData[] = dataRead?.deliverableUnitOrg
+							? dataRead?.deliverableUnitOrg
+							: [];
+
+						store.writeQuery<IGetDeliverablUnit>({
+							query: GET_DELIVERABLE_UNIT_BY_ORG,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								deliverableUnitOrg: [
+									createDeliverableUnitOrg,
+									...deliverableUnits,
+								],
+							},
+						});
+					} catch (err) {
+						console.error(err);
+					}
+				},
+			});
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Unit creation Failed !"));
 		}
 	};
 
-	const onUpdate = (value: IDeliverableUnit) => {};
+	const onUpdate = async (value: IDeliverableUnit) => {
+		try {
+			const submittedValue = Object.assign({}, value);
+			const id = submittedValue.id;
+			delete submittedValue.id;
+			await updateDeliverableUnit({
+				variables: {
+					id,
+					input: submittedValue,
+				},
+			});
+			notificationDispatch(setSuccessNotification("Deliverable Unit updation created !"));
+			onCancel();
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Deliverable Unit updation Failed !"));
+			onCancel();
+		}
+	};
 
 	const validate = (values: IDeliverableUnit) => {
 		let errors: Partial<IDeliverableUnit> = {};
@@ -123,7 +234,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 					}}
 				/>
 			</FormDialog>
-			{createUnitLoading ? <FullScreenLoader /> : null}
+			{createUnitLoading || updatingDeliverableUnit ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

@@ -31,3 +31,37 @@ export const CREATE_DELIVERABLE_UNIT = gql`
 		}
 	}
 `;
+
+export const GET_DELIVERABLE_UNIT_BY_ORG = gql`
+	query getdeliverableUnitByOrg($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		deliverableUnitOrg(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			name
+			description
+			code
+			unit_type
+			prefix_label
+			suffix_label
+		}
+	}
+`;
+
+export const UPDATE_DELIVERABLE_UNIT_ORG = gql`
+	mutation updateDeliverableUnitOrg($id: ID!, $input: DeliverableUnitsOrgInput!) {
+		updateDeliverableUnitOrg(id: $id, input: $input) {
+			id
+			name
+			description
+			code
+			unit_type
+			prefix_label
+			suffix_label
+		}
+	}
+`;
+
+export const GET_DELIVERABLE_UNIT_COUNT_BY_ORG = gql`
+	query getdeliverableUnitOrgCountByOrg($filter: JSON) {
+		deliverableUnitOrgCount(where: $filter)
+	}
+`;

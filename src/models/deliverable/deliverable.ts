@@ -8,6 +8,10 @@ export interface IDeliverable {
 	organization?: number | string;
 }
 
+export interface IDeliverableCategoryData extends Omit<IDeliverable, "id" | "organization"> {
+	id: string;
+}
+
 export type DeliverableProps =
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;
