@@ -20,6 +20,10 @@
 			"__typename": "OrganizationRegistrationType",
 			"id": "1",
 			"reg_type": "Trusts"
+		},
+		"country": {
+			"id": "1",
+			"name": "INDIA"
 		}
 	},
 	"projectDetails": {
@@ -135,6 +139,52 @@
 	"mockBudgetTrackingsCount": {
 		"projBudgetTrackingsCount": 10
 	},
+	"financialYearListMock": [
+		{
+			"id": "1",
+			"name": "FY 2019-2020 USA",
+			"short_name": "213123",
+			"start_date": null,
+			"end_date": null,
+			"country": {
+				"id": "2",
+				"name": "United States of America"
+			}
+		}
+	],
+	"projectDonorMock": [
+		{
+			"id": "18",
+			"donor": {
+				"id": "13",
+				"name": "ASGAR",
+				"country": {
+					"id": "1",
+					"name": "INDIA"
+				}
+			},
+			"project": {
+				"id": "2",
+				"name": "Project1ssssss"
+			}
+		}
+	],
+	"annualYearListMock": [
+		{
+			"id": "1",
+			"name": "2016",
+			"short_name": "2016",
+			"start_date": "2016-01-01T06:30:00.000Z",
+			"end_date": "2016-12-31T06:30:00.000Z"
+		},
+		{
+			"id": "2",
+			"name": "2015",
+			"short_name": "an",
+			"start_date": "2020-08-13T06:30:00.000Z",
+			"end_date": "2020-08-13T06:30:00.000Z"
+		}
+	],
 	"mockCountryList": [
 		{
 			"id": "1",
