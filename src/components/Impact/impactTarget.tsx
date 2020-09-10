@@ -217,6 +217,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 					});
 				}
 			);
+
 			impactTargetForm[3].optionsArray = arr;
 		}
 	}, [unitByCategory]);
@@ -287,7 +288,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
 		}
 	};
-
+	console.log("cuuurrcat", currCategoryId);
 	const validate = (values: IImpactTarget) => {
 		let errors: Partial<any> = {};
 		if (props.type === IMPACT_ACTIONS.CREATE) {

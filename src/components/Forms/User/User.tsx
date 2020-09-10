@@ -12,7 +12,6 @@ function getInitialValues(props: any) {
 		name: "",
 		username: "",
 		email: "",
-		organizationName: "",
 	};
 }
 
@@ -33,9 +32,6 @@ function UserForm(props: any) {
 		if (!values.name) {
 			errors.name = "Name is required";
 		}
-		if (!values.username) {
-			errors.username = "Organization is required";
-		}
 		return errors;
 	};
 
@@ -44,10 +40,10 @@ function UserForm(props: any) {
 			<Grid container spacing={2}>
 				<Grid item xs={3}>
 					<Typography data-testid="dialog-header" variant="h6" gutterBottom>
-						Profile
+						Update Profile
 					</Typography>
 					<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-						update your Profile here
+						Your personal details
 					</Typography>
 				</Grid>
 				<Grid item xs={9}>
