@@ -5,6 +5,7 @@ import Slide from "@material-ui/core/Slide";
 import { Grid, ClickAwayListener } from "@material-ui/core";
 import SlidingButton from "./SlidingButton";
 import { CreateButton } from "../../../models/addButton";
+import { FormattedMessage } from "react-intl";
 
 function AddButton({
 	createButtons,
@@ -60,9 +61,18 @@ function AddButton({
 					alignItems="flex-end"
 				>
 					{createButtons.map((createButton, index) => {
+						console.log(createButton.text.replace(/ /g, ""));
 						return (
 							<SlidingButton dialog={createButton.dialog} key={index}>
-								{createButton.text}
+								{/*if createButton.text is Create Budget Category then id will be createbudgetcategoryButton */}
+								<FormattedMessage
+									id={`${createButton.text
+										.toString()
+										.replace(/ /g, "")
+										.toLowerCase()}Button`}
+									defaultMessage={createButton.text}
+									description={`This text will be shown on Dashboard Add ${createButton.text} Button`}
+								/>
 							</SlidingButton>
 						);
 					})}

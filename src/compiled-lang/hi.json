@@ -58,5 +58,11 @@
 			"type": 0,
 			"value": "साइन अप करें"
 		}
+	],
+	"achievementsCard": [
+		{
+			"type": 0,
+			"value": "उपलब्धि"
+		}
 	]
 }
