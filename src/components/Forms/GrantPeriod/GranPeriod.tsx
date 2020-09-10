@@ -18,7 +18,9 @@ import { GET_PROJECT_DONORS } from "../../../graphql";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { GrantPeriodFormProps, IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
 import InputField from "../../InputField/InputField";
-import BasicDateRangePicker from "./dateRange";
+import { ICustomDatePicker } from "./BasicDateRangePicker";
+
+// import { BasicDateRangePicker } from './dateRange';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -195,7 +197,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 							</Grid>
 
 							<Grid item xs={12} md={12}>
-								<BasicDateRangePicker
+								<ICustomDatePicker
 									from={startDate}
 									to={endData}
 									onChange={(from, to) => {
@@ -203,6 +205,11 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 										formik.setFieldValue("end_date", to?.toISOString());
 									}}
 								/>
+								{/* <ICustomDatePicker
+									from={startDate}
+									to={endData}
+									onChange={(from, to) => console.log(`from`, "to")}
+								/> */}
 							</Grid>
 
 							<Button
