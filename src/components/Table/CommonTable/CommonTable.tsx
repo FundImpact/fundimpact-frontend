@@ -94,7 +94,6 @@ function CommonTableRow<T extends { id: string }>({
 	const [openRow, setOpenRow] = useState(false);
 
 	let childrenArr = React.Children.toArray(children);
-	console.log("openRow :>> ", openRow);
 	return (
 		<>
 			<TableRow key={rowData.id}>

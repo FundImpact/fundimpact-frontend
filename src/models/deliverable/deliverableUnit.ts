@@ -1,11 +1,12 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
+import { IDeliverable } from "./deliverable";
 
 export interface IDeliverableUnit {
 	id?: number;
 	name: string;
 	description?: string;
 	code: string;
-	deliverableCategory?: number | string;
+	deliverableCategory?: IDeliverable[];
 	unit_type: number | string;
 	prefix_label: number | string;
 	suffix_label: number | string;
