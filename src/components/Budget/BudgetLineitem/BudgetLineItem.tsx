@@ -7,6 +7,7 @@ import {
 	GET_ANNUAL_YEAR_LIST,
 	GET_FINANCIAL_YEARS,
 	GET_ORG_CURRENCIES_BY_ORG,
+	GET_CURRENCY_LIST
 } from "../../../graphql/";
 import {
 	GET_BUDGET_TARGET_PROJECT,
@@ -81,7 +82,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
-	let [getOrgCurrencies, { data: orgCurrencies }] = useLazyQuery(GET_ORG_CURRENCIES_BY_ORG);
+
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	useEffect(() => {
 		if (currentProject) {
@@ -174,17 +176,16 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [selectedDonor, getFinancialYearDonor]);
 
 	useEffect(() => {
-		if (dashboardData?.organization) {
-			getOrgCurrencies({
+		if (dashboardData) {
+			getCurrency({
 				variables: {
 					filter: {
-						organization: dashboardData?.organization?.id,
-						isHomeCurrency: true,
+						country: dashboardData?.organization?.country?.id,
 					},
 				},
 			});
 		}
-	}, [getOrgCurrencies, dashboardData?.organization]);
+	}, [getCurrency, dashboardData]);
 
 	useEffect(() => {
 		if (budgetTargets) {
@@ -382,9 +383,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			: [];
 	}
 
-	if (orgCurrencies?.orgCurrencies?.length) {
-		budgetLineitemFormInputFields[1].endAdornment =
-			orgCurrencies.orgCurrencies[0].currency.code;
+	if (currency?.currencyList?.length) {
+		budgetLineitemFormInputFields[1].endAdornment = currency.currencyList[0].code;
 	}
 
 	if (annualYears) {

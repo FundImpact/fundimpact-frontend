@@ -21,7 +21,9 @@ function OrganizationContainer({
 	registrationTypes,
 	countryList,
 	updateOrganization,
+	loading,
 }: {
+	loading: boolean;
 	registrationTypes: { id: string; reg_type: string }[];
 	countryList: ICountry[];
 	updateOrganization: (
@@ -79,7 +81,7 @@ function OrganizationContainer({
 				delete values.id;
 				//change this
 				delete values.icon;
-				delete values.country;
+				// delete values.country;
 				// delete values.reg_type;
 				//make new org and check everything
 				if (!values.organization_registration_type) {
@@ -88,7 +90,7 @@ function OrganizationContainer({
 				await updateOrganization({
 					variables: {
 						id: initialValues.id,
-						input: values
+						input: values,
 					},
 				});
 				notificationDispatch(setSuccessNotification("Organization Updation Success"));
@@ -101,6 +103,7 @@ function OrganizationContainer({
 
 	return (
 		<OrganizationView
+			loading={loading}
 			validate={validate}
 			inputFields={organizationFormInputFields}
 			registrationTypes={registrationTypes}
