@@ -166,7 +166,6 @@ export default function ImpactsTable() {
 
 	useEffect(() => {
 		if (impactTargets) {
-			console.log(impactTargets);
 			let impactTargetProjectList = impactTargets.impactTargetProjectList;
 			let array: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[] = [];
 			for (let i = 0; i < impactTargetProjectList.length; i++) {

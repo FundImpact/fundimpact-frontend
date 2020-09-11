@@ -20,6 +20,7 @@ const userReducer = (state: IUserDataContext, action: Action) => {
 		window.location.reload();
 	}
 	if (action.type === "SET_USER") {
+		console.log("user", action);
 		localStorage.setItem("user", JSON.stringify(action.payload));
 		return { ...state, ...action.payload };
 	}

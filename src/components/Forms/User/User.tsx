@@ -1,12 +1,20 @@
 import React from "react";
 import { FORM_ACTIONS } from "../constant";
-// import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
 import { updateUserForm } from "./inputField.json";
 // import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { Typography, Grid } from "@material-ui/core";
-
-function getInitialValues(props: any) {
+import { useMutation } from "@apollo/client";
+import { UPDATE_USER_DETAILS } from "../../../graphql/User/mutation";
+import {
+	setSuccessNotification,
+	setErrorNotification,
+} from "../../../reducers/notificationReducer";
+import { setUser } from "../../../reducers/userReducer";
+import { UserDispatchContext } from "../../../contexts/userContext";
+import { IUser, UserProps } from "../../../models/User/user";
+function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
@@ -15,22 +23,45 @@ function getInitialValues(props: any) {
 	};
 }
 
-function UserForm(props: any) {
-	// const notificationDispatch = useNotificationDispatch();
-	// const dashboardData = useDashBoardData();
-	let initialValues: any = getInitialValues(props);
+function UserForm(props: UserProps) {
+	const notificationDispatch = useNotificationDispatch();
+	const userDispatch = React.useContext(UserDispatchContext);
+	let initialValues: IUser = getInitialValues(props);
 	const formAction = props.type;
-	// const formIsOpen = props.open;
-	const onCancel = props.handleClose;
+	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
+		onError() {
+			notificationDispatch(setErrorNotification("Profile updation Failed !"));
+		},
+	});
+	React.useEffect(() => {
+		if (userResponse) {
+			if (userDispatch) {
+				userDispatch(setUser({ user: userResponse.updateUserCustomerInput }));
+			}
+			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
+		}
+	}, [userResponse, userDispatch]);
+	const onCreate = (value: IUser) => {};
 
-	const onCreate = (value: any) => {};
+	const onUpdate = (value: IUser) => {
+		updateUser({
+			variables: {
+				id: value.id,
+				input: { name: value.name, username: value.username, email: value.email },
+			},
+		});
+	};
 
-	const onUpdate = (value: any) => {};
-
-	const validate = (values: any) => {
-		let errors: Partial<any> = {};
+	const validate = (values: IUser) => {
+		let errors: Partial<IUser> = {};
 		if (!values.name) {
 			errors.name = "Name is required";
+		}
+		if (!values.username) {
+			errors.username = "Username is required";
+		}
+		if (!values.email) {
+			errors.email = "Email is required";
 		}
 		return errors;
 	};
@@ -39,7 +70,7 @@ function UserForm(props: any) {
 		<React.Fragment>
 			<Grid container spacing={2}>
 				<Grid item xs={3}>
-					<Typography data-testid="dialog-header" variant="h6" gutterBottom>
+					<Typography data-testid="update-profile-heading" variant="h6" gutterBottom>
 						Update Profile
 					</Typography>
 					<Typography variant="subtitle2" color="textSecondary" gutterBottom>
@@ -52,7 +83,7 @@ function UserForm(props: any) {
 							initialValues,
 							validate,
 							onCreate,
-							onCancel,
+							cancelButtonName: "Reset",
 							formAction,
 							onUpdate,
 							inputFields: updateUserForm,

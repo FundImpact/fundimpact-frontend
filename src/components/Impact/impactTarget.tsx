@@ -190,7 +190,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 	// updating sdg field with fetched sdg list
 	useEffect(() => {
-		console.log(sdgList);
 		if (sdgList) {
 			impactTargetForm[4].optionsArray = sdgList.sustainableDevelopmentGoalList;
 		}
@@ -225,7 +224,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 	let initialValues: IImpactTarget = getInitialValues(props);
 
 	const onCreate = (value: IImpactTarget) => {
-		console.log("vaal", value);
 		// fetch impact_category_unit_id
 		setImpactTarget({
 			name: value.name,
@@ -288,7 +286,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
 		}
 	};
-	console.log("cuuurrcat", currCategoryId);
 	const validate = (values: IImpactTarget) => {
 		let errors: Partial<any> = {};
 		if (props.type === IMPACT_ACTIONS.CREATE) {

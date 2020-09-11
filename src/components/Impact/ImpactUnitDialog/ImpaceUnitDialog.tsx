@@ -83,7 +83,6 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 	});
 	useEffect(() => {
 		if (impactCategories) {
-			console.log("impactCategories", impactCategories);
 			impactUnitSelect[0].optionsArray = impactCategories?.impactCategoryOrgList;
 		}
 	}, [impactCategories]);
