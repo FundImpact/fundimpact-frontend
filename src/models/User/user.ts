@@ -7,12 +7,11 @@ export interface IUser {
 	name: string;
 }
 
-export type UserProps = {} & (
+export type UserProps =
 	| {
 			type: FORM_ACTIONS.CREATE;
 	  }
 	| {
 			type: FORM_ACTIONS.UPDATE;
 			data: IUser;
-	  }
-);
+	  };

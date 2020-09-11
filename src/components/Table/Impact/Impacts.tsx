@@ -1,13 +1,5 @@
 import { useQuery } from "@apollo/client";
-import {
-	IconButton,
-	Menu,
-	MenuItem,
-	TableCell,
-	TablePagination,
-	Chip,
-	Avatar,
-} from "@material-ui/core";
+import { IconButton, Menu, MenuItem, TableCell, TablePagination, Avatar } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 

@@ -3,7 +3,6 @@ import { FORM_ACTIONS } from "../constant";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
 import { updateUserForm } from "./inputField.json";
-// import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { Typography, Grid } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER_DETAILS } from "../../../graphql/User/mutation";
