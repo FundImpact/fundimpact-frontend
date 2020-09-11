@@ -61,7 +61,6 @@ function AddButton({
 					alignItems="flex-end"
 				>
 					{createButtons.map((createButton, index) => {
-						console.log(createButton.text.replace(/ /g, ""));
 						return (
 							<SlidingButton dialog={createButton.dialog} key={index}>
 								{/*if createButton.text is Create Budget Category then id will be createbudgetcategoryButton */}

@@ -13,6 +13,7 @@ import TableFooter from "@material-ui/core/TableFooter";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {
@@ -88,7 +89,11 @@ export default function CollapsibleTable({
 				<Box mt={5} display="flex" justifyContent="center">
 					{" "}
 					<Typography variant="h5" gutterBottom color="textSecondary">
-						No targets Found :(
+						<FormattedMessage
+							id={`noTargetFound`}
+							defaultMessage={`No Target Found`}
+							description={`This text will be shown if no target found for table`}
+						/>
 					</Typography>
 				</Box>
 			) : (
@@ -104,6 +109,14 @@ export default function CollapsibleTable({
 										className={tableHeader.th}
 									>
 										{heading.label}
+										{/* <FormattedMessage
+											id={`${heading.label
+												.toString()
+												.replace(/ /g, "")
+												.toLowerCase()}`}
+											defaultMessage={`${heading.label}`}
+											description={`This text will be shown on table for ${heading.label} heading`}
+										/> */}
 									</TableCell>
 								))}
 						</TableRow>
