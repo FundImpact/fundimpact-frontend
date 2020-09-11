@@ -16,9 +16,10 @@ function OrganizationGraphql() {
 	>(GET_ORGANIZATION_REGISTRATION_TYPES);
 
 	const [getCountryList, { data: countryList }] = useLazyQuery<IGetCountryList>(GET_COUNTRY_LIST);
-	const [updateOrganization] = useMutation<IUpdateOrganization, IUpdateOrganizationVariables>(
-		UPDATE_ORGANIZATION
-	);
+	const [updateOrganization, { loading }] = useMutation<
+		IUpdateOrganization,
+		IUpdateOrganizationVariables
+	>(UPDATE_ORGANIZATION);
 
 	useEffect(() => {
 		getOrganizationRegistrationTypes();
@@ -30,6 +31,7 @@ function OrganizationGraphql() {
 
 	return (
 		<OrganizationContainer
+			loading={loading}
 			registrationTypes={registrationTypes?.organizationRegistrationTypes || []}
 			countryList={countryList?.countryList || []}
 			updateOrganization={updateOrganization}

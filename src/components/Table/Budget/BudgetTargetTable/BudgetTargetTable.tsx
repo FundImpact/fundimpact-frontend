@@ -3,7 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { GET_BUDGET_TARGET_PROJECT } from "../../../../graphql/Budget";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
@@ -19,7 +19,7 @@ import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
+import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../../graphql";
 import pagination from "../../../../hooks/pagination";
 import TablePagination from "@material-ui/core/TablePagination";
 import BudgetTargetTableRow from "./BudgetTargetTableRow";
@@ -105,14 +105,19 @@ function BudgetTargetTable() {
 		fireRequest: Boolean(currentProject),
 	});
 
-	const { data: orgCurrencies } = useQuery(GET_ORG_CURRENCIES_BY_ORG, {
-		variables: {
-			filter: {
-				organization: dashboardData?.organization?.id,
-				isHomeCurrency: true,
-			},
-		},
-	});
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
+
+	useEffect(() => {
+		if (dashboardData) {
+			getCurrency({
+				variables: {
+					filter: {
+						country: dashboardData?.organization?.country?.id,
+					},
+				},
+			});
+		}
+	}, [getCurrency, dashboardData]);
 
 	useEffect(() => {
 		setPage(0);
@@ -176,10 +181,8 @@ function BudgetTargetTable() {
 							<TableCell className={tableHeader.th} key={index} align="left">
 								{heading.label === "Total Amount"
 									? `Total Amount ${
-											orgCurrencies?.orgCurrencies[0]?.currency.code
-												? "(" +
-												  orgCurrencies?.orgCurrencies[0]?.currency.code +
-												  ")"
+											currency?.currencyList[0]?.code
+												? "(" + currency?.currencyList[0]?.code + ")"
 												: ""
 									  }`
 									: heading.label}
@@ -193,7 +196,7 @@ function BudgetTargetTable() {
 							<BudgetTargetTableRow
 								budgetTarget={budgetTarget}
 								key={budgetTarget.id}
-								currency={orgCurrencies?.orgCurrencies[0]?.currency.code || ""}
+								currency={currency?.currencyList[0]?.code || ""}
 								serialNo={page * 10 + index + 1}
 								menuId={menuId}
 								selectedTargetBudget={selectedTargetBudget}

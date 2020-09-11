@@ -18,6 +18,8 @@ import {
 	FormHelperText,
 	Button,
 	Divider,
+	Input,
+	CircularProgress,
 } from "@material-ui/core";
 import { IInputFields } from "../../../models";
 import UploadFile from "../../../components/UploadFile";
@@ -53,7 +55,9 @@ function OrganizationView({
 	registrationTypes,
 	initialValues,
 	onSubmit,
+	loading,
 }: {
+	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
 	inputFields: IOrganizationInputFields[];
 	registrationTypes: { id: string; reg_type: string }[];
@@ -90,7 +94,16 @@ function OrganizationView({
 									<Form>
 										<Grid container spacing={5}>
 											<Grid item xs={3}>
-												<UploadFile title="Upload Logo" height="200px" />
+												<UploadFile<IOrganisationForm>
+													formik={formik}
+													title="Upload Logo"
+													height="200px"
+													name="icon"
+													required={!!initialValues.icon}
+													testId="createOrganizationIconInput"
+													dataTestId="createOrganizationIcon"
+													id="icon"
+												/>
 											</Grid>
 											<Grid item xs={9}>
 												<Grid container spacing={2}>
@@ -360,6 +373,16 @@ function OrganizationView({
 					</Paper>
 				</Grid>
 			</Grid>
+			{loading ? (
+				<Box
+					position="fixed"
+					left="50%"
+					top="50%"
+					style={{ transform: "translate(-50%, -50%)" }}
+				>
+					<CircularProgress />
+				</Box>
+			) : null}
 		</Box>
 	);
 }
