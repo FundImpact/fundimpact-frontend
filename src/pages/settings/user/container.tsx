@@ -1,5 +1,6 @@
 import React from "react";
 import UserForm from "../../../components/Forms/User";
+import PasswordReset from "../../../components/Forms/ResetPassword";
 import { Box, Paper } from "@material-ui/core";
 import { useAuth } from "../../../contexts/userContext";
 import { FORM_ACTIONS } from "../../../models/constants";
@@ -23,9 +24,14 @@ export const ProfileContainer = () => {
 					description={`This text will be shown on Setting page for profile heading`}
 				/>
 			</h1>
-			<Paper>
+			<Paper style={{ height: "30vh" }}>
 				<Box m={3} p={2}>
 					<UserForm data={data} type={FORM_ACTIONS.UPDATE} />
+				</Box>
+			</Paper>
+			<Paper style={{ height: "30vh" }}>
+				<Box m={3} p={3}>
+					<PasswordReset userId={data?.id} type={FORM_ACTIONS.UPDATE} />
 				</Box>
 			</Paper>
 		</Box>

@@ -2,29 +2,21 @@
 	"updateUserForm": [
 		{
 			"name": "email",
-			"id": "email",
 			"dataTestId": "userFormEmail",
 			"testId": "userFormEmailInput",
-			"label": "Email",
-			"type": "email",
-			"size": 12
+			"value": "my@my.com"
 		},
 		{
 			"name": "username",
-			"id": "username",
 			"dataTestId": "userFormUsername",
 			"testId": "userFormUsernameInput",
-			"label": "Username",
-			"size": 6
+			"value": "username"
 		},
-
 		{
 			"name": "name",
-			"id": "name",
 			"dataTestId": "userFormName",
 			"testId": "userFormNameInput",
-			"label": "Name",
-			"size": 6
+			"value": "name"
 		}
 	]
 }
