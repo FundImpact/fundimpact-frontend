@@ -24,6 +24,7 @@ import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import DeliverablesTable from "../../Table/Deliverable/Deliverable";
 import GrantPeriodTable from "../../Table/GrantPeriod/GrantPeriodTable";
 import ImpactsTable from "../../Table/Impact/Impacts";
+import { useIntl } from "react-intl";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -223,7 +224,7 @@ export default function DashboardTableContainer() {
 		console.log(`setting tab index `, newValue);
 		setValue(newValue);
 	};
-
+	const intl = useIntl();
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs
@@ -238,7 +239,11 @@ export default function DashboardTableContainer() {
 				{tabs.map((tab, index) => (
 					<Tab
 						textColor="secondary"
-						key={tab.label}
+						key={intl.formatMessage({
+							id: `${tab.label}TableHeading`,
+							defaultMessage: tab.label,
+							description: `This text will be shown for ${tab.label} table heading`,
+						})}
 						value={index}
 						label={tab.label}
 						{...a11yProps(index)}
