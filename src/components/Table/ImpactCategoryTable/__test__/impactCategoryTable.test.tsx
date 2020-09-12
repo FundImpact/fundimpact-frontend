@@ -1,12 +1,8 @@
 import React from "react";
 import { waitForElement, fireEvent } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
-import {
-	GET_PROJECT_BUDGET_TARGETS_COUNT,
-} from "../../../../graphql/Budget";
-import {
-	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-} from "../../../../graphql/Budget";
+import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/Budget";
+import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/Budget";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
@@ -17,10 +13,7 @@ import {
 	mockBudgetTargetCount,
 	mockDeliverableCategoryCount,
 } from "../../../../utils/testMock.json";
-import {
-	impactCategoryTableHeadings,
-	impactUnitTableHeadings,
-} from "../../constants";
+import { impactCategoryTableHeadings, impactUnitTableHeadings } from "../../constants";
 import ImpactCategoryTable from "../ImpactCategoryTableGraphql";
 import {
 	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
@@ -30,9 +23,7 @@ import {
 	deliverableCategoryMock,
 	deliverableCategoryUnitListMock,
 } from "../../../Deliverable/__test__/testHelp";
-import {
-	GET_CATEGORY_UNIT,
-} from "../../../../graphql/Deliverable/categoryUnit";
+import { GET_CATEGORY_UNIT } from "../../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 	GET_IMPACT_CATEGORY_BY_ORG,
@@ -48,78 +39,6 @@ import { GET_IMPACT_CATEGORY_PROJECT_COUNT } from "../../../../graphql/Impact/ca
 let table: any;
 
 const mocks = [
-	{
-		request: {
-			query: GET_PROJECT_BUDGET_TARGETS_COUNT,
-			variables: {
-				filter: {
-					project: 3,
-				},
-			},
-		},
-		result: {
-			data: mockBudgetTargetCount,
-		},
-	},
-	{
-		request: {
-			query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
-			variables: {
-				filter: {
-					organization: "3",
-				},
-			},
-		},
-		result: {
-			data: mockDeliverableCategoryCount,
-		},
-	},
-	{
-		request: {
-			query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-			variables: {
-				filter: {
-					budgetTargetsProject: "3",
-				},
-			},
-		},
-		result: {
-			data: mockBudgetTargetAmountSum,
-		},
-	},
-	{
-		request: {
-			query: GET_DELIVERABLE_ORG_CATEGORY,
-			variables: {
-				filter: { organization: "3" },
-				limit: 2,
-				start: 0,
-				sort: "created_at:DESC",
-			},
-		},
-		result: { data: { deliverableCategory: deliverableCategoryMock } },
-	},
-	{
-		request: {
-			query: GET_DELIVERABLE_ORG_CATEGORY,
-			variables: {
-				filter: { organization: "3" },
-			},
-		},
-		result: { data: { deliverableCategory: deliverableCategoryMock } },
-	},
-	{
-		request: {
-			query: GET_CATEGORY_UNIT,
-			variables: {
-				filter: { deliverable_category_org: "1" },
-				limit: 1,
-				start: 0,
-				sort: "created_at:DESC",
-			},
-		},
-		result: { data: { deliverableCategoryUnitList: deliverableCategoryUnitListMock } },
-	},
 	{
 		request: {
 			query: GET_IMPACT_CATEGORY_BY_ORG,
@@ -196,6 +115,18 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_IMPACT_CATEGORY_UNIT,
+			variables: {
+				filter: { impact_category_org: "1" },
+				limit: impactCategoryUnit.length,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: { data: { impactCategoryUnitList: impactCategoryUnit } },
+	},
+	{
+		request: {
 			query: GET_IMPACT_UNIT_PROJECT_COUNT,
 			variables: {
 				filter: {
@@ -222,24 +153,71 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_IMPACT_CATEGORY_UNIT,
-			variables: {
-				filter: { impact_category_org: "1" },
-				limit: impactCategoryUnit.length,
-				start: 0,
-				sort: "created_at:DESC",
-			},
-		},
-		result: { data: { impactCategoryUnitList: impactCategoryUnit } },
-	},
-	{
-		request: {
 			query: GET_IMPACT_CATEGORY_UNIT_COUNT,
 			variables: {
 				filter: { impact_category_org: "1" },
 			},
 		},
 		result: { data: { impactCategoryUnitListCount: impactCategoryUnit.length } },
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARGETS_COUNT,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: mockBudgetTargetCount,
+		},
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: mockDeliverableCategoryCount,
+		},
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: {
+				filter: { organization: "3" },
+				limit: 2,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: { data: { deliverableCategory: deliverableCategoryMock } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: {
+				filter: { organization: "3" },
+			},
+		},
+		result: { data: { deliverableCategory: deliverableCategoryMock } },
+	},
+	{
+		request: {
+			query: GET_CATEGORY_UNIT,
+			variables: {
+				filter: { deliverable_category_org: "1" },
+				limit: 1,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: { data: { deliverableCategoryUnitList: deliverableCategoryUnitListMock } },
 	},
 ];
 
