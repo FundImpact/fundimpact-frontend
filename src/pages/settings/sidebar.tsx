@@ -9,6 +9,7 @@ import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboard
 import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
+import sideBarList from "./sidebarList.json";
 
 /**
  *
@@ -75,6 +76,34 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 				data-testid="update-user-link"
 				primary="Update Profile"
 			></ListItemLink>
+			{sideBarList.map(
+				(
+					listItem: {
+						mainHeading: string;
+						subHeadings: { to: string; dataTestId: string; title: string }[];
+					},
+					index
+				) => (
+					<>
+						<Box display="flex" key={index}>
+							<Box p={2}>
+								<ListItemText
+									primary={listItem.mainHeading}
+									className={classes.mainHeading}
+								/>
+							</Box>
+						</Box>
+						{listItem.subHeadings.map((subHeading, subHeadingIndex) => (
+							<ListItemLink
+								to={subHeading.to}
+								data-testid={subHeading.dataTestId}
+								primary={subHeading.title}
+								key={subHeadingIndex}
+							/>
+						))}
+					</>
+				)
+			)}
 		</Box>
 	);
 }

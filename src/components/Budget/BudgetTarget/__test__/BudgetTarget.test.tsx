@@ -1,9 +1,13 @@
 import React from "react";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../../graphql";
+import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../../graphql";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
-import { organizationDetails, projectDetails } from "../../../../utils/testMock.json";
+import {
+	organizationDetails,
+	projectDetails,
+	mockCurrencyList,
+} from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
 import { renderApollo } from "../../../../utils/test.util";
@@ -53,6 +57,21 @@ const mocks = [
 		result: {
 			data: {
 				orgBudgetCategory: mockOrgBudgetCategory,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_CURRENCY_LIST,
+			variables: {
+				filter: {
+					country: "1",
+				},
+			},
+		},
+		result: {
+			data: {
+				currencyList: mockCurrencyList,
 			},
 		},
 	},

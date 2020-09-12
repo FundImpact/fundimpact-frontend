@@ -6,6 +6,7 @@ export const GET_ORGANISATIONS = gql`
 			id
 			name
 			short_name
+			legal_name
 			organization_registration_type {
 				id
 				reg_type
@@ -20,6 +21,10 @@ export const GET_ORGANISATIONS = gql`
 			}
 			country {
 				id
+			}
+			logo {
+				id
+				url
 			}
 		}
 	}
@@ -81,7 +86,11 @@ export const GET_PROJECTS = gql`
 export const GET_ORG_CURRENCIES_BY_ORG = gql`
 	query getorgCurrenciesByorg($filter: JSON) {
 		orgCurrencies(where: $filter) {
+			id
+			isHomeCurrency
 			currency {
+				id
+				name
 				code
 			}
 		}
@@ -209,6 +218,23 @@ export const GET_COUNTRY_LIST = gql`
 		countryList {
 			id
 			name
+		}
+	}
+`;
+
+export const GET_ORGANIZATION_REGISTRATION_TYPES = gql`
+	query {
+		organizationRegistrationTypes {
+			id
+			reg_type
+		}
+	}
+`;
+
+export const GET_CURRENCY_LIST = gql`
+	query getCurrencyList($filter: JSON) {
+		currencyList(where: $filter) {
+			code
 		}
 	}
 `;

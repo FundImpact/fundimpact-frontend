@@ -143,3 +143,8 @@ export interface ICommonForm {
 	initialValues: any;
 	formAction?: FORM_ACTIONS;
 }
+
+export interface ICountry {
+	id: string;
+	name: string;
+}

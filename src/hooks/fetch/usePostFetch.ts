@@ -59,7 +59,7 @@ const sendPostRequest = async (url: string, payload: IUserSignUp) => {
 	return response.json();
 };
 
-const setResponseError = (
+export const setResponseError = (
 	response: any,
 	setData: Dispatch<SetStateAction<any>>,
 	setError: Dispatch<SetStateAction<string | null>>
