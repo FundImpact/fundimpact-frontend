@@ -29,3 +29,9 @@ export const GET_IMPACT_CATEGORY = gql`
 		}
 	}
 `;
+
+export const GET_IMPACT_CATEGORY_PROJECT_COUNT = gql`
+	query getProjectCountImpCatByOrg($filter: JSON) {
+		projectCountImpCatByOrg(where: $filter)
+	}
+`;

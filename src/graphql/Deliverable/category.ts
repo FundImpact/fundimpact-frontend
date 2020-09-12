@@ -74,3 +74,9 @@ export const GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG = gql`
 		deliverableCategoryCount(where: $filter)
 	}
 `;
+
+export const GET_DELIVERABLE_CATEGORY_PROJECT_COUNT = gql`
+	query getprojectCountDelCatByOrg($filter: JSON) {
+		projectCountDelCatByOrg(where: $filter)
+	}
+`;

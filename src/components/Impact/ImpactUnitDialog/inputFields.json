@@ -32,22 +32,6 @@
 			"multiple": true
 		},
 		{
-			"name": "prefix_label",
-			"id": "prefix-label",
-			"dataTestId": "createImpactUnitPrefixLabel",
-			"testId": "createImpactUnitPrefixLabelInput",
-			"label": "Prefix Label",
-			"size": 6
-		},
-		{
-			"name": "suffix_label",
-			"id": "suffix-label",
-			"dataTestId": "createImpactUnitSuffixLabel",
-			"testId": "createImpactUnitSuffixLabelInput",
-			"label": "Suffix Label",
-			"size": 6
-		},
-		{
 			"name": "target_unit",
 			"id": "target-unit",
 			"dataTestId": "createImpactUnitTargetUnit",

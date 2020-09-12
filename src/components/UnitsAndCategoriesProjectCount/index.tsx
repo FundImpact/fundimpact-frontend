@@ -1,0 +1,2 @@
+import UnitsAndCategoriesProjectCountGraphql from "./UnitsAndCategoriesProjectCountGraphql";
+export default UnitsAndCategoriesProjectCountGraphql;

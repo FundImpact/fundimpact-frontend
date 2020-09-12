@@ -49,3 +49,9 @@ export const GET_IMPACT_UNIT_COUNT_BY_ORG = gql`
 		impactUnitsOrgCount(where: $filter)
 	}
 `;
+
+export const GET_IMPACT_UNIT_PROJECT_COUNT = gql`
+	query getprojectCountImpUnit($filter: JSON) {
+		projectCountImpUnit(where: $filter)
+	}
+`;

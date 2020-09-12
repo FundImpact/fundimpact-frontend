@@ -61,3 +61,56 @@ export const donorTableHeading = [
 	{ label: "Country" },
 	{ label: "" },
 ];
+
+export const budgetCategoryHeading = [
+	{ label: "#" },
+	{ label: "Budget Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+];
+
+export const deliverableCategoryTableHeading = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Deliverable Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const deliverableUnitTableHeadings = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Deliverable Unit" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const impactUnitTableHeadings = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Impact Unit" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const impactCategoryTableHeadings = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Impact Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];

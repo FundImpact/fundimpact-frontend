@@ -1,49 +1,28 @@
-import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, ApolloCache } from "@apollo/client";
-import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import {
 	CREATE_IMPACT_CATEGORY_UNIT,
-
-
 	CREATE_IMPACT_UNITS_ORG_INPUT,
 } from "../../../graphql/Impact/mutation";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
-import { IInputField } from "../../../models";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
-	UPDATE_IMPACT_UNIT_ORG,
-} from "../../../graphql/Impact/mutation";
+import { UPDATE_IMPACT_UNIT_ORG } from "../../../graphql/Impact/mutation";
 import {
 	GET_IMPACT_UNIT_BY_ORG,
 	GET_IMPACT_CATEGORY_BY_ORG,
 	GET_IMPACT_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Impact/query";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-
-
-
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
-
-
-import { impactUnitForm, impactUnitSelect } from "../inputField.json";
 import { impactUnitForm } from "./inputFields.json";
-import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm/commonForm";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
 	IImpactUnitProps,
 	IImpactUnitData,
-	IImpactCategoryData,
 } from "../../../models/impact/impact";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactUnit, IGetImpactCategoryUnit } from "../../../models/impact/query";
@@ -52,7 +31,7 @@ import {
 	GET_IMPACT_CATEGORY_UNIT,
 } from "../../../graphql/Impact/categoryUnit";
 
-let inputFields: IInputField[] = impactUnitForm;
+let inputFields: any[] = impactUnitForm;
 
 const defaultValues: IImpactUnitFormInput = {
 	name: "",
@@ -213,7 +192,6 @@ function ImpactUnitDialog({
 							filter: { impact_units_org: impactUnitId },
 							store,
 						});
-
 					},
 				});
 			}
@@ -226,11 +204,16 @@ function ImpactUnitDialog({
 		CREATE_IMPACT_UNITS_ORG_INPUT,
 		{
 			async onCompleted(data) {
-				if (impactCategory) {
-					await impactCategoryUnitHelper(data.createImpactUnitsOrgInput?.id);
+				try {
+					if (impactCategory) {
+						console.log("data :>> ", data);
+						await impactCategoryUnitHelper(data.createImpactUnitsOrgInput?.id);
+					}
+					notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
+				} catch (err) {
+				} finally {
+					handleClose();
 				}
-				notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
-				handleClose();
 			},
 			onError() {
 				notificationDispatch(setErrorNotification("Impact Unit Creation Failure"));
@@ -267,6 +250,8 @@ function ImpactUnitDialog({
 		try {
 			const values = Object.assign({}, valuesSubmitted);
 			setImpactCategory(values.impactCategory);
+			delete values.prefix_label
+			delete values.suffix_label
 			delete values.impactCategory;
 			await createImpactUnitsOrgInput({
 				variables: {
