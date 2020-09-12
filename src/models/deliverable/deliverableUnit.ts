@@ -1,5 +1,4 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
-import { IDeliverable } from "./deliverable";
 
 export interface IDeliverableUnit {
 	id?: number;

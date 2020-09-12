@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import ImpactUnitView from "./ImpactUnitTableView";
-import { IGetImpactUnit } from "../../../models/impact/query";
 import { IImpactUnitData, IImpactCategoryData } from "../../../models/impact/impact";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../../graphql/Impact/categoryUnit";
