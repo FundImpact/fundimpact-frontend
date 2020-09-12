@@ -9,6 +9,26 @@ import { DELIVERABLE_ACTIONS } from "../../../components/Deliverable/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { makeStyles } from "@material-ui/styles";
 
+const useStyles = makeStyles((theme: Theme) => ({
+	root: {
+		//flexGrow: 1,
+		backgroundColor: theme.palette.background.paper,
+		height: "100%",
+		overflow: "scroll",
+	},
+	contentHeading: {
+		display: "flex",
+		justifyContent: "space-between",
+		alignItems: "center",
+		margin: theme.spacing(1),
+		marginLeft: theme.spacing(2),
+	},
+	button: {
+		margin: theme.spacing(1),
+		color: theme.palette.common.white,
+	},
+}));
+
 interface TabPanelProps {
 	children?: React.ReactNode;
 	index: any;
@@ -38,27 +58,6 @@ function a11yProps(index: any) {
 	};
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		//flexGrow: 1,
-		backgroundColor: theme.palette.background.paper,
-		height: "100%",
-		overflow: "scroll",
-	},
-	contentHeading: {
-		display: "flex",
-		justifyContent: "space-between",
-		alignItems: "center",
-		margin: theme.spacing(1),
-		marginLeft: theme.spacing(2),
-	},
-	button: {
-		margin: theme.spacing(1),
-		color: theme.palette.common.white,
-	},
-}));
-
-//change all names
 const DeliverableMasterView = () => {
 	const dashboardData = useDashBoardData();
 	const classes = useStyles();
