@@ -10,6 +10,7 @@ import { organizationDetails } from "../../../../utils/testMock.json";
 import { budgetCategoryFormInputFields } from "../inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { IBudgetCategory } from "../../../../models/budget";
+import { FORM_ACTIONS } from "../../../../models/budget/constants";
 
 const handleClose = jest.fn();
 
@@ -39,7 +40,16 @@ const mocks = [
 		},
 		result: () => {
 			creationOccured = true;
-			return {};
+			return {
+				data: {
+					createOrgBudgetCategory: {
+						id: "1",
+						name: "new name",
+						description: "new desc",
+						code: "new code",
+					},
+				},
+			};
 		},
 	},
 ];
@@ -49,7 +59,11 @@ beforeEach(() => {
 		dialog = renderApollo(
 			<DashboardProvider defaultState={{ organization: orgDetails }}>
 				<NotificationProvider>
-					<BudgetCategory open={true} handleClose={handleClose} />
+					<BudgetCategory
+						open={true}
+						handleClose={handleClose}
+						formAction={FORM_ACTIONS.CREATE}
+					/>
 				</NotificationProvider>
 			</DashboardProvider>,
 			{

@@ -7,34 +7,31 @@ import { renderApollo } from "../../../../utils/test.util";
 import { CREATE_IMPACT_UNITS_ORG_INPUT } from "../../../../graphql/Impact/mutation";
 import { impactUnitDialogFields } from "../../../../utils/inputTestFields.json";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../../graphql/Impact/query";
-import { organizationDetail } from "../../../../utils/testMock.json";
+import { organizationDetails } from "../../../../utils/testMock.json";
+import { FORM_ACTIONS } from "../../../../models/constants";
 const handleClose = jest.fn();
 
 const impactCategoryMock = [
 	{
 		id: "2",
-		name: "SONG",
-		code: "ICO",
-		shortname: "IMORG",
-		description: "createImpactCategoryOrgInput",
-		organization: {
-			id: "2",
-			name: "TSERIES",
-			address: null,
-			account: {
-				id: "2",
-				name: "rahul@gmail.com",
-				description: null,
-				account_no: "a8c1e362-405f-4572-a849-eb8094ffa550",
-			},
-			short_name: "TS",
-			legal_name: "",
-			description: null,
-			organization_registration_type: {
-				id: "1",
-				reg_type: "Trusts",
-			},
-		},
+		name: "SONG 2",
+		code: "ICO 2",
+		shortname: "IMORG 2",
+		description: "createImpactCategoryOrgInput 2",
+	},
+	{
+		id: "1",
+		name: "SONG 1",
+		code: "ICO 1",
+		shortname: "IMORG 1",
+		description: "createImpactCategoryOrgInput 1",
+	},
+	{
+		id: "3",
+		name: "SONG 3",
+		code: "ICO 3",
+		shortname: "IMORG 3",
+		description: "createImpactCategoryOrgInput 3",
 	},
 ];
 let dialog: any;
@@ -43,9 +40,7 @@ const initialValues: any = {
 	name: "impc name",
 	description: "desc",
 	code: "impc code",
-	target_unit: "123",
-	prefix_label: "pre label",
-	suffix_label: "suf label",
+	target_unit: "123"
 };
 
 let creationOccured = false;
@@ -55,18 +50,25 @@ const mocks = [
 		request: {
 			query: CREATE_IMPACT_UNITS_ORG_INPUT,
 			variables: {
-				input: { ...initialValues, target_unit: 123 },
+				input: { ...initialValues, target_unit: 123, organization: "3" },
 			},
 		},
 		result: () => {
 			creationOccured = true;
-			return {};
+			return {
+				data: {
+					createImpactUnitsOrgInput: {
+						id: "1",
+						...initialValues,
+					},
+				},
+			};
 		},
 	},
 	{
 		request: {
 			query: GET_IMPACT_CATEGORY_BY_ORG,
-			variables: { filter: { organization: "13" } },
+			variables: { filter: { organization: "3" } },
 		},
 		result: { data: { impactCategoryOrgList: impactCategoryMock } },
 	},
@@ -75,9 +77,13 @@ const mocks = [
 beforeEach(() => {
 	act(() => {
 		dialog = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetail }}>
+			<DashboardProvider defaultState={{ organization: organizationDetails }}>
 				<NotificationProvider>
-					<ImpaceUnitDialog open={true} handleClose={handleClose} />
+					<ImpaceUnitDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={true}
+						handleClose={handleClose}
+					/>
 				</NotificationProvider>
 			</DashboardProvider>,
 			{

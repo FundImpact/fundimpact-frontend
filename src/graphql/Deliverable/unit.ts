@@ -65,3 +65,9 @@ export const GET_DELIVERABLE_UNIT_COUNT_BY_ORG = gql`
 		deliverableUnitOrgCount(where: $filter)
 	}
 `;
+
+export const GET_DELIVERABLE_UNIT_PROJECT_COUNT = gql`
+	query getprojectCountDelUnit($filter: JSON) {
+		projectCountDelUnit(where: $filter)
+	}
+`;

@@ -112,3 +112,9 @@ export const GET_ORG_BUDGET_CATEGORY_COUNT = gql`
 		orgBudgetCategoryCount(where: $filter)
 	}
 `;
+
+export const GET_BUDGET_CATEGORY_PROJECT_COUNT = gql`
+	query getProjectCountBudgetCatByOrg($filter: JSON) {
+		projectCountBudgetCatByOrg(where: $filter)
+	}
+`;

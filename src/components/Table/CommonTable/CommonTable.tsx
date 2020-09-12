@@ -18,16 +18,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
-import { FORM_ACTIONS } from "../../../models/constants";
-import {
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-	GET_ORG_BUDGET_CATEGORY_COUNT,
-} from "../../../graphql/Budget";
-import { IBudgetCategory } from "../../../models/budget";
-import pagination from "../../../hooks/pagination";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import BudgetCategory from "../../Budget/BudgetCategory";
 import { ICommonTableRow } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -104,6 +95,7 @@ function CommonTableRow<T extends { id: string }>({
 							aria-label="expand row"
 							size="small"
 							onClick={() => setOpenRow(!openRow)}
+							data-testid={`collaspeButton-${serialNo}`}
 						>
 							{openRow ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 						</IconButton>
@@ -115,7 +107,9 @@ function CommonTableRow<T extends { id: string }>({
 				{rows.map((row, i: number) => {
 					return (
 						<TableCell key={i} align="left">
-							{getValue<T>(rowData, row.valueAccessKey.split(","))}
+							{(row.valueAccessKey &&
+								getValue<T>(rowData, row.valueAccessKey.split(","))) ||
+								(row.renderComponent && row.renderComponent(rowData.id))}
 						</TableCell>
 					);
 				})}

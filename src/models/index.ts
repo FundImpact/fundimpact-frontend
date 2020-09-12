@@ -103,6 +103,7 @@ export interface IInputFields {
 	getInputValue?: any;
 	required?: boolean;
 	multiple?: boolean;
+	hidden?: boolean;
 }
 
 export interface ISelectField {
@@ -150,4 +151,5 @@ export interface ICountry {
 }
 export type ICommonTableRow = {
 	valueAccessKey: string;
+	renderComponent?: (id: string) => React.ReactNode;
 };

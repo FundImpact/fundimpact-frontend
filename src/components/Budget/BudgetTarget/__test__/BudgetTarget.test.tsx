@@ -3,10 +3,11 @@ import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../../graphq
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { mockCurrencyList } from "../../../../utils/testMock.json";
 import {
 	organizationDetails,
 	projectDetails,
-	mockCurrencyList,
+	mockOrgBudgetCategory,
 } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -37,11 +38,6 @@ const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
 const mockDonors = [
 	{ id: "1", donor: { id: "1", name: "donor 1" } },
 	{ id: "2", donor: { id: "2", name: "donor 2" } },
-];
-
-const mockOrgBudgetCategory = [
-	{ id: "1", name: "military 1", code: "m5" },
-	{ id: "2", name: "military 2", code: "m6" },
 ];
 
 const mocks = [
