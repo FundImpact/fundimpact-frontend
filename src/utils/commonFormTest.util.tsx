@@ -94,8 +94,8 @@ export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 			intialFormValue,
 		});
 		await act(async () => {
-			let budgetTargetSaveButton = await reactElement.getByTestId("createSaveButton");
-			fireEvent.click(budgetTargetSaveButton);
+			let saveButton = await reactElement.getByTestId("createSaveButton");
+			fireEvent.click(saveButton);
 			await wait();
 		});
 		await new Promise((resolve) => setTimeout(resolve, 1000));

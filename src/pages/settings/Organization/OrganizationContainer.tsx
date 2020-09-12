@@ -62,7 +62,7 @@ function OrganizationContainer({
 			if (!values.name && initialValues.name) {
 				errors.name = "Name is required";
 			}
-			if (!values.country && initialValues.country) {
+			if (!values.country) {
 				errors.country = "Country is required";
 			}
 			if (
@@ -79,7 +79,7 @@ function OrganizationContainer({
 			}
 			return errors;
 		},
-		[initialValues]
+		[initialValues, dashboardData]
 	);
 
 	const onSubmit = useCallback(
