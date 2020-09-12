@@ -51,7 +51,7 @@ function TabContent(props: TabPanelProps) {
 	);
 }
 
-function a11yProps(index: any) {
+function a11yProp(index: any) {
 	return {
 		id: `wrapped-tab-${index}`,
 		"aria-controls": `wrapped-tabpanel-${index}`,
@@ -69,9 +69,6 @@ const DeliverableMasterView = () => {
 
 	const tabs = [
 		{
-			label: "Deliverable Category",
-			table: <DeliverableCategoryTable />,
-			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 					<Deliverable
@@ -82,6 +79,9 @@ const DeliverableMasterView = () => {
 					/>
 				),
 			},
+			createButtons: [],
+			table: <DeliverableCategoryTable />,
+			label: "Deliverable Category",
 		},
 		{
 			label: "Deliverable Unit",
@@ -121,7 +121,7 @@ const DeliverableMasterView = () => {
 								key={tab.label}
 								value={index}
 								label={tab.label}
-								{...a11yProps(index)}
+								{...a11yProp(index)}
 							/>
 						))}
 					</Tabs>
