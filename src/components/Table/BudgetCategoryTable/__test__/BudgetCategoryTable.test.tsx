@@ -37,53 +37,58 @@ let table: any;
 
 mockBudgetLineItem.reporting_date = new Date();
 
+const budgetTargetProjectQuery = {
+	request: {
+		query: GET_BUDGET_TARGET_PROJECT,
+		variables: {
+			filter: {
+				project: 3,
+			},
+		},
+	},
+	result: {
+		data: {
+			projectBudgetTargets: mockOrgBudgetTargetProject,
+		},
+	},
+};
+
+const grantPeriodProjectListQuery = {
+	request: {
+		query: GET_GRANT_PERIODS_PROJECT_LIST,
+		variables: {
+			filter: {
+				project: 3,
+			},
+		},
+	},
+	result: {
+		data: {
+			grantPeriodsProjectList: mockGrantPeriodsProjectList,
+		},
+	},
+};
+
+const getFinancialYearListQuery = {
+	request: {
+		query: GET_FINANCIAL_YEARS,
+		variables: {
+			filter: {
+				country: "1",
+			},
+		},
+	},
+	result: {
+		data: {
+			financialYearList: mockFinancialYears,
+		},
+	},
+};
+
 const mocks = [
-	
-	{
-		request: {
-			query: GET_BUDGET_TARGET_PROJECT,
-			variables: {
-				filter: {
-					project: 3,
-				},
-			},
-		},
-		result: {
-			data: {
-				projectBudgetTargets: mockOrgBudgetTargetProject,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_GRANT_PERIODS_PROJECT_LIST,
-			variables: {
-				filter: {
-					project: 3,
-				},
-			},
-		},
-		result: {
-			data: {
-				grantPeriodsProjectList: mockGrantPeriodsProjectList,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_FINANCIAL_YEARS,
-			variables: {
-				filter: {
-					country: "1",
-				},
-			},
-		},
-		result: {
-			data: {
-				financialYearList: mockFinancialYears,
-			},
-		},
-	},
+	budgetTargetProjectQuery,
+	grantPeriodProjectListQuery,
+	getFinancialYearListQuery,
 	{
 		request: {
 			query: GET_PROJ_BUDGET_TRACINGS_COUNT,
