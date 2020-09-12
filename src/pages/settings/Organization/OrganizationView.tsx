@@ -239,9 +239,7 @@ function OrganizationView({
 																					id={
 																						element.inputLabelId
 																					}
-																					required={
-																						element.required
-																					}
+																					required={true}
 																				>
 																					{element.label}
 																				</InputLabel>
@@ -281,18 +279,14 @@ function OrganizationView({
 																					name={
 																						element.name
 																					}
-																					data-testid={
-																						element.dataTestId
-																					}
 																					inputProps={{
 																						"data-testid":
 																							element.testId,
 																					}}
-																					required={
-																						!!initialValues[
-																							element.name as keyof IOrganisationForm
-																						]
+																					data-testid={
+																						element.dataTestId
 																					}
+																					required={true}
 																				>
 																					{!element
 																						.optionsArray
