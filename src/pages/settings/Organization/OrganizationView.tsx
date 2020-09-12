@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { IOrganisationForm } from "../../../models/organisation/types";
+import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import {
 	Grid,
 	Paper,
@@ -43,11 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-interface IOrganizationInputFields extends IInputFields {
-	helperText?: string;
-	displayName?: string;
-}
-
 //check required
 function OrganizationView({
 	validate,
@@ -56,6 +51,7 @@ function OrganizationView({
 	initialValues,
 	onSubmit,
 	loading,
+	logo,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -63,6 +59,7 @@ function OrganizationView({
 	registrationTypes: { id: string; reg_type: string }[];
 	initialValues: IOrganisationForm;
 	onSubmit: (value: IOrganisationForm) => Promise<void>;
+	logo: string;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -73,7 +70,6 @@ function OrganizationView({
 		},
 		[validate]
 	);
-
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
@@ -103,6 +99,7 @@ function OrganizationView({
 													testId="createOrganizationIconInput"
 													dataTestId="createOrganizationIcon"
 													id="icon"
+													logo={logo}
 												/>
 											</Grid>
 											<Grid item xs={9}>
@@ -151,6 +148,10 @@ function OrganizationView({
 																					element.name as keyof IOrganisationForm
 																				]
 																			}
+																			inputProps={{
+																				"data-testid":
+																					element.testId,
+																			}}
 																			name={element.name}
 																			data-testid={
 																				element.dataTestId
@@ -190,6 +191,7 @@ function OrganizationView({
 																		formik.values
 																			.organization_registration_type
 																	}
+																	data-testid="createOrganizationRegistrationType"
 																>
 																	{registrationTypes.map(
 																		(element, index) => (
@@ -217,7 +219,7 @@ function OrganizationView({
 															Home country settings
 														</Typography>
 														{inputFields
-															.slice(5)
+															.slice(4)
 															.map((element, index) => (
 																<Box mt={2} pl={1} key={index}>
 																	<Grid container>

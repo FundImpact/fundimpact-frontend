@@ -2,14 +2,17 @@
 	"organizationDetails": {
 		"orgName": "my org",
 		"streetAdd": "221 baker street",
-		"city": "London",
-		"state": "London",
+		"short_name": "sh homes",
+		"legal_name": "sh legal detective",
 		"country": {
 			"id": "1"
 		},
-		"zipCode": 123213,
 		"name": "sherlock",
-		"id": "3"
+		"id": "3",
+		"organization_registration_type": {
+			"id": "1",
+			"reg_type": "Trusts"
+		}
 	},
 	"organizationDetail": {
 		"__typename": "OrganizationList",
@@ -201,6 +204,24 @@
 			},
 			"legal_name": "vikram legal 001",
 			"short_name": "vikram short 100"
+		}
+	],
+	"mockCurrencyList": [
+		{
+			"code": "INR"
+		},
+		{
+			"code": "Dollor"
+		}
+	],
+	"mockOrganizationRegistrationTypes": [
+		{
+			"id": "1",
+			"reg_type": "Trusts"
+		},
+		{
+			"id": "2",
+			"reg_type": "Education"
 		}
 	]
 }

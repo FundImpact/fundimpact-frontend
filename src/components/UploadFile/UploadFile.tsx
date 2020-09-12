@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Grid,
 	Theme,
@@ -36,6 +36,7 @@ function UploadFiles<T>({
 	testId,
 	dataTestId,
 	id,
+	logo,
 	...props
 }: {
 	title: string;
@@ -46,9 +47,15 @@ function UploadFiles<T>({
 	testId: string;
 	dataTestId: string;
 	id: string;
+	logo?: string;
 }) {
 	const classes = useStyles(props);
-	const [previewImage, setPreviewImage] = useState<string | null>(null);
+	const [previewImage, setPreviewImage] = useState<string | null>(logo || null);
+	
+	useEffect(() => {
+		setPreviewImage(logo || "");
+	}, [logo]);
+
 	return (
 		<Grid container className={classes.uploadBox}>
 			{previewImage && (

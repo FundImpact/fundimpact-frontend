@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import OrganizationView from "./OrganizationView";
-import { IOrganisationForm } from "../../../models/organisation/types";
+import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { organizationFormInputFields } from "./inputFields.json";
 import { ICountry } from "../../../models";
@@ -14,6 +14,10 @@ import {
 	IUpdateOrganizationVariables,
 } from "../../../models/organisation/query";
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
+import useFileUpload from "../../../hooks/fileUpload";
+
+//change this
+let inputFields: any[] = organizationFormInputFields;
 
 //change icon on api update
 //check everywhere if organization cache is updating properly
@@ -32,7 +36,12 @@ function OrganizationContainer({
 			| undefined
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
-	organizationFormInputFields[5].optionsArray = countryList as any;
+	organizationFormInputFields[4].optionsArray = countryList as any;
+	let {
+		error: fileUploadError,
+		uploadFile: uploadFile,
+		loading: fileUploading,
+	} = useFileUpload();
 
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -47,7 +56,6 @@ function OrganizationContainer({
 		legal_name: dashboardData?.organization?.legal_name || "",
 		short_name: dashboardData?.organization?.short_name || "",
 	};
-
 	const validate = useCallback(
 		(values: IOrganisationForm) => {
 			let errors: Partial<IOrganisationForm> = {};
@@ -79,11 +87,14 @@ function OrganizationContainer({
 			try {
 				const values = Object.assign({}, valuesSubmitted);
 				delete values.id;
-				//change this
+				if (values.icon) {
+					let formData = new FormData();
+					formData.append("files", values.icon);
+					const response = await uploadFile(formData);
+					values.logo = response[0].id;
+				}
+
 				delete values.icon;
-				// delete values.country;
-				// delete values.reg_type;
-				//make new org and check everything
 				if (!values.organization_registration_type) {
 					delete values.organization_registration_type;
 				}
@@ -98,17 +109,18 @@ function OrganizationContainer({
 				notificationDispatch(setErrorNotification("Organization Updation Failure"));
 			}
 		},
-		[updateOrganization, initialValues]
+		[updateOrganization, initialValues, uploadFile]
 	);
 
 	return (
 		<OrganizationView
-			loading={loading}
+			loading={loading || fileUploading}
 			validate={validate}
-			inputFields={organizationFormInputFields}
+			inputFields={inputFields}
 			registrationTypes={registrationTypes}
 			initialValues={initialValues}
 			onSubmit={onSubmit}
+			logo={dashboardData?.organization?.logo?.url || ""}
 		/>
 	);
 }

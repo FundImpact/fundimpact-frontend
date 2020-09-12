@@ -41,20 +41,6 @@
 			"helperText": "Short or abbreviated name of the organization"
 		},
 		{
-			"name": "reg_type",
-			"label": "Choose registration type",
-			"size": 12,
-			"testId": "createOrganizationRegistrationTypeOption",
-			"dataTestId": "createOrganizationRegistrationType",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined",
-			"inputType": "select",
-			"displayName": "registration type",
-			"required": true
-		},
-		{
 			"name": "country",
 			"label": "Choose country",
 			"size": 12,

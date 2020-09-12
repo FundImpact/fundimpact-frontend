@@ -20,14 +20,17 @@ import {
 	mockGrantPeriodsProjectList,
 	mockFinancialYears,
 	mockBudgetTrackingsCount,
+	mockCurrencyList,
 } from "../../../../../utils/testMock.json";
 import {
 	GET_ORG_CURRENCIES_BY_ORG,
 	GET_ANNUAL_YEAR_LIST,
 	GET_FINANCIAL_YEARS,
+	GET_CURRENCY_LIST,
 } from "../../../../../graphql";
 import BudgetLineItemTable from "../BudgetLineItemTable";
 import { budgetLineItemTableHeading } from "../../../constants";
+import { getTodaysDate } from "../../../../../utils";
 
 let table: any;
 
@@ -47,6 +50,21 @@ const mocks = [
 		result: {
 			data: {
 				orgCurrencies: mockOrgHomeCurrency,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_CURRENCY_LIST,
+			variables: {
+				filter: {
+					country: "1",
+				},
+			},
+		},
+		result: {
+			data: {
+				currencyList: mockCurrencyList,
 			},
 		},
 	},
@@ -158,7 +176,7 @@ beforeEach(() => {
 });
 
 describe("Budget Line Item Table tests", () => {
-	budgetLineItemTableHeading[3].label += `(${mockOrgHomeCurrency[0].currency.code})`;
+	budgetLineItemTableHeading[3].label += `(${mockCurrencyList[0].code})`;
 	for (let i = 0; i < budgetLineItemTableHeading.length; i++) {
 		test(`Table Headings ${budgetLineItemTableHeading[i].label} for Budget Target Table`, async () => {
 			await waitForElement(() => table.getAllByText(budgetLineItemTableHeading[i].label));
@@ -178,6 +196,11 @@ describe("Budget Line Item Table tests", () => {
 		);
 		await waitForElement(() =>
 			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_org.name, "i"))
+		);
+		await waitForElement(() =>
+			table.getByText(
+				new RegExp("" + getTodaysDate(mockBudgetLineItem[0].reporting_date, true), "i")
+			)
 		);
 		await waitForElement(() =>
 			table.getAllByText(
