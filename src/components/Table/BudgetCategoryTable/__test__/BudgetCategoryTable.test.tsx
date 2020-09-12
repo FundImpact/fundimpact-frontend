@@ -38,51 +38,7 @@ let table: any;
 mockBudgetLineItem.reporting_date = new Date();
 
 const mocks = [
-	{
-		request: {
-			query: GET_ORG_CURRENCIES_BY_ORG,
-			variables: {
-				filter: {
-					organization: "3",
-					isHomeCurrency: true,
-				},
-			},
-		},
-		result: {
-			data: {
-				orgCurrencies: mockOrgHomeCurrency,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_ANNUAL_YEAR_LIST,
-			variables: {},
-		},
-		result: {
-			data: {
-				annualYearList: mockAnnualYearList,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_PROJECT_BUDGET_TARCKING,
-			variables: {
-				filter: {
-					budget_targets_project: "1",
-				},
-				limit: 10,
-				start: 0,
-				sort: "created_at:DESC",
-			},
-		},
-		result: {
-			data: {
-				projBudgetTrackings: mockBudgetLineItem,
-			},
-		},
-	},
+	
 	{
 		request: {
 			query: GET_BUDGET_TARGET_PROJECT,
@@ -194,6 +150,51 @@ const mocks = [
 		},
 		result: {
 			data: { orgBudgetCategory: mockOrgBudgetCategory },
+		},
+	},
+	{
+		request: {
+			query: GET_ORG_CURRENCIES_BY_ORG,
+			variables: {
+				filter: {
+					organization: "3",
+					isHomeCurrency: true,
+				},
+			},
+		},
+		result: {
+			data: {
+				orgCurrencies: mockOrgHomeCurrency,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ANNUAL_YEAR_LIST,
+			variables: {},
+		},
+		result: {
+			data: {
+				annualYearList: mockAnnualYearList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARCKING,
+			variables: {
+				filter: {
+					budget_targets_project: "1",
+				},
+				limit: 10,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: {
+			data: {
+				projBudgetTrackings: mockBudgetLineItem,
+			},
 		},
 	},
 ];
