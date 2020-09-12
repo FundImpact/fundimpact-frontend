@@ -2,14 +2,9 @@ import React from "react";
 import { waitForElement, fireEvent } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import {
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-	GET_GRANT_PERIODS_PROJECT_LIST,
 	GET_PROJECT_BUDGET_TARGETS_COUNT,
-	GET_PROJ_BUDGET_TRACINGS_COUNT,
-	GET_PROJECT_BUDGET_TARCKING,
 } from "../../../../graphql/Budget";
 import {
-	GET_BUDGET_TARGET_PROJECT,
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 } from "../../../../graphql/Budget";
 import { renderApollo } from "../../../../utils/test.util";
@@ -20,25 +15,13 @@ import {
 	organizationDetails,
 	mockBudgetTargetAmountSum,
 	mockBudgetTargetCount,
-	mockBudgetTrackingsCount,
-	mockBudgetLineItem,
 	mockDeliverableCategoryCount,
 } from "../../../../utils/testMock.json";
-import { GET_PROJ_DONORS } from "../../../../graphql/project";
 import {
-	GET_ORG_CURRENCIES_BY_ORG,
-	GET_ANNUAL_YEAR_LIST,
-	GET_FINANCIAL_YEARS,
-} from "../../../../graphql";
-import {
-	budgetTargetTableHeading,
-	budgetLineItemTableHeading,
 	impactCategoryTableHeadings,
 	impactUnitTableHeadings,
 } from "../../constants";
-import { getTodaysDate } from "../../../../utils";
 import ImpactCategoryTable from "../ImpactCategoryTableGraphql";
-import { deliverableCategoryTableHeading, deliverableUnitTableHeadings } from "../../constants";
 import {
 	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 	GET_DELIVERABLE_ORG_CATEGORY,
@@ -49,7 +32,6 @@ import {
 } from "../../../Deliverable/__test__/testHelp";
 import {
 	GET_CATEGORY_UNIT,
-	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 } from "../../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_IMPACT_CATEGORY_COUNT_BY_ORG,

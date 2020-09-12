@@ -26,7 +26,6 @@ import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableUnitForm } from "./inputField.json";
 import { IGetDeliverablUnit, IGetDeliverableCategoryUnit } from "../../models/deliverable/query";
-import { IDeliverableCategoryData, IDeliverable } from "../../models/deliverable/deliverable";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };

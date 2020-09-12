@@ -2,14 +2,9 @@ import React from "react";
 import { waitForElement, fireEvent } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import {
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-	GET_GRANT_PERIODS_PROJECT_LIST,
 	GET_PROJECT_BUDGET_TARGETS_COUNT,
-	GET_PROJ_BUDGET_TRACINGS_COUNT,
-	GET_PROJECT_BUDGET_TARCKING,
 } from "../../../../graphql/Budget";
 import {
-	GET_BUDGET_TARGET_PROJECT,
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 } from "../../../../graphql/Budget";
 import { renderApollo } from "../../../../utils/test.util";
@@ -18,27 +13,10 @@ import { NotificationProvider } from "../../../../contexts/notificationContext";
 import {
 	projectDetails,
 	organizationDetails,
-	mockOrgHomeCurrency,
-	mockDonors,
-	mockOrgBudgetCategory,
-	mockAnnualYearList,
-	mockOrgBudgetTargetProject,
-	mockGrantPeriodsProjectList,
-	mockFinancialYears,
 	mockBudgetTargetAmountSum,
 	mockBudgetTargetCount,
-	mockBudgetTrackingsCount,
-	mockBudgetLineItem,
 	mockDeliverableCategoryCount,
 } from "../../../../utils/testMock.json";
-import { GET_PROJ_DONORS } from "../../../../graphql/project";
-import {
-	GET_ORG_CURRENCIES_BY_ORG,
-	GET_ANNUAL_YEAR_LIST,
-	GET_FINANCIAL_YEARS,
-} from "../../../../graphql";
-import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../constants";
-import { getTodaysDate } from "../../../../utils";
 import DeliverableCategoryTable from "../DeliverableCategoryTableGraphql";
 import { deliverableCategoryTableHeading, deliverableUnitTableHeadings } from "../../constants";
 import {
