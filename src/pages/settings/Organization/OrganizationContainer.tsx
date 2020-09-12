@@ -38,7 +38,6 @@ function OrganizationContainer({
 }) {
 	organizationFormInputFields[4].optionsArray = countryList as any;
 	let {
-		error: fileUploadError,
 		uploadFile: uploadFile,
 		loading: fileUploading,
 	} = useFileUpload();
