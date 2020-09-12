@@ -22,6 +22,10 @@ export const GET_ORGANISATIONS = gql`
 			country {
 				id
 			}
+			logo{
+				id
+				url
+			}
 		}
 	}
 `;
@@ -230,13 +234,7 @@ export const GET_ORGANIZATION_REGISTRATION_TYPES = gql`
 export const GET_CURRENCY_LIST = gql`
 	query getCurrencyList($filter: JSON) {
 		currencyList(where: $filter) {
-			id
-			name
 			code
-			country {
-				id
-				name
-			}
 		}
 	}
 `;

@@ -43,6 +43,10 @@ export const UPDATE_ORGANIZATION = gql`
 			country {
 				id
 			}
+			logo{
+				id
+				url
+			}
 		}
 	}
 `;
