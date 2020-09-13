@@ -8,6 +8,8 @@ import Deliverable from "../../../components/Deliverable/Deliverable";
 import { DELIVERABLE_ACTIONS } from "../../../components/Deliverable/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { makeStyles } from "@material-ui/styles";
+import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -100,10 +102,20 @@ const DeliverableMasterView = () => {
 		},
 	];
 
+	const intl = useIntl();
+
 	return (
 		<>
 			<Box p={2}>
-				<h1>Deliverable {value == 0 ? "Categories" : "Unit"}</h1>
+				<h1>
+					<FormattedMessage
+						id={`deliverablemMasterPageHeading-${value}`}
+						defaultMessage={`Deliverable ${value == 0 ? "Categories" : "Unit"} `}
+						description={`This text is the heding of deliverable ${
+							value == 0 ? "Categories" : "Unit"
+						} table`}
+					/>
+				</h1>
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
@@ -120,7 +132,14 @@ const DeliverableMasterView = () => {
 								textColor="secondary"
 								key={tab.label}
 								value={index}
-								label={tab.label}
+								label={intl.formatMessage({
+									id: `${tab.label
+										.toString()
+										.replace(/ /g, "")
+										.toLowerCase()}TabHeading`,
+									defaultMessage: tab.label,
+									description: `This text will be shown for ${tab.label} table heading`,
+								})}
 								{...a11yProp(index)}
 							/>
 						))}

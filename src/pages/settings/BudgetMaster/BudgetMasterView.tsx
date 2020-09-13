@@ -5,12 +5,19 @@ import BudgetCategoryTable from "../../../components/Table/BudgetCategoryTable";
 import { FORM_ACTIONS } from "../../../models/constants";
 import BudgetCategory from "../../../components/Budget/BudgetCategory";
 import { Box } from "@material-ui/core";
+import { FormattedMessage } from "react-intl";
 
 const BudgetMasterView = () => {
 	return (
 		<>
 			<Box p={2}>
-				<h1>Budget Categories</h1>
+				<h1>
+					<FormattedMessage
+						id="budgetCategoriesHeading"
+						defaultMessage="Budget Categories"
+						description="This text is the heding of budget category table"
+					/>
+				</h1>
 				<BudgetCategoryTable />
 				<AddButton
 					createButtons={[]}

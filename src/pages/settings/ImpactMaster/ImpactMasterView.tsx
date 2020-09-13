@@ -6,6 +6,8 @@ import { Box, Tabs, Tab, makeStyles, Theme } from "@material-ui/core";
 import ImpactUnitDialog from "../../../components/Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import ImpactCategoryDialog from "../../../components/Impact/ImpactCategoryDialog";
 import { FORM_ACTIONS } from "../../../models/constants";
+import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -95,10 +97,20 @@ const ImpactMasterView = () => {
 		},
 	];
 
+	const intl = useIntl();
+
 	return (
 		<>
 			<Box p={2}>
-				<h1>Impact {value == 0 ? "Categories" : "Unit"}</h1>
+				<h1>
+					<FormattedMessage
+						id={`impactMasterPageHeading-${value}`}
+						defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
+						description={`This text is the heding of impact ${
+							value == 0 ? "Categories" : "Unit"
+						} table`}
+					/>
+				</h1>
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
@@ -115,7 +127,14 @@ const ImpactMasterView = () => {
 								textColor="secondary"
 								key={tab.label}
 								value={index}
-								label={tab.label}
+								label={intl.formatMessage({
+									id: `${tab.label
+										.toString()
+										.replace(/ /g, "")
+										.toLowerCase()}TabHeading`,
+									defaultMessage: tab.label,
+									description: `This text will be shown for ${tab.label} table heading`,
+								})}
 								{...a11yProps(index)}
 							/>
 						))}
