@@ -199,6 +199,13 @@ export const impactCategoryMock = [
 			},
 		},
 	},
+	{
+		id: "2",
+		name: "feed people",
+		code: "feed code",
+		description: "feed poor student",
+		shortname: "fed pe",
+	},
 ];
 
 export const impactUnitMock = [
@@ -234,8 +241,36 @@ export const impactUnitMock = [
 export const impactCategoryUnitMock = [
 	{
 		id: "1",
+		name: "educated people",
+		code: "edu code",
+		description: "teaching poor student",
+		shortname: "edu people",
+		target_unit: "10123",
+		prefix_label: "pre educate",
+		suffix_label: "suf educate",
+	},
+	{
+		id: "2",
+		name: "feed people",
+		code: "feed code",
+		description: "feed poor student",
+		shortname: "fed pe",
+		target_unit: "123",
+		prefix_label: "pre feed people",
+		suffix_label: "suf feed people",
+	},
+];
+
+export const impactCategoryUnit = [
+	{
+		id: "1",
 		impact_category_org: impactCategoryMock[0],
 		impact_units_org: impactUnitMock[0],
+	},
+	{
+		id: "2",
+		impact_category_org: impactCategoryMock[1],
+		impact_units_org: impactUnitMock[1],
 	},
 ];
 

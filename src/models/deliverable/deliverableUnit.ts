@@ -5,11 +5,15 @@ export interface IDeliverableUnit {
 	name: string;
 	description?: string;
 	code: string;
-	deliverableCategory?: number | string;
+	deliverableCategory?: string[];
 	unit_type: number | string;
 	prefix_label: number | string;
 	suffix_label: number | string;
 	organization?: number | string;
+}
+
+export interface IDeliverableUnitData extends Omit<IDeliverableUnit, "organization" | "id"> {
+	id: string;
 }
 
 export type DeliverableUnitProps = {

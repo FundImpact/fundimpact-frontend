@@ -1,14 +1,44 @@
 {
+	"SubmitLabel": [
+		{
+			"type": 0,
+			"value": "Submit"
+		}
+	],
 	"alreadyHaveAccount": [
 		{
 			"type": 0,
 			"value": "Already have account?"
 		}
 	],
+	"budgetCategoriesHeading": [
+		{
+			"type": 0,
+			"value": "Budget Categories"
+		}
+	],
+	"donorSettingLink": [
+		{
+			"type": 0,
+			"value": "Donors"
+		}
+	],
 	"dontHaveAccount": [
 		{
 			"type": 0,
 			"value": "Dont have account?"
+		}
+	],
+	"emailPlaceholder": [
+		{
+			"type": 0,
+			"value": "Email"
+		}
+	],
+	"loginBtnText": [
+		{
+			"type": 0,
+			"value": "Login"
 		}
 	],
 	"loginDescription": [
@@ -23,6 +53,42 @@
 			"value": "Login"
 		}
 	],
+	"organiztionHomeCountrySetting": [
+		{
+			"type": 0,
+			"value": "Home country settings"
+		}
+	],
+	"organiztionRegistarationHeadings": [
+		{
+			"type": 0,
+			"value": "Registration type"
+		}
+	],
+	"organiztionUpdateButton": [
+		{
+			"type": 0,
+			"value": "Update"
+		}
+	],
+	"organiztionUpdateFormHeading": [
+		{
+			"type": 0,
+			"value": "About Organization"
+		}
+	],
+	"passwordPlaceholder": [
+		{
+			"type": 0,
+			"value": "Password"
+		}
+	],
+	"profileSettingLink": [
+		{
+			"type": 0,
+			"value": "Profile"
+		}
+	],
 	"signupDescription": [
 		{
 			"type": 0,
@@ -33,6 +99,24 @@
 		{
 			"type": 0,
 			"value": "Singup"
+		}
+	],
+	"signupSuccess": [
+		{
+			"type": 0,
+			"value": "Signup Successfull"
+		}
+	],
+	"singupBtnText": [
+		{
+			"type": 0,
+			"value": "Signup"
+		}
+	],
+	"updateOrganizationBasicDetails": [
+		{
+			"type": 0,
+			"value": "Update the organization information"
 		}
 	]
 }

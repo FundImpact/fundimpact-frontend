@@ -40,12 +40,11 @@ const validate = (values: IDONOR) => {
 function Donor(props: IDonorProps) {
 	const [createDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
 	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
-	const [getCountryList] = useLazyQuery(GET_COUNTRY_LIST, {
+	const [getCountryList, { data }] = useLazyQuery(GET_COUNTRY_LIST, {
 		onCompleted: ({ countryList }) => {
 			addDonorFormSelectFields[0].optionsArray = countryList;
 		},
 	});
-
 	const initialValues =
 		props.formAction == FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 

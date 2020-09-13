@@ -1,0 +1,2 @@
+import DeliverableCategoryTableGraphql from "./DeliverableCategoryTableGraphql";
+export default DeliverableCategoryTableGraphql;

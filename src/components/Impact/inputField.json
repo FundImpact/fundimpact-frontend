@@ -1,71 +1,4 @@
 {
-	"impactUnitForm": [
-		{
-			"name": "name",
-			"id": "name",
-			"dataTestId": "createImpactUnitName",
-			"testId": "createInpactUnitNameInput",
-			"label": "Name",
-			"size": 6
-		},
-		{
-			"name": "prefix_label",
-			"id": "prefix-label",
-			"dataTestId": "createImpactUnitPrefixLabel",
-			"testId": "createImpactUnitPrefixLabelInput",
-			"label": "Prefix Label",
-			"size": 6
-		},
-		{
-			"name": "suffix_label",
-			"id": "suffix-label",
-			"dataTestId": "createImpactUnitSuffixLabel",
-			"testId": "createImpactUnitSuffixLabelInput",
-			"label": "Impact Code",
-			"size": 6
-		},
-		{
-			"name": "code",
-			"id": "impact-code",
-			"dataTestId": "createImpactUnitCode",
-			"testId": "createImpactUnitCodeInput",
-			"label": "Suffix Label",
-			"size": 6
-		},
-		{
-			"name": "target_unit",
-			"id": "target-unit",
-			"dataTestId": "createImpactUnitTargetUnit",
-			"testId": "createImpactUnitTargetUnitInput",
-			"label": "Target Unit",
-			"size": 12,
-			"type": "number"
-		},
-		{
-			"name": "description",
-			"id": "description",
-			"dataTestId": "createImpactUnitDescription",
-			"testId": "createImpactUnitDescriptionInput",
-			"label": "Description",
-			"size": 12,
-			"rows": 2,
-			"multiline": true
-		}
-	],
-	"impactUnitSelect": [
-		{
-			"name": "impactCategory",
-			"label": "Choose Impact Category",
-			"size": 12,
-			"testId": "createImpactUnitImpactCategory",
-			"dataTestId": "createImpactUnitImpactCategoryInput",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined",
-			"type": "select"
-		}
-	],
 	"impactCategoryForm": [
 		{
 			"name": "name",
@@ -73,7 +6,8 @@
 			"dataTestId": "createImpactName",
 			"testId": "createImpactNameInput",
 			"label": "Name",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "shortname",

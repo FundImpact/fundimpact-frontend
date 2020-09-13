@@ -47,6 +47,7 @@ function CommonInputForm({
 			}}
 			validate={validate}
 			isInitialValid={() => validateInitialValue(initialValues)}
+			enableReinitialize
 		>
 			{(formik) => {
 				return (

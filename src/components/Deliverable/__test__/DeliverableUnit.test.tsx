@@ -61,25 +61,25 @@ describe("Deliverable Target Form", () => {
 		expect(deliverableUnitCode).toBeInTheDocument();
 	});
 
-	test("should have a unit type field", () => {
-		let deliverableUnitUnitType = deliverableUnit.getByTestId("deliverableUnitUnitType");
-		expect(deliverableUnitUnitType).toBeInTheDocument();
-	});
+	// test("should have a unit type field", () => {
+	// 	let deliverableUnitUnitType = deliverableUnit.getByTestId("deliverableUnitUnitType");
+	// 	expect(deliverableUnitUnitType).toBeInTheDocument();
+	// });
 
 	test("should have a category field", () => {
 		let deliverableUnitCategory = deliverableUnit.getByTestId("deliverableUnitCategory");
 		expect(deliverableUnitCategory).toBeInTheDocument();
 	});
 
-	test("should have a prefix label field", () => {
-		let deliverableUnitprefixLabel = deliverableUnit.getByTestId("deliverableUnitPrefixLabel");
-		expect(deliverableUnitprefixLabel).toBeInTheDocument();
-	});
+	// test("should have a prefix label field", () => {
+	// 	let deliverableUnitprefixLabel = deliverableUnit.getByTestId("deliverableUnitPrefixLabel");
+	// 	expect(deliverableUnitprefixLabel).toBeInTheDocument();
+	// });
 
-	test("should have a suffix label field", () => {
-		let deliverableUnitsuffixLabel = deliverableUnit.getByTestId("deliverableUnitSuffixLabel");
-		expect(deliverableUnitsuffixLabel).toBeInTheDocument();
-	});
+	// test("should have a suffix label field", () => {
+	// 	let deliverableUnitsuffixLabel = deliverableUnit.getByTestId("deliverableUnitSuffixLabel");
+	// 	expect(deliverableUnitsuffixLabel).toBeInTheDocument();
+	// });
 
 	test("should have a description field", () => {
 		let deliverableUnitDescription = deliverableUnit.getByTestId("deliverableUnitDescription");
@@ -132,21 +132,21 @@ describe("Deliverable Target Form", () => {
 			"deliverableUnitNameInput"
 		) as HTMLInputElement;
 
-		let deliverableUnitUnitType = deliverableUnit.getByTestId(
-			"deliverableUnitUnitTypeInput"
-		) as HTMLInputElement;
+		// let deliverableUnitUnitType = deliverableUnit.getByTestId(
+		// 	"deliverableUnitUnitTypeInput"
+		// ) as HTMLInputElement;
 
 		let deliverableUnitCategory = deliverableUnit.getByTestId(
 			"deliverableUnitCategoryInput"
 		) as HTMLInputElement;
 
-		let deliverableUnitprefixLabel = deliverableUnit.getByTestId(
-			"deliverableUnitPrefixLabelInput"
-		) as HTMLInputElement;
+		// let deliverableUnitprefixLabel = deliverableUnit.getByTestId(
+		// 	"deliverableUnitPrefixLabelInput"
+		// ) as HTMLInputElement;
 
-		let deliverableUnitsuffixLabel = deliverableUnit.getByTestId(
-			"deliverableUnitSuffixLabelInput"
-		) as HTMLInputElement;
+		// let deliverableUnitsuffixLabel = deliverableUnit.getByTestId(
+		// 	"deliverableUnitSuffixLabelInput"
+		// ) as HTMLInputElement;
 
 		let value = "";
 
@@ -155,20 +155,20 @@ describe("Deliverable Target Form", () => {
 		});
 		expect(deliverableUnitName.value).toBe(value);
 
-		act(() => {
-			fireEvent.change(deliverableUnitUnitType, { target: { value } });
-		});
-		expect(deliverableUnitUnitType.value).toBe(value);
+		// act(() => {
+		// 	fireEvent.change(deliverableUnitUnitType, { target: { value } });
+		// });
+		// expect(deliverableUnitUnitType.value).toBe(value);
 
-		act(() => {
-			fireEvent.change(deliverableUnitprefixLabel, { target: { value } });
-		});
-		expect(deliverableUnitprefixLabel.value).toBe(value);
+		// act(() => {
+		// 	fireEvent.change(deliverableUnitprefixLabel, { target: { value } });
+		// });
+		// expect(deliverableUnitprefixLabel.value).toBe(value);
 
-		act(() => {
-			fireEvent.change(deliverableUnitsuffixLabel, { target: { value } });
-		});
-		expect(deliverableUnitsuffixLabel.value).toBe(value);
+		// act(() => {
+		// 	fireEvent.change(deliverableUnitsuffixLabel, { target: { value } });
+		// });
+		// expect(deliverableUnitsuffixLabel.value).toBe(value);
 
 		let deliverableUnitSubmit = await deliverableUnit.findByTestId(`createSaveButton`);
 		expect(deliverableUnitSubmit).toBeDisabled();

@@ -8,6 +8,7 @@ import {
 	projectDetails,
 	mockCurrencyList,
 } from "../../../../utils/testMock.json";
+import { mockOrgBudgetCategory } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
 import { renderApollo } from "../../../../utils/test.util";
@@ -37,11 +38,6 @@ const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
 const mockDonors = [
 	{ id: "1", donor: { id: "1", name: "donor 1" } },
 	{ id: "2", donor: { id: "2", name: "donor 2" } },
-];
-
-const mockOrgBudgetCategory = [
-	{ id: "1", name: "military 1", code: "m5" },
-	{ id: "2", name: "military 2", code: "m6" },
 ];
 
 const mocks = [

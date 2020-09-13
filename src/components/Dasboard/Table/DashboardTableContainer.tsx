@@ -24,6 +24,7 @@ import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import DeliverablesTable from "../../Table/Deliverable/Deliverable";
 import GrantPeriodTable from "../../Table/GrantPeriod/GrantPeriodTable";
 import ImpactsTable from "../../Table/Impact/Impacts";
+import { useIntl } from "react-intl";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -84,7 +85,11 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategory open={open} handleClose={handleClose} />
+						<BudgetCategory
+							open={open}
+							handleClose={handleClose}
+							formAction={FORM_ACTIONS.CREATE}
+						/>
 					),
 				},
 				{
@@ -137,7 +142,7 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Deliverables Category",
+					text: "Create Deliverable Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -148,7 +153,7 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achivement",
+					text: "Report Achievements",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTrackLine
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -177,17 +182,25 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Impact Unit",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactUnitDialog open={open} handleClose={handleClose} />
+						<ImpactUnitDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
 					),
 				},
 				{
 					text: "Create Impact Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactCategoryDialog open={open} handleClose={handleClose} />
+						<ImpactCategoryDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
 					),
 				},
 				{
-					text: "Report Achivement",
+					text: "Report Achievements",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<ImpactTrackLine
 							open={open}
@@ -223,7 +236,7 @@ export default function DashboardTableContainer() {
 		console.log(`setting tab index `, newValue);
 		setValue(newValue);
 	};
-
+	const intl = useIntl();
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs
@@ -240,7 +253,11 @@ export default function DashboardTableContainer() {
 						textColor="secondary"
 						key={tab.label}
 						value={index}
-						label={tab.label}
+						label={intl.formatMessage({
+							id: `${tab.label.toString().replace(/ /g, "").toLowerCase()}TabHeading`,
+							defaultMessage: tab.label,
+							description: `This text will be shown for ${tab.label} table heading`,
+						})}
 						{...a11yProps(index)}
 					/>
 				))}

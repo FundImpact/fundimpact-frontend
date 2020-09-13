@@ -9,6 +9,7 @@ export interface IImpactCategoryFormProps {
 
 export interface IImpactUnitFormInput extends Omit<IImpactUnit, "target_unit"> {
 	target_unit: string;
+	impactCategory: string[];
 }
 
 export interface IImpactUnitFormProps {

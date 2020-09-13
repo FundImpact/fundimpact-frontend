@@ -7,6 +7,14 @@
 		"defaultMessage": "Already have account?",
 		"description": "This text will be show on signup page on left side over blue cover"
 	},
+	"budgetCategoriesHeading": {
+		"defaultMessage": "Budget Categories",
+		"description": "This text is the heding of budget category table"
+	},
+	"donorSettingLink": {
+		"defaultMessage": "Donors",
+		"description": "This text will be shown for donors link on setting page"
+	},
 	"dontHaveAccount": {
 		"defaultMessage": "Dont have account?",
 		"description": "This text will be show on login page on left side over blue cover"
@@ -27,9 +35,29 @@
 		"defaultMessage": "Login",
 		"description": "This text will be shown on login page over blue cover"
 	},
+	"organiztionHomeCountrySetting": {
+		"defaultMessage": "Home country settings",
+		"description": "This text will tell user to update home contry"
+	},
+	"organiztionRegistarationHeadings": {
+		"defaultMessage": "Registration type",
+		"description": "This text will tell user about the registartion types of orgs"
+	},
+	"organiztionUpdateButton": {
+		"defaultMessage": "Update",
+		"description": "This text will tell user to update organization info"
+	},
+	"organiztionUpdateFormHeading": {
+		"defaultMessage": "About Organization",
+		"description": "This text will be heading of organization update form"
+	},
 	"passwordPlaceholder": {
 		"defaultMessage": "Password",
 		"description": "This label is to be used for text `Password`"
+	},
+	"profileSettingLink": {
+		"defaultMessage": "Profile",
+		"description": "This text will be shown for profile link on setting page"
 	},
 	"signupDescription": {
 		"defaultMessage": "Get started in minutes",
@@ -46,5 +74,9 @@
 	"singupBtnText": {
 		"defaultMessage": "Signup",
 		"description": "This text is to be shown on Signup button"
+	},
+	"updateOrganizationBasicDetails": {
+		"defaultMessage": "Update the organization information",
+		"description": "This text will tell user to update basic details of organization"
 	}
 }

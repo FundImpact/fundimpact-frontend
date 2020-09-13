@@ -9,6 +9,7 @@ import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboard
 import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
+import { useIntl } from "react-intl";
 import sideBarList from "./sidebarList.json";
 
 /**
@@ -48,7 +49,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
-
+	const intl = useIntl();
 	React.useEffect(() => {
 		if (data) {
 			const { organizationList } = data;
@@ -70,11 +71,23 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 			</Box>
 			<Divider />
 
-			<ListItemLink to="donors" data-testid="donor-link" primary="Donors"></ListItemLink>
+			<ListItemLink
+				to="donors"
+				data-testid="donor-link"
+				primary={intl.formatMessage({
+					id: `donorSettingLink`,
+					defaultMessage: "Donors",
+					description: `This text will be shown for donors link on setting page`,
+				})}
+			></ListItemLink>
 			<ListItemLink
 				to="profile"
 				data-testid="update-user-link"
-				primary="Update Profile"
+				primary={intl.formatMessage({
+					id: `profileSettingLink`,
+					defaultMessage: "Profile",
+					description: `This text will be shown for profile link on setting page`,
+				})}
 			></ListItemLink>
 			{sideBarList.map(
 				(

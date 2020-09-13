@@ -3,10 +3,16 @@ import React from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../graphql/Budget";
-import { CREATE_ORG_BUDGET_CATEGORY } from "../../../graphql/Budget/mutation";
+import {
+	GET_ORGANIZATION_BUDGET_CATEGORY,
+	GET_ORG_BUDGET_CATEGORY_COUNT,
+} from "../../../graphql/Budget";
+import {
+	CREATE_ORG_BUDGET_CATEGORY,
+	UPDATE_ORG_BUDGET_CATEGORY,
+} from "../../../graphql/Budget/mutation";
 import { IInputField } from "../../../models";
-import { IBudgetCategory } from "../../../models/budget";
+import { IBudgetCategory, IBudgetCategoryProps } from "../../../models/budget";
 import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
 import {
 	setErrorNotification,
@@ -15,11 +21,12 @@ import {
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
-import { removeEmptyKeys } from "../../../utils";
+import { removeEmptyKeys, compareObjectKeys } from "../../../utils";
+import { FORM_ACTIONS } from "../../../models/constants";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
-const initialValues: IBudgetCategory = {
+let defaultFormValues: IBudgetCategory = {
 	name: "",
 	code: "",
 	description: "",
@@ -33,12 +40,24 @@ const validate = (values: IBudgetCategory) => {
 	return errors;
 };
 
-function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () => void }) {
-	const [createNewOrgBudgetCategory, { loading }] = useMutation(CREATE_ORG_BUDGET_CATEGORY);
+function BudgetCategory({
+	open,
+	handleClose,
+	initialValues: formValues,
+	formAction,
+}: IBudgetCategoryProps) {
+	const [createNewOrgBudgetCategory, { loading: creatingBudgetCategory }] = useMutation(
+		CREATE_ORG_BUDGET_CATEGORY
+	);
+	const [updateBudgetCategory, { loading: updatingBudgetCategory }] = useMutation(
+		UPDATE_ORG_BUDGET_CATEGORY
+	);
 
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
+
+	let initialValues = formAction == FORM_ACTIONS.CREATE ? defaultFormValues : formValues;
 
 	const onSubmit = async (valuesSubmitted: IBudgetCategory) => {
 		let values = removeEmptyKeys<IBudgetCategory>({ objectToCheck: valuesSubmitted });
@@ -47,8 +66,63 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 				variables: {
 					input: { ...values, organization: dashboardData?.organization?.id },
 				},
-				update: (store, { data: { createOrgBudgetCategory } }) => {
+				update: async (store, { data: { createOrgBudgetCategory } }) => {
 					try {
+						const count = await store.readQuery<{ orgBudgetCategoryCount: number }>({
+							query: GET_ORG_BUDGET_CATEGORY_COUNT,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+						});
+
+						store.writeQuery<{ orgBudgetCategoryCount: number }>({
+							query: GET_ORG_BUDGET_CATEGORY_COUNT,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+							data: {
+								orgBudgetCategoryCount: count!.orgBudgetCategoryCount + 1,
+							},
+						});
+
+						let limit = 0;
+						if (count) {
+							limit = count.orgBudgetCategoryCount;
+						}
+						const dataRead = await store.readQuery<IGET_BUDGET_CATEGORY>({
+							query: GET_ORGANIZATION_BUDGET_CATEGORY,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+						});
+						let budgetCategories: Partial<
+							IBudgetCategory
+						>[] = dataRead?.orgBudgetCategory ? dataRead?.orgBudgetCategory : [];
+
+						store.writeQuery<IGET_BUDGET_CATEGORY>({
+							query: GET_ORGANIZATION_BUDGET_CATEGORY,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+								limit: limit > 10 ? 10 : limit,
+								start: 0,
+								sort: "created_at:DESC",
+							},
+							data: {
+								orgBudgetCategory: [createOrgBudgetCategory, ...budgetCategories],
+							},
+						});
+
 						const data = store.readQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
@@ -82,13 +156,45 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 		}
 	};
 
+	const onUpdate = async (valuesSubmitted: IBudgetCategory) => {
+		try {
+			let values = removeEmptyKeys<IBudgetCategory>({
+				objectToCheck: valuesSubmitted,
+				keysToRemainUnchecked: {
+					description: 1,
+				},
+			});
+
+			if (compareObjectKeys(values, initialValues)) {
+				handleClose();
+				return;
+			}
+			delete values.id;
+
+			await updateBudgetCategory({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						...values,
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Budget Category Updation Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification("Budget Category Updation Failure"));
+		} finally {
+			handleClose();
+		}
+	};
+
 	return (
 		<>
 			<FormDialog
 				handleClose={handleClose}
 				open={open}
-				loading={loading}
-				title="New Budget Category"
+				loading={updatingBudgetCategory || creatingBudgetCategory}
+				title="Budget Category"
 				subtitle="Physical addresses of your organizatin like headquater, branch etc."
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
@@ -99,6 +205,8 @@ function BudgetCategory({ open, handleClose }: { open: boolean; handleClose: () 
 					onSubmit={onSubmit}
 					onCancel={handleClose}
 					inputFields={inputFields}
+					formAction={formAction}
+					onUpdate={onUpdate}
 				/>
 			</FormDialog>
 		</>
