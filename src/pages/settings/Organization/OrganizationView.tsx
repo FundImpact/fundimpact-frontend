@@ -23,6 +23,7 @@ import {
 import { IInputFields } from "../../../models";
 import UploadFile from "../../../components/UploadFile";
 import { Form, Formik } from "formik";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	uploadBox: {
@@ -105,12 +106,20 @@ function OrganizationView({
 												<Grid container spacing={2}>
 													<Grid item xs={12}>
 														<Typography variant="h5">
-															About Organization
+															<FormattedMessage
+																id="organiztionUpdateFormHeading"
+																defaultMessage="About Organization"
+																description="This text will be heading of organization update form"
+															/>
 														</Typography>
 													</Grid>
 													<Grid item xs={12}>
 														<Typography className={classes.subHeading}>
-															Update the organization information
+															<FormattedMessage
+																id="updateOrganizationBasicDetails"
+																defaultMessage="Update the organization information"
+																description="This text will tell user to update basic details of organization"
+															/>
 														</Typography>
 														{inputFields
 															.slice(1, 4)
@@ -177,7 +186,11 @@ function OrganizationView({
 													</Grid>
 													<Grid item xs={12}>
 														<Typography className={classes.subHeading}>
-															Registration type
+															<FormattedMessage
+																id="organiztionRegistarationHeadings"
+																defaultMessage="Registration type"
+																description="This text will tell user about the registartion types of orgs"
+															/>
 														</Typography>
 														<Box pl={1} mt={1}>
 															<FormControl component="fieldset">
@@ -215,7 +228,11 @@ function OrganizationView({
 													</Grid>
 													<Grid item xs={12}>
 														<Typography className={classes.subHeading}>
-															Home country settings
+															<FormattedMessage
+																id="organiztionHomeCountrySetting"
+																defaultMessage="Home country settings"
+																description="This text will tell user to update home contry"
+															/>
 														</Typography>
 														{inputFields
 															.slice(4)
@@ -354,7 +371,11 @@ function OrganizationView({
 																data-testid="createSaveButton"
 																disabled={!formik.isValid}
 															>
-																Update
+																<FormattedMessage
+																	id="organiztionUpdateButton"
+																	defaultMessage="Update"
+																	description="This text will tell user to update organization info"
+																/>
 															</Button>
 														</Box>
 													</Grid>
