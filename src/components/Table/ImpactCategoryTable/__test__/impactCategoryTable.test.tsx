@@ -76,6 +76,58 @@ const impactCategoryCountQuery = {
 	result: { data: { impactCategoryOrgCount: impactCategoryMock.length } },
 };
 
+const impactCategoryProjectCountQuery = {
+	request: {
+		query: GET_IMPACT_CATEGORY_PROJECT_COUNT,
+		variables: {
+			filter: {
+				impact_category_org: "1",
+			},
+		},
+	},
+	result: {
+		data: { projectCountImpCatByOrg: [{ count: 1 }] },
+	},
+};
+
+const budgetTragetAmountSum = {
+	request: {
+		query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+		variables: {
+			filter: {
+				budgetTargetsProject: "3",
+			},
+		},
+	},
+	result: {
+		data: mockBudgetTargetAmountSum,
+	},
+};
+
+const impactCategoryByOrgQuery = {
+	request: {
+		query: GET_IMPACT_CATEGORY_BY_ORG,
+		variables: {
+			filter: { organization: "3" },
+		},
+	},
+	result: { data: { impactCategoryOrgList: impactCategoryMock } },
+};
+
+const deliverableCategoryCountByOrgQuery = {
+	request: {
+		query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
+		variables: {
+			filter: {
+				organization: "3",
+			},
+		},
+	},
+	result: {
+		data: mockDeliverableCategoryCount,
+	},
+};
+
 const mocks = [
 	impactUnitProjectCountQuery,
 	{
@@ -113,32 +165,8 @@ const mocks = [
 		result: { data: { impactCategoryUnitListCount: impactCategoryUnit.length } },
 	},
 
-	{
-		request: {
-			query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
-			variables: {
-				filter: {
-					organization: "3",
-				},
-			},
-		},
-		result: {
-			data: mockDeliverableCategoryCount,
-		},
-	},
-	{
-		request: {
-			query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-			variables: {
-				filter: {
-					budgetTargetsProject: "3",
-				},
-			},
-		},
-		result: {
-			data: mockBudgetTargetAmountSum,
-		},
-	},
+	deliverableCategoryCountByOrgQuery,
+	budgetTragetAmountSum,
 	{
 		request: {
 			query: GET_DELIVERABLE_ORG_CATEGORY,
@@ -151,6 +179,7 @@ const mocks = [
 		},
 		result: { data: { deliverableCategory: deliverableCategoryMock } },
 	},
+	impactCategoryProjectCountQuery,
 	{
 		request: {
 			query: GET_DELIVERABLE_ORG_CATEGORY,
@@ -185,15 +214,7 @@ const mocks = [
 		},
 		result: { data: { impactCategoryOrgList: impactCategoryMock } },
 	},
-	{
-		request: {
-			query: GET_IMPACT_CATEGORY_BY_ORG,
-			variables: {
-				filter: { organization: "3" },
-			},
-		},
-		result: { data: { impactCategoryOrgList: impactCategoryMock } },
-	},
+	impactCategoryByOrgQuery,
 	impactCategoryCountQuery,
 	{
 		request: {
@@ -213,19 +234,7 @@ const mocks = [
 		},
 		result: { data: { impactCategoryUnitList: impactCategoryUnit } },
 	},
-	{
-		request: {
-			query: GET_IMPACT_CATEGORY_PROJECT_COUNT,
-			variables: {
-				filter: {
-					impact_category_org: "1",
-				},
-			},
-		},
-		result: {
-			data: { projectCountImpCatByOrg: [{ count: 1 }] },
-		},
-	},
+	impactCategoryProjectCountQuery,
 	{
 		request: {
 			query: GET_IMPACT_CATEGORY_PROJECT_COUNT,
