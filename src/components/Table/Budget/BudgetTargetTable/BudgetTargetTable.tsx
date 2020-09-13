@@ -25,6 +25,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import BudgetTargetTableRow from "./BudgetTargetTableRow";
 import TableSkeleton from "../../../Skeletons/TableSkeleton";
 import { budgetTargetTableHeading as tableHeading } from "../../constants";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {
@@ -179,13 +180,28 @@ function BudgetTargetTable() {
 					<TableRow color="primary">
 						{tableHeading.map((heading: { label: string }, index: number) => (
 							<TableCell className={tableHeader.th} key={index} align="left">
-								{heading.label === "Total Amount"
+								{/* {heading.label === "Total Amount"
 									? `Total Amount ${
 											currency?.currencyList[0]?.code
 												? "(" + currency?.currencyList[0]?.code + ")"
 												: ""
 									  }`
-									: heading.label}
+									: heading.label} */}
+								<FormattedMessage
+									id={`BudgetTableHeading${index + 1}`}
+									defaultMessage={
+										heading.label === "Total Amount"
+											? `Total Amount ${
+													currency?.currencyList[0]?.code
+														? "(" +
+														  currency?.currencyList[0]?.code +
+														  ")"
+														: ""
+											  }`
+											: heading.label
+									}
+									description={`This text will be shown on budget table heading for ${heading.label}`}
+								/>
 							</TableCell>
 						))}
 					</TableRow>

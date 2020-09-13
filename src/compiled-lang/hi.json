@@ -206,7 +206,7 @@
 	"donorHeading": [
 		{
 			"type": 0,
-			"value": "दाताओं"
+			"value": "दाता"
 		}
 	],
 	"profileHeading": [
@@ -218,7 +218,7 @@
 	"donorSettingLink": [
 		{
 			"type": 0,
-			"value": "दाताओं"
+			"value": "दाता"
 		}
 	],
 	"profileSettingLink": [
@@ -237,6 +237,168 @@
 		{
 			"type": 0,
 			"value": "अभी कोई प्राप्ति नहीं है"
+		}
+	],
+	"BudgetTableHeading1": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"BudgetTableHeading2": [
+		{
+			"type": 0,
+			"value": "#"
+		}
+	],
+	"BudgetTableHeading3": [
+		{
+			"type": 0,
+			"value": "लक्ष्य"
+		}
+	],
+	"BudgetTableHeading4": [
+		{
+			"type": 0,
+			"value": "बजट श्रेणी"
+		}
+	],
+	"BudgetTableHeading5": [
+		{
+			"type": 0,
+			"value": "दाता"
+		}
+	],
+	"BudgetTableHeading6": [
+		{
+			"type": 0,
+			"value": "कुल रकम"
+		}
+	],
+	"BudgetTableHeading7": [
+		{
+			"type": 0,
+			"value": "खर्च"
+		}
+	],
+	"BudgetTableHeading8": [
+		{
+			"type": 0,
+			"value": "प्रगति %"
+		}
+	],
+	"BudgetTableHeading9": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"BudgetLineitemTableHeading1": [
+		{
+			"type": 0,
+			"value": "#"
+		}
+	],
+	"BudgetLineitemTableHeading2": [
+		{
+			"type": 0,
+			"value": "तारीख"
+		}
+	],
+	"BudgetLineitemTableHeading3": [
+		{
+			"type": 0,
+			"value": "टिप्पणी"
+		}
+	],
+	"BudgetLineitemTableHeading4": [
+		{
+			"type": 0,
+			"value": "राशि"
+		}
+	],
+	"BudgetLineitemTableHeading5": [
+		{
+			"type": 0,
+			"value": "अनुदान की अवधि"
+		}
+	],
+	"BudgetLineitemTableHeading6": [
+		{
+			"type": 0,
+			"value": "साल"
+		}
+	],
+	"BudgetLineitemTableHeading7": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"tableHeading": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"tableHeadingS.no": [
+		{
+			"type": 0,
+			"value": "#"
+		}
+	],
+	"tableHeadingName": [
+		{
+			"type": 0,
+			"value": "नाम"
+		}
+	],
+	"tableHeadingCategory": [
+		{
+			"type": 0,
+			"value": "श्रेणी"
+		}
+	],
+	"tableHeadingTarget": [
+		{
+			"type": 0,
+			"value": "लक्ष्य"
+		}
+	],
+	"tableHeadingAchieved": [
+		{
+			"type": 0,
+			"value": "प्राप्ति"
+		}
+	],
+	"tableHeadingProgess": [
+		{
+			"type": 0,
+			"value": "प्रगति %"
+		}
+	],
+	"tableHeadingSDG": [
+		{
+			"type": 0,
+			"value": "SDG"
+		}
+	],
+	"tableHeadingNote": [
+		{
+			"type": 0,
+			"value": "टिप्पणी"
+		}
+	],
+	"tableHeadingYear": [
+		{
+			"type": 0,
+			"value": "साल"
+		}
+	],
+	"tableHeadingDate": [
+		{
+			"type": 0,
+			"value": "तारीख"
 		}
 	]
 }

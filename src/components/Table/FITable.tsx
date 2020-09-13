@@ -78,7 +78,14 @@ export default function FITable({
 												key={heading.label}
 												align="left"
 											>
-												{heading.label}
+												<FormattedMessage
+													id={
+														"tableHeading" +
+														heading.label.replace(/ /g, "")
+													}
+													defaultMessage={`${heading.label}`}
+													description={`This text will be shown on table for ${heading.label} heading`}
+												/>
 											</TableCell>
 										))}
 								</TableRow>

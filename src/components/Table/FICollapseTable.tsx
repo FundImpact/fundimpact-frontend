@@ -108,15 +108,12 @@ export default function CollapsibleTable({
 										align="left"
 										className={tableHeader.th}
 									>
-										{heading.label}
-										{/* <FormattedMessage
-											id={`${heading.label
-												.toString()
-												.replace(/ /g, "")
-												.toLowerCase()}`}
+										{/* {heading.label} */}
+										<FormattedMessage
+											id={"tableHeading" + heading.label.replace(/ /g, "")}
 											defaultMessage={`${heading.label}`}
 											description={`This text will be shown on table for ${heading.label} heading`}
-										/> */}
+										/>
 									</TableCell>
 								))}
 						</TableRow>
