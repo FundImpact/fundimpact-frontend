@@ -7,6 +7,10 @@
     "defaultMessage": "Already have account?",
     "description": "This text will be show on signup page on left side over blue cover"
   },
+  "budgetCategoriesHeading": {
+    "defaultMessage": "Budget Categories",
+    "description": "This text is the heding of budget category table"
+  },
   "dontHaveAccount": {
     "defaultMessage": "Dont have account?",
     "description": "This text will be show on login page on left side over blue cover"

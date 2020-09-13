@@ -228,6 +228,12 @@
       "value": "Already have account?"
     }
   ],
+  "budgetCategoriesHeading": [
+    {
+      "type": 0,
+      "value": "Budget Categories"
+    }
+  ],
   "dontHaveAccount": [
     {
       "type": 0,
