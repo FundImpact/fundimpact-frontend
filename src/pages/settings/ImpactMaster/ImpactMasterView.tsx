@@ -104,11 +104,11 @@ const ImpactMasterView = () => {
 			<Box p={2}>
 				<h1>
 					<FormattedMessage
-						id={`impactMasterPageHeading-${value}`}
-						defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
 						description={`This text is the heding of impact ${
 							value == 0 ? "Categories" : "Unit"
 						} table`}
+						defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
+						id={`impactMasterPageHeading-${value}`}
 					/>
 				</h1>
 
