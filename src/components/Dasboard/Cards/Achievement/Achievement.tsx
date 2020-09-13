@@ -57,9 +57,18 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 						/>
 					</Typography>
 				</Box>
-				<Box mr={1} color="text.disabled">
+				<Box mr={1} color="text.disabled" display="flex">
+					<Box mr={1}>
+						<Typography variant="body2" gutterBottom>
+							<FormattedMessage
+								id={`updatedAtAchievementCard`}
+								defaultMessage={"Updated at"}
+								description={`This text will be shown on Dashboard achievement card for updated at`}
+							/>
+						</Typography>
+					</Box>
 					<Typography variant="body2" gutterBottom>
-						{`Updated at ${props.lastUpdated}`}
+						{`${props.lastUpdated}`}
 					</Typography>
 				</Box>
 			</Box>

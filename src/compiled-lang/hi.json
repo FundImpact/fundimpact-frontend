@@ -59,10 +59,184 @@
 			"value": "साइन अप करें"
 		}
 	],
+	"createdeliverabletargetsButton": [
+		{
+			"type": 0,
+			"value": "उत्पाद लक्ष्य बनाये"
+		}
+	],
+	"createdeliverableunitButton": [
+		{
+			"type": 0,
+			"value": "उत्पाद मात्रक बनाये"
+		}
+	],
+	"createdeliverablecategoryButton": [
+		{
+			"type": 0,
+			"value": "उत्पाद श्रेणी बनाये"
+		}
+	],
+	"createimpacttargetsButton": [
+		{
+			"type": 0,
+			"value": "सामाजिक प्रभाव लक्ष्य बनाये"
+		}
+	],
+	"createimpactunitButton": [
+		{
+			"type": 0,
+			"value": "सामाजिक प्रभाव मात्रक बनाये"
+		}
+	],
+	"createimpactcategoryButton": [
+		{
+			"type": 0,
+			"value": "सामाजिक प्रभाव श्रेणी बनाये"
+		}
+	],
+	"reportachievementsButton": [
+		{
+			"type": 0,
+			"value": "रिपोर्ट प्राप्ति"
+		}
+	],
+	"createbudgetcategoryButton": [
+		{
+			"type": 0,
+			"value": "बजट श्रेणी बनाये"
+		}
+	],
+	"reportbudgetspendButton": [
+		{
+			"type": 0,
+			"value": "रिपोर्ट बजट खर्च"
+		}
+	],
+	"createbudgettargetButton": [
+		{
+			"type": 0,
+			"value": "बजट लक्ष्य बनाये"
+		}
+	],
+	"creategrantperiodButton": [
+		{
+			"type": 0,
+			"value": "अनुदान की अवधि बनाये"
+		}
+	],
+	"budgetTabHeading": [
+		{
+			"type": 0,
+			"value": "बजट"
+		}
+	],
+	"deliverablesTabHeading": [
+		{
+			"type": 0,
+			"value": "उत्पाद"
+		}
+	],
+	"impactindicatorsTabHeading": [
+		{
+			"type": 0,
+			"value": "सामाजिक प्रभाव"
+		}
+	],
+	"grantperiodsTabHeading": [
+		{
+			"type": 0,
+			"value": "अनुदान की अवधि"
+		}
+	],
+	"DeliverablesAchievementCard": [
+		{
+			"type": 0,
+			"value": "उत्पाद"
+		}
+	],
+	"ImpactAchievementCard": [
+		{
+			"type": 0,
+			"value": "सामाजिक प्रभाव"
+		}
+	],
+	"updatedAtAchievementCard": [
+		{
+			"type": 0,
+			"value": "अद्यतन"
+		}
+	],
+	"ApprovedFundCard": [
+		{
+			"type": 0,
+			"value": "अनुमोदित"
+		}
+	],
+	"ReceivedFundCard": [
+		{
+			"type": 0,
+			"value": "प्राप्त किया"
+		}
+	],
+	"SPENDFundCard": [
+		{
+			"type": 0,
+			"value": "खर्च"
+		}
+	],
+	"fundstatusCard": [
+		{
+			"type": 0,
+			"value": "निधि प्रगति"
+		}
+	],
 	"achievementsCard": [
 		{
 			"type": 0,
-			"value": "उपलब्धि"
+			"value": "प्राप्ति"
+		}
+	],
+	"impactCard": [
+		{
+			"type": 0,
+			"value": "सामाजिक प्रभाव"
+		}
+	],
+	"donorHeading": [
+		{
+			"type": 0,
+			"value": "दाताओं"
+		}
+	],
+	"profileHeading": [
+		{
+			"type": 0,
+			"value": "प्रोफ़ाइल"
+		}
+	],
+	"donorSettingLink": [
+		{
+			"type": 0,
+			"value": "दाताओं"
+		}
+	],
+	"profileSettingLink": [
+		{
+			"type": 0,
+			"value": "प्रोफ़ाइल"
+		}
+	],
+	"noTargetFound": [
+		{
+			"type": 0,
+			"value": "अभी कोई लक्ष्य नहीं है"
+		}
+	],
+	"noAchievementsReported": [
+		{
+			"type": 0,
+			"value": "अभी कोई प्राप्ति नहीं है"
 		}
 	]
 }
