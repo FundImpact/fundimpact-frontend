@@ -32,6 +32,20 @@ import { GET_DELIVERABLE_UNIT_PROJECT_COUNT } from "../../../../graphql/Delivera
 
 let table: any;
 
+const deliverableCategoryProjectCountQuery = {
+	request: {
+		query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
+		variables: {
+			filter: {
+				deliverable_unit_org: "1",
+			},
+		},
+	},
+	result: {
+		data: { projectCountDelUnit: [{ count: 1 }] },
+	},
+};
+
 const mocks = [
 	{
 		request: {
@@ -46,19 +60,7 @@ const mocks = [
 			data: { projectCountDelCatByOrg: [{ count: 1 }] },
 		},
 	},
-	{
-		request: {
-			query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
-			variables: {
-				filter: {
-					deliverable_unit_org: "1",
-				},
-			},
-		},
-		result: {
-			data: { projectCountDelUnit: [{ count: 1 }] },
-		},
-	},
+	deliverableCategoryProjectCountQuery,
 	{
 		request: {
 			query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
