@@ -138,7 +138,7 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Deliverables Category",
+					text: "Create Deliverable Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -149,7 +149,7 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achivement",
+					text: "Report Achievements",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTrackLine
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -188,7 +188,7 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achivement",
+					text: "Report Achievements",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<ImpactTrackLine
 							open={open}
@@ -239,13 +239,13 @@ export default function DashboardTableContainer() {
 				{tabs.map((tab, index) => (
 					<Tab
 						textColor="secondary"
-						key={intl.formatMessage({
-							id: `${tab.label}TableHeading`,
+						key={tab.label}
+						value={index}
+						label={intl.formatMessage({
+							id: `${tab.label.toString().replace(/ /g, "").toLowerCase()}TabHeading`,
 							defaultMessage: tab.label,
 							description: `This text will be shown for ${tab.label} table heading`,
 						})}
-						value={index}
-						label={tab.label}
 						{...a11yProps(index)}
 					/>
 				))}

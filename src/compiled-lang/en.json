@@ -34,5 +34,185 @@
 			"type": 0,
 			"value": "Singup"
 		}
+	],
+	"createdeliverabletargetsButton": [
+		{
+			"type": 0,
+			"value": "Create Deliverable Targets"
+		}
+	],
+	"createdeliverableunitButton": [
+		{
+			"type": 0,
+			"value": "Create Deliverable Unit"
+		}
+	],
+	"createdeliverablecategoryButton": [
+		{
+			"type": 0,
+			"value": "Create Deliverable Category"
+		}
+	],
+	"createimpacttargetsButton": [
+		{
+			"type": 0,
+			"value": "Create Impact Targets"
+		}
+	],
+	"createimpactunitButton": [
+		{
+			"type": 0,
+			"value": "Create Impact Unit"
+		}
+	],
+	"createimpactcategoryButton": [
+		{
+			"type": 0,
+			"value": "Create Impact Category"
+		}
+	],
+	"reportachievementsButton": [
+		{
+			"type": 0,
+			"value": "Report Achievements"
+		}
+	],
+	"createbudgetcategoryButton": [
+		{
+			"type": 0,
+			"value": "Create Budget Category"
+		}
+	],
+	"reportbudgetspendButton": [
+		{
+			"type": 0,
+			"value": "Report Budget Spend"
+		}
+	],
+	"createbudgettargetButton": [
+		{
+			"type": 0,
+			"value": "Create Budget Target"
+		}
+	],
+	"creategrantperiodButton": [
+		{
+			"type": 0,
+			"value": "Create Grant Periods"
+		}
+	],
+	"budgetTabHeading": [
+		{
+			"type": 0,
+			"value": "Budget"
+		}
+	],
+	"deliverablesTabHeading": [
+		{
+			"type": 0,
+			"value": "Deliverables"
+		}
+	],
+	"impactindicatorsTabHeading": [
+		{
+			"type": 0,
+			"value": "Impact Indicators"
+		}
+	],
+	"grantperiodsTabHeading": [
+		{
+			"type": 0,
+			"value": "grant periods"
+		}
+	],
+	"DeliverablesAchievementCard": [
+		{
+			"type": 0,
+			"value": "deliverables"
+		}
+	],
+	"ImpactAchievementCard": [
+		{
+			"type": 0,
+			"value": "Impacts"
+		}
+	],
+	"updatedAtAchievementCard": [
+		{
+			"type": 0,
+			"value": "Updated at"
+		}
+	],
+	"ApprovedFundCard": [
+		{
+			"type": 0,
+			"value": "Approved"
+		}
+	],
+	"ReceivedFundCard": [
+		{
+			"type": 0,
+			"value": "Received"
+		}
+	],
+	"SPENDFundCard": [
+		{
+			"type": 0,
+			"value": "SPEND"
+		}
+	],
+	"fundstatusCard": [
+		{
+			"type": 0,
+			"value": "FUND STATUS"
+		}
+	],
+	"achievementsCard": [
+		{
+			"type": 0,
+			"value": "ACHIEVEMENTS"
+		}
+	],
+	"impactCard": [
+		{
+			"type": 0,
+			"value": "IMPACT"
+		}
+	],
+	"donorHeading": [
+		{
+			"type": 0,
+			"value": "Donors"
+		}
+	],
+	"profileHeading": [
+		{
+			"type": 0,
+			"value": "Profile"
+		}
+	],
+	"donorSettingLink": [
+		{
+			"type": 0,
+			"value": "Donors"
+		}
+	],
+	"profileSettingLink": [
+		{
+			"type": 0,
+			"value": "Profile"
+		}
+	],
+	"noTargetFound": [
+		{
+			"type": 0,
+			"value": "No Target Found"
+		}
+	],
+	"noAchievementsReported": [
+		{
+			"type": 0,
+			"value": "No Achievements Reported"
+		}
 	]
 }
