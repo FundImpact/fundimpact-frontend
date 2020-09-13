@@ -13,22 +13,6 @@ interface TabPanelProps {
 	value: any;
 }
 
-function TabContent(props: TabPanelProps) {
-	const { children, value, index, ...other } = props;
-
-	return (
-		<div
-			role="tabpanel"
-			hidden={value !== index}
-			id={`wrapped-tabpanel-${index}`}
-			aria-labelledby={`wrapped-tab-${index}`}
-			{...other}
-		>
-			{value === index && <Box p={2}>{children}</Box>}
-		</div>
-	);
-}
-
 function a11yProps(index: any) {
 	return {
 		id: `wrapped-tab-${index}`,
@@ -55,6 +39,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 		marginLeft: theme.spacing(2),
 	},
 }));
+
+function TabContent(props: TabPanelProps) {
+	const { children, value, index, ...other } = props;
+
+	return (
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`wrapped-tabpanel-${index}`}
+			aria-labelledby={`wrapped-tab-${index}`}
+			{...other}
+		>
+			{value === index && <Box p={2}>{children}</Box>}
+		</div>
+	);
+}
 
 const ImpactMasterView = () => {
 	const classes = useStyles();
