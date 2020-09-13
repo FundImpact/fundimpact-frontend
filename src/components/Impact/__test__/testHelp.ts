@@ -198,10 +198,6 @@ export const impactCategoryMock = [
 				reg_type: "Trusts",
 			},
 		},
-		name: "educated people",
-		code: "edu code",
-		description: "teaching poor student",
-		shortname: "edu people",
 	},
 	{
 		id: "2",
@@ -243,6 +239,8 @@ export const impactUnitMock = [
 ];
 
 export const impactCategoryUnitMock = [
+	{
+		id: "1",
 		name: "educated people",
 		code: "edu code",
 		description: "teaching poor student",
@@ -269,6 +267,11 @@ export const impactCategoryUnit = [
 		impact_category_org: impactCategoryMock[0],
 		impact_units_org: impactUnitMock[0],
 	},
+	{
+		id: "2",
+		impact_category_org: impactCategoryMock[1],
+		impact_units_org: impactUnitMock[1],
+	},
 ];
 
 export const sustainableDevelopmentGoalMock = [
@@ -280,9 +283,5 @@ export const sustainableDevelopmentGoalMock = [
 		tags: "sdg",
 		icon:
 			"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-bizir&psig=AOvVaw0ZXn6uerGoiZ5amJfazrIv&ust=1599805392503000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKim1tX53esCFQAAAAAdAAAAABAK",
-	{
-		id: "2",
-		impact_category_org: impactCategoryMock[1],
-		impact_units_org: impactUnitMock[1],
 	},
 ];
