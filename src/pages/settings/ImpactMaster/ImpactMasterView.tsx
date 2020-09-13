@@ -37,6 +37,10 @@ function a11yProps(index: any) {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+	button: {
+		margin: theme.spacing(1),
+		color: theme.palette.common.white,
+	},
 	root: {
 		//flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
@@ -49,10 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 		alignItems: "center",
 		margin: theme.spacing(1),
 		marginLeft: theme.spacing(2),
-	},
-	button: {
-		margin: theme.spacing(1),
-		color: theme.palette.common.white,
 	},
 }));
 
@@ -98,7 +98,7 @@ const ImpactMasterView = () => {
 	return (
 		<>
 			<Box p={2}>
-				<h1>Impact {value==0 ? "Categories" : "Unit"}</h1>
+				<h1>Impact {value == 0 ? "Categories" : "Unit"}</h1>
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
