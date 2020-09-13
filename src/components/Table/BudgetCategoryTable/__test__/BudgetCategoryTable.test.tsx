@@ -97,7 +97,22 @@ const getAnnualYearListQuery = {
 	},
 };
 
+const getOrgBudgetCategoryCountQuery = {
+	request: {
+		query: GET_ORG_BUDGET_CATEGORY_COUNT,
+		variables: {
+			filter: {
+				organization: "3",
+			},
+		},
+	},
+	result: {
+		data: { orgBudgetCategoryCount: mockOrgBudgetCategory.length },
+	},
+};
+
 const mocks = [
+	
 	getFinancialYearListQuery,
 	{
 		request: {
@@ -112,19 +127,7 @@ const mocks = [
 			data: mockBudgetTrackingsCount,
 		},
 	},
-	{
-		request: {
-			query: GET_ORG_BUDGET_CATEGORY_COUNT,
-			variables: {
-				filter: {
-					organization: "3",
-				},
-			},
-		},
-		result: {
-			data: { orgBudgetCategoryCount: mockOrgBudgetCategory.length },
-		},
-	},
+
 	budgetTargetProjectQuery,
 	{
 		request: {
@@ -185,6 +188,7 @@ const mocks = [
 			},
 		},
 	},
+	getOrgBudgetCategoryCountQuery,
 	getAnnualYearListQuery,
 	{
 		request: {
