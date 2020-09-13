@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableFooter from "@material-ui/core/TableFooter";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {},
@@ -51,7 +52,11 @@ export default function FITable({
 									subtitle1: "h1",
 								}}
 							>
-								No Achievement Reported
+								<FormattedMessage
+									id={`noAchievementsReported`}
+									defaultMessage={`No Achievements Reported`}
+									description={`This text will be shown if no target found for table`}
+								/>
 							</Typography>
 						</Box>
 					</Grid>
