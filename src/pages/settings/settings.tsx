@@ -42,11 +42,10 @@ export default function SettingContainer() {
 				<Grid item xs={12} md={9}>
 					<Routes>
 						<Route path="donors" element={<DonorContainer />} />
-						<Route path="organization" element={<Organization />} />
 						<Route path="budget" element={<BudgetCategory />} />
 						<Route path="impact" element={<ImpactCategory />} />
 						<Route path="deliverable" element={<DeliverableCategory />} />
-						<Route path="/" element={<IDefaultView />} />
+						<Route path="organization"  element={<Organization />} />
 					</Routes>
 				</Grid>
 			</Grid>

@@ -58,7 +58,7 @@ export default function LeftPanel() {
 							name: "Briefcase",
 							Icon: SettingsIcon,
 							color: "#bdbdbd",
-							to: "/settings",
+							to: "/settings/organization",
 						},
 						// {
 						// 	name: "Star",
