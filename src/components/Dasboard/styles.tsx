@@ -30,5 +30,8 @@ export const sidePanelStyles = makeStyles((theme: Theme) =>
 			boxShadow: "none",
 			margin: theme.spacing(0, 2),
 		},
+		mainHeading: {
+			color: theme.palette.primary.main,
+		},
 	})
 );

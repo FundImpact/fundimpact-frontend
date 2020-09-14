@@ -11,6 +11,7 @@ import {
 	GET_ANNUAL_YEAR_LIST,
 	GET_ORG_CURRENCIES_BY_ORG,
 	GET_FINANCIAL_YEARS,
+	GET_CURRENCY_LIST
 } from "../../../../graphql";
 import { renderApollo } from "../../../../utils/test.util";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
@@ -23,6 +24,7 @@ import {
 	mockOrgHomeCurrency,
 	mockFinancialYears,
 	mockGrantPeriodsProjectList,
+	mockCurrencyList
 } from "../../../../utils/testMock.json";
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
@@ -117,6 +119,21 @@ const mocks = [
 		result: {
 			data: {
 				financialYearList: mockFinancialYears,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_CURRENCY_LIST,
+			variables: {
+				filter: {
+					country: "1",
+				},
+			},
+		},
+		result: {
+			data: {
+				currencyList: mockCurrencyList,
 			},
 		},
 	},
