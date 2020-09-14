@@ -7,9 +7,12 @@ export interface IImpactCategoryFormProps {
 	onCancel: () => void;
 }
 
-export interface IImpactUnitFormInput extends Omit<IImpactUnit, "target_unit"> {
+export interface IImpactUnitFormInput
+	extends Omit<IImpactUnit, "target_unit" | "prefix_label" | "suffix_label"> {
 	target_unit: string;
-	impactCategory: string[];
+	impactCategory?: string[];
+	prefix_label?: string;
+	suffix_label?: string;
 }
 
 export interface IImpactUnitFormProps {

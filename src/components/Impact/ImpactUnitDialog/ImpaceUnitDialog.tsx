@@ -20,10 +20,7 @@ import {
 import { impactUnitForm } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm/commonForm";
-import {
-	IImpactUnitProps,
-	IImpactUnitData,
-} from "../../../models/impact/impact";
+import { IImpactUnitProps, IImpactUnitData } from "../../../models/impact/impact";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactUnit, IGetImpactCategoryUnit } from "../../../models/impact/query";
 import {
@@ -249,9 +246,9 @@ function ImpactUnitDialog({
 	const onSubmit = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
 			const values = Object.assign({}, valuesSubmitted);
-			setImpactCategory(values.impactCategory);
-			delete values.prefix_label
-			delete values.suffix_label
+			setImpactCategory(values?.impactCategory || []);
+			delete values.prefix_label;
+			delete values.suffix_label;
 			delete values.impactCategory;
 			await createImpactUnitsOrgInput({
 				variables: {
