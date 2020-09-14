@@ -96,7 +96,7 @@ function ImpactCategoryDialog({
 							},
 							data: {
 								impactCategoryOrgCount:
-									(count && count!.impactCategoryOrgCount + 1) || 0,
+									(count && count.impactCategoryOrgCount + 1) || 0,
 							},
 						});
 

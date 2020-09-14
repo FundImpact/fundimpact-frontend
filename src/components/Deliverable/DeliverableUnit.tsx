@@ -79,7 +79,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 				data: {
 					deliverableCategoryUnitCount:
 						(deliverableCategoryUnitCount &&
-							deliverableCategoryUnitCount!.deliverableCategoryUnitCount + 1) ||
+							deliverableCategoryUnitCount.deliverableCategoryUnitCount + 1) ||
 						0,
 				},
 			});
@@ -242,7 +242,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 							},
 							data: {
 								deliverableUnitOrgCount:
-									(count && count!.deliverableUnitOrgCount + 1) || 0,
+									(count && count.deliverableUnitOrgCount + 1) || 0,
 							},
 						});
 

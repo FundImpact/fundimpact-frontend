@@ -75,7 +75,7 @@ function Deliverable(props: DeliverableProps) {
 							},
 							data: {
 								deliverableCategoryCount:
-									(count && count!.deliverableCategoryCount + 1) || 0,
+									(count && count.deliverableCategoryCount + 1) || 0,
 							},
 						});
 

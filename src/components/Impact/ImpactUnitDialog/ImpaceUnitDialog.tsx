@@ -90,7 +90,7 @@ function ImpactUnitDialog({
 				data: {
 					impactCategoryUnitListCount:
 						(impactCategoryUnitCount &&
-							impactCategoryUnitCount!.impactCategoryUnitListCount + 1) ||
+							impactCategoryUnitCount.impactCategoryUnitListCount + 1) ||
 						0,
 				},
 			});
