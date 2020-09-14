@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import { Avatar, IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -50,7 +50,12 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 							name: impactTarget.name,
 							target_value: impactTarget.target_value,
 							description: impactTarget.description,
+							impactCategory:
+								impactTarget.impact_category_unit?.impact_category_org.id,
+							impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
 							impact_category_unit: impactTarget.impact_category_unit.id,
+							sustainable_development_goal:
+								impactTarget.sustainable_development_goal?.id,
 							project: impactTarget.project.id,
 						});
 						handleMenuClose();
@@ -204,6 +209,25 @@ export default function ImpactsTable() {
 							}
 						/>
 					);
+					column.push(
+						<TableCell
+							key={impactTargetProjectList[i]?.sustainable_development_goal?.id}
+						>
+							{impactTargetProjectList[i]?.sustainable_development_goal?.name ? (
+								<Avatar
+									alt="SD"
+									src={
+										impactTargetProjectList[i]?.sustainable_development_goal
+											?.icon
+									}
+								/>
+							) : (
+								"-"
+							)}
+							{}
+						</TableCell>
+					);
+
 					column.push(
 						<EditImpactTargetIcon
 							key={Math.random()}
