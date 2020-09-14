@@ -22,7 +22,7 @@ export const GET_ORGANISATIONS = gql`
 			country {
 				id
 			}
-			logo{
+			logo {
 				id
 				url
 			}

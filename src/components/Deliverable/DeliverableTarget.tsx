@@ -22,6 +22,10 @@ import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { deliverableTargetForm, deliverableTargetUpdateForm } from "./inputField.json";
+import {
+	IGET_DELIVERABLE_TARGET_BY_PROJECT,
+	IDeliverableTargetByProjectResponse,
+} from "../../models/deliverable/query";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -96,7 +100,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						if (count) {
 							limit = count.deliverableTargetCount;
 						}
-						const dataRead = await store.readQuery<any>({
+						const dataRead = await store.readQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
 							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
@@ -107,11 +111,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								sort: "created_at:DESC",
 							},
 						});
-						let deliverableTargets: any[] = dataRead?.deliverableTargetList
+						let deliverableTargets: IDeliverableTargetByProjectResponse[] = dataRead?.deliverableTargetList
 							? dataRead?.deliverableTargetList
 							: [];
-
-						store.writeQuery<any>({
+						store.writeQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
 							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
@@ -126,7 +129,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							},
 						});
 
-						store.writeQuery<any>({
+						store.writeQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
 							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
@@ -137,7 +140,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								deliverableTargetList: [...deliverableTargets, targetCreated],
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.error(err);
+					}
 				},
 				refetchQueries: [
 					{
@@ -190,7 +195,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	useEffect(() => {
 		if (unitsBycategory) {
 			let arr: any = [];
-			console.log(unitsBycategory);
 			unitsBycategory.deliverableCategoryUnitList.forEach(
 				(elem: { deliverable_units_org: { id: string; name: string } }) => {
 					arr.push({

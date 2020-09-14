@@ -108,7 +108,7 @@ describe("Organization Update Form tests", () => {
 			).toBeTruthy();
 		});
 	}
-	
+
 	for (let i = 0; i < organizationFormInputFields.length; i++) {
 		test(`test to check ${organizationFormInputFields[i].id} has correct initial value`, async () => {
 			let field = await organizationUpdateForm.findByTestId(
