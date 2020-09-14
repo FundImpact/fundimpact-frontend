@@ -13,12 +13,18 @@ import {
 import { setUser } from "../../../reducers/userReducer";
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { IUser, UserProps } from "../../../models/User/user";
+import useFileUpload from "../../../hooks/fileUpload";
 function getInitialValues(props: UserProps) {
-	if (props.type === FORM_ACTIONS.UPDATE) return { ...props.data };
+	if (props.type === FORM_ACTIONS.UPDATE) {
+		updateUserForm[0].logo = props.data?.logo;
+		props.data.uploadPhoto = "";
+		return { ...props.data };
+	}
 	return {
 		name: "",
 		username: "",
 		email: "",
+		uploadPhoto: "",
 	};
 }
 
@@ -26,6 +32,7 @@ function UserForm(props: UserProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const userDispatch = React.useContext(UserDispatchContext);
 	let initialValues: IUser = getInitialValues(props);
+	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
 	const formAction = props.type;
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
 		onError() {
@@ -40,15 +47,44 @@ function UserForm(props: UserProps) {
 			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
 		}
 	}, [userResponse, userDispatch]);
+
 	const onCreate = (value: IUser) => {};
 
-	const onUpdate = (value: IUser) => {
-		updateUser({
-			variables: {
-				id: value.id,
-				input: { name: value.name, username: value.username, email: value.email },
-			},
-		});
+	const onUpdate = async (value: IUser) => {
+		/*if user uploads file*/
+		if (value.uploadPhoto) {
+			let formData = new FormData();
+			/* uploadFile component set file attribute value to "removed" if cancel button is clicked on logo */
+			let uploadResponse;
+			if (value.uploadPhoto !== "removed") {
+				formData.append("files", value.uploadPhoto);
+				uploadResponse = await uploadFile(formData);
+			}
+			updateUser({
+				variables: {
+					id: value.id,
+					input: {
+						name: value.name,
+						username: value.username,
+						email: value.email,
+						profile_photo:
+							value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
+					},
+				},
+			});
+		} else {
+			updateUser({
+				variables: {
+					id: value.id,
+					input: {
+						name: value.name,
+						username: value.username,
+						email: value.email,
+						profile_photo: value.profile_photo,
+					},
+				},
+			});
+		}
 	};
 
 	const validate = (values: IUser) => {

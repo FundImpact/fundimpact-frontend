@@ -104,6 +104,7 @@ export interface IInputFields {
 	required?: boolean;
 	multiple?: boolean;
 	hidden?: boolean;
+	logo?: string;
 }
 
 export interface ISelectField {

@@ -14,6 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import { IInputFields } from "../../models";
+import UploadFile from "../UploadFile";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -49,8 +50,9 @@ const InputFields = ({
 	selectLabelId,
 	selectId,
 	getInputValue,
-	required,
+	required = false,
 	multiple = false,
+	logo,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -175,6 +177,21 @@ const InputFields = ({
 				</Select>
 				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 			</FormControl>
+		);
+	}
+	if (inputType === "upload") {
+		return (
+			<UploadFile
+				formik={formik}
+				title={label}
+				height="120px"
+				name={name}
+				required={required}
+				testId={testId}
+				dataTestId={dataTestId}
+				id={name}
+				logo={logo}
+			/>
 		);
 	}
 	return (

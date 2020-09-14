@@ -14,6 +14,9 @@ export const ProfileContainer = () => {
 		name: user?.name,
 		email: user?.email,
 		username: user?.username,
+		profile_photo: user?.profile_photo?.id,
+		logo: user?.profile_photo?.url,
+		uploadPhoto: "",
 	};
 	const [openResetPassForm, setOpenResetPassForm] = useState<boolean>(false);
 	return (
@@ -25,7 +28,7 @@ export const ProfileContainer = () => {
 					description={`This text will be shown on Setting page for profile heading`}
 				/>
 			</h1>
-			<Paper style={{ height: "30vh" }}>
+			<Paper style={{ height: "50vh" }}>
 				<Box m={3} p={2}>
 					<UserForm data={data} type={FORM_ACTIONS.UPDATE} />
 				</Box>

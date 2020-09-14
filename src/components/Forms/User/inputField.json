@@ -1,6 +1,16 @@
 {
 	"updateUserForm": [
 		{
+			"name": "uploadPhoto",
+			"id": "uploadPhoto",
+			"dataTestId": "userFormAvatar",
+			"testId": "userFormAvatarInput",
+			"label": "Avatar",
+			"size": 2,
+			"logo": "",
+			"inputType": "upload"
+		},
+		{
 			"name": "email",
 			"id": "email",
 			"dataTestId": "userFormEmail",

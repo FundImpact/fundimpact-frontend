@@ -8,6 +8,10 @@ export const UPDATE_USER_DETAILS = gql`
 			name
 			email
 			provider
+			profile_photo {
+				id
+				url
+			}
 			role {
 				id
 				name
