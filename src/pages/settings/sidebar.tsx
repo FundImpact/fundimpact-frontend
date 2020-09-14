@@ -55,16 +55,6 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 				</Box>
 			</Box>
 			<Divider />
-
-			<ListItemLink
-				to="donors"
-				data-testid="donor-link"
-				primary={intl.formatMessage({
-					id: `donorSettingLink`,
-					defaultMessage: "Donors",
-					description: `This text will be shown for donors link on setting page`,
-				})}
-			></ListItemLink>
 			{sideBarList.map(
 				(
 					listItem: {
