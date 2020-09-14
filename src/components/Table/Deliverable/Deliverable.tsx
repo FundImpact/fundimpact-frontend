@@ -249,7 +249,7 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<FICollaspeTable
-						tableHeading={deliverableAndImpactHeadings}
+						tableHeading={deliverableHeadings}
 						rows={rows}
 						pagination={deliverableTablePagination}
 					/>

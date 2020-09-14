@@ -280,5 +280,11 @@
 			"type": 0,
 			"value": "Date"
 		}
+	],
+	"profileResetPassword": [
+		{
+			"type": 0,
+			"value": "Reset Password"
+		}
 	]
 }

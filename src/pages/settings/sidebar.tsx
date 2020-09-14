@@ -11,7 +11,7 @@ import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
 import { useIntl } from "react-intl";
 import sideBarList from "./sidebarList.json";
-
+import ListItemLink from "../../components/ListItemLink";
 /**
  *
  * @description The to url must be relative to the /settings.
@@ -25,24 +25,6 @@ import sideBarList from "./sidebarList.json";
  * @param primary  will be the name which will be displayed on
  * the UI.
  */
-function ListItemLink(props: { primary: string; to: string }) {
-	const { primary, to } = props;
-	const { sidePanelActiveLink } = sidePanelStyles();
-
-	const CustomLink = React.useMemo(
-		() =>
-			React.forwardRef((linkProps, ref) => (
-				<NavLink activeClassName={sidePanelActiveLink} to={to} {...linkProps} />
-			)),
-		[to]
-	);
-
-	return (
-		<ListItem button component={CustomLink}>
-			<ListItemText primary={primary} />
-		</ListItem>
-	);
-}
 
 export default function SettingsSidebar({ children }: { children?: Function }) {
 	const classes = sidePanelStyles();
@@ -78,15 +60,6 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 					id: `donorSettingLink`,
 					defaultMessage: "Donors",
 					description: `This text will be shown for donors link on setting page`,
-				})}
-			></ListItemLink>
-			<ListItemLink
-				to="profile"
-				data-testid="update-user-link"
-				primary={intl.formatMessage({
-					id: `profileSettingLink`,
-					defaultMessage: "Profile",
-					description: `This text will be shown for profile link on setting page`,
 				})}
 			></ListItemLink>
 			{sideBarList.map(

@@ -5,6 +5,7 @@ import {
 	Divider,
 	Grid,
 	IconButton,
+	Link,
 	List,
 	ListItemIcon,
 	Menu,
@@ -105,6 +106,12 @@ export default function LeftPanel() {
 					open={Boolean(anchorEl)}
 					onClose={handleClose}
 				>
+					{" "}
+					<MenuItem>
+						<Link href="/account/profile" color="inherit" underline="none">
+							Account Settings
+						</Link>
+					</MenuItem>
 					<MenuItem
 						onClick={() => {
 							if (userDispatch) {

@@ -1,19 +1,12 @@
 import { Box, Container, Grid } from "@material-ui/core";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import Snackbar from "../../components/Snackbar/Snackbar";
 import { useNotificationData } from "../../contexts/notificationContext";
-import IDefaultView from "./defaultView";
-import { DonorContainer } from "./donor/container";
-import Organization from "./Organization";
-import BudgetCategory from "./BudgetMaster";
-import SettingsSidebar from "./sidebar";
-import { ProfileContainer } from "../AccountSettings/user/container";
-import ImpactCategory from "./ImpactMaster";
-import DeliverableCategory from "./DeliverableMaster";
+import AccountSettingsSidebar from "./sidebar";
+import { ProfileContainer } from "./user/container";
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
@@ -35,28 +28,22 @@ export default function SettingContainer() {
 								<LeftPanel />
 							</Grid>
 							<Grid item xs={10}>
-								<SettingsSidebar></SettingsSidebar>
+								<AccountSettingsSidebar />
 							</Grid>
 						</Grid>
 					</Box>
 				</Grid>
 				<Grid item xs={12} md={9}>
 					<Routes>
-						<Route path="donors" element={<DonorContainer />} />
-						<Route path="organization" element={<Organization />} />
-						<Route path="budget" element={<BudgetCategory />} />
-						<Route path="impact" element={<ImpactCategory />} />
-						<Route path="deliverable" element={<DeliverableCategory />} />
-						<Route path="organization" element={<Organization />} />
-						<Route path="/" element={<IDefaultView />} />
+						<Route path="profile" element={<ProfileContainer />} />
 					</Routes>
 				</Grid>
 			</Grid>
-			{notificationData!.successNotification && (
-				<Snackbar severity="success" msg={notificationData!.successNotification} />
-			)}
 			{notificationData!.errorNotification && (
 				<Snackbar severity="error" msg={notificationData!.errorNotification} />
+			)}
+			{notificationData!.successNotification && (
+				<Snackbar severity="success" msg={notificationData!.successNotification} />
 			)}
 		</Container>
 	);

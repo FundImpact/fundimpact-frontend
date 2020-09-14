@@ -400,5 +400,11 @@
 			"type": 0,
 			"value": "तारीख"
 		}
+	],
+	"profileResetPassword": [
+		{
+			"type": 0,
+			"value": "पासवर्ड रिसेट "
+		}
 	]
 }
