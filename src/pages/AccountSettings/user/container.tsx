@@ -34,7 +34,7 @@ export const ProfileContainer = () => {
 				<Button color="primary" onClick={() => setOpenResetPassForm(!openResetPassForm)}>
 					<FormattedMessage
 						id={`profileResetPassword`}
-						defaultMessage={`ResetPassword`}
+						defaultMessage={`Reset Password`}
 						description={`This text will be shown on Setting page for reset password button`}
 					/>
 				</Button>

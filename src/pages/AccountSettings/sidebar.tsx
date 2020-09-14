@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
-import { Box, Divider, ListItem, ListItemText, Typography } from "@material-ui/core";
+import { Box, Divider, Typography } from "@material-ui/core";
 import React from "react";
-import { NavLink } from "react-router-dom";
-
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import SidebarSkeleton from "../../components/Skeletons/SidebarSkeleton";
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
@@ -16,8 +14,8 @@ import ListItemLink from "../../components/ListItemLink";
  * @description The to url must be relative to the /account.
  *
  * @example
- *   If to = 'profile', the generate url will be <ROOT>/settings/profile
- *   If to = 'reset-pass', the generate url will be <ROOT>/settings/reset-pass
+ *   If to = 'profile', the generate url will be <ROOT>/account/profile
+ *   If to = 'reset-pass', the generate url will be <ROOT>/account/reset-pass
  *
  * @param primary  will be the name which will be displayed on
  * the UI.
