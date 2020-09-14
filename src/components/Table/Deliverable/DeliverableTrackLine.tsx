@@ -160,7 +160,7 @@ export default function DeliverablesTrackLineTable({
 		},
 		sort: "created_at:DESC",
 	});
-
+	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (
@@ -174,6 +174,13 @@ export default function DeliverablesTrackLineTable({
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
 					let row = [
+						<TableCell
+							component="td"
+							scope="row"
+							key={deliverableTrackingLineitemList[i]?.id}
+						>
+							{TracklinePage * limit + i + 1}
+						</TableCell>,
 						<TableCell
 							key={getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
 						>
@@ -229,26 +236,27 @@ export default function DeliverablesTrackLineTable({
 			setRows([]);
 		}
 	}, [deliverableTracklineData]);
-
+	let deliverableTracklineTablePagination = (
+		<TablePagination
+			rowsPerPageOptions={[]}
+			colSpan={9}
+			count={count}
+			rowsPerPage={count > limit ? limit : count}
+			page={TracklinePage}
+			onChangePage={handleDeliverableLineChangePage}
+			onChangeRowsPerPage={() => {}}
+			style={{ paddingRight: "40px" }}
+		/>
+	);
 	return (
 		<>
 			{countQueryLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
-			<FITable tableHeading={deliverableAndimpactTracklineHeading} rows={rows} />{" "}
-			{rows.length > 0 && (
-				<Box mt={1}>
-					<TablePagination
-						rowsPerPageOptions={[]}
-						colSpan={9}
-						count={count}
-						rowsPerPage={count > 10 ? 10 : count}
-						page={TracklinePage}
-						onChangePage={handleDeliverableLineChangePage}
-						onChangeRowsPerPage={() => {}}
-						style={{ paddingRight: "40px" }}
-					/>
-				</Box>
-			)}
+			<FITable
+				tableHeading={deliverableAndimpactTracklineHeading}
+				rows={rows}
+				pagination={deliverableTracklineTablePagination}
+			/>
 		</>
 	);
 }

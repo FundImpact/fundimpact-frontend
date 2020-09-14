@@ -9,6 +9,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TableFooter from "@material-ui/core/TableFooter";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import React from "react";
@@ -55,9 +56,6 @@ function Row(props: {
 						{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 					</IconButton>
 				</TableCell>
-				<TableCell component="td" scope="row">
-					{index + 1}
-				</TableCell>
 				{row.column.map((col) => {
 					return col;
 				})}
@@ -76,9 +74,11 @@ function Row(props: {
 export default function CollapsibleTable({
 	tableHeading,
 	rows,
+	pagination,
 }: {
 	tableHeading: { label: string }[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
+	pagination?: React.ReactNode;
 }) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
@@ -94,7 +94,7 @@ export default function CollapsibleTable({
 			) : (
 				<Table aria-label="collapsible table">
 					<TableHead>
-						<TableRow color="primary">
+						<TableRow key={1} color="primary">
 							{rows &&
 								rows.length > 0 &&
 								tableHeading.map((heading, index) => (
@@ -113,6 +113,9 @@ export default function CollapsibleTable({
 							<Row key={index} index={index} row={row} />
 						))}
 					</TableBody>
+					<TableFooter>
+						<TableRow key={1}>{rows.length > 0 && pagination}</TableRow>
+					</TableFooter>
 				</Table>
 			)}
 		</TableContainer>

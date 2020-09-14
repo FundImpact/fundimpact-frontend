@@ -6,6 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TableFooter from "@material-ui/core/TableFooter";
 import React from "react";
 
 const useStyles = makeStyles({
@@ -28,9 +29,11 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 export default function FITable({
 	tableHeading,
 	rows,
+	pagination,
 }: {
 	tableHeading: { label: string }[];
-	rows: any[];
+	rows: React.ReactNode[];
+	pagination?: React.ReactNode;
 }) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
@@ -78,15 +81,15 @@ export default function FITable({
 							<TableBody className={tableHeader.tbody}>
 								{rows.map((row: any, index: number) => (
 									<TableRow key={index}>
-										<TableCell component="td" scope="row">
-											{index + 1}
-										</TableCell>
 										{row.map((col: React.ReactNode) => {
 											return col;
 										})}
 									</TableRow>
 								))}
 							</TableBody>
+							<TableFooter>
+								<TableRow>{rows.length > 0 && pagination}</TableRow>
+							</TableFooter>
 						</Table>
 					</TableContainer>
 				</Grid>

@@ -37,10 +37,7 @@ function OrganizationContainer({
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
 	organizationFormInputFields[4].optionsArray = countryList as any;
-	let {
-		uploadFile: uploadFile,
-		loading: fileUploading,
-	} = useFileUpload();
+	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
 
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();

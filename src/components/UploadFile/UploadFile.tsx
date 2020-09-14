@@ -51,7 +51,7 @@ function UploadFiles<T>({
 }) {
 	const classes = useStyles(props);
 	const [previewImage, setPreviewImage] = useState<string | null>(logo || null);
-	
+
 	useEffect(() => {
 		setPreviewImage(logo || "");
 	}, [logo]);
