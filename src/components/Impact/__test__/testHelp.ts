@@ -176,28 +176,10 @@ export const impactLinitemFyDonorListMock = [
 export const impactCategoryMock = [
 	{
 		id: "1",
-		name: "SUPPLY",
-		code: "XXX",
-		shortname: "XX",
-		description: "X",
-		organization: {
-			id: "2",
-			name: "TSERIES",
-			address: null,
-			account: {
-				id: "2",
-				name: "rahul@gmail.com",
-				description: null,
-				account_no: "a8c1e362-405f-4572-a849-eb8094ffa550",
-			},
-			short_name: "TS",
-			legal_name: "",
-			description: null,
-			organization_registration_type: {
-				id: "1",
-				reg_type: "Trusts",
-			},
-		},
+		name: "educated people",
+		code: "edu code",
+		description: "teaching poor student",
+		shortname: "edu people",
 	},
 	{
 		id: "2",
@@ -209,36 +191,6 @@ export const impactCategoryMock = [
 ];
 
 export const impactUnitMock = [
-	{
-		id: "1",
-		name: "UNITS",
-		code: "ICO",
-		description: "createImpactCategoryOrgInput",
-		target_unit: 2111,
-		prefix_label: "",
-		suffix_label: "",
-		organization: {
-			id: "2",
-			name: "TSERIES",
-			address: null,
-			account: {
-				id: "2",
-				name: "rahul@gmail.com",
-				description: null,
-				account_no: "a8c1e362-405f-4572-a849-eb8094ffa550",
-			},
-			short_name: "TS",
-			legal_name: "",
-			description: null,
-			organization_registration_type: {
-				id: "1",
-				reg_type: "Trusts",
-			},
-		},
-	},
-];
-
-export const impactCategoryUnitMock = [
 	{
 		id: "1",
 		name: "educated people",
@@ -271,17 +223,5 @@ export const impactCategoryUnit = [
 		id: "2",
 		impact_category_org: impactCategoryMock[1],
 		impact_units_org: impactUnitMock[1],
-	},
-];
-
-export const sustainableDevelopmentGoalMock = [
-	{
-		id: "3",
-		name: "Goal 3",
-		short_name: "SDG",
-		goal_no: 5,
-		tags: "sdg",
-		icon:
-			"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-bizir&psig=AOvVaw0ZXn6uerGoiZ5amJfazrIv&ust=1599805392503000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKim1tX53esCFQAAAAAdAAAAABAK",
 	},
 ];

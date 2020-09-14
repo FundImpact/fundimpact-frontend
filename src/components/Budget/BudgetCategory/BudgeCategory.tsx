@@ -85,7 +85,8 @@ function BudgetCategory({
 								},
 							},
 							data: {
-								orgBudgetCategoryCount: count!.orgBudgetCategoryCount + 1,
+								orgBudgetCategoryCount:
+									(count && count.orgBudgetCategoryCount + 1) || 0,
 							},
 						});
 

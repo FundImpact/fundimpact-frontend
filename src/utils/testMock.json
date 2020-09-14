@@ -235,5 +235,8 @@
 			"id": "2",
 			"reg_type": "Education"
 		}
-	]
+	],
+	"mockDeliverableCategoryCount": {
+		"deliverableCategoryCount": 2
+	}
 }

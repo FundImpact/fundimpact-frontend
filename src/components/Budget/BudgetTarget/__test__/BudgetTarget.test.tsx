@@ -3,10 +3,11 @@ import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../../graphq
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { mockCurrencyList } from "../../../../utils/testMock.json";
 import {
 	organizationDetails,
 	projectDetails,
-	mockCurrencyList,
+	mockOrgBudgetCategory,
 } from "../../../../utils/testMock.json";
 import { mockOrgBudgetCategory } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";

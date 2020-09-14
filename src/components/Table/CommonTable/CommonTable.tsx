@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MutableRefObject, useEffect } from "react";
+import React, { useState, ReactNode, MutableRefObject } from "react";
 import {
 	TableContainer,
 	Table,
