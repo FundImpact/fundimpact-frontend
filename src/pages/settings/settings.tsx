@@ -8,6 +8,7 @@ import Snackbar from "../../components/Snackbar/Snackbar";
 import { useNotificationData } from "../../contexts/notificationContext";
 import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
+import Organization from "./Organization";
 import SettingsSidebar from "./sidebar";
 
 export default function SettingContainer() {
@@ -38,6 +39,7 @@ export default function SettingContainer() {
 				<Grid item xs={12} md={9}>
 					<Routes>
 						<Route path="donors" element={<DonorContainer />} />
+						<Route path="organization" element={<Organization />} />
 						<Route path="/" element={<IDefaultView />} />
 					</Routes>
 				</Grid>

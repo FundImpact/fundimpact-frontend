@@ -3,10 +3,10 @@ import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
 
 export interface ISignUpStep {
-	label: string;
+	label: string | JSX.Element;
 	id: string;
 	step: number;
-	description?: string;
+	description?: string | JSX.Element;
 }
 
 export interface IUserSignUp {
@@ -142,4 +142,9 @@ export interface ICommonForm {
 	selectFields?: ISelectField[];
 	initialValues: any;
 	formAction?: FORM_ACTIONS;
+}
+
+export interface ICountry {
+	id: string;
+	name: string;
 }

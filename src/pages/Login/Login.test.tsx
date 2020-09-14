@@ -1,5 +1,6 @@
 import { queries, render, RenderResult } from "@testing-library/react";
 import React from "react";
+import { IntlProvider } from "react-intl";
 import { BrowserRouter } from "react-router-dom";
 
 import { ILoginForm } from "../../models";
@@ -13,9 +14,11 @@ const intialFormValue: ILoginForm = {
 let loginPage: RenderResult<typeof queries>;
 beforeEach(() => {
 	loginPage = render(
-		<BrowserRouter>
-			<Login intialFormValue={intialFormValue} />
-		</BrowserRouter>
+		<IntlProvider locale={"en"} defaultLocale="en">
+			<BrowserRouter>
+				<Login intialFormValue={intialFormValue} />
+			</BrowserRouter>
+		</IntlProvider>
 	);
 });
 

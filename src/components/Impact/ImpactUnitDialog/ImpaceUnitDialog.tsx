@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
+import React, { useEffect, useState } from "react";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
-	CREATE_IMPACT_UNITS_ORG_INPUT,
 	CREATE_IMPACT_CATEGORY_UNIT,
+	CREATE_IMPACT_UNITS_ORG_INPUT,
 } from "../../../graphql/Impact/mutation";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { IInputField } from "../../../models";
+import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { impactUnitForm, impactUnitSelect } from "../inputField.json";
-import { IInputField } from "../../../models";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { impactUnitForm, impactUnitSelect } from "../inputField.json";
 
 let inputFields: IInputField[] = impactUnitForm;
 
@@ -89,7 +90,7 @@ function ImpactUnitDialog({ open, handleClose }: { open: boolean; handleClose: (
 
 	const onSubmit = async (values: IImpactUnitFormInput) => {
 		setImpactCategory(values.impactCategory);
-		delete values.impactCategory;
+		delete (values as any)?.impactCategory;
 
 		createImpactUnitsOrgInput({
 			variables: {

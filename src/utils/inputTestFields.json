@@ -76,5 +76,11 @@
 		{ "id": "donorLegalNameInput", "key": "legal_name", "name": "Legal name" },
 		{ "id": "donorShortNameInput", "key": "short_name", "name": "Short name" },
 		{ "id": "donorCountryOption", "key": "country", "name": "Country" }
+	],
+	"organizationUpdateForm": [
+		{ "id": "createOrganizationNameInput", "name": "name" },
+		{ "id": "createOrganizationLegalNameInput", "name": "legal_name" },
+		{ "id": "createOrganizationShortNameInput", "name": "short_name" },
+		{ "id": "createOrganizationCountryOption", "name": "country" }
 	]
 }

@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 
 import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../graphql/Impact/query";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../graphql/Impact/query";
 import {
 	CREATE_IMPACT_TARGET,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_IMPACT_TARGET_BY_PROJECT,
-	UPDATE_IMAPACT_TARGET,
 	GET_IMPACT_TARGETS_COUNT,
+	UPDATE_IMAPACT_TARGET,
 } from "../../graphql/Impact/target";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -233,7 +233,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 	const onUpdate = (value: IImpactTarget) => {
 		let impactId = value.id;
-		delete value.id;
+		delete (value as any).id;
 		value.target_value = Number(value.target_value);
 		try {
 			updateImpactTarget({

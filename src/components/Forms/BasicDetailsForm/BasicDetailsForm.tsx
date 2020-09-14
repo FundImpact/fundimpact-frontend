@@ -1,36 +1,37 @@
 import {
 	Button,
 	createStyles,
+	FormControl,
+	FormHelperText,
 	Grid,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	MenuItem,
+	OutlinedInput,
+	Select,
 	TextField,
 	Theme,
-	FormControl,
-	InputLabel,
-	Select,
-	FormHelperText,
-	MenuItem,
-	Box,
-	OutlinedInput,
-	InputAdornment,
-	IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { UserDispatchContext } from "../../../contexts/userContext";
+import { useGetFetch } from "../../../hooks/fetch/useFetch";
 import { usePostFetch } from "../../../hooks/fetch/usePostFetch";
 import useRouteResolver from "../../../hooks/routes/useRouteResolver";
 import { IBasicInformation } from "../../../models";
 import { IUserSignupResponse } from "../../../models/signup/userSignUpResponse";
 import { setUser } from "../../../reducers/userReducer";
-import { SIGNUP_API, COUNTRY_LIST_API } from "../../../utils/endpoints.util";
+import { COUNTRY_LIST_API, SIGNUP_API } from "../../../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../../../utils/signup.util";
 import AlertMsg from "../../AlertMessage/AlertMessage";
 import GlobalLoader from "../../commons/GlobalLoader";
-import { useGetFetch } from "../../../hooks/fetch/useFetch";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
 // import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,12 +77,13 @@ const BasicDetailsForm = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
+	const intl = useIntl();
 
 	let { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse
 	>({ body: null, url: SIGNUP_API });
 
-	let { error: countryListFetchError, data: countryList } = useGetFetch({
+	let { error: countryListFetchError, data: countryList } = useGetFetch<any>({
 		url: COUNTRY_LIST_API,
 	});
 	// let { error: OrganisationError, data: organisationTypes } = useGetFetch<IOrganisationType[]>({
@@ -154,6 +156,7 @@ const BasicDetailsForm = () => {
 										variant="outlined"
 										type={"email"}
 										id="email"
+										data-testid="email"
 									/>
 								</Grid>
 
@@ -240,6 +243,7 @@ const BasicDetailsForm = () => {
 										}
 										onChange={formik.handleChange}
 										label="Organization Name"
+										data-testid="organisationName"
 										onBlur={formik.handleBlur}
 										required
 										fullWidth
@@ -386,12 +390,23 @@ const BasicDetailsForm = () => {
 										variant="contained"
 										color="primary"
 									>
-										Submit
+										<FormattedMessage
+											id="SubmitLabel"
+											defaultMessage="Submit"
+											description="This label is used to display on Submit button"
+										/>
 									</Button>
 
 									{loading ? <GlobalLoader /> : null}
 									{singupSuccessfulResponse ? (
-										<p className="text-center"> Singgup Successfull </p>
+										<p className="text-center">
+											{" "}
+											<FormattedMessage
+												id="signupSuccess"
+												defaultMessage="Signup Successfull"
+												description="This label is used to display if signup is successfull"
+											/>{" "}
+										</p>
 									) : null}
 
 									{error ? <AlertMsg severity="error" msg={error} /> : null}

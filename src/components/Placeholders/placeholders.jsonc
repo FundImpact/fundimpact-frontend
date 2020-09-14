@@ -1,0 +1,17 @@
+// This file is currenlty not in use but it is suppoed to be implement with react-intl
+// for input fields plceholders. However at the time of implementing this feature,
+// reac-inlt only support inline Message Descriptor. Check @file palceholder.tsx for more
+// information regarding this.
+
+// {
+// 	"email": {
+// 		"id": "emailPlaceholder",
+// 		"defaultMessage": "Email",
+// 		"description": "This label is to be used for text `Email`"
+// 	},
+// 	"password": {
+// 		"id": "passwordPlaceholder",
+// 		"defaultMessage": "Password",
+// 		"description": "This label is to be used for text `Password`. Generally on login page and signup page"
+// 	}
+// }

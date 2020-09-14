@@ -1,9 +1,9 @@
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { GET_ORG_CURRENCIES_BY_ORG } from "../../../graphql";
+import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../graphql";
 import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
@@ -25,11 +25,10 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { compareObjectKeys } from "../../../utils";
+import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
-import { removeEmptyKeys } from "../../../utils";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -73,7 +72,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		UPDATE_PROJECT_BUDGET_TARGET
 	);
 
-	let [getOrgCurrencies, { data: orgCurrencies }] = useLazyQuery(GET_ORG_CURRENCIES_BY_ORG);
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	let [getBudgetCategory, { data: budgetCategory }] = useLazyQuery(
 		GET_ORGANIZATION_BUDGET_CATEGORY
@@ -82,17 +81,16 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	let [getDonors, { data: donors }] = useLazyQuery(GET_PROJ_DONORS);
 
 	useEffect(() => {
-		if (dashboardData?.organization) {
-			getOrgCurrencies({
+		if (dashboardData) {
+			getCurrency({
 				variables: {
 					filter: {
-						organization: dashboardData?.organization?.id,
-						isHomeCurrency: true,
+						country: dashboardData?.organization?.country?.id,
 					},
 				},
 			});
 		}
-	}, [getOrgCurrencies, dashboardData]);
+	}, [getCurrency, dashboardData]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -118,12 +116,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	}, [getDonors, dashboardData]);
 
-	useEffect(() => {
-		if (orgCurrencies?.orgCurrencies?.length) {
-			budgetTargetFormInputFields[1].endAdornment =
-				orgCurrencies.orgCurrencies[0].currency.code;
-		}
-	}, [orgCurrencies]);
+	if (currency?.currencyList?.length) {
+		budgetTargetFormInputFields[1].endAdornment = currency.currencyList[0].code;
+	}
 
 	useEffect(() => {
 		if (donors) {
@@ -243,7 +238,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				return;
 			}
 
-			delete values.id;
+			delete (values as any).id;
 
 			await updateProjectBudgetTarget({
 				variables: {

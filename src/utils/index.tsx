@@ -1,3 +1,18 @@
+export const months: { [key: number]: string } = {
+	1: "JAN",
+	2: "FEB",
+	3: "MAR",
+	4: "APR",
+	5: "MAY",
+	6: "JUN",
+	7: "JUL",
+	8: "AUG",
+	9: "SEP",
+	10: "OCT",
+	11: "NOV",
+	12: "DEC",
+};
+
 export const getToken = (): string | null => {
 	let user = localStorage.getItem("user");
 	if (user) {
@@ -7,8 +22,20 @@ export const getToken = (): string | null => {
 	return null;
 };
 
-export const getTodaysDate = (dateArg?: Date): string => {
+export const getTodaysDate = (dateArg?: Date, getMonth: boolean = false): string => {
 	let date = dateArg ? new Date(dateArg) : new Date();
+	if (getMonth) {
+		return (
+			date.getDate() +
+			" " +
+			(getMonth ? months[date.getUTCMonth() + 1] : date.getUTCMonth() + 1) +
+			" " +
+			date.getFullYear()
+		)
+			.split("-")
+			.map((ele: string) => (ele.length > 1 ? ele : "0" + ele))
+			.join("-");
+	}
 	return (date.getFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getDate())
 		.split("-")
 		.map((ele: string) => (ele.length > 1 ? ele : "0" + ele))

@@ -1,5 +1,6 @@
 import { act, fireEvent, queries, render, RenderResult, wait } from "@testing-library/react";
 import React from "react";
+import { IntlProvider } from "react-intl";
 
 import { ILoginForm } from "../../../models";
 import LoginForm from "./LoginForm";
@@ -22,12 +23,14 @@ let loginForm: RenderResult<typeof queries>;
 beforeEach(() => {
 	act(() => {
 		loginForm = render(
-			<LoginForm
-				onSubmit={onSubmitMock}
-				clearErrors={clearError}
-				validate={validate}
-				initialValues={intialFormValue}
-			/>
+			<IntlProvider locale={"en"} defaultLocale="en">
+				<LoginForm
+					onSubmit={onSubmitMock}
+					clearErrors={clearError}
+					validate={validate}
+					initialValues={intialFormValue}
+				/>
+			</IntlProvider>
 		);
 	});
 });
@@ -44,7 +47,7 @@ describe("Login  Form", () => {
 	});
 
 	test("should have Submit Button and enabled by default", async () => {
-		let submitButton = await loginForm.findByText("Submit");
+		let submitButton = await loginForm.findByTestId("submit");
 		expect(submitButton).toBeInTheDocument();
 		expect(submitButton).toBeEnabled();
 	});

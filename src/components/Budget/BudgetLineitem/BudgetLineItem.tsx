@@ -1,38 +1,40 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useMutation, useLazyQuery } from "@apollo/client";
-import {
-	CREATE_PROJECT_BUDGET_TRACKING,
-	UPDATE_PROJECT_BUDGET_TRACKING,
-} from "../../../graphql/Budget/mutation";
-import { GET_BUDGET_TARGET_PROJECT, GET_PROJ_BUDGET_TRACINGS_COUNT } from "../../../graphql/Budget";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IBudgetLineitemProps } from "../../../models/budget/";
-import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
-import {
-	setErrorNotification,
-	setSuccessNotification,
-} from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { budgetLineitemFormSelectFields, budgetLineitemFormInputFields } from "./inputFields.json";
-import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
-import {
-	GET_PROJECT_BUDGET_TARCKING,
-	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-	GET_GRANT_PERIODS_PROJECT_LIST,
-} from "../../../graphql/Budget";
 import {
 	GET_ANNUAL_YEAR_LIST,
 	GET_FINANCIAL_YEARS,
 	GET_ORG_CURRENCIES_BY_ORG,
+	GET_CURRENCY_LIST,
 } from "../../../graphql/";
-import { getTodaysDate } from "../../../utils/index";
 import {
-	IGET_BUDGET_TARCKING_LINE_ITEM,
+	GET_BUDGET_TARGET_PROJECT,
+	GET_GRANT_PERIODS_PROJECT_LIST,
+	GET_PROJ_BUDGET_TRACINGS_COUNT,
+	GET_PROJECT_BUDGET_TARCKING,
+	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+} from "../../../graphql/Budget";
+import {
+	CREATE_PROJECT_BUDGET_TRACKING,
+	UPDATE_PROJECT_BUDGET_TRACKING,
+} from "../../../graphql/Budget/mutation";
+import { IBudgetLineitemProps } from "../../../models/budget/";
+import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
+import {
 	IBUDGET_LINE_ITEM_RESPONSE,
+	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
-import { compareObjectKeys } from "../../../utils";
-import { removeEmptyKeys } from "../../../utils";
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from "../../../reducers/notificationReducer";
+import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
+import { getTodaysDate } from "../../../utils";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../Forms/CommonForm";
+import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "./inputFields.json";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -80,7 +82,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
-	let [getOrgCurrencies, { data: orgCurrencies }] = useLazyQuery(GET_ORG_CURRENCIES_BY_ORG);
+
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	useEffect(() => {
 		if (currentProject) {
@@ -173,17 +176,16 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [selectedDonor, getFinancialYearDonor]);
 
 	useEffect(() => {
-		if (dashboardData?.organization) {
-			getOrgCurrencies({
+		if (dashboardData) {
+			getCurrency({
 				variables: {
 					filter: {
-						organization: dashboardData?.organization?.id,
-						isHomeCurrency: true,
+						country: dashboardData?.organization?.country?.id,
 					},
 				},
 			});
 		}
-	}, [getOrgCurrencies, dashboardData?.organization]);
+	}, [getCurrency, dashboardData]);
 
 	useEffect(() => {
 		if (budgetTargets) {
@@ -321,7 +323,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				closeDialog();
 				return;
 			}
-			delete values.id;
+			delete (values as any).id;
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
 			}
@@ -381,9 +383,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			: [];
 	}
 
-	if (orgCurrencies?.orgCurrencies?.length) {
-		budgetLineitemFormInputFields[1].endAdornment =
-			orgCurrencies.orgCurrencies[0].currency.code;
+	if (currency?.currencyList?.length) {
+		budgetLineitemFormInputFields[1].endAdornment = currency.currencyList[0].code;
 	}
 
 	if (annualYears) {
