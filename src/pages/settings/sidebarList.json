@@ -2,7 +2,6 @@
 	{
 		"mainHeading": "Manage Portal",
 		"subHeadings": [
-			{ "to": "donors", "dataTestId": "donor-link", "title": "Manage Donors" },
 			{
 				"to": "organization",
 				"dataTestId": "organization-link",
