@@ -31,8 +31,6 @@
 	],
 	"impactUnitDialogFields": [
 		{ "id": "createInpactUnitNameInput", "key": "name", "name": "Name" },
-		{ "id": "createImpactUnitPrefixLabelInput", "key": "prefix_label", "name": "Prefix Label" },
-		{ "id": "createImpactUnitSuffixLabelInput", "key": "suffix_label", "name": "Suffix Label" },
 		{ "id": "createImpactUnitCodeInput", "key": "code", "name": "Code" },
 		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit", "name": "target unit" },
 		{ "id": "createImpactUnitDescriptionInput", "key": "description", "name": "Description" }

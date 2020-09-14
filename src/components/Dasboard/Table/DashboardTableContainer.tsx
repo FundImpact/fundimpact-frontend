@@ -84,7 +84,11 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Budget Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategory open={open} handleClose={handleClose} />
+						<BudgetCategory
+							open={open}
+							handleClose={handleClose}
+							formAction={FORM_ACTIONS.CREATE}
+						/>
 					),
 				},
 				{
@@ -177,13 +181,21 @@ export default function DashboardTableContainer() {
 				{
 					text: "Create Impact Unit",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactUnitDialog open={open} handleClose={handleClose} />
+						<ImpactUnitDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
 					),
 				},
 				{
 					text: "Create Impact Category",
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactCategoryDialog open={open} handleClose={handleClose} />
+						<ImpactCategoryDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
 					),
 				},
 				{
