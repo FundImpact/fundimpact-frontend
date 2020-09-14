@@ -225,3 +225,23 @@ export const impactCategoryUnit = [
 		impact_units_org: impactUnitMock[1],
 	},
 ];
+
+export const impactCategoryUnitMock = [
+	{
+		id: "1",
+		impact_category_org: impactCategoryMock[0],
+		impact_units_org: impactUnitMock[0],
+	},
+];
+
+export const sustainableDevelopmentGoalMock = [
+	{
+		id: "3",
+		name: "Goal 3",
+		short_name: "SDG",
+		goal_no: 5,
+		tags: "sdg",
+		icon:
+			"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-bizir&psig=AOvVaw0ZXn6uerGoiZ5amJfazrIv&ust=1599805392503000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKim1tX53esCFQAAAAAdAAAAABAK",
+	},
+];

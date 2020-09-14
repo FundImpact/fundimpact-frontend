@@ -152,7 +152,7 @@
 	"BudgetTableHeading6": [
 		{
 			"type": 0,
-			"value": "Total Amount"
+			"value": "Total Amount(INR)"
 		}
 	],
 	"BudgetTableHeading7": [
@@ -194,7 +194,7 @@
 	"BudgetLineitemTableHeading4": [
 		{
 			"type": 0,
-			"value": "Amount"
+			"value": "Amount(INR)"
 		}
 	],
 	"BudgetLineitemTableHeading5": [

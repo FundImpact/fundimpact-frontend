@@ -19,6 +19,7 @@ const mocks = [
 					username: "username",
 					email: "my@my.com",
 					name: "name",
+					profile_photo: "1",
 				},
 			},
 		},
@@ -35,6 +36,8 @@ let data = {
 	name: "name",
 	email: "email.com",
 	username: "username",
+	profile_photo: "1",
+	uploadPhoto: "",
 };
 beforeEach(() => {
 	act(() => {

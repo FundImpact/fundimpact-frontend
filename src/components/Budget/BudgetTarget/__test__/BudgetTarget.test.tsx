@@ -9,7 +9,6 @@ import {
 	projectDetails,
 	mockOrgBudgetCategory,
 } from "../../../../utils/testMock.json";
-import { mockOrgBudgetCategory } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
 import { renderApollo } from "../../../../utils/test.util";
