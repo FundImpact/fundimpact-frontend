@@ -48,6 +48,7 @@ export default function SettingContainer() {
 						<Route path="budget" element={<BudgetCategory />} />
 						<Route path="impact" element={<ImpactCategory />} />
 						<Route path="deliverable" element={<DeliverableCategory />} />
+						<Route path="organization" element={<Organization />} />
 						<Route path="/" element={<IDefaultView />} />
 					</Routes>
 				</Grid>

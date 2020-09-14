@@ -30,13 +30,18 @@ export interface IOrganisationForm
 	logo?: string;
 }
 
-export interface IOrganizationCurrency {
+export interface IOrganisation {
+	__typename: string;
 	id: string;
-	isHomeCurrency: boolean;
-	currency: {
+	name: string;
+	short_name: string;
+	organization_registration_type: IOrganisationType;
+	country?: { id: string; name: string };
+	account?: {
 		id: string;
 		name: string;
-		code: string;
+		description: string;
+		account_no: string;
 	};
 	legal_name: string;
 	logo?: {

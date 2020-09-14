@@ -143,7 +143,7 @@ export default function ImpactsTable() {
 		},
 		sort: "created_at:DESC",
 	});
-
+	const limit = 10;
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
 		newPage: number
@@ -173,7 +173,7 @@ export default function ImpactsTable() {
 				if (impactTargetProjectList[i].impact_category_unit) {
 					let column = [
 						<TableCell component="td" scope="row" key={impactTargetProjectList[i]?.id}>
-							{impactPage * 10 + i + 1}
+							{impactPage * limit + i + 1}
 						</TableCell>,
 						<TableCell key={impactTargetProjectList[i]?.name}>
 							{impactTargetProjectList[i].name}
@@ -204,26 +204,6 @@ export default function ImpactsTable() {
 							}
 						/>
 					);
-
-					column.push(
-						<TableCell
-							key={impactTargetProjectList[i]?.sustainable_development_goal?.id}
-						>
-							{impactTargetProjectList[i]?.sustainable_development_goal?.name ? (
-								<Avatar
-									alt="SD"
-									src={
-										impactTargetProjectList[i]?.sustainable_development_goal
-											?.icon
-									}
-								/>
-							) : (
-								"-"
-							)}
-							{}
-						</TableCell>
-					);
-
 					column.push(
 						<EditImpactTargetIcon
 							key={Math.random()}
@@ -246,7 +226,7 @@ export default function ImpactsTable() {
 			rowsPerPageOptions={[]}
 			colSpan={9}
 			count={count}
-			rowsPerPage={count > 10 ? 10 : count}
+			rowsPerPage={count > limit ? limit : count}
 			page={impactPage}
 			onChangePage={handleChangePage}
 			onChangeRowsPerPage={() => {}}
@@ -260,7 +240,7 @@ export default function ImpactsTable() {
 			) : (
 				<>
 					<FICollaspeTable
-						tableHeading={ImpactHeadings}
+						tableHeading={deliverableAndImpactHeadings}
 						rows={rows}
 						pagination={impactTablePagination}
 					/>
