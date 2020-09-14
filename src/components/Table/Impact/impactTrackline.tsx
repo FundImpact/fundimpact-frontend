@@ -172,7 +172,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		},
 		sort: "created_at:DESC",
 	});
-
+	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (
@@ -190,7 +190,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 							scope="row"
 							key={impactTrackingLineitemList[i]?.id}
 						>
-							{impactTracklinePage * 10 + i + 1}
+							{impactTracklinePage * limit + i + 1}
 						</TableCell>,
 						<TableCell key={impactTrackingLineitemList[i]?.reporting_date}>
 							{getTodaysDate(impactTrackingLineitemList[i]?.reporting_date)}
@@ -252,7 +252,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			rowsPerPageOptions={[]}
 			colSpan={9}
 			count={count}
-			rowsPerPage={count > 10 ? 10 : count}
+			rowsPerPage={count > limit ? limit : count}
 			page={impactTracklinePage}
 			onChangePage={handleImpactLineChangePage}
 			onChangeRowsPerPage={() => {}}

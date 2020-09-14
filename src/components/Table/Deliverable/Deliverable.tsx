@@ -156,6 +156,7 @@ export default function DeliverablesTable() {
 	});
 
 	const [rows, setRows] = useState<any>([]);
+	const limit = 10;
 	useEffect(() => {
 		if (
 			deliverableTargetData &&
@@ -176,7 +177,7 @@ export default function DeliverablesTable() {
 				if (deliverableTargetList[i].deliverable_category_unit) {
 					let column = [
 						<TableCell component="td" scope="row" key={deliverableTargetList[i]?.id}>
-							{page * 10 + i + 1}
+							{page * limit + i + 1}
 						</TableCell>,
 						<TableCell key={deliverableTargetList[i].name}>
 							{deliverableTargetList[i].name}
@@ -234,7 +235,7 @@ export default function DeliverablesTable() {
 			rowsPerPageOptions={[]}
 			colSpan={9}
 			count={count}
-			rowsPerPage={count > 10 ? 10 : count}
+			rowsPerPage={count > limit ? limit : count}
 			page={page}
 			onChangePage={handleChangePage}
 			onChangeRowsPerPage={() => {}}

@@ -160,7 +160,7 @@ export default function DeliverablesTrackLineTable({
 		},
 		sort: "created_at:DESC",
 	});
-
+	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	useEffect(() => {
 		if (
@@ -179,7 +179,7 @@ export default function DeliverablesTrackLineTable({
 							scope="row"
 							key={deliverableTrackingLineitemList[i]?.id}
 						>
-							{TracklinePage * 10 + i + 1}
+							{TracklinePage * limit + i + 1}
 						</TableCell>,
 						<TableCell
 							key={getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
@@ -241,7 +241,7 @@ export default function DeliverablesTrackLineTable({
 			rowsPerPageOptions={[]}
 			colSpan={9}
 			count={count}
-			rowsPerPage={count > 10 ? 10 : count}
+			rowsPerPage={count > limit ? limit : count}
 			page={TracklinePage}
 			onChangePage={handleDeliverableLineChangePage}
 			onChangeRowsPerPage={() => {}}
