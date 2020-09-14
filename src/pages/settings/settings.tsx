@@ -1,6 +1,6 @@
 import { Box, Container, Grid } from "@material-ui/core";
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
@@ -45,7 +45,10 @@ export default function SettingContainer() {
 						<Route path="budget" element={<BudgetCategory />} />
 						<Route path="impact" element={<ImpactCategory />} />
 						<Route path="deliverable" element={<DeliverableCategory />} />
-						<Route path="organization"  element={<Organization />} />
+						<Route path="organization" element={<Organization />} />
+						<Route path="">
+							<Navigate to="organization" />
+						</Route>
 					</Routes>
 				</Grid>
 			</Grid>
