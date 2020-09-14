@@ -27,6 +27,7 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import BudgetCategory from "../../Budget/BudgetCategory";
 import { budgetCategoryHeading as tableHeading } from "../constants";
 import BudgetCategoryProjectCount from "../../UnitsAndCategoriesProjectCount";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {
@@ -139,7 +140,11 @@ function BudgetCategoryTable() {
 						{budgetCategoryList?.orgBudgetCategory?.length
 							? tableHeading.map((heading: { label: string }, index: number) => (
 									<TableCell className={tableHeader.th} key={index} align="left">
-										{heading.label}
+										<FormattedMessage
+											id={`BudgetCategoryTableHeading${index + 1}`}
+											defaultMessage={heading.label}
+											description={`This text will be shown on budget category table heading for ${heading.label}`}
+										/>
 									</TableCell>
 							  ))
 							: null}

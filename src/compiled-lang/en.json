@@ -280,5 +280,84 @@
 			"type": 0,
 			"value": "Date"
 		}
+	],
+	"BudgetCategoryTableHeading1": [
+		{
+			"type": 0,
+			"value": "#"
+		}
+	],
+	"BudgetCategoryTableHeading2": [
+		{
+			"type": 0,
+			"value": "Budget Category"
+		}
+	],
+	"BudgetCategoryTableHeading3": [
+		{
+			"type": 0,
+			"value": "Code"
+		}
+	],
+	"BudgetCategoryTableHeading4": [
+		{
+			"type": 0,
+			"value": "Description"
+		}
+	],
+	"BudgetCategoryTableHeading5": [
+		{
+			"type": 0,
+			"value": "Used in projects"
+		}
+	],
+	"BudgetCategoryTableHeading6": [],
+	"impactMasterPageHeading-0": [
+		{
+			"type": 0,
+			"value": "Impact Categories"
+		}
+	],
+	"impactMasterPageHeading-1": [
+		{
+			"type": 0,
+			"value": "Impact Unit"
+		}
+	],
+	"impactcategoryTabHeading": [
+		{
+			"type": 0,
+			"value": "Impact Category"
+		}
+	],
+	"impactunitTabHeading": [
+		{
+			"type": 0,
+			"value": "Impact Unit"
+		}
+	],
+	"deliverableMasterPageHeading-0": [
+		{
+			"type": 0,
+			"value": "Deliverable Categories"
+		}
+	],
+	"deliverableMasterPageHeading-1": [
+		{
+			"type": 0,
+			"value": "Deliverable Unit"
+		}
+	],
+	"deliverablecategoryTabHeading": [
+		{
+			"type": 0,
+			"value": "Deliverable Category"
+		}
+	],
+	"deliverableunitTabHeading": [
+		{
+			"type": 0,
+			"value": "Deliverable Unit"
+		}
 	]
 }

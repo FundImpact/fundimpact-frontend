@@ -109,7 +109,7 @@ const DeliverableMasterView = () => {
 			<Box p={2}>
 				<h1>
 					<FormattedMessage
-						id={`deliverablemMasterPageHeading-${value}`}
+						id={`deliverableMasterPageHeading-${value}`}
 						defaultMessage={`Deliverable ${value == 0 ? "Categories" : "Unit"} `}
 						description={`This text is the heding of deliverable ${
 							value == 0 ? "Categories" : "Unit"
