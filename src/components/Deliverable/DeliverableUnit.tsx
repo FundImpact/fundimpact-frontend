@@ -78,7 +78,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 				},
 				data: {
 					deliverableCategoryUnitCount:
-						deliverableCategoryUnitCount!.deliverableCategoryUnitCount + 1,
+						(deliverableCategoryUnitCount &&
+							deliverableCategoryUnitCount!.deliverableCategoryUnitCount + 1) ||
+						0,
 				},
 			});
 			return deliverableCategoryUnitCount;
@@ -117,7 +119,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 				data: {
 					deliverableCategoryUnitList: [
 						createdDeliverableCategoryUnit,
-						...deliverableCategoryUnitCacheByUnit!.deliverableCategoryUnitList,
+						...((deliverableCategoryUnitCacheByUnit &&
+							deliverableCategoryUnitCacheByUnit.deliverableCategoryUnitList) ||
+							[]),
 					],
 				},
 			});
@@ -237,7 +241,8 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 								},
 							},
 							data: {
-								deliverableUnitOrgCount: count!.deliverableUnitOrgCount + 1,
+								deliverableUnitOrgCount:
+									(count && count!.deliverableUnitOrgCount + 1) || 0,
 							},
 						});
 

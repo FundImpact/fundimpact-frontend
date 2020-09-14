@@ -76,7 +76,7 @@ function ImpactCategoryDialog({
 						variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
-				update: async (store, { data: createImpactCategoryOrgInput }) => {
+				update: async (store, { data: createImpactCategoryOrgInputData }) => {
 					try {
 						const count = await store.readQuery<{ impactCategoryOrgCount: number }>({
 							query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
@@ -95,7 +95,8 @@ function ImpactCategoryDialog({
 								},
 							},
 							data: {
-								impactCategoryOrgCount: count!.impactCategoryOrgCount + 1,
+								impactCategoryOrgCount:
+									(count && count!.impactCategoryOrgCount + 1) || 0,
 							},
 						});
 
@@ -130,7 +131,7 @@ function ImpactCategoryDialog({
 							},
 							data: {
 								impactCategoryOrgList: [
-									createImpactCategoryOrgInput,
+									createImpactCategoryOrgInputData,
 									...impactCategories,
 								],
 							},

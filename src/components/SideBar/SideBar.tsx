@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Divider, List, MenuItem, Typography, Button, Avatar } from "@material-ui/core";
+import { Box, Divider, List, MenuItem, Typography, Avatar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";

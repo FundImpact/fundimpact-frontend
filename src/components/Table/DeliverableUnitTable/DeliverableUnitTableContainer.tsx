@@ -43,10 +43,9 @@ function DeliverableUnitTableContainer({
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
 	const dashboardData = useDashBoardData();
-	const [
-		getcategoryUnit,
-		{ data: deliverableCategoryUnitList, loading: fetchingCategoryUnit },
-	] = useLazyQuery(GET_CATEGORY_UNIT);
+	const [getcategoryUnit, { data: deliverableCategoryUnitList }] = useLazyQuery(
+		GET_CATEGORY_UNIT
+	);
 
 	useEffect(() => {
 		if (selectedDeliverableUnit.current) {

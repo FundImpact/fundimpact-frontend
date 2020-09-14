@@ -89,7 +89,9 @@ function ImpactUnitDialog({
 				},
 				data: {
 					impactCategoryUnitListCount:
-						impactCategoryUnitCount!.impactCategoryUnitListCount + 1,
+						(impactCategoryUnitCount &&
+							impactCategoryUnitCount!.impactCategoryUnitListCount + 1) ||
+						0,
 				},
 			});
 			return impactCategoryUnitCount;
@@ -126,7 +128,9 @@ function ImpactUnitDialog({
 				data: {
 					impactCategoryUnitList: [
 						createdImpactCategoryUnit,
-						...impactCategoryUnitCacheByUnit!.impactCategoryUnitList,
+						...((impactCategoryUnitCacheByUnit &&
+							impactCategoryUnitCacheByUnit.impactCategoryUnitList) ||
+							[]),
 					],
 				},
 			});
@@ -257,7 +261,7 @@ function ImpactUnitDialog({
 						organization: dashboardData?.organization?.id,
 					},
 				},
-				update: async (store, { data: { createImpactUnitsOrgInput } }) => {
+				update: async (store, { data: { createImpactUnitsOrgData } }) => {
 					try {
 						const count = await store.readQuery<{ impactUnitsOrgCount: number }>({
 							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
@@ -276,7 +280,7 @@ function ImpactUnitDialog({
 								},
 							},
 							data: {
-								impactUnitsOrgCount: count!.impactUnitsOrgCount + 1,
+								impactUnitsOrgCount: (count && count.impactUnitsOrgCount + 1) || 0,
 							},
 						});
 
@@ -310,7 +314,7 @@ function ImpactUnitDialog({
 								sort: "created_at:DESC",
 							},
 							data: {
-								impactUnitsOrgList: [createImpactUnitsOrgInput, ...impactUnits],
+								impactUnitsOrgList: [createImpactUnitsOrgData, ...impactUnits],
 							},
 						});
 
@@ -334,7 +338,7 @@ function ImpactUnitDialog({
 								},
 							},
 							data: {
-								impactUnitsOrgList: [createImpactUnitsOrgInput, ...impactUnitList],
+								impactUnitsOrgList: [createImpactUnitsOrgData, ...impactUnitList],
 							},
 						});
 					} catch (err) {}

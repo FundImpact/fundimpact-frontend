@@ -55,7 +55,7 @@ function Deliverable(props: DeliverableProps) {
 						variables: { filter: { organization: value.organization } },
 					},
 				],
-				update: async (store, { data: createDeliverableCategory }) => {
+				update: async (store, { data: createDeliverableCategoryData }) => {
 					try {
 						const count = await store.readQuery<{ deliverableCategoryCount: number }>({
 							query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
@@ -74,7 +74,8 @@ function Deliverable(props: DeliverableProps) {
 								},
 							},
 							data: {
-								deliverableCategoryCount: count!.deliverableCategoryCount + 1,
+								deliverableCategoryCount:
+									(count && count!.deliverableCategoryCount + 1) || 0,
 							},
 						});
 
@@ -109,7 +110,7 @@ function Deliverable(props: DeliverableProps) {
 							},
 							data: {
 								deliverableCategory: [
-									createDeliverableCategory,
+									createDeliverableCategoryData,
 									...deliverableCategories,
 								],
 							},
