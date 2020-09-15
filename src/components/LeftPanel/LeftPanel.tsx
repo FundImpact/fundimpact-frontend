@@ -41,10 +41,12 @@ export default function LeftPanel() {
 			<Grid xs item>
 				<Box mb={1} mt={1}>
 					<IconButton>
-						<Avatar
-							variant="square"
-							src={require("../../assets/icons/Fundimpact-logo.png")}
-						/>
+						<Link href="/organization/dashboard" color="inherit" underline="none">
+							<Avatar
+								variant="square"
+								src={require("../../assets/icons/Fundimpact-logo.png")}
+							/>
+						</Link>
 					</IconButton>
 				</Box>
 				<Divider />

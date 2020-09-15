@@ -4,11 +4,11 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { FormattedMessage } from "react-intl";
 
 export default function DashboardCard({
-	title,
-	Children,
+	title = "",
+	children,
 }: {
 	title: string | React.ReactElement;
-	Children?: React.ReactElement | any;
+	children?: React.ReactElement | any;
 }) {
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
@@ -37,7 +37,7 @@ export default function DashboardCard({
 						description={`This text will be shown on Dashboard ${title} Card`}
 					/>
 				</Typography>
-				{Children && <Children />}
+				{children}
 			</CardContent>
 		</Card>
 	);
