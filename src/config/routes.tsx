@@ -3,18 +3,22 @@ import React from "react";
 import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import DashboardTableContainer from "../components/Dasboard/Table/DashboardTableContainer";
 import { DashboardProvider } from "../contexts/dashboardContext";
 import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
-import SettingsContainer from "../pages/settings/settings";
-import AccountSettingsContainer from "../pages/AccountSettings/AccountSettings";
 import { client } from "./grapql";
 
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
 const Login = React.lazy(() => import("../pages/Login/Login"));
 const DashboardContainer = React.lazy(() => import("../pages/Dashboard/DashboardContainer"));
+const AccountSettingsContainer = React.lazy(
+	() => import("../pages/AccountSettings/AccountSettings")
+);
+const SettingsContainer = React.lazy(() => import("../pages/settings/settings"));
+const DashboardTableContainer = React.lazy(
+	() => import("../components/Dasboard/Table/DashboardTableContainer")
+);
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
 	const { jwt } = useAuth();
@@ -39,10 +43,7 @@ function AppRoutes() {
 									/>
 								}
 							/>
-							<PrivateRoute
-								path="settings/*"
-								element={<SettingsContainer></SettingsContainer>}
-							/>
+							<PrivateRoute path="settings/*" element={<SettingsContainer />} />
 							<PrivateRoute path="account/*" element={<AccountSettingsContainer />} />
 							<Route path="" element={<LandingPage />}>
 								<Route path="login" element={<Login />} />
