@@ -14,6 +14,7 @@ import {
 import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
 import PieCharts from "../../../Charts/Pie/PieChart";
 import { IFunds } from "./models/funds";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -155,13 +156,27 @@ export default function FundStatus() {
 					{FUND_DETAILS.map((fund, index) => (
 						<React.Fragment key={fund.name}>
 							<Box m={0} width="100%" display="inline">
-								<Typography variant="subtitle1">
+								<Box display="flex">
 									<FiberManualRecordIcon
 										className={classes.fundTextIcon}
 										style={{ color: fund.color }}
 									/>
-									{`${fund.amountToShow} ${fund.name}`}
-								</Typography>
+									{/* {`${fund.amountToShow} ${fund.name}`} */}
+									<Box display="flex">
+										<Box mr={1}>
+											<Typography variant="subtitle1">
+												{fund.amountToShow}
+											</Typography>
+										</Box>
+										<Typography variant="subtitle1">
+											<FormattedMessage
+												id={`${fund.name}FundCard`}
+												defaultMessage={`${fund.name}`}
+												description={`This text will be shown on Dashboard Fund card for ${fund.name}`}
+											/>
+										</Typography>
+									</Box>
+								</Box>
 							</Box>
 						</React.Fragment>
 					))}

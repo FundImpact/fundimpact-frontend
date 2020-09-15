@@ -39,5 +39,41 @@
 			"dataTestId": "impactTracklineNote",
 			"testId": "impactTracklineNoteInput"
 		}
+	],
+	"impactTargetTestField": [
+		{
+			"name": "name",
+			"dataTestId": "impactTargetName",
+			"testId": "impactTargetNameInput",
+			"value": "IMPACTTARGET"
+		},
+		{
+			"name": "impactCategory",
+			"dataTestId": "impactTargetCategory",
+			"testId": "impactTargetCategoryInput",
+			"value": "1"
+		},
+		{
+			"name": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"value": "5000"
+		},
+		{
+			"name": "sustainable_development_goal",
+			"dataTestId": "impactTargetSDG",
+			"testId": "impactTargetSDGInput"
+		},
+		{
+			"name": "description",
+			"dataTestId": "impactTargetDescription",
+			"testId": "impactTargetDescriptionInput"
+		},
+		{
+			"name": "impactUnit",
+			"dataTestId": "impactTargetUnit",
+			"testId": "impactTargetUnitInput",
+			"value": "1"
+		}
 	]
 }

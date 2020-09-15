@@ -1,9 +1,7 @@
 import React from "react";
 import { waitForElement, fireEvent } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
-import {
-	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
-} from "../../../../graphql/Budget";
+import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/Budget";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";

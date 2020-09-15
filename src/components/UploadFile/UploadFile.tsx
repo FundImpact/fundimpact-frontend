@@ -62,7 +62,13 @@ function UploadFiles<T>({
 		<Grid container className={classes.uploadBox}>
 			{previewImage && (
 				<>
-					<Close className={classes.close} onClick={() => setPreviewImage(null)} />
+					<Close
+						className={classes.close}
+						onClick={() => {
+							formik.setFieldValue(name, "removed");
+							setPreviewImage(null);
+						}}
+					/>
 					<img src={previewImage} style={{ width: "100%", height: "100%" }} alt="" />
 				</>
 			)}

@@ -14,10 +14,7 @@ import {
 } from "../../../../graphql/Deliverable/trackline";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
-import {
-	deliverableAndImpactHeadings,
-	deliverableAndimpactTracklineHeading,
-} from "../../constants";
+import { deliverableHeadings, deliverableAndimpactTracklineHeading } from "../../constants";
 import {
 	DeliverableTargetMock,
 	achieveValueMock,
@@ -104,8 +101,8 @@ jest.setTimeout(30000);
 describe("Deliverable Table and Deliverable trackline table Graphql Calls and data listing", () => {
 	test("Table Headings for Deliverable Table", async () => {
 		const { getAllByText } = deliverableTable;
-		for (let i = 0; i < deliverableAndImpactHeadings.length; i++) {
-			await waitForElement(() => getAllByText(deliverableAndImpactHeadings[i].label));
+		for (let i = 0; i < deliverableHeadings.length; i++) {
+			await waitForElement(() => getAllByText(deliverableHeadings[i].label));
 		}
 	});
 	test("Data listing of Deliverable table", async () => {

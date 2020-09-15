@@ -15,7 +15,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { deliverableAndImpactHeadings } from "../constants";
+import { deliverableHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
 
@@ -51,6 +51,12 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 							name: deliverableTarget.name,
 							target_value: deliverableTarget.target_value,
 							description: deliverableTarget.description,
+							deliverableCategory:
+								deliverableTarget.deliverable_category_unit
+									?.deliverable_category_org?.id,
+							deliverableUnit:
+								deliverableTarget.deliverable_category_unit?.deliverable_units_org
+									?.id,
 							deliverable_category_unit:
 								deliverableTarget.deliverable_category_unit.id,
 							project: deliverableTarget.project.id,
@@ -249,7 +255,7 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<FICollaspeTable
-						tableHeading={deliverableAndImpactHeadings}
+						tableHeading={deliverableHeadings}
 						rows={rows}
 						pagination={deliverableTablePagination}
 					/>

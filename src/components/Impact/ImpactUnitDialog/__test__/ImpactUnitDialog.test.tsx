@@ -40,7 +40,7 @@ const initialValues: any = {
 	name: "impc name",
 	description: "desc",
 	code: "impc code",
-	target_unit: "123"
+	target_unit: "123",
 };
 
 let creationOccured = false;

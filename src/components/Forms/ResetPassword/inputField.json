@@ -1,0 +1,22 @@
+{
+	"newPasswordForm": [
+		{
+			"name": "password",
+			"id": "password",
+			"dataTestId": "newPassword",
+			"testId": "newPasswordInput",
+			"label": "New Password",
+			"size": 6,
+			"type": "password"
+		},
+		{
+			"name": "passwordConfirmation",
+			"id": "passwordConfirmation",
+			"dataTestId": "confirmPassword",
+			"testId": "confirmPasswordInput",
+			"label": "Confirm Password",
+			"size": 6,
+			"type": "password"
+		}
+	]
+}

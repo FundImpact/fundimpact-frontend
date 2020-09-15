@@ -11,6 +11,18 @@
 			"value": "Already have account?"
 		}
 	],
+	"budgetCategoriesHeading": [
+		{
+			"type": 0,
+			"value": "Budget Categories"
+		}
+	],
+	"donorSettingLink": [
+		{
+			"type": 0,
+			"value": "Donors"
+		}
+	],
 	"dontHaveAccount": [
 		{
 			"type": 0,
@@ -71,6 +83,12 @@
 			"value": "Password"
 		}
 	],
+	"profileSettingLink": [
+		{
+			"type": 0,
+			"value": "Profile"
+		}
+	],
 	"signupDescription": [
 		{
 			"type": 0,
@@ -100,7 +118,173 @@
 			"type": 0,
 			"value": "Update the organization information"
 		}
+	],
+	"BudgetTableHeading1": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"BudgetTableHeading2": [
+		{
+			"type": 0,
+			"value": "S.no"
+		}
+	],
+	"BudgetTableHeading3": [
+		{
+			"type": 0,
+			"value": "Target Name"
+		}
+	],
+	"BudgetTableHeading4": [
+		{
+			"type": 0,
+			"value": "Budget Category"
+		}
+	],
+	"BudgetTableHeading5": [
+		{
+			"type": 0,
+			"value": "Donor"
+		}
+	],
+	"BudgetTableHeading6": [
+		{
+			"type": 0,
+			"value": "Total Amount(INR)"
+		}
+	],
+	"BudgetTableHeading7": [
+		{
+			"type": 0,
+			"value": "Spent"
+		}
+	],
+	"BudgetTableHeading8": [
+		{
+			"type": 0,
+			"value": "Progress %"
+		}
+	],
+	"BudgetTableHeading9": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"BudgetLineitemTableHeading1": [
+		{
+			"type": 0,
+			"value": "S.no"
+		}
+	],
+	"BudgetLineitemTableHeading2": [
+		{
+			"type": 0,
+			"value": "Date"
+		}
+	],
+	"BudgetLineitemTableHeading3": [
+		{
+			"type": 0,
+			"value": "Note"
+		}
+	],
+	"BudgetLineitemTableHeading4": [
+		{
+			"type": 0,
+			"value": "Amount(INR)"
+		}
+	],
+	"BudgetLineitemTableHeading5": [
+		{
+			"type": 0,
+			"value": "Grant Period"
+		}
+	],
+	"BudgetLineitemTableHeading6": [
+		{
+			"type": 0,
+			"value": "Year"
+		}
+	],
+	"BudgetLineitemTableHeading7": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"tableHeading": [
+		{
+			"type": 0,
+			"value": ""
+		}
+	],
+	"tableHeadingS.no": [
+		{
+			"type": 0,
+			"value": "S.no"
+		}
+	],
+	"tableHeadingName": [
+		{
+			"type": 0,
+			"value": "Name"
+		}
+	],
+	"tableHeadingCategory": [
+		{
+			"type": 0,
+			"value": "Category"
+		}
+	],
+	"tableHeadingTarget": [
+		{
+			"type": 0,
+			"value": "Target"
+		}
+	],
+	"tableHeadingAchieved": [
+		{
+			"type": 0,
+			"value": "Achieved"
+		}
+	],
+	"tableHeadingProgess": [
+		{
+			"type": 0,
+			"value": "Progess"
+		}
+	],
+	"tableHeadingSDG": [
+		{
+			"type": 0,
+			"value": "SDG"
+		}
+	],
+	"tableHeadingNote": [
+		{
+			"type": 0,
+			"value": "Note"
+		}
+	],
+	"tableHeadingYear": [
+		{
+			"type": 0,
+			"value": "Year"
+		}
+	],
+	"tableHeadingDate": [
+		{
+			"type": 0,
+			"value": "Date"
+		}
+	],
+	"profileResetPassword": [
+		{
+			"type": 0,
+			"value": "Reset Password"
+		}
 	]
 }
-  
-

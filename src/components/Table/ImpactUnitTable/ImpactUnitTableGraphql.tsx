@@ -39,7 +39,7 @@ function ImpactUnitTableGraphql({
 		sort: "created_at:DESC",
 		fireRequest: Boolean(impactCategoryId && !collapsableTable),
 	});
-	
+
 	let {
 		changePage: changeImpactUnitPage,
 		count: impactUnitCount,

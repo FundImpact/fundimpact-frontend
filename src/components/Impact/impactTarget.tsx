@@ -12,6 +12,7 @@ import {
 	GET_IMPACT_TARGETS_COUNT,
 	UPDATE_IMAPACT_TARGET,
 } from "../../graphql/Impact/target";
+import { GET_SDG } from "../../graphql/SDG/query";
 import { IImpactTarget, ImpactTargetProps } from "../../models/impact/impactTarget";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import CommonForm from "../CommonForm/commonForm";
@@ -26,7 +27,9 @@ import {
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
-	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
+	if (props.type === IMPACT_ACTIONS.UPDATE) {
+		return { ...props.data };
+	}
 	return {
 		name: "",
 		description: "",
@@ -34,6 +37,7 @@ function getInitialValues(props: ImpactTargetProps) {
 		impactCategory: "",
 		impactUnit: "",
 		impact_category_unit: "",
+		sustainable_development_goal: "",
 		project: props.project,
 	};
 }
@@ -43,7 +47,9 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
-	const [currCategoryId, setCurrentCategoryId] = React.useState<number>();
+	const { data: sdgList } = useQuery(GET_SDG);
+
+	const [currCategoryId, setCurrentCategoryId] = React.useState<number | string>();
 
 	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
 
@@ -62,7 +68,9 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
 		onCompleted(data) {
 			if (data.impactCategoryUnitList && data.impactCategoryUnitList.length) {
-				createImpactTargetHelper(data.impactCategoryUnitList[0].id);
+				if (props.type === IMPACT_ACTIONS.CREATE)
+					createImpactTargetHelper(data.impactCategoryUnitList[0].id);
+				else updateImpactTargetHelper(data.impactCategoryUnitList[0].id);
 			}
 		},
 		onError() {
@@ -70,13 +78,67 @@ function ImpactTarget(props: ImpactTargetProps) {
 		},
 	});
 
+	useEffect(() => {
+		if (props.type === IMPACT_ACTIONS.UPDATE) {
+			setCurrentCategoryId(props.data?.impactCategory);
+		}
+	}, [props.type]);
+
+	const updateImpactTargetHelper = async (impactCategoryUnitId: string) => {
+		let createInputTarget: any = {
+			...impactTarget,
+			impact_category_unit: impactCategoryUnitId,
+		};
+		let impactId = createInputTarget.id;
+		delete (createInputTarget as any).id;
+		createInputTarget.target_value = Number(createInputTarget.target_value);
+		try {
+			updateImpactTarget({
+				variables: {
+					id: impactId,
+					input: createInputTarget,
+				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: {
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+							filter: { project: props.project },
+						},
+					},
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: {
+							filter: { project: props.project },
+						},
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { impactTargetProject: impactId },
+						},
+					},
+				],
+			});
+			impactTargetForm[3].optionsArray = []; // set empty units after creation
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			onCancel();
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
+		}
+	};
+
 	const createImpactTargetHelper = async (impactCategoryUnitId: string) => {
 		try {
-			let createInputTarget = {
+			let createInputTarget: any = {
 				...impactTarget,
 				impact_category_unit: impactCategoryUnitId,
 			};
-
+			delete createInputTarget.id;
 			createImpactTarget({
 				variables: {
 					input: createInputTarget,
@@ -184,6 +246,13 @@ function ImpactTarget(props: ImpactTargetProps) {
 		}
 	}, [categories]);
 
+	// updating sdg field with fetched sdg list
+	useEffect(() => {
+		if (sdgList) {
+			impactTargetForm[4].optionsArray = sdgList.sustainableDevelopmentGoalList;
+		}
+	}, [sdgList]);
+
 	// handling category change
 	useEffect(() => {
 		if (currCategoryId) {
@@ -205,6 +274,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 					});
 				}
 			);
+
 			impactTargetForm[3].optionsArray = arr;
 		}
 	}, [unitByCategory]);
@@ -214,11 +284,13 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const onCreate = (value: IImpactTarget) => {
 		// fetch impact_category_unit_id
 		setImpactTarget({
+			id: value?.id,
 			name: value.name,
 			target_value: Number(value.target_value),
 			description: value.description,
 			project: value.project,
 			impact_category_unit: -1,
+			sustainable_development_goal: value.sustainable_development_goal,
 		});
 		// Query call for fetching impact_categroy_unit_id
 		getUnitsAndCategory({
@@ -232,79 +304,27 @@ function ImpactTarget(props: ImpactTargetProps) {
 	};
 
 	const onUpdate = (value: IImpactTarget) => {
-		let impactId = value.id;
-		delete (value as any).id;
-		value.target_value = Number(value.target_value);
-		try {
-			updateImpactTarget({
-				variables: {
-					id: impactId,
-					input: value,
-				},
-				refetchQueries: [
-					{
-						query: GET_IMPACT_TARGET_BY_PROJECT,
-						variables: {
-							limit: 10,
-							start: 0,
-							sort: "created_at:DESC",
-							filter: { project: props.project },
-						},
-					},
-					{
-						query: GET_IMPACT_TARGET_BY_PROJECT,
-						variables: {
-							filter: { project: props.project },
-						},
-					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { impactTargetProject: impactId },
-						},
-					},
-				],
-			});
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
-			onCancel();
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
-		}
+		onCreate(value);
 	};
-
 	const validate = (values: IImpactTarget) => {
 		let errors: Partial<any> = {};
-		if (props.type === IMPACT_ACTIONS.CREATE) {
-			if (!values.name && !values.name.length) {
-				errors.name = "Name is required here";
-			}
-			if (!values.project) {
-				errors.project = "Project is required here";
-			}
-			if (!values.target_value) {
-				errors.target_value = "Target value is required here";
-			}
-			if (!values.impactCategory) {
-				errors.deliverableCategory = "Category is required here";
-			}
-			if (!values.impactUnit) {
-				errors.deliverableUnit = "Unit is required here";
-			}
+
+		if (!values.name && !values.name.length) {
+			errors.name = "Name is required here";
+		}
+		if (!values.project) {
+			errors.project = "Project is required here";
+		}
+		if (!values.target_value) {
+			errors.target_value = "Target value is required here";
+		}
+		if (!values.impactCategory) {
+			errors.deliverableCategory = "Category is required here";
+		}
+		if (!values.impactUnit) {
+			errors.deliverableUnit = "Unit is required here";
 		}
 
-		if (props.type === IMPACT_ACTIONS.UPDATE) {
-			if (!values.name && !values.name.length) {
-				errors.name = "Name is required here";
-			}
-			if (!values.project) {
-				errors.project = "Project is required here";
-			}
-			if (!values.target_value) {
-				errors.target_value = "Target value is required here";
-			}
-		}
 		return errors;
 	};
 
@@ -326,10 +346,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields:
-							formAction === IMPACT_ACTIONS.CREATE
-								? impactTargetForm
-								: impactTargetUpdateForm,
+						inputFields: impactTargetForm,
 					}}
 				/>
 			</FormDialog>

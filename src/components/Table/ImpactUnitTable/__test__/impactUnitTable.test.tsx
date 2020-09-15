@@ -4,21 +4,11 @@ import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
-import {
-	projectDetails,
-	organizationDetails,
-} from "../../../../utils/testMock.json";
-import {
-	impactCategoryTableHeadings,
-	impactUnitTableHeadings,
-} from "../../constants";
+import { projectDetails, organizationDetails } from "../../../../utils/testMock.json";
+import { impactCategoryTableHeadings, impactUnitTableHeadings } from "../../constants";
 import ImpactUnitTable from "../ImpactUnitTableGraphql";
-import {
-	deliverableCategoryUnitListMock,
-} from "../../../Deliverable/__test__/testHelp";
-import {
-	GET_CATEGORY_UNIT,
-} from "../../../../graphql/Deliverable/categoryUnit";
+import { deliverableCategoryUnitListMock } from "../../../Deliverable/__test__/testHelp";
+import { GET_CATEGORY_UNIT } from "../../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 	GET_IMPACT_CATEGORY_BY_ORG,

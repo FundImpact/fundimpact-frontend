@@ -31,6 +31,7 @@ function CommonInputForm({
 	onCancel,
 	inputFields,
 	formAction,
+	cancelButtonName = "Cancel",
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -83,6 +84,7 @@ function CommonInputForm({
 											}
 											required={element.required ? true : false}
 											multiple={element.multiple ? element.multiple : false}
+											logo={element.logo ? element.logo : ""}
 										/>
 									</Grid>
 								);
@@ -101,8 +103,11 @@ function CommonInputForm({
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
 									</Button>
-									<Button className={classes.cancelButton} onClick={onCancel}>
-										Cancel
+									<Button
+										className={classes.cancelButton}
+										onClick={onCancel ? onCancel : formik.handleReset}
+									>
+										{cancelButtonName}
 									</Button>
 								</Box>
 							</Grid>

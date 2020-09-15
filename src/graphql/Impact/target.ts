@@ -7,6 +7,12 @@ export const CREATE_IMPACT_TARGET = gql`
 			name
 			target_value
 			description
+			sustainable_development_goal {
+				id
+				name
+				short_name
+				icon
+			}
 			project {
 				id
 				name
@@ -161,6 +167,12 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 				name
 				short_name
 				description
+			}
+			sustainable_development_goal {
+				id
+				name
+				short_name
+				icon
 			}
 			impact_category_unit {
 				id

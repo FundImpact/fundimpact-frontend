@@ -45,7 +45,7 @@
 			"label": "Name",
 			"required": true,
 			"inputType": "textarea",
-			"size": 6
+			"size": 12
 		},
 		{
 			"name": "target_value",
@@ -79,6 +79,20 @@
 			"dataTestId": "impactTargetUnit",
 			"testId": "impactTargetUnitInput",
 			"label": "Impact Unit",
+			"required": true,
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "sustainable_development_goal",
+			"id": "sustainable_development_goal",
+			"dataTestId": "impactTargetSDG",
+			"testId": "impactTargetSDGInput",
+			"label": "Sustainable Development",
 			"required": true,
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",

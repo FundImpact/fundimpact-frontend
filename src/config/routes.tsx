@@ -9,6 +9,7 @@ import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
 import LandingPage from "../pages/Landing/Landing";
 import SettingsContainer from "../pages/settings/settings";
+import AccountSettingsContainer from "../pages/AccountSettings/AccountSettings";
 import { client } from "./grapql";
 
 const SignUp = React.lazy(() => import("../pages/Signup/SignUp"));
@@ -42,7 +43,7 @@ function AppRoutes() {
 								path="settings/*"
 								element={<SettingsContainer></SettingsContainer>}
 							/>
-
+							<PrivateRoute path="account/*" element={<AccountSettingsContainer />} />
 							<Route path="" element={<LandingPage />}>
 								<Route path="login" element={<Login />} />
 								<Route path="signup/:id" element={<SignUp />} />

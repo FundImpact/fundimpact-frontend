@@ -7,7 +7,6 @@ import ImpactUnit from "../ImpactUnitTable";
 import { impactCategoryTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 
-
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },

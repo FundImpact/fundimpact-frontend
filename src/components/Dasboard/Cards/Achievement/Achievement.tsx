@@ -11,6 +11,7 @@ import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 } from "../../../../graphql/project";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: { height: "100vh" },
@@ -48,12 +49,26 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 			<Box display="flex">
 				<Box flexGrow={1} ml={1}>
 					<Typography variant="subtitle2" gutterBottom>
-						{props.name}
+						{/*This text is for deliverable and impact headings in achievement card*/}
+						<FormattedMessage
+							id={`${props.name}AchievementCard`}
+							defaultMessage={props.name}
+							description={`This text will be shown on Dashboard achievement card for ${props.name}`}
+						/>
 					</Typography>
 				</Box>
-				<Box mr={1} color="text.disabled">
+				<Box mr={1} color="text.disabled" display="flex">
+					<Box mr={1}>
+						<Typography variant="body2" gutterBottom>
+							<FormattedMessage
+								id={`updatedAtAchievementCard`}
+								defaultMessage={"Updated at"}
+								description={`This text will be shown on Dashboard achievement card for updated at`}
+							/>
+						</Typography>
+					</Box>
 					<Typography variant="body2" gutterBottom>
-						{`Updated at ${props.lastUpdated}`}
+						{`${props.lastUpdated}`}
 					</Typography>
 				</Box>
 			</Box>

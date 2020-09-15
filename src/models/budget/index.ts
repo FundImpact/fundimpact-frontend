@@ -54,12 +54,12 @@ export type IBudgetLineitemProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IBudgetTrackingLineitemForm;
-		};
-		
+	  };
+
 export type IBudgetCategoryProps =
 	| {
 			open: boolean;
-			handleClose: () => void; 
+			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetCategory;
 	  }

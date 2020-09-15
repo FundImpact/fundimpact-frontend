@@ -5,6 +5,7 @@ import {
 	Divider,
 	Grid,
 	IconButton,
+	Link,
 	List,
 	ListItemIcon,
 	Menu,
@@ -16,7 +17,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { UserDispatchContext } from "../../contexts/userContext";
+import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { sidePanelStyles } from "../Dasboard/styles";
 
 /**
@@ -27,7 +28,8 @@ export default function LeftPanel() {
 	const theme = useTheme();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const userDispatch = React.useContext(UserDispatchContext);
-
+	const auth = useAuth();
+	const user: any = auth.user;
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -96,7 +98,7 @@ export default function LeftPanel() {
 				style={{ marginBottom: theme.spacing(2) }}
 			>
 				<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-					<Avatar src={require("../../assets/icons/dummy-user.png")} />
+					<Avatar alt={user?.name} src={user?.profile_photo?.url} />
 				</Button>
 				<Menu
 					id="simple-menu"
@@ -105,6 +107,12 @@ export default function LeftPanel() {
 					open={Boolean(anchorEl)}
 					onClose={handleClose}
 				>
+					{" "}
+					<MenuItem>
+						<Link href="/account/profile" color="inherit" underline="none">
+							Account Settings
+						</Link>
+					</MenuItem>
 					<MenuItem
 						onClick={() => {
 							if (userDispatch) {

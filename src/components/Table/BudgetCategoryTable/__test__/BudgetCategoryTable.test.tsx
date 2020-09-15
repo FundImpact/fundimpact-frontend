@@ -112,7 +112,6 @@ const getOrgBudgetCategoryCountQuery = {
 };
 
 const mocks = [
-	
 	getFinancialYearListQuery,
 	{
 		request: {

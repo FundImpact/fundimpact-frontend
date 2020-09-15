@@ -34,7 +34,6 @@ function DeliverableCategoryTableContainer({
 
 	const dashboardData = useDashBoardData();
 
-	
 	return (
 		<DeliverableCategoryTableView
 			openDialog={openDialog}

@@ -56,3 +56,13 @@ export interface IOrganizationInputFields extends IInputFields {
 	helperText?: string;
 	displayName?: string;
 }
+
+export interface IOrganizationRegistrationType {
+	id: string;
+	reg_type: string;
+}
+
+export interface IOrganizationInputFields extends IInputFields {
+	helperText?: string;
+	displayName?: string;
+}

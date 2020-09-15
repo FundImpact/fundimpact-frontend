@@ -1,7 +1,7 @@
 import { IProject } from "../project/project";
 import { IOrganisation } from "../organisation/types";
 import { IImpactCategoryData } from "./impact";
-import {  IImpactUnitData } from "./impact";
+import { IImpactUnitData } from "./impact";
 
 export interface IImpactCategoryUnitResponse {
 	id: string;
