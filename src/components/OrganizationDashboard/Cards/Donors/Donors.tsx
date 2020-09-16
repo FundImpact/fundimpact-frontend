@@ -11,37 +11,44 @@ const donors = [
 ];
 
 export default function DonorsCard() {
-	const [filterByReceivedOrAllocated, setFilterByReceivedOrAllocated] = useState<string>("rec");
+	const [donorsCardFilter, setDonorsCardFilter] = useState<{
+		received: boolean;
+		allocated: boolean;
+	}>({
+		received: true,
+		allocated: false,
+	});
 	return (
 		<Box>
-			{/* <Typography color="primary" gutterBottom>
-				{`Project by ${
-					filterByExperditureOrAllocation === "exp" ? "Expenditure" : "Allocation"
-				}`}
-			</Typography> */}
 			<Grid container>
 				<Grid item md={7}>
 					<Box display="flex">
 						<Box>
 							<Button
-								color={
-									filterByReceivedOrAllocated === "rec" ? "primary" : "default"
-								}
+								color={donorsCardFilter.received ? "primary" : "default"}
 								size="small"
-								onClick={() => setFilterByReceivedOrAllocated("rec")}
+								onClick={() =>
+									setDonorsCardFilter({
+										received: true,
+										allocated: false,
+									})
+								}
 							>
 								Received
 							</Button>
 						</Box>
 						<Box>
 							<Button
-								color={
-									filterByReceivedOrAllocated === "all" ? "primary" : "default"
-								}
+								color={donorsCardFilter.allocated ? "primary" : "default"}
 								size="small"
-								onClick={() => setFilterByReceivedOrAllocated("all")}
+								onClick={() =>
+									setDonorsCardFilter({
+										received: false,
+										allocated: true,
+									})
+								}
 							>
-								Allocation
+								Allocated
 							</Button>
 						</Box>
 					</Box>

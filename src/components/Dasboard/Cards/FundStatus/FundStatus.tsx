@@ -12,7 +12,7 @@ import {
 	GET_PROJECT_BUDGET_AMOUNT,
 } from "../../../../graphql/project";
 import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
-import PieCharts from "../../../Charts/Pie/PieChart";
+import { DoughnutChart } from "../../../Charts";
 import { IFunds } from "./models/funds";
 import { FormattedMessage } from "react-intl";
 
@@ -182,7 +182,7 @@ export default function FundStatus() {
 					))}
 				</Grid>
 				<Grid item xs={6}>
-					<PieCharts data={chartData} />
+					<DoughnutChart data={chartData} />
 				</Grid>
 			</Grid>
 		</Box>

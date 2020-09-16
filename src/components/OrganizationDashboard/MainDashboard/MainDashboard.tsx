@@ -1,13 +1,26 @@
-import { Box, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
 import React from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
-import BudgetOrgCard from "../Cards/BudgetOrg";
-import DeliverableOrgCard from "../Cards/DeliverableOrg";
-import ImpactOrgCard from "../Cards/ImpactOrg";
-import BudgetProjectsCard from "../Cards/BudgetProjects";
-import DeliverableProjectsCard from "../Cards/DeliverableProjects";
-import DonorsCard from "../Cards/Donors";
+import {
+	BudgetOrgCard,
+	DeliverableOrgCard,
+	ImpactOrgCard,
+	BudgetProjectsCard,
+	DeliverableProjectsCard,
+	DonorsCard,
+	BudgetCategoryCard,
+	DeliverableCategoryCard,
+	ImpactCategoryCard,
+} from "../Cards";
+
+const useStyles = makeStyles((theme: Theme) => ({
+	bottonContainer: {
+		marginTop: theme.spacing(1),
+	},
+}));
+
 export default function MainOrganizationDashboard() {
+	const classes = useStyles();
 	return (
 		<>
 			<Grid item container style={{ flex: 1.5 }}>
@@ -51,10 +64,25 @@ export default function MainOrganizationDashboard() {
 						<DeliverableProjectsCard />
 					</DashboardCard>
 				</Grid>
-				<Grid container>
+				<Grid container className={classes.bottonContainer}>
 					<Grid item md={3}>
 						<DashboardCard title={"Donors"} cardHeight={"15rem"}>
 							<DonorsCard />
+						</DashboardCard>
+					</Grid>
+					<Grid item md={3}>
+						<DashboardCard title={"Budget Category"} cardHeight={"15rem"}>
+							<BudgetCategoryCard />
+						</DashboardCard>
+					</Grid>
+					<Grid item md={3}>
+						<DashboardCard title={"Deliverable Category"} cardHeight={"15rem"}>
+							<DeliverableCategoryCard />
+						</DashboardCard>
+					</Grid>
+					<Grid item md={3}>
+						<DashboardCard title={"Impact Category"} cardHeight={"15rem"}>
+							<ImpactCategoryCard />
 						</DashboardCard>
 					</Grid>
 				</Grid>

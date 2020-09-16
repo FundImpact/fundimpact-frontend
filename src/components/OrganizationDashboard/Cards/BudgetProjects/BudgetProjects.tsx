@@ -18,44 +18,45 @@ const budgetProjects = [
 
 export default function BudgetProjectsCard() {
 	const classes = useStyles();
-	const [filterByExperditureOrAllocation, setFilterByExpenditureOrAllocation] = useState<string>(
-		"exp"
-	);
+	const [budgetProjectFilter, setBudgetProjectFilter] = useState<{
+		expenditure: boolean;
+		allocation: boolean;
+	}>({
+		expenditure: true,
+		allocation: false,
+	});
 	return (
 		<Box>
 			<Typography color="primary" gutterBottom>
-				{`Project by ${
-					filterByExperditureOrAllocation === "exp" ? "Expenditure" : "Allocation"
-				}`}
+				{`Project by ${budgetProjectFilter.expenditure ? "Expenditure" : "Allocation"}`}
 			</Typography>
 			<Grid container>
 				<Grid item md={8}>
 					<Box display="flex">
 						<Box>
 							<Button
-								color={
-									filterByExperditureOrAllocation === "exp"
-										? "primary"
-										: "default"
-								}
+								color={budgetProjectFilter.expenditure ? "primary" : "default"}
 								size="small"
-								onClick={() => setFilterByExpenditureOrAllocation("exp")}
+								onClick={() =>
+									setBudgetProjectFilter({
+										expenditure: true,
+										allocation: false,
+									})
+								}
 							>
 								Expenditure
 							</Button>
 						</Box>
-						<Box ml={1} mr={1}>
-							<Typography variant="caption">|</Typography>
-						</Box>
 						<Box>
 							<Button
-								color={
-									filterByExperditureOrAllocation === "all"
-										? "primary"
-										: "default"
-								}
+								color={budgetProjectFilter.allocation ? "primary" : "default"}
 								size="small"
-								onClick={() => setFilterByExpenditureOrAllocation("all")}
+								onClick={() =>
+									setBudgetProjectFilter({
+										expenditure: false,
+										allocation: true,
+									})
+								}
 							>
 								Allocation
 							</Button>
