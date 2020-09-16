@@ -5,7 +5,6 @@ import {
 	Divider,
 	Grid,
 	IconButton,
-	Link,
 	List,
 	ListItemIcon,
 	Menu,
@@ -16,7 +15,7 @@ import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import SettingsIcon from "@material-ui/icons/Settings";
 import React from "react";
 import { NavLink } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { sidePanelStyles } from "../Dasboard/styles";
 
@@ -41,7 +40,7 @@ export default function LeftPanel() {
 			<Grid xs item>
 				<Box mb={1} mt={1}>
 					<IconButton>
-						<Link href="/organization/dashboard" color="inherit" underline="none">
+						<Link to="/organization/dashboard">
 							<Avatar
 								variant="square"
 								src={require("../../assets/icons/Fundimpact-logo.png")}
@@ -110,10 +109,8 @@ export default function LeftPanel() {
 					onClose={handleClose}
 				>
 					{" "}
-					<MenuItem>
-						<Link href="/account/profile" color="inherit" underline="none">
-							Account Settings
-						</Link>
+					<MenuItem component={Link} to={"/account/profile"}>
+						Account Settings
 					</MenuItem>
 					<MenuItem
 						onClick={() => {
