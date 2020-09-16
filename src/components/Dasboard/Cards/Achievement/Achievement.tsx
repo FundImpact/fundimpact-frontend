@@ -10,7 +10,7 @@ import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 } from "../../../../graphql/project";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: { height: "100vh" },
@@ -93,16 +93,24 @@ export default function Achievement() {
 		GetImpactAmountTarget({ variables: { filter: { project: projectId } } });
 		GetImpactAmountSpend({ variables: { filter: { project: projectId } } });
 	}, [projectId]);
-
+	const intl = useIntl();
 	const [DELIVERABLE_STATUS, setDELIVERABLE_STATUS] = useState<IIndicatorProps_PROPS>({
-		name: "Deliverables",
+		name: intl.formatMessage({
+			id: "deliverableAchievementCard",
+			defaultMessage: "Deliverable",
+			description: `This text will be show on dashboard achievement card for fund deliverable`,
+		}),
 		percentage: undefined,
 		lastUpdated: "20-5-2020",
 		color: "secondary",
 	});
 
 	const [IMPACT_STATUS, setIMPACT_STATUS] = useState<IIndicatorProps_PROPS>({
-		name: "Impact",
+		name: intl.formatMessage({
+			id: "impactAchievementCard",
+			defaultMessage: "Impact",
+			description: `This text will be show on dashboard achievement card for fund deliverable`,
+		}),
 		percentage: undefined,
 		lastUpdated: "20-5-2020",
 		color: "primary",

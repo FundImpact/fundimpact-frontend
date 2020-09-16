@@ -14,7 +14,7 @@ import {
 import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
 import { DoughnutChart } from "../../../Charts";
 import { IFunds } from "./models/funds";
-import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -26,66 +26,86 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-const createFundDetails = (
-	amountApproved: number,
-	amountSpend: number,
-	amountReceived: number,
-	theme: Theme
-) => {
-	const FUNDS_APPROVED: IFunds = {
-		name: "Approved",
-		amountToShow: undefined,
-		color: theme.palette.grey[200],
-	};
-
-	const FUNDS_SPENT: IFunds = {
-		name: "SPEND",
-		amountToShow: undefined,
-		color: theme.palette.primary.main,
-	};
-
-	const FUNDS_RECEIVED: IFunds = {
-		name: "Received",
-		amountToShow: undefined,
-		color: theme.palette.secondary.main,
-	};
-	let pieData = {
-		datasets: [
-			{
-				backgroundColor: [FUNDS_APPROVED.color, FUNDS_SPENT.color, FUNDS_RECEIVED.color],
-				data: [amountApproved, amountSpend, amountReceived],
-			},
-		],
-	};
-
-	let details = [
-		{
-			...FUNDS_APPROVED,
-			amountToShow:
-				amountApproved > 999
-					? (amountApproved / 1000).toFixed(1) + "K"
-					: amountApproved + "",
-			originalAmount: amountApproved,
-		},
-		{
-			...FUNDS_RECEIVED,
-			amountToShow:
-				amountReceived > 999
-					? (amountReceived / 1000).toFixed(1) + "K"
-					: amountReceived + "",
-			originalAmount: amountReceived,
-		},
-		{
-			...FUNDS_SPENT,
-			amountToShow:
-				amountSpend > 999 ? (amountSpend / 1000).toFixed(1) + "K" : amountSpend + "",
-			originalAmount: amountSpend,
-		},
-	];
-
-	return { pieData, details };
-};
 export default function FundStatus() {
+	const intl = useIntl();
+
+	const createFundDetails = (
+		amountApproved: number,
+		amountSpend: number,
+		amountReceived: number,
+		theme: Theme
+	) => {
+		const FUNDS_APPROVED: IFunds = {
+			name: intl.formatMessage({
+				id: "approvedFundStatusCard",
+				defaultMessage: "Approved",
+				description: `This text will be show on dashboard fund status card for fund approved`,
+			}),
+			amountToShow: undefined,
+			color: theme.palette.grey[200],
+		};
+
+		const FUNDS_SPENT: IFunds = {
+			name: intl.formatMessage({
+				id: "spentFundStatusCard",
+				defaultMessage: "Spent",
+				description: `This text will be show on dashboard fund status card for fund spenty`,
+			}),
+			amountToShow: undefined,
+			color: theme.palette.primary.main,
+		};
+
+		const FUNDS_RECEIVED: IFunds = {
+			name: intl.formatMessage({
+				id: "receivedFundStatusCard",
+				defaultMessage: "Received",
+				description: `This text will be show on dashboard fund status card for fund Received`,
+			}),
+			amountToShow: undefined,
+			color: theme.palette.secondary.main,
+		};
+
+		let pieData = {
+			datasets: [
+				{
+					backgroundColor: [
+						FUNDS_APPROVED.color,
+						FUNDS_SPENT.color,
+						FUNDS_RECEIVED.color,
+					],
+					data: [amountApproved, amountSpend, amountReceived],
+				},
+			],
+		};
+
+		let details = [
+			{
+				...FUNDS_APPROVED,
+				amountToShow:
+					amountApproved > 999
+						? (amountApproved / 1000).toFixed(1) + "K"
+						: amountApproved + "",
+				originalAmount: amountApproved,
+			},
+			{
+				...FUNDS_RECEIVED,
+				amountToShow:
+					amountReceived > 999
+						? (amountReceived / 1000).toFixed(1) + "K"
+						: amountReceived + "",
+				originalAmount: amountReceived,
+			},
+			{
+				...FUNDS_SPENT,
+				amountToShow:
+					amountSpend > 999 ? (amountSpend / 1000).toFixed(1) + "K" : amountSpend + "",
+				originalAmount: amountSpend,
+			},
+		];
+
+		return { pieData, details };
+	};
+
 	const dashboardData = useDashBoardData();
 	const projectId = dashboardData?.project?.id;
 
@@ -168,13 +188,7 @@ export default function FundStatus() {
 												{fund.amountToShow}
 											</Typography>
 										</Box>
-										<Typography variant="subtitle1">
-											<FormattedMessage
-												id={`${fund.name}FundCard`}
-												defaultMessage={`${fund.name}`}
-												description={`This text will be shown on Dashboard Fund card for ${fund.name}`}
-											/>
-										</Typography>
+										<Typography variant="subtitle1">{fund.name}</Typography>
 									</Box>
 								</Box>
 							</Box>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function DashboardCard({
 	title = "",
@@ -12,6 +12,7 @@ export default function DashboardCard({
 	children?: React.ReactElement | any;
 	cardHeight?: string;
 }) {
+	const intl = useIntl();
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
 			width: "100%",
@@ -30,12 +31,7 @@ export default function DashboardCard({
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
 				<Typography color="primary" gutterBottom>
-					{/*title is FUND STATUS then id will be fundstatusCard */}
-					<FormattedMessage
-						id={`${title.toString().replace(/ /g, "").toLowerCase()}Card`}
-						defaultMessage={`${title}`}
-						description={`This text will be shown on Dashboard ${title} Card`}
-					/>
+					{title}
 				</Typography>
 				{children}
 			</CardContent>
