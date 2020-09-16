@@ -1,12 +1,6 @@
 import { Box, Button, Grid, Typography } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import CommonProgres from "../CommonProgress";
-const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		height: "100vh",
-	},
-}));
 
 const budgetProjects = [
 	{ name: "project 1", completed: 90, lastUpdated: "12-02-2020" },
@@ -17,7 +11,6 @@ const budgetProjects = [
 ];
 
 export default function BudgetProjectsCard() {
-	const classes = useStyles();
 	const [filterByExperditureOrAllocation, setFilterByExpenditureOrAllocation] = useState<string>(
 		"exp"
 	);

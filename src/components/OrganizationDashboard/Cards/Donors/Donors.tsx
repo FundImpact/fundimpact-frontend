@@ -59,12 +59,12 @@ export default function DonorsCard() {
 			</Grid>
 			<Box mt={1}>
 				{donors &&
-					donors.slice(0, 3).map((donors) => {
+					donors.slice(0, 3).map((donor) => {
 						return (
 							<CommonProgres
-								title={donors.name}
-								date={donors.lastUpdated}
-								percentage={donors.completed}
+								title={donor.name}
+								date={donor.lastUpdated}
+								percentage={donor.completed}
 							/>
 						);
 					})}
