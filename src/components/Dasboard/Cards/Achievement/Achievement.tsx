@@ -1,10 +1,9 @@
 import { useLazyQuery } from "@apollo/client";
 import { Box, Typography } from "@material-ui/core";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
-
+import BorderLinearProgress from "../../../BorderLinearProgress";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { GET_ALL_IMPACT_TARGET_AMOUNT } from "../../../../graphql/Impact/query";
 import {
@@ -16,19 +15,6 @@ import { FormattedMessage } from "react-intl";
 const useStyles = makeStyles((theme: Theme) => ({
 	root: { height: "100vh" },
 }));
-
-const BorderLinearProgress = withStyles((theme: Theme) =>
-	createStyles({
-		root: {
-			height: 10,
-			borderRadius: 5,
-			margin: theme.spacing(0, 1, 0, 1),
-		},
-		colorPrimary: {
-			backgroundColor: theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
-		},
-	})
-)(LinearProgress);
 
 interface IIndicatorProps_PROPS {
 	name: string;
