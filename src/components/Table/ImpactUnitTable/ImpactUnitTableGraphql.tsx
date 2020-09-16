@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import ImpactUnitTableContainer from "./ImpactUnitTableContainer";
 import {
 	GET_IMPACT_UNIT_BY_ORG,
@@ -20,6 +20,29 @@ function ImpactUnitTableGraphql({
 	rowId?: string;
 }) {
 	const dashboardData = useDashBoardData();
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
+
+	let {
+		changePage: changeImpactUnitPage,
+		count: impactUnitCount,
+		queryData: impactUnitList,
+		queryLoading: impactUnitLoading,
+		countQueryLoading: impactUnitCountLoading,
+	} = pagination({
+		countQuery: GET_IMPACT_UNIT_COUNT_BY_ORG,
+		countFilter: {
+			organization: dashboardData?.organization?.id,
+		},
+		query: GET_IMPACT_UNIT_BY_ORG,
+		queryFilter: {
+			organization: dashboardData?.organization?.id,
+		},
+		sort: `${orderBy}:${order.toUpperCase()}`,
+		fireRequest: Boolean(dashboardData && collapsableTable),
+	});
 
 	let {
 		changePage: changeImpactCategoryUnitPage,
@@ -36,27 +59,8 @@ function ImpactUnitTableGraphql({
 		queryFilter: {
 			impact_category_org: impactCategoryId,
 		},
-		sort: "created_at:DESC",
+		sort:  `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
 		fireRequest: Boolean(impactCategoryId && !collapsableTable),
-	});
-	
-	let {
-		changePage: changeImpactUnitPage,
-		count: impactUnitCount,
-		queryData: impactUnitList,
-		queryLoading: impactUnitLoading,
-		countQueryLoading: impactUnitCountLoading,
-	} = pagination({
-		countQuery: GET_IMPACT_UNIT_COUNT_BY_ORG,
-		countFilter: {
-			organization: dashboardData?.organization?.id,
-		},
-		query: GET_IMPACT_UNIT_BY_ORG,
-		queryFilter: {
-			organization: dashboardData?.organization?.id,
-		},
-		sort: "created_at:DESC",
-		fireRequest: Boolean(dashboardData && collapsableTable),
 	});
 
 	const impactCategoryUnitListMemoized = useMemo(
@@ -88,6 +92,10 @@ function ImpactUnitTableGraphql({
 				impactCategoryUnitCountLoading
 			}
 			count={dashboardData && collapsableTable ? impactUnitCount : impactCategoryUnitCount}
+			order={collapsableTable ? order : nestedTableOrder}
+			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
+			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
+			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
 		/>
 	);
 }

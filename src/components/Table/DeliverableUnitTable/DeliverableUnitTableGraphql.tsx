@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -21,24 +21,10 @@ function DeliverableUnitTableGraphql({
 	rowId?: string;
 }) {
 	const dashboardData = useDashBoardData();
-	let {
-		changePage: changeDeliverableCategoryUnitPage,
-		count: deliverableCategoryUnitCount,
-		queryData: deliverableCategoryUnitList,
-		queryLoading: deliverableCategoryUnitLoading,
-		countQueryLoading: deliverableCategoryUnitCountLoading,
-	} = pagination({
-		countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-		countFilter: {
-			deliverable_category_org: deliverableCategoryId,
-		},
-		query: GET_CATEGORY_UNIT,
-		queryFilter: {
-			deliverable_category_org: deliverableCategoryId,
-		},
-		sort: "created_at:DESC",
-		fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	});
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
 
 	let {
 		changePage: changeDeliverableUnitPage,
@@ -55,8 +41,27 @@ function DeliverableUnitTableGraphql({
 		queryFilter: {
 			organization: dashboardData?.organization?.id,
 		},
-		sort: "created_at:DESC",
+		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && collapsableTable),
+	});
+
+	let {
+		changePage: changeDeliverableCategoryUnitPage,
+		count: deliverableCategoryUnitCount,
+		queryData: deliverableCategoryUnitList,
+		queryLoading: deliverableCategoryUnitLoading,
+		countQueryLoading: deliverableCategoryUnitCountLoading,
+	} = pagination({
+		countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
+		countFilter: {
+			deliverable_category_org: deliverableCategoryId,
+		},
+		query: GET_CATEGORY_UNIT,
+		queryFilter: {
+			deliverable_category_org: deliverableCategoryId,
+		},
+		sort:  `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
+		fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
 	});
 
 	const deliverableCategoryUnitListMemoized = useMemo(
@@ -92,6 +97,10 @@ function DeliverableUnitTableGraphql({
 					? deliverableUnitCount
 					: deliverableCategoryUnitCount
 			}
+			order={collapsableTable ? order : nestedTableOrder}
+			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
+			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
+			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
 		/>
 	);
 }

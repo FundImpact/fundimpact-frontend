@@ -13,6 +13,7 @@ import {
 	Collapse,
 	Box,
 	Typography,
+	TableSortLabel,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -22,6 +23,7 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { ICommonTableRow } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import FilterList from "../../FilterList";
 
 const useStyles = makeStyles({
 	table: {
@@ -68,6 +70,10 @@ interface ICommonTable<T> {
 	changePage?: (prev?: boolean) => void;
 	count?: number;
 	loading?: boolean;
+	order?: "asc" | "desc";
+	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy?: string;
+	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function CommonTableRow<T extends { id: string }>({
@@ -146,6 +152,10 @@ function CommonTable<T extends { id: string }>({
 	changePage,
 	count,
 	loading,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: ICommonTable<T>) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
@@ -183,7 +193,7 @@ function CommonTable<T extends { id: string }>({
 	if (!valuesList.length) {
 		return <Typography align="center">No Data</Typography>;
 	}
-
+	console.log("order :>> ", order);
 	return (
 		<TableContainer component={Paper}>
 			{childrenArr[0]}
@@ -191,12 +201,50 @@ function CommonTable<T extends { id: string }>({
 				<TableHead>
 					<TableRow color="primary">
 						{valuesList.length
-							? tableHeadings.map((heading: { label: string }, index: number) => (
-									<TableCell className={tableHeader.th} key={index} align="left">
-										{heading.label}
-									</TableCell>
-							  ))
+							? tableHeadings.map(
+									(
+										heading: { label: string; keyMapping?: string },
+										index: number
+									) => (
+										<TableCell
+											className={tableHeader.th}
+											key={index}
+											align="left"
+										>
+											{heading.label}
+											{order && heading.keyMapping && (
+												<TableSortLabel
+													active={orderBy == heading.keyMapping}
+													onClick={() => {
+														if (orderBy == heading.keyMapping) {
+															setOrder &&
+																setOrder(
+																	order == "asc" ? "desc" : "asc"
+																);
+														} else {
+															setOrderBy &&
+																setOrderBy(
+																	heading.keyMapping || ""
+																);
+														}
+													}}
+													direction={order}
+												></TableSortLabel>
+											)}
+										</TableCell>
+									)
+							  )
 							: null}
+						<TableCell>
+							<FilterList
+								inputElements={tableHeadings
+									.filter(
+										(heading: { label: string; keyMapping?: string }) =>
+											heading.keyMapping
+									)
+									.map((element) => element.label)}
+							/>
+						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>

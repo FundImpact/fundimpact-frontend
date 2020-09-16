@@ -18,12 +18,20 @@ function ImpactCategoryTableContainer({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
 	impactCategoryList: IImpactCategoryData[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedImpactCategory = useRef<IImpactCategoryData | null>(null);
@@ -39,6 +47,10 @@ function ImpactCategoryTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 		/>
 	);
 }

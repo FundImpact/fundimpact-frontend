@@ -7,7 +7,6 @@ import ImpactUnit from "../ImpactUnitTable";
 import { impactCategoryTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 
-
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
@@ -29,6 +28,10 @@ function ImpactCategoryTableView({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	openDialog: boolean;
@@ -39,6 +42,10 @@ function ImpactCategoryTableView({
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	return (
 		<CommonTable
@@ -52,6 +59,10 @@ function ImpactCategoryTableView({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 		>
 			<ImpactCategoryDialog
 				formAction={FORM_ACTIONS.UPDATE}

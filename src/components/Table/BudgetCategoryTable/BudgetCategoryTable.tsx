@@ -10,6 +10,7 @@ import {
 	MenuItem,
 	TableFooter,
 	TablePagination,
+	Tooltip,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -27,6 +28,9 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import BudgetCategory from "../../Budget/BudgetCategory";
 import { budgetCategoryHeading as tableHeading } from "../constants";
 import BudgetCategoryProjectCount from "../../UnitsAndCategoriesProjectCount";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import FilterList from "../../FilterList";
 
 const useStyles = makeStyles({
 	table: {
@@ -79,6 +83,8 @@ function BudgetCategoryTable() {
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const [order, setOrder] = React.useState<null | number>(null);
+	const [orderBy, setOrderBy] = React.useState(true);
 
 	let {
 		changePage,
@@ -95,7 +101,10 @@ function BudgetCategoryTable() {
 		queryFilter: {
 			organization: dashboardData?.organization?.id,
 		},
-		sort: "created_at:DESC",
+		sort:
+			order == null
+				? "created_at:DESC"
+				: `${keyNames[order - 1]}:${!orderBy ? "DESC" : "ASC"}`,
 	});
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -138,11 +147,39 @@ function BudgetCategoryTable() {
 					<TableRow color="primary">
 						{budgetCategoryList?.orgBudgetCategory?.length
 							? tableHeading.map((heading: { label: string }, index: number) => (
-									<TableCell className={tableHeader.th} key={index} align="left">
+									<TableCell
+										sortDirection="desc"
+										className={tableHeader.th}
+										key={index}
+										align="left"
+									>
 										{heading.label}
+										{index != 4 && (
+											<TableSortLabel
+												active={order == index}
+												onClick={() => {
+													if (order == index) {
+														setOrderBy(!orderBy);
+													} else {
+														setOrder(index);
+													}
+												}}
+												direction={orderBy ? "asc" : "desc"}
+											></TableSortLabel>
+										)}
 									</TableCell>
 							  ))
 							: null}
+						<TableCell>
+							<FilterList
+								inputElements={tableHeading
+									.filter(
+										(heading: { label: string; keyMapping?: string }) =>
+											heading.keyMapping
+									)
+									.map((element) => element.label)}
+							/>
+						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableHeader.tbody}>

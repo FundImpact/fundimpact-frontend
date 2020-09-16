@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import ImpactCategoryTableContainer from "./ImpactCategoryTableContainer";
 import {
 	GET_IMPACT_CATEGORY_BY_ORG,
@@ -20,6 +20,10 @@ function ImpactCategoryTableGraphql({
 	rowId?: string;
 }) {
 	const dashboardData = useDashBoardData();
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
 
 	let {
 		changePage: changeImpactCategoryPage,
@@ -36,7 +40,7 @@ function ImpactCategoryTableGraphql({
 		queryFilter: {
 			organization: dashboardData?.organization?.id,
 		},
-		sort: "created_at:DESC",
+		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && collapsableTable),
 	});
 
@@ -55,7 +59,7 @@ function ImpactCategoryTableGraphql({
 		queryFilter: {
 			impact_units_org: impactUnitId,
 		},
-		sort: "created_at:DESC",
+		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
 		fireRequest: Boolean(impactUnitId && !collapsableTable),
 	});
 
@@ -90,6 +94,10 @@ function ImpactCategoryTableGraphql({
 			count={
 				dashboardData && collapsableTable ? impactCategoryCount : impactCategoryUnitCount
 			}
+			order={collapsableTable ? order : nestedTableOrder}
+			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
+			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
+			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
 		/>
 	);
 }

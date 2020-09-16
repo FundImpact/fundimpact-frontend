@@ -22,19 +22,26 @@ function DeliverableCategoryTableContainer({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
 	deliverableCategoryList: IDeliverableCategoryData[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedDeliverableCategory = useRef<IDeliverableCategoryData | null>(null);
 
 	const dashboardData = useDashBoardData();
 
-	
 	return (
 		<DeliverableCategoryTableView
 			openDialog={openDialog}
@@ -49,6 +56,10 @@ function DeliverableCategoryTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 		/>
 	);
 }

@@ -31,6 +31,10 @@ function ImpactUnitTableContainer({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	openDialog: boolean;
@@ -41,6 +45,10 @@ function ImpactUnitTableContainer({
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	return (
 		<CommonTable
@@ -54,6 +62,10 @@ function ImpactUnitTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}	
 		>
 			<ImpactUnitDialog
 				formAction={FORM_ACTIONS.UPDATE}

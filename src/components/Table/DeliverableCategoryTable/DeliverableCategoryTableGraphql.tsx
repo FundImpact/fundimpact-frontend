@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import DeliverableCategoryTableContainer from "./DeliverableCategoryTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -22,7 +22,12 @@ function DeliverableCategoryTableGraphql({
 	rowId?: string;
 }) {
 	const dashboardData = useDashBoardData();
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
 
+	console.log(`${orderBy}:${order.toUpperCase()}`);
 	let {
 		changePage: changeDeliverableCategoryPage,
 		count: deliverableCategoryCount,
@@ -38,7 +43,7 @@ function DeliverableCategoryTableGraphql({
 		queryFilter: {
 			organization: dashboardData?.organization?.id,
 		},
-		sort: "created_at:DESC",
+		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && collapsableTable),
 	});
 
@@ -57,7 +62,7 @@ function DeliverableCategoryTableGraphql({
 		queryFilter: {
 			deliverable_units_org: delivarableUnitId,
 		},
-		sort: "created_at:DESC",
+		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
 		fireRequest: Boolean(delivarableUnitId && !collapsableTable),
 	});
 
@@ -96,6 +101,10 @@ function DeliverableCategoryTableGraphql({
 					? deliverableCategoryCount
 					: deliverableCategoryUnitCount
 			}
+			order={collapsableTable ? order : nestedTableOrder}
+			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
+			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
+			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
 		/>
 	);
 }

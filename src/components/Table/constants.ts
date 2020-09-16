@@ -52,53 +52,48 @@ export const donorTableHeading = [
 
 export const budgetCategoryHeading = [
 	{ label: "#" },
-	{ label: "Budget Category" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Budget Category", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 ];
 
 export const deliverableCategoryTableHeading = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Deliverable Category" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Deliverable Category", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];
 
 export const deliverableUnitTableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Deliverable Unit" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Deliverable Unit", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];
 
 export const impactUnitTableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Unit" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Impact Unit", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];
 
 export const impactCategoryTableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Category" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Impact Category", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];

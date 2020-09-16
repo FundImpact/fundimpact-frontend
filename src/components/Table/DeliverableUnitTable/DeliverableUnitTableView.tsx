@@ -32,6 +32,10 @@ function DeliverableUnitTableView({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
 	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 	openDialog: boolean;
@@ -42,6 +46,10 @@ function DeliverableUnitTableView({
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const dashboardData = useDashBoardData();
 	return (
@@ -56,6 +64,10 @@ function DeliverableUnitTableView({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 		>
 			<DeliverableUnit
 				type={DELIVERABLE_ACTIONS.UPDATE}
