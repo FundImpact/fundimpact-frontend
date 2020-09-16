@@ -1,15 +1,8 @@
 import { Box, Grid, Typography } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 
-const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		height: "100vh",
-	},
-}));
 export default function BudgetOrgCard() {
-	const classes = useStyles();
 	return (
 		<Box>
 			<Grid container>
