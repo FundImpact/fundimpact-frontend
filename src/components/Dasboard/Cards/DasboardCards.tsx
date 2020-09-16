@@ -6,9 +6,11 @@ import { FormattedMessage } from "react-intl";
 export default function DashboardCard({
 	title = "",
 	children,
+	cardHeight = "11rem",
 }: {
 	title: string | React.ReactElement;
 	children?: React.ReactElement | any;
+	cardHeight?: string;
 }) {
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
@@ -18,8 +20,6 @@ export default function DashboardCard({
 			},
 		},
 		card: {
-			height: "90%",
-			maxHeight: "12rem",
 			margin: theme.spacing(1),
 			marginTop: theme.spacing(0),
 		},
@@ -27,7 +27,7 @@ export default function DashboardCard({
 
 	const classes = useStyles();
 	return (
-		<Card raised={false} className={classes.card}>
+		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
 				<Typography color="primary" gutterBottom>
 					{/*title is FUND STATUS then id will be fundstatusCard */}

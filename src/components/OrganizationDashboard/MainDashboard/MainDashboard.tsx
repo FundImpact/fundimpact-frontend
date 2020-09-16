@@ -5,6 +5,8 @@ import BudgetOrgCard from "../Cards/BudgetOrg";
 import DeliverableOrgCard from "../Cards/DeliverableOrg";
 import ImpactOrgCard from "../Cards/ImpactOrg";
 import BudgetProjectsCard from "../Cards/BudgetProjects";
+import DeliverableProjectsCard from "../Cards/DeliverableProjects";
+import DonorsCard from "../Cards/Donors";
 export default function MainOrganizationDashboard() {
 	return (
 		<>
@@ -35,19 +37,26 @@ export default function MainOrganizationDashboard() {
 					</Box>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "}>
+					<DashboardCard title={" "} cardHeight={"15rem"}>
 						<BudgetProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={"Deliverable Achieved"}>
-						<DeliverableOrgCard />
+					<DashboardCard title={"Deliverable Achieved"} cardHeight={"15rem"}>
+						<DeliverableProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={"Impacts Achieved"}>
-						<ImpactOrgCard />
+					<DashboardCard title={"Impacts Achieved"} cardHeight={"15rem"}>
+						<DeliverableProjectsCard />
 					</DashboardCard>
+				</Grid>
+				<Grid container>
+					<Grid item md={3}>
+						<DashboardCard title={"Donors"} cardHeight={"15rem"}>
+							<DonorsCard />
+						</DashboardCard>
+					</Grid>
 				</Grid>
 			</Grid>
 		</>
