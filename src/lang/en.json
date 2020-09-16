@@ -11,9 +11,9 @@
 		"defaultMessage": "Budget Categories",
 		"description": "This text is the heding of budget category table"
 	},
-	"donorSettingLink": {
-		"defaultMessage": "Donors",
-		"description": "This text will be shown for donors link on setting page"
+	"createBudgetCategory": {
+		"defaultMessage": "Create Budget Category",
+		"description": "This text will be show on Add Button for create Budget Category"
 	},
 	"dontHaveAccount": {
 		"defaultMessage": "Dont have account?",
