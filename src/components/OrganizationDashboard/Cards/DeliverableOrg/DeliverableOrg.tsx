@@ -32,7 +32,7 @@ export default function DeliverableOrgCard() {
 					<BorderLinearProgress variant="determinate" value={80} color={"primary"} />
 				</Grid>
 			</Grid>
-			<Box mt={1}>
+			<Box mt={2}>
 				<Box ml={1}>
 					<Typography variant="caption">
 						<FormattedMessage

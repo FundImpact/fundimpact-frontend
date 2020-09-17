@@ -12,7 +12,7 @@ export default function ImpactOrgCard() {
 						<Box mt={2} ml={2}>
 							<Typography variant="h6">256</Typography>
 						</Box>
-						<Typography variant="subtitle1">
+						<Typography variant="subtitle2">
 							<FormattedMessage
 								id="impactOrgCardTitle"
 								defaultMessage="Impacts"
@@ -32,7 +32,7 @@ export default function ImpactOrgCard() {
 					<BorderLinearProgress variant="determinate" value={60} color={"primary"} />
 				</Grid>
 			</Grid>
-			<Box mt={1}>
+			<Box mt={2}>
 				<Box ml={1}>
 					<Typography variant="caption">
 						<FormattedMessage

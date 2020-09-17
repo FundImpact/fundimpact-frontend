@@ -1,4 +1,13 @@
-import { Box, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
+import {
+	Box,
+	Fade,
+	FormControlLabel,
+	Grid,
+	makeStyles,
+	Switch,
+	Theme,
+	Typography,
+} from "@material-ui/core";
 import React from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
 import {
@@ -11,24 +20,30 @@ import {
 	BudgetCategoryCard,
 	DeliverableCategoryCard,
 	ImpactCategoryCard,
+	ImpactProjectsCard,
 } from "../Cards";
 import { FormattedMessage, useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
-		marginTop: theme.spacing(1),
+		marginTop: theme.spacing(2),
 	},
 }));
 
 export default function MainOrganizationDashboard() {
 	const intl = useIntl();
 	const classes = useStyles();
+	const [checked, setChecked] = React.useState(false);
+
+	const handleChange = () => {
+		setChecked((prev) => !prev);
+	};
 	return (
 		<>
 			<Grid item container style={{ flex: 1.5 }}>
 				<Grid item md={12}>
 					<Box m={1}>
-						<Typography variant="h5">
+						<Typography variant="h6">
 							<FormattedMessage
 								id="orgDashboardOverviewHeading"
 								defaultMessage="Overview"
@@ -54,7 +69,7 @@ export default function MainOrganizationDashboard() {
 				</Grid>
 				<Grid item md={12}>
 					<Box m={1}>
-						<Typography variant="h5">
+						<Typography variant="h6">
 							{" "}
 							<FormattedMessage
 								id="orgDashboardTopProjectsHeading"
@@ -70,79 +85,45 @@ export default function MainOrganizationDashboard() {
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard
-						title={intl.formatMessage({
-							id: "deliverableAchievedCardTitle",
-							defaultMessage: "Deliverable Achieved",
-							description: `This text will be show on dashboard for deliverable achieved card title`,
-						})}
-						cardHeight={"15rem"}
-					>
+					<DashboardCard title={" "} cardHeight={"15rem"}>
 						<DeliverableProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard
-						title={intl.formatMessage({
-							id: "impactAchievedCardTitle",
-							defaultMessage: "Impact Achieved",
-							description: `This text will be show on dashboard for impact achieved card title`,
-						})}
-						cardHeight={"15rem"}
-					>
-						<DeliverableProjectsCard />
+					<DashboardCard title={" "} cardHeight={"15rem"}>
+						<ImpactProjectsCard />
 					</DashboardCard>
 				</Grid>
-				<Grid container className={classes.bottonContainer}>
-					<Grid item md={3}>
-						<DashboardCard
-							title={intl.formatMessage({
-								id: "donorsCardTitle",
-								defaultMessage: "Donors",
-								description: `This text will be show on dashboard for donors card title`,
-							})}
-							cardHeight={"15rem"}
-						>
-							<DonorsCard />
-						</DashboardCard>
+				<Box m={2} mb={0} mt={0}>
+					<FormControlLabel
+						control={<Switch size="small" checked={checked} onChange={handleChange} />}
+						label="Show More"
+					/>
+				</Box>
+				<Fade in={checked}>
+					<Grid container className={classes.bottonContainer}>
+						<Grid item md={3}>
+							<DashboardCard title={" "} cardHeight={"15rem"}>
+								<DonorsCard />
+							</DashboardCard>
+						</Grid>
+						<Grid item md={3}>
+							<DashboardCard title={" "} cardHeight={"15rem"}>
+								<BudgetCategoryCard />
+							</DashboardCard>
+						</Grid>
+						<Grid item md={3}>
+							<DashboardCard title={" "} cardHeight={"15rem"}>
+								<DeliverableCategoryCard />
+							</DashboardCard>
+						</Grid>
+						<Grid item md={3}>
+							<DashboardCard title={" "} cardHeight={"15rem"}>
+								<ImpactCategoryCard />
+							</DashboardCard>
+						</Grid>
 					</Grid>
-					<Grid item md={3}>
-						<DashboardCard
-							title={intl.formatMessage({
-								id: "budgetCategoryCardTitle",
-								defaultMessage: "Budget Category",
-								description: `This text will be show on dashboard for budget category card title`,
-							})}
-							cardHeight={"15rem"}
-						>
-							<BudgetCategoryCard />
-						</DashboardCard>
-					</Grid>
-					<Grid item md={3}>
-						<DashboardCard
-							title={intl.formatMessage({
-								id: "deliverableCategoryCardTitle",
-								defaultMessage: "Deliverable Category",
-								description: `This text will be show on dashboard for deliverable category card title`,
-							})}
-							cardHeight={"15rem"}
-						>
-							<DeliverableCategoryCard />
-						</DashboardCard>
-					</Grid>
-					<Grid item md={3}>
-						<DashboardCard
-							title={intl.formatMessage({
-								id: "impactCategoryCardTitle",
-								defaultMessage: "Impact Category",
-								description: `This text will be show on dashboard for impact category card title`,
-							})}
-							cardHeight={"15rem"}
-						>
-							<ImpactCategoryCard />
-						</DashboardCard>
-					</Grid>
-				</Grid>
+				</Fade>
 			</Grid>
 		</>
 	);

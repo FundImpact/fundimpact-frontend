@@ -1,12 +1,15 @@
-import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
+import ProgressDialog from "../ProgressDialog";
 
 const budgetProjects = [
-	{ name: "project 1", completed: 90, lastUpdated: "12-02-2020" },
-	{ name: "project 2", completed: 80, lastUpdated: "12-02-2020" },
-	{ name: "project 3", completed: 70, lastUpdated: "12-02-2020" },
+	{ name: "Wash Awarness ", completed: 90, lastUpdated: "12-02-2020" },
+	{ name: "Covid 19 supply", completed: 80, lastUpdated: "12-02-2020" },
+	{ name: "Budget Project ", completed: 70, lastUpdated: "12-02-2020" },
 	{ name: "project 4", completed: 60, lastUpdated: "12-02-2020" },
 	{ name: "project 5", completed: 50, lastUpdated: "12-02-2020" },
 ];
@@ -19,81 +22,126 @@ export default function BudgetProjectsCard() {
 		expenditure: true,
 		allocation: false,
 	});
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+	const [budgetProgressDialogOpen, setBudgetProgressDialogOpen] = React.useState(false);
 	return (
-		<Box>
-			<Typography color="primary" gutterBottom>
-				{`Project by ${budgetProjectFilter.expenditure ? "Expenditure" : "Allocation"}`}
-			</Typography>
-			<Grid container>
-				<Grid item md={8}>
-					<Box display="flex">
-						<Box>
-							<Button
-								color={budgetProjectFilter.expenditure ? "primary" : "default"}
-								size="small"
-								onClick={() =>
-									setBudgetProjectFilter({
-										expenditure: true,
-										allocation: false,
-									})
-								}
-							>
-								<FormattedMessage
-									id="expenditureButtonCards"
-									defaultMessage="Expenditure"
-									description="This text will be show on cards for expenditure button"
-								/>
-							</Button>
-						</Box>
-						<Box>
-							<Button
-								color={budgetProjectFilter.allocation ? "primary" : "default"}
-								size="small"
-								onClick={() =>
-									setBudgetProjectFilter({
-										expenditure: false,
-										allocation: true,
-									})
-								}
-							>
-								<FormattedMessage
-									id="allocationButtonCards"
-									defaultMessage="Allocation"
-									description="This text will be show on cards for allocation button"
-								/>
-							</Button>
-						</Box>
-					</Box>
-				</Grid>
-				<Grid item md={2}>
-					<Button color={"primary"} size="small">
-						See All
-					</Button>
-				</Grid>
-				<Grid item md={2}>
-					<Box ml={2}>
-						<Typography variant="button">
+		<Grid container>
+			<Grid item md={7}>
+				<Box mt={1}>
+					<Typography color="primary" gutterBottom>
+						<FormattedMessage
+							id="budgetProjectCardTitle"
+							defaultMessage="Project By "
+							description="This text will be show on dashboard for budget project card title"
+						/>
+						{budgetProjectFilter.expenditure ? (
 							<FormattedMessage
-								id="Top3HeadingCards"
-								defaultMessage="Top 3"
-								description="This text will be show on cards for top 3 heading"
+								id="expenditureButtonCards"
+								defaultMessage="Expenditure"
+								description="This text will be show on cards for expenditure button"
 							/>
-						</Typography>
-					</Box>
-				</Grid>
+						) : (
+							<FormattedMessage
+								id="allocationButtonCards"
+								defaultMessage="Allocation"
+								description="This text will be show on cards for allocation button"
+							/>
+						)}
+					</Typography>
+				</Box>
 			</Grid>
-			<Box mt={1}>
-				{budgetProjects &&
-					budgetProjects.slice(0, 3).map((budgetProject, index) => {
-						return (
-							<CommonProgres
-								title={budgetProject.name}
-								date={budgetProject.lastUpdated}
-								percentage={budgetProject.completed}
-							/>
-						);
-					})}
-			</Box>
-		</Box>
+			<Grid item md={5}>
+				<IconButton onClick={handleClick}>
+					<FilterListIcon fontSize="small" />
+				</IconButton>
+				<Menu
+					id="simple-menu-budget-org"
+					anchorEl={anchorEl}
+					keepMounted
+					open={Boolean(anchorEl)}
+					onClose={handleClose}
+				>
+					<MenuItem
+						onClick={() => {
+							setBudgetProjectFilter({
+								expenditure: true,
+								allocation: false,
+							});
+							handleClose();
+						}}
+					>
+						<FormattedMessage
+							id="expenditureButtonCards"
+							defaultMessage="Expenditure"
+							description="This text will be show on cards for expenditure button"
+						/>
+					</MenuItem>
+					<MenuItem
+						onClick={() => {
+							setBudgetProjectFilter({
+								expenditure: false,
+								allocation: true,
+							});
+							handleClose();
+						}}
+					>
+						<FormattedMessage
+							id="allocationButtonCards"
+							defaultMessage="Allocation"
+							description="This text will be show on cards for allocation button"
+						/>
+					</MenuItem>
+				</Menu>
+				<Typography variant="caption">
+					{" "}
+					<FormattedMessage
+						id="moreHeadingCards"
+						defaultMessage="more"
+						description="This text will be show on cards for more heading"
+					/>
+				</Typography>
+				<IconButton onClick={() => setBudgetProgressDialogOpen(true)}>
+					<ArrowRightAltIcon fontSize="small" />
+				</IconButton>
+			</Grid>
+			<Grid item md={12}>
+				<Box mt={1}>
+					{budgetProjects &&
+						budgetProjects.slice(0, 3).map((budgetProject, index) => {
+							return (
+								<CommonProgres
+									title={budgetProject.name}
+									date={budgetProject.lastUpdated}
+									percentage={budgetProject.completed}
+								/>
+							);
+						})}
+				</Box>
+			</Grid>
+			{budgetProgressDialogOpen && (
+				<ProgressDialog
+					open={budgetProgressDialogOpen}
+					onClose={() => setBudgetProgressDialogOpen(false)}
+					title={"Budget Projects"}
+				>
+					{budgetProjects &&
+						budgetProjects.map((budgetProject, index) => {
+							return (
+								<CommonProgres
+									title={budgetProject.name}
+									date={budgetProject.lastUpdated}
+									percentage={budgetProject.completed}
+								/>
+							);
+						})}
+				</ProgressDialog>
+			)}
+		</Grid>
 	);
 }

@@ -1,9 +1,10 @@
-import { Box, Button, Grid } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { Box, Grid, IconButton, Menu, MenuItem, Typography, useTheme } from "@material-ui/core";
 import React, { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { PieChart } from "../../../Charts";
-
+import { Link } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 export default function BudgetCategoryCard() {
 	const theme = useTheme();
 	const [budgetCategoryFilter, setBudgetCategoryFilter] = useState<{
@@ -26,54 +27,87 @@ export default function BudgetCategoryCard() {
 			},
 		],
 	};
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	return (
-		<Box>
-			<Grid container>
-				<Grid item md={8}>
-					<Box display="flex">
-						<Box>
-							<Button
-								color={budgetCategoryFilter.expenditure ? "primary" : "default"}
-								size="small"
-								onClick={() =>
-									setBudgetCategoryFilter({
-										expenditure: true,
-										allocation: false,
-									})
-								}
-							>
-								<FormattedMessage
-									id="expenditureButtonCards"
-									defaultMessage="Expenditure"
-									description="This text will be show on cards for expenditure button"
-								/>
-							</Button>
-						</Box>
-						<Box>
-							<Button
-								color={budgetCategoryFilter.allocation ? "primary" : "default"}
-								size="small"
-								onClick={() =>
-									setBudgetCategoryFilter({
-										expenditure: false,
-										allocation: true,
-									})
-								}
-							>
-								<FormattedMessage
-									id="allocationButtonCards"
-									defaultMessage="Allocation"
-									description="This text will be show on cards for allocation button"
-								/>
-							</Button>
-						</Box>
-					</Box>
-				</Grid>
+		<Grid container>
+			<Grid item md={6}>
+				<Box mt={1}>
+					<Typography color="primary" noWrap gutterBottom>
+						<FormattedMessage
+							id="budgetCategoryCardTitle"
+							defaultMessage="Budget Category"
+							description="This text will be show on dashboard for budget category card title"
+						/>
+					</Typography>
+				</Box>
 			</Grid>
-			<Box mt={1}>
+			<Grid item md={6}>
+				<IconButton onClick={handleClick}>
+					<FilterListIcon fontSize="small" />
+				</IconButton>
+				<Menu
+					id="simple-menu-budget-org"
+					anchorEl={anchorEl}
+					keepMounted
+					open={Boolean(anchorEl)}
+					onClose={handleClose}
+				>
+					<MenuItem
+						onClick={() => {
+							setBudgetCategoryFilter({
+								expenditure: true,
+								allocation: false,
+							});
+
+							handleClose();
+						}}
+					>
+						<FormattedMessage
+							id="expenditureButtonCards"
+							defaultMessage="Expenditure"
+							description="This text will be show on cards for expenditure button"
+						/>
+					</MenuItem>
+					<MenuItem
+						onClick={() => {
+							setBudgetCategoryFilter({
+								expenditure: false,
+								allocation: true,
+							});
+							handleClose();
+						}}
+					>
+						<FormattedMessage
+							id="allocationButtonCards"
+							defaultMessage="Allocation"
+							description="This text will be show on cards for allocation button"
+						/>
+					</MenuItem>
+				</Menu>
+				<Typography variant="caption">
+					{" "}
+					<FormattedMessage
+						id="moreHeadingCards"
+						defaultMessage="more"
+						description="This text will be show on cards for more heading"
+					/>
+				</Typography>
+				<Link to="/settings/budget">
+					<IconButton>
+						<ArrowRightAltIcon fontSize="small" />
+					</IconButton>
+				</Link>
+			</Grid>
+			<Grid item md={12}>
 				<PieChart data={pieData} />
-			</Box>
-		</Box>
+			</Grid>
+		</Grid>
 	);
 }

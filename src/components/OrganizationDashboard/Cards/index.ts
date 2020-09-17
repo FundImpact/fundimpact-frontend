@@ -7,6 +7,7 @@ import DonorsCard from "./Donors/Donors";
 import BudgetCategoryCard from "./BudgetCategory/BudgetCategory";
 import DeliverableCategoryCard from "./DeliverableCategory/DeliverableCategory";
 import ImpactCategoryCard from "./ImpactCategory/ImpactCategory";
+import ImpactProjectsCard from "./ImpactProjects/ImpactProject";
 export {
 	BudgetOrgCard,
 	DeliverableOrgCard,
@@ -17,4 +18,5 @@ export {
 	BudgetCategoryCard,
 	DeliverableCategoryCard,
 	ImpactCategoryCard,
+	ImpactProjectsCard,
 };
