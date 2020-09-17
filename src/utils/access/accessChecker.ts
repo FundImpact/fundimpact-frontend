@@ -1,13 +1,10 @@
-/**
- *
- * @description This function is used to check the access of the loggedin user
- * for modules.
- *
- */
-import { MODULE_ACTIONS } from "./moduleActions";
-import { ModulesKeys } from "./modulesCodes";
+import { MODULE_CODES, MODULES } from "./modules.list";
+import { BUDGET_MODULE_ACTIONS } from "./modules/budget/actions";
 
-export const UserHasAccessFor = (moduleName: keyof typeof ModulesKeys, action: MODULE_ACTIONS) => {
-	if (moduleName || action) return true;
-	return false;
+type actionType<T extends MODULE_CODES> = keyof typeof MODULES[T]["actionsAvailable"];
+
+export const UserHasAccess = <T extends MODULE_CODES>(moduleName: T, action: actionType<T>) => {
+	return true;
 };
+
+UserHasAccess<MODULE_CODES.BUDGET>(MODULE_CODES.BUDGET, BUDGET_MODULE_ACTIONS.CREATE_BUDGET_SPEND);

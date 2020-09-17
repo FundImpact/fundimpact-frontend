@@ -1,3 +1,3 @@
-import { UserHasAccessFor } from "./accessChecker";
+import { UserHasAccess } from "./accessChecker";
 
-export default { UserHasAccessFor };
+export default { UserHasAccess };
