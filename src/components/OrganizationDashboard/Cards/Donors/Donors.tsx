@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import React, { useState } from "react";
+import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
 
 const donors = [
@@ -34,7 +35,11 @@ export default function DonorsCard() {
 									})
 								}
 							>
-								Received
+								<FormattedMessage
+									id="receivedButtonCards"
+									defaultMessage="Received"
+									description="This text will be show on cards for received button"
+								/>
 							</Button>
 						</Box>
 						<Box>
@@ -48,7 +53,11 @@ export default function DonorsCard() {
 									})
 								}
 							>
-								Allocated
+								<FormattedMessage
+									id="allocatedButtonCards"
+									defaultMessage="Allocated"
+									description="This text will be show on cards for allocated button"
+								/>
 							</Button>
 						</Box>
 					</Box>
@@ -60,7 +69,13 @@ export default function DonorsCard() {
 				</Grid>
 				<Grid item md={3}>
 					<Box ml={2}>
-						<Typography variant="button">Top 3</Typography>
+						<Typography variant="button">
+							<FormattedMessage
+								id="Top3HeadingCards"
+								defaultMessage="Top 3"
+								description="This text will be show on cards for top 3 heading"
+							/>
+						</Typography>
 					</Box>
 				</Grid>
 			</Grid>

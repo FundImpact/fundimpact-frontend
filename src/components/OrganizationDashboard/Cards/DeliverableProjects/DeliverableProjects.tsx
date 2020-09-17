@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@material-ui/core";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
 
 const deliverableProjects = [
@@ -20,7 +21,14 @@ export default function DeliverableProjectsCard() {
 					</Button>
 				</Box>
 				<Box mr={1}>
-					<Typography variant="button">Top 3</Typography>
+					<Typography variant="button">
+						{" "}
+						<FormattedMessage
+							id="Top3HeadingCards"
+							defaultMessage="Top 3"
+							description="This text will be show on cards for top 3 heading"
+						/>
+					</Typography>
 				</Box>
 			</Box>
 			<Box mt={1}>

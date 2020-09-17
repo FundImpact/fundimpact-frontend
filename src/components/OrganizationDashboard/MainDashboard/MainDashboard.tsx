@@ -12,6 +12,7 @@ import {
 	DeliverableCategoryCard,
 	ImpactCategoryCard,
 } from "../Cards";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
@@ -20,13 +21,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function MainOrganizationDashboard() {
+	const intl = useIntl();
 	const classes = useStyles();
 	return (
 		<>
 			<Grid item container style={{ flex: 1.5 }}>
 				<Grid item md={12}>
 					<Box m={1}>
-						<Typography variant="h5">Overview</Typography>
+						<Typography variant="h5">
+							<FormattedMessage
+								id="orgDashboardOverviewHeading"
+								defaultMessage="Overview"
+								description="This text will be show on organization dashboard for overview heading"
+							/>
+						</Typography>
 					</Box>
 				</Grid>
 				<Grid item md={4}>
@@ -46,7 +54,14 @@ export default function MainOrganizationDashboard() {
 				</Grid>
 				<Grid item md={12}>
 					<Box m={1}>
-						<Typography variant="h5">Top Projects</Typography>
+						<Typography variant="h5">
+							{" "}
+							<FormattedMessage
+								id="orgDashboardTopProjectsHeading"
+								defaultMessage="Top Projects"
+								description="This text will be show on organization dashboard for top projects heading"
+							/>
+						</Typography>
 					</Box>
 				</Grid>
 				<Grid item md={4}>
@@ -55,33 +70,75 @@ export default function MainOrganizationDashboard() {
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={"Deliverable Achieved"} cardHeight={"15rem"}>
+					<DashboardCard
+						title={intl.formatMessage({
+							id: "deliverableAchievedCardTitle",
+							defaultMessage: "Deliverable Achieved",
+							description: `This text will be show on dashboard for deliverable achieved card title`,
+						})}
+						cardHeight={"15rem"}
+					>
 						<DeliverableProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={"Impacts Achieved"} cardHeight={"15rem"}>
+					<DashboardCard
+						title={intl.formatMessage({
+							id: "impactAchievedCardTitle",
+							defaultMessage: "Impact Achieved",
+							description: `This text will be show on dashboard for impact achieved card title`,
+						})}
+						cardHeight={"15rem"}
+					>
 						<DeliverableProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid container className={classes.bottonContainer}>
 					<Grid item md={3}>
-						<DashboardCard title={"Donors"} cardHeight={"15rem"}>
+						<DashboardCard
+							title={intl.formatMessage({
+								id: "donorsCardTitle",
+								defaultMessage: "Donors",
+								description: `This text will be show on dashboard for donors card title`,
+							})}
+							cardHeight={"15rem"}
+						>
 							<DonorsCard />
 						</DashboardCard>
 					</Grid>
 					<Grid item md={3}>
-						<DashboardCard title={"Budget Category"} cardHeight={"15rem"}>
+						<DashboardCard
+							title={intl.formatMessage({
+								id: "budgetCategoryCardTitle",
+								defaultMessage: "Budget Category",
+								description: `This text will be show on dashboard for budget category card title`,
+							})}
+							cardHeight={"15rem"}
+						>
 							<BudgetCategoryCard />
 						</DashboardCard>
 					</Grid>
 					<Grid item md={3}>
-						<DashboardCard title={"Deliverable Category"} cardHeight={"15rem"}>
+						<DashboardCard
+							title={intl.formatMessage({
+								id: "deliverableCategoryCardTitle",
+								defaultMessage: "Deliverable Category",
+								description: `This text will be show on dashboard for deliverable category card title`,
+							})}
+							cardHeight={"15rem"}
+						>
 							<DeliverableCategoryCard />
 						</DashboardCard>
 					</Grid>
 					<Grid item md={3}>
-						<DashboardCard title={"Impact Category"} cardHeight={"15rem"}>
+						<DashboardCard
+							title={intl.formatMessage({
+								id: "impactCategoryCardTitle",
+								defaultMessage: "Impact Category",
+								description: `This text will be show on dashboard for impact category card title`,
+							})}
+							cardHeight={"15rem"}
+						>
 							<ImpactCategoryCard />
 						</DashboardCard>
 					</Grid>

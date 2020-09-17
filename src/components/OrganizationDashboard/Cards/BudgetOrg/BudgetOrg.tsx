@@ -1,5 +1,6 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 
 export default function BudgetOrgCard() {
@@ -11,7 +12,13 @@ export default function BudgetOrgCard() {
 						<Box mt={2} ml={3}>
 							<Typography variant="h6">2.4Cr</Typography>
 						</Box>
-						<Typography variant="subtitle1">Budget Target</Typography>
+						<Typography variant="subtitle1">
+							<FormattedMessage
+								id="BudgetOrgCardTitle"
+								defaultMessage="Budget Target"
+								description="This text will be show on budget org card for target title"
+							/>
+						</Typography>
 					</Box>
 				</Grid>
 				<Grid item md={7}>
@@ -27,7 +34,14 @@ export default function BudgetOrgCard() {
 			</Grid>
 			<Box mt={1}>
 				<Box ml={1}>
-					<Typography variant="caption">Fund Received</Typography>
+					<Typography variant="caption">
+						{" "}
+						<FormattedMessage
+							id="BudgetOrgCardFundRecieved"
+							defaultMessage="Fund Received"
+							description="This text will be show on budget org card for fund receievd heading"
+						/>
+					</Typography>
 				</Box>
 				<BorderLinearProgress variant="determinate" value={90} color={"secondary"} />
 			</Box>

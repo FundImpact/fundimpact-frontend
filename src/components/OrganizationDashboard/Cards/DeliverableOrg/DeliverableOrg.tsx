@@ -1,5 +1,6 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 
 export default function DeliverableOrgCard() {
@@ -11,7 +12,13 @@ export default function DeliverableOrgCard() {
 						<Box mt={2} ml={3}>
 							<Typography variant="h6">246</Typography>
 						</Box>
-						<Typography variant="subtitle1">Deliverables</Typography>
+						<Typography variant="subtitle1">
+							<FormattedMessage
+								id="deliverableOrgCardTitle"
+								defaultMessage="Deliverables"
+								description="This text will be show on deliverable org card for target title"
+							/>
+						</Typography>
 					</Box>
 				</Grid>
 				<Grid item md={7}>
@@ -27,7 +34,13 @@ export default function DeliverableOrgCard() {
 			</Grid>
 			<Box mt={1}>
 				<Box ml={1}>
-					<Typography variant="caption">Deliverables Achieved</Typography>
+					<Typography variant="caption">
+						<FormattedMessage
+							id="deliverableOrgCardDeliveranleAchieved"
+							defaultMessage="Deliveranle Achieved"
+							description="This text will be show on budget category card for deliveranle achieved heading"
+						/>
+					</Typography>
 				</Box>
 				<BorderLinearProgress variant="determinate" value={50} color={"secondary"} />
 			</Box>

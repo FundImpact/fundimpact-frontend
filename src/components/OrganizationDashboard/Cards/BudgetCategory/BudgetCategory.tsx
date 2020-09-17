@@ -1,6 +1,7 @@
-import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Grid } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import React, { useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { PieChart } from "../../../Charts";
 
 export default function BudgetCategoryCard() {
@@ -42,7 +43,11 @@ export default function BudgetCategoryCard() {
 									})
 								}
 							>
-								Expenditure
+								<FormattedMessage
+									id="expenditureButtonCards"
+									defaultMessage="Expenditure"
+									description="This text will be show on cards for expenditure button"
+								/>
 							</Button>
 						</Box>
 						<Box>
@@ -56,7 +61,11 @@ export default function BudgetCategoryCard() {
 									})
 								}
 							>
-								Allocation
+								<FormattedMessage
+									id="allocationButtonCards"
+									defaultMessage="Allocation"
+									description="This text will be show on cards for allocation button"
+								/>
 							</Button>
 						</Box>
 					</Box>

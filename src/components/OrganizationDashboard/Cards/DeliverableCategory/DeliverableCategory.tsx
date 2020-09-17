@@ -1,6 +1,7 @@
 import { Box, Button, Grid } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import React, { useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { PieChart } from "../../../Charts";
 
 export default function DeliverableCategoryCard() {
@@ -42,7 +43,11 @@ export default function DeliverableCategoryCard() {
 									})
 								}
 							>
-								Projects
+								<FormattedMessage
+									id="projectsButtonCards"
+									defaultMessage="Projects"
+									description="This text will be show on cards for project button"
+								/>
 							</Button>
 						</Box>
 						<Box>
@@ -56,7 +61,11 @@ export default function DeliverableCategoryCard() {
 									})
 								}
 							>
-								Achieved
+								<FormattedMessage
+									id="achievedButtonCards"
+									defaultMessage="Achieved"
+									description="This text will be show on cards for achieved button"
+								/>
 							</Button>
 						</Box>
 					</Box>
