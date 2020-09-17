@@ -1,5 +1,7 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
+import { FORMERR } from "dns";
 import React, { useCallback, useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -34,6 +36,7 @@ import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { getTodaysDate } from "../../../utils";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
+import { FORM_ACTIONS } from "../../Forms/constant";
 import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "./inputFields.json";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
@@ -400,14 +403,37 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			? financialYearDonor?.financialYearList
 			: [];
 	}
-
+	const intl = useIntl();
 	return (
 		<FormDialog
 			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
-			title="Report Budget Spend"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={
+				(props.formAction === FORM_ACTIONS.CREATE
+					? intl.formatMessage({
+							id: "reportFormHeading",
+							defaultMessage: "Report",
+							description: `This text will be show on forms for Report`,
+					  })
+					: intl.formatMessage({
+							id: "editFormHeading",
+							defaultMessage: "Edit",
+							description: `This text will be show on forms for Edit`,
+					  })) +
+				" " +
+				intl.formatMessage({
+					id: "budgetExpenditureFormTitle",
+					defaultMessage: "Budget Expenditure",
+					description: `This text will be show on Budget Expenditure form for title`,
+				})
+			}
+			subtitle={intl.formatMessage({
+				id: "budgetExpenditureFormSubtitle",
+				defaultMessage:
+					"Physical addresses of your organisation like headquarter branch etc",
+				description: `This text will be show on Budget Expenditureform for subtitle`,
+			})}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

@@ -24,6 +24,7 @@ import {
 	IGET_IMPACT_TARGET_BY_PROJECT,
 	IImpactTargetByProjectResponse,
 } from "../../models/impact/query";
+import { useIntl } from "react-intl";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -327,12 +328,35 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 		return errors;
 	};
-
+	const intl = useIntl();
 	return (
 		<DashboardProvider>
 			<FormDialog
-				title={(formAction === IMPACT_ACTIONS.CREATE ? "New" : "Edit") + " Impact Target"}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				title={
+					(formAction === IMPACT_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "newFormHeading",
+								defaultMessage: "New",
+								description: `This text will be show on forms for New`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "impactTargetFormTitle",
+						defaultMessage: "Impact Target",
+						description: `This text will be show on impact Target form for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "impactTargetFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organizatin like headquater, branch etc.",
+					description: `This text will be show on impact Target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

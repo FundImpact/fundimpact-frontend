@@ -25,6 +25,7 @@ import {
 } from "../../../graphql/Impact/query";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
+import { useIntl } from "react-intl";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -168,14 +169,38 @@ function ImpactCategoryDialog({
 			handleClose();
 		}
 	};
+	const intl = useIntl();
 
 	return (
 		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={creatingImpactCategory || updatingImpactCategory}
-			title="Impact Category"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={
+				(formAction === FORM_ACTIONS.CREATE
+					? intl.formatMessage({
+							id: "newFormHeading",
+							defaultMessage: "New",
+							description: `This text will be show on forms for New`,
+					  })
+					: intl.formatMessage({
+							id: "editFormHeading",
+							defaultMessage: "Edit",
+							description: `This text will be show on forms for Edit`,
+					  })) +
+				" " +
+				intl.formatMessage({
+					id: "impactCategoryFormTitle",
+					defaultMessage: "Impact Category",
+					description: `This text will be show on impact Category form for title`,
+				})
+			}
+			subtitle={intl.formatMessage({
+				id: "impactCategoryFormSubtitle",
+				defaultMessage:
+					"Physical addresses of your organizatin like headquater, branch etc.",
+				description: `This text will be show on impact Category form for subtitle`,
+			})}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

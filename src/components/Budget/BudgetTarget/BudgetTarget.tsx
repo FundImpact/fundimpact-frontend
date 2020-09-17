@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -257,14 +258,37 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			props.handleClose();
 		}
 	};
-
+	const intl = useIntl();
 	return (
 		<FormDialog
 			handleClose={props.handleClose}
 			open={props.open}
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
-			title="New Budget Target"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={
+				(props.formAction === FORM_ACTIONS.CREATE
+					? intl.formatMessage({
+							id: "newFormHeading",
+							defaultMessage: "New",
+							description: `This text will be show on forms for New`,
+					  })
+					: intl.formatMessage({
+							id: "editFormHeading",
+							defaultMessage: "Edit",
+							description: `This text will be show on forms for Edit`,
+					  })) +
+				" " +
+				intl.formatMessage({
+					id: "budgetTargetFormTitle",
+					defaultMessage: "Budget Target",
+					description: `This text will be show on Budget target form for title`,
+				})
+			}
+			subtitle={intl.formatMessage({
+				id: "budgetTargetFormSubtitle",
+				defaultMessage:
+					"Physical addresses of your organisation like headquarter branch etc",
+				description: `This text will be show on Budget target form for subtitle`,
+			})}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

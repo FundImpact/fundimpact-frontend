@@ -26,6 +26,7 @@ import {
 	IGET_DELIVERABLE_TARGET_BY_PROJECT,
 	IDeliverableTargetByProjectResponse,
 } from "../../models/deliverable/query";
+import { useIntl } from "react-intl";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -319,15 +320,35 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 		return errors;
 	};
-
+	const intl = useIntl();
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") +
-					" Deliverable Target"
+					(formAction === DELIVERABLE_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "newFormHeading",
+								defaultMessage: "New",
+								description: `This text will be show on forms for New`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "deliverableTargetFormTitle",
+						defaultMessage: "Deliverable Target",
+						description: `This text will be show on deliverable target form for title`,
+					})
 				}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				subtitle={intl.formatMessage({
+					id: "deliverableTargetFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on deliverable target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

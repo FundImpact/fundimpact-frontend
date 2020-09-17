@@ -34,20 +34,10 @@ function FormDialog({
 				<Grid container spacing={2}>
 					<Grid item xs={4}>
 						<Typography data-testid="dialog-header" variant="h6" gutterBottom>
-							{/*if title is New Deliverable unit then id will be newdeliverableunitFormTitle*/}
-							<FormattedMessage
-								id={`${title.replace(/ /g, "").toLowerCase()}FormTitle`}
-								defaultMessage={title}
-								description={`This text will be shown as title of ${title} Form`}
-							/>
+							{title}
 						</Typography>
 						<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-							{/*if title is New Deliverable unit then id will be newdeliverableunitFormSubtitle*/}
-							<FormattedMessage
-								id={`${title.replace(/ /g, "").toLowerCase()}FormSubtitle`}
-								defaultMessage={subtitle}
-								description={`This text will be shown as subtitle of ${title} Form`}
-							/>
+							{subtitle}
 						</Typography>
 						{(workspace || project) && (
 							<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>

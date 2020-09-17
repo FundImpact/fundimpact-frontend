@@ -20,6 +20,7 @@ import CommonForm from "../CommonForm/commonForm";
 import { deliverableCategoryForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IGetDeliverableCategory } from "../../models/deliverable/query";
+import { useIntl } from "react-intl";
 
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -156,15 +157,34 @@ function Deliverable(props: DeliverableProps) {
 		}
 		return errors;
 	};
-
+	const intl = useIntl();
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") +
-					" Deliverable Category"
+					(formAction === DELIVERABLE_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "newFormHeading",
+								defaultMessage: "New",
+								description: `This text will be show on forms for New`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "deliverableCategoryFormTitle",
+						defaultMessage: "Deliverable Category",
+						description: `This text will be show on deliverable category form for title`,
+					})
 				}
-				subtitle={"Manage Deliverable Category"}
+				subtitle={intl.formatMessage({
+					id: "deliverableCategoryFormSubtitle",
+					defaultMessage: "Manage Deliverable Category",
+					description: `This text will be show on deliverable category form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

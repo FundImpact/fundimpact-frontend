@@ -23,6 +23,7 @@ import CommonForm from "../../Forms/CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
 import { removeEmptyKeys, compareObjectKeys } from "../../../utils";
 import { FORM_ACTIONS } from "../../../models/constants";
+import { useIntl } from "react-intl";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -188,6 +189,7 @@ function BudgetCategory({
 			handleClose();
 		}
 	};
+	const intl = useIntl();
 
 	return (
 		<>
@@ -195,8 +197,30 @@ function BudgetCategory({
 				handleClose={handleClose}
 				open={open}
 				loading={updatingBudgetCategory || creatingBudgetCategory}
-				title="Budget Category"
-				subtitle="Physical addresses of your organizatin like headquater, branch etc."
+				title={
+					(formAction === FORM_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "newFormHeading",
+								defaultMessage: "New",
+								description: `This text will be show on forms for New`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "budgetCategoryFormTitle",
+						defaultMessage: "Budget Category",
+						description: `This text will be show on Budget category form for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "deliverableCategoryFormSubtitle",
+					defaultMessage: "Manage Budget Category",
+					description: `This text will be show on Budget category form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 			>

@@ -26,6 +26,7 @@ import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableUnitForm } from "./inputField.json";
 import { IGetDeliverablUnit, IGetDeliverableCategoryUnit } from "../../models/deliverable/query";
+import { useIntl } from "react-intl";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -327,14 +328,35 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		}
 		return errors;
 	};
-
+	const intl = useIntl();
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") + " Target unit"
+					(formAction === DELIVERABLE_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "newFormHeading",
+								defaultMessage: "New",
+								description: `This text will be show on forms for New`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "deliverableUnitFormTitle",
+						defaultMessage: "Deliverable Unit",
+						description: `This text will be show on deliverable unit form for title`,
+					})
 				}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				subtitle={intl.formatMessage({
+					id: "deliverableUnitFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on deliverable unit form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

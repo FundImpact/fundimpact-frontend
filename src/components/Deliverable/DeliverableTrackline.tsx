@@ -32,6 +32,7 @@ import {
 	IDeliverableTracklineByTargetResponse,
 	IGET_DELIVERABLE_TRACKLINE_BY_TARGET,
 } from "../../models/deliverable/query";
+import { useIntl } from "react-intl";
 
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -359,15 +360,35 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			}}
 		/>
 	);
-
+	const intl = useIntl();
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE ? "Report" : "Edit") +
-					" Target Achievement"
+					(formAction === DELIVERABLE_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "reportFormHeading",
+								defaultMessage: "Report",
+								description: `This text will be show on forms for Report`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "deliverableAchievementFormTitle",
+						defaultMessage: "Deliverable Achievement",
+						description: `This text will be show on deliverable Achievement form for title`,
+					})
 				}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				subtitle={intl.formatMessage({
+					id: "deliverableAchievementFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on deliverable Achievement form for subtitle`,
+				})}
 				workspace={DashBoardData?.workspace?.name}
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}

@@ -29,6 +29,7 @@ import {
 	IGET_IMPACT_TRACKLINE_BY_TARGET,
 	IImpactTracklineByTargetResponse,
 } from "../../models/impact/query";
+import { useIntl } from "react-intl";
 
 // import FullScreenLoader from "../commons/GlobalLoader";
 // import { IMPACT_ACTIONS } from "./constants";
@@ -352,14 +353,35 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			}}
 		/>
 	);
+	const intl = useIntl();
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === IMPACT_ACTIONS.CREATE ? "Report" : "Edit") +
-					" Target Achievement"
+					(formAction === IMPACT_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "reportFormHeading",
+								defaultMessage: "Report",
+								description: `This text will be show on forms for Report`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "impactAchievementFormTitle",
+						defaultMessage: "Impact Achievement",
+						description: `This text will be show on Impact Achievement form for title`,
+					})
 				}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				subtitle={intl.formatMessage({
+					id: "impactAchievementFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on Impact Achievement form for subtitle`,
+				})}
 				workspace={DashBoardData?.workspace?.name}
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
