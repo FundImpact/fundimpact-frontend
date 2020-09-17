@@ -1,40 +1,65 @@
-import { Box, Button, Typography } from "@material-ui/core";
+import { Box, Grid, IconButton, Typography } from "@material-ui/core";
 import React from "react";
 import CommonProgres from "../CommonProgress";
+import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
+import ProgressDialog from "../ProgressDialog";
 
 const deliverableProjects = [
-	{ name: "project 1", completed: 95, lastUpdated: "12-02-2020" },
-	{ name: "project 2", completed: 85, lastUpdated: "12-02-2020" },
-	{ name: "project 3", completed: 75, lastUpdated: "12-02-2020" },
+	{ name: "HUL Food Drive 2020", completed: 95, lastUpdated: "12-02-2020" },
+	{ name: "Literacy Campaign Aug", completed: 85, lastUpdated: "12-02-2020" },
+	{ name: "Deliverable Project", completed: 75, lastUpdated: "12-02-2020" },
 	{ name: "project 4", completed: 65, lastUpdated: "12-02-2020" },
 	{ name: "project 5", completed: 55, lastUpdated: "12-02-2020" },
 ];
 
 export default function DeliverableProjectsCard() {
+	const [deliverableProgressDialogOpen, setDeliverableProgressDialogOpen] = React.useState(false);
+
 	return (
-		<Box>
-			<Box justifyContent="flex-end" display="flex" ml={2}>
-				<Box mr={2}>
-					<Button color={"primary"} size="small">
-						See All
-					</Button>
+		<Grid container>
+			<Grid item md={8}>
+				<Box mt={1}>
+					<Typography color="primary" gutterBottom>
+						Deliverable Achieved
+					</Typography>
 				</Box>
-				<Box mr={1}>
-					<Typography variant="button">Top 3</Typography>
-				</Box>
-			</Box>
-			<Box mt={1}>
+			</Grid>
+			<Grid item md={4}>
+				<Typography variant="caption">More</Typography>
+				<IconButton onClick={() => setDeliverableProgressDialogOpen(true)}>
+					<ArrowRightAltIcon fontSize="small" />
+				</IconButton>
+			</Grid>
+			<Grid item md={12}>
 				{deliverableProjects &&
-					deliverableProjects.slice(0, 3).map((budgetProject, index) => {
+					deliverableProjects.slice(0, 3).map((deliverableProject, index) => {
 						return (
 							<CommonProgres
-								title={budgetProject.name}
-								date={budgetProject.lastUpdated}
-								percentage={budgetProject.completed}
+								title={deliverableProject.name}
+								date={deliverableProject.lastUpdated}
+								percentage={deliverableProject.completed}
 							/>
 						);
 					})}
-			</Box>
-		</Box>
+			</Grid>
+			{deliverableProgressDialogOpen && (
+				<ProgressDialog
+					open={deliverableProgressDialogOpen}
+					onClose={() => setDeliverableProgressDialogOpen(false)}
+					title={"Deliverable Projects"}
+				>
+					{deliverableProjects &&
+						deliverableProjects.map((deliverableProject, index) => {
+							return (
+								<CommonProgres
+									title={deliverableProject.name}
+									date={deliverableProject.lastUpdated}
+									percentage={deliverableProject.completed}
+								/>
+							);
+						})}
+				</ProgressDialog>
+			)}
+		</Grid>
 	);
 }

@@ -11,7 +11,7 @@ export default function ImpactOrgCard() {
 						<Box mt={2} ml={2}>
 							<Typography variant="h6">256</Typography>
 						</Box>
-						<Typography variant="subtitle1">Impacts</Typography>
+						<Typography variant="subtitle2">Impacts</Typography>
 					</Box>
 				</Grid>
 				<Grid item md={7}>
@@ -25,7 +25,7 @@ export default function ImpactOrgCard() {
 					<BorderLinearProgress variant="determinate" value={60} color={"primary"} />
 				</Grid>
 			</Grid>
-			<Box mt={1}>
+			<Box mt={2}>
 				<Box ml={1}>
 					<Typography variant="caption">Impacts Achieved</Typography>
 				</Box>

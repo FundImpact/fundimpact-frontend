@@ -1,8 +1,9 @@
-import { Box, Button, Grid } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { Box, Grid, IconButton, Menu, MenuItem, Typography, useTheme } from "@material-ui/core";
 import React, { useState } from "react";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { PieChart } from "../../../Charts";
-
+import { Link } from "react-router-dom";
 export default function BudgetCategoryCard() {
 	const theme = useTheme();
 	const [budgetCategoryFilter, setBudgetCategoryFilter] = useState<{
@@ -25,46 +26,68 @@ export default function BudgetCategoryCard() {
 			},
 		],
 	};
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	return (
-		<Box>
-			<Grid container>
-				<Grid item md={8}>
-					<Box display="flex">
-						<Box>
-							<Button
-								color={budgetCategoryFilter.expenditure ? "primary" : "default"}
-								size="small"
-								onClick={() =>
-									setBudgetCategoryFilter({
-										expenditure: true,
-										allocation: false,
-									})
-								}
-							>
-								Expenditure
-							</Button>
-						</Box>
-						<Box>
-							<Button
-								color={budgetCategoryFilter.allocation ? "primary" : "default"}
-								size="small"
-								onClick={() =>
-									setBudgetCategoryFilter({
-										expenditure: false,
-										allocation: true,
-									})
-								}
-							>
-								Allocation
-							</Button>
-						</Box>
-					</Box>
-				</Grid>
+		<Grid container>
+			<Grid item md={6}>
+				<Box mt={1}>
+					<Typography color="primary" noWrap gutterBottom>
+						Budget Category
+					</Typography>
+				</Box>
 			</Grid>
-			<Box mt={1}>
+			<Grid item md={6}>
+				<IconButton onClick={handleClick}>
+					<FilterListIcon fontSize="small" />
+				</IconButton>
+				<Menu
+					id="simple-menu-budget-org"
+					anchorEl={anchorEl}
+					keepMounted
+					open={Boolean(anchorEl)}
+					onClose={handleClose}
+				>
+					<MenuItem
+						onClick={() => {
+							setBudgetCategoryFilter({
+								expenditure: true,
+								allocation: false,
+							});
+
+							handleClose();
+						}}
+					>
+						Expenditure
+					</MenuItem>
+					<MenuItem
+						onClick={() => {
+							setBudgetCategoryFilter({
+								expenditure: false,
+								allocation: true,
+							});
+							handleClose();
+						}}
+					>
+						Allocation
+					</MenuItem>
+				</Menu>
+				<Typography variant="caption">More</Typography>
+				<Link to="/settings/budget">
+					<IconButton>
+						<ArrowRightAltIcon fontSize="small" />
+					</IconButton>
+				</Link>
+			</Grid>
+			<Grid item md={12}>
 				<PieChart data={pieData} />
-			</Box>
-		</Box>
+			</Grid>
+		</Grid>
 	);
 }
