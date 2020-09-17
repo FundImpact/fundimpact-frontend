@@ -1,7 +1,8 @@
+import { IMODULE } from "../../module.interface";
 import { MODULE_CODES } from "../../modules.list";
 import { DELIVERABLE_MODULE_ACTIONS } from "./actions";
 
-export const DELIVERABLES_MODULE = {
+export const DELIVERABLES_MODULE: IMODULE = {
 	name: "DELIVERABLES",
 	code: MODULE_CODES.BUDGET,
 	actionsAvailable: {

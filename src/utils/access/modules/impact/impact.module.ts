@@ -1,7 +1,8 @@
+import { IMODULE } from "../../module.interface";
 import { MODULE_CODES } from "../../modules.list";
 import { IMPACT_MODULE_ACTIONS } from "./actions";
 
-export const IMPACT_MODULE = {
+export const IMPACT_MODULE: IMODULE = {
 	name: "IMPACT",
 	code: MODULE_CODES.BUDGET,
 	actionsAvailable: {
