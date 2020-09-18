@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { FormattedMessage, useIntl } from "react-intl";
 
 export default function DashboardCard({
 	title = "",
@@ -12,7 +11,6 @@ export default function DashboardCard({
 	children?: React.ReactElement | any;
 	cardHeight?: string;
 }) {
-	const intl = useIntl();
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
 			width: "100%",

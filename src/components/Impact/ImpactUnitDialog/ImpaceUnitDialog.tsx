@@ -27,7 +27,6 @@ import {
 	GET_IMPACT_CATEGORY_UNIT_COUNT,
 	GET_IMPACT_CATEGORY_UNIT,
 } from "../../../graphql/Impact/categoryUnit";
-import { IMPACT_ACTIONS } from "../constants";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 

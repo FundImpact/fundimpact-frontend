@@ -22,7 +22,7 @@ import {
 	ImpactCategoryCard,
 	ImpactProjectsCard,
 } from "../Cards";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function MainOrganizationDashboard() {
-	const intl = useIntl();
 	const classes = useStyles();
 	const [checked, setChecked] = React.useState(false);
 
