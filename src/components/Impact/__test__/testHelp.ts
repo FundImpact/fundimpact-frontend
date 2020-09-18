@@ -16,6 +16,13 @@ export const impactTargetMock = [
 			short_name: "",
 			description: "",
 		},
+		sustainable_development_goal: {
+			id: "4",
+			name: "Goal 3",
+			short_name: "SDG",
+			icon:
+				"https://e7.pngegg.com/pngimages/863/694/png-clipart-person-holding-soil-and-plant-illustration-sustainable-agriculture-sustainability-computer-icons-agriculture-miscellaneous-leaf.png",
+		},
 		impact_category_unit: {
 			id: "1",
 			impact_category_org: {
@@ -163,5 +170,78 @@ export const impactLinitemFyDonorListMock = [
 				name: "HUL Food Drive 2020",
 			},
 		},
+	},
+];
+
+export const impactCategoryMock = [
+	{
+		id: "1",
+		name: "educated people",
+		code: "edu code",
+		description: "teaching poor student",
+		shortname: "edu people",
+	},
+	{
+		id: "2",
+		name: "feed people",
+		code: "feed code",
+		description: "feed poor student",
+		shortname: "fed pe",
+	},
+];
+
+export const impactUnitMock = [
+	{
+		id: "1",
+		name: "educated people",
+		code: "edu code",
+		description: "teaching poor student",
+		shortname: "edu people",
+		target_unit: "10123",
+		prefix_label: "pre educate",
+		suffix_label: "suf educate",
+	},
+	{
+		id: "2",
+		name: "feed people",
+		code: "feed code",
+		description: "feed poor student",
+		shortname: "fed pe",
+		target_unit: "123",
+		prefix_label: "pre feed people",
+		suffix_label: "suf feed people",
+	},
+];
+
+export const impactCategoryUnit = [
+	{
+		id: "1",
+		impact_category_org: impactCategoryMock[0],
+		impact_units_org: impactUnitMock[0],
+	},
+	{
+		id: "2",
+		impact_category_org: impactCategoryMock[1],
+		impact_units_org: impactUnitMock[1],
+	},
+];
+
+export const impactCategoryUnitMock = [
+	{
+		id: "1",
+		impact_category_org: impactCategoryMock[0],
+		impact_units_org: impactUnitMock[0],
+	},
+];
+
+export const sustainableDevelopmentGoalMock = [
+	{
+		id: "3",
+		name: "Goal 3",
+		short_name: "SDG",
+		goal_no: 5,
+		tags: "sdg",
+		icon:
+			"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngegg.com%2Fen%2Fpng-bizir&psig=AOvVaw0ZXn6uerGoiZ5amJfazrIv&ust=1599805392503000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKim1tX53esCFQAAAAAdAAAAABAK",
 	},
 ];

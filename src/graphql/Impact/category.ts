@@ -6,8 +6,8 @@ export const GET_IMPACT_CATEGORY = gql`
 			id
 			name
 			code
-			shortname
 			description
+			shortname
 			organization {
 				id
 				name
@@ -27,5 +27,11 @@ export const GET_IMPACT_CATEGORY = gql`
 				}
 			}
 		}
+	}
+`;
+
+export const GET_IMPACT_CATEGORY_PROJECT_COUNT = gql`
+	query getProjectCountImpCatByOrg($filter: JSON) {
+		projectCountImpCatByOrg(where: $filter)
 	}
 `;

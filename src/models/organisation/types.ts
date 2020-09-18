@@ -28,12 +28,13 @@ export interface IOrganisation {
 export interface IOrganisationForm
 	extends Omit<
 		IOrganisation,
-		"__typename" | "organization_registration_type" | "country" | "logo"
+		"__typename" | "organization_registration_type" | "country" | "logo" | "id"
 	> {
-	organization_registration_type: string;
+	organization_registration_type?: string;
 	country: string;
-	icon: File | string;
+	icon?: File | string;
 	logo?: string;
+	id?: string;
 }
 
 export interface IOrganizationCurrency {
@@ -44,6 +45,16 @@ export interface IOrganizationCurrency {
 		name: string;
 		code: string;
 	};
+}
+
+export interface IOrganizationRegistrationType {
+	id: string;
+	reg_type: string;
+}
+
+export interface IOrganizationInputFields extends IInputFields {
+	helperText?: string;
+	displayName?: string;
 }
 
 export interface IOrganizationRegistrationType {

@@ -14,6 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import { IInputFields } from "../../models";
+import UploadFile from "../UploadFile";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -49,12 +50,12 @@ const InputFields = ({
 	selectLabelId,
 	selectId,
 	getInputValue,
-	required,
+	required = false,
 	multiple = false,
+	logo,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
-
 	useEffect(() => {
 		if (optionsArray?.length)
 			setOptionsArrayHash(() => {
@@ -73,8 +74,14 @@ const InputFields = ({
 	// const classes = useStyles();
 	const [elemName, setElemName] = React.useState<string[]>([]);
 
+	useEffect(() => {
+		if (inputType == "multiSelect") {
+			setElemName((formik.values[name]?.map((elem: any) => elem.id) as string[]) || []);
+		}
+	}, [formik, setElemName, name, inputType]);
+
 	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
-		setElemName(event.target.value.map((elem: any) => elem.name) as string[]);
+		setElemName(event.target.value.map((elem: any) => elem.id) as string[]);
 	};
 	let renderValue;
 	if (multiple) {
@@ -82,20 +89,14 @@ const InputFields = ({
 			<div className={classes.chips}>
 				{(selected as string[])
 					.filter((selectedValue) => selectedValue)
-					.map((value, index) => (
-						<Chip
-							key={index}
-							label={optionsArrayHash[value]}
-							className={classes.chip}
-						/>
-					))}
+					.map((value, index) => optionsArrayHash[value])
+					.join(", ")}
 			</div>
 		);
 	}
 
 	if (inputType === "select" || inputType === "multiSelect") {
 		let multiSelect: boolean = inputType === "multiSelect" ? true : false;
-
 		let onChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 			if (inputType === "multiSelect") {
 				elemHandleChange(event);
@@ -150,7 +151,7 @@ const InputFields = ({
 								{multiSelect ? (
 									<Checkbox
 										color="primary"
-										checked={elemName.indexOf(elem.name) > -1}
+										checked={elemName.indexOf(elem.id) > -1}
 									/>
 								) : null}
 								{elem.name}
@@ -176,6 +177,21 @@ const InputFields = ({
 				</Select>
 				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 			</FormControl>
+		);
+	}
+	if (inputType === "upload") {
+		return (
+			<UploadFile
+				formik={formik}
+				title={label}
+				height="120px"
+				name={name}
+				required={required}
+				testId={testId}
+				dataTestId={dataTestId}
+				id={name}
+				logo={logo}
+			/>
 		);
 	}
 	return (

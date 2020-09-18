@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Divider, ListItem, ListItemText, Typography } from "@material-ui/core";
+import { Box, Divider, ListItem, ListItemText, Typography, Avatar } from "@material-ui/core";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -9,8 +9,9 @@ import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboard
 import { GET_ORGANISATIONS } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
+import { useIntl } from "react-intl";
 import sideBarList from "./sidebarList.json";
-
+import ListItemLink from "../../components/ListItemLink";
 /**
  *
  * @description The to url must be relative to the /settings.
@@ -24,31 +25,13 @@ import sideBarList from "./sidebarList.json";
  * @param primary  will be the name which will be displayed on
  * the UI.
  */
-function ListItemLink(props: { primary: string; to: string }) {
-	const { primary, to } = props;
-	const { sidePanelActiveLink } = sidePanelStyles();
-
-	const CustomLink = React.useMemo(
-		() =>
-			React.forwardRef((linkProps, ref) => (
-				<NavLink activeClassName={sidePanelActiveLink} to={to} {...linkProps} />
-			)),
-		[to]
-	);
-
-	return (
-		<ListItem button component={CustomLink}>
-			<ListItemText primary={primary} />
-		</ListItem>
-	);
-}
 
 export default function SettingsSidebar({ children }: { children?: Function }) {
 	const classes = sidePanelStyles();
 	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
-
+	const intl = useIntl();
 	React.useEffect(() => {
 		if (data) {
 			const { organizationList } = data;
@@ -62,14 +45,16 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>
-				<Box flexGrow={1} ml={1}>
+				<Box flexGrow={1} ml={1} display="flex">
+					<Box mr={1}>
+						<Avatar src={dashboardData?.organization?.logo?.url} />
+					</Box>
 					<Typography color="primary" gutterBottom variant="h6">
-						{dashboardData?.organization?.name || "Organization name is not available"}
+						{dashboardData?.organization?.name || ""}
 					</Typography>
 				</Box>
 			</Box>
 			<Divider />
-
 			{sideBarList.map(
 				(
 					listItem: {
@@ -79,14 +64,16 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 					index
 				) => (
 					<>
-						<Box display="flex" key={index}>
-							<Box p={2}>
-								<ListItemText
-									primary={listItem.mainHeading}
-									className={classes.mainHeading}
-								/>
+						{listItem.mainHeading && (
+							<Box display="flex" key={index}>
+								<Box p={2}>
+									<ListItemText
+										primary={listItem.mainHeading}
+										className={classes.mainHeading}
+									/>
+								</Box>
 							</Box>
-						</Box>
+						)}
 						{listItem.subHeadings.map((subHeading, subHeadingIndex) => (
 							<ListItemLink
 								to={subHeading.to}

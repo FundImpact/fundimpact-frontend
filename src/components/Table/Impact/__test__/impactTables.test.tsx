@@ -14,10 +14,7 @@ import {
 } from "../../../../graphql/Impact/trackline";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
-import {
-	deliverableAndImpactHeadings,
-	deliverableAndimpactTracklineHeading,
-} from "../../constants";
+import { ImpactHeadings, deliverableAndimpactTracklineHeading } from "../../constants";
 import {
 	impactTargetMock,
 	achieveValueMock,
@@ -97,8 +94,8 @@ jest.setTimeout(30000);
 describe("Impact Table and impact trackline table Graphql Calls and data listing", () => {
 	test("Table Headings for Impact Table", async () => {
 		const { getAllByText } = impactTable;
-		for (let i = 0; i < deliverableAndImpactHeadings.length; i++) {
-			await waitForElement(() => getAllByText(deliverableAndImpactHeadings[i].label));
+		for (let i = 0; i < ImpactHeadings.length; i++) {
+			await waitForElement(() => getAllByText(ImpactHeadings[i].label));
 		}
 	});
 

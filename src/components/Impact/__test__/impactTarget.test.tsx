@@ -1,6 +1,6 @@
 import React from "react";
 import ImpactTarget from "../impactTarget";
-import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
+import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
 import { IImpactTarget } from "../../../models/impact/impactTarget";
 import { IMPACT_ACTIONS } from "../constants";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
@@ -8,60 +8,79 @@ import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { organizationDetail } from "../../../utils/testMock.json";
+import { impactTargetTestField } from "./testInputField.json";
+import { GET_IMPACT_CATEGORY_UNIT } from "../../../graphql/Impact/categoryUnit";
+import {
+	impactCategoryMock,
+	impactCategoryUnitMock,
+	sustainableDevelopmentGoalMock,
+	impactTargetMock,
+} from "./testHelp";
+import { CREATE_IMPACT_TARGET, GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/Impact/target";
+import { GET_SDG } from "../../../graphql/SDG/query";
 
-const intialFormValue: IImpactTarget = {
-	name: "Impact TARGET",
-	description: "This is a sample Impact TARGET",
-	target_value: "",
-	impactCategory: "",
-	impactUnit: "",
-	impact_category_unit: "",
-	project: 4,
-};
-const onCreateMock = jest.fn();
-const onUpdateMock = jest.fn();
-const clearErrors = jest.fn();
-const handleFormOpen = jest.fn();
-const formIsOpen = true;
-const validate = jest.fn((values: IImpactTarget) => {
-	let errors: Partial<IImpactTarget> = {};
-	if (!values.name && !values.name.length) {
-		errors.name = "Name is required";
-	}
-	if (!values.project) {
-		errors.project = "Project is required";
-	}
-	if (!values.impactCategory) {
-		errors.impactCategory = "impact Category is required";
-	}
-	if (!values.impactUnit) {
-		errors.impactUnit = "impact Unit is required";
-	}
-	if (!values.target_value) {
-		errors.name = "Target value is required";
-	}
-	return errors;
-});
-
-const formState = IMPACT_ACTIONS.CREATE;
-
-const categoryMock = [
-	{ id: 1, name: "SONG" },
-	{ id: 2, name: "SONG" },
-];
+let createimpactTargetFormMutation = false;
 const mocks = [
 	{
 		request: {
 			query: GET_IMPACT_CATEGORY_BY_ORG,
 			variables: { filter: { organization: "13" } },
 		},
-		result: { data: { impactCategoryOrgList: categoryMock } },
+		result: { data: { impactCategoryOrgList: impactCategoryMock } },
+	},
+	{
+		request: {
+			query: GET_IMPACT_CATEGORY_UNIT,
+			variables: { filter: { impact_category_org: "1" } },
+		},
+		result: { data: { impactCategoryUnitList: impactCategoryUnitMock } },
+	},
+	{
+		request: {
+			query: GET_IMPACT_CATEGORY_UNIT,
+			variables: { filter: { impact_category_org: "1", impact_units_org: "1" } },
+		},
+		result: { data: { impactCategoryUnitList: impactCategoryUnitMock } },
+	},
+	{
+		request: {
+			query: GET_SDG,
+		},
+		result: { data: { sustainableDevelopmentGoalList: sustainableDevelopmentGoalMock } },
+	},
+	{
+		request: {
+			query: CREATE_IMPACT_TARGET,
+			variables: {
+				input: {
+					name: "IMPACTTARGET",
+					target_value: 5000,
+					impact_category_unit: "1",
+					description: "",
+					sustainable_development_goal: "",
+					project: 1,
+				},
+			},
+		},
+		result: () => {
+			createimpactTargetFormMutation = true;
+			return { data: { createImpactTargetProjectInput: {} } };
+		},
+	},
+	{
+		request: {
+			query: GET_IMPACT_TARGET_BY_PROJECT,
+			variables: {
+				filter: { project: 1 },
+			},
+		},
+		result: { data: { impactTargetProjectList: impactTargetMock } },
 	},
 ];
 
 let impactTarget: RenderResult<typeof queries>;
 let handleClose = jest.fn();
-
+jest.setTimeout(30000);
 beforeEach(() => {
 	act(() => {
 		impactTarget = renderApollo(
@@ -84,72 +103,37 @@ beforeEach(() => {
 });
 
 describe("Impact Target Form", () => {
-	test("should have a name field", () => {
-		let impactTargetName = impactTarget.getByTestId("impactTargetName");
-		expect(impactTargetName).toBeInTheDocument();
-	});
-	test("should have a target Value field", () => {
-		let impactTargetTargetValue = impactTarget.getByTestId("impactTargetTargetValue");
-		expect(impactTargetTargetValue).toBeInTheDocument();
-	});
-	test("should have a category field", () => {
-		let impactTargetCategory = impactTarget.getByTestId("impactTargetCategory");
-		expect(impactTargetCategory).toBeInTheDocument();
-	});
-	test("should have a unit field", () => {
-		let impactTargetUnit = impactTarget.getByTestId("impactTargetUnit");
-		expect(impactTargetUnit).toBeInTheDocument();
-	});
-	test("should have a description field", () => {
-		let impacttargetDescription = impactTarget.getByTestId("impactTargetDescription");
-		expect(impacttargetDescription).toBeInTheDocument();
-	});
-	test("should have a submit button", () => {
-		let submitButton = impactTarget.getByTestId("createSaveButton");
-		expect(submitButton).toBeInTheDocument();
-	});
-
-	test("Submit Button should be disabled if either of name,targetValue,category,unit fields is empty", async () => {
-		let impactTargetName = impactTarget.getByTestId(
-			"impactTargetNameInput"
-		) as HTMLInputElement;
-
-		let impactTargetTargetValue = impactTarget.getByTestId(
-			"impactTargetTargetValueInput"
-		) as HTMLInputElement;
-
-		let impactTargetCategory = impactTarget.getByTestId(
-			"impactTargetCategoryInput"
-		) as HTMLInputElement;
-
-		let impactTargetUnit = impactTarget.getByTestId(
-			"impactTargetUnitInput"
-		) as HTMLInputElement;
-
-		let value = "";
-
-		act(() => {
-			fireEvent.change(impactTargetName, { target: { value } });
+	impactTargetTestField.forEach((formField) => {
+		test(`should have ${formField.name} field`, () => {
+			let impactTargetTestFieldField = impactTarget.getByTestId(formField.dataTestId);
+			expect(impactTargetTestFieldField).toBeInTheDocument();
 		});
-		expect(impactTargetName.value).toBe(value);
+	});
 
+	test(`Submit Button enabels if all required field have values and Impact Target mutaion call`, async () => {
+		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
+		for (let i = 0; i < impactTargetTestField.length; i++) {
+			let formField = impactTargetTestField[i];
+			if (formField.value) {
+				let impactTargetTestFieldField = impactTarget.getByTestId(
+					formField.testId
+				) as HTMLInputElement;
+				act(() => {
+					fireEvent.change(impactTargetTestFieldField, {
+						target: { value: formField.value },
+					});
+				});
+
+				await wait(() => expect(impactTargetTestFieldField.value).toBe(formField.value));
+			}
+		}
+
+		let impactTracklineFormSubmit = await impactTarget.findByTestId(`createSaveButton`);
+		expect(impactTracklineFormSubmit).toBeEnabled();
 		act(() => {
-			fireEvent.change(impactTargetTargetValue, { target: { value } });
+			fireEvent.click(impactTracklineFormSubmit);
 		});
-		expect(impactTargetTargetValue.value).toBe(value);
-
-		act(() => {
-			fireEvent.change(impactTargetCategory, { target: { value } });
-		});
-		expect(impactTargetCategory.value).toBe(value);
-
-		act(() => {
-			fireEvent.change(impactTargetUnit, { target: { value } });
-		});
-
-		expect(impactTargetUnit.value).toBe(value);
-
-		let submitButton = await impactTarget.findByTestId(`createSaveButton`);
-		expect(submitButton).toBeDisabled();
+		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
+		expect(createimpactTargetFormMutation).toBe(true);
 	});
 });

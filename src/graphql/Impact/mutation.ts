@@ -19,7 +19,6 @@ export const CREATE_IMPACT_UNITS_ORG_INPUT = gql`
 			description
 			target_unit
 			prefix_label
-			suffix_label
 		}
 	}
 `;
@@ -80,6 +79,32 @@ export const CREATE_IMPACT_CATEGORY_UNIT = gql`
 					}
 				}
 			}
+		}
+	}
+`;
+
+export const UPDATE_IMPACT_UNIT_ORG = gql`
+	mutation updateImpactUnitsOrgInput($id: ID!, $input: ImpactUnitsOrgInput!) {
+		updateImpactUnitsOrgInput(id: $id, input: $input) {
+			id
+			name
+			code
+			description
+			target_unit
+			prefix_label
+			suffix_label
+		}
+	}
+`;
+
+export const UPDATE_IMPACT_CATEGORY_ORG = gql`
+	mutation updateImpactCategoryOrgInput($id: ID!, $input: ImpactCategoryOrgInput!) {
+		updateImpactCategoryOrgInput(id: $id, input: $input) {
+			id
+			name
+			code
+			shortname
+			description
 		}
 	}
 `;

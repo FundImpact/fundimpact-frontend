@@ -69,6 +69,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				...deliverbaleTarget,
 				deliverable_category_unit: deliverableCategoryUnitId,
 			};
+			delete (createInputTarget as any).id;
 			await createDeliverableTarget({
 				variables: {
 					input: createInputTarget,
@@ -161,19 +162,71 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	};
 
+	const updateDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
+		let createInputTarget: any = {
+			...deliverbaleTarget,
+			deliverable_category_unit: deliverableCategoryUnitId,
+		};
+		let deliverableId = createInputTarget.id;
+		delete (createInputTarget as any).id;
+		try {
+			await updateDeliverableTarget({
+				variables: {
+					id: deliverableId,
+					input: createInputTarget,
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: {
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+							filter: { project: props.project },
+						},
+					},
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: { filter: { project: props.project } },
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: deliverableId },
+						},
+					},
+				],
+			});
+			deliverableTargetForm[3].optionsArray = []; // set empty units after creation
+			notificationDispatch(
+				setSuccessNotification("Deliverable Target updated successfully !")
+			);
+			onCancel();
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
+		}
+	};
 	//  fetching category_unit id and on completion creating deliverable target
 	const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
 		onCompleted(data) {
 			if (!data?.deliverableCategoryUnitList) return;
 			if (!data.deliverableCategoryUnitList.length) return;
 
-			createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id); //deliverable_category_unit id
+			if (props.type === DELIVERABLE_ACTIONS.CREATE)
+				createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);
+			//deliverable_category_unit id
+			else updateDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);
 		},
 		onError(err) {
 			notificationDispatch(setErrorNotification("Unit not match with category !"));
 		},
 	});
 
+	useEffect(() => {
+		if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+			setcurrentCategory(props.data?.deliverableCategory);
+		}
+	}, [props.type]);
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
@@ -210,6 +263,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
 		setDeliverableTarget({
+			id: value.id,
 			name: value.name,
 			target_value: Number(value.target_value),
 			description: value.description,
@@ -229,43 +283,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	};
 
 	const onUpdate = async (value: IDeliverableTarget) => {
-		let deliverableId = value.id;
-		delete (value as any).id;
-		try {
-			await updateDeliverableTarget({
-				variables: {
-					id: deliverableId,
-					input: value,
-				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: {
-							limit: 10,
-							start: 0,
-							sort: "created_at:DESC",
-							filter: { project: props.project },
-						},
-					},
-					{
-						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: { filter: { project: props.project } },
-					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { deliverableTargetProject: deliverableId },
-						},
-					},
-				],
-			});
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
-			onCancel();
-		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
-		}
+		onCreate(value);
 	};
 
 	const validate = (values: IDeliverableTarget) => {
@@ -323,10 +341,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields:
-							formAction === DELIVERABLE_ACTIONS.CREATE
-								? deliverableTargetForm
-								: deliverableTargetUpdateForm,
+						inputFields: deliverableTargetForm,
 					}}
 				/>
 			</FormDialog>
