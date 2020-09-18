@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -64,7 +65,11 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 						handleMenuClose();
 					}}
 				>
-					Edit Target
+					<FormattedMessage
+						id="editTargetMenu"
+						defaultMessage="Edit Target"
+						description="This text will be show on deliverable or impact target table for edit target menu"
+					/>
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
@@ -72,7 +77,11 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 						setTargetLineDialog(true);
 					}}
 				>
-					Report Achievement
+					<FormattedMessage
+						id="reportAchievementMenu"
+						defaultMessage="Report Achievement"
+						description="This text will be show on deliverable or impact target table for report achievement menu"
+					/>
 				</MenuItem>
 			</Menu>
 			{targetData && (

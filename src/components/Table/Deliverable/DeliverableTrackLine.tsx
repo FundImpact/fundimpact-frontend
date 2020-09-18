@@ -25,7 +25,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
-
+import { FormattedMessage } from "react-intl";
 // import {
 // 	GET_DELIVERABLE_LINEITEM_FYDONOR,
 // 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
@@ -108,7 +108,11 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 						handleMenuClose();
 					}}
 				>
-					Edit Achievement
+					<FormattedMessage
+						id="editAchievementMenu"
+						defaultMessage="Edit Achievement"
+						description="This text will be show on deliverable or impact target table for edit achievement menu"
+					/>
 				</MenuItem>
 			</Menu>
 			{deliverableTracklineData && (

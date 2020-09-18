@@ -1,5 +1,6 @@
 import { useApolloClient, useMutation } from "@apollo/client";
 import React from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -25,7 +26,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 
 	//change type
 	const onCreatingNewGrantPeriodSuccess = (newGrantPeriod: any, action: FORM_ACTIONS) => {
-		console.log('newGrantPeriod :>> ', newGrantPeriod);
+		console.log("newGrantPeriod :>> ", newGrantPeriod);
 		const cacheData = cache.readQuery({
 			query: FETCH_GRANT_PERIODS,
 			variables: { filter: { project: dashboardData?.project?.id } },
@@ -137,14 +138,36 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 			}).initialValues,
 		};
 	}
-
+	const intl = useIntl();
 	return (
 		<div>
 			<FormDialog
 				open={open}
 				loading={loading || updating}
-				title={"Grant Period"}
-				subtitle={"Grant Period for the project"}
+				title={
+					(action === FORM_ACTIONS.CREATE
+						? intl.formatMessage({
+								id: "newFormHeading",
+								defaultMessage: "New",
+								description: `This text will be show on forms for New`,
+						  })
+						: intl.formatMessage({
+								id: "editFormHeading",
+								defaultMessage: "Edit",
+								description: `This text will be show on forms for Edit`,
+						  })) +
+					" " +
+					intl.formatMessage({
+						id: "grantPeriodFormTitle",
+						defaultMessage: "Grant Period",
+						description: `This text will be show on Grant Periodform for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "deliverableCategoryFormSubtitle",
+					defaultMessage: "Manage Budget Category",
+					description: `This text will be show on Grant Period form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name || ""}
 				handleClose={onClose}
 				project={dashboardData?.project?.name || ""}

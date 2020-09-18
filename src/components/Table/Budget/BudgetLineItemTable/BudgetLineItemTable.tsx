@@ -32,7 +32,6 @@ import pagination from "../../../../hooks/pagination";
 import TableSkeleton from "../../../Skeletons/TableSkeleton";
 import { budgetLineItemTableHeading as tableHeading } from "../../constants";
 import { FormattedMessage } from "react-intl";
-
 const useStyles = makeStyles((theme: Theme) => ({
 	table: {
 		minWidth: 650,
@@ -146,7 +145,11 @@ function BudgetLineItemTable({
 						handleClose();
 					}}
 				>
-					Edit Budget Target Line Item
+					<FormattedMessage
+						id="editBudgetTargetLineItem"
+						defaultMessage="Edit Budget Target Lineitem"
+						description="This text will be show on budget target tabke for edit budget target menu"
+					/>
 				</MenuItem>
 			),
 		},
@@ -184,20 +187,9 @@ function BudgetLineItemTable({
 											key={index}
 											align="left"
 										>
-											{/* {heading.label === "Amount"
+											{heading.label === "Amount"
 												? `Amount ${currency ? "(" + currency + ")" : ""}`
-												: heading.label} */}
-											<FormattedMessage
-												id={`BudgetLineitemTableHeading${index + 1}`}
-												defaultMessage={
-													heading.label === "Amount"
-														? `Amount ${
-																currency ? "(" + currency + ")" : ""
-														  }`
-														: heading.label
-												}
-												description={`This text will be shown on budget lineitem table heading for ${heading.label}`}
-											/>
+												: heading.label}
 										</TableCell>
 								  ))
 								: null}

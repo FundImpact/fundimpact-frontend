@@ -18,6 +18,7 @@ import FICollaspeTable from "../FICollapseTable";
 import ImpactTrackLineTable from "./impactTrackline";
 import pagination from "../../../hooks/pagination/pagination";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { FormattedMessage } from "react-intl";
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
@@ -61,7 +62,11 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 						handleMenuClose();
 					}}
 				>
-					Edit Target
+					<FormattedMessage
+						id="editTargetMenu"
+						defaultMessage="Edit Target"
+						description="This text will be show on deliverable or impact target table for edit target menu"
+					/>
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
@@ -69,7 +74,11 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 						setImpactTargetLineDialog(true);
 					}}
 				>
-					Report Achievement
+					<FormattedMessage
+						id="reportAchievementMenu"
+						defaultMessage="Report Achievement"
+						description="This text will be show on deliverable or impact target table for report achievement menu"
+					/>
 				</MenuItem>
 			</Menu>
 			{impactTargetData && (
