@@ -14,6 +14,7 @@ import { setUser } from "../../../reducers/userReducer";
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { IUser, UserProps } from "../../../models/User/user";
 import useFileUpload from "../../../hooks/fileUpload";
+import { FormattedMessage } from "react-intl";
 function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		updateUserForm[0].logo = props.data?.logo;
@@ -106,10 +107,18 @@ function UserForm(props: UserProps) {
 			<Grid container spacing={2}>
 				<Grid item xs={3}>
 					<Typography data-testid="update-profile-heading" variant="h6" gutterBottom>
-						Update Profile
+						<FormattedMessage
+							id="updateUserFormTitle"
+							defaultMessage="Update Profile"
+							description="This text will be show on user update form for title"
+						/>
 					</Typography>
 					<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-						Your personal details
+						<FormattedMessage
+							id="updateUserFormSubtitle"
+							defaultMessage="your personal details"
+							description="This text will be show on user update form for subtitle"
+						/>
 					</Typography>
 				</Grid>
 				<Grid item xs={9}>
