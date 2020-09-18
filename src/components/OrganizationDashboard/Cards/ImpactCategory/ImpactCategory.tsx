@@ -27,19 +27,19 @@ export default function ImpactCategoryCard() {
 			},
 		],
 	};
-	let cardTitle = (
+	let impactCategoryCardTitle = (
 		<FormattedMessage
 			id="impactCategoryCardTitle"
 			defaultMessage="Impact Category"
 			description="This text will be show on dashboard for impact category card title"
 		/>
 	);
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+	const impactCategoryCardMenuHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	const handleClose = () => {
+	const impactCategoryCardMenuHandleClose = () => {
 		setAnchorEl(null);
 	};
 	return (
@@ -47,12 +47,12 @@ export default function ImpactCategoryCard() {
 			<Grid item md={6}>
 				<Box mt={1}>
 					<Typography color="primary" noWrap gutterBottom>
-						{cardTitle}
+						{impactCategoryCardTitle}
 					</Typography>
 				</Box>
 			</Grid>
 			<Grid item md={6}>
-				<IconButton onClick={handleClick}>
+				<IconButton onClick={impactCategoryCardMenuHandleClick}>
 					<FilterListIcon fontSize="small" />
 				</IconButton>
 				<Menu
@@ -60,7 +60,7 @@ export default function ImpactCategoryCard() {
 					anchorEl={anchorEl}
 					keepMounted
 					open={Boolean(anchorEl)}
-					onClose={handleClose}
+					onClose={impactCategoryCardMenuHandleClose}
 				>
 					<MenuItem
 						onClick={() => {
@@ -69,7 +69,7 @@ export default function ImpactCategoryCard() {
 								achieved: false,
 							});
 
-							handleClose();
+							impactCategoryCardMenuHandleClose();
 						}}
 					>
 						<FormattedMessage
@@ -84,7 +84,7 @@ export default function ImpactCategoryCard() {
 								projects: false,
 								achieved: true,
 							});
-							handleClose();
+							impactCategoryCardMenuHandleClose();
 						}}
 					>
 						<FormattedMessage
