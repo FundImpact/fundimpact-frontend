@@ -27,6 +27,7 @@ import CommonForm from "../CommonForm/commonForm";
 import { deliverableUnitForm } from "./inputField.json";
 import { IGetDeliverablUnit, IGetDeliverableCategoryUnit } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -329,21 +330,12 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		return errors;
 	};
 	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE
-						? intl.formatMessage({
-								id: "newFormHeading",
-								defaultMessage: "New",
-								description: `This text will be show on forms for New`,
-						  })
-						: intl.formatMessage({
-								id: "editFormHeading",
-								defaultMessage: "Edit",
-								description: `This text will be show on forms for Edit`,
-						  })) +
+					newOrEdit +
 					" " +
 					intl.formatMessage({
 						id: "deliverableUnitFormTitle",

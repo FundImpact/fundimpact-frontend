@@ -25,6 +25,7 @@ import {
 	IImpactTargetByProjectResponse,
 } from "../../models/impact/query";
 import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -64,7 +65,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	//for fetching category_unit id and creating impact target
 	const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
 		onCompleted(data) {
@@ -333,17 +334,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 		<DashboardProvider>
 			<FormDialog
 				title={
-					(formAction === IMPACT_ACTIONS.CREATE
-						? intl.formatMessage({
-								id: "newFormHeading",
-								defaultMessage: "New",
-								description: `This text will be show on forms for New`,
-						  })
-						: intl.formatMessage({
-								id: "editFormHeading",
-								defaultMessage: "Edit",
-								description: `This text will be show on forms for Edit`,
-						  })) +
+					newOrEdit +
 					" " +
 					intl.formatMessage({
 						id: "impactTargetFormTitle",

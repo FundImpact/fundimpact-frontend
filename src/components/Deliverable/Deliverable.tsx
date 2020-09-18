@@ -21,7 +21,7 @@ import { deliverableCategoryForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IGetDeliverableCategory } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
-
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -45,7 +45,7 @@ function Deliverable(props: DeliverableProps) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const onCreate = async (value: IDeliverable) => {
 		try {
 			await createDeliverableCategory({
@@ -162,17 +162,7 @@ function Deliverable(props: DeliverableProps) {
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE
-						? intl.formatMessage({
-								id: "newFormHeading",
-								defaultMessage: "New",
-								description: `This text will be show on forms for New`,
-						  })
-						: intl.formatMessage({
-								id: "editFormHeading",
-								defaultMessage: "Edit",
-								description: `This text will be show on forms for Edit`,
-						  })) +
+					newOrEdit +
 					" " +
 					intl.formatMessage({
 						id: "deliverableCategoryFormTitle",

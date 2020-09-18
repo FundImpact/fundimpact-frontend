@@ -27,6 +27,7 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
@@ -259,23 +260,14 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	};
 	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
 		<FormDialog
 			handleClose={props.handleClose}
 			open={props.open}
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
 			title={
-				(props.formAction === FORM_ACTIONS.CREATE
-					? intl.formatMessage({
-							id: "newFormHeading",
-							defaultMessage: "New",
-							description: `This text will be show on forms for New`,
-					  })
-					: intl.formatMessage({
-							id: "editFormHeading",
-							defaultMessage: "Edit",
-							description: `This text will be show on forms for Edit`,
-					  })) +
+				newOrEdit +
 				" " +
 				intl.formatMessage({
 					id: "budgetTargetFormTitle",

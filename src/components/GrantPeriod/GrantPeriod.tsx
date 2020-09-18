@@ -10,6 +10,7 @@ import { FORM_ACTIONS } from "../../models/constants";
 import { GrantPeriodDialogProps } from "../../models/grantPeriod/grantPeriodDialog";
 import { IGrantPeriod } from "../../models/grantPeriod/grantPeriodForm";
 import { setSuccessNotification } from "../../reducers/notificationReducer";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import FormDialog from "../FormDialog";
 import { GranPeriodForm } from "../Forms/GrantPeriod/GranPeriod";
 
@@ -139,23 +140,14 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		};
 	}
 	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(action);
 	return (
 		<div>
 			<FormDialog
 				open={open}
 				loading={loading || updating}
 				title={
-					(action === FORM_ACTIONS.CREATE
-						? intl.formatMessage({
-								id: "newFormHeading",
-								defaultMessage: "New",
-								description: `This text will be show on forms for New`,
-						  })
-						: intl.formatMessage({
-								id: "editFormHeading",
-								defaultMessage: "Edit",
-								description: `This text will be show on forms for Edit`,
-						  })) +
+					newOrEdit +
 					" " +
 					intl.formatMessage({
 						id: "grantPeriodFormTitle",

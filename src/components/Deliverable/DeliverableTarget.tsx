@@ -27,6 +27,7 @@ import {
 	IDeliverableTargetByProjectResponse,
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -63,7 +64,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	const formAction = props.type;
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const createDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
 		try {
 			let createInputTarget = {
@@ -325,17 +326,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE
-						? intl.formatMessage({
-								id: "newFormHeading",
-								defaultMessage: "New",
-								description: `This text will be show on forms for New`,
-						  })
-						: intl.formatMessage({
-								id: "editFormHeading",
-								defaultMessage: "Edit",
-								description: `This text will be show on forms for Edit`,
-						  })) +
+					newOrEdit +
 					" " +
 					intl.formatMessage({
 						id: "deliverableTargetFormTitle",

@@ -29,6 +29,7 @@ import {
 } from "../../../graphql/Impact/categoryUnit";
 import { IMPACT_ACTIONS } from "../constants";
 import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 
 let inputFields: any[] = impactUnitForm;
 
@@ -69,7 +70,7 @@ function ImpactUnitDialog({
 	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
 		CREATE_IMPACT_CATEGORY_UNIT
 	);
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const updateImpactCategoryUnitCount = async (
 		store: ApolloCache<any>,
 		filter: { [key: string]: string }
@@ -377,17 +378,7 @@ function ImpactUnitDialog({
 			open={open}
 			loading={creatingInpactUnit || updatingImpactUnit || creatingImpactCategoryUnit}
 			title={
-				(formAction === FORM_ACTIONS.CREATE
-					? intl.formatMessage({
-							id: "newFormHeading",
-							defaultMessage: "New",
-							description: `This text will be show on forms for New`,
-					  })
-					: intl.formatMessage({
-							id: "editFormHeading",
-							defaultMessage: "Edit",
-							description: `This text will be show on forms for Edit`,
-					  })) +
+				newOrEdit +
 				" " +
 				intl.formatMessage({
 					id: "impactUnitFormTitle",

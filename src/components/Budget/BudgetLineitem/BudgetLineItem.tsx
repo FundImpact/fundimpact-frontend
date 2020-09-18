@@ -34,6 +34,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { getTodaysDate } from "../../../utils";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { FORM_ACTIONS } from "../../Forms/constant";
@@ -404,23 +405,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			: [];
 	}
 	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
 		<FormDialog
 			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
 			title={
-				(props.formAction === FORM_ACTIONS.CREATE
-					? intl.formatMessage({
-							id: "reportFormHeading",
-							defaultMessage: "Report",
-							description: `This text will be show on forms for Report`,
-					  })
-					: intl.formatMessage({
-							id: "editFormHeading",
-							defaultMessage: "Edit",
-							description: `This text will be show on forms for Edit`,
-					  })) +
+				newOrEdit +
 				" " +
 				intl.formatMessage({
 					id: "budgetExpenditureFormTitle",

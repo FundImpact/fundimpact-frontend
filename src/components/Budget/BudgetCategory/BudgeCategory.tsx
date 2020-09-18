@@ -24,6 +24,7 @@ import { budgetCategoryFormInputFields } from "./inputFields.json";
 import { removeEmptyKeys, compareObjectKeys } from "../../../utils";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -190,7 +191,7 @@ function BudgetCategory({
 		}
 	};
 	const intl = useIntl();
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	return (
 		<>
 			<FormDialog
@@ -198,17 +199,7 @@ function BudgetCategory({
 				open={open}
 				loading={updatingBudgetCategory || creatingBudgetCategory}
 				title={
-					(formAction === FORM_ACTIONS.CREATE
-						? intl.formatMessage({
-								id: "newFormHeading",
-								defaultMessage: "New",
-								description: `This text will be show on forms for New`,
-						  })
-						: intl.formatMessage({
-								id: "editFormHeading",
-								defaultMessage: "Edit",
-								description: `This text will be show on forms for Edit`,
-						  })) +
+					newOrEdit +
 					" " +
 					intl.formatMessage({
 						id: "budgetCategoryFormTitle",

@@ -26,6 +26,7 @@ import {
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -59,7 +60,7 @@ function ImpactCategoryDialog({
 	);
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const initialValues = formAction == FORM_ACTIONS.CREATE ? defauleValues : formValues;
 
 	const onSubmit = async (values: IImpactCategory) => {
@@ -177,17 +178,7 @@ function ImpactCategoryDialog({
 			open={open}
 			loading={creatingImpactCategory || updatingImpactCategory}
 			title={
-				(formAction === FORM_ACTIONS.CREATE
-					? intl.formatMessage({
-							id: "newFormHeading",
-							defaultMessage: "New",
-							description: `This text will be show on forms for New`,
-					  })
-					: intl.formatMessage({
-							id: "editFormHeading",
-							defaultMessage: "Edit",
-							description: `This text will be show on forms for Edit`,
-					  })) +
+				newOrEdit +
 				" " +
 				intl.formatMessage({
 					id: "impactCategoryFormTitle",
