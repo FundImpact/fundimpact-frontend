@@ -5,6 +5,7 @@ import { PieChart } from "../../../Charts";
 import { Link } from "react-router-dom";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
+import MoreButton from "../MoreIconButton";
 
 export default function DeliverableCategoryCard() {
 	const theme = useTheme();
@@ -44,14 +45,14 @@ export default function DeliverableCategoryCard() {
 
 	return (
 		<Grid container>
-			<Grid item md={6}>
+			<Grid item md={9}>
 				<Box mt={1}>
 					<Typography color="primary" noWrap gutterBottom>
 						{cardTitle}
 					</Typography>
 				</Box>
 			</Grid>
-			<Grid item md={6}>
+			<Grid item md={3}>
 				<IconButton onClick={handleClick}>
 					<FilterListIcon fontSize="small" />
 				</IconButton>
@@ -94,22 +95,15 @@ export default function DeliverableCategoryCard() {
 						/>
 					</MenuItem>
 				</Menu>
-				<Typography variant="caption">
-					{" "}
-					<FormattedMessage
-						id="moreHeadingCards"
-						defaultMessage="more"
-						description="This text will be show on cards for more heading"
-					/>
-				</Typography>
-				<Link to="/settings/deliverable">
-					<IconButton>
-						<ArrowRightAltIcon fontSize="small" />
-					</IconButton>
-				</Link>
 			</Grid>
 			<Grid item md={12}>
-				<PieChart data={DeliverablePieData} />
+				<Box p={1}>
+					<PieChart data={DeliverablePieData} />
+				</Box>
+			</Grid>
+			<Grid item md={8}></Grid>
+			<Grid item md={4}>
+				<MoreButton link={"/settings/deliverable"} />
 			</Grid>
 		</Grid>
 	);

@@ -5,6 +5,7 @@ import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { PieChart } from "../../../Charts";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import MoreButton from "../MoreIconButton";
 export default function ImpactCategoryCard() {
 	const theme = useTheme();
 	const [impactCategoryFilter, setImpactCategoryFilter] = useState<{
@@ -44,14 +45,14 @@ export default function ImpactCategoryCard() {
 	};
 	return (
 		<Grid container>
-			<Grid item md={6}>
+			<Grid item md={9}>
 				<Box mt={1}>
 					<Typography color="primary" noWrap gutterBottom>
 						{impactCategoryCardTitle}
 					</Typography>
 				</Box>
 			</Grid>
-			<Grid item md={6}>
+			<Grid item md={3}>
 				<IconButton onClick={impactCategoryCardMenuHandleClick}>
 					<FilterListIcon fontSize="small" />
 				</IconButton>
@@ -94,22 +95,15 @@ export default function ImpactCategoryCard() {
 						/>
 					</MenuItem>
 				</Menu>
-				<Typography variant="caption">
-					{" "}
-					<FormattedMessage
-						id="moreHeadingCards"
-						defaultMessage="more"
-						description="This text will be show on cards for more heading"
-					/>
-				</Typography>
-				<Link to="/settings/impact">
-					<IconButton>
-						<ArrowRightAltIcon fontSize="small" />
-					</IconButton>
-				</Link>
 			</Grid>
 			<Grid item md={12}>
-				<PieChart data={impactlePieData} />
+				<Box p={1}>
+					<PieChart data={impactlePieData} />
+				</Box>
+			</Grid>
+			<Grid item md={8}></Grid>
+			<Grid item md={4}>
+				<MoreButton link={"/settings/impact"} />
 			</Grid>
 		</Grid>
 	);

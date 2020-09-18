@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
+import MoreButton from "../MoreIconButton";
 import ProgressDialog from "../ProgressDialog";
 
 const budgetProjects = [
@@ -32,7 +32,7 @@ export default function BudgetProjectsCard() {
 	const [budgetProgressDialogOpen, setBudgetProgressDialogOpen] = React.useState(false);
 	return (
 		<Grid container>
-			<Grid item md={7}>
+			<Grid item md={10}>
 				<Box mt={1}>
 					<Typography color="primary" gutterBottom>
 						<FormattedMessage
@@ -56,7 +56,7 @@ export default function BudgetProjectsCard() {
 					</Typography>
 				</Box>
 			</Grid>
-			<Grid item md={5}>
+			<Grid item md={2}>
 				<IconButton onClick={handleClick}>
 					<FilterListIcon fontSize="small" />
 				</IconButton>
@@ -98,17 +98,6 @@ export default function BudgetProjectsCard() {
 						/>
 					</MenuItem>
 				</Menu>
-				<Typography variant="caption">
-					{" "}
-					<FormattedMessage
-						id="moreHeadingCards"
-						defaultMessage="more"
-						description="This text will be show on cards for more heading"
-					/>
-				</Typography>
-				<IconButton onClick={() => setBudgetProgressDialogOpen(true)}>
-					<ArrowRightAltIcon fontSize="small" />
-				</IconButton>
 			</Grid>
 			<Grid item md={12}>
 				<Box mt={1}>
@@ -119,6 +108,7 @@ export default function BudgetProjectsCard() {
 									title={budgetProject.name}
 									date={budgetProject.lastUpdated}
 									percentage={budgetProject.completed}
+									size="md"
 								/>
 							);
 						})}
@@ -138,12 +128,17 @@ export default function BudgetProjectsCard() {
 										title={budgetProject.name}
 										date={budgetProject.lastUpdated}
 										percentage={budgetProject.completed}
+										size="lg"
 									/>
 								</Box>
 							);
 						})}
 				</ProgressDialog>
 			)}
+			<Grid item md={9}></Grid>
+			<Grid item md={3}>
+				<MoreButton handleClick={() => setBudgetProgressDialogOpen(true)} />
+			</Grid>
 		</Grid>
 	);
 }

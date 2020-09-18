@@ -5,6 +5,7 @@ import CommonProgres from "../CommonProgress";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
+import MoreButton from "../MoreIconButton";
 
 const donors = [
 	{ name: "A ONE Donor", completed: 60, lastUpdated: "2020-09-18T10:16:34.000Z" },
@@ -33,7 +34,7 @@ export default function DonorsCard() {
 
 	return (
 		<Grid container>
-			<Grid item md={6}>
+			<Grid item md={9}>
 				<Box mt={1}>
 					<Typography color="primary" gutterBottom>
 						<FormattedMessage
@@ -44,7 +45,7 @@ export default function DonorsCard() {
 					</Typography>
 				</Box>
 			</Grid>
-			<Grid item md={6}>
+			<Grid item md={3}>
 				<IconButton onClick={handleClick}>
 					<FilterListIcon fontSize="small" />
 				</IconButton>
@@ -87,28 +88,19 @@ export default function DonorsCard() {
 						/>
 					</MenuItem>
 				</Menu>
-				<Typography variant="caption">
-					{" "}
-					<FormattedMessage
-						id="moreHeadingCards"
-						defaultMessage="more"
-						description="This text will be show on cards for more heading"
-					/>
-				</Typography>
-				<IconButton onClick={() => setonorsProgressDialogOpen(true)}>
-					<ArrowRightAltIcon fontSize="small" />
-				</IconButton>
 			</Grid>
 			<Grid item md={12}>
 				<Box mt={1}>
 					{donors &&
 						donors.slice(0, 3).map((donor) => {
 							return (
-								<CommonProgres
-									title={donor.name}
-									date={donor.lastUpdated}
-									percentage={donor.completed}
-								/>
+								<Box mr={2}>
+									<CommonProgres
+										title={donor.name}
+										date={donor.lastUpdated}
+										percentage={donor.completed}
+									/>
+								</Box>
 							);
 						})}
 				</Box>
@@ -133,6 +125,10 @@ export default function DonorsCard() {
 						})}
 				</ProgressDialog>
 			)}
+			<Grid item md={8}></Grid>
+			<Grid item md={4}>
+				<MoreButton handleClick={() => setonorsProgressDialogOpen(true)} />
+			</Grid>
 		</Grid>
 	);
 }

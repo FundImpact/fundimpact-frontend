@@ -8,11 +8,13 @@ export default function CommonProgress({
 	date,
 	percentage,
 	color = "primary",
+	size = "xs",
 }: {
 	title: string;
 	date: string;
 	percentage: number;
 	color?: "primary" | "secondary";
+	size?: "xs" | "md" | "lg";
 }) {
 	return (
 		<Grid container>
@@ -37,12 +39,12 @@ export default function CommonProgress({
 					<Grid item md={3}>
 						<Typography variant="caption">{`${percentage} %`}</Typography>
 					</Grid>
-					<Grid item md={4}></Grid>
-					<Grid item md={8} xs={10}>
+					<Grid item md={size === "xs" ? 4 : size === "md" ? 5 : 7}></Grid>
+					<Grid item md={size === "xs" ? 8 : size === "md" ? 7 : 5}>
 						<Box display="flex">
-							<Box mt="1" mr="1">
+							{/* <Box mt="1" mr="1">
 								<UpdateIcon color="disabled" fontSize="small" />
-							</Box>
+							</Box> */}
 							<Typography
 								variant="caption"
 								color="textSecondary"

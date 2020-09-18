@@ -4,6 +4,7 @@ import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
+import MoreButton from "../MoreIconButton";
 
 const deliverableProjects = [
 	{ name: "HUL Food Drive 2020", completed: 95, lastUpdated: "2017-12-03T10:15:30.000Z" },
@@ -18,8 +19,8 @@ export default function DeliverableProjectsCard() {
 
 	return (
 		<Grid container>
-			<Grid item md={8}>
-				<Box mt={1}>
+			<Grid item md={12}>
+				<Box m={1} mb={2}>
 					<Typography color="primary" gutterBottom>
 						<FormattedMessage
 							id="deliverableAchievedCardTitle"
@@ -29,19 +30,6 @@ export default function DeliverableProjectsCard() {
 					</Typography>
 				</Box>
 			</Grid>
-			<Grid item md={4}>
-				<Typography variant="caption">
-					{" "}
-					<FormattedMessage
-						id="moreHeadingCards"
-						defaultMessage="more"
-						description="This text will be show on cards for more heading"
-					/>
-				</Typography>
-				<IconButton onClick={() => setDeliverableProgressDialogOpen(true)}>
-					<ArrowRightAltIcon fontSize="small" />
-				</IconButton>
-			</Grid>
 			<Grid item md={12}>
 				{deliverableProjects &&
 					deliverableProjects.slice(0, 3).map((deliverableProject, index) => {
@@ -50,6 +38,7 @@ export default function DeliverableProjectsCard() {
 								title={deliverableProject.name}
 								date={deliverableProject.lastUpdated}
 								percentage={deliverableProject.completed}
+								size="md"
 							/>
 						);
 					})}
@@ -68,12 +57,17 @@ export default function DeliverableProjectsCard() {
 										title={deliverableProject.name}
 										date={deliverableProject.lastUpdated}
 										percentage={deliverableProject.completed}
+										size="lg"
 									/>
 								</Box>
 							);
 						})}
 				</ProgressDialog>
 			)}
+			<Grid item md={9}></Grid>
+			<Grid item md={3}>
+				<MoreButton handleClick={() => setDeliverableProgressDialogOpen(true)} />
+			</Grid>
 		</Grid>
 	);
 }

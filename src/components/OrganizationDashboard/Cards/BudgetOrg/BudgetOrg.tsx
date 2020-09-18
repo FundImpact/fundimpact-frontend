@@ -50,7 +50,7 @@ export default function BudgetOrgCard() {
 						/>
 					</Typography>
 				</Box>
-				<BorderLinearProgress variant="determinate" value={90} color={"secondary"} />
+				<BorderLinearProgress variant="determinate" value={50} color={"secondary"} />
 			</Box>
 		</Box>
 	);

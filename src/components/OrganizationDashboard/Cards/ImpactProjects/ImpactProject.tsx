@@ -3,6 +3,7 @@ import React from "react";
 import CommonProgres from "../CommonProgress";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
+import MoreButton from "../MoreIconButton";
 
 const impactProjects = [
 	{ name: "Literacy Campaign Aug", completed: 95, lastUpdated: "2017-12-03T10:15:30.000Z" },
@@ -16,20 +17,12 @@ export default function ImpactProjectsCard() {
 	const [impactProgressDialogOpen, setImpactProgressDialogOpen] = React.useState(false);
 	return (
 		<Grid container>
-			<Grid item md={8}>
-				<Box mt={1}>
+			<Grid item md={12}>
+				<Box m={1} mb={2}>
 					<Typography color="primary" gutterBottom>
 						Impact Achieved
 					</Typography>
 				</Box>
-			</Grid>
-			<Grid item md={4}>
-				<Typography variant="caption" data-testid="impact-more-test">
-					More
-				</Typography>
-				<IconButton onClick={() => setImpactProgressDialogOpen(true)}>
-					<ArrowRightAltIcon fontSize="small" />
-				</IconButton>
 			</Grid>
 			<Grid item md={12}>
 				{impactProjects &&
@@ -39,6 +32,7 @@ export default function ImpactProjectsCard() {
 								title={impactProject.name}
 								date={impactProject.lastUpdated}
 								percentage={impactProject.completed}
+								size="md"
 							/>
 						);
 					})}
@@ -57,12 +51,17 @@ export default function ImpactProjectsCard() {
 										title={impactProject.name}
 										date={impactProject.lastUpdated}
 										percentage={impactProject.completed}
+										size="lg"
 									/>
 								</Box>
 							);
 						})}
 				</ProgressDialog>
 			)}
+			<Grid item md={9}></Grid>
+			<Grid item md={3}>
+				<MoreButton handleClick={() => setImpactProgressDialogOpen(true)} />
+			</Grid>
 		</Grid>
 	);
 }
