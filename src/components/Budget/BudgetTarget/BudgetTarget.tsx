@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../graphql";
+import { GET_CURRENCY_LIST } from "../../../graphql";
 import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
