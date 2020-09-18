@@ -97,16 +97,18 @@ export default function DonorsCard() {
 				<ProgressDialog
 					open={donorsProgressDialogOpen}
 					onClose={() => setonorsProgressDialogOpen(false)}
-					title={"Deliverable Projects"}
+					title={"Donors"}
 				>
 					{donors &&
 						donors.map((donor, index) => {
 							return (
-								<CommonProgres
-									title={donor.name}
-									date={donor.lastUpdated}
-									percentage={donor.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={donor.name}
+										date={donor.lastUpdated}
+										percentage={donor.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>

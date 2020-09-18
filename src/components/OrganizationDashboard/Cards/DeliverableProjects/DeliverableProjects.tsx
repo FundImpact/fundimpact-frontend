@@ -51,11 +51,13 @@ export default function DeliverableProjectsCard() {
 					{deliverableProjects &&
 						deliverableProjects.map((deliverableProject, index) => {
 							return (
-								<CommonProgres
-									title={deliverableProject.name}
-									date={deliverableProject.lastUpdated}
-									percentage={deliverableProject.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={deliverableProject.name}
+										date={deliverableProject.lastUpdated}
+										percentage={deliverableProject.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>

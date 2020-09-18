@@ -102,11 +102,13 @@ export default function BudgetProjectsCard() {
 					{budgetProjects &&
 						budgetProjects.map((budgetProject, index) => {
 							return (
-								<CommonProgres
-									title={budgetProject.name}
-									date={budgetProject.lastUpdated}
-									percentage={budgetProject.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={budgetProject.name}
+										date={budgetProject.lastUpdated}
+										percentage={budgetProject.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>

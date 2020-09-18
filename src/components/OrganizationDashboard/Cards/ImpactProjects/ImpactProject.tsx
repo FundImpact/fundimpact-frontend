@@ -52,11 +52,13 @@ export default function ImpactProjectsCard() {
 					{impactProjects &&
 						impactProjects.map((impactProject, index) => {
 							return (
-								<CommonProgres
-									title={impactProject.name}
-									date={impactProject.lastUpdated}
-									percentage={impactProject.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={impactProject.name}
+										date={impactProject.lastUpdated}
+										percentage={impactProject.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>
