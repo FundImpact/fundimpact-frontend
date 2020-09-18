@@ -1,9 +1,7 @@
 import { Box, Grid, IconButton, Menu, MenuItem, Typography, useTheme } from "@material-ui/core";
 import React, { useState } from "react";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { PieChart } from "../../../Charts";
-import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import MoreButton from "../MoreIconButton";
 export default function ImpactCategoryCard() {

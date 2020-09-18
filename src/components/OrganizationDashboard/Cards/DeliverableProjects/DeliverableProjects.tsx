@@ -1,8 +1,7 @@
-import { Box, Grid, IconButton, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 import MoreButton from "../MoreIconButton";
 

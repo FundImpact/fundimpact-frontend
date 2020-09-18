@@ -1,9 +1,9 @@
-import { Box, Grid, IconButton, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import CommonProgres from "../CommonProgress";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 import MoreButton from "../MoreIconButton";
+import { FormattedMessage } from "react-intl";
 
 const impactProjects = [
 	{ name: "Literacy Campaign Aug", completed: 95, lastUpdated: "2017-12-03T10:15:30.000Z" },
@@ -15,12 +15,19 @@ const impactProjects = [
 
 export default function ImpactProjectsCard() {
 	const [impactProgressDialogOpen, setImpactProgressDialogOpen] = React.useState(false);
+	let impactProjectCardTitle = (
+		<FormattedMessage
+			id="impactAchievedCardTitle"
+			defaultMessage="Impact Achieved"
+			description="This text will be show on dashboard for impact achieved card title"
+		/>
+	);
 	return (
 		<Grid container>
 			<Grid item md={12}>
 				<Box m={1} mb={2}>
 					<Typography color="primary" gutterBottom>
-						Impact Achieved
+						{impactProjectCardTitle}
 					</Typography>
 				</Box>
 			</Grid>

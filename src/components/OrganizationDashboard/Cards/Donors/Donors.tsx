@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import CommonProgres from "../CommonProgress";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 import MoreButton from "../MoreIconButton";
 

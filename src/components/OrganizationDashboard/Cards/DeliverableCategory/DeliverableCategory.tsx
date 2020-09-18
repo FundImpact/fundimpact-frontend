@@ -2,9 +2,7 @@ import { Box, Grid, IconButton, Menu, MenuItem, Typography, useTheme } from "@ma
 import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { PieChart } from "../../../Charts";
-import { Link } from "react-router-dom";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import MoreButton from "../MoreIconButton";
 
 export default function DeliverableCategoryCard() {
