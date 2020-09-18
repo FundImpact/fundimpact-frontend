@@ -40,6 +40,20 @@ function UserForm(props: UserProps) {
 			notificationDispatch(setErrorNotification("Profile updation Failed !"));
 		},
 	});
+	let title = (
+		<FormattedMessage
+			id="updateUserFormTitle"
+			defaultMessage="Update Profile"
+			description="This text will be show on user update form for title"
+		/>
+	);
+	let subtitle = (
+		<FormattedMessage
+			id="updateUserFormSubtitle"
+			defaultMessage="your personal details"
+			description="This text will be show on user update form for subtitle"
+		/>
+	);
 	React.useEffect(() => {
 		if (userResponse) {
 			if (userDispatch) {
@@ -107,18 +121,10 @@ function UserForm(props: UserProps) {
 			<Grid container spacing={2}>
 				<Grid item xs={3}>
 					<Typography data-testid="update-profile-heading" variant="h6" gutterBottom>
-						<FormattedMessage
-							id="updateUserFormTitle"
-							defaultMessage="Update Profile"
-							description="This text will be show on user update form for title"
-						/>
+						{title}
 					</Typography>
 					<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-						<FormattedMessage
-							id="updateUserFormSubtitle"
-							defaultMessage="your personal details"
-							description="This text will be show on user update form for subtitle"
-						/>
+						{subtitle}
 					</Typography>
 				</Grid>
 				<Grid item xs={9}>

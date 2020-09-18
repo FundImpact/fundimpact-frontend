@@ -79,9 +79,18 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	let [getBudgetCategory, { data: budgetCategory }] = useLazyQuery(
 		GET_ORGANIZATION_BUDGET_CATEGORY
 	);
-
+	const intl = useIntl();
 	let [getDonors, { data: donors }] = useLazyQuery(GET_PROJ_DONORS);
-
+	let budgetTargetTitle = intl.formatMessage({
+		id: "budgetTargetFormTitle",
+		defaultMessage: "Budget Target",
+		description: `This text will be show on Budget target form for title`,
+	});
+	let budgetTargetSubtitle = intl.formatMessage({
+		id: "budgetTargetFormSubtitle",
+		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+		description: `This text will be show on Budget target form for subtitle`,
+	});
 	useEffect(() => {
 		if (dashboardData) {
 			getCurrency({
@@ -259,28 +268,15 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			props.handleClose();
 		}
 	};
-	const intl = useIntl();
+
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
 		<FormDialog
 			handleClose={props.handleClose}
 			open={props.open}
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
-			title={
-				newOrEdit +
-				" " +
-				intl.formatMessage({
-					id: "budgetTargetFormTitle",
-					defaultMessage: "Budget Target",
-					description: `This text will be show on Budget target form for title`,
-				})
-			}
-			subtitle={intl.formatMessage({
-				id: "budgetTargetFormSubtitle",
-				defaultMessage:
-					"Physical addresses of your organisation like headquarter branch etc",
-				description: `This text will be show on Budget target form for subtitle`,
-			})}
+			title={newOrEdit + " " + budgetTargetTitle}
+			subtitle={budgetTargetSubtitle}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

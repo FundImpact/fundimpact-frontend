@@ -1,5 +1,4 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { FORMERR } from "dns";
 import React, { useCallback, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -37,7 +36,6 @@ import { getTodaysDate } from "../../../utils";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
-import { FORM_ACTIONS } from "../../Forms/constant";
 import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "./inputFields.json";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
@@ -61,6 +59,17 @@ let budgetTargetHash: {
 function BudgetLineitem(props: IBudgetLineitemProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
+	const intl = useIntl();
+	let budgetTargetLineTitle = intl.formatMessage({
+		id: "budgetExpenditureFormTitle",
+		defaultMessage: "Budget Expenditure",
+		description: `This text will be show on Budget Expenditure form for title`,
+	});
+	let budgetTargetLineSubtitle = intl.formatMessage({
+		id: "budgetExpenditureFormSubtitle",
+		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+		description: `This text will be show on Budget Expenditureform for subtitle`,
+	});
 	const [selectedDonor, setSelectedDonor] = useState<{
 		id: string;
 		country: { id: string };
@@ -404,28 +413,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			? financialYearDonor?.financialYearList
 			: [];
 	}
-	const intl = useIntl();
+
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
 		<FormDialog
 			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
-			title={
-				newOrEdit +
-				" " +
-				intl.formatMessage({
-					id: "budgetExpenditureFormTitle",
-					defaultMessage: "Budget Expenditure",
-					description: `This text will be show on Budget Expenditure form for title`,
-				})
-			}
-			subtitle={intl.formatMessage({
-				id: "budgetExpenditureFormSubtitle",
-				defaultMessage:
-					"Physical addresses of your organisation like headquarter branch etc",
-				description: `This text will be show on Budget Expenditureform for subtitle`,
-			})}
+			title={newOrEdit + " " + budgetTargetLineTitle}
+			subtitle={budgetTargetLineSubtitle}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

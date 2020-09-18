@@ -15,7 +15,13 @@ export default function DeliverableCategoryCard() {
 		projects: true,
 		achieved: false,
 	});
-
+	let cardTitle = (
+		<FormattedMessage
+			id="deliverableCategoryCardTitle"
+			defaultMessage="Deliverable Category"
+			description="This text will be show on dashboard for deliverable category card title"
+		/>
+	);
 	let DeliverablePieData = {
 		datasets: [
 			{
@@ -41,11 +47,7 @@ export default function DeliverableCategoryCard() {
 			<Grid item md={6}>
 				<Box mt={1}>
 					<Typography color="primary" noWrap gutterBottom>
-						<FormattedMessage
-							id="deliverableCategoryCardTitle"
-							defaultMessage="Deliverable Category"
-							description="This text will be show on dashboard for deliverable category card title"
-						/>
+						{cardTitle}
 					</Typography>
 				</Box>
 			</Grid>
@@ -54,7 +56,7 @@ export default function DeliverableCategoryCard() {
 					<FilterListIcon fontSize="small" />
 				</IconButton>
 				<Menu
-					id="simple-menu-budget-org"
+					id="simple-menu-deliverable-category"
 					anchorEl={anchorEl}
 					keepMounted
 					open={Boolean(anchorEl)}

@@ -27,6 +27,13 @@ export default function ImpactCategoryCard() {
 			},
 		],
 	};
+	let cardTitle = (
+		<FormattedMessage
+			id="impactCategoryCardTitle"
+			defaultMessage="Impact Category"
+			description="This text will be show on dashboard for impact category card title"
+		/>
+	);
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -40,11 +47,7 @@ export default function ImpactCategoryCard() {
 			<Grid item md={6}>
 				<Box mt={1}>
 					<Typography color="primary" noWrap gutterBottom>
-						<FormattedMessage
-							id="impactCategoryCardTitle"
-							defaultMessage="Impact Category"
-							description="This text will be show on dashboard for impact category card title"
-						/>
+						{cardTitle}
 					</Typography>
 				</Box>
 			</Grid>
@@ -53,7 +56,7 @@ export default function ImpactCategoryCard() {
 					<FilterListIcon fontSize="small" />
 				</IconButton>
 				<Menu
-					id="simple-menu-budget-org"
+					id="simple-menu-impact-category"
 					anchorEl={anchorEl}
 					keepMounted
 					open={Boolean(anchorEl)}
