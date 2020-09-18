@@ -2,6 +2,7 @@ import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 import UpdateIcon from "@material-ui/icons/Update";
+import { getLastUpdatedInWords } from "../../../../utils/index";
 export default function CommonProgress({
 	title,
 	date,
@@ -46,7 +47,7 @@ export default function CommonProgress({
 								variant="caption"
 								color="textSecondary"
 								noWrap
-							>{`${date}`}</Typography>
+							>{`${getLastUpdatedInWords(new Date(date))}`}</Typography>
 						</Box>
 					</Grid>
 				</Grid>

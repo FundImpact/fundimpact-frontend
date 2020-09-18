@@ -5,11 +5,11 @@ import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 
 const deliverableProjects = [
-	{ name: "HUL Food Drive 2020", completed: 95, lastUpdated: "12-02-2020" },
-	{ name: "Literacy Campaign Aug", completed: 85, lastUpdated: "12-02-2020" },
-	{ name: "Deliverable Project", completed: 75, lastUpdated: "12-02-2020" },
-	{ name: "project 4", completed: 65, lastUpdated: "12-02-2020" },
-	{ name: "project 5", completed: 55, lastUpdated: "12-02-2020" },
+	{ name: "HUL Food Drive 2020", completed: 95, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Literacy Campaign Aug", completed: 85, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Deliverable Project", completed: 75, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "project 4", completed: 65, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "project 5", completed: 55, lastUpdated: "2017-12-03T10:15:30.000Z" },
 ];
 
 export default function DeliverableProjectsCard() {
