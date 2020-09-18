@@ -7,11 +7,11 @@ import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 
 const budgetProjects = [
-	{ name: "Wash Awarness ", completed: 90, lastUpdated: "12-02-2020" },
-	{ name: "Covid 19 supply", completed: 80, lastUpdated: "12-02-2020" },
-	{ name: "Budget Project ", completed: 70, lastUpdated: "12-02-2020" },
-	{ name: "project 4", completed: 60, lastUpdated: "12-02-2020" },
-	{ name: "project 5", completed: 50, lastUpdated: "12-02-2020" },
+	{ name: "Wash Awarness ", completed: 90, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Covid 19 supply", completed: 80, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Budget Project ", completed: 70, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "project 4", completed: 60, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "project 5", completed: 50, lastUpdated: "2017-12-03T10:15:30.000Z" },
 ];
 
 export default function BudgetProjectsCard() {
@@ -133,11 +133,13 @@ export default function BudgetProjectsCard() {
 					{budgetProjects &&
 						budgetProjects.map((budgetProject, index) => {
 							return (
-								<CommonProgres
-									title={budgetProject.name}
-									date={budgetProject.lastUpdated}
-									percentage={budgetProject.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={budgetProject.name}
+										date={budgetProject.lastUpdated}
+										percentage={budgetProject.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>

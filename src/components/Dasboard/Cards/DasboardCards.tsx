@@ -6,7 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 export default function DashboardCard({
 	title = "",
 	children,
-	cardHeight = "11rem",
+	cardHeight = "24vh",
 }: {
 	title: string | React.ReactElement;
 	children?: React.ReactElement | any;

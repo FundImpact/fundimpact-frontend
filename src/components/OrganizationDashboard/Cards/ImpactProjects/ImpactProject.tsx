@@ -5,11 +5,11 @@ import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 
 const impactProjects = [
-	{ name: "Literacy Campaign Aug", completed: 95, lastUpdated: "12-02-2020" },
-	{ name: "HUL Food Drive 2020", completed: 85, lastUpdated: "12-02-2020" },
-	{ name: "Impact Project", completed: 75, lastUpdated: "12-02-2020" },
-	{ name: "project 4", completed: 65, lastUpdated: "12-02-2020" },
-	{ name: "project 5", completed: 55, lastUpdated: "12-02-2020" },
+	{ name: "Literacy Campaign Aug", completed: 95, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "HUL Food Drive 2020", completed: 85, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Impact Project", completed: 75, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "project 4", completed: 65, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "project 5", completed: 55, lastUpdated: "2017-12-03T10:15:30.000Z" },
 ];
 
 export default function ImpactProjectsCard() {
@@ -52,11 +52,13 @@ export default function ImpactProjectsCard() {
 					{impactProjects &&
 						impactProjects.map((impactProject, index) => {
 							return (
-								<CommonProgres
-									title={impactProject.name}
-									date={impactProject.lastUpdated}
-									percentage={impactProject.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={impactProject.name}
+										date={impactProject.lastUpdated}
+										percentage={impactProject.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>

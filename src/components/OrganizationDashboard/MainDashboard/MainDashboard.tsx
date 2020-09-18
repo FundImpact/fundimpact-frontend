@@ -80,17 +80,17 @@ export default function MainOrganizationDashboard() {
 					</Box>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "} cardHeight={"15rem"}>
+					<DashboardCard title={" "} cardHeight={"33vh"}>
 						<BudgetProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "} cardHeight={"15rem"}>
+					<DashboardCard title={" "} cardHeight={"33vh"}>
 						<DeliverableProjectsCard />
 					</DashboardCard>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "} cardHeight={"15rem"}>
+					<DashboardCard title={" "} cardHeight={"33vh"}>
 						<ImpactProjectsCard />
 					</DashboardCard>
 				</Grid>
@@ -103,22 +103,22 @@ export default function MainOrganizationDashboard() {
 				<Fade in={checked}>
 					<Grid container className={classes.bottonContainer}>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"15rem"}>
+							<DashboardCard title={" "} cardHeight={"33vh"}>
 								<DonorsCard />
 							</DashboardCard>
 						</Grid>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"15rem"}>
+							<DashboardCard title={" "} cardHeight={"33vh"}>
 								<BudgetCategoryCard />
 							</DashboardCard>
 						</Grid>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"15rem"}>
+							<DashboardCard title={" "} cardHeight={"33vh"}>
 								<DeliverableCategoryCard />
 							</DashboardCard>
 						</Grid>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"15rem"}>
+							<DashboardCard title={" "} cardHeight={"33vh"}>
 								<ImpactCategoryCard />
 							</DashboardCard>
 						</Grid>

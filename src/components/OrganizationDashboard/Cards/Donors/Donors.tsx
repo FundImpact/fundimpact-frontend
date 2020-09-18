@@ -7,11 +7,11 @@ import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import ProgressDialog from "../ProgressDialog";
 
 const donors = [
-	{ name: "A ONE Donor", completed: 60, lastUpdated: "12-02-2020" },
-	{ name: "Chintu Gudia", completed: 50, lastUpdated: "12-02-2020" },
-	{ name: "Donor", completed: 40, lastUpdated: "12-02-2020" },
-	{ name: "Donor", completed: 30, lastUpdated: "12-02-2020" },
-	{ name: "Donor", completed: 20, lastUpdated: "12-02-2020" },
+	{ name: "A ONE Donor", completed: 60, lastUpdated: "2020-09-18T10:16:34.000Z" },
+	{ name: "Chintu Gudia", completed: 50, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Donor", completed: 40, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Donor", completed: 30, lastUpdated: "2017-12-03T10:15:30.000Z" },
+	{ name: "Donor", completed: 20, lastUpdated: "2017-12-03T10:15:30.000Z" },
 ];
 
 export default function DonorsCard() {
@@ -117,16 +117,18 @@ export default function DonorsCard() {
 				<ProgressDialog
 					open={donorsProgressDialogOpen}
 					onClose={() => setonorsProgressDialogOpen(false)}
-					title={"Deliverable Projects"}
+					title={"Donors"}
 				>
 					{donors &&
 						donors.map((donor, index) => {
 							return (
-								<CommonProgres
-									title={donor.name}
-									date={donor.lastUpdated}
-									percentage={donor.completed}
-								/>
+								<Box m={2}>
+									<CommonProgres
+										title={donor.name}
+										date={donor.lastUpdated}
+										percentage={donor.completed}
+									/>
+								</Box>
 							);
 						})}
 				</ProgressDialog>
