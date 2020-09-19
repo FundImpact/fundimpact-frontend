@@ -74,19 +74,6 @@ function DeliverableUnitTableView({
 	setFilterList,
 	removeFilterListElements,
 }: {
-	toggleDialogs: (index: number, val: boolean) => void;
-	openDialogs: boolean[];
-	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
-	initialValues: IDeliverableUnit;
-	deliverableUnitList: IDeliverableUnitData[];
-	collapsableTable: boolean;
-	changePage: (prev?: boolean) => void;
-	count: number;
-	loading: boolean;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	filterList: {
 		[key: string]: string;
 	};
@@ -96,15 +83,27 @@ function DeliverableUnitTableView({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	orderBy: string;
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	order: "asc" | "desc";
+	loading: boolean;
+	count: number;
+	changePage: (prev?: boolean) => void;
+	collapsableTable: boolean;
+	deliverableUnitList: IDeliverableUnitData[];
+	initialValues: IDeliverableUnit;
+	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
+	openDialogs: boolean[];
+	toggleDialogs: (index: number, val: boolean) => void;
 }) {
-	console.log("openDialogs :>> ", openDialogs);
 	const dashboardData = useDashBoardData();
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
-					<Grid item xs={11}>
-						<Box my={2} display="flex">
+					<Grid xs={11} item>
+						<Box display="flex" my={2}>
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
 									return chipArray({
@@ -118,7 +117,7 @@ function DeliverableUnitTableView({
 							})}
 						</Box>
 					</Grid>
-					<Grid item xs={1}>
+					<Grid xs={1} item>
 						<Box mt={2}>
 							<FilterList
 								initialValues={{
