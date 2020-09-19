@@ -222,6 +222,12 @@ export default function ImpactsTable() {
 	}, [categories]);
 
 	useEffect(() => {
+		setQueryFilter({
+			project: dashboardData?.project?.id,
+		});
+	}, [dashboardData]);
+
+	useEffect(() => {
 		if (sdgList) {
 			impactTargetInputFields[3].optionsArray = sdgList.sustainableDevelopmentGoalList;
 			sustainableDevelopmentHash = mapIdToName(
@@ -241,12 +247,6 @@ export default function ImpactsTable() {
 			return { ...obj };
 		});
 	};
-
-	useEffect(() => {
-		setQueryFilter({
-			project: dashboardData?.project?.id,
-		});
-	}, [dashboardData]);
 
 	useEffect(() => {
 		if (filterList) {

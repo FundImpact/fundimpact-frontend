@@ -35,15 +35,16 @@ function ImpactUnitContainer({
 	setFilterList,
 	removeFilterListElements,
 }: {
-	impactUnitList: IImpactUnitData[];
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	count: number;
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
-	count: number;
-	loading: boolean;
-	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	order: "asc" | "desc";
+	impactUnitList: IImpactUnitData[];
+	loading: boolean;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	filterList: {
 		[key: string]: string;
 	};
@@ -52,7 +53,6 @@ function ImpactUnitContainer({
 			[key: string]: string;
 		}>
 	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
 	const selectedImpactUnit = useRef<IImpactUnitData | null>(null);
 	const [getImpactCategoryUnit, { data: impactCategoryUnitList }] = useLazyQuery(
