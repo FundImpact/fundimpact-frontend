@@ -105,11 +105,11 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		deliverableTracklineData,
 		setDeliverableTracklineData,
 	] = useState<IDeliverableTargetLine | null>();
-	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
-	};
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
+	};
+	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setMenuAnchor(event.currentTarget);
 	};
 	return (
 		<>
@@ -119,11 +119,11 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 				</IconButton>
 			</TableCell>
 			<Menu
-				id="deliverable-trackline-simple-menu"
-				anchorEl={menuAnchor}
-				keepMounted
-				open={Boolean(menuAnchor)}
 				onClose={handleMenuClose}
+				open={Boolean(menuAnchor)}
+				keepMounted
+				anchorEl={menuAnchor}
+				id="deliverable-trackline-simple-menu"
 			>
 				<MenuItem
 					onClick={() => {
@@ -163,9 +163,6 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	);
 }
 
-let annualYearHash: { [key: string]: string } = {};
-let financialYearHash: { [key: string]: string } = {};
-
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
@@ -175,6 +172,10 @@ const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: 
 		obj
 	);
 };
+
+let financialYearHash: { [key: string]: string } = {};
+let annualYearHash: { [key: string]: string } = {};
+
 
 export default function DeliverablesTrackLineTable({
 	deliverableTargetId,
@@ -203,6 +204,17 @@ export default function DeliverablesTrackLineTable({
 		variables: { filter: { country: dashBoardData?.organization?.country?.id } },
 	});
 
+	const removeFilterListElements = (key: string, index?: number) => {
+		setFilterList((obj) => {
+			if (Array.isArray(obj[key])) {
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+			} else {
+				obj[key] = "";
+			}
+			return { ...obj };
+		});
+	};
+
 	useEffect(() => {
 		if (getAnnualYears) {
 			deliverableTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
@@ -216,17 +228,6 @@ export default function DeliverablesTrackLineTable({
 			financialYearHash = mapIdToName(impactFyData.financialYearList, financialYearHash);
 		}
 	}, [impactFyData]);
-
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
 
 	useEffect(() => {
 		setQueryFilter({
@@ -386,15 +387,6 @@ export default function DeliverablesTrackLineTable({
 				<Grid item xs={11}>
 					<Box my={2} display="flex">
 						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									arr: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
 							if (element[1] && Array.isArray(element[1])) {
 								if (element[0] == "annual_year") {
 									return chipArray({
@@ -414,6 +406,15 @@ export default function DeliverablesTrackLineTable({
 										},
 									});
 								}
+							}
+							if (element[1] && typeof element[1] == "string") {
+								return chipArray({
+									name: element[0].slice(0, 4),
+									removeChip: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+									arr: [element[1]],
+								});
 							}
 						})}
 					</Box>
