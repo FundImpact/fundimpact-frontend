@@ -7,6 +7,7 @@ export interface IImpactTarget {
 	target_value: number | string;
 	impactCategory?: number | string;
 	impactUnit?: number | string;
+	sustainable_development_goal?: string;
 	impact_category_unit: number | string;
 	project?: number | string;
 }

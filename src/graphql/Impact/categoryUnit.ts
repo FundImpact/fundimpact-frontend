@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_IMPACT_CATEGORY_UNIT = gql`
-	query getImpactUnitByCategory($filter: JSON) {
-		impactCategoryUnitList(where: $filter) {
+	query getImpactUnitByCategory($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		impactCategoryUnitList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			impact_category_org {
 				id
@@ -10,24 +10,6 @@ export const GET_IMPACT_CATEGORY_UNIT = gql`
 				shortname
 				code
 				description
-				organization {
-					id
-					name
-					address
-					account {
-						id
-						name
-						description
-						account_no
-					}
-					short_name
-					legal_name
-					description
-					organization_registration_type {
-						id
-						reg_type
-					}
-				}
 			}
 			impact_units_org {
 				id
@@ -37,25 +19,13 @@ export const GET_IMPACT_CATEGORY_UNIT = gql`
 				target_unit
 				prefix_label
 				suffix_label
-				organization {
-					id
-					name
-					address
-					account {
-						id
-						name
-						description
-						account_no
-					}
-					short_name
-					legal_name
-					description
-					organization_registration_type {
-						id
-						reg_type
-					}
-				}
 			}
 		}
+	}
+`;
+
+export const GET_IMPACT_CATEGORY_UNIT_COUNT = gql`
+	query getimpactCategoryUnitListCountByCategory($filter: JSON) {
+		impactCategoryUnitListCount(where: $filter)
 	}
 `;

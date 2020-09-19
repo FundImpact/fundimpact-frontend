@@ -152,7 +152,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	// updating Impact Target field with fetched Target list
 	useEffect(() => {
 		if (impactTargets) {
-			console.log(impactTargets);
 			impactTragetLineForm[0].optionsArray = impactTargets.impactTargetProjectList;
 		}
 	}, [impactTargets]);

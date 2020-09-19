@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Divider, List, MenuItem, Typography } from "@material-ui/core";
+import { Box, Divider, List, MenuItem, Typography, Avatar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
@@ -63,11 +63,16 @@ export default function SideBar({ children }: { children?: Function }) {
 			) : (
 				<div>
 					<Box display="flex" m={2}>
-						<Box flexGrow={1} ml={1}>
+						<Box flexGrow={1} ml={1} display="flex">
 							{dashboardData?.organization?.name && (
-								<Typography color="primary" gutterBottom variant="h6">
-									{dashboardData?.organization?.name}
-								</Typography>
+								<>
+									<Box mr={1}>
+										<Avatar src={dashboardData?.organization?.logo?.url} />
+									</Box>
+									<Typography color="primary" gutterBottom variant="h6">
+										{dashboardData?.organization?.name}
+									</Typography>
+								</>
 							)}
 						</Box>
 						<Box>

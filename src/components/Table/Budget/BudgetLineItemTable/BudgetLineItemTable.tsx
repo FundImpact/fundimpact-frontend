@@ -31,6 +31,7 @@ import {
 import pagination from "../../../../hooks/pagination";
 import TableSkeleton from "../../../Skeletons/TableSkeleton";
 import { budgetLineItemTableHeading as tableHeading } from "../../constants";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	table: {
@@ -183,9 +184,20 @@ function BudgetLineItemTable({
 											key={index}
 											align="left"
 										>
-											{heading.label === "Amount"
+											{/* {heading.label === "Amount"
 												? `Amount ${currency ? "(" + currency + ")" : ""}`
-												: heading.label}
+												: heading.label} */}
+											<FormattedMessage
+												id={`BudgetLineitemTableHeading${index + 1}`}
+												defaultMessage={
+													heading.label === "Amount"
+														? `Amount ${
+																currency ? "(" + currency + ")" : ""
+														  }`
+														: heading.label
+												}
+												description={`This text will be shown on budget lineitem table heading for ${heading.label}`}
+											/>
 										</TableCell>
 								  ))
 								: null}

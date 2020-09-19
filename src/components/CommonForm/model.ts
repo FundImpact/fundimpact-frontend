@@ -3,7 +3,8 @@ export interface ICommonForm {
 	validate: (initialValue: any) => object;
 	onCreate: (values: any) => void;
 	onUpdate: (values: any) => void;
-	onCancel: () => void;
+	onCancel?: () => void;
 	inputFields: any[];
 	formAction: any;
+	cancelButtonName?: string;
 }

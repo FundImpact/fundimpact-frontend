@@ -1,4 +1,4 @@
-export const deliverableAndImpactHeadings = [
+export const deliverableHeadings = [
 	{ label: "" },
 	{ label: "S.no" },
 	{ label: "Name" },
@@ -7,6 +7,18 @@ export const deliverableAndImpactHeadings = [
 	{ label: "Achieved" },
 	{ label: "Progess" },
 
+	{ label: "" }, //edit icon
+];
+
+export const ImpactHeadings = [
+	{ label: "" },
+	{ label: "S.no" },
+	{ label: "Name" },
+	{ label: "Category" },
+	{ label: "Target" },
+	{ label: "Achieved" },
+	{ label: "Progess" },
+	{ label: "SDG" },
 	{ label: "" }, //edit icon
 ];
 
@@ -47,5 +59,58 @@ export const donorTableHeading = [
 	{ label: "Legal Name" },
 	{ label: "Short Name" },
 	{ label: "Country" },
+	{ label: "" },
+];
+
+export const budgetCategoryHeading = [
+	{ label: "#" },
+	{ label: "Budget Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+];
+
+export const deliverableCategoryTableHeading = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Deliverable Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const deliverableUnitTableHeadings = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Deliverable Unit" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const impactUnitTableHeadings = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Impact Unit" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const impactCategoryTableHeadings = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Impact Category" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Used in projects" },
+	{ label: "" },
 	{ label: "" },
 ];

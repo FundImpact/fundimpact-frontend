@@ -8,6 +8,7 @@ import { CREATE_IMPACT_CATEGORY_ORG_INPUT } from "../../../../graphql/Impact/mut
 import { impactCategoeyDialogFields } from "../../../../utils/inputTestFields.json";
 import { organizationDetail } from "../../../../utils/testMock.json";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../../graphql/Impact/query";
+import { FORM_ACTIONS } from "../../../../models/constants";
 
 const handleClose = jest.fn();
 
@@ -53,7 +54,11 @@ beforeEach(() => {
 		dialog = renderApollo(
 			<DashboardProvider defaultState={{ organization: organizationDetail }}>
 				<NotificationProvider>
-					<ImpactCategoryDialog open={true} handleClose={handleClose} />
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={true}
+						handleClose={handleClose}
+					/>
 				</NotificationProvider>
 			</DashboardProvider>,
 			{

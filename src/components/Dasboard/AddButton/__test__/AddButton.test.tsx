@@ -1,7 +1,7 @@
 import React from "react";
-import { act, fireEvent, queries, render, RenderResult, wait } from "@testing-library/react";
+import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
 import AddButton from "../AddButton";
-
+import { renderApollo } from "../../../../utils/test.util";
 interface CreateButton {
 	text: string;
 }
@@ -20,7 +20,7 @@ let addButton: RenderResult<typeof queries>;
 
 beforeEach(() => {
 	act(() => {
-		addButton = render(<AddButton createButtons={mockCreateButtonsData} />);
+		addButton = renderApollo(<AddButton createButtons={mockCreateButtonsData} />);
 	});
 });
 

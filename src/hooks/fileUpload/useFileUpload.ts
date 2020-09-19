@@ -1,30 +1,18 @@
-import { Dispatch, SetStateAction, useEffect, useState, useCallback } from "react";
+import { Dispatch, SetStateAction, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/userContext";
 import { FILE_UPLOAD } from "../../utils/endpoints.util";
 import { setResponseError } from "../fetch/usePostFetch";
 
-export const useFileUpload = () => {
+export const useFileUpload = <T>() => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string>();
-	const [data, setData] = useState<
-		[
-			{
-				id: number;
-				formats: [
-					{
-						large: { url: string };
-						medium: { url: string };
-						small: { url: string };
-						thumbnail: { url: string };
-					}
-				];
-			}
-		]
-	>();
+	const [data, setData] = useState<T>();
+
 	const { jwt } = useAuth();
 
 	const uploadFile = useCallback(
 		async (payload) => {
+			console.log("payload", payload);
 			const response = await intiatePostRequest(payload, setLoading, setData, setError, jwt);
 			return response;
 		},

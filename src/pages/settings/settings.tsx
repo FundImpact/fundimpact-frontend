@@ -1,6 +1,6 @@
 import { Box, Container, Grid } from "@material-ui/core";
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
@@ -9,7 +9,10 @@ import { useNotificationData } from "../../contexts/notificationContext";
 import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
 import Organization from "./Organization";
+import BudgetCategory from "./BudgetMaster";
 import SettingsSidebar from "./sidebar";
+import ImpactCategory from "./ImpactMaster";
+import DeliverableCategory from "./DeliverableMaster";
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
@@ -39,8 +42,13 @@ export default function SettingContainer() {
 				<Grid item xs={12} md={9}>
 					<Routes>
 						<Route path="donors" element={<DonorContainer />} />
+						<Route path="budget" element={<BudgetCategory />} />
+						<Route path="impact" element={<ImpactCategory />} />
+						<Route path="deliverable" element={<DeliverableCategory />} />
 						<Route path="organization" element={<Organization />} />
-						<Route path="/" element={<IDefaultView />} />
+						<Route path="">
+							<Navigate to="organization" />
+						</Route>
 					</Routes>
 				</Grid>
 			</Grid>

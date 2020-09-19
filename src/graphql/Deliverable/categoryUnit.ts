@@ -60,8 +60,13 @@ export const CREATE_CATEGORY_UNIT = gql`
 `;
 
 export const GET_CATEGORY_UNIT = gql`
-	query getDeliverableCategoryUnitByCategory($filter: JSON) {
-		deliverableCategoryUnitList(where: $filter) {
+	query getDeliverableCategoryUnitByCategory(
+		$sort: String
+		$limit: Int
+		$start: Int
+		$filter: JSON
+	) {
+		deliverableCategoryUnitList(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			deliverable_category_org {
 				id
@@ -115,5 +120,11 @@ export const GET_CATEGORY_UNIT = gql`
 				}
 			}
 		}
+	}
+`;
+
+export const GET_DELIVERABLE_CATEGORY_UNIT_COUNT = gql`
+	query getdeliverableCategoryUnitCountByCategory($filter: JSON) {
+		deliverableCategoryUnitCount(where: $filter)
 	}
 `;

@@ -7,6 +7,8 @@ import {
 	FormControl,
 	InputLabel,
 	Input,
+	Button,
+	IconButton,
 } from "@material-ui/core";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Close from "@material-ui/icons/Close";
@@ -60,7 +62,13 @@ function UploadFiles<T>({
 		<Grid container className={classes.uploadBox}>
 			{previewImage && (
 				<>
-					<Close className={classes.close} onClick={() => setPreviewImage(null)} />
+					<Close
+						className={classes.close}
+						onClick={() => {
+							formik.setFieldValue(name, "removed");
+							setPreviewImage(null);
+						}}
+					/>
 					<img src={previewImage} style={{ width: "100%", height: "100%" }} alt="" />
 				</>
 			)}
@@ -72,10 +80,12 @@ function UploadFiles<T>({
 							htmlFor={id}
 							style={{ width: "100%", position: "static" }}
 						>
-							<Typography align="center" variant="h5" color="textPrimary">
-								<AddCircleOutlineIcon fontSize="large" />
+							<Typography align="center" color="textPrimary">
+								<IconButton component="span" color="inherit">
+									<AddCircleOutlineIcon fontSize="large" />
+								</IconButton>
 								<br />
-								{title}
+								<Button component="span">{title}</Button>
 							</Typography>
 						</InputLabel>
 

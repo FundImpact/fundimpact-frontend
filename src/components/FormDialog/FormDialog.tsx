@@ -1,5 +1,6 @@
 import { Box, CircularProgress, Dialog, Grid, Typography } from "@material-ui/core";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 
 function FormDialog({
 	open,
@@ -33,10 +34,20 @@ function FormDialog({
 				<Grid container spacing={2}>
 					<Grid item xs={4}>
 						<Typography data-testid="dialog-header" variant="h6" gutterBottom>
-							{title}
+							{/*if title is New Deliverable unit then id will be newdeliverableunitFormTitle*/}
+							<FormattedMessage
+								id={`${title.replace(/ /g, "").toLowerCase()}FormTitle`}
+								defaultMessage={title}
+								description={`This text will be shown as title of ${title} Form`}
+							/>
 						</Typography>
 						<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-							{subtitle}
+							{/*if title is New Deliverable unit then id will be newdeliverableunitFormSubtitle*/}
+							<FormattedMessage
+								id={`${title.replace(/ /g, "").toLowerCase()}FormSubtitle`}
+								defaultMessage={subtitle}
+								description={`This text will be shown as subtitle of ${title} Form`}
+							/>
 						</Typography>
 						{(workspace || project) && (
 							<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>

@@ -1,5 +1,7 @@
 import { IProject } from "../project/project";
 import { IOrganisation } from "../organisation/types";
+import { IDeliverableCategoryData } from "./deliverable";
+import { IDeliverableUnitData } from "../deliverable/deliverableUnit";
 
 export interface IDeliverableCategoryUnitResponse {
 	id: string;
@@ -55,4 +57,38 @@ export interface IGET_DELIVERABLE_TARGET_BY_PROJECT {
 
 export interface IGET_DELIVERABLE_TRACKLINE_BY_TARGET {
 	deliverableTrackingLineitemList: IDeliverableTracklineByTargetResponse[];
+}
+
+export interface IGetDeliverableCategory {
+	deliverableCategory: IDeliverableCategoryData[];
+}
+
+export interface IGetDeliverablCategoryVariables {
+	filter: {
+		organization: string;
+	};
+}
+export interface IGetDeliverablUnit {
+	deliverableUnitOrg: IDeliverableUnitData[];
+}
+
+export interface IGetDeliverableUnitVariables {
+	filter: {
+		organization: string;
+	};
+}
+
+export interface IGetDeliverableCategoryUnitVariables {
+	filter: {
+		deliverable_category_org?: string;
+		deliverable_units_org?: string;
+	};
+}
+
+export interface IGetDeliverableCategoryUnit {
+	deliverableCategoryUnitList: {
+		id: string;
+		deliverable_category_org: IDeliverableCategoryData;
+		deliverable_units_org: IDeliverableUnitData;
+	}[];
 }

@@ -148,7 +148,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 6,
+			"multiple": true
 		},
 		{
 			"name": "code",
@@ -158,31 +159,6 @@
 			"label": "Code",
 			"size": 6
 		},
-		{
-			"name": "unit_type",
-			"id": "unit-type",
-			"dataTestId": "deliverableUnitUnitType",
-			"testId": "deliverableUnitUnitTypeInput",
-			"label": "Unit Type",
-			"size": 4
-		},
-		{
-			"name": "prefix_label",
-			"id": "prefix-label",
-			"dataTestId": "deliverableUnitPrefixLabel",
-			"testId": "deliverableUnitPrefixLabelInput",
-			"label": "Prefix Label",
-			"size": 4
-		},
-		{
-			"name": "suffix_label",
-			"id": "suffix-label",
-			"dataTestId": "deliverableUnitSuffixLabel",
-			"testId": "deliverableUnitSuffixLabelInput",
-			"label": "Suffix Label",
-			"size": 4
-		},
-
 		{
 			"name": "description",
 			"id": "description",
