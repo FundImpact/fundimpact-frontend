@@ -189,6 +189,11 @@ describe("Budget Line Item Table tests", () => {
 		});
 	}
 
+	test("Filter List test", async () => {
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
 	test("renders correctly", async () => {
 		await waitForElement(() =>
 			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
@@ -213,11 +218,6 @@ describe("Budget Line Item Table tests", () => {
 				new RegExp("" + mockBudgetLineItem[0].grant_periods_project.name, "i")
 			)
 		);
-	});
-
-	test("Filter List test", async () => {
-		let filterButton = await table.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
 	});
 
 	test("Filter List Input Elements test", async () => {

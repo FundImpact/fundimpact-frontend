@@ -34,15 +34,15 @@ import { deliverableTargetInputFields } from "./inputFields.json";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
 
 const chipArray = ({
-	arr,
-	name,
 	removeChip,
+	name,
+	list,
 }: {
-	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	list: string[];
+	name: string;
 }) => {
-	return arr.map((element, index) => (
+	return list.map((element, index) => (
 		<Box key={index} mx={1}>
 			<Chip
 				label={element}
@@ -395,7 +395,7 @@ export default function DeliverablesTable() {
 								{Object.entries(filterList).map((element) => {
 									if (element[1] && typeof element[1] == "string") {
 										return chipArray({
-											arr: [element[1]],
+											list: [element[1]],
 											name: element[0].slice(0, 4),
 											removeChip: (index: number) => {
 												removeFilterListElements(element[0]);
@@ -405,7 +405,7 @@ export default function DeliverablesTable() {
 									if (element[1] && Array.isArray(element[1])) {
 										if (element[0] == "deliverable_category_org") {
 											return chipArray({
-												arr: element[1].map(
+												list: element[1].map(
 													(ele) => deliverableCategoryHash[ele]
 												),
 												name: "dc",

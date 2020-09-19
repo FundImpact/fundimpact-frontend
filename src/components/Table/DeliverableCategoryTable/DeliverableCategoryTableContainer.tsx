@@ -30,15 +30,15 @@ function DeliverableCategoryTableContainer({
 	setFilterList,
 	removeFilterListElements,
 }: {
-	deliverableCategoryList: IDeliverableCategoryData[];
+	orderBy: string;
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
-	loading: boolean;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
+	deliverableCategoryList: IDeliverableCategoryData[];
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	loading: boolean;
 	filterList: {
 		[key: string]: string;
 	};
