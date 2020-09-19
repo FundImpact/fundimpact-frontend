@@ -1,0 +1,70 @@
+{
+	"BT": {
+		"name": "Budget Target",
+		"code": "BT",
+		"actionsAvailable": {
+			"read": { "name": "Read", "code": "read" },
+			"create": { "name": "Create", "code": "create" },
+			"delete": { "name": "Delete", "code": "delete" },
+			"update": { "name": "Delete", "code": "update" }
+		}
+	},
+
+	"DN": {
+		"name": "Donor",
+		"code": "DN",
+		"actionsAvailable": {
+			"read": { "name": "Read", "code": "read" },
+			"create": { "name": "Create", "code": "create" },
+			"delete": { "name": "Delete", "code": "delete" },
+			"update": { "name": "Delete", "code": "update" }
+		}
+	},
+
+	"BG": {
+		"name": "Budget",
+		"code": "BG",
+		"actionsAvailable": {
+			"BT_Target_Create": { "name": "Read", "code": "BT_Target_Create" },
+			"BT_Target_Update": { "name": "Read", "code": "BT_Target_Create" },
+
+			"create": { "name": "Create", "code": "create" },
+			"delete": { "name": "Delete", "code": "delete" },
+			"update": { "name": "Delete", "code": "update" }
+		}
+	},
+	
+
+	"BCat": {
+		"name": "Budget Category",
+		"code": "BCat",
+		"actionsAvailable": {
+			"read": { "name": "Read", "code": "read" },
+			"create": { "name": "Create", "code": "create" },
+			"delete": { "name": "Delete", "code": "delete" },
+			"update": { "name": "Delete", "code": "update" }
+		}
+	},
+	"DT": {
+		"name": "Deliverables Target",
+		"code": "DT",
+		"actionsAvailable": {
+			"read": { "name": "Create", "code": "read" }
+		}
+	},
+	"NN": {
+		"name": "Some new module in the future",
+		"code": "NN",
+		"actionsAvailable": {
+			"read": { "name": "Create", "code": "read" },
+			"update": { "name": "Create", "code": "read" }
+		}
+	}
+}
+
+// In user details
+
+{
+	...// details of users
+	actionsAllowed: {"BT": ["create", "update"], "BCat": ["read"], "DT": ["read"]}
+}
