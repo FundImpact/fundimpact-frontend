@@ -13,11 +13,11 @@ import { useLazyQuery } from "@apollo/client";
 const chipArray = ({
 	arr,
 	name,
-	removeChip,
+	removeChips,
 }: {
 	arr: string[];
 	name: string;
-	removeChip: (index: number) => void;
+	removeChips: (index: number) => void;
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -33,7 +33,7 @@ const chipArray = ({
 						<span>{name}</span>
 					</Avatar>
 				}
-				onDelete={() => removeChip(index)}
+				onDelete={() => removeChips(index)}
 			/>
 		</Box>
 	));
@@ -116,7 +116,7 @@ export const DonorContainer = () => {
 								return chipArray({
 									arr: [element[1]],
 									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
+									removeChips: (index: number) => {
 										removeFilterListElements(element[0]);
 									},
 								});
@@ -126,7 +126,7 @@ export const DonorContainer = () => {
 									return chipArray({
 										arr: element[1].map((ele) => countryHash[ele]),
 										name: "co",
-										removeChip: (index: number) => {
+										removeChips: (index: number) => {
 											removeFilterListElements(element[0], index);
 										},
 									});

@@ -33,8 +33,8 @@ const chipArray = ({
 	removeChip,
 }: {
 	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	name: string;
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
