@@ -5,7 +5,7 @@ type actionType<T extends MODULE_CODES> = keyof typeof MODULES[T]["actionsAvaila
 /**
  * @description Check whether loggedin user has access to the given module or not.
  */
-export const UserHasAccess = <T extends MODULE_CODES>(moduleName: T, action: actionType<T>) => {
+export const userHasAccess = <T extends MODULE_CODES>(moduleName: T, action: actionType<T>) => {
 	return true;
 };
 
