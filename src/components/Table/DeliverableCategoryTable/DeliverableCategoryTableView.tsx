@@ -23,7 +23,7 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
-const chipArray = ({
+const chipArr = ({
 	arr,
 	name,
 	removeChip,
@@ -101,12 +101,12 @@ function DeliverableCategoryView({
 						<Box my={2} display="flex">
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
-									return chipArray({
-										arr: [element[1]],
-										name: element[0].slice(0, 4),
+									return chipArr({
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0]);
 										},
+										name: element[0].slice(0, 4),
+										arr: [element[1]],
 									});
 								}
 							})}
