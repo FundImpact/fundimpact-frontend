@@ -24,15 +24,15 @@ const rows = [
 ];
 
 const chipArr = ({
-	arr,
+	list,
 	name,
 	removeChip,
 }: {
-	arr: string[];
+	list: string[];
 	name: string;
 	removeChip: (index: number) => void;
 }) => {
-	return arr.map((element, index) => (
+	return list.map((element, index) => (
 		<Box key={index} mx={1}>
 			<Chip
 				label={element}
@@ -106,7 +106,7 @@ function DeliverableCategoryView({
 											removeFilterListElements(element[0]);
 										},
 										name: element[0].slice(0, 4),
-										arr: [element[1]],
+										list: [element[1]],
 									});
 								}
 							})}
