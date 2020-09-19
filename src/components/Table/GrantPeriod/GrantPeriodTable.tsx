@@ -58,14 +58,14 @@ interface ISImpleTableProps {
 	editGrantPeriod: (value: any) => void;
 }
 
-const chipArray = ({
+const chipArr = ({
 	arr,
 	name,
 	removeChip,
 }: {
 	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	name: string;
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -207,6 +207,12 @@ export default function GrantPeriodTable() {
 		donor: [],
 	});
 
+	useEffect(() => {
+		setQueryFilter({
+			project: dashboardData?.project?.id,
+		});
+	}, [dashboardData]);
+
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
@@ -217,12 +223,6 @@ export default function GrantPeriodTable() {
 			return { ...obj };
 		});
 	};
-
-	useEffect(() => {
-		setQueryFilter({
-			project: dashboardData?.project?.id,
-		});
-	}, [dashboardData]);
 
 	useEffect(() => {
 		if (filterList) {
@@ -305,9 +305,9 @@ export default function GrantPeriodTable() {
 					<Box my={2} display="flex">
 						{Object.entries(filterList).map((element) => {
 							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									arr: [element[1]],
+								return chipArr({
 									name: element[0].slice(0, 5),
+									arr: [element[1]],
 									removeChip: (index: number) => {
 										removeFilterListElements(element[0]);
 									},
@@ -315,9 +315,9 @@ export default function GrantPeriodTable() {
 							}
 							if (element[1] && Array.isArray(element[1])) {
 								if (element[0] == "donor") {
-									return chipArray({
-										arr: element[1].map((ele) => donorHash[ele]),
+									return chipArr({
 										name: "do",
+										arr: element[1].map((ele) => donorHash[ele]),
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0], index);
 										},
