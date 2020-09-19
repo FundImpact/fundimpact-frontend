@@ -33,13 +33,13 @@ import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 const chipArray = ({
-	arr,
-	name,
 	removeChip,
+	name,
+	arr,
 }: {
-	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	name: string;
+	arr: string[];
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -179,10 +179,13 @@ let annualYearHash: { [key: string]: string } = {};
 let financialYearHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	return arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetId: string }) {
@@ -191,7 +194,6 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 	// });
 
 	const [impactTracklinePage, setImpactTracklinePage] = React.useState(0);
-	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
@@ -202,19 +204,19 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		annual_year: [],
 		financial_year: [],
 	});
-	const [queryFilter, setQueryFilter] = useState({});
 	const dashBoardData = useDashBoardData();
-
-	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
+	const [queryFilter, setQueryFilter] = useState({});
+	const [orderBy, setOrderBy] = useState<string>("created_at");
 
 	const { data: impactFyData } = useQuery(GET_FINANCIAL_YEARS, {
 		variables: { filter: { country: dashBoardData?.organization?.country?.id } },
 	});
+	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
 
 	useEffect(() => {
 		if (getAnnualYears) {
 			impactTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
-			annualYearHash = 	mapIdToName(getAnnualYears.annualYears, annualYearHash);
+			annualYearHash = mapIdToName(getAnnualYears.annualYears, annualYearHash);
 		}
 	}, [getAnnualYears]);
 
@@ -390,15 +392,6 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				<Grid item xs={11}>
 					<Box my={2} display="flex">
 						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									arr: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
 							if (element[1] && Array.isArray(element[1])) {
 								if (element[0] == "annual_year") {
 									return chipArray({
@@ -418,6 +411,15 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 										},
 									});
 								}
+							}
+							if (element[1] && typeof element[1] == "string") {
+								return chipArray({
+									arr: [element[1]],
+									name: element[0].slice(0, 4),
+									removeChip: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+								});
 							}
 						})}
 					</Box>
