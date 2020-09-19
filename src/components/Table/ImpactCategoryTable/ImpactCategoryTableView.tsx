@@ -70,22 +70,22 @@ function ImpactCategoryTableView({
 	setFilterList,
 	removeFilterListElements,
 }: {
-	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
-	selectedImpactCategory: React.MutableRefObject<IImpactCategoryData | null>;
 	initialValues: IImpactCategoryData;
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	impactCategoryList: IImpactCategoryData[];
+	orderBy: string;
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
+	selectedImpactCategory: React.MutableRefObject<IImpactCategoryData | null>;
 	count: number;
 	loading: boolean;
+	toggleDialogs: (index: number, val: boolean) => void;
 	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	filterList: {
 		[key: string]: string;
 	};
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string;
@@ -102,8 +102,8 @@ function ImpactCategoryTableView({
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
 									return chipArray({
-										arr: [element[1]],
 										name: element[0].slice(0, 4),
+										arr: [element[1]],
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0]);
 										},
