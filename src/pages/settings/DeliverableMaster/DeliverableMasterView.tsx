@@ -187,19 +187,19 @@ const DeliverableMasterView = ({
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
-						value={value}
-						indicatorColor="primary"
+						aria-label="wrapped label tabs example"
 						textColor="primary"
 						onChange={handleChange}
 						variant="scrollable"
+						indicatorColor="primary"
 						scrollButtons="auto"
-						aria-label="wrapped label tabs example"
+						value={value}
 					>
 						{tabs.map((tab, index) => (
 							<Tab
-								textColor="secondary"
-								key={tab.label}
 								value={index}
+								key={tab.label}
+								textColor="secondary"
 								label={intl.formatMessage({
 									id: `${tab.label
 										.toString()
