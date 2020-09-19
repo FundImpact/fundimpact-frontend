@@ -27,13 +27,13 @@ const rows = [
 ];
 
 const chipArray = ({
-	arr,
-	name,
 	removeChip,
+	name,
+	arr,
 }: {
-	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	name: string;
+	arr: string[];
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
