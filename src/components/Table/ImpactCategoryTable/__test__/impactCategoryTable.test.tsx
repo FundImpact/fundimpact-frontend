@@ -284,6 +284,17 @@ describe("Impact Category Table tests", () => {
 			await waitForElement(() => table.getAllByText(impactCategoryTableHeadings[i].label));
 		});
 	}
+
+	test("Filter List test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
 	test("Impact Category Table renders correctly", async () => {
 		for (let i = 0; i < impactCategoryMock.length; i++) {
 			await waitForElement(() =>
@@ -295,6 +306,27 @@ describe("Impact Category Table tests", () => {
 			await waitForElement(() =>
 				table.getAllByText(new RegExp("" + impactCategoryMock[i].code, "i"))
 			);
+		}
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		for (let i = 0; i < impactUnitInputFields.length; i++) {
+			await checkElementHaveCorrectValue({
+				inputElement: impactUnitInputFields[i],
+				reactElement: table,
+				value: intialFormValue[impactUnitInputFields[i].name],
+			});
 		}
 	});
 
@@ -320,36 +352,5 @@ describe("Impact Category Table tests", () => {
 				new RegExp("" + impactCategoryUnit[0].impact_units_org.description, "i")
 			)
 		);
-	});
-
-	test("Filter List test", async () => {
-		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
-		expect(collaspeButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(collaspeButton);
-		});
-		let filterButton = await table.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
-	});
-
-	test("Filter List Input Elements test", async () => {
-		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
-		expect(collaspeButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(collaspeButton);
-		});
-		let filterButton = await table.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(filterButton);
-		});
-
-		for (let i = 0; i < impactUnitInputFields.length; i++) {
-			await checkElementHaveCorrectValue({
-				inputElement: impactUnitInputFields[i],
-				reactElement: table,
-				value: intialFormValue[impactUnitInputFields[i].name],
-			});
-		}
 	});
 });

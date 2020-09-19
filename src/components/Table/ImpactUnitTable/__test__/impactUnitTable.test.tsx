@@ -266,10 +266,10 @@ describe("Impact Unit Table tests", () => {
 	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
 
 	test("Filter List test", async () => {
-		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
-		expect(collaspeButton).toBeInTheDocument();
+		let collaspeBtn = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeBtn).toBeInTheDocument();
 		act(() => {
-			fireEvent.click(collaspeButton);
+			fireEvent.click(collaspeBtn);
 		});
 		let filterButton = await table.findByTestId(`filter-button`);
 		expect(filterButton).toBeInTheDocument();

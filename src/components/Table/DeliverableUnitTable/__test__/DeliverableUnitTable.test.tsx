@@ -233,6 +233,17 @@ describe("Deliverable Unit Table tests", () => {
 			await waitForElement(() => table.getAllByText(deliverableUnitTableHeadings[i].label));
 		});
 	}
+
+	test("Filter List test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
 	test("Deliverable Unit Table renders correctly", async () => {
 		for (let i = 0; i < deliverableUnitMock.length; i++) {
 			await waitForElement(() =>
@@ -287,16 +298,6 @@ describe("Deliverable Unit Table tests", () => {
 	});
 
 	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
-
-	test("Filter List test", async () => {
-		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
-		expect(collaspeButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(collaspeButton);
-		});
-		let filterButton = await table.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
-	});
 
 	test("Filter List Input Elements test", async () => {
 		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
