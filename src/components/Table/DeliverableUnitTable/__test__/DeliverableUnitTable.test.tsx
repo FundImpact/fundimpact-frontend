@@ -228,6 +228,8 @@ beforeEach(() => {
 });
 
 describe("Deliverable Unit Table tests", () => {
+	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
+
 	for (let i = 0; i < deliverableUnitTableHeadings.length; i++) {
 		test(`Table Headings ${deliverableUnitTableHeadings[i].label} for Deliverable Unit Table`, async () => {
 			await waitForElement(() => table.getAllByText(deliverableUnitTableHeadings[i].label));
@@ -296,8 +298,6 @@ describe("Deliverable Unit Table tests", () => {
 			)
 		);
 	});
-
-	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
 
 	test("Filter List Input Elements test", async () => {
 		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);

@@ -41,18 +41,18 @@ function DeliverableUnitTableContainer({
 	setFilterList,
 	removeFilterListElements,
 }: {
-	deliverableUnitList: IDeliverableUnitData[];
-	collapsableTable: boolean;
-	changePage: (prev?: boolean) => void;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	count: number;
-	loading: boolean;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	collapsableTable: boolean;
+	changePage: (prev?: boolean) => void;
 	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	deliverableUnitList: IDeliverableUnitData[];
 	filterList: {
 		[key: string]: string;
 	};
+	loading: boolean;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string;

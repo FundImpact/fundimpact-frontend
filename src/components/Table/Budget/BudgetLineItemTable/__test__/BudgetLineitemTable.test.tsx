@@ -221,10 +221,10 @@ describe("Budget Line Item Table tests", () => {
 	});
 
 	test("Filter List Input Elements test", async () => {
-		let filterButton = await table.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
+		let buttonElement = await table.findByTestId(`filter-button`);
+		expect(buttonElement).toBeInTheDocument();
 		act(() => {
-			fireEvent.click(filterButton);
+			fireEvent.click(buttonElement);
 		});
 
 		let nameField = (await table.findByTestId(

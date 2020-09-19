@@ -209,6 +209,8 @@ beforeEach(() => {
 	});
 });
 
+const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
+
 describe("Deliverable Category Table tests", () => {
 	for (let i = 0; i < deliverableCategoryTableHeading.length; i++) {
 		test(`Table Headings ${deliverableCategoryTableHeading[i].label} for Deliverable Category Table`, async () => {
@@ -272,7 +274,6 @@ describe("Deliverable Category Table tests", () => {
 		);
 	});
 
-	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
 
 	test("Filter List Input Elements test", async () => {
 		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
