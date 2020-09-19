@@ -42,10 +42,13 @@ const chipArray = ({
 let countryHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	return arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 export const DonorContainer = () => {
@@ -58,12 +61,7 @@ export const DonorContainer = () => {
 		country: [],
 	});
 
-	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST, {
-		onCompleted: ({ countryList }) => {
-			donorInputFields[3].optionsArray = countryList;
-			countryHash =	mapIdToName(countryList, countryHash);
-		},
-	});
+	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
 
 	const removeFilterListElements = (key: string, index?: number) => {
 		setTableFilterList((obj) => {
@@ -76,7 +74,11 @@ export const DonorContainer = () => {
 		});
 	};
 	donorInputFields[3].optionsArray = countries?.countryList || [];
-	
+
+	if (!Object.keys(countryHash).length && countries?.countryList ) {
+		countryHash = mapIdToName(countries?.countryList, countryHash);
+	}
+
 	useEffect(() => {
 		getCountryList();
 	}, []);
