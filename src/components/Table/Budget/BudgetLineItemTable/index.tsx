@@ -1,2 +1,2 @@
-import BudgetLineItemTable from "./BudgetLineItemTable";
-export default BudgetLineItemTable;
+import BudgetLineItemTableGraphql from "./BudgetLineItemTableGraphql";
+export default BudgetLineItemTableGraphql;

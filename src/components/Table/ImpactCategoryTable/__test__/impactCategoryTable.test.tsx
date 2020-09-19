@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent } from "@testing-library/react";
+import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/Budget";
 import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/Budget";
@@ -35,8 +35,16 @@ import {
 	GET_IMPACT_CATEGORY_UNIT_COUNT,
 } from "../../../../graphql/Impact/categoryUnit";
 import { GET_IMPACT_CATEGORY_PROJECT_COUNT } from "../../../../graphql/Impact/category";
+import { impactUnitInputFields } from "../../../../pages/settings/ImpactMaster/inputFields.json";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 
 let table: any;
+
+let intialFormValue = {
+	name: "new impact unit",
+	code: "impact code",
+	description: "impact desc",
+};
 
 const impactUnitProjectCountQuery = {
 	request: {
@@ -268,6 +276,8 @@ beforeEach(() => {
 	});
 });
 
+const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
+
 describe("Impact Category Table tests", () => {
 	for (let i = 0; i < impactCategoryTableHeadings.length; i++) {
 		test(`Table Headings ${impactCategoryTableHeadings[i].label} for Impact Category Table`, async () => {
@@ -310,5 +320,36 @@ describe("Impact Category Table tests", () => {
 				new RegExp("" + impactCategoryUnit[0].impact_units_org.description, "i")
 			)
 		);
+	});
+
+	test("Filter List test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		for (let i = 0; i < impactUnitInputFields.length; i++) {
+			await checkElementHaveCorrectValue({
+				inputElement: impactUnitInputFields[i],
+				reactElement: table,
+				value: intialFormValue[impactUnitInputFields[i].name],
+			});
+		}
 	});
 });

@@ -27,3 +27,15 @@ export type DeliverableProps =
 	  };
 
 // workspaces: NonNullable < Pick < IWorkspace, "id" | ("name" >> []);
+
+export interface IDeliverableCategoryUnitTableFilter {
+	name: string;
+	code: string;
+	description: string;
+}
+
+export interface IImpactCategoryUnitTableFilter {
+	name: string;
+	code: string;
+	description: string;
+}

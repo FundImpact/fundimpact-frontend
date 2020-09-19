@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement } from "@testing-library/react";
+import { waitForElement, fireEvent } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
 import {
 	GET_BUDGET_TARGET_PROJECT,
@@ -28,11 +28,17 @@ import {
 	GET_FINANCIAL_YEARS,
 	GET_CURRENCY_LIST,
 } from "../../../../../graphql";
-import BudgetLineItemTable from "../BudgetLineItemTable";
+import BudgetLineItemTable from "../BudgetLineItemTableGraphql";
 import { budgetLineItemTableHeading } from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
 
 let table: any;
+
+let intialFormValue = {
+	name: "budget target name",
+	amount: "100",
+	reporting_date: getTodaysDate(),
+};
 
 mockBudgetLineItem.reporting_date = new Date();
 
@@ -207,5 +213,46 @@ describe("Budget Line Item Table tests", () => {
 				new RegExp("" + mockBudgetLineItem[0].grant_periods_project.name, "i")
 			)
 		);
+	});
+
+	test("Filter List test", async () => {
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		let nameField = (await table.findByTestId(
+			"createBudgetTargetLineItemNameInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		});
+		await expect(nameField.value).toBe(intialFormValue.name);
+
+		let amountField = (await table.findByTestId(
+			"createBudgetLineItemAmountInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(amountField, {
+				target: { value: intialFormValue.amount },
+			});
+		});
+		await expect(amountField.value).toBe(intialFormValue.amount);
+
+		let dateField = (await table.findByTestId(
+			"createReporingDateInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(dateField, {
+				target: { value: intialFormValue.reporting_date },
+			});
+		});
+		await expect(dateField.value).toBe(intialFormValue.reporting_date);
 	});
 });

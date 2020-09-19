@@ -9,7 +9,7 @@ export const months: { [key: number]: string } = {
 	6: "JUN",
 	7: "JUL",
 	8: "AUG",
-	9: "SEP",
+	9: "SEPT",
 	10: "OCT",
 	11: "NOV",
 	12: "DEC",

@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent } from "@testing-library/react";
+import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { GET_PROJECT_BUDGET_TARGETS_COUNT } from "../../../../graphql/Budget";
 import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/Budget";
@@ -29,8 +29,16 @@ import {
 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 } from "../../../../graphql/Deliverable/categoryUnit";
 import { GET_DELIVERABLE_UNIT_PROJECT_COUNT } from "../../../../graphql/Deliverable/unit";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+import { deliverableUnitInputFields } from "../../../../pages/settings/DeliverableMaster/inputFields.json";
 
 let table: any;
+
+let intialFormValue = {
+	name: "new category name",
+	code: "deliverable category code",
+	description: "deliverable category desc",
+};
 
 const deliverableCategoryProjectCountQuery = {
 	request: {
@@ -252,5 +260,38 @@ describe("Deliverable Category Table tests", () => {
 				)
 			)
 		);
+	});
+
+	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
+
+	test("Filter List test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		for (let i = 0; i < deliverableUnitInputFields.length; i++) {
+			await checkElementHaveCorrectValue({
+				inputElement: deliverableUnitInputFields[i],
+				reactElement: table,
+				value: intialFormValue[deliverableUnitInputFields[i].name],
+			});
+		}
 	});
 });

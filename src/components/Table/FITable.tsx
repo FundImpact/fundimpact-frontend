@@ -1,4 +1,4 @@
-import { Box, Grid, Table, Typography } from "@material-ui/core";
+import { Box, Grid, Table, Typography, TableSortLabel } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
@@ -31,10 +31,18 @@ export default function FITable({
 	tableHeading,
 	rows,
 	pagination,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
-	tableHeading: { label: string }[];
+	tableHeading: { label: string; keyMapping?: string }[];
 	rows: React.ReactNode[];
 	pagination?: React.ReactNode;
+	order?: "asc" | "desc";
+	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy?: string;
+	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
@@ -78,7 +86,36 @@ export default function FITable({
 												key={heading.label}
 												align="left"
 											>
-												{heading.label}
+												 {/* {heading.label} */}
+												<FormattedMessage
+													id={
+														"tableHeading" +
+														heading.label.replace(/ /g, "")
+													}
+													defaultMessage={`${heading.label}`}
+													description={`This text will be shown on table for ${heading.label} heading`}
+												/>
+												{order && heading.keyMapping && (
+													<TableSortLabel
+														active={orderBy == heading.keyMapping}
+														onClick={() => {
+															if (orderBy == heading.keyMapping) {
+																setOrder &&
+																	setOrder(
+																		order == "asc"
+																			? "desc"
+																			: "asc"
+																	);
+															} else {
+																setOrderBy &&
+																	setOrderBy(
+																		heading.keyMapping || ""
+																	);
+															}
+														}}
+														direction={order}
+													></TableSortLabel>
+												)}
 											</TableCell>
 										))}
 								</TableRow>

@@ -1,5 +1,15 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import {
+	IconButton,
+	Menu,
+	MenuItem,
+	TableCell,
+	TablePagination,
+	Box,
+	Grid,
+	Chip,
+	Avatar,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -19,6 +29,38 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { deliverableHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
 import DeliverableTracklineTable from "./DeliverableTrackLine";
+import FilterList from "../../FilterList";
+import { deliverableTargetInputFields } from "./inputFields.json";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
+
+const chipArray = ({
+	arr,
+	name,
+	removeChip,
+}: {
+	arr: string[];
+	name: string;
+	removeChip: (index: number) => void;
+}) => {
+	return arr.map((element, index) => (
+		<Box key={index} mx={1}>
+			<Chip
+				label={element}
+				avatar={
+					<Avatar
+						style={{
+							width: "30px",
+							height: "30px",
+						}}
+					>
+						<span>{name}</span>
+					</Avatar>
+				}
+				onDelete={() => removeChip(index)}
+			/>
+		</Box>
+	));
+};
 
 function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -136,9 +178,40 @@ function DeliverableTargetAchievementAndProgress({
 	);
 }
 
+const deliverableCategoryHash: { [key: string]: string } = {};
+
+const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+		accumulator[current.id] = current.name;
+		return accumulator;
+	}, obj);
+};
+
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
 	const [page, setPage] = React.useState(0);
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [queryFilter, setQueryFilter] = useState({});
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>({
+		name: "",
+		target_value: "",
+		deliverable_category_org: [],
+	});
+
+	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
+
+	useEffect(() => {
+		if (deliverableCategories) {
+			deliverableTargetInputFields[2].optionsArray =
+				deliverableCategories.deliverableCategory;
+			mapIdToName(deliverableCategories.deliverableCategory, deliverableCategoryHash);
+		}
+	}, [deliverableCategories]);
 
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -152,6 +225,47 @@ export default function DeliverablesTable() {
 		setPage(newPage);
 	};
 
+	const removeFilterListElements = (key: string, index?: number) => {
+		setFilterList((obj) => {
+			if (Array.isArray(obj[key])) {
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+			} else {
+				obj[key] = "";
+			}
+			return { ...obj };
+		});
+	};
+
+	useEffect(() => {
+		setQueryFilter({
+			project: dashboardData?.project?.id,
+		});
+	}, [dashboardData]);
+
+	useEffect(() => {
+		if (filterList) {
+			setQueryFilter(() => {
+				let filter: {
+					[key: string]: string | string[] | number | { [keyName: string]: string[] };
+				} = {
+					project: dashboardData?.project?.id || "",
+				};
+				if (filterList.name) {
+					filter.name = filterList.name;
+				}
+				if (filterList.target_value) {
+					filter.target_value = filterList.target_value;
+				}
+				if (filterList.deliverable_category_org.length) {
+					filter.deliverable_category_unit = {
+						deliverable_category_org: filterList.deliverable_category_org as string[],
+					};
+				}
+				return filter;
+			});
+		}
+	}, [filterList]);
+
 	let {
 		count,
 		queryData: deliverableTargetData,
@@ -161,13 +275,9 @@ export default function DeliverablesTable() {
 	} = pagination({
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
-		countFilter: {
-			project: dashboardData?.project?.id,
-		},
-		queryFilter: {
-			project: dashboardData?.project?.id,
-		},
-		sort: "created_at:DESC",
+		countFilter: queryFilter,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
 	const [rows, setRows] = useState<any>([]);
@@ -194,13 +304,18 @@ export default function DeliverablesTable() {
 						<TableCell component="td" scope="row" key={deliverableTargetList[i]?.id}>
 							{page * limit + i + 1}
 						</TableCell>,
-						<TableCell key={deliverableTargetList[i].name}>
+						<TableCell
+							key={
+								deliverableTargetList[i].name + `${deliverableTargetList[i]?.id}-1`
+							}
+						>
 							{deliverableTargetList[i].name}
 						</TableCell>,
 						<TableCell
 							key={
 								deliverableTargetList[i].deliverable_category_unit
-									.deliverable_category_org.name
+									.deliverable_category_org.name +
+								`${deliverableTargetList[i]?.id}-2`
 							}
 						>
 							{
@@ -208,7 +323,12 @@ export default function DeliverablesTable() {
 									.deliverable_category_org.name
 							}
 						</TableCell>,
-						<TableCell key={deliverableTargetList[i].target_value}>
+						<TableCell
+							key={
+								deliverableTargetList[i].target_value +
+								`${deliverableTargetList[i]?.id}-3`
+							}
+						>
 							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}
 							`}
 						</TableCell>,
@@ -263,7 +383,54 @@ export default function DeliverablesTable() {
 				<TableSkeleton />
 			) : (
 				<>
+					<Grid container>
+						<Grid item xs={11}>
+							<Box my={2} display="flex" flexWrap={true}>
+								{Object.entries(filterList).map((element) => {
+									if (element[1] && typeof element[1] == "string") {
+										return chipArray({
+											arr: [element[1]],
+											name: element[0].slice(0, 4),
+											removeChip: (index: number) => {
+												removeFilterListElements(element[0]);
+											},
+										});
+									}
+									if (element[1] && Array.isArray(element[1])) {
+										if (element[0] == "deliverable_category_org") {
+											return chipArray({
+												arr: element[1].map(
+													(ele) => deliverableCategoryHash[ele]
+												),
+												name: "dc",
+												removeChip: (index: number) => {
+													removeFilterListElements(element[0], index);
+												},
+											});
+										}
+									}
+								})}
+							</Box>
+						</Grid>
+						<Grid item xs={1}>
+							<Box mt={2}>
+								<FilterList
+									initialValues={{
+										name: "",
+										target_value: "",
+										deliverable_category_org: [],
+									}}
+									setFilterList={setFilterList}
+									inputFields={deliverableTargetInputFields}
+								/>
+							</Box>
+						</Grid>
+					</Grid>
 					<FICollaspeTable
+						order={order}
+						orderBy={orderBy}
+						setOrder={setOrder}
+						setOrderBy={setOrderBy}
 						tableHeading={deliverableHeadings}
 						rows={rows}
 						pagination={deliverableTablePagination}

@@ -27,18 +27,44 @@ function ImpactUnitContainer({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
+	filterList,
+	setFilterList,
+	removeFilterListElements,
 }: {
 	impactUnitList: IImpactUnitData[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	filterList: {
+		[key: string]: string;
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string;
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
-	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const selectedImpactUnit = useRef<IImpactUnitData | null>(null);
 	const [getImpactCategoryUnit, { data: impactCategoryUnitList }] = useLazyQuery(
 		GET_IMPACT_CATEGORY_UNIT
 	);
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+
+	const toggleDialogs = (index: number, val: boolean) => {
+		setOpenDialogs((openStatus) =>
+			openStatus.map((element: boolean, i) => (i == index ? val : element))
+		);
+	};
 
 	useEffect(() => {
 		if (selectedImpactUnit.current) {
@@ -65,8 +91,8 @@ function ImpactUnitContainer({
 
 	return (
 		<ImpactUnitView
-			openDialog={openDialog}
-			setOpenDialog={setOpenDialog}
+			openDialogs={openDialogs}
+			toggleDialogs={toggleDialogs}
 			selectedImpactUnit={selectedImpactUnit}
 			initialValues={getInitialValues(
 				selectedImpactUnit.current,
@@ -77,6 +103,13 @@ function ImpactUnitContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
+			filterList={filterList}
+			setFilterList={setFilterList}
+			removeFilterListElements={removeFilterListElements}
 		/>
 	);
 }

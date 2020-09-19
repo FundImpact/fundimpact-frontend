@@ -1,5 +1,15 @@
 import { useQuery } from "@apollo/client";
-import { Avatar, IconButton, Menu, MenuItem, TableCell, TablePagination } from "@material-ui/core";
+import {
+	Avatar,
+	IconButton,
+	Menu,
+	MenuItem,
+	TableCell,
+	TablePagination,
+	Grid,
+	Box,
+	Chip,
+} from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 
@@ -19,6 +29,39 @@ import ImpactTrackLineTable from "./impactTrackline";
 import pagination from "../../../hooks/pagination/pagination";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { FormattedMessage } from "react-intl";
+import FilterList from "../../FilterList";
+import { impactTargetInputFields } from "./inputFields.json";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
+import { GET_SDG } from "../../../graphql/SDG/query";
+
+const chipArray = ({
+	arr,
+	name,
+	removeChip,
+}: {
+	arr: string[];
+	name: string;
+	removeChip: (index: number) => void;
+}) => {
+	return arr.map((element, index) => (
+		<Box key={index} mx={1}>
+			<Chip
+				label={element}
+				avatar={
+					<Avatar
+						style={{
+							width: "30px",
+							height: "30px",
+						}}
+					>
+						<span>{name}</span>
+					</Avatar>
+				}
+				onDelete={() => removeChip(index)}
+			/>
+		</Box>
+	));
+};
 
 function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
@@ -132,6 +175,16 @@ function ImpactTargetAchievementAndProgress({
 	);
 }
 
+const impactCategoryHash: { [key: string]: string } = {};
+const sustainableDevelopmentHash: { [key: string]: string } = {};
+
+const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+		accumulator[current.id] = current.name;
+		return accumulator;
+	}, obj);
+};
+
 export default function ImpactsTable() {
 	const dashboardData = useDashBoardData();
 	const [rows, setRows] = useState<
@@ -139,6 +192,82 @@ export default function ImpactsTable() {
 	>([]);
 
 	const [impactPage, setImpactPage] = React.useState(0);
+
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [queryFilter, setQueryFilter] = useState({});
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>({
+		name: "",
+		target_value: "",
+		impact_category_org: [],
+		sustainable_development_goal: [],
+	});
+
+	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
+
+	const { data: sdgList } = useQuery(GET_SDG);
+
+	useEffect(() => {
+		if (categories) {
+			impactTargetInputFields[2].optionsArray = categories.impactCategoryOrgList;
+			mapIdToName(categories.impactCategoryOrgList, impactCategoryHash);
+		}
+	}, [categories]);
+
+	useEffect(() => {
+		if (sdgList) {
+			impactTargetInputFields[3].optionsArray = sdgList.sustainableDevelopmentGoalList;
+			mapIdToName(sdgList.sustainableDevelopmentGoalList, sustainableDevelopmentHash);
+		}
+	}, [sdgList]);
+
+	const removeFilterListElements = (key: string, index?: number) => {
+		setFilterList((obj) => {
+			if (Array.isArray(obj[key])) {
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+			} else {
+				obj[key] = "";
+			}
+			return { ...obj };
+		});
+	};
+
+	useEffect(() => {
+		setQueryFilter({
+			project: dashboardData?.project?.id,
+		});
+	}, [dashboardData]);
+
+	useEffect(() => {
+		if (filterList) {
+			setQueryFilter(() => {
+				let filter: {
+					[key: string]: string | string[] | number | { [keyName: string]: string[] };
+				} = {
+					project: dashboardData?.project?.id  || "",
+				};
+				if (filterList.name) {
+					filter.name = filterList.name;
+				}
+				if (filterList.target_value) {
+					filter.target_value = filterList.target_value;
+				}
+				if (filterList.sustainable_development_goal.length) {
+					filter.sustainable_development_goal = filterList.sustainable_development_goal;
+				}
+				if (filterList.impact_category_org.length) {
+					filter.impact_category_unit = {
+						impact_category_org: filterList.impact_category_org as string[],
+					};
+				}
+				return filter;
+			});
+		}
+	}, [filterList]);
 
 	let {
 		count,
@@ -149,13 +278,9 @@ export default function ImpactsTable() {
 	} = pagination({
 		query: GET_IMPACT_TARGET_BY_PROJECT,
 		countQuery: GET_IMPACT_TARGETS_COUNT,
-		countFilter: {
-			project: dashboardData?.project?.id,
-		},
-		queryFilter: {
-			project: dashboardData?.project?.id,
-		},
-		sort: "created_at:DESC",
+		countFilter: queryFilter,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 	const limit = 10;
 	const handleChangePage = (
@@ -189,13 +314,18 @@ export default function ImpactsTable() {
 						<TableCell component="td" scope="row" key={impactTargetProjectList[i]?.id}>
 							{impactPage * limit + i + 1}
 						</TableCell>,
-						<TableCell key={impactTargetProjectList[i]?.name}>
+						<TableCell
+							key={
+								impactTargetProjectList[i]?.name +
+								`${impactTargetProjectList[i]?.id}-1`
+							}
+						>
 							{impactTargetProjectList[i].name}
 						</TableCell>,
 						<TableCell
 							key={
 								impactTargetProjectList[i]?.impact_category_unit.impact_category_org
-									.name
+									.name + `${impactTargetProjectList[i]?.id}-2`
 							}
 						>
 							{
@@ -204,7 +334,10 @@ export default function ImpactsTable() {
 							}
 						</TableCell>,
 						<TableCell
-							key={impactTargetProjectList[i]?.target_value}
+							key={
+								impactTargetProjectList[i]?.target_value +
+								`${impactTargetProjectList[i]?.id}-3`
+							}
 						>{`${impactTargetProjectList[i].target_value} ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`}</TableCell>,
 					];
 					column.push(
@@ -272,7 +405,66 @@ export default function ImpactsTable() {
 				<TableSkeleton />
 			) : (
 				<>
+					<Grid container>
+						<Grid item xs={11}>
+							<Box my={2} display="flex">
+								{Object.entries(filterList).map((element) => {
+									if (element[1] && typeof element[1] == "string") {
+										return chipArray({
+											arr: [element[1]],
+											name: element[0].slice(0, 4),
+											removeChip: (index: number) => {
+												removeFilterListElements(element[0]);
+											},
+										});
+									}
+									if (element[1] && Array.isArray(element[1])) {
+										if (element[0] == "impact_category_org") {
+											return chipArray({
+												arr: element[1].map(
+													(ele) => impactCategoryHash[ele]
+												),
+												name: "ic",
+												removeChip: (index: number) => {
+													removeFilterListElements(element[0], index);
+												},
+											});
+										}
+										if (element[0] == "sustainable_development_goal") {
+											return chipArray({
+												arr: element[1].map(
+													(ele) => sustainableDevelopmentHash[ele]
+												),
+												name: "sdg",
+												removeChip: (index: number) => {
+													removeFilterListElements(element[0], index);
+												},
+											});
+										}
+									}
+								})}
+							</Box>
+						</Grid>
+						<Grid item xs={1}>
+							<Box mt={2}>
+								<FilterList
+									initialValues={{
+										name: "",
+										target_value: "",
+										sustainable_development_goal: [],
+										impact_category_org: [],
+									}}
+									setFilterList={setFilterList}
+									inputFields={impactTargetInputFields}
+								/>
+							</Box>
+						</Grid>
+					</Grid>
 					<FICollaspeTable
+						order={order}
+						orderBy={orderBy}
+						setOrder={setOrder}
+						setOrderBy={setOrderBy}
 						tableHeading={ImpactHeadings}
 						rows={rows}
 						pagination={impactTablePagination}

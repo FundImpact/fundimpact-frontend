@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent } from "@testing-library/react";
+import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
@@ -30,6 +30,7 @@ import {
 	mockBudgetTrackingsCount,
 	mockBudgetLineItem,
 	mockCurrencyList,
+	mockOrgDonor,
 } from "../../../../../utils/testMock.json";
 import { GET_PROJ_DONORS } from "../../../../../graphql/project";
 import {
@@ -38,11 +39,17 @@ import {
 	GET_FINANCIAL_YEARS,
 	GET_CURRENCY_LIST,
 } from "../../../../../graphql";
-import BudgetTargetTable from "..";
+import BudgetTargetTable from "../BudgetTargetTableGraphql";
 import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
+import { GET_ORG_DONOR } from "../../../../../graphql/donor";
 
 let table: any;
+
+let intialFormValue = {
+	name: "budget target name",
+	total_target_amount: "100",
+};
 
 const mocks = [
 	{
@@ -228,6 +235,21 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_FINANCIAL_YEARS,
+			variables: {
+				filter: {
+					country: "2",
+				},
+			},
+		},
+		result: {
+			data: {
+				financialYearList: mockFinancialYears,
+			},
+		},
+	},
+	{
+		request: {
 			query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 			variables: {
 				filter: {
@@ -237,6 +259,55 @@ const mocks = [
 		},
 		result: {
 			data: mockBudgetTargetCount,
+		},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+				limit: 10,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_GRANT_PERIODS_PROJECT_LIST,
+			variables: {
+				filter: {
+					donor: "1",
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				grantPeriodsProjectList: mockGrantPeriodsProjectList,
+			},
 		},
 	},
 	{
@@ -319,8 +390,8 @@ describe("Budget Target Table tests", () => {
 	test("Table Headings and Data listing of Budget trackline table", async () => {
 		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
 		expect(collaspeButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(collaspeButton);
+		act(async () => {
+			await fireEvent.click(collaspeButton);
 		});
 		budgetLineItemTableHeading[3].label += `(${mockOrgHomeCurrency[0].currency.code})`;
 
@@ -350,5 +421,34 @@ describe("Budget Target Table tests", () => {
 		await waitForElement(() =>
 			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
 		);
+	});
+
+	test("Filter List test", async () => {
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		let nameField = (await table.findByTestId(
+			"createBudgetTargetNameInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		});
+		await expect(nameField.value).toBe(intialFormValue.name);
+
+		let targetAmountField = (await table.findByTestId(
+			"createBudgetTotalTargetAmountInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(targetAmountField, { target: { value: intialFormValue.total_target_amount } });
+		});
+		await expect(targetAmountField.value).toBe(intialFormValue.total_target_amount);
 	});
 });

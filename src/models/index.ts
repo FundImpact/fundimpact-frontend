@@ -1,6 +1,7 @@
 import { FORM_ACTIONS } from "./constants";
 import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
+import { MutableRefObject, ReactNode } from "react";
 
 export interface ISignUpStep {
 	label: string | JSX.Element;
@@ -150,7 +151,27 @@ export interface ICountry {
 	id: string;
 	name: string;
 }
+
+//change type here
 export type ICommonTableRow = {
 	valueAccessKey: string;
-	renderComponent?: (id: string) => React.ReactNode;
+	renderComponent?: (props: any) => React.ReactNode;
 };
+
+export interface ICommonTable<T> {
+	tableHeadings: { label: string; keyMapping?: string }[];
+	rows: ICommonTableRow[];
+	selectedRow: MutableRefObject<T | null>;
+	children: ReactNode | [ReactNode, () => ReactNode];
+	valuesList: T[];
+	toggleDialogs: (index: number, val: boolean) => void;
+	editMenuName: string[];
+	collapsableTable?: boolean;
+	changePage?: (prev?: boolean) => void;
+	count?: number;
+	loading?: boolean;
+	order?: "asc" | "desc";
+	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy?: string;
+	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+}

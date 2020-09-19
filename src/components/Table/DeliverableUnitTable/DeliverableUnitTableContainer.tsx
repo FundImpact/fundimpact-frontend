@@ -33,19 +33,46 @@ function DeliverableUnitTableContainer({
 	changePage,
 	loading,
 	count,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
+	filterList,
+	setFilterList,
+	removeFilterListElements,
 }: {
 	deliverableUnitList: IDeliverableUnitData[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	filterList: {
+		[key: string]: string;
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string;
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
-	const [openDialog, setOpenDialog] = useState<boolean>(false);
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+
 	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
 	const dashboardData = useDashBoardData();
 	const [getcategoryUnit, { data: deliverableCategoryUnitList }] = useLazyQuery(
 		GET_CATEGORY_UNIT
 	);
+
+	const toggleDialogs = (index: number, val: boolean) => {
+		setOpenDialogs((openStatus) =>
+			openStatus.map((element: boolean, i) => (i == index ? val : element))
+		);
+	};
 
 	useEffect(() => {
 		if (selectedDeliverableUnit.current) {
@@ -72,8 +99,8 @@ function DeliverableUnitTableContainer({
 
 	return (
 		<DeliverableUnitTableView
-			openDialog={openDialog}
-			setOpenDialog={setOpenDialog}
+			openDialogs={openDialogs}
+			toggleDialogs={toggleDialogs}
 			selectedDeliverableUnit={selectedDeliverableUnit}
 			initialValues={getInitialValues(
 				selectedDeliverableUnit.current,
@@ -85,6 +112,13 @@ function DeliverableUnitTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
+			filterList={filterList}
+			setFilterList={setFilterList}
+			removeFilterListElements={removeFilterListElements}
 		/>
 	);
 }

@@ -1,0 +1,54 @@
+{
+	"impactCategoryInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactCategoryName",
+			"testId": "createImpactCategoryNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "budgetCode",
+			"dataTestId": "createImpactCategoryCode",
+			"testId": "createImpactCategoryCodeInput",
+			"label": "Impact Category Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactCategoryDescription",
+			"testId": "createImpactCategoryDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	],
+	"impactUnitInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactUnitName",
+			"testId": "createImpactUnitNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactUnitCode",
+			"dataTestId": "createImpactCode",
+			"testId": "createImpactUnitCodeInput",
+			"label": "Impact Unit Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactUnitDescription",
+			"testId": "createImpactCategoryDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	]
+}
