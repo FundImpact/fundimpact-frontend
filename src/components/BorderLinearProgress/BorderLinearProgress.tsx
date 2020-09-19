@@ -3,7 +3,7 @@ import { withStyles, Theme, createStyles, LinearProgress } from "@material-ui/co
 export const BorderLinearProgress = withStyles((theme: Theme) =>
 	createStyles({
 		root: {
-			height: 10,
+			height: 7,
 			borderRadius: 5,
 			margin: theme.spacing(0, 1, 0, 1),
 		},

@@ -180,28 +180,13 @@ function BudgetTargetTable() {
 					<TableRow color="primary">
 						{tableHeading.map((heading: { label: string }, index: number) => (
 							<TableCell className={tableHeader.th} key={index} align="left">
-								{/* {heading.label === "Total Amount"
+								{heading.label === "Total Amount"
 									? `Total Amount ${
 											currency?.currencyList[0]?.code
 												? "(" + currency?.currencyList[0]?.code + ")"
 												: ""
 									  }`
-									: heading.label} */}
-								<FormattedMessage
-									id={`BudgetTableHeading${index + 1}`}
-									defaultMessage={
-										heading.label === "Total Amount"
-											? `Total Amount ${
-													currency?.currencyList[0]?.code
-														? "(" +
-														  currency?.currencyList[0]?.code +
-														  ")"
-														: ""
-											  }`
-											: heading.label
-									}
-									description={`This text will be shown on budget table heading for ${heading.label}`}
-								/>
+									: heading.label}
 							</TableCell>
 						))}
 					</TableRow>

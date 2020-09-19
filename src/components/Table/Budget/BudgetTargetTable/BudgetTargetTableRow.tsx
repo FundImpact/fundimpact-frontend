@@ -16,6 +16,7 @@ import BudgetLineItemTable from "../BudgetLineItemTable";
 import AmountSpent from "./AmountSpent";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../../Menu/";
+import { FormattedMessage } from "react-intl";
 
 function BudgetTargetTableRow({
 	budgetTarget,
@@ -56,7 +57,11 @@ function BudgetTargetTableRow({
 						handleClose();
 					}}
 				>
-					Edit Budget Target
+					<FormattedMessage
+						id="editBudgetTarget"
+						defaultMessage="Edit Budget Target"
+						description="This text will be show on budget target tabke for edit budget target menu"
+					/>
 				</MenuItem>
 			),
 		},
@@ -68,7 +73,11 @@ function BudgetTargetTableRow({
 						handleClose();
 					}}
 				>
-					Report Expenditure
+					<FormattedMessage
+						id="reportBudgetExpenditure"
+						defaultMessage="Report Expenditure"
+						description="This text will be show on budget target tabke for Report Budget Expenditure menu"
+					/>
 				</MenuItem>
 			),
 		},

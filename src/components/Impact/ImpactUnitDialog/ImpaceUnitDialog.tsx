@@ -27,6 +27,8 @@ import {
 	GET_IMPACT_CATEGORY_UNIT_COUNT,
 	GET_IMPACT_CATEGORY_UNIT,
 } from "../../../graphql/Impact/categoryUnit";
+import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 
 let inputFields: any[] = impactUnitForm;
 
@@ -67,7 +69,7 @@ function ImpactUnitDialog({
 	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
 		CREATE_IMPACT_CATEGORY_UNIT
 	);
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const updateImpactCategoryUnitCount = async (
 		store: ApolloCache<any>,
 		filter: { [key: string]: string }
@@ -368,14 +370,27 @@ function ImpactUnitDialog({
 			});
 		} catch (err) {}
 	};
-
+	const intl = useIntl();
 	return (
 		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={creatingInpactUnit || updatingImpactUnit || creatingImpactCategoryUnit}
-			title="Impact Unit"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={
+				newOrEdit +
+				" " +
+				intl.formatMessage({
+					id: "impactUnitFormTitle",
+					defaultMessage: "Impact Unit",
+					description: `This text will be show on impact unit form for title`,
+				})
+			}
+			subtitle={intl.formatMessage({
+				id: "impactUnitFormSubtitle",
+				defaultMessage:
+					"Physical addresses of your organizatin like headquater, branch etc.",
+				description: `This text will be show on impact unit form for subtitle`,
+			})}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

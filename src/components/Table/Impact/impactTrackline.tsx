@@ -25,6 +25,7 @@ import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
 import pagination from "../../../hooks/pagination/pagination";
+import { FormattedMessage } from "react-intl";
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
@@ -120,7 +121,11 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 						handleMenuClose();
 					}}
 				>
-					Edit Achievement
+					<FormattedMessage
+						id="editAchievementMenu"
+						defaultMessage="Edit Achievement"
+						description="This text will be show on deliverable or impact target table for edit achievement menu"
+					/>
 				</MenuItem>
 			</Menu>
 			{impactTargetLineData && (

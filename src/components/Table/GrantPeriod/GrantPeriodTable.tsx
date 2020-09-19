@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React, { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { FETCH_GRANT_PERIODS } from "../../../graphql/grantPeriod/query";
@@ -113,7 +114,11 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 											closeMenuItems(index);
 										}}
 									>
-										Edit
+										<FormattedMessage
+											id="editMenu"
+											defaultMessage="Edit"
+											description="This text will be show on menus for EDIT"
+										/>
 									</MenuItem>
 								</SimpleMenu>
 							</TableCell>
