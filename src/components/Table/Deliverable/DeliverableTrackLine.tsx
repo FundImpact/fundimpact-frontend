@@ -37,9 +37,9 @@ const chipArray = ({
 	name,
 	removeChip,
 }: {
-	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	name: string;
+	arr: string[];
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -175,7 +175,6 @@ const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: 
 
 let financialYearHash: { [key: string]: string } = {};
 let annualYearHash: { [key: string]: string } = {};
-
 
 export default function DeliverablesTrackLineTable({
 	deliverableTargetId,
@@ -387,16 +386,16 @@ export default function DeliverablesTrackLineTable({
 				<Grid item xs={11}>
 					<Box my={2} display="flex">
 						{Object.entries(filterList).map((element) => {
+							if (element[1] && typeof element[1] == "string") {
+								return chipArray({
+									name: element[0].slice(0, 4),
+									removeChip: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+									arr: [element[1]],
+								});
+							}
 							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "annual_year") {
-									return chipArray({
-										arr: element[1].map((ele) => annualYearHash[ele]),
-										name: "ay",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
 								if (element[0] == "financial_year") {
 									return chipArray({
 										arr: element[1].map((ele) => financialYearHash[ele]),
@@ -406,15 +405,15 @@ export default function DeliverablesTrackLineTable({
 										},
 									});
 								}
-							}
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-									arr: [element[1]],
-								});
+								if (element[0] == "annual_year") {
+									return chipArray({
+										arr: element[1].map((ele) => annualYearHash[ele]),
+										name: "ay",
+										removeChip: (index: number) => {
+											removeFilterListElements(element[0], index);
+										},
+									});
+								}
 							}
 						})}
 					</Box>
