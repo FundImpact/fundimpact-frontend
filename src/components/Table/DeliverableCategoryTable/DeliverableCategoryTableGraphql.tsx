@@ -33,13 +33,13 @@ function DeliverableCategoryTableGraphql({
 	rowId?: string;
 	tableFilterList?: { [key: string]: string };
 }) {
-	const dashboardData = useDashBoardData();
-	const [orderBy, setOrderBy] = useState<string>("created_at");
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
-	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
 	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
-	const [queryFilter, setQueryFilter] = useState({});
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const dashboardData = useDashBoardData();
 	const [nestedTableQueryFilter, setNestedTableQueryFilter] = useState({});
+	const [queryFilter, setQueryFilter] = useState({});
 	const [nestedTableFilterList, setNestedTableFilterList] = useState<{
 		[key: string]: string;
 	}>({
@@ -56,6 +56,16 @@ function DeliverableCategoryTableGraphql({
 	};
 
 	useEffect(() => {
+		if (tableFilterList) {
+			let obj: { [key: string]: string } = removeEmptyKeys(tableFilterList);
+			setQueryFilter({
+				organization: dashboardData?.organization?.id,
+				...obj,
+			});
+		}
+	}, [tableFilterList]);
+
+	useEffect(() => {
 		setNestedTableQueryFilter({
 			deliverable_units_org: {
 				id: delivarableUnitId,
@@ -68,16 +78,6 @@ function DeliverableCategoryTableGraphql({
 			organization: dashboardData?.organization?.id,
 		});
 	}, [dashboardData]);
-
-	useEffect(() => {
-		if (tableFilterList) {
-			let obj: { [key: string]: string } = removeEmptyKeys(tableFilterList);
-			setQueryFilter({
-				organization: dashboardData?.organization?.id,
-				...obj,
-			});
-		}
-	}, [tableFilterList]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
