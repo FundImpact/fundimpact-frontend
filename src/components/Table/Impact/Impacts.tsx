@@ -37,11 +37,11 @@ import { GET_SDG } from "../../../graphql/SDG/query";
 const chipArray = ({
 	arr,
 	name,
-	removeChip,
+	removeChips,
 }: {
 	arr: string[];
 	name: string;
-	removeChip: (index: number) => void;
+	removeChips: (index: number) => void;
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -57,7 +57,7 @@ const chipArray = ({
 						<span>{name}</span>
 					</Avatar>
 				}
-				onDelete={() => removeChip(index)}
+				onDelete={() => removeChips(index)}
 			/>
 		</Box>
 	));
@@ -415,15 +415,6 @@ export default function ImpactsTable() {
 						<Grid item xs={11}>
 							<Box my={2} display="flex">
 								{Object.entries(filterList).map((element) => {
-									if (element[1] && typeof element[1] == "string") {
-										return chipArray({
-											arr: [element[1]],
-											name: element[0].slice(0, 4),
-											removeChip: (index: number) => {
-												removeFilterListElements(element[0]);
-											},
-										});
-									}
 									if (element[1] && Array.isArray(element[1])) {
 										if (element[0] == "impact_category_org") {
 											return chipArray({
@@ -431,7 +422,7 @@ export default function ImpactsTable() {
 													(ele) => impactCategoryHash[ele]
 												),
 												name: "ic",
-												removeChip: (index: number) => {
+												removeChips: (index: number) => {
 													removeFilterListElements(element[0], index);
 												},
 											});
@@ -442,11 +433,20 @@ export default function ImpactsTable() {
 													(ele) => sustainableDevelopmentHash[ele]
 												),
 												name: "sdg",
-												removeChip: (index: number) => {
+												removeChips: (index: number) => {
 													removeFilterListElements(element[0], index);
 												},
 											});
 										}
+									}
+									if (element[1] && typeof element[1] == "string") {
+										return chipArray({
+											arr: [element[1]],
+											name: element[0].slice(0, 4),
+											removeChips: (index: number) => {
+												removeFilterListElements(element[0]);
+											},
+										});
 									}
 								})}
 							</Box>

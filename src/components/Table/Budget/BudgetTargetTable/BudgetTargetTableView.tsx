@@ -48,15 +48,15 @@ const rows = [
 ];
 
 const chipArray = ({
-	arr,
+	elementList,
 	name,
 	removeChip,
 }: {
-	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	elementList: string[];
+	name: string;
 }) => {
-	return arr.map((element, index) => (
+	return elementList.map((element, index) => (
 		<Box key={index} mx={1}>
 			<Chip
 				label={element}
@@ -135,7 +135,7 @@ function BudgetTargetView({
 						{Object.entries(filterList).map((element) => {
 							if (element[1] && typeof element[1] == "string") {
 								return chipArray({
-									arr: [element[1]],
+									elementList: [element[1]],
 									name: element[0].slice(0, 4),
 									removeChip: (index: number) => {
 										removeFilterListElements(element[0]);
@@ -145,7 +145,7 @@ function BudgetTargetView({
 							if (element[1] && Array.isArray(element[1])) {
 								if (element[0] == "donor") {
 									return chipArray({
-										arr: element[1].map((ele) => donorHash[ele]),
+										elementList: element[1].map((ele) => donorHash[ele]),
 										name: "do",
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0], index);
@@ -154,7 +154,7 @@ function BudgetTargetView({
 								}
 								if (element[0] == "budget_category_organization") {
 									return chipArray({
-										arr: element[1].map((ele) => budgetCategoryHash[ele]),
+										elementList: element[1].map((ele) => budgetCategoryHash[ele]),
 										name: "bc",
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0], index);

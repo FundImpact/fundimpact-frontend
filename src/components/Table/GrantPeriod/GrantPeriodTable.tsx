@@ -61,10 +61,10 @@ interface ISImpleTableProps {
 const chipArr = ({
 	arr,
 	name,
-	removeChip,
+	removeChips,
 }: {
 	arr: string[];
-	removeChip: (index: number) => void;
+	removeChips: (index: number) => void;
 	name: string;
 }) => {
 	return arr.map((element, index) => (
@@ -81,7 +81,7 @@ const chipArr = ({
 						<span>{name}</span>
 					</Avatar>
 				}
-				onDelete={() => removeChip(index)}
+				onDelete={() => removeChips(index)}
 			/>
 		</Box>
 	));
@@ -308,7 +308,7 @@ export default function GrantPeriodTable() {
 								return chipArr({
 									name: element[0].slice(0, 5),
 									arr: [element[1]],
-									removeChip: (index: number) => {
+									removeChips: (index: number) => {
 										removeFilterListElements(element[0]);
 									},
 								});
@@ -318,7 +318,7 @@ export default function GrantPeriodTable() {
 									return chipArr({
 										name: "do",
 										arr: element[1].map((ele) => donorHash[ele]),
-										removeChip: (index: number) => {
+										removeChips: (index: number) => {
 											removeFilterListElements(element[0], index);
 										},
 									});

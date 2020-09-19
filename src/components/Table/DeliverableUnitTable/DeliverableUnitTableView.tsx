@@ -29,12 +29,12 @@ const rows = [
 
 const chipArray = ({
 	arr,
-	name,
+	chipName,
 	removeChip,
 }: {
 	arr: string[];
 	removeChip: (index: number) => void;
-	name: string;
+	chipName: string;
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -47,7 +47,7 @@ const chipArray = ({
 							height: "30px",
 						}}
 					>
-						<span>{name}</span>
+						<span>{chipName}</span>
 					</Avatar>
 				}
 				onDelete={() => removeChip(index)}
@@ -108,7 +108,7 @@ function DeliverableUnitTableView({
 								if (element[1] && typeof element[1] == "string") {
 									return chipArray({
 										arr: [element[1]],
-										name: element[0].slice(0, 4),
+										chipName: element[0].slice(0, 4),
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0]);
 										},

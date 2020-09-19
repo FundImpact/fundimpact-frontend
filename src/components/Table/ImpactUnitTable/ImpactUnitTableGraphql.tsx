@@ -31,13 +31,11 @@ function ImpactUnitTableGraphql({
 	rowId?: string;
 	tableFilterList?: { [key: string]: string };
 }) {
-	const dashboardData = useDashBoardData();
-	const [orderBy, setOrderBy] = useState<string>("created_at");
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [nestedTableQueryFilter, setNestedTableQueryFilter] = useState({});
 	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
 	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
-	const [nestedTableQueryFilter, setNestedTableQueryFilter] = useState({});
+	const dashboardData = useDashBoardData();
 	const [nestedTableFilterList, setNestedTableFilterList] = useState<{
 		[key: string]: string;
 	}>({
@@ -45,6 +43,8 @@ function ImpactUnitTableGraphql({
 		code: "",
 		description: "",
 	});
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
 		setNestedTableFilterList((obj) => {

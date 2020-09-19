@@ -69,8 +69,8 @@ const chipArray = ({
 	removeChip,
 }: {
 	arr: string[];
-	name: string;
 	removeChip: (index: number) => void;
+	name: string;
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
@@ -151,15 +151,6 @@ function BudgetLineItemTableView({
 				<Grid item xs={11}>
 					<Box my={2} display="flex">
 						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									arr: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
 							if (element[1] && Array.isArray(element[1])) {
 								if (element[0] == "grant_periods_project") {
 									return chipArray({
@@ -197,6 +188,15 @@ function BudgetLineItemTableView({
 										},
 									});
 								}
+							}
+							if (element[1] && typeof element[1] == "string") {
+								return chipArray({
+									arr: [element[1]],
+									name: element[0].slice(0, 4),
+									removeChip: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+								});
 							}
 						})}
 					</Box>

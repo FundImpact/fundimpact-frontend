@@ -70,14 +70,19 @@ function DeliverableCategoryView({
 	setFilterList,
 	removeFilterListElements,
 }: {
+	count: number;
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
 	selectedDeliverableCategory: React.MutableRefObject<IDeliverableCategoryData | null>;
 	initialValues: IDeliverable;
-	deliverableCategoryList: IDeliverableCategoryData[];
 	collapsableTable: boolean;
+	setFilterList: React.Dispatch<
+	React.SetStateAction<{
+		[key: string]: string;
+	}>
+	>;
 	changePage: (prev?: boolean) => void;
-	count: number;
+	deliverableCategoryList: IDeliverableCategoryData[];
 	loading: boolean;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -86,11 +91,7 @@ function DeliverableCategoryView({
 	filterList: {
 		[key: string]: string;
 	};
-	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string;
-		}>
-	>;
+
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
 	return (
