@@ -24,15 +24,15 @@ const rows = [
 ];
 
 const chipArray = ({
-	arr,
+	elementList,
 	name,
 	removeChip,
 }: {
-	arr: string[];
+	elementList: string[];
 	name: string;
 	removeChip: (index: number) => void;
 }) => {
-	return arr.map((element, index) => (
+	return elementList.map((element, index) => (
 		<Box key={index} mx={1}>
 			<Chip
 				label={element}
@@ -72,6 +72,7 @@ function ImpactCategoryTableView({
 }: {
 	openDialogs: boolean[];
 	initialValues: IImpactCategoryData;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	impactCategoryList: IImpactCategoryData[];
 	orderBy: string;
@@ -81,17 +82,16 @@ function ImpactCategoryTableView({
 	count: number;
 	loading: boolean;
 	toggleDialogs: (index: number, val: boolean) => void;
-	order: "asc" | "desc";
-	filterList: {
-		[key: string]: string;
-	};
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string;
 		}>
 	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	order: "asc" | "desc";
+	filterList: {
+		[key: string]: string;
+	};
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	return (
 		<>
@@ -103,7 +103,7 @@ function ImpactCategoryTableView({
 								if (element[1] && typeof element[1] == "string") {
 									return chipArray({
 										name: element[0].slice(0, 4),
-										arr: [element[1]],
+										elementList: [element[1]],
 										removeChip: (index: number) => {
 											removeFilterListElements(element[0]);
 										},
