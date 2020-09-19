@@ -167,14 +167,14 @@ const ImpactMasterView = ({
 									element[1] && (
 										<Box key={index} mx={1}>
 											<Chip
-												label={element[1]}
 												avatar={
 													<Avatar
-														style={{ width: "30px", height: "30px" }}
+													style={{ height: "30px", width: "30px" }}
 													>
 														<span>{element[0].slice(0, 4)}</span>
 													</Avatar>
 												}
+												label={element[1]}
 												onDelete={() => removeFilteListElements(element[0])}
 											/>
 										</Box>
