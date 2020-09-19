@@ -36,7 +36,7 @@ const chipArr = ({
 	arr: string[];
 }) => {
 	return arr.map((element, index) => (
-		<Box key={index} mx={1}>
+		<Box key={index} m={1}>
 			<Chip
 				avatar={
 					<Avatar
@@ -101,7 +101,7 @@ function ImpactUnitTableContainer({
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={11}>
-						<Box my={2} display="flex">
+						<Box my={2} display="flex" flexWrap="wrap">
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
 									return chipArr({

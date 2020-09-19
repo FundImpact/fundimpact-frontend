@@ -33,7 +33,7 @@ const chipArr = ({
 	removeChip: (index: number) => void;
 }) => {
 	return list.map((element, index) => (
-		<Box key={index} mx={1}>
+		<Box key={index} m={1}>
 			<Chip
 				label={element}
 				avatar={
@@ -99,7 +99,7 @@ function DeliverableCategoryView({
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={11}>
-						<Box my={2} display="flex">
+						<Box my={2} display="flex" flexWrap="wrap">
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
 									return chipArr({

@@ -37,7 +37,7 @@ const chipArray = ({
 	chipName: string;
 }) => {
 	return arr.map((element, index) => (
-		<Box key={index} mx={1}>
+		<Box key={index} m={1}>
 			<Chip
 				label={element}
 				avatar={
@@ -103,7 +103,7 @@ function DeliverableUnitTableView({
 			{!collapsableTable && (
 				<Grid container>
 					<Grid xs={11} item>
-						<Box display="flex" my={2}>
+						<Box display="flex" my={2} flexWrap="wrap">
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
 									return chipArray({
