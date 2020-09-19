@@ -11,14 +11,17 @@ import { budgetTargetInputFields } from "./inputFields.json";
 import { GET_ORG_DONOR } from "../../../../graphql/donor";
 import { useLazyQuery } from "@apollo/client";
 
-const donorHash = {};
-const budgetCategoryHash = {};
+let donorHash = {};
+let budgetCategoryHash = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 function BudgetTargetTableGraphql() {
@@ -30,7 +33,7 @@ function BudgetTargetTableGraphql() {
 
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onCompleted: (data) => {
-			mapIdToName(data.orgDonors, donorHash);
+			donorHash = mapIdToName(data.orgDonors, donorHash);
 		},
 	});
 
@@ -38,7 +41,7 @@ function BudgetTargetTableGraphql() {
 		GET_ORGANIZATION_BUDGET_CATEGORY,
 		{
 			onCompleted: (data) => {
-				mapIdToName(data.orgBudgetCategory, budgetCategoryHash);
+				budgetCategoryHash = mapIdToName(data.orgBudgetCategory, budgetCategoryHash);
 			},
 		}
 	);

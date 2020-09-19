@@ -178,13 +178,16 @@ function DeliverableTargetAchievementAndProgress({
 	);
 }
 
-const deliverableCategoryHash: { [key: string]: string } = {};
+let deliverableCategoryHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 export default function DeliverablesTable() {
@@ -209,7 +212,10 @@ export default function DeliverablesTable() {
 		if (deliverableCategories) {
 			deliverableTargetInputFields[2].optionsArray =
 				deliverableCategories.deliverableCategory;
-			mapIdToName(deliverableCategories.deliverableCategory, deliverableCategoryHash);
+			deliverableCategoryHash = mapIdToName(
+				deliverableCategories.deliverableCategory,
+				deliverableCategoryHash
+			);
 		}
 	}, [deliverableCategories]);
 

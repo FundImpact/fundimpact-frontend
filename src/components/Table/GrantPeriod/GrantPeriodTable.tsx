@@ -172,13 +172,16 @@ const headers: ISImpleTableProps["headers"] = [
 	{ label: "End Date", key: "end_date" },
 ];
 
-const donorHash: { [key: string]: string } = {};
+let donorHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 export default function GrantPeriodTable() {
@@ -190,7 +193,7 @@ export default function GrantPeriodTable() {
 
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onCompleted: (data) => {
-			mapIdToName(data.orgDonors, donorHash);
+			donorHash = mapIdToName(data.orgDonors, donorHash);
 		},
 	});
 

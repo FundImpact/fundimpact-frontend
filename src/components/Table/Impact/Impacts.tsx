@@ -175,14 +175,17 @@ function ImpactTargetAchievementAndProgress({
 	);
 }
 
-const impactCategoryHash: { [key: string]: string } = {};
-const sustainableDevelopmentHash: { [key: string]: string } = {};
+let impactCategoryHash: { [key: string]: string } = {};
+let sustainableDevelopmentHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 export default function ImpactsTable() {
@@ -214,14 +217,17 @@ export default function ImpactsTable() {
 	useEffect(() => {
 		if (categories) {
 			impactTargetInputFields[2].optionsArray = categories.impactCategoryOrgList;
-			mapIdToName(categories.impactCategoryOrgList, impactCategoryHash);
+			impactCategoryHash = mapIdToName(categories.impactCategoryOrgList, impactCategoryHash);
 		}
 	}, [categories]);
 
 	useEffect(() => {
 		if (sdgList) {
 			impactTargetInputFields[3].optionsArray = sdgList.sustainableDevelopmentGoalList;
-			mapIdToName(sdgList.sustainableDevelopmentGoalList, sustainableDevelopmentHash);
+			sustainableDevelopmentHash = mapIdToName(
+				sdgList.sustainableDevelopmentGoalList,
+				sustainableDevelopmentHash
+			);
 		}
 	}, [sdgList]);
 
@@ -248,7 +254,7 @@ export default function ImpactsTable() {
 				let filter: {
 					[key: string]: string | string[] | number | { [keyName: string]: string[] };
 				} = {
-					project: dashboardData?.project?.id  || "",
+					project: dashboardData?.project?.id || "",
 				};
 				if (filterList.name) {
 					filter.name = filterList.name;

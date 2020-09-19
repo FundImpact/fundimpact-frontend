@@ -12,16 +12,19 @@ import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS } from "../../../../graphql";
 import { useLazyQuery } from "@apollo/client";
 
 //make input field hidden
-const grantPeriodHash = {};
-const annualYearHash = {};
-const financialYearDonorHash = {};
-const financialYearOrgHash = {};
+let grantPeriodHash = {};
+let annualYearHash = {};
+let financialYearDonorHash = {};
+let financialYearOrgHash = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 function BudgetLineItemTableGraphql({
@@ -98,31 +101,31 @@ function BudgetLineItemTableGraphql({
 		GET_GRANT_PERIODS_PROJECT_LIST,
 		{
 			onCompleted: (data) => {
-				mapIdToName(data.grantPeriodsProjectList, grantPeriodHash);
+				grantPeriodHash = mapIdToName(data.grantPeriodsProjectList, grantPeriodHash);
 			},
 		}
 	);
 
 	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST, {
 		onCompleted: (data) => {
-			mapIdToName(data.annualYearList, annualYearHash);
+			annualYearHash = mapIdToName(data.annualYearList, annualYearHash);
 		},
 		onError: (err) => {
 			console.log(err);
 		},
 	});
 	if (annualYears && Object.keys(annualYearHash).length == 0) {
-		mapIdToName(annualYears.annualYearList, annualYearHash);
+		annualYearHash = mapIdToName(annualYears.annualYearList, annualYearHash);
 	}
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS, {
 		onCompleted: (data) => {
-			mapIdToName(data.financialYearList, financialYearDonorHash);
+			financialYearDonorHash = mapIdToName(data.financialYearList, financialYearDonorHash);
 		},
 	});
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS, {
 		onCompleted: (data) => {
-			mapIdToName(data.financialYearList, financialYearOrgHash);
+			financialYearOrgHash = mapIdToName(data.financialYearList, financialYearOrgHash);
 		},
 	});
 

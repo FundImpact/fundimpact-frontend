@@ -175,11 +175,11 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	);
 }
 
-const annualYearHash: { [key: string]: string } = {};
-const financialYearHash: { [key: string]: string } = {};
+let annualYearHash: { [key: string]: string } = {};
+let financialYearHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+	return arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 		accumulator[current.id] = current.name;
 		return accumulator;
 	}, obj);
@@ -214,14 +214,14 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 	useEffect(() => {
 		if (getAnnualYears) {
 			impactTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
-			mapIdToName(getAnnualYears.annualYears, annualYearHash);
+			annualYearHash = 	mapIdToName(getAnnualYears.annualYears, annualYearHash);
 		}
 	}, [getAnnualYears]);
 
 	useEffect(() => {
 		if (impactFyData) {
 			impactTracklineInputFields[4].optionsArray = impactFyData.financialYearList;
-			mapIdToName(impactFyData.financialYearList, financialYearHash);
+			financialYearHash = mapIdToName(impactFyData.financialYearList, financialYearHash);
 		}
 	}, [impactFyData]);
 

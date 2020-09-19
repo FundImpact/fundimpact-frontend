@@ -42,7 +42,7 @@ const chipArray = ({
 let countryHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+	return arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 		accumulator[current.id] = current.name;
 		return accumulator;
 	}, obj);
@@ -61,7 +61,7 @@ export const DonorContainer = () => {
 	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST, {
 		onCompleted: ({ countryList }) => {
 			donorInputFields[3].optionsArray = countryList;
-			mapIdToName(countryList, countryHash);
+			countryHash =	mapIdToName(countryList, countryHash);
 		},
 	});
 

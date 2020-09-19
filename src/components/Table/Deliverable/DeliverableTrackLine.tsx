@@ -163,14 +163,17 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	);
 }
 
-const annualYearHash: { [key: string]: string } = {};
-const financialYearHash: { [key: string]: string } = {};
+let annualYearHash: { [key: string]: string } = {};
+let financialYearHash: { [key: string]: string } = {};
 
 const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
-	arr.reduce((accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-		accumulator[current.id] = current.name;
-		return accumulator;
-	}, obj);
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
 };
 
 export default function DeliverablesTrackLineTable({
@@ -203,14 +206,14 @@ export default function DeliverablesTrackLineTable({
 	useEffect(() => {
 		if (getAnnualYears) {
 			deliverableTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
-			mapIdToName(getAnnualYears.annualYears, annualYearHash);
+			annualYearHash = mapIdToName(getAnnualYears.annualYears, annualYearHash);
 		}
 	}, [getAnnualYears]);
 
 	useEffect(() => {
 		if (impactFyData) {
 			deliverableTracklineInputFields[4].optionsArray = impactFyData.financialYearList;
-			mapIdToName(impactFyData.financialYearList, financialYearHash);
+			financialYearHash = mapIdToName(impactFyData.financialYearList, financialYearHash);
 		}
 	}, [impactFyData]);
 
