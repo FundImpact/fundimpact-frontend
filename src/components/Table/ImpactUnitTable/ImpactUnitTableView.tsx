@@ -26,7 +26,7 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
-const chipArray = ({
+const chipArr = ({
 	removeChip,
 	name,
 	arr,
@@ -38,7 +38,6 @@ const chipArray = ({
 	return arr.map((element, index) => (
 		<Box key={index} mx={1}>
 			<Chip
-				label={element}
 				avatar={
 					<Avatar
 						style={{
@@ -50,6 +49,7 @@ const chipArray = ({
 					</Avatar>
 				}
 				onDelete={() => removeChip(index)}
+				label={element}
 			/>
 		</Box>
 	));
@@ -104,7 +104,7 @@ function ImpactUnitTableContainer({
 						<Box my={2} display="flex">
 							{Object.entries(filterList).map((element) => {
 								if (element[1] && typeof element[1] == "string") {
-									return chipArray({
+									return chipArr({
 										arr: [element[1]],
 										name: element[0].slice(0, 4),
 										removeChip: (index: number) => {
