@@ -8,7 +8,7 @@ import {
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import pagination from "../../../../hooks/pagination";
 import { budgetLineItemInputFields } from "./inputFields.json";
-import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS } from "../../../../graphql";
+import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS, GET_CURRENCY_LIST } from "../../../../graphql";
 import { useLazyQuery } from "@apollo/client";
 
 //make input field hidden
@@ -82,6 +82,20 @@ function BudgetLineItemTableGraphql({
 			});
 		}
 	}, [filterList]);
+
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
+
+	useEffect(() => {
+		if (dashboardData) {
+			getCurrency({
+				variables: {
+					filter: {
+						country: dashboardData?.organization?.country?.id,
+					},
+				},
+			});
+		}
+	}, [getCurrency, dashboardData]);
 
 	let {
 		count,
@@ -205,6 +219,7 @@ function BudgetLineItemTableGraphql({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			currency={currency?.currencyList[0]?.code || ""}
 		/>
 	);
 }

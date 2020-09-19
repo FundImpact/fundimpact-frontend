@@ -113,6 +113,7 @@ function BudgetLineItemTableView({
 	annualYearHash,
 	financialYearDonorHash,
 	financialYearOrgHash,
+	currency,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -140,7 +141,10 @@ function BudgetLineItemTableView({
 	annualYearHash: { [key: string]: string };
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
+	currency: string;
 }) {
+	tableHeadings[3].label = "Amount " + `(${currency})`;
+
 	return (
 		<>
 			<Grid container>

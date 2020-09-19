@@ -10,6 +10,7 @@ import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { budgetTargetInputFields } from "./inputFields.json";
 import { GET_ORG_DONOR } from "../../../../graphql/donor";
 import { useLazyQuery } from "@apollo/client";
+import { GET_CURRENCY_LIST } from "../../../../graphql";
 
 let donorHash = {};
 let budgetCategoryHash = {};
@@ -45,6 +46,20 @@ function BudgetTargetTableGraphql() {
 			},
 		}
 	);
+
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
+
+	useEffect(() => {
+		if (dashboardData) {
+			getCurrency({
+				variables: {
+					filter: {
+						country: dashboardData?.organization?.country?.id,
+					},
+				},
+			});
+		}
+	}, [getCurrency, dashboardData]);
 
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
@@ -146,6 +161,7 @@ function BudgetTargetTableGraphql() {
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			currency={currency?.currencyList[0]?.code || ""}
 		/>
 	);
 }

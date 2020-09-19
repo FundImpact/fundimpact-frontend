@@ -96,6 +96,7 @@ function BudgetTargetView({
 	donorHash,
 	budgetCategoryHash,
 	removeFilterListElements,
+	currency,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -122,7 +123,10 @@ function BudgetTargetView({
 	donorHash: { [key: string]: string };
 	budgetCategoryHash: { [key: string]: string };
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	currency: string;
 }) {
+	tableHeadings[5].label = "Total Amount " + `(${currency})`;
+
 	return (
 		<>
 			<Grid container>

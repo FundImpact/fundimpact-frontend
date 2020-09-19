@@ -48,6 +48,7 @@ function BudgetTargetTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	currency,
 }: {
 	budgetTargetList: IBudgetTargetProjectResponse[];
 	changePage: (prev?: boolean) => void;
@@ -69,6 +70,7 @@ function BudgetTargetTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	currency: string;
 }) {
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false]);
 	const selectedBudgetTarget = useRef<IBudgetTargetProjectResponse | null>(null);
@@ -102,6 +104,7 @@ function BudgetTargetTableContainer({
 			donorHash={donorHash}
 			budgetCategoryHash={budgetCategoryHash}
 			removeFilterListElements={removeFilterListElements}
+			currency={currency}
 		/>
 	);
 }

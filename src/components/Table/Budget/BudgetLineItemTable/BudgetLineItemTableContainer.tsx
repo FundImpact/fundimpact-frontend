@@ -37,6 +37,7 @@ function BudgetLineItemTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	currency,
 }: {
 	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
 	changePage: (prev?: boolean) => void;
@@ -60,6 +61,7 @@ function BudgetLineItemTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	currency: string;
 }) {
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 	const selectedBudgetLineItem = useRef<IBUDGET_LINE_ITEM_RESPONSE | null>(null);
@@ -92,6 +94,7 @@ function BudgetLineItemTableContainer({
 			annualYearHash={annualYearHash}
 			financialYearDonorHash={financialYearDonorHash}
 			financialYearOrgHash={financialYearOrgHash}
+			currency={currency}
 		/>
 	);
 }
