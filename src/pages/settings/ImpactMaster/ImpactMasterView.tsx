@@ -2,12 +2,24 @@ import React from "react";
 import AddButton from "../../../components/Dasboard/AddButton";
 import ImpactCategoryTable from "../../../components/Table/ImpactCategoryTable";
 import ImpactUnitTable from "../../../components/Table/ImpactUnitTable";
-import { Box, Tabs, Tab, makeStyles, Theme } from "@material-ui/core";
+import {
+	Box,
+	Tabs,
+	Tab,
+	makeStyles,
+	Theme,
+	Typography,
+	Grid,
+	Chip,
+	Avatar,
+} from "@material-ui/core";
 import ImpactUnitDialog from "../../../components/Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import ImpactCategoryDialog from "../../../components/Impact/ImpactCategoryDialog";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
+import FilterList from "../../../components/FilterList";
+import { impactCategoryInputFields, impactUnitInputFields } from "./inputFields.json"; //make seprate json
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -58,9 +70,24 @@ function TabContent(props: TabPanelProps) {
 	);
 }
 
-const ImpactMasterView = () => {
+const ImpactMasterView = ({
+	value,
+	setValue,
+	impactCategoryFilterList,
+	impactUnitFilterList,
+	removeFilteListElements,
+	setImpactCategoryFilterList,
+	setImpactUnitFilterList,
+}: {
+	value: number;
+	setValue: React.Dispatch<React.SetStateAction<number>>;
+	impactCategoryFilterList: { [key: string]: string };
+	impactUnitFilterList: { [key: string]: string };
+	removeFilteListElements: (elementToDelete: string) => void;
+	setImpactCategoryFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+	setImpactUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+}) => {
 	const classes = useStyles();
-	const [value, setValue] = React.useState(0);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
@@ -69,7 +96,7 @@ const ImpactMasterView = () => {
 	const tabs = [
 		{
 			label: "Impact Category",
-			table: <ImpactCategoryTable />,
+			table: <ImpactCategoryTable tableFilterList={impactCategoryFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -83,7 +110,7 @@ const ImpactMasterView = () => {
 		},
 		{
 			label: "Impact Unit",
-			table: <ImpactUnitTable />,
+			table: <ImpactUnitTable tableFilterList={impactUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -102,15 +129,60 @@ const ImpactMasterView = () => {
 	return (
 		<>
 			<Box p={2}>
-				<h1>
-					<FormattedMessage
-						description={`This text is the heding of impact ${
-							value == 0 ? "Categories" : "Unit"
-						} table`}
-						defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
-						id={`impactMasterPageHeading-${value}`}
-					/>
-				</h1>
+				<Grid container>
+					<Grid item xs={11}>
+						<Typography variant="h4">
+							<Box mt={2} fontWeight="fontWeightBold">
+								<FormattedMessage
+									description={`This text is the heding of impact ${
+										value == 0 ? "Categories" : "Unit"
+									} table`}
+									defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
+									id={`impactMasterPageHeading-${value}`}
+								/>
+							</Box>
+						</Typography>
+					</Grid>
+					<Grid item xs={1}>
+						<Box mt={2}>
+							<FilterList
+								setFilterList={
+									value == 0
+										? setImpactCategoryFilterList
+										: setImpactUnitFilterList
+								}
+								inputFields={
+									value == 0 ? impactCategoryInputFields : impactUnitInputFields
+								}
+							/>
+						</Box>
+					</Grid>
+					<Grid item xs={12}>
+						<Box my={2} display="flex">
+							{(value == 0
+								? Object.entries(impactCategoryFilterList)
+								: Object.entries(impactUnitFilterList)
+							).map(
+								(element, index) =>
+									element[1] && (
+										<Box key={index} mx={1}>
+											<Chip
+												avatar={
+													<Avatar
+													style={{ height: "30px", width: "30px" }}
+													>
+														<span>{element[0].slice(0, 4)}</span>
+													</Avatar>
+												}
+												label={element[1]}
+												onDelete={() => removeFilteListElements(element[0])}
+											/>
+										</Box>
+									)
+							)}
+						</Box>
+					</Grid>
+				</Grid>
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs

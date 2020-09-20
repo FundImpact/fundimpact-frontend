@@ -8,6 +8,7 @@ import {
 	MenuItem,
 	TableCell,
 	TablePagination,
+	Grid,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
@@ -26,6 +27,40 @@ import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
 import { FormattedMessage } from "react-intl";
+import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
+import { deliverableTracklineInputFields } from "./inputFields.json";
+import FilterList from "../../FilterList";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+
+const chipArray = ({
+	arr,
+	name,
+	removeChip,
+}: {
+	removeChip: (index: number) => void;
+	name: string;
+	arr: string[];
+}) => {
+	return arr.map((element, index) => (
+		<Box key={index} m={1}>
+			<Chip
+				label={element}
+				avatar={
+					<Avatar
+						style={{
+							width: "30px",
+							height: "30px",
+						}}
+					>
+						<span>{name}</span>
+					</Avatar>
+				}
+				onDelete={() => removeChip(index)}
+			/>
+		</Box>
+	));
+};
+
 // import {
 // 	GET_DELIVERABLE_LINEITEM_FYDONOR,
 // 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
@@ -70,11 +105,11 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		deliverableTracklineData,
 		setDeliverableTracklineData,
 	] = useState<IDeliverableTargetLine | null>();
-	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setMenuAnchor(event.currentTarget);
-	};
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
+	};
+	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setMenuAnchor(event.currentTarget);
 	};
 	return (
 		<>
@@ -84,11 +119,11 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 				</IconButton>
 			</TableCell>
 			<Menu
-				id="deliverable-trackline-simple-menu"
-				anchorEl={menuAnchor}
-				keepMounted
-				open={Boolean(menuAnchor)}
 				onClose={handleMenuClose}
+				open={Boolean(menuAnchor)}
+				keepMounted
+				anchorEl={menuAnchor}
+				id="deliverable-trackline-simple-menu"
 			>
 				<MenuItem
 					onClick={() => {
@@ -128,12 +163,91 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	);
 }
 
+const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
+};
+
+let financialYearHash: { [key: string]: string } = {};
+let annualYearHash: { [key: string]: string } = {};
+
 export default function DeliverablesTrackLineTable({
 	deliverableTargetId,
 }: {
 	deliverableTargetId: string;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>({
+		reporting_date: "",
+		note: "",
+		value: "",
+		annual_year: [],
+		financial_year: [],
+	});
+	const [queryFilter, setQueryFilter] = useState({});
+
+	const dashBoardData = useDashBoardData();
+
+	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
+
+	const { data: impactFyData } = useQuery(GET_FINANCIAL_YEARS, {
+		variables: { filter: { country: dashBoardData?.organization?.country?.id } },
+	});
+
+	const removeFilterListElements = (key: string, index?: number) => {
+		setFilterList((obj) => {
+			if (Array.isArray(obj[key])) {
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+			} else {
+				obj[key] = "";
+			}
+			return { ...obj };
+		});
+	};
+
+	useEffect(() => {
+		if (getAnnualYears) {
+			deliverableTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
+			annualYearHash = mapIdToName(getAnnualYears.annualYears, annualYearHash);
+		}
+	}, [getAnnualYears]);
+
+	useEffect(() => {
+		if (impactFyData) {
+			deliverableTracklineInputFields[4].optionsArray = impactFyData.financialYearList;
+			financialYearHash = mapIdToName(impactFyData.financialYearList, financialYearHash);
+		}
+	}, [impactFyData]);
+
+	useEffect(() => {
+		setQueryFilter({
+			deliverable_target_project: deliverableTargetId,
+		});
+	}, [deliverableTargetId]);
+
+	useEffect(() => {
+		if (filterList) {
+			let obj: { [key: string]: string | string[] } = {};
+			for (let key in filterList) {
+				if (filterList[key] && filterList[key].length) {
+					obj[key] = filterList[key];
+				}
+			}
+			setQueryFilter({
+				deliverable_target_project: deliverableTargetId,
+				...obj,
+			});
+		}
+	}, [filterList]);
 
 	const handleDeliverableLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -156,13 +270,9 @@ export default function DeliverablesTrackLineTable({
 	} = pagination({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
-		countFilter: {
-			deliverable_target_project: deliverableTargetId,
-		},
-		queryFilter: {
-			deliverable_target_project: deliverableTargetId,
-		},
-		sort: "created_at:DESC",
+		countFilter: queryFilter,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
@@ -186,19 +296,35 @@ export default function DeliverablesTrackLineTable({
 							{TracklinePage * limit + i + 1}
 						</TableCell>,
 						<TableCell
-							key={getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
+							key={
+								getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date) +
+								`${deliverableTrackingLineitemList[i]?.id}-1`
+							}
 						>
 							{getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
 						</TableCell>,
-						<TableCell key={deliverableTrackingLineitemList[i]?.note}>
+						<TableCell
+							key={
+								deliverableTrackingLineitemList[i]?.note +
+								`${deliverableTrackingLineitemList[i]?.id}-2`
+							}
+						>
 							{deliverableTrackingLineitemList[i]?.note
 								? deliverableTrackingLineitemList[i]?.note
 								: "-"}
 						</TableCell>,
 						<TableCell
-							key={deliverableTrackingLineitemList[i]?.value}
+							key={
+								deliverableTrackingLineitemList[i]?.value +
+								`${deliverableTrackingLineitemList[i]?.id}-3`
+							}
 						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_category_unit?.deliverable_units_org?.name}`}</TableCell>,
-						<TableCell key={deliverableTrackingLineitemList[i]?.financial_year?.name}>
+						<TableCell
+							key={
+								deliverableTrackingLineitemList[i]?.financial_year?.name +
+								+`${deliverableTrackingLineitemList[i]?.id}-4`
+							}
+						>
 							<Box display="flex">
 								<Box mr={1}>
 									<Chip
@@ -256,10 +382,66 @@ export default function DeliverablesTrackLineTable({
 		<>
 			{countQueryLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
+			<Grid container>
+				<Grid item xs={11}>
+					<Box my={2} display="flex" flexWrap="wrap">
+						{Object.entries(filterList).map((element) => {
+							if (element[1] && typeof element[1] == "string") {
+								return chipArray({
+									name: element[0].slice(0, 4),
+									removeChip: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+									arr: [element[1]],
+								});
+							}
+							if (element[1] && Array.isArray(element[1])) {
+								if (element[0] == "financial_year") {
+									return chipArray({
+										arr: element[1].map((ele) => financialYearHash[ele]),
+										name: "fy",
+										removeChip: (index: number) => {
+											removeFilterListElements(element[0], index);
+										},
+									});
+								}
+								if (element[0] == "annual_year") {
+									return chipArray({
+										arr: element[1].map((ele) => annualYearHash[ele]),
+										name: "ay",
+										removeChip: (index: number) => {
+											removeFilterListElements(element[0], index);
+										},
+									});
+								}
+							}
+						})}
+					</Box>
+				</Grid>
+				<Grid item xs={1}>
+					<Box mt={2}>
+						<FilterList
+							initialValues={{
+								reporting_date: "",
+								note: "",
+								value: "",
+								annual_year: [],
+								financial_year: [],
+							}}
+							setFilterList={setFilterList}
+							inputFields={deliverableTracklineInputFields}
+						/>
+					</Box>
+				</Grid>
+			</Grid>
 			<FITable
 				tableHeading={deliverableAndimpactTracklineHeading}
 				rows={rows}
 				pagination={deliverableTracklineTablePagination}
+				order={order}
+				orderBy={orderBy}
+				setOrder={setOrder}
+				setOrderBy={setOrderBy}
 			/>
 		</>
 	);

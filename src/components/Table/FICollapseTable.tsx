@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, TableSortLabel } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
@@ -76,10 +76,18 @@ export default function CollapsibleTable({
 	tableHeading,
 	rows,
 	pagination,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
-	tableHeading: { label: string }[];
+	tableHeading: { label: string; keyMapping?: string }[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
 	pagination?: React.ReactNode;
+	order?: "asc" | "desc";
+	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy?: string;
+	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
@@ -108,7 +116,30 @@ export default function CollapsibleTable({
 										align="left"
 										className={tableHeader.th}
 									>
-										{heading.label}
+										 {/* {heading.label} */}
+										{/* {heading.label} */}
+										<FormattedMessage
+											id={"tableHeading" + heading.label.replace(/ /g, "")}
+											defaultMessage={`${heading.label}`}
+											description={`This text will be shown on table for ${heading.label} heading`}
+										/>
+										{order && heading.keyMapping && (
+											<TableSortLabel
+												active={orderBy == heading.keyMapping}
+												onClick={() => {
+													if (orderBy == heading.keyMapping) {
+														setOrder &&
+															setOrder(
+																order == "asc" ? "desc" : "asc"
+															);
+													} else {
+														setOrderBy &&
+															setOrderBy(heading.keyMapping || "");
+													}
+												}}
+												direction={order}
+											></TableSortLabel>
+										)}
 									</TableCell>
 								))}
 						</TableRow>

@@ -21,7 +21,19 @@ import {
 	impactTracklineByTargetMock,
 	projectMock,
 	impactLinitemFyDonorListMock,
+	impactCategoryMock,
+	sustainableDevelopmentGoalMock,
+	annualYearListMock,
 } from "../../../Impact/__test__/testHelp";
+import { organizationDetail, financialYearListMock } from "../../../../utils/testMock.json";
+import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../../graphql/Impact/query";
+import { GET_SDG } from "../../../../graphql/SDG/query";
+import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../../graphql";
+
+let intialFormValue = {
+	name: "impact target name",
+	target_value: "1231"
+}
 
 const mocks = [
 	{
@@ -30,6 +42,19 @@ const mocks = [
 			variables: { sort: "created_at:DESC", limit: 1, start: 0, filter: { project: 2 } },
 		},
 		result: { data: { impactTargetProjectList: impactTargetMock } },
+	},
+	{
+		request: {
+			query: GET_IMPACT_CATEGORY_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { impactCategoryOrgList: impactCategoryMock } },
+	},
+	{
+		request: {
+			query: GET_SDG,
+		},
+		result: { data: { sustainableDevelopmentGoalList: sustainableDevelopmentGoalMock } },
 	},
 	{
 		request: {
@@ -59,6 +84,19 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_ANNUAL_YEARS,
+		},
+		result: { data: { annualYears: annualYearListMock } },
+	},
+	{
+		request: {
+			query: GET_FINANCIAL_YEARS,
+			variables: { filter: { country: "1" } },
+		},
+		result: { data: { financialYearList: financialYearListMock } },
+	},
+	{
+		request: {
 			query: GET_IMPACT_TRACKLINE_COUNT,
 			variables: { filter: { impact_target_project: "14" } },
 		},
@@ -78,7 +116,9 @@ let impactTable: any;
 beforeEach(() => {
 	act(() => {
 		impactTable = renderApollo(
-			<DashboardProvider defaultState={{ project: projectMock }}>
+			<DashboardProvider
+				defaultState={{ project: projectMock, organization: organizationDetail }}
+			>
 				<NotificationProvider>
 					<ImpactTable />
 				</NotificationProvider>
@@ -125,5 +165,36 @@ describe("Impact Table and impact trackline table Graphql Calls and data listing
 		await waitForElement(() => getAllByText(/2015/));
 		await waitForElement(() => getAllByText(/FY 2019-20/));
 		await waitForElement(() => getByText(/2020-08-26/i)); // date of target trackline
+	});
+
+	test("Filter List test", async () => {
+		let filterButton = await impactTable.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let filterButton = await impactTable.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		let nameField = (await impactTable.findByTestId(
+			"createImpactTargetNameInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		});
+		await expect(nameField.value).toBe(intialFormValue.name);
+
+		let amountField = (await impactTable.findByTestId(
+			"createImpactTotalTargetAmountInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(amountField, {
+				target: { value: intialFormValue.target_value },
+			});
+		});
+		await expect(amountField.value).toBe(intialFormValue.target_value);
 	});
 });

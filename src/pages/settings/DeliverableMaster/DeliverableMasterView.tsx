@@ -2,7 +2,7 @@ import React from "react";
 import AddButton from "../../../components/Dasboard/AddButton";
 import DeliverableCategoryTable from "../../../components/Table/DeliverableCategoryTable";
 import DeliverableUnitTable from "../../../components/Table/DeliverableUnitTable";
-import { Box, Tabs, Tab, Theme } from "@material-ui/core";
+import { Box, Tabs, Tab, Theme, Grid, Typography, Chip, Avatar } from "@material-ui/core";
 import DeliverableUnit from "../../../components/Deliverable/DeliverableUnit";
 import Deliverable from "../../../components/Deliverable/Deliverable";
 import { DELIVERABLE_ACTIONS } from "../../../components/Deliverable/constants";
@@ -10,6 +10,8 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { makeStyles } from "@material-ui/styles";
 import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
+import FilterList from "../../../components/FilterList";
+import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -60,10 +62,27 @@ function a11yProp(index: any) {
 	};
 }
 
-const DeliverableMasterView = () => {
+const DeliverableMasterView = ({
+	value,
+	setValue,
+	deliverableCategoryFilterList,
+	deliverableUnitFilterList,
+	removeFilteListElements,
+	setDeliverableCategoryFilterList,
+	setDeliverableUnitFilterList,
+}: {
+	value: number;
+	setValue: React.Dispatch<React.SetStateAction<number>>;
+	deliverableCategoryFilterList: { [key: string]: string };
+	deliverableUnitFilterList: { [key: string]: string };
+	removeFilteListElements: (elementToDelete: string) => void;
+	setDeliverableCategoryFilterList: React.Dispatch<
+		React.SetStateAction<{ [key: string]: string }>
+	>;
+	setDeliverableUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+}) => {
 	const dashboardData = useDashBoardData();
 	const classes = useStyles();
-	const [value, setValue] = React.useState(0);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
@@ -82,12 +101,12 @@ const DeliverableMasterView = () => {
 				),
 			},
 			createButtons: [],
-			table: <DeliverableCategoryTable />,
+			table: <DeliverableCategoryTable tableFilterList={deliverableCategoryFilterList} />,
 			label: "Deliverable Category",
 		},
 		{
 			label: "Deliverable Unit",
-			table: <DeliverableUnitTable />,
+			table: <DeliverableUnitTable tableFilterList={deliverableUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -107,31 +126,80 @@ const DeliverableMasterView = () => {
 	return (
 		<>
 			<Box p={2}>
-				<h1>
-					<FormattedMessage
-						id={`deliverablemMasterPageHeading-${value}`}
-						defaultMessage={`Deliverable ${value == 0 ? "Categories" : "Unit"} `}
-						description={`This text is the heding of deliverable ${
-							value == 0 ? "Categories" : "Unit"
-						} table`}
-					/>
-				</h1>
+				<Grid container>
+					<Grid item xs={11}>
+						<Typography variant="h4">
+							<Box mt={2} fontWeight="fontWeightBold">
+								<FormattedMessage
+									description={`This text is the heding of deliverable ${
+										value == 0 ? "Categories" : "Unit"
+									} table`}
+									defaultMessage={`Deliverable ${
+										value == 0 ? "Categories" : "Unit"
+									} `}
+									id={`deliverableMasterPageHeading-${value}`}
+								/>
+							</Box>
+						</Typography>
+					</Grid>
+					<Grid item xs={1}>
+						<Box mt={2}>
+							<FilterList
+								setFilterList={
+									value == 0
+										? setDeliverableCategoryFilterList
+										: setDeliverableUnitFilterList
+								}
+								inputFields={
+									value == 0
+										? deliverableCategoryInputFields
+										: deliverableUnitInputFields
+								}
+							/>
+						</Box>
+					</Grid>
+					<Grid item xs={12}>
+						<Box my={2} display="flex">
+							{(value == 0
+								? Object.entries(deliverableCategoryFilterList)
+								: Object.entries(deliverableUnitFilterList)
+							).map(
+								(element, index) =>
+									element[1] && (
+										<Box key={index} mx={1}>
+											<Chip
+												label={element[1]}
+												avatar={
+													<Avatar
+														style={{ width: "30px", height: "30px" }}
+													>
+														<span>{element[0].slice(0, 4)}</span>
+													</Avatar>
+												}
+												onDelete={() => removeFilteListElements(element[0])}
+											/>
+										</Box>
+									)
+							)}
+						</Box>
+					</Grid>
+				</Grid>
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
-						value={value}
-						indicatorColor="primary"
+						aria-label="wrapped label tabs example"
 						textColor="primary"
 						onChange={handleChange}
 						variant="scrollable"
+						indicatorColor="primary"
 						scrollButtons="auto"
-						aria-label="wrapped label tabs example"
+						value={value}
 					>
 						{tabs.map((tab, index) => (
 							<Tab
-								textColor="secondary"
-								key={tab.label}
 								value={index}
+								key={tab.label}
+								textColor="secondary"
 								label={intl.formatMessage({
 									id: `${tab.label
 										.toString()
