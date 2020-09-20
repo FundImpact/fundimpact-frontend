@@ -3,6 +3,7 @@ import React from "react";
 import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import MainDashboard from "../components/Dasboard/MainDashboard";
 import { DashboardProvider } from "../contexts/dashboardContext";
 import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
@@ -16,8 +17,8 @@ const AccountSettingsContainer = React.lazy(
 	() => import("../pages/AccountSettings/AccountSettings")
 );
 const SettingsContainer = React.lazy(() => import("../pages/settings/settings"));
-const DashboardTableContainer = React.lazy(
-	() => import("../components/Dasboard/Table/DashboardTableContainer")
+const MainOrganizationDashboard = React.lazy(
+	() => import("../components/OrganizationDashboard/MainDashboard")
 );
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
@@ -37,9 +38,15 @@ function AppRoutes() {
 							<PrivateRoute
 								path="dashboard"
 								element={
+									<DashboardContainer left={null} main={<MainDashboard />} />
+								}
+							/>
+							<PrivateRoute
+								path="organization/dashboard"
+								element={
 									<DashboardContainer
 										left={null}
-										main={<DashboardTableContainer />}
+										main={<MainOrganizationDashboard />}
 									/>
 								}
 							/>

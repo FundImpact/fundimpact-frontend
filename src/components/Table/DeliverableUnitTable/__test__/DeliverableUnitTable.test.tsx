@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent } from "@testing-library/react";
+import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM } from "../../../../graphql/Budget";
 import { renderApollo } from "../../../../utils/test.util";
@@ -32,6 +32,14 @@ import {
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 } from "../../../../graphql/Deliverable/unit";
+import { deliverableCategoryInputFields } from "../../../../pages/settings/DeliverableMaster/inputFields.json";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+
+let intialFormValue = {
+	name: "new unit name",
+	code: "deliverable unit code",
+	description: "deliverable unit desc",
+};
 
 let table: any;
 
@@ -220,11 +228,24 @@ beforeEach(() => {
 });
 
 describe("Deliverable Unit Table tests", () => {
+	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
+
 	for (let i = 0; i < deliverableUnitTableHeadings.length; i++) {
 		test(`Table Headings ${deliverableUnitTableHeadings[i].label} for Deliverable Unit Table`, async () => {
 			await waitForElement(() => table.getAllByText(deliverableUnitTableHeadings[i].label));
 		});
 	}
+
+	test("Filter List test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
 	test("Deliverable Unit Table renders correctly", async () => {
 		for (let i = 0; i < deliverableUnitMock.length; i++) {
 			await waitForElement(() =>
@@ -276,5 +297,26 @@ describe("Deliverable Unit Table tests", () => {
 				)
 			)
 		);
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		for (let i = 0; i < deliverableCategoryInputFields.length; i++) {
+			await checkElementHaveCorrectValue({
+				inputElement: deliverableCategoryInputFields[i],
+				reactElement: table,
+				value: intialFormValue[deliverableCategoryInputFields[i].name],
+			});
+		}
 	});
 });

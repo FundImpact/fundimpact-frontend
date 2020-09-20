@@ -8,6 +8,7 @@ import {
 	TablePagination,
 	Chip,
 	Avatar,
+	Grid,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
@@ -25,6 +26,40 @@ import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
 import pagination from "../../../hooks/pagination/pagination";
+import { FormattedMessage } from "react-intl";
+import { impactTracklineInputFields } from "./inputFields.json";
+import FilterList from "../../FilterList";
+import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+
+const chipArray = ({
+	removeChip,
+	name,
+	arr,
+}: {
+	removeChip: (index: number) => void;
+	name: string;
+	arr: string[];
+}) => {
+	return arr.map((element, index) => (
+		<Box key={index} m={1}>
+			<Chip
+				avatar={
+					<Avatar
+						style={{
+							width: "30px",
+							height: "30px",
+						}}
+					>
+						<span>{name}</span>
+					</Avatar>
+				}
+				label={element}
+				onDelete={() => removeChip(index)}
+			/>
+		</Box>
+	));
+};
 
 function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
@@ -120,7 +155,11 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 						handleMenuClose();
 					}}
 				>
-					Edit Achievement
+					<FormattedMessage
+						id="editAchievementMenu"
+						defaultMessage="Edit Achievement"
+						description="This text will be show on deliverable or impact target table for edit achievement menu"
+					/>
 				</MenuItem>
 			</Menu>
 			{impactTargetLineData && (
@@ -136,12 +175,89 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	);
 }
 
+let annualYearHash: { [key: string]: string } = {};
+let financialYearHash: { [key: string]: string } = {};
+
+const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
+};
+
 export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetId: string }) {
 	// const { loading, data } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
 	// 	variables: { filter: { impact_target_project: impactTargetId } },
 	// });
 
 	const [impactTracklinePage, setImpactTracklinePage] = React.useState(0);
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>({
+		reporting_date: "",
+		note: "",
+		value: "",
+		annual_year: [],
+		financial_year: [],
+	});
+	const dashBoardData = useDashBoardData();
+	const [queryFilter, setQueryFilter] = useState({});
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+
+	const { data: impactFyData } = useQuery(GET_FINANCIAL_YEARS, {
+		variables: { filter: { country: dashBoardData?.organization?.country?.id } },
+	});
+	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
+
+	useEffect(() => {
+		if (getAnnualYears) {
+			impactTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
+			annualYearHash = mapIdToName(getAnnualYears.annualYears, annualYearHash);
+		}
+	}, [getAnnualYears]);
+
+	useEffect(() => {
+		if (impactFyData) {
+			impactTracklineInputFields[4].optionsArray = impactFyData.financialYearList;
+			financialYearHash = mapIdToName(impactFyData.financialYearList, financialYearHash);
+		}
+	}, [impactFyData]);
+
+	const removeFilterListElements = (key: string, index?: number) => {
+		setFilterList((obj) => {
+			if (Array.isArray(obj[key])) {
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+			} else {
+				obj[key] = "";
+			}
+			return { ...obj };
+		});
+	};
+
+	useEffect(() => {
+		setQueryFilter({
+			impact_target_project: impactTargetId,
+		});
+	}, [impactTargetId]);
+
+	useEffect(() => {
+		if (filterList) {
+			let obj: { [key: string]: string | string[] } = {};
+			for (let key in filterList) {
+				if (filterList[key] && filterList[key].length) {
+					obj[key] = filterList[key];
+				}
+			}
+			setQueryFilter({
+				impact_target_project: impactTargetId,
+				...obj,
+			});
+		}
+	}, [filterList]);
 
 	const handleImpactLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -164,13 +280,9 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 	} = pagination({
 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 		countQuery: GET_IMPACT_TRACKLINE_COUNT,
-		countFilter: {
-			impact_target_project: impactTargetId,
-		},
-		queryFilter: {
-			impact_target_project: impactTargetId,
-		},
-		sort: "created_at:DESC",
+		countFilter: queryFilter,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
@@ -192,18 +304,31 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						>
 							{impactTracklinePage * limit + i + 1}
 						</TableCell>,
-						<TableCell key={impactTrackingLineitemList[i]?.reporting_date}>
+						<TableCell
+							key={
+								impactTrackingLineitemList[i]?.reporting_date +
+								`${impactTrackingLineitemList[i]?.id}-1`
+							}
+						>
 							{getTodaysDate(impactTrackingLineitemList[i]?.reporting_date)}
 						</TableCell>,
-						<TableCell key={impactTrackingLineitemList[i]?.note}>
+						<TableCell
+							key={
+								impactTrackingLineitemList[i]?.note +
+								`${impactTrackingLineitemList[i]?.id}-2`
+							}
+						>
 							{impactTrackingLineitemList[i]?.note
 								? impactTrackingLineitemList[i]?.note
 								: "-"}
 						</TableCell>,
 						<TableCell
-							key={impactTrackingLineitemList[i]?.value}
+							key={
+								impactTrackingLineitemList[i]?.value +
+								`${impactTrackingLineitemList[i]?.id}-3`
+							}
 						>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
-						<TableCell key={Math.random()}>
+						<TableCell key={Math.random() + `${impactTrackingLineitemList[i]?.id}-4`}>
 							{" "}
 							<Box display="flex">
 								<Box mr={1}>
@@ -263,10 +388,66 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		<>
 			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
+			<Grid container>
+				<Grid item xs={11}>
+					<Box my={2} display="flex" flexWrap="wrap">
+						{Object.entries(filterList).map((element) => {
+							if (element[1] && Array.isArray(element[1])) {
+								if (element[0] == "annual_year") {
+									return chipArray({
+										arr: element[1].map((ele) => annualYearHash[ele]),
+										name: "ay",
+										removeChip: (index: number) => {
+											removeFilterListElements(element[0], index);
+										},
+									});
+								}
+								if (element[0] == "financial_year") {
+									return chipArray({
+										arr: element[1].map((ele) => financialYearHash[ele]),
+										name: "fy",
+										removeChip: (index: number) => {
+											removeFilterListElements(element[0], index);
+										},
+									});
+								}
+							}
+							if (element[1] && typeof element[1] == "string") {
+								return chipArray({
+									arr: [element[1]],
+									name: element[0].slice(0, 4),
+									removeChip: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+								});
+							}
+						})}
+					</Box>
+				</Grid>
+				<Grid item xs={1}>
+					<Box mt={2}>
+						<FilterList
+							initialValues={{
+								reporting_date: "",
+								note: "",
+								value: "",
+								annual_year: [],
+								financial_year: [],
+							}}
+							setFilterList={setFilterList}
+							inputFields={impactTracklineInputFields}
+						/>
+					</Box>
+				</Grid>
+			</Grid>
 			<FITable
 				tableHeading={deliverableAndimpactTracklineHeading}
 				rows={rows}
 				pagination={tablePagination}
+				order={order}
+				orderBy={orderBy}
+				setOrder={setOrder}
+				setOrderBy={setOrderBy}
 			/>
 		</>
 	);

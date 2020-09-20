@@ -1,0 +1,46 @@
+{
+	"budgetTargetInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetTargetName",
+			"testId": "createBudgetTargetNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "total_target_amount",
+			"id": "budgetTotalTargetAmount",
+			"dataTestId": "createBudgetTotalTargetAmount",
+			"testId": "createBudgetTotalTargetAmountInput",
+			"label": "Total Amount",
+			"size": 6
+		},
+		{
+			"name": "donor",
+			"label": "Choose Donor",
+			"size": 12,
+			"testId": "createDonorOption",
+			"dataTestId": "createDonor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "budget_category_organization",
+			"label": "Choose Budget Category",
+			"size": 12,
+			"testId": "createBudgetCategoryOption",
+			"dataTestId": "budgetCategory",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	]
+}

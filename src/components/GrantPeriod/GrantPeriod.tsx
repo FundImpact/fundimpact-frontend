@@ -1,5 +1,6 @@
 import { useApolloClient, useMutation } from "@apollo/client";
 import React from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -9,6 +10,7 @@ import { FORM_ACTIONS } from "../../models/constants";
 import { GrantPeriodDialogProps } from "../../models/grantPeriod/grantPeriodDialog";
 import { IGrantPeriod } from "../../models/grantPeriod/grantPeriodForm";
 import { setSuccessNotification } from "../../reducers/notificationReducer";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import FormDialog from "../FormDialog";
 import { GranPeriodForm } from "../Forms/GrantPeriod/GranPeriod";
 
@@ -25,7 +27,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 
 	//change type
 	const onCreatingNewGrantPeriodSuccess = (newGrantPeriod: any, action: FORM_ACTIONS) => {
-		console.log('newGrantPeriod :>> ', newGrantPeriod);
+		console.log("newGrantPeriod :>> ", newGrantPeriod);
 		const cacheData = cache.readQuery({
 			query: FETCH_GRANT_PERIODS,
 			variables: { filter: { project: dashboardData?.project?.id } },
@@ -137,14 +139,27 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 			}).initialValues,
 		};
 	}
-
+	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(action);
 	return (
 		<div>
 			<FormDialog
 				open={open}
 				loading={loading || updating}
-				title={"Grant Period"}
-				subtitle={"Grant Period for the project"}
+				title={
+					newOrEdit +
+					" " +
+					intl.formatMessage({
+						id: "grantPeriodFormTitle",
+						defaultMessage: "Grant Period",
+						description: `This text will be show on Grant Periodform for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "deliverableCategoryFormSubtitle",
+					defaultMessage: "Manage Budget Category",
+					description: `This text will be show on Grant Period form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name || ""}
 				handleClose={onClose}
 				project={dashboardData?.project?.name || ""}

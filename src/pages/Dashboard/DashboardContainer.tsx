@@ -1,11 +1,5 @@
 import { Box, Container, Grid, Typography } from "@material-ui/core";
 import React from "react";
-
-import Achievement from "../../components/Dasboard/Cards/Achievement/Achievement";
-import DashboardCard from "../../components/Dasboard/Cards/DasboardCards";
-import FundStatus from "../../components/Dasboard/Cards/FundStatus/FundStatus";
-import Impact from "../../components/Dasboard/Cards/Impact/Impact";
-import ProjectName from "../../components/Dasboard/ProjectName/ProjectName";
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import SideBar from "../../components/SideBar/SideBar";
@@ -82,24 +76,7 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 					</Grid>
 
 					<Grid item xs md={9} container direction="column">
-						<Grid item>
-							<ProjectName />
-						</Grid>
-
-						<Grid item container style={{ flex: 1.5 }}>
-							<Grid item md={4}>
-								<DashboardCard title={"FUND STATUS"} Children={FundStatus} />
-							</Grid>
-							<Grid item md={4}>
-								<DashboardCard title={"ACHIEVEMENTS"} Children={Achievement} />
-							</Grid>
-							<Grid item md={4}>
-								<DashboardCard title={"IMPACT"} Children={Impact} />
-							</Grid>
-						</Grid>
-						<Grid item style={{ flex: 4 }}>
-							<Box ml={1}>{main}</Box>
-						</Grid>
+						<Box ml={1}>{main}</Box>
 					</Grid>
 				</Grid>
 			</Container>

@@ -32,6 +32,8 @@ import {
 	IDeliverableTracklineByTargetResponse,
 	IGET_DELIVERABLE_TRACKLINE_BY_TARGET,
 } from "../../models/deliverable/query";
+import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -83,11 +85,22 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const formAction = props.type;
 	const formIsOpen = props.open;
+	const intl = useIntl();
 	const onCancel = () => {
 		props.handleClose();
 		handleReset();
 	};
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+	let formTitle = intl.formatMessage({
+		id: "deliverableAchievementFormTitle",
+		defaultMessage: "Deliverable Achievement",
+		description: `This text will be show on deliverable Achievement form for title`,
+	});
+	let formSubtitle = intl.formatMessage({
+		id: "deliverableAchievementFormSubtitle",
+		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+		description: `This text will be show on deliverable Achievement form for subtitle`,
+	});
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
@@ -363,11 +376,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE ? "Report" : "Edit") +
-					" Target Achievement"
-				}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				title={newOrEdit + " " + formTitle}
+				subtitle={formSubtitle}
 				workspace={DashBoardData?.workspace?.name}
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}

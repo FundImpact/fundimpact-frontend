@@ -30,7 +30,7 @@ import {
 	GET_ANNUAL_YEAR_LIST,
 	GET_FINANCIAL_YEARS,
 } from "../../../../graphql";
-import BudgetCategoryTable from "../BudgetCategoryTable";
+import BudgetCategoryTable from "../BudgetCategoryTableGraphql";
 import { budgetCategoryHeading } from "../../constants";
 
 let table: any;

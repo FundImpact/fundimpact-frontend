@@ -1,0 +1,54 @@
+{
+	"deliverableCategoryInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createDeliverableCategoryName",
+			"testId": "createDeliverableCategoryNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "budgetCode",
+			"dataTestId": "createDeliverableCode",
+			"testId": "createDeliverableCategoryCodeInput",
+			"label": "Deliverable Category Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createDeliverableCategoryDescription",
+			"testId": "createDeliverableCategoryDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	],
+	"deliverableUnitInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createDeliverableUnitName",
+			"testId": "createDeliverableUnitNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "DeliverableUnitCode",
+			"dataTestId": "createDeliverableUnitCode",
+			"testId": "createDeliverableUnitCodeInput",
+			"label": "Deliverable Unit Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createDeliverableUnitDescription",
+			"testId": "createDeliverableCategoryDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	]
+}

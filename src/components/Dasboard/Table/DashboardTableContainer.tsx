@@ -76,14 +76,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function DashboardTableContainer() {
+	const intl = useIntl();
 	const dashboardData = useDashBoardData();
 	const tabs = [
 		{
-			label: "Budget",
+			label: intl.formatMessage({
+				id: "budgetTabHeading",
+				defaultMessage: "Budget",
+				description: `This text will be show on tab for Budget`,
+			}),
 			table: <BudgetTargetTable />,
 			createButtons: [
 				{
-					text: "Create Budget Category",
+					text: intl.formatMessage({
+						id: "createBudgetCategory",
+						defaultMessage: "Create Budget Category",
+						description: `This text will be show on Add Button for create Budget Category`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<BudgetCategory
 							open={open}
@@ -93,7 +102,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Budget Target",
+					text: intl.formatMessage({
+						id: "createBudgetTarget",
+						defaultMessage: "Create Budget Target",
+						description: `This text will be show on Add Button for create Budget Target`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<BudgetTarget
 							formAction={FORM_ACTIONS.CREATE}
@@ -104,7 +117,11 @@ export default function DashboardTableContainer() {
 				},
 				// { text: "Report Fund Receipt" },
 				{
-					text: "Report Budget Spend",
+					text: intl.formatMessage({
+						id: "reportBudgetSpend",
+						defaultMessage: "Report Budget Spend",
+						description: `This text will be show on Add Button for Report Budget Spend`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<BudgetLineitem
 							formAction={FORM_ACTIONS.CREATE}
@@ -116,11 +133,19 @@ export default function DashboardTableContainer() {
 			],
 		},
 		{
-			label: "Deliverables",
+			label: intl.formatMessage({
+				id: "deliverableTabHeading",
+				defaultMessage: "Deliverable",
+				description: `This text will be show on tab for Deliverables`,
+			}),
 			table: <DeliverablesTable />,
 			createButtons: [
 				{
-					text: "Create Deliverable Targets",
+					text: intl.formatMessage({
+						id: "createDeliverableTarget",
+						defaultMessage: "Create Deliverable Target",
+						description: `This text will be show on Add Button for create Deliverable Target`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -131,7 +156,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Deliverable Unit",
+					text: intl.formatMessage({
+						id: "createDeliverableUnit",
+						defaultMessage: "Create Deliverable Unit",
+						description: `This text will be show on Add Button for create Deliverable Unit`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableUnit
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -142,7 +171,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Deliverable Category",
+					text: intl.formatMessage({
+						id: "createDeliverableCategory",
+						defaultMessage: "Create Deliverable Category",
+						description: `This text will be show on Add Button for create Deliverable Category`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<Deliverable
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -153,7 +186,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achievements",
+					text: intl.formatMessage({
+						id: "reportAchievement",
+						defaultMessage: "Report Achievement",
+						description: `This text will be show on Add Button for Report Achievement`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTrackLine
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -165,11 +202,19 @@ export default function DashboardTableContainer() {
 			],
 		},
 		{
-			label: "Impact Indicators",
+			label: intl.formatMessage({
+				id: "impactTabHeading",
+				defaultMessage: "Impact Indicator",
+				description: `This text will be show on tab for Impact`,
+			}),
 			table: <ImpactsTable />,
 			createButtons: [
 				{
-					text: "Create Impact Targets",
+					text: intl.formatMessage({
+						id: "createImpactTarget",
+						defaultMessage: "Create Impact Target",
+						description: `This text will be show on Add Button for Create Impact Target`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<ImpactTarget
 							type={IMPACT_ACTIONS.CREATE}
@@ -180,7 +225,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Impact Unit",
+					text: intl.formatMessage({
+						id: "createImpactUnit",
+						defaultMessage: "Create Impact Unit",
+						description: `This text will be show on Add Button for Create Impact Unit`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<ImpactUnitDialog
 							formAction={FORM_ACTIONS.CREATE}
@@ -190,7 +239,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Create Impact Category",
+					text: intl.formatMessage({
+						id: "createImpactCategory",
+						defaultMessage: "Create Impact Category",
+						description: `This text will be show on Add Button for Create Impact Category`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<ImpactCategoryDialog
 							formAction={FORM_ACTIONS.CREATE}
@@ -200,7 +253,11 @@ export default function DashboardTableContainer() {
 					),
 				},
 				{
-					text: "Report Achievements",
+					text: intl.formatMessage({
+						id: "reportAchievement",
+						defaultMessage: "Report Achievement",
+						description: `This text will be show on Add Button for Report Achievement`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<ImpactTrackLine
 							open={open}
@@ -212,11 +269,19 @@ export default function DashboardTableContainer() {
 			],
 		},
 		{
-			label: "Grant Periods",
+			label: intl.formatMessage({
+				id: "grantPeriodTabHeading",
+				defaultMessage: "Grant Period",
+				description: `This text will be show on tab for grant period`,
+			}),
 			table: <GrantPeriodTable />,
 			createButtons: [
 				{
-					text: "Create Grant Period",
+					text: intl.formatMessage({
+						id: "createGrantPeriod",
+						defaultMessage: "Create Grant Period",
+						description: `This text will be show on Add Button for Create Grant Period`,
+					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<GrantPeriodDialog
 							open={open}
@@ -236,7 +301,6 @@ export default function DashboardTableContainer() {
 		console.log(`setting tab index `, newValue);
 		setValue(newValue);
 	};
-	const intl = useIntl();
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs
@@ -253,11 +317,7 @@ export default function DashboardTableContainer() {
 						textColor="secondary"
 						key={tab.label}
 						value={index}
-						label={intl.formatMessage({
-							id: `${tab.label.toString().replace(/ /g, "").toLowerCase()}TabHeading`,
-							defaultMessage: tab.label,
-							description: `This text will be shown for ${tab.label} table heading`,
-						})}
+						label={tab.label}
 						{...a11yProps(index)}
 					/>
 				))}

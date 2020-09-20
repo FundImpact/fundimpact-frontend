@@ -1,34 +1,20 @@
 import { useLazyQuery } from "@apollo/client";
 import { Box, Typography } from "@material-ui/core";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
-
+import BorderLinearProgress from "../../../BorderLinearProgress";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { GET_ALL_IMPACT_TARGET_AMOUNT } from "../../../../graphql/Impact/query";
 import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 } from "../../../../graphql/project";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: { height: "100vh" },
 }));
-
-const BorderLinearProgress = withStyles((theme: Theme) =>
-	createStyles({
-		root: {
-			height: 10,
-			borderRadius: 5,
-			margin: theme.spacing(0, 1, 0, 1),
-		},
-		colorPrimary: {
-			backgroundColor: theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
-		},
-	})
-)(LinearProgress);
 
 interface IIndicatorProps_PROPS {
 	name: string;
@@ -107,16 +93,24 @@ export default function Achievement() {
 		GetImpactAmountTarget({ variables: { filter: { project: projectId } } });
 		GetImpactAmountSpend({ variables: { filter: { project: projectId } } });
 	}, [projectId]);
-
+	const intl = useIntl();
 	const [DELIVERABLE_STATUS, setDELIVERABLE_STATUS] = useState<IIndicatorProps_PROPS>({
-		name: "Deliverables",
+		name: intl.formatMessage({
+			id: "deliverableAchievementCard",
+			defaultMessage: "Deliverable",
+			description: `This text will be show on dashboard achievement card for fund deliverable`,
+		}),
 		percentage: undefined,
 		lastUpdated: "20-5-2020",
 		color: "secondary",
 	});
 
 	const [IMPACT_STATUS, setIMPACT_STATUS] = useState<IIndicatorProps_PROPS>({
-		name: "Impact",
+		name: intl.formatMessage({
+			id: "impactAchievementCard",
+			defaultMessage: "Impact",
+			description: `This text will be show on dashboard achievement card for fund deliverable`,
+		}),
 		percentage: undefined,
 		lastUpdated: "20-5-2020",
 		color: "primary",

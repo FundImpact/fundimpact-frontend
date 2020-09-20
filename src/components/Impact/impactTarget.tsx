@@ -24,6 +24,8 @@ import {
 	IGET_IMPACT_TARGET_BY_PROJECT,
 	IImpactTargetByProjectResponse,
 } from "../../models/impact/query";
+import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -63,7 +65,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	//for fetching category_unit id and creating impact target
 	const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
 		onCompleted(data) {
@@ -327,12 +329,25 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 		return errors;
 	};
-
+	const intl = useIntl();
 	return (
 		<DashboardProvider>
 			<FormDialog
-				title={(formAction === IMPACT_ACTIONS.CREATE ? "New" : "Edit") + " Impact Target"}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				title={
+					newOrEdit +
+					" " +
+					intl.formatMessage({
+						id: "impactTargetFormTitle",
+						defaultMessage: "Impact Target",
+						description: `This text will be show on impact Target form for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "impactTargetFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organizatin like headquater, branch etc.",
+					description: `This text will be show on impact Target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

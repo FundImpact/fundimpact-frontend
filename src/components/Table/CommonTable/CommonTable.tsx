@@ -13,13 +13,14 @@ import {
 	Collapse,
 	Box,
 	Typography,
+	TableSortLabel,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { ICommonTableRow } from "../../../models";
+import { ICommonTableRow, ICommonTable } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
@@ -47,27 +48,13 @@ function getValue<U extends { [key: string]: any }>(
 	obj: U,
 	key: string[]
 ): string | number | boolean {
-	if (!obj.hasOwnProperty(key[0])) {
+	if (!obj?.hasOwnProperty(key[0])) {
 		return "";
 	}
 	if (key.length == 1) {
 		return obj[key[0]];
 	}
 	return getValue(obj[key[0]], key.slice(1));
-}
-//export this
-interface ICommonTable<T> {
-	tableHeadings: { label: string }[];
-	rows: ICommonTableRow[];
-	selectedRow: MutableRefObject<T | null>;
-	children: ReactNode;
-	valuesList: T[];
-	setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
-	editMenuName: string;
-	collapsableTable?: boolean;
-	changePage?: (prev?: boolean) => void;
-	count?: number;
-	loading?: boolean;
 }
 
 function CommonTableRow<T extends { id: string }>({
@@ -80,12 +67,12 @@ function CommonTableRow<T extends { id: string }>({
 	rowData: T;
 	serialNo: number;
 	rows: ICommonTableRow[];
-	children: ReactNode;
+	children: any; //change
 	collapsableTable?: boolean;
 }) {
 	const [openRow, setOpenRow] = useState(false);
+	const childrenArray = React.Children.toArray(children);
 
-	let childrenArr = React.Children.toArray(children);
 	return (
 		<>
 			<TableRow>
@@ -109,21 +96,16 @@ function CommonTableRow<T extends { id: string }>({
 						<TableCell key={i} align="left">
 							{(row.valueAccessKey &&
 								getValue<T>(rowData, row.valueAccessKey.split(","))) ||
-								(row.renderComponent && row.renderComponent(rowData.id))}
+								(row.renderComponent && row.renderComponent(rowData))}
 						</TableCell>
 					);
 				})}
-				{childrenArr[0]}
+				{childrenArray[0]}
 			</TableRow>
 			<TableRow>
 				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
 					<Collapse in={openRow} timeout="auto" unmountOnExit>
-						<Box m={1}>
-							{childrenArr[1] &&
-								React.cloneElement(childrenArr[1] as any, {
-									rowId: rowData.id,
-								})}
-						</Box>
+						<Box m={1}>{children[1] && children[1](rowData)}</Box>
 					</Collapse>
 				</TableCell>
 			</TableRow>
@@ -140,12 +122,16 @@ function CommonTable<T extends { id: string }>({
 	selectedRow,
 	children,
 	valuesList,
-	setOpenDialog,
+	toggleDialogs,
 	editMenuName,
 	collapsableTable = false,
 	changePage,
 	count,
 	loading,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: ICommonTable<T>) {
 	const classes = useStyles();
 	const tableHeader = StyledTableHeader();
@@ -160,42 +146,69 @@ function CommonTable<T extends { id: string }>({
 		setAnchorEl(null);
 	};
 
-	const menuList = [
-		{
-			children: (
-				<MenuItem
-					onClick={() => {
-						setOpenDialog(true);
-						handleClose();
-					}}
-				>
-					{editMenuName}
-				</MenuItem>
-			),
-		},
-	];
+	const menuList = editMenuName.map((element, index) => ({
+		children: (
+			<MenuItem
+				onClick={() => {
+					toggleDialogs(index, true);
+					handleClose();
+				}}
+			>
+				{element}
+			</MenuItem>
+		),
+	}));
 
 	if (loading) {
 		return <TableSkeleton />;
 	}
-	let childrenArr = React.Children.toArray(children);
 
 	if (!valuesList.length) {
 		return <Typography align="center">No Data</Typography>;
 	}
 
+	let childrenArray = React.Children.toArray(children);
+
 	return (
 		<TableContainer component={Paper}>
-			{childrenArr[0]}
+			{childrenArray[0]}
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
 						{valuesList.length
-							? tableHeadings.map((heading: { label: string }, index: number) => (
-									<TableCell className={tableHeader.th} key={index} align="left">
-										{heading.label}
-									</TableCell>
-							  ))
+							? tableHeadings.map(
+									(
+										heading: { label: string; keyMapping?: string },
+										index: number
+									) => (
+										<TableCell
+											className={tableHeader.th}
+											key={index}
+											align="left"
+										>
+											{heading.label}
+											{order && heading.keyMapping && (
+												<TableSortLabel
+													active={orderBy == heading.keyMapping}
+													onClick={() => {
+														if (orderBy == heading.keyMapping) {
+															setOrder &&
+																setOrder(
+																	order == "asc" ? "desc" : "asc"
+																);
+														} else {
+															setOrderBy &&
+																setOrderBy(
+																	heading.keyMapping || ""
+																);
+														}
+													}}
+													direction={order}
+												></TableSortLabel>
+											)}
+										</TableCell>
+									)
+							  )
 							: null}
 					</TableRow>
 				</TableHead>
@@ -232,7 +245,7 @@ function CommonTable<T extends { id: string }>({
 									/>
 								</TableCell>
 
-								{childrenArr[1]}
+								{Array.isArray(children) && children?.length >= 1 && children[1]}
 							</CommonTableRow>
 						))}
 				</TableBody>
@@ -241,7 +254,7 @@ function CommonTable<T extends { id: string }>({
 						<TableRow>
 							<TablePagination
 								rowsPerPageOptions={[]}
-								colSpan={8}
+								colSpan={tableHeadings.length}
 								count={count}
 								rowsPerPage={count > defaultRows ? defaultRows : count}
 								page={page}

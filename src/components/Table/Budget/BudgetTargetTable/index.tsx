@@ -1,2 +1,2 @@
-import BudgetTargetTable from "./BudgetTargetTable";
-export default BudgetTargetTable;
+import BudgetTargetTableGraphql from "./BudgetTargetTableGraphql";
+export default BudgetTargetTableGraphql;

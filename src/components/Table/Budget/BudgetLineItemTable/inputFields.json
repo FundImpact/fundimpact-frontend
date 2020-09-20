@@ -1,0 +1,81 @@
+{
+	"budgetLineItemInputFields": [
+		{
+			"name": "note",
+			"id": "note",
+			"dataTestId": "createBudgetTargetLineItemName",
+			"testId": "createBudgetTargetLineItemNameInput",
+			"label": "Note",
+			"size": 6
+		},
+		{
+			"name": "amount",
+			"id": "budgetLineItemAmount",
+			"dataTestId": "createBudgetLineItemAmount",
+			"testId": "createBudgetLineItemAmountInput",
+			"label": "Amount",
+			"size": 6
+		},
+		{
+			"name": "grant_periods_project",
+			"label": "Choose Grant Period",
+			"size": 12,
+			"testId": "createGrantPeriodOption",
+			"dataTestId": "createGrantPeriod",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "annual_year",
+			"label": "Choose Annual Year",
+			"size": 12,
+			"testId": "createAnnualYearOption",
+			"dataTestId": "createAnnualYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "fy_org",
+			"label": "Choose Financial Year Org",
+			"size": 12,
+			"testId": "createFinancialYearOrgOption",
+			"dataTestId": "createFinancialYearOrg",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "fy_donor",
+			"label": "Choose Financial Year Donor",
+			"size": 12,
+			"testId": "createFinancialYearDonorOption",
+			"dataTestId": "createFinancialYearDonor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "reporting_date",
+			"id": "Date",
+			"dataTestId": "createReporingDate",
+			"testId": "createReporingDateInput",
+			"label": "Date",
+			"size": 6,
+			"type": "date"
+		}
+	]
+}

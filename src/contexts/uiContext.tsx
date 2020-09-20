@@ -22,7 +22,7 @@ function UIProvider({ children }: any) {
 	const { user } = useAuth();
 	const theme = getMuiTheme(user?.theme);
 	return (
-		<ThemeProvider theme={theme}>
+		<ThemeProvider theme={{ ...theme }}>
 			<CssBaseline />
 			{children}
 		</ThemeProvider>

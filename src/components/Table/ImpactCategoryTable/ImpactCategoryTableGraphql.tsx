@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import ImpactCategoryTableContainer from "./ImpactCategoryTableContainer";
 import {
 	GET_IMPACT_CATEGORY_BY_ORG,
@@ -12,14 +12,85 @@ import {
 import { IImpactCategoryData, IImpactUnitData } from "../../../models/impact/impact";
 import pagination from "../../../hooks/pagination";
 
+const removeEmptyKeys = (filterList: { [key: string]: string }) => {
+	let obj: { [key: string]: string } = {};
+	for (let key in filterList) {
+		if (filterList[key] && filterList[key].length) {
+			obj[key] = filterList[key];
+		}
+	}
+	return obj;
+};
+
 function ImpactCategoryTableGraphql({
 	collapsableTable = true,
 	rowId: impactUnitId,
+	tableFilterList,
 }: {
 	collapsableTable?: boolean;
 	rowId?: string;
+	tableFilterList?: { [key: string]: string };
 }) {
 	const dashboardData = useDashBoardData();
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
+	const [queryFilter, setQueryFilter] = useState({});
+	const [nestedTableQueryFilter, setNestedTableQueryFilter] = useState({});
+	const [nestedTableFilterList, setNestedTableFilterList] = useState<{
+		[key: string]: string;
+	}>({
+		name: "",
+		code: "",
+		description: "",
+	});
+
+	useEffect(() => {
+		setNestedTableQueryFilter({
+			impact_units_org: impactUnitId,
+		});
+	}, [impactUnitId]);
+
+	useEffect(() => {
+		setQueryFilter({
+			organization: dashboardData?.organization?.id,
+		});
+	}, [dashboardData]);
+
+	useEffect(() => {
+		if (tableFilterList) {
+			let obj: { [key: string]: string } = removeEmptyKeys(tableFilterList);
+			setQueryFilter({
+				organization: dashboardData?.organization?.id,
+				...obj,
+			});
+		}
+	}, [tableFilterList]);
+
+	useEffect(() => {
+		if (nestedTableFilterList) {
+			const obj = removeEmptyKeys(nestedTableFilterList);
+			setNestedTableQueryFilter(
+				Object.assign(
+					{},
+					{ impact_units_org: impactUnitId },
+					Object.keys(obj).length && {
+						impact_category_org: {
+							...obj,
+						},
+					}
+				)
+			);
+		}
+	}, [nestedTableFilterList]);
+
+	const removeNestedFilterListElements = (key: string, index?: number) => {
+		setNestedTableFilterList((obj) => {
+			obj[key] = "";
+			return { ...obj };
+		});
+	};
 
 	let {
 		changePage: changeImpactCategoryPage,
@@ -29,14 +100,10 @@ function ImpactCategoryTableGraphql({
 		countQueryLoading: impactCategoryCountLoading,
 	} = pagination({
 		countQuery: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
-		countFilter: {
-			organization: dashboardData?.organization?.id,
-		},
+		countFilter: queryFilter,
 		query: GET_IMPACT_CATEGORY_BY_ORG,
-		queryFilter: {
-			organization: dashboardData?.organization?.id,
-		},
-		sort: "created_at:DESC",
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && collapsableTable),
 	});
 
@@ -48,14 +115,10 @@ function ImpactCategoryTableGraphql({
 		countQueryLoading: impactCategoryUnitCountLoading,
 	} = pagination({
 		countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
-		countFilter: {
-			impact_units_org: impactUnitId,
-		},
+		countFilter: nestedTableQueryFilter,
 		query: GET_IMPACT_CATEGORY_UNIT,
-		queryFilter: {
-			impact_units_org: impactUnitId,
-		},
-		sort: "created_at:DESC",
+		queryFilter: nestedTableQueryFilter,
+		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
 		fireRequest: Boolean(impactUnitId && !collapsableTable),
 	});
 
@@ -90,6 +153,13 @@ function ImpactCategoryTableGraphql({
 			count={
 				dashboardData && collapsableTable ? impactCategoryCount : impactCategoryUnitCount
 			}
+			order={collapsableTable ? order : nestedTableOrder}
+			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
+			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
+			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
+			filterList={nestedTableFilterList}
+			setFilterList={setNestedTableFilterList}
+			removeFilterListElements={removeNestedFilterListElements}
 		/>
 	);
 }

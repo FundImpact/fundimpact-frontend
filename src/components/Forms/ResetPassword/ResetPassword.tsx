@@ -10,6 +10,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import { IPassword, ResetPasswordProps } from "../../../models/ResetPassword/ResetPassword";
 import { UPDATE_PASSWORD } from "../../../graphql/Password/mutation";
+import { FormattedMessage } from "react-intl";
 
 function PasswordReset(props: ResetPasswordProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -56,10 +57,18 @@ function PasswordReset(props: ResetPasswordProps) {
 			<Grid container spacing={2}>
 				<Grid item xs={3}>
 					<Typography data-testid="reset-password-heading" variant="h6" gutterBottom>
-						Password
+						<FormattedMessage
+							id="reserPasswordFormTitle"
+							defaultMessage="Password"
+							description="This text will be show on reset password form for title"
+						/>
 					</Typography>
 					<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-						update your password
+						<FormattedMessage
+							id="reserPasswordFormSubtitle"
+							defaultMessage="update your password"
+							description="This text will be show on reset password form for subtitle"
+						/>
 					</Typography>
 				</Grid>
 				<Grid item xs={9}>
