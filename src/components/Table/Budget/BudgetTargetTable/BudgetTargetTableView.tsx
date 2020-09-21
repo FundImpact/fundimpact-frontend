@@ -125,7 +125,7 @@ function BudgetTargetView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
 }) {
-	tableHeadings[5].label = "Total Amount " + `(${currency})`;
+	tableHeadings[5].label = `Total Amount (${currency})`;
 
 	return (
 		<>
@@ -143,7 +143,7 @@ function BudgetTargetView({
 								});
 							}
 							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "donor") {
+								if (element[0] === "donor") {
 									return chipArray({
 										elementList: element[1].map((ele) => donorHash[ele]),
 										name: "do",
@@ -152,7 +152,7 @@ function BudgetTargetView({
 										},
 									});
 								}
-								if (element[0] == "budget_category_organization") {
+								if (element[0] === "budget_category_organization") {
 									return chipArray({
 										elementList: element[1].map(
 											(ele) => budgetCategoryHash[ele]
@@ -164,6 +164,7 @@ function BudgetTargetView({
 									});
 								}
 							}
+							return null;
 						})}
 					</Box>
 				</Grid>

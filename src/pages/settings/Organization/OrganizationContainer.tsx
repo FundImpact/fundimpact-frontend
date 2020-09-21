@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import OrganizationView from "./OrganizationView";
-import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
+import { IOrganisationForm } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { organizationFormInputFields } from "./inputFields.json";
 import { ICountry } from "../../../models";
@@ -37,7 +37,7 @@ function OrganizationContainer({
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
 	organizationFormInputFields[4].optionsArray = countryList as any;
-	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
+	let { uploadFile, loading: fileUploading } = useFileUpload();
 
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -75,7 +75,7 @@ function OrganizationContainer({
 			}
 			return errors;
 		},
-		[initialValues, dashboardData]
+		[initialValues]
 	);
 
 	const onSubmit = useCallback(
@@ -105,7 +105,7 @@ function OrganizationContainer({
 				notificationDispatch(setErrorNotification("Organization Updation Failure"));
 			}
 		},
-		[updateOrganization, initialValues, uploadFile]
+		[updateOrganization, initialValues, uploadFile, notificationDispatch]
 	);
 
 	return (

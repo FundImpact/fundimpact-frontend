@@ -240,7 +240,7 @@ export default function ImpactsTable() {
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -273,7 +273,7 @@ export default function ImpactsTable() {
 				return filter;
 			});
 		}
-	}, [filterList]);
+	}, [filterList, dashboardData]);
 
 	let {
 		count,
@@ -416,7 +416,7 @@ export default function ImpactsTable() {
 							<Box my={2} display="flex" flexWrap="wrap">
 								{Object.entries(filterList).map((element) => {
 									if (element[1] && Array.isArray(element[1])) {
-										if (element[0] == "impact_category_org") {
+										if (element[0] === "impact_category_org") {
 											return chipArray({
 												arr: element[1].map(
 													(ele) => impactCategoryHash[ele]
@@ -427,7 +427,7 @@ export default function ImpactsTable() {
 												},
 											});
 										}
-										if (element[0] == "sustainable_development_goal") {
+										if (element[0] === "sustainable_development_goal") {
 											return chipArray({
 												arr: element[1].map(
 													(ele) => sustainableDevelopmentHash[ele]
@@ -448,6 +448,7 @@ export default function ImpactsTable() {
 											},
 										});
 									}
+									return null;
 								})}
 							</Box>
 						</Grid>

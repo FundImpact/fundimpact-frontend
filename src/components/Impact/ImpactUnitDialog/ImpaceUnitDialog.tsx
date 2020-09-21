@@ -242,7 +242,7 @@ function ImpactUnitDialog({
 		}
 	);
 
-	const initialValues = formAction == FORM_ACTIONS.CREATE ? defaultValues : formValues;
+	const initialValues = formAction === FORM_ACTIONS.CREATE ? defaultValues : formValues;
 	useEffect(() => {
 		if (impactCategories) {
 			impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
@@ -354,7 +354,7 @@ function ImpactUnitDialog({
 			const values = Object.assign({}, valuesSubmitted);
 			setImpactCategory(
 				values?.impactCategory?.filter(
-					(element: string) => initialValues?.impactCategory?.indexOf(element) == -1
+					(element: string) => initialValues?.impactCategory?.indexOf(element) === -1
 				) || []
 			);
 			delete values.impactCategory;

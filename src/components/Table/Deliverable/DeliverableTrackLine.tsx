@@ -206,7 +206,7 @@ export default function DeliverablesTrackLineTable({
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -247,7 +247,7 @@ export default function DeliverablesTrackLineTable({
 				...obj,
 			});
 		}
-	}, [filterList]);
+	}, [filterList, deliverableTargetId]);
 
 	const handleDeliverableLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -386,7 +386,7 @@ export default function DeliverablesTrackLineTable({
 				<Grid item xs={11}>
 					<Box my={2} display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
+							if (element[1] && typeof element[1] === "string") {
 								return chipArray({
 									name: element[0].slice(0, 4),
 									removeChip: (index: number) => {
@@ -396,7 +396,7 @@ export default function DeliverablesTrackLineTable({
 								});
 							}
 							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "financial_year") {
+								if (element[0] === "financial_year") {
 									return chipArray({
 										arr: element[1].map((ele) => financialYearHash[ele]),
 										name: "fy",
@@ -405,7 +405,7 @@ export default function DeliverablesTrackLineTable({
 										},
 									});
 								}
-								if (element[0] == "annual_year") {
+								if (element[0] === "annual_year") {
 									return chipArray({
 										arr: element[1].map((ele) => annualYearHash[ele]),
 										name: "ay",
@@ -415,6 +415,7 @@ export default function DeliverablesTrackLineTable({
 									});
 								}
 							}
+							return null;
 						})}
 					</Box>
 				</Grid>

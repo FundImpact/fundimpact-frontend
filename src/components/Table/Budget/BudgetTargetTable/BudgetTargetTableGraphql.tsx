@@ -74,7 +74,7 @@ function BudgetTargetTableGraphql() {
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -101,7 +101,7 @@ function BudgetTargetTableGraphql() {
 				...obj,
 			});
 		}
-	}, [filterList]);
+	}, [filterList, currentProject]);
 
 	let {
 		count,
@@ -128,7 +128,7 @@ function BudgetTargetTableGraphql() {
 				},
 			});
 		}
-	}, [dashboardData]);
+	}, [dashboardData, getOrganizationDonors]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {

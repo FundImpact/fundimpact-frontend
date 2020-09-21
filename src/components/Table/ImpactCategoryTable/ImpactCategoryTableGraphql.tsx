@@ -66,7 +66,7 @@ function ImpactCategoryTableGraphql({
 				...obj,
 			});
 		}
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
@@ -83,7 +83,7 @@ function ImpactCategoryTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList]);
+	}, [nestedTableFilterList, impactUnitId]);
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
 		setNestedTableFilterList((obj) => {

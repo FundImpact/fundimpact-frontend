@@ -114,6 +114,7 @@ function DeliverableUnitTableView({
 										},
 									});
 								}
+								return null;
 							})}
 						</Box>
 					</Grid>

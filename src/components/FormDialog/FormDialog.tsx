@@ -1,6 +1,5 @@
 import { Box, CircularProgress, Dialog, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { FormattedMessage } from "react-intl";
 
 function FormDialog({
 	open,

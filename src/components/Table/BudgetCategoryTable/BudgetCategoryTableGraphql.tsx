@@ -34,7 +34,7 @@ function BudgetCategoryTableGraphql({
 			organization: dashboardData?.organization?.id,
 			...obj,
 		});
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	let {
 		changePage,

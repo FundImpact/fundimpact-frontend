@@ -68,7 +68,7 @@ function BudgetLineItemTableContainer({
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>
-			openStatus.map((element: boolean, i) => (i == index ? val : element))
+			openStatus.map((element: boolean, i) => (i === index ? val : element))
 		);
 	};
 

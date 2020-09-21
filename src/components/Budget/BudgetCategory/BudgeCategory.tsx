@@ -59,7 +59,7 @@ function BudgetCategory({
 
 	const dashboardData = useDashBoardData();
 
-	let initialValues = formAction == FORM_ACTIONS.CREATE ? defaultFormValues : formValues;
+	let initialValues = formAction === FORM_ACTIONS.CREATE ? defaultFormValues : formValues;
 
 	const onSubmit = async (valuesSubmitted: IBudgetCategory) => {
 		let values = removeEmptyKeys<IBudgetCategory>({ objectToCheck: valuesSubmitted });

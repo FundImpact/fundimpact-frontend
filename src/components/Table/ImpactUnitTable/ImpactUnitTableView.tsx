@@ -112,6 +112,7 @@ function ImpactUnitTableContainer({
 										},
 									});
 								}
+								return null;
 							})}
 						</Box>
 					</Grid>

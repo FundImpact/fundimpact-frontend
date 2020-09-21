@@ -297,7 +297,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 			const id = submittedValue.id;
 			setDeliverableCategory(
 				submittedValue?.deliverableCategory?.filter(
-					(element: string) => initialValues?.deliverableCategory?.indexOf(element) == -1
+					(element: string) => initialValues?.deliverableCategory?.indexOf(element) === -1
 				) || []
 			);
 			delete submittedValue.id;

@@ -135,9 +135,9 @@ const ImpactMasterView = ({
 							<Box mt={2} fontWeight="fontWeightBold">
 								<FormattedMessage
 									description={`This text is the heding of impact ${
-										value == 0 ? "Categories" : "Unit"
+										value === 0 ? "Categories" : "Unit"
 									} table`}
-									defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
+									defaultMessage={`Impact ${value === 0 ? "Categories" : "Unit"} `}
 									id={`impactMasterPageHeading-${value}`}
 								/>
 							</Box>
@@ -147,19 +147,19 @@ const ImpactMasterView = ({
 						<Box mt={2}>
 							<FilterList
 								setFilterList={
-									value == 0
+									value === 0
 										? setImpactCategoryFilterList
 										: setImpactUnitFilterList
 								}
 								inputFields={
-									value == 0 ? impactCategoryInputFields : impactUnitInputFields
+									value === 0 ? impactCategoryInputFields : impactUnitInputFields
 								}
 							/>
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
-							{(value == 0
+							{(value === 0
 								? Object.entries(impactCategoryFilterList)
 								: Object.entries(impactUnitFilterList)
 							).map(

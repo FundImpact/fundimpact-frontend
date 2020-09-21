@@ -6,7 +6,6 @@ import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import Snackbar from "../../components/Snackbar/Snackbar";
 import { useNotificationData } from "../../contexts/notificationContext";
-import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
 import Organization from "./Organization";
 import BudgetCategory from "./BudgetMaster";

@@ -234,7 +234,7 @@ export default function DeliverablesTable() {
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -270,7 +270,7 @@ export default function DeliverablesTable() {
 				return filter;
 			});
 		}
-	}, [filterList]);
+	}, [filterList, dashboardData]);
 
 	let {
 		count,
@@ -403,7 +403,7 @@ export default function DeliverablesTable() {
 										});
 									}
 									if (element[1] && Array.isArray(element[1])) {
-										if (element[0] == "deliverable_category_org") {
+										if (element[0] === "deliverable_category_org") {
 											return chipArray({
 												list: element[1].map(
 													(ele) => deliverableCategoryHash[ele]
@@ -415,6 +415,7 @@ export default function DeliverablesTable() {
 											});
 										}
 									}
+									return null;
 								})}
 							</Box>
 						</Grid>

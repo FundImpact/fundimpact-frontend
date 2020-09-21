@@ -66,7 +66,7 @@ export const DonorContainer = () => {
 	const removeFilterListElements = (key: string, index?: number) => {
 		setTableFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -81,7 +81,7 @@ export const DonorContainer = () => {
 
 	useEffect(() => {
 		getCountryList();
-	}, []);
+	}, [getCountryList]);
 
 	return (
 		<>
@@ -124,7 +124,7 @@ export const DonorContainer = () => {
 								});
 							}
 							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "country") {
+								if (element[0] === "country") {
 									return chipArray({
 										arr: element[1].map((ele) => countryHash[ele]),
 										name: "co",
@@ -134,6 +134,7 @@ export const DonorContainer = () => {
 									});
 								}
 							}
+							return null;
 						})}
 					</Box>
 				</Grid>

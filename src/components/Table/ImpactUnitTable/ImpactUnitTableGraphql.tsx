@@ -73,7 +73,7 @@ function ImpactUnitTableGraphql({
 				...obj,
 			});
 		}
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
@@ -90,7 +90,7 @@ function ImpactUnitTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList]);
+	}, [nestedTableFilterList, impactCategoryId]);
 
 	let {
 		changePage: changeImpactUnitPage,

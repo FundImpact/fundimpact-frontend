@@ -62,7 +62,7 @@ function getValue(obj: any, key: string[]): any {
 	if (!obj?.hasOwnProperty(key[0])) {
 		return "";
 	}
-	if (key.length == 1) {
+	if (key.length === 1) {
 		return obj[key[0]];
 	}
 	return getValue(obj[key[0]], key.slice(1));
@@ -100,7 +100,7 @@ function DonorTable({
 			organization: dashboardData?.organization?.id,
 			...obj,
 		});
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -165,12 +165,12 @@ function DonorTable({
 											{heading.label}
 											{heading.keyMapping && (
 												<TableSortLabel
-													active={orderBy == heading.keyMapping}
+													active={orderBy === heading.keyMapping}
 													onClick={() => {
-														if (orderBy == heading.keyMapping) {
+														if (orderBy === heading.keyMapping) {
 															setOrder &&
 																setOrder(
-																	order == "asc" ? "desc" : "asc"
+																	order === "asc" ? "desc" : "asc"
 																);
 														} else {
 															setOrderBy &&

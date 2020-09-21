@@ -54,7 +54,7 @@ function BudgetLineItemTableGraphql({
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -81,7 +81,7 @@ function BudgetLineItemTableGraphql({
 				...obj,
 			});
 		}
-	}, [filterList]);
+	}, [filterList, budgetTargetId]);
 
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
@@ -128,7 +128,7 @@ function BudgetLineItemTableGraphql({
 			console.log(err);
 		},
 	});
-	if (annualYears && Object.keys(annualYearHash).length == 0) {
+	if (annualYears && Object.keys(annualYearHash).length === 0) {
 		annualYearHash = mapIdToName(annualYears.annualYearList, annualYearHash);
 	}
 
@@ -154,7 +154,7 @@ function BudgetLineItemTableGraphql({
 				},
 			});
 		}
-	}, [donor, getGrantPeriodProject]);
+	}, [donor, getGrantPeriodProject, currentProject]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -166,7 +166,7 @@ function BudgetLineItemTableGraphql({
 				},
 			});
 		}
-	}, [dashboardData?.organization, getFinancialYearOrg]);
+	}, [dashboardData, getFinancialYearOrg]);
 
 	useEffect(() => {
 		if (donor) {
@@ -182,7 +182,7 @@ function BudgetLineItemTableGraphql({
 
 	useEffect(() => {
 		getAnnualYears();
-	}, []);
+	}, [getAnnualYears]);
 
 	if (grantPeriodProject) {
 		budgetLineItemInputFields[2].optionsArray =

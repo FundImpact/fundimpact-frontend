@@ -230,7 +230,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((obj) => {
 			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
 			} else {
 				obj[key] = "";
 			}
@@ -257,7 +257,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				...obj,
 			});
 		}
-	}, [filterList]);
+	}, [filterList, impactTargetId]);
 
 	const handleImpactLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -393,7 +393,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 					<Box my={2} display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((element) => {
 							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "annual_year") {
+								if (element[0] === "annual_year") {
 									return chipArray({
 										arr: element[1].map((ele) => annualYearHash[ele]),
 										name: "ay",
@@ -402,7 +402,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 										},
 									});
 								}
-								if (element[0] == "financial_year") {
+								if (element[0] === "financial_year") {
 									return chipArray({
 										arr: element[1].map((ele) => financialYearHash[ele]),
 										name: "fy",
@@ -421,6 +421,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 									},
 								});
 							}
+							return null;
 						})}
 					</Box>
 				</Grid>

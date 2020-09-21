@@ -109,6 +109,7 @@ function ImpactCategoryTableView({
 										},
 									});
 								}
+								return null;
 							})}
 						</Box>
 					</Grid>

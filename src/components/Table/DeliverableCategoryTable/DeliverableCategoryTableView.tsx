@@ -110,6 +110,7 @@ function DeliverableCategoryView({
 										list: [element[1]],
 									});
 								}
+								return null;
 							})}
 						</Box>
 					</Grid>

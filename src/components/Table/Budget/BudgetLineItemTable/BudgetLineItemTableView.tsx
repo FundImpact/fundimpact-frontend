@@ -13,7 +13,7 @@ function getValue(obj: any, key: string[]): any {
 	if (!obj?.hasOwnProperty(key[0])) {
 		return "";
 	}
-	if (key.length == 1) {
+	if (key.length === 1) {
 		return obj[key[0]];
 	}
 	return getValue(obj[key[0]], key.slice(1));
@@ -143,7 +143,7 @@ function BudgetLineItemTableView({
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
 }) {
-	tableHeadings[3].label = "Amount " + `(${currency})`;
+	tableHeadings[3].label = `Amount (${currency})`;
 
 	return (
 		<>
@@ -152,7 +152,7 @@ function BudgetLineItemTableView({
 					<Box my={2} display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((element) => {
 							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "grant_periods_project") {
+								if (element[0] === "grant_periods_project") {
 									return chipArray({
 										arr: element[1].map((ele) => grantPeriodHash[ele]),
 										name: "gp",
@@ -161,7 +161,7 @@ function BudgetLineItemTableView({
 										},
 									});
 								}
-								if (element[0] == "annual_year") {
+								if (element[0] === "annual_year") {
 									return chipArray({
 										arr: element[1].map((ele) => annualYearHash[ele]),
 										name: "ay",
@@ -170,7 +170,7 @@ function BudgetLineItemTableView({
 										},
 									});
 								}
-								if (element[0] == "fy_org") {
+								if (element[0] === "fy_org") {
 									return chipArray({
 										arr: element[1].map((ele) => financialYearOrgHash[ele]),
 										name: "fyo",
@@ -179,7 +179,7 @@ function BudgetLineItemTableView({
 										},
 									});
 								}
-								if (element[0] == "fy_donor") {
+								if (element[0] === "fy_donor") {
 									return chipArray({
 										arr: element[1].map((ele) => financialYearDonorHash[ele]),
 										name: "fyd",
@@ -189,7 +189,7 @@ function BudgetLineItemTableView({
 									});
 								}
 							}
-							if (element[1] && typeof element[1] == "string") {
+							if (element[1] && typeof element[1] === "string") {
 								return chipArray({
 									arr: [element[1]],
 									name: element[0].slice(0, 4),
@@ -198,6 +198,7 @@ function BudgetLineItemTableView({
 									},
 								});
 							}
+							return null;
 						})}
 					</Box>
 				</Grid>

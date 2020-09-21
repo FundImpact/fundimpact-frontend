@@ -74,7 +74,7 @@ function DeliverableUnitTableGraphql({
 				...obj,
 			});
 		}
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
@@ -91,7 +91,7 @@ function DeliverableUnitTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList]);
+	}, [nestedTableFilterList, deliverableCategoryId]);
 
 	let {
 		changePage: changeDeliverableUnitPage,

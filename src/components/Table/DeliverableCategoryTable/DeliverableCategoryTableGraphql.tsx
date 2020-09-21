@@ -63,7 +63,7 @@ function DeliverableCategoryTableGraphql({
 				...obj,
 			});
 		}
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
@@ -94,7 +94,7 @@ function DeliverableCategoryTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList]);
+	}, [nestedTableFilterList, delivarableUnitId]);
 
 	let {
 		changePage: changeDeliverableCategoryPage,

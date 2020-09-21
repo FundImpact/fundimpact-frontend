@@ -17,13 +17,13 @@ function ImpactMasterContainer() {
 	const [value, setValue] = React.useState<number>(0);
 
 	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
-		value == 0 &&
+		value === 0 &&
 			setImpactCategoryFilterList((obj) => {
 				obj[elementToDelete] = "";
 				return { ...obj };
 			});
 
-		value == 1 &&
+		value === 1 &&
 			setImpactUnitFilterList((obj) => {
 				obj[elementToDelete] = "";
 				return { ...obj };

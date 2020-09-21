@@ -5,7 +5,6 @@ import Slide from "@material-ui/core/Slide";
 import { Grid, ClickAwayListener } from "@material-ui/core";
 import SlidingButton from "./SlidingButton";
 import { CreateButton } from "../../../models/addButton";
-import { FormattedMessage } from "react-intl";
 
 function AddButton({
 	createButtons,

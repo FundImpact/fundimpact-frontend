@@ -132,10 +132,10 @@ const DeliverableMasterView = ({
 							<Box mt={2} fontWeight="fontWeightBold">
 								<FormattedMessage
 									description={`This text is the heding of deliverable ${
-										value == 0 ? "Categories" : "Unit"
+										value === 0 ? "Categories" : "Unit"
 									} table`}
 									defaultMessage={`Deliverable ${
-										value == 0 ? "Categories" : "Unit"
+										value === 0 ? "Categories" : "Unit"
 									} `}
 									id={`deliverableMasterPageHeading-${value}`}
 								/>
@@ -146,12 +146,12 @@ const DeliverableMasterView = ({
 						<Box mt={2}>
 							<FilterList
 								setFilterList={
-									value == 0
+									value === 0
 										? setDeliverableCategoryFilterList
 										: setDeliverableUnitFilterList
 								}
 								inputFields={
-									value == 0
+									value === 0
 										? deliverableCategoryInputFields
 										: deliverableUnitInputFields
 								}
@@ -160,7 +160,7 @@ const DeliverableMasterView = ({
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
-							{(value == 0
+							{(value === 0
 								? Object.entries(deliverableCategoryFilterList)
 								: Object.entries(deliverableUnitFilterList)
 							).map(
