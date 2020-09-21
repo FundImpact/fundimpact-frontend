@@ -447,7 +447,9 @@ describe("Budget Target Table tests", () => {
 			"createBudgetTotalTargetAmountInput"
 		)) as HTMLInputElement;
 		await act(async () => {
-			await fireEvent.change(targetAmountField, { target: { value: intialFormValue.total_target_amount } });
+			await fireEvent.change(targetAmountField, {
+				target: { value: intialFormValue.total_target_amount },
+			});
 		});
 		await expect(targetAmountField.value).toBe(intialFormValue.total_target_amount);
 	});

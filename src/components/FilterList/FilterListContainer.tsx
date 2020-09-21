@@ -1,7 +1,7 @@
 import React from "react";
 import FilterListView from "./FilterListView";
 
-function FilterListContainer<T extends { [key: string]: string | string[]}>({
+function FilterListContainer<T extends { [key: string]: string | string[] }>({
 	inputFields,
 	setFilterList,
 	initialValues = {},

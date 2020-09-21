@@ -64,7 +64,11 @@ function FilterListView<T extends { [key: string]: string | string[] }>({
 	return (
 		<>
 			<Tooltip title="Filter list">
-				<IconButton data-testid="filter-button" aria-label="filter list" onClick={handleClick}>
+				<IconButton
+					data-testid="filter-button"
+					aria-label="filter list"
+					onClick={handleClick}
+				>
 					<FilterListIcon />
 				</IconButton>
 			</Tooltip>

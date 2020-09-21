@@ -46,10 +46,10 @@ const chipArray = ({
 			<Chip
 				avatar={
 					<Avatar
-					style={{
-						width: "30px",
-						height: "30px",
-					}}
+						style={{
+							width: "30px",
+							height: "30px",
+						}}
 					>
 						<span>{name}</span>
 					</Avatar>

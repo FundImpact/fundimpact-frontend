@@ -75,7 +75,7 @@ export const DonorContainer = () => {
 	};
 	donorInputFields[3].optionsArray = countries?.countryList || [];
 
-	if (!Object.keys(countryHash).length && countries?.countryList ) {
+	if (!Object.keys(countryHash).length && countries?.countryList) {
 		countryHash = mapIdToName(countries?.countryList, countryHash);
 	}
 

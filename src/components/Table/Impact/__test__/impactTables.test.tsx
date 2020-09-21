@@ -32,8 +32,8 @@ import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../../graphql";
 
 let intialFormValue = {
 	name: "impact target name",
-	target_value: "1231"
-}
+	target_value: "1231",
+};
 
 const mocks = [
 	{

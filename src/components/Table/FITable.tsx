@@ -86,7 +86,7 @@ export default function FITable({
 												key={heading.label}
 												align="left"
 											>
-												 {/* {heading.label} */}
+												{/* {heading.label} */}
 												<FormattedMessage
 													id={
 														"tableHeading" +

@@ -77,9 +77,9 @@ function DeliverableCategoryView({
 	initialValues: IDeliverable;
 	collapsableTable: boolean;
 	setFilterList: React.Dispatch<
-	React.SetStateAction<{
-		[key: string]: string;
-	}>
+		React.SetStateAction<{
+			[key: string]: string;
+		}>
 	>;
 	changePage: (prev?: boolean) => void;
 	deliverableCategoryList: IDeliverableCategoryData[];

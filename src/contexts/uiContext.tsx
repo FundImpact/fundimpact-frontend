@@ -1,7 +1,11 @@
 import React from "react";
-import { createMuiTheme, ThemeOptions, CssBaseline, ThemeProvider } from "@material-ui/core";
+import { createMuiTheme, ThemeOptions, CssBaseline, ThemeProvider, Theme } from "@material-ui/core";
+import { useAuth } from "./userContext";
 
-function getMuiTheme(): ThemeOptions {
+function getMuiTheme(theme: ThemeOptions | undefined | null): ThemeOptions {
+	if (theme) {
+		return createMuiTheme(theme);
+	}
 	return createMuiTheme({
 		palette: {
 			primary: {
@@ -15,9 +19,10 @@ function getMuiTheme(): ThemeOptions {
 }
 
 function UIProvider({ children }: any) {
-	const theme = getMuiTheme();
+	const { user } = useAuth();
+	const theme = getMuiTheme(user?.theme);
 	return (
-		<ThemeProvider theme={theme}>
+		<ThemeProvider theme={{ ...theme }}>
 			<CssBaseline />
 			{children}
 		</ThemeProvider>

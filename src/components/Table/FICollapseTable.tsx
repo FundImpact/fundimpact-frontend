@@ -116,7 +116,7 @@ export default function CollapsibleTable({
 										align="left"
 										className={tableHeader.th}
 									>
-										 {/* {heading.label} */}
+										{/* {heading.label} */}
 										{/* {heading.label} */}
 										<FormattedMessage
 											id={"tableHeading" + heading.label.replace(/ /g, "")}

@@ -274,7 +274,6 @@ describe("Deliverable Category Table tests", () => {
 		);
 	});
 
-
 	test("Filter List Input Elements test", async () => {
 		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
 		expect(collaspeButton).toBeInTheDocument();

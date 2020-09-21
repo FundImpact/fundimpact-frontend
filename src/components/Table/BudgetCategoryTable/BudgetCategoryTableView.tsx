@@ -12,7 +12,9 @@ const rows = [
 	{ valueAccessKey: "description" },
 	{
 		valueAccessKey: "",
-		renderComponent: (budgetCategory: IBudgetCategory) => <UnitsAndCategoriesProjectCount budgetCategoryId={budgetCategory.id} />,
+		renderComponent: (budgetCategory: IBudgetCategory) => (
+			<UnitsAndCategoriesProjectCount budgetCategoryId={budgetCategory.id} />
+		),
 	},
 	{ valueAccessKey: "" },
 ];

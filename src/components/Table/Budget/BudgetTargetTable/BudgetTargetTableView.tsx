@@ -131,7 +131,7 @@ function BudgetTargetView({
 		<>
 			<Grid container>
 				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap" >
+					<Box my={2} display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((element) => {
 							if (element[1] && typeof element[1] == "string") {
 								return chipArray({

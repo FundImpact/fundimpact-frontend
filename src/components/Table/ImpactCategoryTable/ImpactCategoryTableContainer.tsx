@@ -24,7 +24,7 @@ function ImpactCategoryTableContainer({
 	setOrderBy,
 	filterList,
 	setFilterList,
-	removeFilterListElements
+	removeFilterListElements,
 }: {
 	impactCategoryList: IImpactCategoryData[];
 	collapsableTable: boolean;
@@ -43,7 +43,7 @@ function ImpactCategoryTableContainer({
 			[key: string]: string;
 		}>
 	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
 	const selectedImpactCategory = useRef<IImpactCategoryData | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);

@@ -245,9 +245,7 @@ describe("Budget Line Item Table tests", () => {
 		});
 		await expect(amountField.value).toBe(intialFormValue.amount);
 
-		let dateField = (await table.findByTestId(
-			"createReporingDateInput"
-		)) as HTMLInputElement;
+		let dateField = (await table.findByTestId("createReporingDateInput")) as HTMLInputElement;
 		await act(async () => {
 			await fireEvent.change(dateField, {
 				target: { value: intialFormValue.reporting_date },
