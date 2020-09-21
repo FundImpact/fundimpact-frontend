@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import OrganizationView from "./OrganizationView";
 import { IOrganisationForm } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -46,12 +46,13 @@ function OrganizationContainer({
 		id: dashboardData?.organization?.id || "",
 		organization_registration_type:
 			dashboardData?.organization?.organization_registration_type?.id || "",
-		country: dashboardData?.organization?.country?.id || "",
+		country: (countryList.length && dashboardData?.organization?.country?.id) || "",
 		icon: "",
 		name: dashboardData?.organization?.name || "",
 		legal_name: dashboardData?.organization?.legal_name || "",
 		short_name: dashboardData?.organization?.short_name || "",
 	};
+	
 	const validate = useCallback(
 		(values: IOrganisationForm) => {
 			let errors: Partial<IOrganisationForm> = {};
