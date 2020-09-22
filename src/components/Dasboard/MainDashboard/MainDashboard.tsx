@@ -2,6 +2,7 @@ import { Box, Grid } from "@material-ui/core";
 import React from "react";
 import { useIntl } from "react-intl";
 import Achievement from "../Cards/Achievement/Achievement";
+import { CARD_TYPES } from "../Cards/constants";
 import DashboardCard from "../Cards/DasboardCards";
 import FundStatus from "../Cards/FundStatus/FundStatus";
 import Impact from "../Cards/Impact/Impact";
@@ -24,6 +25,7 @@ export default function MainDashboard() {
 							defaultMessage: "FUND STATUS",
 							description: `This text will be show on dashboard for fund status card title`,
 						})}
+						type={CARD_TYPES.DEFAULT}
 					>
 						<FundStatus />
 					</DashboardCard>
@@ -35,6 +37,7 @@ export default function MainDashboard() {
 							defaultMessage: "Achievement",
 							description: `This text will be show on dashboard for achievement card title`,
 						})}
+						type={CARD_TYPES.DEFAULT}
 					>
 						<Achievement />
 					</DashboardCard>
@@ -46,6 +49,7 @@ export default function MainDashboard() {
 							defaultMessage: "Impacts",
 							description: `This text will be show on dashboard for impacts card title`,
 						})}
+						type={CARD_TYPES.DEFAULT}
 					>
 						<Impact />
 					</DashboardCard>

@@ -10,20 +10,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
-import {
-	BudgetOrgCard,
-	DeliverableOrgCard,
-	ImpactOrgCard,
-	BudgetProjectsCard,
-	DeliverableProjectsCard,
-	DonorsCard,
-	BudgetCategoryCard,
-	DeliverableCategoryCard,
-	ImpactCategoryCard,
-	ImpactProjectsCard,
-} from "../Cards";
 import { FormattedMessage } from "react-intl";
-
+import { CARD_TYPES } from "../../Dasboard/Cards/constants";
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
 		marginTop: theme.spacing(2),
@@ -52,24 +40,32 @@ export default function MainOrganizationDashboard() {
 					</Box>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "}>
-						<BudgetOrgCard />
-					</DashboardCard>
+					<DashboardCard
+						type={CARD_TYPES.PROJECT}
+						projectCardTitle="Budget Target"
+						projectCardFirstBarHeading="1.2 SPENT"
+						projectCardSecondBarHeading="Fund Received"
+					/>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "}>
-						<DeliverableOrgCard />
-					</DashboardCard>
+					<DashboardCard
+						type={CARD_TYPES.PROJECT}
+						projectCardTitle="Deliverables"
+						projectCardFirstBarHeading="70 % avg Progress"
+						projectCardSecondBarHeading="Deliverable achieved"
+					/>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "}>
-						<ImpactOrgCard />
-					</DashboardCard>
+					<DashboardCard
+						type={CARD_TYPES.PROJECT}
+						projectCardTitle="Impact Target"
+						projectCardFirstBarHeading="80 % avg Progress"
+						projectCardSecondBarHeading="Impact achieved"
+					/>
 				</Grid>
 				<Grid item md={12}>
 					<Box m={1}>
 						<Typography variant="h6">
-							{" "}
 							<FormattedMessage
 								id="orgDashboardTopProjectsHeading"
 								defaultMessage="Top Projects"
@@ -79,19 +75,29 @@ export default function MainOrganizationDashboard() {
 					</Box>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "} cardHeight={"33vh"}>
-						<BudgetProjectsCard />
-					</DashboardCard>
+					<DashboardCard
+						title="Budget Project"
+						cardFilter={[
+							{ label: "Received", filter: {} },
+							{ label: "Allocated", filter: {} },
+						]}
+						type={CARD_TYPES.PROGRESS}
+						cardHeight="33vh"
+					/>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "} cardHeight={"33vh"}>
-						<DeliverableProjectsCard />
-					</DashboardCard>
+					<DashboardCard
+						title="Deliverable Achieved"
+						type={CARD_TYPES.PROGRESS}
+						cardHeight="33vh"
+					/>
 				</Grid>
 				<Grid item md={4}>
-					<DashboardCard title={" "} cardHeight={"33vh"}>
-						<ImpactProjectsCard />
-					</DashboardCard>
+					<DashboardCard
+						title="Budget Project"
+						type={CARD_TYPES.PROGRESS}
+						cardHeight="33vh"
+					/>
 				</Grid>
 				<Box m={2} mb={0} mt={0}>
 					<FormControlLabel
@@ -102,24 +108,51 @@ export default function MainOrganizationDashboard() {
 				<Fade in={checked}>
 					<Grid container className={classes.bottonContainer}>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"33vh"}>
-								<DonorsCard />
-							</DashboardCard>
+							<DashboardCard
+								title="Budget Project"
+								cardFilter={[
+									{ label: "Received", filter: {} },
+									{ label: "Allocated", filter: {} },
+								]}
+								type={CARD_TYPES.PROGRESS}
+								cardHeight="33vh"
+							/>
 						</Grid>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"33vh"}>
-								<BudgetCategoryCard />
-							</DashboardCard>
+							<DashboardCard
+								title="Budget Category"
+								cardFilter={[
+									{ label: "Projects", filter: {} },
+									{ label: "Achieved", filter: {} },
+								]}
+								type={CARD_TYPES.PIE}
+								cardHeight="33vh"
+								moreButtonLink="/settings/budget"
+							/>
 						</Grid>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"33vh"}>
-								<DeliverableCategoryCard />
-							</DashboardCard>
+							<DashboardCard
+								title="Deliverable Category"
+								cardFilter={[
+									{ label: "Projects", filter: {} },
+									{ label: "Achieved", filter: {} },
+								]}
+								type={CARD_TYPES.PIE}
+								cardHeight="33vh"
+								moreButtonLink="/settings/deliverable"
+							/>
 						</Grid>
 						<Grid item md={3}>
-							<DashboardCard title={" "} cardHeight={"33vh"}>
-								<ImpactCategoryCard />
-							</DashboardCard>
+							<DashboardCard
+								title="Impact Category"
+								cardFilter={[
+									{ label: "Projects", filter: {} },
+									{ label: "Achieved", filter: {} },
+								]}
+								type={CARD_TYPES.PIE}
+								cardHeight="33vh"
+								moreButtonLink="/settings/impact"
+							/>
 						</Grid>
 					</Grid>
 				</Fade>

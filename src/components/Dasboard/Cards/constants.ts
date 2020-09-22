@@ -1,0 +1,6 @@
+export enum CARD_TYPES {
+	PROJECT = "PROJECT",
+	PROGRESS = "PROGRESS",
+	PIE = "PIE",
+	DEFAULT = "DEFAULT",
+}
