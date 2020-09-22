@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			marginRight: theme.spacing(2),
 			padding: theme.spacing(1),
 			"&:hover": {
-				color: "#d32f2f !important",
+				color: `${theme.palette.error.dark} !important`,
 			},
 		},
 	})

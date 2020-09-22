@@ -16,7 +16,7 @@ import { FormikProps } from "formik";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	uploadBox: {
-		backgroundColor: theme.palette.grey[300],
+		backgroundColor: theme.palette.action.selected,
 		height: (props: { height?: string }) => props.height,
 		alignItems: "center",
 		position: "relative",
