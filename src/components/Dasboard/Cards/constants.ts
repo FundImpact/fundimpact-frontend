@@ -4,3 +4,9 @@ export enum CARD_TYPES {
 	PIE = "PIE",
 	DEFAULT = "DEFAULT",
 }
+
+export enum CARD_OF {
+	DELIVERABLE = "DELIVERABLE",
+	BUDGET = "BUDGET",
+	IMPACT = "IMPACT",
+}

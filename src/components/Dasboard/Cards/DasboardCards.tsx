@@ -14,11 +14,11 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import CommonProgres from "../../OrganizationDashboard/Cards/CommonProgress";
 import MoreButton from "../../OrganizationDashboard/Cards/MoreIconButton";
 import ProgressDialog from "../../OrganizationDashboard/Cards/ProgressDialog";
-import { PieChart } from "../../Charts";
 import { CARD_TYPES } from "./constants";
-import BorderLinearProgress from "../../BorderLinearProgress";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { CardProps } from "../../../models/cards/cards";
+import { GetCardTypeAndValues } from "./cardHooks/GetCardType";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { ProjectCard, PieCard } from "./CommonCards";
 
 /*static value*/
 const budgetProjects = [
@@ -32,40 +32,16 @@ const budgetProjects = [
 export default function DashboardCard(props: CardProps) {
 	const theme = useTheme();
 	/*Static pieData*/
+	const dashboardData = useDashBoardData();
+	const organization = dashboardData?.organization?.id;
 
-	let cardFilter: any,
-		moreButtonLink,
-		projectCardTitle,
-		projectCardFirstBarHeading,
-		projectCardSecondBarHeading;
-	const { title, children, cardHeight = "24vh" } = props;
+	const { title, children, cardHeight = "24vh", cardFilter } = props;
 
-	if (props.type === CARD_TYPES.PROJECT) {
-		projectCardTitle = props.projectCardTitle;
-		projectCardFirstBarHeading = props.projectCardFirstBarHeading;
-		projectCardSecondBarHeading = props.projectCardSecondBarHeading;
-	}
-
-	if (props.type === CARD_TYPES.PIE) {
-		cardFilter = props.cardFilter;
-		moreButtonLink = props.moreButtonLink;
-	}
+	let { projectCardConfig, pieCardConfig } = GetCardTypeAndValues(props);
 
 	if (props.type === CARD_TYPES.PROGRESS) {
-		cardFilter = props.cardFilter;
 	}
-	let pieData = {
-		datasets: [
-			{
-				backgroundColor: [
-					theme.palette.primary.main,
-					theme.palette.secondary.main,
-					theme.palette.grey[200],
-				],
-				data: [500, 200, 300],
-			},
-		],
-	};
+
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
 			width: "100%",
@@ -96,6 +72,7 @@ export default function DashboardCard(props: CardProps) {
 		setAnchorEl(null);
 	};
 	const [progressDialogOpen, setProgressDialogOpen] = React.useState(false);
+
 	return (
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
@@ -185,74 +162,9 @@ export default function DashboardCard(props: CardProps) {
 							)}
 						</>
 					)}
-					{props.type === CARD_TYPES.PIE && (
-						<>
-							<Grid item md={12}>
-								<Box p={1}>
-									<PieChart data={pieData} />
-								</Box>
-							</Grid>
-							<Grid item md={12} justify="flex-end" container>
-								{moreButtonLink && <MoreButton link={moreButtonLink} />}
-							</Grid>
-						</>
-					)}
-					{props.type === CARD_TYPES.PROJECT && (
-						<>
-							<Grid item md={5} justify="center">
-								<Box ml={1}>
-									<Box mt={2} ml={3}>
-										<Typography variant="h6">2.4Cr</Typography>
-									</Box>
-									{projectCardTitle && (
-										<Typography variant="subtitle1">
-											{projectCardTitle}
-										</Typography>
-									)}
-								</Box>
-							</Grid>
-							<Grid item md={7}>
-								<Box ml={1} mt={2} display="flex">
-									<AssignmentTurnedInIcon color="secondary" />
-									<Box ml={1}>
-										<Typography variant="body1" noWrap>
-											{" "}
-											6 / 12 Project
-										</Typography>
-									</Box>
-								</Box>
-								{/* <BorderLinearProgress variant="determinate" value={60} /> */}
-								<Box ml={1} mt={2}>
-									{projectCardFirstBarHeading && (
-										<Typography variant="caption">
-											{" "}
-											{projectCardFirstBarHeading}
-										</Typography>
-									)}
-								</Box>
-								<BorderLinearProgress
-									variant="determinate"
-									value={50}
-									color={"primary"}
-								/>
-							</Grid>
 
-							<Grid item md={12}>
-								<Box ml={1} mt={2}>
-									{projectCardSecondBarHeading && (
-										<Typography variant="caption">
-											{projectCardSecondBarHeading}
-										</Typography>
-									)}
-								</Box>
-								<BorderLinearProgress
-									variant="determinate"
-									value={50}
-									color={"secondary"}
-								/>
-							</Grid>
-						</>
-					)}
+					{props.type === CARD_TYPES.PIE && <PieCard {...pieCardConfig} />}
+					{props.type === CARD_TYPES.PROJECT && <ProjectCard {...projectCardConfig} />}
 				</Grid>
 				<Grid item md={12}>
 					{children}

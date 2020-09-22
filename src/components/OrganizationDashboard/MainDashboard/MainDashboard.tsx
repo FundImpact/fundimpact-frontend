@@ -11,7 +11,7 @@ import {
 import React from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
 import { FormattedMessage } from "react-intl";
-import { CARD_TYPES } from "../../Dasboard/Cards/constants";
+import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
 		marginTop: theme.spacing(2),
@@ -42,25 +42,34 @@ export default function MainOrganizationDashboard() {
 				<Grid item md={4}>
 					<DashboardCard
 						type={CARD_TYPES.PROJECT}
-						projectCardTitle="Budget Target"
-						projectCardFirstBarHeading="1.2 SPENT"
-						projectCardSecondBarHeading="Fund Received"
+						cardOf={CARD_OF.BUDGET}
+						projectCardConfig={{
+							title: "Budget Target",
+							firstBarHeading: "Spend",
+							secondBarHeading: "Fund Received",
+						}}
 					/>
 				</Grid>
 				<Grid item md={4}>
 					<DashboardCard
 						type={CARD_TYPES.PROJECT}
-						projectCardTitle="Deliverables"
-						projectCardFirstBarHeading="70 % avg Progress"
-						projectCardSecondBarHeading="Deliverable achieved"
+						cardOf={CARD_OF.DELIVERABLE}
+						projectCardConfig={{
+							title: "Deliverables",
+							firstBarHeading: "Avg Progress",
+							secondBarHeading: "Deliverable achieved",
+						}}
 					/>
 				</Grid>
 				<Grid item md={4}>
 					<DashboardCard
 						type={CARD_TYPES.PROJECT}
-						projectCardTitle="Impact Target"
-						projectCardFirstBarHeading="80 % avg Progress"
-						projectCardSecondBarHeading="Impact achieved"
+						cardOf={CARD_OF.IMPACT}
+						projectCardConfig={{
+							title: "Impact Target",
+							firstBarHeading: "Avg Progress",
+							secondBarHeading: "Impact achieved",
+						}}
 					/>
 				</Grid>
 				<Grid item md={12}>
@@ -127,7 +136,9 @@ export default function MainOrganizationDashboard() {
 								]}
 								type={CARD_TYPES.PIE}
 								cardHeight="33vh"
-								moreButtonLink="/settings/budget"
+								pieCardConfig={{
+									moreButtonLink: "/settings/budget",
+								}}
 							/>
 						</Grid>
 						<Grid item md={3}>
@@ -139,7 +150,9 @@ export default function MainOrganizationDashboard() {
 								]}
 								type={CARD_TYPES.PIE}
 								cardHeight="33vh"
-								moreButtonLink="/settings/deliverable"
+								pieCardConfig={{
+									moreButtonLink: "/settings/deliverable",
+								}}
 							/>
 						</Grid>
 						<Grid item md={3}>
@@ -151,7 +164,9 @@ export default function MainOrganizationDashboard() {
 								]}
 								type={CARD_TYPES.PIE}
 								cardHeight="33vh"
-								moreButtonLink="/settings/impact"
+								pieCardConfig={{
+									moreButtonLink: "/settings/impact",
+								}}
 							/>
 						</Grid>
 					</Grid>
