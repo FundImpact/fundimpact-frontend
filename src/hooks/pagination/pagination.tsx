@@ -65,7 +65,7 @@ function Pagination({
 			count.current = Object.values(countData)[0] as number;
 			ChangePage();
 		}
-	}, [countData]);
+	}, [countData, sort]);
 
 	function ChangePage(prev: boolean = false) {
 		if (countQueryLoading) {

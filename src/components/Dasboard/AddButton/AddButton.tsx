@@ -64,14 +64,7 @@ function AddButton({
 						return (
 							<SlidingButton dialog={createButton.dialog} key={index}>
 								{/*if createButton.text is Create Budget Category then id will be createbudgetcategoryButton */}
-								<FormattedMessage
-									id={`${createButton.text
-										.toString()
-										.replace(/ /g, "")
-										.toLowerCase()}Button`}
-									defaultMessage={createButton.text}
-									description={`This text will be shown on Dashboard Add ${createButton.text} Button`}
-								/>
+								{createButton.text}
 							</SlidingButton>
 						);
 					})}

@@ -15,7 +15,7 @@ import { PROJECT_ACTIONS } from "../../Project/constants";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		selectedProject: {
-			backgroundColor: theme.palette.grey[100],
+			backgroundColor: theme.palette.action.selected,
 		},
 		addProject: {
 			color: "white",

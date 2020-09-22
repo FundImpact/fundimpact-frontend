@@ -14,9 +14,13 @@ import {
 	TableRow,
 	Theme,
 	Typography,
+	Grid,
+	Avatar,
+	Chip,
 } from "@material-ui/core";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React, { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { FETCH_GRANT_PERIODS } from "../../../graphql/grantPeriod/query";
@@ -26,17 +30,20 @@ import { resolveJSON } from "../../../utils/jsonUtils";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import SimpleMenu from "../../Menu/Menu";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import FilterList from "../../FilterList";
+import { grantPeriodInputFields } from "./inputFields.json";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 
 const useStyles = makeStyles({
 	table: {
 		minWidth: 650,
 	},
 });
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(even) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -51,9 +58,38 @@ interface ISImpleTableProps {
 	editGrantPeriod: (value: any) => void;
 }
 
+const chipArr = ({
+	arr,
+	name,
+	removeChips,
+}: {
+	arr: string[];
+	removeChips: (index: number) => void;
+	name: string;
+}) => {
+	return arr.map((element, index) => (
+		<Box key={index} m={1}>
+			<Chip
+				label={element}
+				avatar={
+					<Avatar
+						style={{
+							width: "30px",
+							height: "30px",
+						}}
+					>
+						<span>{name}</span>
+					</Avatar>
+				}
+				onDelete={() => removeChips(index)}
+			/>
+		</Box>
+	));
+};
+
 function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
@@ -72,16 +108,16 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow>
-						<TableCell className={tableHeader.th}>#</TableCell>
+						<TableCell className={tableStyles.th}>#</TableCell>
 						{headers.map((header) => (
-							<TableCell className={tableHeader.th} key={header.label}>
+							<TableCell className={tableStyles.th} key={header.label}>
 								{header.label}
 							</TableCell>
 						))}
 						<TableCell>Action</TableCell>
 					</TableRow>
 				</TableHead>
-				<TableBody className={tableHeader.tbody}>
+				<TableBody className={tableStyles.tbody}>
 					{data.map((row, index) => (
 						<TableRow key={index}>
 							<TableCell key={index}> {index + 1} </TableCell>
@@ -113,7 +149,11 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 											closeMenuItems(index);
 										}}
 									>
-										Edit
+										<FormattedMessage
+											id="editMenu"
+											defaultMessage="Edit"
+											description="This text will be show on menus for EDIT"
+										/>
 									</MenuItem>
 								</SimpleMenu>
 							</TableCell>
@@ -132,20 +172,86 @@ const headers: ISImpleTableProps["headers"] = [
 	{ label: "End Date", key: "end_date" },
 ];
 
+let donorHash: { [key: string]: string } = {};
+
+const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		obj
+	);
+};
+
 export default function GrantPeriodTable() {
 	const apolloClient = useApolloClient();
-
+	const [queryFilter, setQueryFilter] = useState({});
 	let [getProjectGrantPeriods, { loading, data }] = useLazyQuery(FETCH_GRANT_PERIODS, {
 		notifyOnNetworkStatusChange: true,
 	});
+
+	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
+		onCompleted: (data) => {
+			donorHash = mapIdToName(data.orgDonors, donorHash);
+		},
+	});
+
 	const dashboardData = useDashBoardData();
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>({
+		name: "",
+		start_date: "",
+		end_date: "",
+		donor: [],
+	});
+
+	useEffect(() => {
+		setQueryFilter({
+			project: dashboardData?.project?.id,
+		});
+	}, [dashboardData]);
+
+	const removeFilterListElements = (key: string, index?: number) => {
+		setFilterList((obj) => {
+			if (Array.isArray(obj[key])) {
+				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
+			} else {
+				obj[key] = "";
+			}
+			return { ...obj };
+		});
+	};
+
+	useEffect(() => {
+		if (filterList) {
+			let obj: { [key: string]: string | string[] } = {};
+			for (let key in filterList) {
+				if (filterList[key] && filterList[key].length) {
+					obj[key] = filterList[key];
+					if (key == "start_date") {
+						obj[key] = `${new Date(filterList[key] as string)}`;
+					}
+					if (key == "end_date") {
+						obj[key] = `${new Date(filterList[key] as string)}`;
+					}
+				}
+			}
+			setQueryFilter({
+				project: dashboardData?.project?.id,
+				...obj,
+			});
+		}
+	}, [filterList]);
+	console.log("queryFilter :>> ", queryFilter);
 	let filter = { project: dashboardData?.project?.id };
 	try {
 		data = apolloClient.readQuery(
 			{
 				query: FETCH_GRANT_PERIODS,
 
-				variables: { filter: { project: dashboardData?.project?.id } },
+				variables: { filter: queryFilter },
 			},
 			true
 		);
@@ -156,9 +262,9 @@ export default function GrantPeriodTable() {
 		filter = { ...filter, project: dashboardData?.project?.id };
 		console.log(`fecthing new list for project`, dashboardData?.project?.id, { ...filter });
 		getProjectGrantPeriods({
-			variables: { filter: { project: dashboardData?.project?.id } },
+			variables: { filter: queryFilter },
 		});
-	}, [dashboardData?.project?.id, getProjectGrantPeriods]);
+	}, [dashboardData?.project?.id, getProjectGrantPeriods, queryFilter]);
 
 	useEffect(() => {
 		if (!data) {
@@ -168,6 +274,20 @@ export default function GrantPeriodTable() {
 		console.log(`grantPeriods`, data.grantPeriodsProjectList);
 	}, [data]);
 	const [grantPeriodToEdit, setGrantPeriodDialog] = useState<IGrantPeriod | null>(null);
+
+	useEffect(() => {
+		if (dashboardData?.organization) {
+			getOrganizationDonors({
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+		}
+	}, [dashboardData]);
+
+	grantPeriodInputFields[3].optionsArray = donors?.orgDonors || [];
 
 	if (loading) return <TableSkeleton />;
 	if (!data?.grantPeriodsProjectList?.length) {
@@ -180,6 +300,48 @@ export default function GrantPeriodTable() {
 
 	return (
 		<>
+			<Grid container>
+				<Grid item xs={11}>
+					<Box my={2} display="flex" flexWrap="wrap">
+						{Object.entries(filterList).map((element) => {
+							if (element[1] && typeof element[1] == "string") {
+								return chipArr({
+									name: element[0].slice(0, 5),
+									arr: [element[1]],
+									removeChips: (index: number) => {
+										removeFilterListElements(element[0]);
+									},
+								});
+							}
+							if (element[1] && Array.isArray(element[1])) {
+								if (element[0] == "donor") {
+									return chipArr({
+										name: "do",
+										arr: element[1].map((ele) => donorHash[ele]),
+										removeChips: (index: number) => {
+											removeFilterListElements(element[0], index);
+										},
+									});
+								}
+							}
+						})}
+					</Box>
+				</Grid>
+				<Grid item xs={1}>
+					<Box mt={2}>
+						<FilterList
+							initialValues={{
+								name: "",
+								start_date: "",
+								end_date: "",
+								donor: [],
+							}}
+							setFilterList={setFilterList}
+							inputFields={grantPeriodInputFields}
+						/>
+					</Box>
+				</Grid>
+			</Grid>
 			<SimpleTable
 				headers={headers}
 				data={data?.grantPeriodsProjectList}

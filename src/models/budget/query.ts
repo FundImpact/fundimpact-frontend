@@ -21,6 +21,7 @@ export interface IBudgetTargetProjectResponse {
 }
 
 export interface IBUDGET_LINE_ITEM_RESPONSE {
+	id: string;
 	amount: number;
 	note: string;
 	budget_targets_project: {
@@ -30,7 +31,6 @@ export interface IBUDGET_LINE_ITEM_RESPONSE {
 		id: string;
 	};
 	reporting_date: Date;
-	id: string;
 	fy_org: {
 		id: string;
 		name: string;

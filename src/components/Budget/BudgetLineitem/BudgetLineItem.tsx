@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useCallback, useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -32,6 +33,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { getTodaysDate } from "../../../utils";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "./inputFields.json";
@@ -57,6 +59,17 @@ let budgetTargetHash: {
 function BudgetLineitem(props: IBudgetLineitemProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
+	const intl = useIntl();
+	let budgetTargetLineTitle = intl.formatMessage({
+		id: "budgetExpenditureFormTitle",
+		defaultMessage: "Budget Expenditure",
+		description: `This text will be show on Budget Expenditure form for title`,
+	});
+	let budgetTargetLineSubtitle = intl.formatMessage({
+		id: "budgetExpenditureFormSubtitle",
+		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+		description: `This text will be show on Budget Expenditureform for subtitle`,
+	});
 	const [selectedDonor, setSelectedDonor] = useState<{
 		id: string;
 		country: { id: string };
@@ -401,13 +414,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			: [];
 	}
 
+	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
 		<FormDialog
 			handleClose={closeDialog}
 			open={props.open}
 			loading={creatingLineItem || updatingLineItem}
-			title="Report Budget Spend"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={newOrEdit + " " + budgetTargetLineTitle}
+			subtitle={budgetTargetLineSubtitle}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

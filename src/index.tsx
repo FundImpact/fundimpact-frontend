@@ -39,11 +39,11 @@ function loadLocaleData(locale: string) {
 	const messages = await loadLocaleData(locale);
 	ReactDOM.render(
 		<IntlProvider messages={messages.default} locale={locale} defaultLocale="en">
-			<UIProvider>
-				<UserProvider>
+			<UserProvider>
+				<UIProvider>
 					<App />
-				</UserProvider>
-			</UIProvider>
+				</UIProvider>
+			</UserProvider>
 		</IntlProvider>,
 		document.getElementById("root")
 	);

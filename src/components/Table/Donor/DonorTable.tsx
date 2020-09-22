@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	TableContainer,
 	Table,
@@ -10,6 +10,7 @@ import {
 	MenuItem,
 	TableFooter,
 	TablePagination,
+	TableSortLabel,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -31,11 +32,11 @@ const useStyles = makeStyles({
 	},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main, fontSize: "13px" },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(even) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -67,27 +68,49 @@ function getValue(obj: any, key: string[]): any {
 	return getValue(obj[key[0]], key.slice(1));
 }
 
-function DonorTable() {
+function DonorTable({
+	tableFilterList,
+}: {
+	tableFilterList?: { [key: string]: string | string[] };
+}) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 	const selectedDonor = React.useRef<IDONOR_RESPONSE | null>(null);
 	const [page, setPage] = useState<number>(0);
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [queryFilter, setQueryFilter] = useState({});
 
 	const dashboardData = useDashBoardData();
+
+	useEffect(() => {
+		setQueryFilter({
+			organization: dashboardData?.organization?.id,
+		});
+	}, [dashboardData]);
+
+	useEffect(() => {
+		let obj: { [key: string]: string | string[] } = {};
+		for (let key in tableFilterList) {
+			if (tableFilterList[key] && tableFilterList[key].length) {
+				obj[key] = tableFilterList[key];
+			}
+		}
+		setQueryFilter({
+			organization: dashboardData?.organization?.id,
+			...obj,
+		});
+	}, [tableFilterList]);
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
 	let { changePage, count, queryData: donorList, queryLoading, countQueryLoading } = pagination({
 		countQuery: GET_DONOR_COUNT,
-		countFilter: {
-			organization: dashboardData?.organization?.id,
-		},
+		countFilter: queryFilter,
 		query: GET_ORG_DONOR,
-		queryFilter: {
-			organization: dashboardData?.organization?.id,
-		},
-		sort: "created_at:DESC",
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -129,15 +152,43 @@ function DonorTable() {
 				<TableHead>
 					<TableRow color="primary">
 						{donorList?.orgDonors?.length
-							? tableHeading.map((heading: { label: string }, index: number) => (
-									<TableCell className={tableHeader.th} key={index} align="left">
-										{heading.label}
-									</TableCell>
-							  ))
+							? tableHeading.map(
+									(
+										heading: { label: string; keyMapping?: string },
+										index: number
+									) => (
+										<TableCell
+											className={tableStyles.th}
+											key={index}
+											align="left"
+										>
+											{heading.label}
+											{heading.keyMapping && (
+												<TableSortLabel
+													active={orderBy == heading.keyMapping}
+													onClick={() => {
+														if (orderBy == heading.keyMapping) {
+															setOrder &&
+																setOrder(
+																	order == "asc" ? "desc" : "asc"
+																);
+														} else {
+															setOrderBy &&
+																setOrderBy(
+																	heading.keyMapping || ""
+																);
+														}
+													}}
+													direction={order}
+												></TableSortLabel>
+											)}
+										</TableCell>
+									)
+							  )
 							: null}
 					</TableRow>
 				</TableHead>
-				<TableBody className={tableHeader.tbody}>
+				<TableBody className={tableStyles.tbody}>
 					{donorList?.orgDonors?.map((donor: IDONOR_RESPONSE, index: number) => (
 						<TableRow key={donor.id}>
 							<TableCell component="td" scope="row">

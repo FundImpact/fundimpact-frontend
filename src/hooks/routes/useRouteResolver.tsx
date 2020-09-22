@@ -9,7 +9,7 @@ export default function useRouteResolver() {
 	const { jwt } = useAuth();
 	React.useEffect(() => {
 		if (jwt) {
-			navigate("/dashboard");
+			navigate("/organization/dashboard");
 		}
 	}, [jwt, pathname, navigate]);
 }

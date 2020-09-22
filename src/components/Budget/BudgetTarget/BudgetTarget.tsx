@@ -1,9 +1,10 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../graphql";
+import { GET_CURRENCY_LIST } from "../../../graphql";
 import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
@@ -26,6 +27,7 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
@@ -77,9 +79,18 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	let [getBudgetCategory, { data: budgetCategory }] = useLazyQuery(
 		GET_ORGANIZATION_BUDGET_CATEGORY
 	);
-
+	const intl = useIntl();
 	let [getDonors, { data: donors }] = useLazyQuery(GET_PROJ_DONORS);
-
+	let budgetTargetTitle = intl.formatMessage({
+		id: "budgetTargetFormTitle",
+		defaultMessage: "Budget Target",
+		description: `This text will be show on Budget target form for title`,
+	});
+	let budgetTargetSubtitle = intl.formatMessage({
+		id: "budgetTargetFormSubtitle",
+		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+		description: `This text will be show on Budget target form for subtitle`,
+	});
 	useEffect(() => {
 		if (dashboardData) {
 			getCurrency({
@@ -258,13 +269,14 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	};
 
+	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
 		<FormDialog
 			handleClose={props.handleClose}
 			open={props.open}
 			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
-			title="New Budget Target"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={newOrEdit + " " + budgetTargetTitle}
+			subtitle={budgetTargetSubtitle}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

@@ -25,6 +25,8 @@ import {
 } from "../../../graphql/Impact/query";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
+import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -58,7 +60,7 @@ function ImpactCategoryDialog({
 	);
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const initialValues = formAction == FORM_ACTIONS.CREATE ? defauleValues : formValues;
 
 	const onSubmit = async (values: IImpactCategory) => {
@@ -168,14 +170,28 @@ function ImpactCategoryDialog({
 			handleClose();
 		}
 	};
+	const intl = useIntl();
 
 	return (
 		<FormDialog
 			handleClose={handleClose}
 			open={open}
 			loading={creatingImpactCategory || updatingImpactCategory}
-			title="Impact Category"
-			subtitle="Physical addresses of your organizatin like headquater, branch etc."
+			title={
+				newOrEdit +
+				" " +
+				intl.formatMessage({
+					id: "impactCategoryFormTitle",
+					defaultMessage: "Impact Category",
+					description: `This text will be show on impact Category form for title`,
+				})
+			}
+			subtitle={intl.formatMessage({
+				id: "impactCategoryFormSubtitle",
+				defaultMessage:
+					"Physical addresses of your organizatin like headquater, branch etc.",
+				description: `This text will be show on impact Category form for subtitle`,
+			})}
 			workspace={dashboardData?.workspace?.name}
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>

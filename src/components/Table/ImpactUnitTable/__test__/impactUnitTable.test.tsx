@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent } from "@testing-library/react";
+import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
@@ -26,8 +26,16 @@ import {
 	GET_IMPACT_CATEGORY_UNIT_COUNT,
 } from "../../../../graphql/Impact/categoryUnit";
 import { GET_IMPACT_CATEGORY_PROJECT_COUNT } from "../../../../graphql/Impact/category";
+import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+import { impactCategoryInputFields } from "../../../../pages/settings/ImpactMaster/inputFields.json";
 
 let table: any;
+
+let intialFormValue = {
+	name: "new category name",
+	code: "impact category code",
+	description: "impact category desc",
+};
 
 const mocks = [
 	{
@@ -253,5 +261,38 @@ describe("Impact Unit Table tests", () => {
 				new RegExp("" + impactCategoryUnit[0].impact_category_org.description, "i")
 			)
 		);
+	});
+
+	const { checkElementHaveCorrectValue } = commonFormTestUtil(fireEvent, wait, act);
+
+	test("Filter List test", async () => {
+		let collaspeBtn = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeBtn).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeBtn);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		expect(collaspeButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(collaspeButton);
+		});
+		let filterButton = await table.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		for (let i = 0; i < impactCategoryInputFields.length; i++) {
+			await checkElementHaveCorrectValue({
+				inputElement: impactCategoryInputFields[i],
+				reactElement: table,
+				value: intialFormValue[impactCategoryInputFields[i].name],
+			});
+		}
 	});
 });

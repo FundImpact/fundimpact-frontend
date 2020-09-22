@@ -21,8 +21,17 @@ import {
 	DeliverableTracklineByTargetMock,
 	projectsMock,
 	deliverableLineitemFyDonorListMock,
+	deliverableCategoryMock,
 } from "../../../Deliverable/__test__/testHelp";
-import { getTodaysDate } from "../../../../utils";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../../graphql/Deliverable/category";
+import { organizationDetail, financialYearListMock } from "../../../../utils/testMock.json";
+import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../../graphql";
+import { annualYearListMock } from "../../../Impact/__test__/testHelp";
+
+let intialFormValue = {
+	name: "new deliverable target name",
+	target_value: "12312",
+};
 
 const mocks = [
 	{
@@ -43,6 +52,13 @@ const mocks = [
 			variables: { filter: { deliverableTargetProject: "1" } },
 		},
 		result: { data: { deliverableTrackingTotalValue: achieveValueMock } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_ORG_CATEGORY,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { impactCategoryOrgList: deliverableCategoryMock } },
 	},
 	{
 		request: {
@@ -72,6 +88,19 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_ANNUAL_YEARS,
+		},
+		result: { data: { annualYears: annualYearListMock } },
+	},
+	{
+		request: {
+			query: GET_FINANCIAL_YEARS,
+			variables: { filter: { country: "1" } },
+		},
+		result: { data: { financialYearList: financialYearListMock } },
+	},
+	{
+		request: {
 			query: GET_DELIVERABLE_LINEITEM_FYDONOR,
 			variables: { filter: { deliverable_tracking_lineitem: "2" } },
 		},
@@ -84,7 +113,9 @@ let deliverableTable: any;
 beforeEach(() => {
 	act(() => {
 		deliverableTable = renderApollo(
-			<DashboardProvider defaultState={{ project: projectsMock }}>
+			<DashboardProvider
+				defaultState={{ project: projectsMock, organization: organizationDetail }}
+			>
 				<NotificationProvider>
 					<DeliverableTable />
 				</NotificationProvider>
@@ -132,5 +163,36 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 		await waitForElement(() => getAllByText(/25000 unit/)); // Target Value of target trackline
 		await waitForElement(() => getAllByText(/FY 2019-20/));
 		await waitForElement(() => getAllByText(/2015/));
+	});
+
+	test("Filter List test", async () => {
+		let filterButton = await deliverableTable.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
+
+	test("Filter List Input Elements test", async () => {
+		let filterButton = await deliverableTable.findByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(filterButton);
+		});
+
+		let nameField = (await deliverableTable.findByTestId(
+			"createDeliverableTargetNameInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		});
+		await expect(nameField.value).toBe(intialFormValue.name);
+
+		let amountField = (await deliverableTable.findByTestId(
+			"createDeliverableTotalTargetAmountInput"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(amountField, {
+				target: { value: intialFormValue.target_value },
+			});
+		});
+		await expect(amountField.value).toBe(intialFormValue.target_value);
 	});
 });

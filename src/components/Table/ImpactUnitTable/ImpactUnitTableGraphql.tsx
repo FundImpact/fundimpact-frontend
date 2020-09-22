@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import ImpactUnitTableContainer from "./ImpactUnitTableContainer";
 import {
 	GET_IMPACT_UNIT_BY_ORG,
@@ -12,33 +12,85 @@ import {
 import { IImpactUnitData, IImpactCategoryData } from "../../../models/impact/impact";
 import pagination from "../../../hooks/pagination";
 
+const removeEmptyKeys = (filterList: { [key: string]: string }) => {
+	let obj: { [key: string]: string } = {};
+	for (let key in filterList) {
+		if (filterList[key] && filterList[key].length) {
+			obj[key] = filterList[key];
+		}
+	}
+	return obj;
+};
+
 function ImpactUnitTableGraphql({
 	collapsableTable = true,
 	rowId: impactCategoryId,
+	tableFilterList,
 }: {
 	collapsableTable?: boolean;
 	rowId?: string;
+	tableFilterList?: { [key: string]: string };
 }) {
+	const [nestedTableQueryFilter, setNestedTableQueryFilter] = useState({});
+	const [nestedTableOrderBy, setNestedTableOrderBy] = useState<string>("created_at");
+	const [nestedTableOrder, setNestedTableOrder] = useState<"asc" | "desc">("desc");
+	const [queryFilter, setQueryFilter] = useState({});
 	const dashboardData = useDashBoardData();
-
-	let {
-		changePage: changeImpactCategoryUnitPage,
-		count: impactCategoryUnitCount,
-		queryData: impactCategoryUnitList,
-		queryLoading: impactCategoryUnitLoading,
-		countQueryLoading: impactCategoryUnitCountLoading,
-	} = pagination({
-		countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
-		countFilter: {
-			impact_category_org: impactCategoryId,
-		},
-		query: GET_IMPACT_CATEGORY_UNIT,
-		queryFilter: {
-			impact_category_org: impactCategoryId,
-		},
-		sort: "created_at:DESC",
-		fireRequest: Boolean(impactCategoryId && !collapsableTable),
+	const [nestedTableFilterList, setNestedTableFilterList] = useState<{
+		[key: string]: string;
+	}>({
+		name: "",
+		code: "",
+		description: "",
 	});
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
+
+	const removeNestedFilterListElements = (key: string, index?: number) => {
+		setNestedTableFilterList((obj) => {
+			obj[key] = "";
+			return { ...obj };
+		});
+	};
+
+	useEffect(() => {
+		setQueryFilter({
+			organization: dashboardData?.organization?.id,
+		});
+	}, [dashboardData]);
+
+	useEffect(() => {
+		setNestedTableQueryFilter({
+			impact_category_org: impactCategoryId,
+		});
+	}, [impactCategoryId]);
+
+	useEffect(() => {
+		if (tableFilterList) {
+			const obj = removeEmptyKeys(tableFilterList);
+			setQueryFilter({
+				organization: dashboardData?.organization?.id,
+				...obj,
+			});
+		}
+	}, [tableFilterList]);
+
+	useEffect(() => {
+		if (nestedTableFilterList) {
+			const obj = removeEmptyKeys(nestedTableFilterList);
+			setNestedTableQueryFilter(
+				Object.assign(
+					{},
+					{ impact_category_org: impactCategoryId },
+					Object.keys(obj).length && {
+						impact_units_org: {
+							...obj,
+						},
+					}
+				)
+			);
+		}
+	}, [nestedTableFilterList]);
 
 	let {
 		changePage: changeImpactUnitPage,
@@ -48,15 +100,26 @@ function ImpactUnitTableGraphql({
 		countQueryLoading: impactUnitCountLoading,
 	} = pagination({
 		countQuery: GET_IMPACT_UNIT_COUNT_BY_ORG,
-		countFilter: {
-			organization: dashboardData?.organization?.id,
-		},
+		countFilter: queryFilter,
 		query: GET_IMPACT_UNIT_BY_ORG,
-		queryFilter: {
-			organization: dashboardData?.organization?.id,
-		},
-		sort: "created_at:DESC",
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && collapsableTable),
+	});
+
+	let {
+		changePage: changeImpactCategoryUnitPage,
+		count: impactCategoryUnitCount,
+		queryData: impactCategoryUnitList,
+		queryLoading: impactCategoryUnitLoading,
+		countQueryLoading: impactCategoryUnitCountLoading,
+	} = pagination({
+		countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
+		countFilter: nestedTableQueryFilter,
+		query: GET_IMPACT_CATEGORY_UNIT,
+		queryFilter: nestedTableQueryFilter,
+		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
+		fireRequest: Boolean(impactCategoryId && !collapsableTable),
 	});
 
 	const impactCategoryUnitListMemoized = useMemo(
@@ -88,6 +151,13 @@ function ImpactUnitTableGraphql({
 				impactCategoryUnitCountLoading
 			}
 			count={dashboardData && collapsableTable ? impactUnitCount : impactCategoryUnitCount}
+			order={collapsableTable ? order : nestedTableOrder}
+			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
+			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
+			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
+			filterList={nestedTableFilterList}
+			setFilterList={setNestedTableFilterList}
+			removeFilterListElements={removeNestedFilterListElements}
 		/>
 	);
 }

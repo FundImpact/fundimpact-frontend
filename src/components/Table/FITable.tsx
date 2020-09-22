@@ -1,6 +1,6 @@
-import { Box, Grid, Table, Typography } from "@material-ui/core";
+import { Box, Grid, Table, Typography, TableSortLabel } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -14,11 +14,11 @@ const useStyles = makeStyles({
 	table: {},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(odd) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -31,18 +31,27 @@ export default function FITable({
 	tableHeading,
 	rows,
 	pagination,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
-	tableHeading: { label: string }[];
+	tableHeading: { label: string; keyMapping?: string }[];
 	rows: React.ReactNode[];
 	pagination?: React.ReactNode;
+	order?: "asc" | "desc";
+	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy?: string;
+	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
+	const theme = useTheme();
 
 	return (
 		<>
 			{!rows.length ? (
-				<Grid container style={{ backgroundColor: "#F5F6FA" }}>
+				<Grid container style={{ backgroundColor: theme.palette.action.hover }}>
 					<Grid item xs={12}>
 						<Box>
 							<Typography
@@ -74,10 +83,11 @@ export default function FITable({
 										rows.length > 0 &&
 										tableHeading.map((heading) => (
 											<TableCell
-												className={tableHeader.th}
+												className={tableStyles.th}
 												key={heading.label}
 												align="left"
 											>
+												{/* {heading.label} */}
 												<FormattedMessage
 													id={
 														"tableHeading" +
@@ -86,11 +96,32 @@ export default function FITable({
 													defaultMessage={`${heading.label}`}
 													description={`This text will be shown on table for ${heading.label} heading`}
 												/>
+												{order && heading.keyMapping && (
+													<TableSortLabel
+														active={orderBy == heading.keyMapping}
+														onClick={() => {
+															if (orderBy == heading.keyMapping) {
+																setOrder &&
+																	setOrder(
+																		order == "asc"
+																			? "desc"
+																			: "asc"
+																	);
+															} else {
+																setOrderBy &&
+																	setOrderBy(
+																		heading.keyMapping || ""
+																	);
+															}
+														}}
+														direction={order}
+													></TableSortLabel>
+												)}
 											</TableCell>
 										))}
 								</TableRow>
 							</TableHead>
-							<TableBody className={tableHeader.tbody}>
+							<TableBody className={tableStyles.tbody}>
 								{rows.map((row: any, index: number) => (
 									<TableRow key={index}>
 										{row.map((col: React.ReactNode) => {

@@ -1,11 +1,5 @@
 import { Box, Container, Grid, Typography } from "@material-ui/core";
 import React from "react";
-
-import Achievement from "../../components/Dasboard/Cards/Achievement/Achievement";
-import DashboardCard from "../../components/Dasboard/Cards/DasboardCards";
-import FundStatus from "../../components/Dasboard/Cards/FundStatus/FundStatus";
-import Impact from "../../components/Dasboard/Cards/Impact/Impact";
-import ProjectName from "../../components/Dasboard/ProjectName/ProjectName";
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import SideBar from "../../components/SideBar/SideBar";

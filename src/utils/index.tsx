@@ -1,3 +1,5 @@
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+
 export const months: { [key: number]: string } = {
 	1: "JAN",
 	2: "FEB",
@@ -7,7 +9,7 @@ export const months: { [key: number]: string } = {
 	6: "JUN",
 	7: "JUL",
 	8: "AUG",
-	9: "SEP",
+	9: "SEPT",
 	10: "OCT",
 	11: "NOV",
 	12: "DEC",
@@ -73,3 +75,12 @@ export const removeEmptyKeys = <T extends { [key: string]: any }>({
 		}
 		return accumulator;
 	}, {});
+
+export function getLastUpdatedInWords(date: Date) {
+	// /*2017-12-03T10:15:30.000Z example date*/
+	if (!date) return;
+
+	return formatDistanceToNow(new Date(date), {
+		includeSeconds: true,
+	});
+}

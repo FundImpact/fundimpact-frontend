@@ -26,6 +26,8 @@ import {
 	IGET_DELIVERABLE_TARGET_BY_PROJECT,
 	IDeliverableTargetByProjectResponse,
 } from "../../models/deliverable/query";
+import { useIntl } from "react-intl";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -62,7 +64,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	const formAction = props.type;
-
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const createDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
 		try {
 			let createInputTarget = {
@@ -319,15 +321,25 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 		return errors;
 	};
-
+	const intl = useIntl();
 	return (
 		<React.Fragment>
 			<FormDialog
 				title={
-					(formAction === DELIVERABLE_ACTIONS.CREATE ? "New" : "Edit") +
-					" Deliverable Target"
+					newOrEdit +
+					" " +
+					intl.formatMessage({
+						id: "deliverableTargetFormTitle",
+						defaultMessage: "Deliverable Target",
+						description: `This text will be show on deliverable target form for title`,
+					})
 				}
-				subtitle={"Physical addresses of your organisation like headquarter branch etc"}
+				subtitle={intl.formatMessage({
+					id: "deliverableTargetFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on deliverable target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

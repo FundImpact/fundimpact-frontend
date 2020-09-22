@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, TableSortLabel } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
@@ -24,11 +24,11 @@ const useStyles = makeStyles({
 	},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -76,13 +76,21 @@ export default function CollapsibleTable({
 	tableHeading,
 	rows,
 	pagination,
+	order,
+	setOrder,
+	orderBy,
+	setOrderBy,
 }: {
-	tableHeading: { label: string }[];
+	tableHeading: { label: string; keyMapping?: string }[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
 	pagination?: React.ReactNode;
+	order?: "asc" | "desc";
+	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy?: string;
+	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 	return (
 		<TableContainer component={Paper} className={classes.tableContainer}>
 			{!rows.length ? (
@@ -106,19 +114,37 @@ export default function CollapsibleTable({
 									<TableCell
 										key={heading.label + index}
 										align="left"
-										className={tableHeader.th}
+										className={tableStyles.th}
 									>
+										{/* {heading.label} */}
 										{/* {heading.label} */}
 										<FormattedMessage
 											id={"tableHeading" + heading.label.replace(/ /g, "")}
 											defaultMessage={`${heading.label}`}
 											description={`This text will be shown on table for ${heading.label} heading`}
 										/>
+										{order && heading.keyMapping && (
+											<TableSortLabel
+												active={orderBy == heading.keyMapping}
+												onClick={() => {
+													if (orderBy == heading.keyMapping) {
+														setOrder &&
+															setOrder(
+																order == "asc" ? "desc" : "asc"
+															);
+													} else {
+														setOrderBy &&
+															setOrderBy(heading.keyMapping || "");
+													}
+												}}
+												direction={order}
+											></TableSortLabel>
+										)}
 									</TableCell>
 								))}
 						</TableRow>
 					</TableHead>
-					<TableBody className={tableHeader.tbody}>
+					<TableBody className={tableStyles.tbody}>
 						{rows.map((row, index) => (
 							<Row key={index} index={index} row={row} />
 						))}

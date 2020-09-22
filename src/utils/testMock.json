@@ -1,17 +1,17 @@
 {
 	"organizationDetails": {
-		"orgName": "my org",
-		"streetAdd": "221 baker street",
+		"__typename": "OrganizationList",
+		"id": "3",
+		"name": "sherlock",
 		"short_name": "sh homes",
 		"legal_name": "sh legal detective",
-		"country": {
-			"id": "1"
-		},
-		"name": "sherlock",
-		"id": "3",
 		"organization_registration_type": {
 			"id": "1",
 			"reg_type": "Trusts"
+		},
+		"country": {
+			"id": "1",
+			"name": "INDIA"
 		}
 	},
 	"organizationDetail": {

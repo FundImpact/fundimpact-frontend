@@ -16,7 +16,7 @@ const useNotificationData = (): INotificationContext | undefined => {
 const useNotificationDispatch = () => {
 	const context = React.useContext(NotificationdDispatchContext);
 	if (!context) {
-		throw new Error("useNotificationDispatch must be used within a DashboardProvider");
+		throw new Error("useNotificationDispatch must be used within a NotificationProvider");
 	}
 	return context;
 };

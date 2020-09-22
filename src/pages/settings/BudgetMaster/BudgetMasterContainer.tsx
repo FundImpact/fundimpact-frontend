@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import BudgetMasterView from "./BudgetMasterView";
 
-//remove this
 function BudgetMasterContainer() {
+	//change it to object
+	const [tableFilterList, setTableFilterList] = useState<{
+		[key: string]: string;
+	}>({
+		name: "",
+		code: "",
+		description: "",
+	});
+
+	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
+		setTableFilterList((obj) => {
+			obj[elementToDelete] = "";
+			return { ...obj };
+		});
+	};
+
 	return (
 		<div>
-			<BudgetMasterView />
+			<BudgetMasterView
+				tableFilterList={tableFilterList}
+				setTableFilterList={setTableFilterList}
+				removeFilteListElements={removeFilteListElements}
+			/>
 		</div>
 	);
 }

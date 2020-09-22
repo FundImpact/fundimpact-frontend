@@ -1,9 +1,9 @@
 export const deliverableHeadings = [
 	{ label: "" },
-	{ label: "S.no" },
-	{ label: "Name" },
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
 	{ label: "Category" },
-	{ label: "Target" },
+	{ label: "Target", keyMapping: "target_value" },
 	{ label: "Achieved" },
 	{ label: "Progess" },
 
@@ -12,10 +12,10 @@ export const deliverableHeadings = [
 
 export const ImpactHeadings = [
 	{ label: "" },
-	{ label: "S.no" },
-	{ label: "Name" },
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
 	{ label: "Category" },
-	{ label: "Target" },
+	{ label: "Target", keyMapping: "target_value" },
 	{ label: "Achieved" },
 	{ label: "Progess" },
 	{ label: "SDG" },
@@ -23,60 +23,61 @@ export const ImpactHeadings = [
 ];
 
 export const deliverableAndimpactTracklineHeading = [
-	{ label: "S.no" },
-	{ label: "Date" },
-	{ label: "Note" },
-	{ label: "Achieved" },
+	{ label: "#" },
+	{ label: "Date", keyMapping: "reporting_date" },
+	{ label: "Note", keyMapping: "note" },
+	{ label: "Achieved", keyMapping: "value" },
 	{ label: "Year" },
 	{ label: "" }, //edit icon
 ];
 
 export const budgetTargetTableHeading = [
 	{ label: "" },
-	{ label: "S.no" },
-	{ label: "Target Name" },
+	{ label: "#" },
+	{ label: "Target Name", keyMapping: "name" },
 	{ label: "Budget Category" },
 	{ label: "Donor" },
-	{ label: "Total Amount" },
+	{ label: "Total Amount", keyMapping: "total_target_amount" },
 	{ label: "Spent" },
 	{ label: "Progress %" },
 	{ label: "" },
 ];
 
 export const budgetLineItemTableHeading = [
-	{ label: "S.no" },
-	{ label: "Date" },
-	{ label: "Note" },
-	{ label: "Amount" },
+	{ label: "#" },
+	{ label: "Date", keyMapping: "reporting_date" },
+	{ label: "Note", keyMapping: "note" },
+	{ label: "Amount", keyMapping: "amount" },
 	{ label: "Grant Period" },
 	{ label: "Year" },
 	{ label: "" },
 ];
 
 export const donorTableHeading = [
-	{ label: "S.no" },
-	{ label: "Name" },
-	{ label: "Legal Name" },
-	{ label: "Short Name" },
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Legal Name", keyMapping: "legal_name" },
+	{ label: "Short Name", keyMapping: "short_name" },
 	{ label: "Country" },
 	{ label: "" },
 ];
 
 export const budgetCategoryHeading = [
 	{ label: "#" },
-	{ label: "Budget Category" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Budget Category", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
+	{ label: "" },
 	{ label: "" },
 ];
 
 export const deliverableCategoryTableHeading = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Deliverable Category" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Deliverable Category", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
 	{ label: "" },
@@ -85,9 +86,9 @@ export const deliverableCategoryTableHeading = [
 export const deliverableUnitTableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Deliverable Unit" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Deliverable Unit", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
 	{ label: "" },
@@ -96,9 +97,9 @@ export const deliverableUnitTableHeadings = [
 export const impactUnitTableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Unit" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Impact Unit", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
 	{ label: "" },
@@ -107,9 +108,9 @@ export const impactUnitTableHeadings = [
 export const impactCategoryTableHeadings = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Impact Category" },
-	{ label: "Code" },
-	{ label: "Description" },
+	{ label: "Impact Category", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
 	{ label: "" },
