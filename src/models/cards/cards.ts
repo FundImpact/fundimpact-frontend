@@ -53,7 +53,6 @@ export type ProgressCardResponse = {
 	name: string;
 	avg_value?: number;
 	sum?: number;
-	dialogTitle: string;
 };
 
 export type ProgressCardConfig = {

@@ -16,7 +16,7 @@ export function MoreButton({ handleClick, link }: { handleClick?: () => void; li
 				/>
 			</Typography>
 			{handleClick && (
-				<IconButton onClick={() => handleClick()}>
+				<IconButton onClick={() => handleClick()} data-testid="fundImpactMoreButton">
 					<ArrowRightAltIcon fontSize="small" />
 				</IconButton>
 			)}

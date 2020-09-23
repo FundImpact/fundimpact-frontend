@@ -30,7 +30,7 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 	}
 	return (
 		<>
-			<Grid item md={5} justify="center">
+			<Grid item md={5} justify="center" container>
 				<Box ml={1}>
 					<Box mt={2} ml={3}>
 						<Typography variant="h6">{projectCardConfig.mainHeading}</Typography>
