@@ -1,4 +1,4 @@
-export const enum IMPACT_MODULE_ACTIONS {
+export enum IMPACT_MODULE_ACTIONS {
 	CREATE_TARGET = "create_target",
 	UPDATE_TARGET = "update_target",
 	DELETE_TARGET = "delete_target",

@@ -1,5 +1,5 @@
 import { IMODULE } from "../../module.interface";
-import { MODULE_CODES } from "../../modules.list";
+import { MODULE_CODES } from "../../moduleCodes";
 import { IMPACT_MODULE_ACTIONS } from "./actions";
 
 export const IMPACT_MODULE: IMODULE = {
