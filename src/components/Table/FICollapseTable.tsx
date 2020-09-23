@@ -24,11 +24,11 @@ const useStyles = makeStyles({
 	},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -90,7 +90,7 @@ export default function CollapsibleTable({
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 	return (
 		<TableContainer component={Paper} className={classes.tableContainer}>
 			{!rows.length ? (
@@ -114,7 +114,7 @@ export default function CollapsibleTable({
 									<TableCell
 										key={heading.label + index}
 										align="left"
-										className={tableHeader.th}
+										className={tableStyles.th}
 									>
 										{/* {heading.label} */}
 										{/* {heading.label} */}
@@ -144,7 +144,7 @@ export default function CollapsibleTable({
 								))}
 						</TableRow>
 					</TableHead>
-					<TableBody className={tableHeader.tbody}>
+					<TableBody className={tableStyles.tbody}>
 						{rows.map((row, index) => (
 							<Row key={index} index={index} row={row} />
 						))}

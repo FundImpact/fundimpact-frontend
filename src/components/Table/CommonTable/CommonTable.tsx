@@ -30,11 +30,11 @@ const useStyles = makeStyles({
 	},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -134,7 +134,7 @@ function CommonTable<T extends { id: string }>({
 	setOrderBy,
 }: ICommonTable<T>) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -182,7 +182,7 @@ function CommonTable<T extends { id: string }>({
 										index: number
 									) => (
 										<TableCell
-											className={tableHeader.th}
+											className={tableStyles.th}
 											key={index}
 											align="left"
 										>
@@ -212,7 +212,7 @@ function CommonTable<T extends { id: string }>({
 							: null}
 					</TableRow>
 				</TableHead>
-				<TableBody className={tableHeader.tbody}>
+				<TableBody className={tableStyles.tbody}>
 					{valuesList
 						.filter((element) => element)
 						.map((rowData: T, index: number) => (
