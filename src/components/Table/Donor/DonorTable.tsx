@@ -33,11 +33,11 @@ const useStyles = makeStyles({
 	},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main, fontSize: "13px" },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(even) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -65,7 +65,7 @@ function DonorTable({
 	tableFilterList?: { [key: string]: string | string[] };
 }) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 	const selectedDonor = React.useRef<IDONOR_RESPONSE | null>(null);
 	const [page, setPage] = useState<number>(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -149,7 +149,7 @@ function DonorTable({
 										index: number
 									) => (
 										<TableCell
-											className={tableHeader.th}
+											className={tableStyles.th}
 											key={index}
 											align="left"
 										>
@@ -179,7 +179,7 @@ function DonorTable({
 							: null}
 					</TableRow>
 				</TableHead>
-				<TableBody className={tableHeader.tbody}>
+				<TableBody className={tableStyles.tbody}>
 					{donorList?.orgDonors?.map((donor: IDONOR_RESPONSE, index: number) => (
 						<TableRow key={donor.id}>
 							<TableCell component="td" scope="row">

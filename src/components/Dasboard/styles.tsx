@@ -24,7 +24,7 @@ export const sidePanelStyles = makeStyles((theme: Theme) =>
 			overflowY: "scroll",
 		},
 		sidePanelActiveLink: {
-			background: "rgb(204, 204, 204)",
+			background: theme.palette.action.selected,
 		},
 		card: {
 			boxShadow: "none",

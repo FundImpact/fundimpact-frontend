@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { LocalizationProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@material-ui/pickers/adapter/date-fns";
 import React, { Suspense } from "react";
