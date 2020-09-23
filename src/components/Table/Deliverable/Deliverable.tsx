@@ -179,8 +179,6 @@ function DeliverableTargetAchievementAndProgress({
 	);
 }
 
-let deliverableCategoryHash: { [key: string]: string } = {};
-
 const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
@@ -190,6 +188,9 @@ const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key:
 		initialObject
 	);
 };
+
+let deliverableCategoryHash: { [key: string]: string } = {};
+
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,

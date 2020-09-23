@@ -176,9 +176,6 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	);
 }
 
-let annualYearHash: { [key: string]: string } = {};
-let financialYearHash: { [key: string]: string } = {};
-
 const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
@@ -188,6 +185,10 @@ const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key:
 		initialObject
 	);
 };
+
+let annualYearHash: { [key: string]: string } = {};
+let financialYearHash: { [key: string]: string } = {};
+
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,
