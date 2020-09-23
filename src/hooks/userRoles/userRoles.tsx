@@ -19,7 +19,7 @@ function UserRoles() {
 	const [getUserRoles, { data, loading, error }] = useLazyQuery<IGetUserRole>(GET_USER_ROLES);
 	const [userRoleHash, setUserRoleHash] = useState<{
 		[key: string]: { id: string; controller: string; action: string };
-	}>({});
+	}>({});	
 
 	useEffect(() => {
 		if (user) {

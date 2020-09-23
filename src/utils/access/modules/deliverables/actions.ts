@@ -1,16 +1,16 @@
 export enum DELIVERABLE_MODULE_ACTIONS {
-	CREATE_TARGET = "create_target",
-	UPDATE_TARGET = "update_target",
-	DELETE_TARGET = "delete_target",
-	CREATE_CATEGORY = "create_category",
-	UPDATE_CATEGORY = "update_category",
-	DELETE_CATEGORY = "delete_category",
-	CREATE_UNITS = "create_units",
-	UPDATE_UNITS = "update_units",
-	DELETE_UNITS = "delete_units",
-	CREATE_REPORT_ACHIEVEMENT = "create_report_achievement",
-	UPDATE_REPORT_ACHIEVEMENT = "update_report_achievement",
-	DELETE_REPORT_ACHIEVEMENT = "delete_report_achievement",
+	CREATE_TARGET = "deliverable-target-project-create",
+	UPDATE_TARGET = "deliverable-target-project-update",
+	DELETE_TARGET = "deliverable-target-project-delete",
+	CREATE_CATEGORY = "deliverable-category-org-create",
+	UPDATE_CATEGORY = "deliverable-category-org-update",
+	DELETE_CATEGORY = "deliverable-category-org-delete",
+	CREATE_UNITS = "deliverable-units-org-create",
+	UPDATE_UNITS = "deliverable-units-org-update",
+	DELETE_UNITS = "deliverable-units-org-delete",
+	CREATE_REPORT_ACHIEVEMENT = "deliverable-tracking-lineitem-create",
+	UPDATE_REPORT_ACHIEVEMENT = "deliverable-tracking-lineitem-update",
+	DELETE_REPORT_ACHIEVEMENT = "deliverable-tracking-lineitem-delete",
 }
 
 // {
