@@ -65,3 +65,38 @@ export const GET_TOTAL_ACHIEVED_DELIVERABLE_PROJECT = gql`
 		totalAchivedProjectByOrg(where: $filter)
 	}
 `;
+
+export const GET_BUDGET_PROJECTS_BY_EXPENDITURE = gql`
+	query getProjectExpenditureValue($filter: JSON) {
+		projectExpenditureValue(where: $filter)
+	}
+`;
+
+export const GET_BUDGET_PROJECTS_BY_ALLOCATION = gql`
+	query getProjectAllocationValue($filter: JSON) {
+		projectAllocationValue(where: $filter)
+	}
+`;
+
+export const GET_DELIVERABLE_PROJECTS_ACHIEVED = gql`
+	query getDeliverableAchieved($filter: JSON) {
+		deliverableAchieved(where: $filter)
+	}
+`;
+
+export const GET_IMPACTS_PROJECTS_ACHIEVED = gql`
+	query getImpactAchieved($filter: JSON) {
+		impactAchieved(where: $filter)
+	}
+`;
+export const GET_DONOR_BY_FUND_RECEIVED = gql`
+	query getDonorsRecievedValue($filter: JSON) {
+		donorsRecievedValue(where: $filter)
+	}
+`;
+
+export const GET_DONOR_BY_FUND_ALLOCATED = gql`
+	query getDonorsAllocationValue($filter: JSON) {
+		donorsAllocationValue(where: $filter)
+	}
+`;

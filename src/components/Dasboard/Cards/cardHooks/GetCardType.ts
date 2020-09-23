@@ -1,9 +1,22 @@
 import { useTheme } from "@material-ui/core/styles";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { CardProps, PieCardConfig, ProjectCardConfig } from "../../../../models/cards/cards";
+import {
+	CardProps,
+	PieCardConfig,
+	ProgressCardConfig,
+	ProjectCardConfig,
+} from "../../../../models/cards/cards";
 import { abbreviateNumber } from "../../../../utils";
 import { CARD_OF, CARD_TYPES } from "../constants";
-import { GetBudgetOrgStatus, GetDeliverableOrgStatus, GetImpactOrgStatus } from "./OrgStatus";
+import {
+	GetBudgetOrgStatus,
+	GetBudgetProjects,
+	GetDeliverableOrgStatus,
+	GetDeliverableProjects,
+	GetDonors,
+	GetImpactOrgStatus,
+	GetImpactProjects,
+} from "./OrgDashboardQuery";
 
 export function GetCardTypeAndValues(props: CardProps) {
 	const dashboardData = useDashBoardData();
@@ -33,6 +46,11 @@ export function GetCardTypeAndValues(props: CardProps) {
 		},
 		moreButtonLink: "",
 	};
+	let progressCardConfig: ProgressCardConfig = {
+		dataToDisplay: [],
+		dialogTitle: props.title,
+	};
+
 	if (props.type === CARD_TYPES.PROJECT) {
 		if (props.cardOf === CARD_OF.IMPACT) {
 			let {
@@ -97,8 +115,36 @@ export function GetCardTypeAndValues(props: CardProps) {
 		pieCardConfig.moreButtonLink = props.pieCardConfig.moreButtonLink;
 	}
 
+	if (props.type === CARD_TYPES.PROGRESS) {
+		if (props.cardOf === CARD_OF.BUDGET) {
+			let { data: budgetProject } = GetBudgetProjects(props.currentFilter, {
+				variables: { filter: { organization: organization } },
+			});
+			progressCardConfig.dataToDisplay = budgetProject;
+		}
+		if (props.cardOf === CARD_OF.DELIVERABLE) {
+			let { deliverableAchieved } = GetDeliverableProjects({
+				variables: { filter: { organization: organization } },
+			});
+			progressCardConfig.dataToDisplay = deliverableAchieved;
+		}
+		if (props.cardOf === CARD_OF.IMPACT) {
+			let { impactAchieved } = GetImpactProjects({
+				variables: { filter: { organization: organization } },
+			});
+			progressCardConfig.dataToDisplay = impactAchieved;
+		}
+		if (props.cardOf === CARD_OF.DONOR) {
+			let { data: donors } = GetDonors(props.currentFilter, {
+				variables: { filter: { organization: organization } },
+			});
+			progressCardConfig.dataToDisplay = donors;
+		}
+	}
+
 	return {
 		projectCardConfig,
 		pieCardConfig,
+		progressCardConfig,
 	};
 }

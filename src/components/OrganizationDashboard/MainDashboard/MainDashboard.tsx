@@ -86,11 +86,9 @@ export default function MainOrganizationDashboard() {
 				<Grid item md={4}>
 					<DashboardCard
 						title="Budget Project"
-						cardFilter={[
-							{ label: "Received", filter: {} },
-							{ label: "Allocated", filter: {} },
-						]}
+						cardFilter={[{ label: "Expenditure" }, { label: "Allocation" }]}
 						type={CARD_TYPES.PROGRESS}
+						cardOf={CARD_OF.BUDGET}
 						cardHeight="33vh"
 					/>
 				</Grid>
@@ -99,12 +97,14 @@ export default function MainOrganizationDashboard() {
 						title="Deliverable Achieved"
 						type={CARD_TYPES.PROGRESS}
 						cardHeight="33vh"
+						cardOf={CARD_OF.DELIVERABLE}
 					/>
 				</Grid>
 				<Grid item md={4}>
 					<DashboardCard
-						title="Budget Project"
+						title="Impacts Achieved"
 						type={CARD_TYPES.PROGRESS}
+						cardOf={CARD_OF.IMPACT}
 						cardHeight="33vh"
 					/>
 				</Grid>
@@ -118,23 +118,19 @@ export default function MainOrganizationDashboard() {
 					<Grid container className={classes.bottonContainer}>
 						<Grid item md={3}>
 							<DashboardCard
-								title="Budget Project"
-								cardFilter={[
-									{ label: "Received", filter: {} },
-									{ label: "Allocated", filter: {} },
-								]}
+								title="Donors"
+								cardFilter={[{ label: "Allocated" }, { label: "Received" }]}
 								type={CARD_TYPES.PROGRESS}
+								cardOf={CARD_OF.DONOR}
 								cardHeight="33vh"
 							/>
 						</Grid>
 						<Grid item md={3}>
 							<DashboardCard
 								title="Budget Category"
-								cardFilter={[
-									{ label: "Projects", filter: {} },
-									{ label: "Achieved", filter: {} },
-								]}
+								cardFilter={[{ label: "Projects" }, { label: "Achieved" }]}
 								type={CARD_TYPES.PIE}
+								cardOf={CARD_OF.BUDGET}
 								cardHeight="33vh"
 								pieCardConfig={{
 									moreButtonLink: "/settings/budget",
@@ -144,29 +140,25 @@ export default function MainOrganizationDashboard() {
 						<Grid item md={3}>
 							<DashboardCard
 								title="Deliverable Category"
-								cardFilter={[
-									{ label: "Projects", filter: {} },
-									{ label: "Achieved", filter: {} },
-								]}
+								cardFilter={[{ label: "Projects" }, { label: "Achieved" }]}
 								type={CARD_TYPES.PIE}
 								cardHeight="33vh"
 								pieCardConfig={{
 									moreButtonLink: "/settings/deliverable",
 								}}
+								cardOf={CARD_OF.DELIVERABLE}
 							/>
 						</Grid>
 						<Grid item md={3}>
 							<DashboardCard
 								title="Impact Category"
-								cardFilter={[
-									{ label: "Projects", filter: {} },
-									{ label: "Achieved", filter: {} },
-								]}
+								cardFilter={[{ label: "Projects" }, { label: "Achieved" }]}
 								type={CARD_TYPES.PIE}
 								cardHeight="33vh"
 								pieCardConfig={{
 									moreButtonLink: "/settings/impact",
 								}}
+								cardOf={CARD_OF.IMPACT}
 							/>
 						</Grid>
 					</Grid>

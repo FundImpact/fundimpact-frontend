@@ -9,38 +9,20 @@ import {
 	MenuItem,
 	Typography,
 } from "@material-ui/core";
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import CommonProgres from "../../OrganizationDashboard/Cards/CommonProgress";
-import MoreButton from "../../OrganizationDashboard/Cards/MoreIconButton";
-import ProgressDialog from "../../OrganizationDashboard/Cards/ProgressDialog";
 import { CARD_TYPES } from "./constants";
 import { CardProps } from "../../../models/cards/cards";
-import { GetCardTypeAndValues } from "./cardHooks/GetCardType";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { ProjectCard, PieCard } from "./CommonCards";
-
-/*static value*/
-const budgetProjects = [
-	{ name: "Wash Awarness ", completed: 90, lastUpdated: "2017-12-03T10:15:30.000Z" },
-	{ name: "Covid 19 supply", completed: 80, lastUpdated: "2017-12-03T10:15:30.000Z" },
-	{ name: "Budget Project ", completed: 70, lastUpdated: "2017-12-03T10:15:30.000Z" },
-	{ name: "project 4", completed: 60, lastUpdated: "2017-12-03T10:15:30.000Z" },
-	{ name: "project 5", completed: 50, lastUpdated: "2017-12-03T10:15:30.000Z" },
-];
+import { GetCardTypeAndValues } from "./CardHooks/GetCardType";
+import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 
 export default function DashboardCard(props: CardProps) {
-	const theme = useTheme();
-	/*Static pieData*/
-	const dashboardData = useDashBoardData();
-	const organization = dashboardData?.organization?.id;
-
 	const { title, children, cardHeight = "24vh", cardFilter } = props;
-
-	let { projectCardConfig, pieCardConfig } = GetCardTypeAndValues(props);
-
-	if (props.type === CARD_TYPES.PROGRESS) {
-	}
+	const [currentFilter, setCurrentFilter] = useState<{ label: string }>();
+	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
+		...props,
+		currentFilter: currentFilter?.label,
+	});
 
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
@@ -54,11 +36,10 @@ export default function DashboardCard(props: CardProps) {
 			marginTop: theme.spacing(0),
 		},
 	}));
-	const [currentFilter, setCurrentFilter] = useState<any>();
 
 	/*setting first filter as default filter*/
 	useEffect(() => {
-		if (cardFilter && cardFilter.length) {
+		if (cardFilter?.length) {
 			setCurrentFilter(cardFilter[0]);
 		}
 	}, []);
@@ -71,7 +52,17 @@ export default function DashboardCard(props: CardProps) {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	const [progressDialogOpen, setProgressDialogOpen] = React.useState(false);
+
+	function renderCard() {
+		switch (props.type) {
+			case CARD_TYPES.PROGRESS:
+				return <ProgressCard {...progressCardConfig} />;
+			case CARD_TYPES.PIE:
+				return <PieCard {...pieCardConfig} />;
+			case CARD_TYPES.PROJECT:
+				return <ProjectCard {...projectCardConfig} />;
+		}
+	}
 
 	return (
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
@@ -90,7 +81,6 @@ export default function DashboardCard(props: CardProps) {
 								<IconButton onClick={handleClick}>
 									<FilterListIcon fontSize="small" />
 								</IconButton>
-
 								<Menu
 									id="simple-menu-budget-org"
 									anchorEl={anchorEl}
@@ -99,12 +89,10 @@ export default function DashboardCard(props: CardProps) {
 									onClose={handleClose}
 								>
 									{cardFilter.map(
-										(
-											filter: { label: string; filter: object },
-											mapIndex: number
-										) => {
+										(filter: { label: string }, mapIndex: number) => {
 											return (
 												<MenuItem
+													key={mapIndex}
 													onClick={() => {
 														setCurrentFilter(filter);
 														handleClose();
@@ -119,52 +107,7 @@ export default function DashboardCard(props: CardProps) {
 							</>
 						)}
 					</Grid>
-					{props.type === CARD_TYPES.PROGRESS && (
-						<>
-							<Grid item md={12}>
-								<Box mt={1}>
-									{budgetProjects &&
-										budgetProjects.slice(0, 3).map((budgetProject, index) => {
-											return (
-												<CommonProgres
-													title={budgetProject.name}
-													date={budgetProject.lastUpdated}
-													percentage={budgetProject.completed}
-													size="md"
-												/>
-											);
-										})}
-								</Box>
-							</Grid>
-							<Grid item md={12} justify="flex-end" container>
-								<MoreButton handleClick={() => setProgressDialogOpen(true)} />
-							</Grid>
-							{progressDialogOpen && (
-								<ProgressDialog
-									open={progressDialogOpen}
-									onClose={() => setProgressDialogOpen(false)}
-									title={title ? title : " "}
-								>
-									{budgetProjects &&
-										budgetProjects.map((budgetProject, index) => {
-											return (
-												<Box m={1}>
-													<CommonProgres
-														title={budgetProject.name}
-														date={budgetProject.lastUpdated}
-														percentage={budgetProject.completed}
-														size="lg"
-													/>
-												</Box>
-											);
-										})}
-								</ProgressDialog>
-							)}
-						</>
-					)}
-
-					{props.type === CARD_TYPES.PIE && <PieCard {...pieCardConfig} />}
-					{props.type === CARD_TYPES.PROJECT && <ProjectCard {...projectCardConfig} />}
+					{renderCard()}
 				</Grid>
 				<Grid item md={12}>
 					{children}

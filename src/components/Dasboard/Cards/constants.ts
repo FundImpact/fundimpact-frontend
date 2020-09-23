@@ -9,4 +9,5 @@ export enum CARD_OF {
 	DELIVERABLE = "DELIVERABLE",
 	BUDGET = "BUDGET",
 	IMPACT = "IMPACT",
+	DONOR = "DONOR",
 }

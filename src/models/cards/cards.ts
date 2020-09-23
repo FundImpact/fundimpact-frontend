@@ -5,16 +5,19 @@ export type CardProps = {
 	title?: string;
 	children?: React.ReactElement | any;
 	cardHeight?: string;
-	cardFilter?: { label: string; filter: object }[];
+	cardFilter?: { label: string }[];
+	currentFilter?: string;
 } & (
 	| {
 			type: CARD_TYPES.PIE;
+			cardOf: CARD_OF;
 			pieCardConfig: {
 				moreButtonLink?: string;
 			};
 	  }
 	| {
 			type: CARD_TYPES.PROGRESS;
+			cardOf: CARD_OF;
 	  }
 	| {
 			type: CARD_TYPES.PROJECT;
@@ -43,4 +46,17 @@ export type ProjectCardConfig = {
 export type PieCardConfig = {
 	pieData: PieDataFormat;
 	moreButtonLink: string | undefined;
+};
+
+export type ProgressCardResponse = {
+	id: string | number;
+	name: string;
+	avg_value?: number;
+	sum?: number;
+	dialogTitle: string;
+};
+
+export type ProgressCardConfig = {
+	dataToDisplay: ProgressCardResponse[];
+	dialogTitle?: string;
 };

@@ -1,3 +1,4 @@
 import { ProjectCard } from "./ProjectCards";
 import { PieCard } from "./PieCard";
-export { ProjectCard, PieCard };
+import { ProgressCard } from "./ProgressCard";
+export { ProjectCard, PieCard, ProgressCard };

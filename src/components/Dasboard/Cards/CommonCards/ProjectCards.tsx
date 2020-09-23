@@ -3,8 +3,31 @@ import React from "react";
 import { ProjectCardConfig } from "../../../../models/cards/cards";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import { Skeleton } from "@material-ui/lab";
 
 export function ProjectCard(projectCardConfig: ProjectCardConfig) {
+	if (!projectCardConfig.mainHeading) {
+		return (
+			<>
+				<Grid item md={5}>
+					<Skeleton variant="text" animation="wave"></Skeleton>
+					<Skeleton variant="text" animation="wave"></Skeleton>
+				</Grid>
+				<Grid item md={7}>
+					<Box ml={1}>
+						<Skeleton variant="text" animation="wave"></Skeleton>
+						<Skeleton variant="text" animation="wave"></Skeleton>
+						<Skeleton variant="text" animation="wave"></Skeleton>
+						<Skeleton variant="text" animation="wave"></Skeleton>
+					</Box>
+				</Grid>
+				<Grid item md={12}>
+					<Skeleton variant="text" animation="wave"></Skeleton>
+					<Skeleton variant="text" animation="wave"></Skeleton>
+				</Grid>
+			</>
+		);
+	}
 	return (
 		<>
 			<Grid item md={5} justify="center">
