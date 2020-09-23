@@ -63,9 +63,9 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 					},
 					index
 				) => (
-					<>
+					<React.Fragment key={index}>
 						{listItem.mainHeading && (
-							<Box display="flex" key={index}>
+							<Box display="flex">
 								<Box p={2}>
 									<ListItemText
 										primary={listItem.mainHeading}
@@ -82,7 +82,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 								key={subHeadingIndex}
 							/>
 						))}
-					</>
+					</React.Fragment>
 				)
 			)}
 		</Box>

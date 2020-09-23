@@ -77,7 +77,6 @@ const BasicDetailsForm = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const initialValues: IBasicInformation = getDefaultBasicInformation();
 	const classes = useStyles();
-	const intl = useIntl();
 
 	let { error, loading, data: singupSuccessfulResponse, setPayload } = usePostFetch<
 		IUserSignupResponse

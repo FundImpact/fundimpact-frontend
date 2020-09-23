@@ -32,6 +32,7 @@ import DeliverableTracklineTable from "./DeliverableTrackLine";
 import FilterList from "../../FilterList";
 import { deliverableTargetInputFields } from "./inputFields.json";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
 
 const chipArray = ({
 	removeChip,
@@ -178,16 +179,47 @@ function DeliverableTargetAchievementAndProgress({
 	);
 }
 
-let deliverableCategoryHash: { [key: string]: string } = {};
-
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
+};
+
+let deliverableCategoryHash: { [key: string]: string } = {};
+
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			list: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "deliverable_category_org") {
+			return chipArray({
+				list: filterListObjectKeyValuePair[1].map((ele) => deliverableCategoryHash[ele]),
+				name: "dc",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	return null;
 };
 
 export default function DeliverablesTable() {
@@ -231,16 +263,10 @@ export default function DeliverablesTable() {
 		setPage(newPage);
 	};
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -270,7 +296,7 @@ export default function DeliverablesTable() {
 				return filter;
 			});
 		}
-	}, [filterList]);
+	}, [filterList, dashboardData]);
 
 	let {
 		count,
@@ -392,30 +418,12 @@ export default function DeliverablesTable() {
 					<Grid container>
 						<Grid item xs={11}>
 							<Box my={2} display="flex" flexWrap="wrap">
-								{Object.entries(filterList).map((element) => {
-									if (element[1] && typeof element[1] == "string") {
-										return chipArray({
-											list: [element[1]],
-											name: element[0].slice(0, 4),
-											removeChip: (index: number) => {
-												removeFilterListElements(element[0]);
-											},
-										});
-									}
-									if (element[1] && Array.isArray(element[1])) {
-										if (element[0] == "deliverable_category_org") {
-											return chipArray({
-												list: element[1].map(
-													(ele) => deliverableCategoryHash[ele]
-												),
-												name: "dc",
-												removeChip: (index: number) => {
-													removeFilterListElements(element[0], index);
-												},
-											});
-										}
-									}
-								})}
+								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+									createChipArray({
+										filterListObjectKeyValuePair,
+										removeFilterListElements,
+									})
+								)}
 							</Box>
 						</Grid>
 						<Grid item xs={1}>

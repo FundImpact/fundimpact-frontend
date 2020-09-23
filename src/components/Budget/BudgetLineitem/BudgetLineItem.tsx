@@ -4,12 +4,7 @@ import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import {
-	GET_ANNUAL_YEAR_LIST,
-	GET_FINANCIAL_YEARS,
-	GET_ORG_CURRENCIES_BY_ORG,
-	GET_CURRENCY_LIST,
-} from "../../../graphql/";
+import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS, GET_CURRENCY_LIST } from "../../../graphql/";
 import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_GRANT_PERIODS_PROJECT_LIST,
@@ -110,10 +105,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [currentProject, getBudgetTargetProject]);
 
+	const { handleClose } = props;
+
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormSelectFields[2].hidden = false;
-		props.handleClose();
-	}, []);
+		handleClose();
+	}, [handleClose]);
 
 	const validate = useCallback(
 		(values: IBudgetTrackingLineitemForm) => {
@@ -121,7 +118,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			if (values.budget_targets_project) {
 				setSelectedDonor(budgetTargetHash[values.budget_targets_project]);
 				if (
-					budgetTargetHash[values.budget_targets_project]?.country?.id ==
+					budgetTargetHash[values.budget_targets_project]?.country?.id ===
 					dashboardData?.organization?.country?.id
 				) {
 					budgetLineitemFormSelectFields[2].hidden = true;
@@ -149,7 +146,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	useEffect(() => {
 		getAnnualYears();
-	}, []);
+	}, [getAnnualYears]);
 
 	useEffect(() => {
 		if (selectedDonor) {
@@ -162,7 +159,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				},
 			});
 		}
-	}, [selectedDonor, getGrantPeriodProject]);
+	}, [selectedDonor, getGrantPeriodProject, currentProject]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -174,7 +171,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				},
 			});
 		}
-	}, [dashboardData?.organization, getFinancialYearOrg]);
+	}, [dashboardData, getFinancialYearOrg]);
 
 	useEffect(() => {
 		if (selectedDonor) {

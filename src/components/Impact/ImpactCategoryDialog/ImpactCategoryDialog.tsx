@@ -61,7 +61,7 @@ function ImpactCategoryDialog({
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
-	const initialValues = formAction == FORM_ACTIONS.CREATE ? defauleValues : formValues;
+	const initialValues = formAction === FORM_ACTIONS.CREATE ? defauleValues : formValues;
 
 	const onSubmit = async (values: IImpactCategory) => {
 		try {

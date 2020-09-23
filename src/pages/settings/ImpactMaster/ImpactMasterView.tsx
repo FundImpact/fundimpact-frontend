@@ -71,7 +71,7 @@ function TabContent(props: TabPanelProps) {
 }
 
 const ImpactMasterView = ({
-	value,
+	showImpactUnitTable,
 	setValue,
 	impactCategoryFilterList,
 	impactUnitFilterList,
@@ -79,7 +79,7 @@ const ImpactMasterView = ({
 	setImpactCategoryFilterList,
 	setImpactUnitFilterList,
 }: {
-	value: number;
+	showImpactUnitTable: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
 	impactCategoryFilterList: { [key: string]: string };
 	impactUnitFilterList: { [key: string]: string };
@@ -135,10 +135,10 @@ const ImpactMasterView = ({
 							<Box mt={2} fontWeight="fontWeightBold">
 								<FormattedMessage
 									description={`This text is the heding of impact ${
-										value == 0 ? "Categories" : "Unit"
+										showImpactUnitTable === 0 ? "Categories" : "Unit"
 									} table`}
-									defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
-									id={`impactMasterPageHeading-${value}`}
+									defaultMessage={`Impact ${showImpactUnitTable === 0 ? "Categories" : "Unit"} `}
+									id={`impactMasterPageHeading-${showImpactUnitTable}`}
 								/>
 							</Box>
 						</Typography>
@@ -147,35 +147,35 @@ const ImpactMasterView = ({
 						<Box mt={2}>
 							<FilterList
 								setFilterList={
-									value == 0
+									showImpactUnitTable === 0
 										? setImpactCategoryFilterList
 										: setImpactUnitFilterList
 								}
 								inputFields={
-									value == 0 ? impactCategoryInputFields : impactUnitInputFields
+									showImpactUnitTable === 0 ? impactCategoryInputFields : impactUnitInputFields
 								}
 							/>
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
-							{(value == 0
+							{(showImpactUnitTable === 0
 								? Object.entries(impactCategoryFilterList)
 								: Object.entries(impactUnitFilterList)
 							).map(
-								(element, index) =>
-									element[1] && (
+								(filterListObjectKeyValuePair, index) =>
+									filterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
 												avatar={
 													<Avatar
 														style={{ height: "30px", width: "30px" }}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>{filterListObjectKeyValuePair[0].slice(0, 4)}</span>
 													</Avatar>
 												}
-												label={element[1]}
-												onDelete={() => removeFilteListElements(element[0])}
+												label={filterListObjectKeyValuePair[1]}
+												onDelete={() => removeFilteListElements(filterListObjectKeyValuePair[0])}
 											/>
 										</Box>
 									)
@@ -186,7 +186,7 @@ const ImpactMasterView = ({
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
-						value={value}
+						value={showImpactUnitTable}
 						indicatorColor="primary"
 						textColor="primary"
 						onChange={handleChange}
@@ -213,7 +213,7 @@ const ImpactMasterView = ({
 					</Tabs>
 
 					{tabs.map((tab, index) => (
-						<TabContent key={index} value={value} index={index}>
+						<TabContent key={index} value={showImpactUnitTable} index={index}>
 							{tab.table}
 							<AddButton
 								createButtons={tab.createButtons}

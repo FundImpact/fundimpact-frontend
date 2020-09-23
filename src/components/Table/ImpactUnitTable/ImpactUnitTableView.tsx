@@ -55,6 +55,25 @@ const chipArr = ({
 	));
 };
 
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArr({
+			arr: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
+};
+
 function ImpactUnitTableContainer({
 	toggleDialogs,
 	openDialogs,
@@ -101,18 +120,13 @@ function ImpactUnitTableContainer({
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={11}>
-						<Box my={2} display="flex" flexWrap="wrap">
-							{Object.entries(filterList).map((element) => {
-								if (element[1] && typeof element[1] == "string") {
-									return chipArr({
-										arr: [element[1]],
-										name: element[0].slice(0, 4),
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0]);
-										},
-									});
-								}
-							})}
+						<Box my={2} flexWrap="wrap" display="flex">
+							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+								createChipArray({
+									removeFilterListElements,
+									filterListObjectKeyValuePair,
+								})
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={1}>
@@ -123,8 +137,8 @@ function ImpactUnitTableContainer({
 									code: "",
 									description: "",
 								}}
-								setFilterList={setFilterList}
 								inputFields={impactUnitInputFields}
+								setFilterList={setFilterList}
 							/>
 						</Box>
 					</Grid>

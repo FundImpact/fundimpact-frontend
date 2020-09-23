@@ -12,9 +12,9 @@ function BudgetMasterContainer() {
 	});
 
 	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
-		setTableFilterList((obj) => {
-			obj[elementToDelete] = "";
-			return { ...obj };
+		setTableFilterList((filterListObject) => {
+			filterListObject[elementToDelete] = "";
+			return { ...filterListObject };
 		});
 	};
 

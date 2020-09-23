@@ -76,6 +76,51 @@ const chipArray = ({
 	));
 };
 
+const getNewTotalAmountHeaderOfTable = (currency: string) => `Total Amount (${currency})`;
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	donorHash,
+	budgetCategoryHash,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	donorHash: { [key: string]: string };
+	budgetCategoryHash: { [key: string]: string };
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			elementList: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "donor") {
+			return chipArray({
+				elementList: filterListObjectKeyValuePair[1].map((ele) => donorHash[ele]),
+				name: "do",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "budget_category_organization") {
+			return chipArray({
+				elementList: filterListObjectKeyValuePair[1].map((ele) => budgetCategoryHash[ele]),
+				name: "bc",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	return null;
+};
+
 function BudgetTargetView({
 	toggleDialogs,
 	openDialogs,
@@ -125,46 +170,21 @@ function BudgetTargetView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
 }) {
-	tableHeadings[5].label = "Total Amount " + `(${currency})`;
+	tableHeadings[5].label = getNewTotalAmountHeaderOfTable(currency);
 
 	return (
 		<>
 			<Grid container>
 				<Grid item xs={11}>
 					<Box my={2} display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									elementList: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
-							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "donor") {
-									return chipArray({
-										elementList: element[1].map((ele) => donorHash[ele]),
-										name: "do",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-								if (element[0] == "budget_category_organization") {
-									return chipArray({
-										elementList: element[1].map(
-											(ele) => budgetCategoryHash[ele]
-										),
-										name: "bc",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-							}
-						})}
+						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+							createChipArray({
+								filterListObjectKeyValuePair,
+								donorHash,
+								budgetCategoryHash,
+								removeFilterListElements,
+							})
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={1}>

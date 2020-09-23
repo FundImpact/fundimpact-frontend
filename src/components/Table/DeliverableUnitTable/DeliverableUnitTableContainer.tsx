@@ -68,14 +68,14 @@ function DeliverableUnitTableContainer({
 		GET_CATEGORY_UNIT
 	);
 
-	const toggleDialogs = (index: number, val: boolean) => {
+	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
-			openStatus.map((element: boolean, i) => (i == index ? val : element))
+			openStatus.map((element: boolean, i) => (i === index ? dialogNewOpenStatus : element))
 		);
 	};
 
 	useEffect(() => {
-		if (selectedDeliverableUnit.current) {
+		if (selectedDeliverableUnit.current && openDialogs[0]) {
 			getcategoryUnit({
 				variables: {
 					filter: {
@@ -84,7 +84,7 @@ function DeliverableUnitTableContainer({
 				},
 			});
 		}
-	}, [getcategoryUnit, selectedDeliverableUnit.current]);
+	}, [openDialogs, getcategoryUnit]);
 
 	const deliverableCategoryMemoized = useMemo<string[]>(
 		() =>

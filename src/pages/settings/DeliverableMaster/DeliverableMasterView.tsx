@@ -132,10 +132,10 @@ const DeliverableMasterView = ({
 							<Box mt={2} fontWeight="fontWeightBold">
 								<FormattedMessage
 									description={`This text is the heding of deliverable ${
-										value == 0 ? "Categories" : "Unit"
+										value === 0 ? "Categories" : "Unit"
 									} table`}
 									defaultMessage={`Deliverable ${
-										value == 0 ? "Categories" : "Unit"
+										value === 0 ? "Categories" : "Unit"
 									} `}
 									id={`deliverableMasterPageHeading-${value}`}
 								/>
@@ -146,12 +146,12 @@ const DeliverableMasterView = ({
 						<Box mt={2}>
 							<FilterList
 								setFilterList={
-									value == 0
+									value === 0
 										? setDeliverableCategoryFilterList
 										: setDeliverableUnitFilterList
 								}
 								inputFields={
-									value == 0
+									value === 0
 										? deliverableCategoryInputFields
 										: deliverableUnitInputFields
 								}
@@ -160,23 +160,23 @@ const DeliverableMasterView = ({
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
-							{(value == 0
+							{(value === 0
 								? Object.entries(deliverableCategoryFilterList)
 								: Object.entries(deliverableUnitFilterList)
 							).map(
-								(element, index) =>
-									element[1] && (
+								(filterListObjectKeyValuePair, index) =>
+									filterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
-												label={element[1]}
+												label={filterListObjectKeyValuePair[1]}
 												avatar={
 													<Avatar
 														style={{ width: "30px", height: "30px" }}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>{filterListObjectKeyValuePair[0].slice(0, 4)}</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(element[0])}
+												onDelete={() => removeFilteListElements(filterListObjectKeyValuePair[0])}
 											/>
 										</Box>
 									)
