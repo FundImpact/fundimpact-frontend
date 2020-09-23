@@ -39,11 +39,11 @@ const useStyles = makeStyles({
 		minWidth: 650,
 	},
 });
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(even) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -89,7 +89,7 @@ const chipArr = ({
 
 function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
 
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
@@ -108,16 +108,16 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow>
-						<TableCell className={tableHeader.th}>#</TableCell>
+						<TableCell className={tableStyles.th}>#</TableCell>
 						{headers.map((header) => (
-							<TableCell className={tableHeader.th} key={header.label}>
+							<TableCell className={tableStyles.th} key={header.label}>
 								{header.label}
 							</TableCell>
 						))}
 						<TableCell>Action</TableCell>
 					</TableRow>
 				</TableHead>
-				<TableBody className={tableHeader.tbody}>
+				<TableBody className={tableStyles.tbody}>
 					{data.map((row, index) => (
 						<TableRow key={index}>
 							<TableCell key={index}> {index + 1} </TableCell>

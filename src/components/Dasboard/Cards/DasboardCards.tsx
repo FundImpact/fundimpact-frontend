@@ -1,16 +1,29 @@
-import React from "react";
-import { Card, CardContent, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import {
+	Box,
+	Card,
+	CardContent,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	Typography,
+} from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import { CARD_TYPES } from "./constants";
+import { CardProps } from "../../../models/cards/cards";
+import { GetCardTypeAndValues } from "./CardHooks/GetCardType";
+import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 
-export default function DashboardCard({
-	title = "",
-	children,
-	cardHeight = "24vh",
-}: {
-	title: string | React.ReactElement;
-	children?: React.ReactElement | any;
-	cardHeight?: string;
-}) {
+export default function DashboardCard(props: CardProps) {
+	const { title, children, cardHeight = "24vh", cardFilter } = props;
+	const [currentFilter, setCurrentFilter] = useState<{ label: string }>();
+	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
+		...props,
+		currentFilter: currentFilter?.label,
+	});
+
 	const useStyles = makeStyles((theme: Theme) => ({
 		root: {
 			width: "100%",
@@ -24,14 +37,81 @@ export default function DashboardCard({
 		},
 	}));
 
+	/*setting first filter as default filter*/
+	useEffect(() => {
+		if (cardFilter?.length) {
+			setCurrentFilter(cardFilter[0]);
+		}
+	}, []);
+
 	const classes = useStyles();
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	function renderCard() {
+		switch (props.type) {
+			case CARD_TYPES.PROGRESS:
+				return <ProgressCard {...progressCardConfig} />;
+			case CARD_TYPES.PIE:
+				return <PieCard {...pieCardConfig} />;
+			case CARD_TYPES.PROJECT:
+				return <ProjectCard {...projectCardConfig} />;
+		}
+	}
+
 	return (
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
-				<Typography color="primary" gutterBottom>
-					{title}
-				</Typography>
-				{children}
+				<Grid container>
+					<Grid item md={12} container justify="space-between">
+						{title && (
+							<Box mt={1} mb={1}>
+								<Typography color="primary" gutterBottom>
+									{title}
+								</Typography>
+							</Box>
+						)}
+						{cardFilter && cardFilter.length > 0 && (
+							<>
+								<IconButton onClick={handleClick}>
+									<FilterListIcon fontSize="small" />
+								</IconButton>
+								<Menu
+									id="simple-menu-budget-org"
+									anchorEl={anchorEl}
+									keepMounted
+									open={Boolean(anchorEl)}
+									onClose={handleClose}
+								>
+									{cardFilter.map(
+										(filter: { label: string }, mapIndex: number) => {
+											return (
+												<MenuItem
+													key={mapIndex}
+													onClick={() => {
+														setCurrentFilter(filter);
+														handleClose();
+													}}
+												>
+													{filter.label}
+												</MenuItem>
+											);
+										}
+									)}
+								</Menu>
+							</>
+						)}
+					</Grid>
+					{renderCard()}
+				</Grid>
+				<Grid item md={12}>
+					{children}
+				</Grid>
 			</CardContent>
 		</Card>
 	);

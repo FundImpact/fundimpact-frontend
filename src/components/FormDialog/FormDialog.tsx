@@ -1,6 +1,5 @@
-import { Box, CircularProgress, Dialog, Grid, Typography } from "@material-ui/core";
+import { Box, CircularProgress, Dialog, Grid, Typography, useTheme } from "@material-ui/core";
 import React from "react";
-import { FormattedMessage } from "react-intl";
 
 function FormDialog({
 	open,
@@ -21,6 +20,8 @@ function FormDialog({
 	children: any;
 	loading?: boolean;
 }) {
+	const theme = useTheme();
+
 	return (
 		<Dialog
 			fullWidth
@@ -40,7 +41,11 @@ function FormDialog({
 							{subtitle}
 						</Typography>
 						{(workspace || project) && (
-							<Box p={3} mt={3} style={{ backgroundColor: "#F5F6FA" }}>
+							<Box
+								p={3}
+								mt={3}
+								style={{ backgroundColor: theme.palette.action.hover }}
+							>
 								<Typography color="primary" gutterBottom>
 									{workspace}
 								</Typography>

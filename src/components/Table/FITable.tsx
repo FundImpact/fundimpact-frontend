@@ -1,6 +1,6 @@
 import { Box, Grid, Table, Typography, TableSortLabel } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -14,11 +14,11 @@ const useStyles = makeStyles({
 	table: {},
 });
 
-const StyledTableHeader = makeStyles((theme: Theme) =>
+const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main },
 		tbody: {
-			"& tr:nth-child(even) td": { background: "#F5F6FA" },
+			"& tr:nth-child(odd) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -45,12 +45,13 @@ export default function FITable({
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 }) {
 	const classes = useStyles();
-	const tableHeader = StyledTableHeader();
+	const tableStyles = styledTable();
+	const theme = useTheme();
 
 	return (
 		<>
 			{!rows.length ? (
-				<Grid container style={{ backgroundColor: "#F5F6FA" }}>
+				<Grid container style={{ backgroundColor: theme.palette.action.hover }}>
 					<Grid item xs={12}>
 						<Box>
 							<Typography
@@ -82,7 +83,7 @@ export default function FITable({
 										rows.length > 0 &&
 										tableHeading.map((heading) => (
 											<TableCell
-												className={tableHeader.th}
+												className={tableStyles.th}
 												key={heading.label}
 												align="left"
 											>
@@ -120,7 +121,7 @@ export default function FITable({
 										))}
 								</TableRow>
 							</TableHead>
-							<TableBody className={tableHeader.tbody}>
+							<TableBody className={tableStyles.tbody}>
 								{rows.map((row: any, index: number) => (
 									<TableRow key={index}>
 										{row.map((col: React.ReactNode) => {
