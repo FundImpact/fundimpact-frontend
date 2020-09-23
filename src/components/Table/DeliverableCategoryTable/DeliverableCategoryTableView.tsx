@@ -121,8 +121,8 @@ function DeliverableCategoryView({
 						<Box my={2} display="flex" flexWrap="wrap">
 							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 								createChipArray({
-									filterListObjectKeyValuePair,
 									removeFilterListElements,
+									filterListObjectKeyValuePair,
 								})
 							)}
 						</Box>
@@ -131,12 +131,12 @@ function DeliverableCategoryView({
 						<Box mt={2}>
 							<FilterList
 								initialValues={{
-									name: "",
 									code: "",
+									name: "",
 									description: "",
 								}}
-								setFilterList={setFilterList}
 								inputFields={deliverableCategoryInputFields}
+								setFilterList={setFilterList}
 							/>
 						</Box>
 					</Grid>

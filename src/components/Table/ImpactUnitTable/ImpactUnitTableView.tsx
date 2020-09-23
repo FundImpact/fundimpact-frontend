@@ -120,11 +120,11 @@ function ImpactUnitTableContainer({
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={11}>
-						<Box my={2} display="flex" flexWrap="wrap">
+						<Box my={2} flexWrap="wrap" display="flex">
 							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 								createChipArray({
-									filterListObjectKeyValuePair,
 									removeFilterListElements,
+									filterListObjectKeyValuePair,
 								})
 							)}
 						</Box>
@@ -137,8 +137,8 @@ function ImpactUnitTableContainer({
 									code: "",
 									description: "",
 								}}
-								setFilterList={setFilterList}
 								inputFields={impactUnitInputFields}
+								setFilterList={setFilterList}
 							/>
 						</Box>
 					</Grid>
