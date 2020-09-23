@@ -24,15 +24,15 @@ function BudgetCategoryTableGraphql({
 	}, [dashboardData]);
 
 	useEffect(() => {
-		let obj: { [key: string]: string } = {};
+		let newFilterListObject: { [key: string]: string } = {};
 		for (let key in tableFilterList) {
 			if (tableFilterList[key] && tableFilterList[key].length) {
-				obj[key] = tableFilterList[key];
+				newFilterListObject[key] = tableFilterList[key];
 			}
 		}
 		setQueryFilter({
 			organization: dashboardData?.organization?.id,
-			...obj,
+			...newFilterListObject,
 		});
 	}, [tableFilterList, dashboardData]);
 

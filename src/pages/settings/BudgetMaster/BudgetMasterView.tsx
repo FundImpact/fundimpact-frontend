@@ -50,11 +50,11 @@ const BudgetMasterView = ({
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
 							{Object.entries(tableFilterList).map(
-								(element, index) =>
-									element[1] && (
+								(tableFilterListObjectKeyValuePair, index) =>
+									tableFilterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
-												label={element[1]}
+												label={tableFilterListObjectKeyValuePair[1]}
 												avatar={
 													<Avatar
 														style={{
@@ -62,10 +62,10 @@ const BudgetMasterView = ({
 															height: "30px",
 														}}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>{tableFilterListObjectKeyValuePair[0].slice(0, 4)}</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(element[0])}
+												onDelete={() => removeFilteListElements(tableFilterListObjectKeyValuePair[0])}
 											/>
 										</Box>
 									)

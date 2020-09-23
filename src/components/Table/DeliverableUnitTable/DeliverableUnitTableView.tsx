@@ -56,6 +56,25 @@ const chipArray = ({
 	));
 };
 
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			arr: [filterListObjectKeyValuePair[1]],
+			chipName: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
+};
+
 function DeliverableUnitTableView({
 	toggleDialogs,
 	openDialogs,
@@ -104,18 +123,12 @@ function DeliverableUnitTableView({
 				<Grid container>
 					<Grid xs={11} item>
 						<Box display="flex" my={2} flexWrap="wrap">
-							{Object.entries(filterList).map((element) => {
-								if (element[1] && typeof element[1] == "string") {
-									return chipArray({
-										arr: [element[1]],
-										chipName: element[0].slice(0, 4),
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0]);
-										},
-									});
-								}
-								return null;
-							})}
+							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+								createChipArray({
+									filterListObjectKeyValuePair,
+									removeFilterListElements,
+								})
+							)}
 						</Box>
 					</Grid>
 					<Grid xs={1} item>

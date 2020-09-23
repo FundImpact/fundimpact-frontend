@@ -14,13 +14,13 @@ import {
 import pagination from "../../../hooks/pagination";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
-	let obj: { [key: string]: string } = {};
+	let newFilterListObject: { [key: string]: string } = {};
 	for (let key in filterList) {
 		if (filterList[key] && filterList[key].length) {
-			obj[key] = filterList[key];
+			newFilterListObject[key] = filterList[key];
 		}
 	}
-	return obj;
+	return newFilterListObject;
 };
 
 //insert genrics in pagination
@@ -49,18 +49,18 @@ function DeliverableCategoryTableGraphql({
 	});
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
-		setNestedTableFilterList((obj) => {
-			obj[key] = "";
-			return { ...obj };
+		setNestedTableFilterList((nestedTableFilterListObject) => {
+			nestedTableFilterListObject[key] = "";
+			return { ...nestedTableFilterListObject };
 		});
 	};
 
 	useEffect(() => {
 		if (tableFilterList) {
-			let obj: { [key: string]: string } = removeEmptyKeys(tableFilterList);
+			let newFilterListObject: { [key: string]: string } = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
 				organization: dashboardData?.organization?.id,
-				...obj,
+				...newFilterListObject,
 			});
 		}
 	}, [tableFilterList, dashboardData]);
@@ -81,14 +81,14 @@ function DeliverableCategoryTableGraphql({
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
-			const obj = removeEmptyKeys(nestedTableFilterList);
+			const newNestedTableFilterListObject = removeEmptyKeys(nestedTableFilterList);
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
 					{ deliverable_units_org: delivarableUnitId },
-					Object.keys(obj).length && {
+					Object.keys(newNestedTableFilterListObject).length && {
 						deliverable_category_org: {
-							...obj,
+							...newNestedTableFilterListObject,
 						},
 					}
 				)

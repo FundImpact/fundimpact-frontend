@@ -11,17 +11,18 @@ import { budgetTargetInputFields } from "./inputFields.json";
 import { GET_ORG_DONOR } from "../../../../graphql/donor";
 import { useLazyQuery } from "@apollo/client";
 import { GET_CURRENCY_LIST } from "../../../../graphql";
+import { removeFilterListObjectElements } from "../../../../utils/filterList";
 
 let donorHash = {};
 let budgetCategoryHash = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
 };
 
@@ -71,16 +72,10 @@ function BudgetTargetTableGraphql() {
 		budget_category_organization: [],
 	});
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -90,15 +85,15 @@ function BudgetTargetTableGraphql() {
 
 	useEffect(() => {
 		if (filterList) {
-			let obj: { [key: string]: string | string[] } = {};
+			let newFilterListObject: { [key: string]: string | string[] } = {};
 			for (let key in filterList) {
 				if (filterList[key] && filterList[key].length) {
-					obj[key] = filterList[key];
+					newFilterListObject[key] = filterList[key];
 				}
 			}
 			setQueryFilter({
 				project: currentProject?.id,
-				...obj,
+				...newFilterListObject,
 			});
 		}
 	}, [filterList, currentProject]);

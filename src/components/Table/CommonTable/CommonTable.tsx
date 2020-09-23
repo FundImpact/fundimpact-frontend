@@ -23,6 +23,7 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { ICommonTableRow, ICommonTable } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { getValueFromObject } from "../../../utils";
 
 const useStyles = makeStyles({
 	table: {
@@ -42,20 +43,6 @@ const StyledTableHeader = makeStyles((theme: Theme) =>
 		},
 	})
 );
-
-//change any
-function getValue<U extends { [key: string]: any }>(
-	obj: U,
-	key: string[]
-): string | number | boolean {
-	if (!obj?.hasOwnProperty(key[0])) {
-		return "";
-	}
-	if (key.length === 1) {
-		return obj[key[0]];
-	}
-	return getValue(obj[key[0]], key.slice(1));
-}
 
 function CommonTableRow<T extends { id: string }>({
 	rowData,
@@ -95,7 +82,7 @@ function CommonTableRow<T extends { id: string }>({
 					return (
 						<TableCell key={i} align="left">
 							{(row.valueAccessKey &&
-								getValue<T>(rowData, row.valueAccessKey.split(","))) ||
+								getValueFromObject(rowData, row.valueAccessKey.split(","))) ||
 								(row.renderComponent && row.renderComponent(rowData))}
 						</TableCell>
 					);

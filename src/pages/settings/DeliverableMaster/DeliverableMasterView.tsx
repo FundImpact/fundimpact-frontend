@@ -164,19 +164,19 @@ const DeliverableMasterView = ({
 								? Object.entries(deliverableCategoryFilterList)
 								: Object.entries(deliverableUnitFilterList)
 							).map(
-								(element, index) =>
-									element[1] && (
+								(filterListObjectKeyValuePair, index) =>
+									filterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
-												label={element[1]}
+												label={filterListObjectKeyValuePair[1]}
 												avatar={
 													<Avatar
 														style={{ width: "30px", height: "30px" }}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>{filterListObjectKeyValuePair[0].slice(0, 4)}</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(element[0])}
+												onDelete={() => removeFilteListElements(filterListObjectKeyValuePair[0])}
 											/>
 										</Box>
 									)

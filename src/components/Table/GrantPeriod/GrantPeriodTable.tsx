@@ -33,6 +33,7 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import FilterList from "../../FilterList";
 import { grantPeriodInputFields } from "./inputFields.json";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
 
 const useStyles = makeStyles({
 	table: {
@@ -174,14 +175,46 @@ const headers: ISImpleTableProps["headers"] = [
 
 let donorHash: { [key: string]: string } = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
+};
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArr({
+			name: filterListObjectKeyValuePair[0].slice(0, 5),
+			arr: [filterListObjectKeyValuePair[1]],
+			removeChips: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] == "donor") {
+			return chipArr({
+				name: "do",
+				arr: filterListObjectKeyValuePair[1].map((ele) => donorHash[ele]),
+				removeChips: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
 };
 
 export default function GrantPeriodTable() {
@@ -214,33 +247,28 @@ export default function GrantPeriodTable() {
 	}, [dashboardData]);
 
 	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 	};
 
 	useEffect(() => {
 		if (filterList) {
-			let obj: { [key: string]: string | string[] } = {};
+			let newFilterListObject: { [key: string]: string | string[] } = {};
 			for (let key in filterList) {
 				if (filterList[key] && filterList[key].length) {
-					obj[key] = filterList[key];
+					newFilterListObject[key] = filterList[key];
 					if (key == "start_date") {
-						obj[key] = `${new Date(filterList[key] as string)}`;
+						newFilterListObject[key] = `${new Date(filterList[key] as string)}`;
 					}
 					if (key == "end_date") {
-						obj[key] = `${new Date(filterList[key] as string)}`;
+						newFilterListObject[key] = `${new Date(filterList[key] as string)}`;
 					}
 				}
 			}
 			setQueryFilter({
 				project: dashboardData?.project?.id,
-				...obj,
+				...newFilterListObject,
 			});
 		}
 	}, [filterList]);
@@ -303,28 +331,12 @@ export default function GrantPeriodTable() {
 			<Grid container>
 				<Grid item xs={11}>
 					<Box my={2} display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArr({
-									name: element[0].slice(0, 5),
-									arr: [element[1]],
-									removeChips: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
-							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "donor") {
-									return chipArr({
-										name: "do",
-										arr: element[1].map((ele) => donorHash[ele]),
-										removeChips: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-							}
-						})}
+						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+							createChipArray({
+								filterListObjectKeyValuePair,
+								removeFilterListElements,
+							})
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={1}>

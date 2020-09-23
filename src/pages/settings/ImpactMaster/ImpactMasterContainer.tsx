@@ -14,31 +14,31 @@ function ImpactMasterContainer() {
 		code: "",
 		description: "",
 	});
-	const [value, setValue] = React.useState<number>(0);
+	const [showImpactUnitTable, setShowImpactUnitTable] = React.useState<number>(0);
 
 	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
-		value === 0 &&
-			setImpactCategoryFilterList((obj) => {
-				obj[elementToDelete] = "";
-				return { ...obj };
+		showImpactUnitTable === 0 &&
+			setImpactCategoryFilterList((impactCategoryFilterListObject) => {
+				impactCategoryFilterListObject[elementToDelete] = "";
+				return { ...impactCategoryFilterListObject };
 			});
 
-		value === 1 &&
-			setImpactUnitFilterList((obj) => {
-				obj[elementToDelete] = "";
-				return { ...obj };
+		showImpactUnitTable === 1 &&
+			setImpactUnitFilterList((impactUnitFilterListObject) => {
+				impactUnitFilterListObject[elementToDelete] = "";
+				return { ...impactUnitFilterListObject };
 			});
 	};
 
 	return (
 		<ImpactMasterView
-			value={value}
+			showImpactUnitTable={showImpactUnitTable}
 			impactCategoryFilterList={impactCategoryFilterList}
 			impactUnitFilterList={impactUnitFilterList}
 			removeFilteListElements={removeFilteListElements}
 			setImpactCategoryFilterList={setImpactCategoryFilterList}
 			setImpactUnitFilterList={setImpactUnitFilterList}
-			setValue={setValue}
+			setValue={setShowImpactUnitTable}
 		/>
 	);
 }

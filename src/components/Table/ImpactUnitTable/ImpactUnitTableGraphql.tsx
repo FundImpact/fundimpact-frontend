@@ -13,13 +13,13 @@ import { IImpactUnitData, IImpactCategoryData } from "../../../models/impact/imp
 import pagination from "../../../hooks/pagination";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
-	let obj: { [key: string]: string } = {};
+	let newFilterList: { [key: string]: string } = {};
 	for (let key in filterList) {
 		if (filterList[key] && filterList[key].length) {
-			obj[key] = filterList[key];
+			newFilterList[key] = filterList[key];
 		}
 	}
-	return obj;
+	return newFilterList;
 };
 
 function ImpactUnitTableGraphql({
@@ -47,9 +47,9 @@ function ImpactUnitTableGraphql({
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
-		setNestedTableFilterList((obj) => {
-			obj[key] = "";
-			return { ...obj };
+		setNestedTableFilterList((nestedFilterListObject) => {
+			nestedFilterListObject[key] = "";
+			return { ...nestedFilterListObject };
 		});
 	};
 
@@ -67,24 +67,24 @@ function ImpactUnitTableGraphql({
 
 	useEffect(() => {
 		if (tableFilterList) {
-			const obj = removeEmptyKeys(tableFilterList);
+			const newTableFilterList = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
 				organization: dashboardData?.organization?.id,
-				...obj,
+				...newTableFilterList,
 			});
 		}
 	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
-			const obj = removeEmptyKeys(nestedTableFilterList);
+			const newNestedTableFilterList = removeEmptyKeys(nestedTableFilterList);
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
 					{ impact_category_org: impactCategoryId },
-					Object.keys(obj).length && {
+					Object.keys(newNestedTableFilterList).length && {
 						impact_units_org: {
-							...obj,
+							...newNestedTableFilterList,
 						},
 					}
 				)

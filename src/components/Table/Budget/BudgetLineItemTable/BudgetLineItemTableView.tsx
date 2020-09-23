@@ -8,16 +8,7 @@ import { budgetLineItemTableHeading as tableHeadings } from "../../constants";
 import { getTodaysDate } from "../../../../utils";
 import { Box, Chip, Avatar, Grid } from "@material-ui/core";
 import FilterList from "../../../FilterList";
-
-function getValue(obj: any, key: string[]): any {
-	if (!obj?.hasOwnProperty(key[0])) {
-		return "";
-	}
-	if (key.length === 1) {
-		return obj[key[0]];
-	}
-	return getValue(obj[key[0]], key.slice(1));
-}
+import { getValueFromObject } from "../../../../utils";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -43,7 +34,7 @@ const rows = [
 			<Box display="flex">
 				{Object.entries(yearTags).map(([objKey, objVal], arrIndex) => {
 					return (
-						getValue(budgetLineItem, objVal.split(",")) && (
+						getValueFromObject(budgetLineItem, objVal.split(",")) && (
 							<Box mr={1} key={arrIndex}>
 								<Chip
 									avatar={
@@ -51,7 +42,7 @@ const rows = [
 											<span>{objKey}</span>
 										</Avatar>
 									}
-									label={getValue(budgetLineItem, objVal.split(","))}
+									label={getValueFromObject(budgetLineItem, objVal.split(","))}
 									size="small"
 								/>
 							</Box>
@@ -90,6 +81,77 @@ const chipArray = ({
 			/>
 		</Box>
 	));
+};
+
+const getNewAmountHeaderOfTable = (currency: string) => `Amount (${currency})`;
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+	grantPeriodHash,
+	annualYearHash,
+	financialYearDonorHash,
+	financialYearOrgHash,
+}: {
+	filterListObjectKeyValuePair: any[];
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	grantPeriodHash: { [key: string]: string };
+	annualYearHash: { [key: string]: string };
+	financialYearDonorHash: { [key: string]: string };
+	financialYearOrgHash: { [key: string]: string };
+}) => {
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "grant_periods_project") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((element) => grantPeriodHash[element]),
+				name: "gp",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "annual_year") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((element) => annualYearHash[element]),
+				name: "ay",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "fy_org") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map(
+					(element) => financialYearOrgHash[element]
+				),
+				name: "fyo",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "fy_donor") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map(
+					(element) => financialYearDonorHash[element]
+				),
+				name: "fyd",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] === "string") {
+		return chipArray({
+			arr: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
 };
 
 function BudgetLineItemTableView({
@@ -143,63 +205,23 @@ function BudgetLineItemTableView({
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
 }) {
-	tableHeadings[3].label = `Amount (${currency})`;
+	tableHeadings[3].label = getNewAmountHeaderOfTable(currency);
 
 	return (
 		<>
 			<Grid container>
 				<Grid item xs={11}>
 					<Box my={2} display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((element) => {
-							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] === "grant_periods_project") {
-									return chipArray({
-										arr: element[1].map((ele) => grantPeriodHash[ele]),
-										name: "gp",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-								if (element[0] === "annual_year") {
-									return chipArray({
-										arr: element[1].map((ele) => annualYearHash[ele]),
-										name: "ay",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-								if (element[0] === "fy_org") {
-									return chipArray({
-										arr: element[1].map((ele) => financialYearOrgHash[ele]),
-										name: "fyo",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-								if (element[0] === "fy_donor") {
-									return chipArray({
-										arr: element[1].map((ele) => financialYearDonorHash[ele]),
-										name: "fyd",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-							}
-							if (element[1] && typeof element[1] === "string") {
-								return chipArray({
-									arr: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
-							return null;
-						})}
+						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+							createChipArray({
+								filterListObjectKeyValuePair,
+								removeFilterListElements,
+								grantPeriodHash,
+								annualYearHash,
+								financialYearDonorHash,
+								financialYearOrgHash,
+							})
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={1}>

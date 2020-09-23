@@ -66,9 +66,9 @@ function BudgetLineItemTableContainer({
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 	const selectedBudgetLineItem = useRef<IBUDGET_LINE_ITEM_RESPONSE | null>(null);
 
-	const toggleDialogs = (index: number, val: boolean) => {
+	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
-			openStatus.map((element: boolean, i) => (i === index ? val : element))
+			openStatus.map((element: boolean, i) => (i === index ? dialogNewOpenStatus : element))
 		);
 	};
 

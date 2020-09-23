@@ -31,6 +31,7 @@ import { impactTracklineInputFields } from "./inputFields.json";
 import FilterList from "../../FilterList";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
 
 const chipArray = ({
 	removeChip,
@@ -178,14 +179,53 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 let annualYearHash: { [key: string]: string } = {};
 let financialYearHash: { [key: string]: string } = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
+};
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "annual_year") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((ele) => annualYearHash[ele]),
+				name: "ay",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "financial_year") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((ele) => financialYearHash[ele]),
+				name: "fy",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			arr: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
 };
 
 export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetId: string }) {
@@ -227,16 +267,10 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		}
 	}, [impactFyData]);
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index !== i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -246,15 +280,15 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 
 	useEffect(() => {
 		if (filterList) {
-			let obj: { [key: string]: string | string[] } = {};
+			let newFilterListObject: { [key: string]: string | string[] } = {};
 			for (let key in filterList) {
 				if (filterList[key] && filterList[key].length) {
-					obj[key] = filterList[key];
+					newFilterListObject[key] = filterList[key];
 				}
 			}
 			setQueryFilter({
 				impact_target_project: impactTargetId,
-				...obj,
+				...newFilterListObject,
 			});
 		}
 	}, [filterList, impactTargetId]);
@@ -391,38 +425,12 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			<Grid container>
 				<Grid item xs={11}>
 					<Box my={2} display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((element) => {
-							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] === "annual_year") {
-									return chipArray({
-										arr: element[1].map((ele) => annualYearHash[ele]),
-										name: "ay",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-								if (element[0] === "financial_year") {
-									return chipArray({
-										arr: element[1].map((ele) => financialYearHash[ele]),
-										name: "fy",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-							}
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									arr: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
-							return null;
-						})}
+						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+							createChipArray({
+								filterListObjectKeyValuePair,
+								removeFilterListElements,
+							})
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={1}>

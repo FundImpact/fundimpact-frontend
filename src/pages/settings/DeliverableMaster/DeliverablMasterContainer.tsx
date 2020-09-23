@@ -20,15 +20,15 @@ function DeliverablMasterContainer() {
 
 	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
 		value === 0 &&
-			setDeliverableCategoryFilterList((obj) => {
-				obj[elementToDelete] = "";
-				return { ...obj };
+			setDeliverableCategoryFilterList((deliverableCategoryFilterListObject) => {
+				deliverableCategoryFilterListObject[elementToDelete] = "";
+				return { ...deliverableCategoryFilterListObject };
 			});
 
 		value === 1 &&
-			setDeliverableUnitFilterList((obj) => {
-				obj[elementToDelete] = "";
-				return { ...obj };
+			setDeliverableUnitFilterList((deliverableUnitFilterListObject) => {
+				deliverableUnitFilterListObject[elementToDelete] = "";
+				return { ...deliverableUnitFilterListObject };
 			});
 	};
 
