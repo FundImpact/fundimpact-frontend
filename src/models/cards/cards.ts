@@ -59,6 +59,7 @@ export type ProgressCardResponse = {
 export type ProgressCardConfig = {
 	dataToDisplay: ProgressCardResponse[];
 	dialogTitle?: string;
+	noBarDisplay?: boolean;
 };
 
 export type CategoryDataResponse = {

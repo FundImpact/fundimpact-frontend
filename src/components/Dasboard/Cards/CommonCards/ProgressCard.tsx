@@ -8,7 +8,7 @@ import { Skeleton } from "@material-ui/lab";
 import { FormattedMessage } from "react-intl";
 
 export function ProgressCard(progressCardConfig: ProgressCardConfig) {
-	const { dataToDisplay, dialogTitle } = progressCardConfig;
+	const { dataToDisplay, dialogTitle, noBarDisplay = false } = progressCardConfig;
 	const [progressDialogOpen, setProgressDialogOpen] = React.useState(false);
 	if (!dataToDisplay) {
 		return (
@@ -42,7 +42,7 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 												? data.avg_value
 												: 0
 										}
-										size="md"
+										noBarDisplay={noBarDisplay}
 									/>
 								);
 							})}
@@ -87,7 +87,7 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 												? data.avg_value
 												: 0
 										}
-										size="lg"
+										noBarDisplay={noBarDisplay}
 									/>
 								</Box>
 							);

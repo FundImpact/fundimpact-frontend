@@ -190,6 +190,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				variables: { filter: { organization: organization } },
 			});
 			progressCardConfig.dataToDisplay = donors;
+			progressCardConfig.noBarDisplay = true;
 		}
 	}
 
