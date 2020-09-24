@@ -11,6 +11,7 @@ const mapPermissionsControllerActionToPermission = (data: IGetUserRole) => {
 	data.role.permissions.forEach((permission) => {
 		userRoleHashObject[permission.controller + "-" + permission.action] = { ...permission };
 	});
+	userRoleHashObject["setting-view"] = { id: "123123", controller: "setting", action: "view" };
 	return userRoleHashObject;
 };
 
@@ -19,7 +20,7 @@ function UserRoles() {
 	const [getUserRoles, { data, loading, error }] = useLazyQuery<IGetUserRole>(GET_USER_ROLES);
 	const [userRoleHash, setUserRoleHash] = useState<{
 		[key: string]: { id: string; controller: string; action: string };
-	}>({});	
+	}>({});
 
 	useEffect(() => {
 		if (user) {
