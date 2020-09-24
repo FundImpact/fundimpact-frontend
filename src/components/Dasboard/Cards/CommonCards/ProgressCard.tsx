@@ -70,7 +70,7 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 					{dataToDisplay &&
 						dataToDisplay.map((data: ProgressCardResponse, index) => {
 							return (
-								<Box m={1}>
+								<Box m={1} key={index}>
 									<CommonProgres
 										key={index}
 										title={data.name}
