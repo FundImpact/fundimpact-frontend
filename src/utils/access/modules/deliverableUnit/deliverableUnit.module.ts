@@ -17,5 +17,9 @@ export const DELIVERABLE_UNIT_MODULE = {
 			name: "Delete deliverable unit",
 			code: DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT,
 		},
+		[DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT]: {
+			name: "Find deliverable unit",
+			code: DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT,
+		},
 	},
 };
