@@ -7,4 +7,6 @@ export interface ICommonForm {
 	inputFields: any[];
 	formAction: any;
 	cancelButtonName?: string;
+	createButtonName?: string;
+	updateButtonName?: string;
 }

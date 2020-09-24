@@ -32,5 +32,11 @@
 				"title": "Deliverable Categories And Units"
 			}
 		]
+	},
+	{
+		"mainHeading": "Manage Roles",
+		"subHeadings": [
+			{ "to": "user_roles", "dataTestId": "user-role-link", "title": "User Roles" }
+		]
 	}
 ]

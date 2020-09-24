@@ -6,13 +6,13 @@ import { sidePanelStyles } from "../../components/Dasboard/styles";
 import LeftPanel from "../../components/LeftPanel/LeftPanel";
 import Snackbar from "../../components/Snackbar/Snackbar";
 import { useNotificationData } from "../../contexts/notificationContext";
-import IDefaultView from "./defaultView";
 import { DonorContainer } from "./donor/container";
 import Organization from "./Organization";
 import BudgetCategory from "./BudgetMaster";
 import SettingsSidebar from "./sidebar";
 import ImpactCategory from "./ImpactMaster";
 import DeliverableCategory from "./DeliverableMaster";
+import { UserRoleContainer } from "./UserRole/container";
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
@@ -46,6 +46,7 @@ export default function SettingContainer() {
 						<Route path="impact" element={<ImpactCategory />} />
 						<Route path="deliverable" element={<DeliverableCategory />} />
 						<Route path="organization" element={<Organization />} />
+						<Route path="user_roles" element={<UserRoleContainer />} />
 						<Route path="">
 							<Navigate to="organization" />
 						</Route>
