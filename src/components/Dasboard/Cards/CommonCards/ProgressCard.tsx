@@ -1,8 +1,8 @@
 import { Grid, Box, Typography } from "@material-ui/core";
 import React from "react";
-import MoreButton from "../../../OrganizationDashboard/Cards/MoreIconButton";
-import ProgressDialog from "../../../OrganizationDashboard/Cards/ProgressDialog";
-import CommonProgres from "../../../OrganizationDashboard/Cards/CommonProgress";
+import MoreButton from "../MoreIconButton";
+import ProgressDialog from "../ProgressDialog";
+import CommonProgres from "../CommonProgress";
 import { ProgressCardConfig, ProgressCardResponse } from "../../../../models/cards/cards";
 import { Skeleton } from "@material-ui/lab";
 import { FormattedMessage } from "react-intl";

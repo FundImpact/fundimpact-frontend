@@ -4,7 +4,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { PieCardConfig } from "../../../../models/cards/cards";
 import { PieChart } from "../../../Charts";
-import MoreButton from "../../../OrganizationDashboard/Cards/MoreIconButton";
+import MoreButton from "../MoreIconButton";
 
 export function PieCard(pieCardConfig: PieCardConfig) {
 	const { pieData, moreButtonLink, loading } = pieCardConfig;

@@ -5,7 +5,7 @@ export type CardProps = {
 	title?: string;
 	children?: React.ReactElement | any;
 	cardHeight?: string;
-	cardFilter?: { label: string }[];
+	cardFilter?: { label: string; base: string }[];
 	currentFilter?: string;
 } & (
 	| {
