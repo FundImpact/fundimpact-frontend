@@ -72,6 +72,7 @@ const createChipArray = ({
 	}
 	return null;
 };
+let deliverableCategoryTableEditMenu: string[] = [];
 
 function DeliverableCategoryView({
 	toggleDialogs,
@@ -115,10 +116,9 @@ function DeliverableCategoryView({
 
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
-	let deliverableCategoryTableEditMenu: string[] = [];
 	const deliverableCategoryEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
 	);
 
 	useEffect(() => {

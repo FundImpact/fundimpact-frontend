@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
@@ -9,6 +9,8 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Avatar, Chip } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -70,6 +72,7 @@ const createChipArray = ({
 	}
 	return null;
 };
+let impactCategoryTableEditMenu: string[] = [];
 
 function ImpactCategoryTableView({
 	toggleDialogs,
@@ -112,6 +115,17 @@ function ImpactCategoryTableView({
 	};
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
+	const impactCategoryEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.UPDATE_IMPACT_CATEGORY
+	);
+
+	useEffect(() => {
+		if (impactCategoryEditAccess) {
+			impactCategoryTableEditMenu = ["Edit Impact Category"];
+		}
+	}, [impactCategoryEditAccess]);
+
 	return (
 		<>
 			{!collapsableTable && (
@@ -147,7 +161,7 @@ function ImpactCategoryTableView({
 				rows={rows}
 				selectedRow={selectedImpactCategory}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Impact Category"]}
+				editMenuName={impactCategoryTableEditMenu}
 				collapsableTable={collapsableTable}
 				changePage={changePage}
 				loading={loading}

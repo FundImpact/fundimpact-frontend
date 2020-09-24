@@ -25,6 +25,19 @@ import DeliverablesTable from "../../Table/Deliverable/Deliverable";
 import GrantPeriodTable from "../../Table/GrantPeriod/GrantPeriodTable";
 import ImpactsTable from "../../Table/Impact/Impacts";
 import { useIntl } from "react-intl";
+import { CreateButton } from "../../../models/addButton";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { BUDGET_TARGET_ACTIONS } from "../../../utils/access/modules/budgetTarget/actions";
+import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
+import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/budgetTargetLineItem/actions";
+import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
+import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
+import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
+import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
+import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -75,9 +88,58 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
+const filterCreateButtonsAccordingToUserAccess = (createButtons: CreateButton[]) =>
+	createButtons.filter((createButton) => createButton.createButtonAccess);
+
 export default function DashboardTableContainer() {
 	const intl = useIntl();
 	const dashboardData = useDashBoardData();
+
+	const budgetTargetCreateAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET
+	);
+	const budgetCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	);
+	const budgetTargetLineItemCreateAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
+	);
+	const impactCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
+	);
+	const impactUnitCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	);
+	const impactTargetCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.CREATE_IMPACT_TARGET
+	);
+	const impactTracklineCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
+	);
+	const deliverableCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+	);
+	const deliverableUnitCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+	);
+	const deliverableTargetCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.CREATE_DELIVERABLE_TARGET
+	);
+	const deliverableTracklineCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
+
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -100,6 +162,7 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 						/>
 					),
+					createButtonAccess: budgetCategoryCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -114,6 +177,7 @@ export default function DashboardTableContainer() {
 							handleClose={handleClose}
 						/>
 					),
+					createButtonAccess: budgetTargetCreateAccess,
 				},
 				// { text: "Report Fund Receipt" },
 				{
@@ -129,6 +193,7 @@ export default function DashboardTableContainer() {
 							handleClose={handleClose}
 						/>
 					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
 			],
 		},
@@ -154,6 +219,7 @@ export default function DashboardTableContainer() {
 							project={dashboardData?.project?.id}
 						/>
 					),
+					createButtonAccess: deliverableTargetCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -169,6 +235,7 @@ export default function DashboardTableContainer() {
 							organization={dashboardData?.organization?.id}
 						/>
 					),
+					createButtonAccess: deliverableUnitCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -184,6 +251,7 @@ export default function DashboardTableContainer() {
 							organization={dashboardData?.organization?.id}
 						/>
 					),
+					createButtonAccess: deliverableCategoryCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -198,6 +266,7 @@ export default function DashboardTableContainer() {
 							handleClose={handleClose}
 						/>
 					),
+					createButtonAccess: deliverableTracklineCreateAccess,
 				},
 			],
 		},
@@ -223,6 +292,7 @@ export default function DashboardTableContainer() {
 							project={dashboardData?.project?.id}
 						/>
 					),
+					createButtonAccess: impactTargetCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -237,6 +307,7 @@ export default function DashboardTableContainer() {
 							handleClose={handleClose}
 						/>
 					),
+					createButtonAccess: impactUnitCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -251,6 +322,7 @@ export default function DashboardTableContainer() {
 							handleClose={handleClose}
 						/>
 					),
+					createButtonAccess: impactCategoryCreateAccess,
 				},
 				{
 					text: intl.formatMessage({
@@ -265,33 +337,34 @@ export default function DashboardTableContainer() {
 							type={IMPACT_ACTIONS.CREATE}
 						/>
 					),
+					createButtonAccess: impactTracklineCreateAccess,
 				},
 			],
 		},
-		{
-			label: intl.formatMessage({
-				id: "grantPeriodTabHeading",
-				defaultMessage: "Grant Period",
-				description: `This text will be show on tab for grant period`,
-			}),
-			table: <GrantPeriodTable />,
-			createButtons: [
-				{
-					text: intl.formatMessage({
-						id: "createGrantPeriod",
-						defaultMessage: "Create Grant Period",
-						description: `This text will be show on Add Button for Create Grant Period`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<GrantPeriodDialog
-							open={open}
-							onClose={handleClose}
-							action={FORM_ACTIONS.CREATE}
-						/>
-					),
-				},
-			],
-		},
+		// {
+		// 	label: intl.formatMessage({
+		// 		id: "grantPeriodTabHeading",
+		// 		defaultMessage: "Grant Period",
+		// 		description: `This text will be show on tab for grant period`,
+		// 	}),
+		// 	table: <GrantPeriodTable />,
+		// 	createButtons: [
+		// 		{
+		// 			text: intl.formatMessage({
+		// 				id: "createGrantPeriod",
+		// 				defaultMessage: "Create Grant Period",
+		// 				description: `This text will be show on Add Button for Create Grant Period`,
+		// 			}),
+		// 			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+		// 				<GrantPeriodDialog
+		// 					open={open}
+		// 					onClose={handleClose}
+		// 					action={FORM_ACTIONS.CREATE}
+		// 				/>
+		// 			),
+		// 		},
+		// 	],
+		// },
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
@@ -301,6 +374,7 @@ export default function DashboardTableContainer() {
 		console.log(`setting tab index `, newValue);
 		setValue(newValue);
 	};
+
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs
@@ -323,16 +397,20 @@ export default function DashboardTableContainer() {
 				))}
 			</Tabs>
 
-			{tabs.map((tab, index) => (
-				<TabContent key={index} value={value} index={index}>
-					{/* <Box className={classes.contentHeading}>
+			{tabs.map((tab, index) => {
+				const createButtons = filterCreateButtonsAccordingToUserAccess(tab.createButtons);
+
+				return (
+					<TabContent key={index} value={value} index={index}>
+						{/* <Box className={classes.contentHeading}>
 						<Typography variant="subtitle2">Budget Tracker</Typography>
 					</Box> */}
-					{tab.table}
-					{/* {GetTable(tab.label)} */}
-					<AddButton createButtons={tab.createButtons} />
-				</TabContent>
-			))}
+						{tab.table}
+						{/* {GetTable(tab.label)} */}
+						{createButtons.length > 0 && <AddButton createButtons={createButtons} />}
+					</TabContent>
+				);
+			})}
 			{notificationData!.successNotification && (
 				<Snackbar severity="success" msg={notificationData!.successNotification} />
 			)}

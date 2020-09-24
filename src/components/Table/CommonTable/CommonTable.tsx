@@ -102,7 +102,8 @@ function CommonTableRow<T extends { id: string }>({
 
 const defaultRows = 10;
 
-//check how to set the value of T
+const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) => element.children;
+
 function CommonTable<T extends { id: string }>({
 	tableHeadings,
 	rows,
@@ -120,7 +121,6 @@ function CommonTable<T extends { id: string }>({
 	orderBy,
 	setOrderBy,
 }: ICommonTable<T>) {
-	const classes = useStyles();
 	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -133,18 +133,24 @@ function CommonTable<T extends { id: string }>({
 		setAnchorEl(null);
 	};
 
-	const menuList = editMenuName.map((element, index) => ({
-		children: (
-			<MenuItem
-				onClick={() => {
-					toggleDialogs(index, true);
-					handleClose();
-				}}
-			>
-				{element}
-			</MenuItem>
-		),
-	}));
+	const menuList = editMenuName
+		.map((element, index) => ({
+			children:
+				(element && (
+					<MenuItem
+						onClick={() => {
+							toggleDialogs(index, true);
+							handleClose();
+						}}
+					>
+						{element}
+					</MenuItem>
+				)) ||
+				null,
+		}))
+		.filter(removeNullElementsFromMenuList);
+
+	const classes = useStyles();
 
 	if (loading) {
 		return <TableSkeleton />;
@@ -217,19 +223,24 @@ function CommonTable<T extends { id: string }>({
 											selectedRow.current = rowData;
 											handleClick(event);
 										}}
+										style={{
+											visibility: menuList.length > 0 ? "visible" : "hidden",
+										}}
 									>
 										<MoreVertIcon />
 									</IconButton>
-									<SimpleMenu
-										handleClose={handleClose}
-										id={`organizationMenu-${rowData?.id}`}
-										anchorEl={
-											selectedRow?.current?.id === rowData?.id
-												? anchorEl
-												: null
-										}
-										menuList={menuList}
-									/>
+									{menuList.length > 0 && (
+										<SimpleMenu
+											handleClose={handleClose}
+											id={`organizationMenu-${rowData?.id}`}
+											anchorEl={
+												selectedRow?.current?.id === rowData?.id
+													? anchorEl
+													: null
+											}
+											menuList={menuList}
+										/>
+									)}
 								</TableCell>
 
 								{Array.isArray(children) && children?.length >= 1 && children[1]}

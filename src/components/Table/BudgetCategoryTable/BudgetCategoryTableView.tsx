@@ -21,6 +21,8 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
+let budgetCategoryTableEditMenu: string[] = [];
+
 function BudgetCategoryTableView({
 	toggleDialogs,
 	openDialogs,
@@ -50,10 +52,9 @@ function BudgetCategoryTableView({
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
-	let budgetCategoryTableEditMenu: string[] = [];
 	const budgetCategoryEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,
-		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+		BUDGET_CATEGORY_ACTIONS.UPDATE_BUDGET_CATEGORY
 	);
 
 	useEffect(() => {
