@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ROLES_BY_ORG = gql`
-	query getRole($id: ID!) {
-		role(id: $id) {
+	query getRoles($filter: JSON) {
+		roles(where: $filter) {
 			id
 			name
 			organization {
