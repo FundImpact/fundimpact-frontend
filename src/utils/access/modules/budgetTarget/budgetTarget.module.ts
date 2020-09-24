@@ -17,5 +17,9 @@ export const BUDGET_TARGET_MODULE = {
 			name: "Delete Budget Target",
 			code: BUDGET_TARGET_ACTIONS.DELETE_BUDGET_TARGET,
 		},
+		[BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET]: {
+			name: "Find Budget Target",
+			code: BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET,
+		},
 	},
 };

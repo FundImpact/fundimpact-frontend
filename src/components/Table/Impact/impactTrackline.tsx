@@ -32,6 +32,8 @@ import FilterList from "../../FilterList";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
 
 const chipArray = ({
 	removeChip,
@@ -126,10 +128,20 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	const handleMenuClose = () => {
 		setImpactTracklineMenuAnchor(null);
 	};
+
+	const impactTracklineEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.UPDATE_IMPACT_TRACKING_LINE_ITEM
+	);
+
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="impact_trackline-edit" onClick={handleMenuClick}>
+				<IconButton
+					style={{ visibility: impactTracklineEditAccess ? "visible" : "hidden" }}
+					aria-label="impact_trackline-edit"
+					onClick={handleMenuClick}
+				>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
@@ -140,28 +152,30 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 				open={Boolean(impactTracklineMenuAnchor)}
 				onClose={handleMenuClose}
 			>
-				<MenuItem
-					onClick={() => {
-						setImpactTargetLineData({
-							id: impactTargetLine.id,
-							impact_target_project: impactTargetLine.impact_target_project?.id,
-							annual_year: impactTargetLine.annual_year?.id,
-							reporting_date: getTodaysDate(impactTargetLine?.reporting_date),
-							value: impactTargetLine?.value,
-							note: impactTargetLine?.note,
-							financial_year: impactTargetLine.financial_year?.id,
-							donors: impactTracklineDonors,
-							impactDonorMapValues: impactTracklineDonorsMapValues,
-						});
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="editAchievementMenu"
-						defaultMessage="Edit Achievement"
-						description="This text will be show on deliverable or impact target table for edit achievement menu"
-					/>
-				</MenuItem>
+				{impactTracklineEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTargetLineData({
+								id: impactTargetLine.id,
+								impact_target_project: impactTargetLine.impact_target_project?.id,
+								annual_year: impactTargetLine.annual_year?.id,
+								reporting_date: getTodaysDate(impactTargetLine?.reporting_date),
+								value: impactTargetLine?.value,
+								note: impactTargetLine?.note,
+								financial_year: impactTargetLine.financial_year?.id,
+								donors: impactTracklineDonors,
+								impactDonorMapValues: impactTracklineDonorsMapValues,
+							});
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="editAchievementMenu"
+							defaultMessage="Edit Achievement"
+							description="This text will be show on deliverable or impact target table for edit achievement menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{impactTargetLineData && (
 				<ImpactTrackLine
@@ -176,7 +190,10 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	);
 }
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
@@ -188,7 +205,6 @@ const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key:
 
 let annualYearHash: { [key: string]: string } = {};
 let financialYearHash: { [key: string]: string } = {};
-
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,

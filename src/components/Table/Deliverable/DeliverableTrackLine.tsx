@@ -32,6 +32,8 @@ import { deliverableTracklineInputFields } from "./inputFields.json";
 import FilterList from "../../FilterList";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 
 const chipArray = ({
 	arr,
@@ -112,10 +114,20 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setMenuAnchor(event.currentTarget);
 	};
+
+	const deliverableTracklineEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.UPDATE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
+
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<IconButton
+					style={{ visibility: deliverableTracklineEditAccess ? "visible" : "hidden" }}
+					aria-label="delete"
+					onClick={handleMenuClick}
+				>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
@@ -126,30 +138,32 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 				anchorEl={menuAnchor}
 				id="deliverable-trackline-simple-menu"
 			>
-				<MenuItem
-					onClick={() => {
-						setDeliverableTracklineData({
-							id: deliverableTrackline?.id,
-							deliverable_target_project:
-								deliverableTrackline.deliverable_target_project?.id,
-							annual_year: deliverableTrackline.annual_year?.id,
-							reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
-							value: deliverableTrackline?.value,
-							note: deliverableTrackline?.note,
-							financial_year: deliverableTrackline.financial_year?.id,
-							donors: tracklineDonors,
-							donorMapValues: tracklineDonorsMapValues,
-						});
+				{deliverableTracklineEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setDeliverableTracklineData({
+								id: deliverableTrackline?.id,
+								deliverable_target_project:
+									deliverableTrackline.deliverable_target_project?.id,
+								annual_year: deliverableTrackline.annual_year?.id,
+								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
+								value: deliverableTrackline?.value,
+								note: deliverableTrackline?.note,
+								financial_year: deliverableTrackline.financial_year?.id,
+								donors: tracklineDonors,
+								donorMapValues: tracklineDonorsMapValues,
+							});
 
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="editAchievementMenu"
-						defaultMessage="Edit Achievement"
-						description="This text will be show on deliverable or impact target table for edit achievement menu"
-					/>
-				</MenuItem>
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="editAchievementMenu"
+							defaultMessage="Edit Achievement"
+							description="This text will be show on deliverable or impact target table for edit achievement menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{deliverableTracklineData && (
 				<DeliverableTrackline
@@ -164,7 +178,10 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	);
 }
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;

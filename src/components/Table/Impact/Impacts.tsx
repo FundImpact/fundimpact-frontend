@@ -34,6 +34,9 @@ import { impactTargetInputFields } from "./inputFields.json";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
 import { GET_SDG } from "../../../graphql/SDG/query";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
+import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
 
 const chipArray = ({
 	arr,
@@ -74,10 +77,30 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const handleMenuClose = () => {
 		setImpactTargetMenuAnchor(null);
 	};
+
+	const impactTragetEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.UPDATE_IMPACT_TARGET
+	);
+
+	const impactTracklineCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
+	);
+
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="impact-target-edit" onClick={handleMenuClick}>
+				<IconButton
+					aria-label="impact-target-edit"
+					onClick={handleMenuClick}
+					style={{
+						visibility:
+							impactTragetEditAccess || impactTracklineCreateAccess
+								? "visible"
+								: "hidden",
+					}}
+				>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
@@ -88,42 +111,46 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 				open={Boolean(impactTargetMenuAnchor)}
 				onClose={handleMenuClose}
 			>
-				<MenuItem
-					onClick={() => {
-						setImpactTargetData({
-							id: impactTarget.id,
-							name: impactTarget.name,
-							target_value: impactTarget.target_value,
-							description: impactTarget.description,
-							impactCategory:
-								impactTarget.impact_category_unit?.impact_category_org.id,
-							impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
-							impact_category_unit: impactTarget.impact_category_unit.id,
-							sustainable_development_goal:
-								impactTarget.sustainable_development_goal?.id,
-							project: impactTarget.project.id,
-						});
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="editTargetMenu"
-						defaultMessage="Edit Target"
-						description="This text will be show on deliverable or impact target table for edit target menu"
-					/>
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						handleMenuClose();
-						setImpactTargetLineDialog(true);
-					}}
-				>
-					<FormattedMessage
-						id="reportAchievementMenu"
-						defaultMessage="Report Achievement"
-						description="This text will be show on deliverable or impact target table for report achievement menu"
-					/>
-				</MenuItem>
+				{impactTragetEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTargetData({
+								id: impactTarget.id,
+								name: impactTarget.name,
+								target_value: impactTarget.target_value,
+								description: impactTarget.description,
+								impactCategory:
+									impactTarget.impact_category_unit?.impact_category_org.id,
+								impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
+								impact_category_unit: impactTarget.impact_category_unit.id,
+								sustainable_development_goal:
+									impactTarget.sustainable_development_goal?.id,
+								project: impactTarget.project.id,
+							});
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="editTargetMenu"
+							defaultMessage="Edit Target"
+							description="This text will be show on deliverable or impact target table for edit target menu"
+						/>
+					</MenuItem>
+				)}
+				{impactTracklineCreateAccess && (
+					<MenuItem
+						onClick={() => {
+							handleMenuClose();
+							setImpactTargetLineDialog(true);
+						}}
+					>
+						<FormattedMessage
+							id="reportAchievementMenu"
+							defaultMessage="Report Achievement"
+							description="This text will be show on deliverable or impact target table for report achievement menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{impactTargetData && (
 				<ImpactTarget
@@ -179,7 +206,10 @@ function ImpactTargetAchievementAndProgress({
 let impactCategoryHash: { [key: string]: string } = {};
 let sustainableDevelopmentHash: { [key: string]: string } = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
