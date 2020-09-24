@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function MainOrganizationDashboard() {
 	const classes = useStyles();
-	const [checked, setChecked] = React.useState(false);
+	const [checked, setChecked] = React.useState(true);
 
 	const handleChange = () => {
 		setChecked((prev) => !prev);
@@ -128,7 +128,7 @@ export default function MainOrganizationDashboard() {
 						<Grid item md={3}>
 							<DashboardCard
 								title="Budget Category"
-								cardFilter={[{ label: "Projects" }, { label: "Achieved" }]}
+								cardFilter={[{ label: "Expenditure" }, { label: "Allocation" }]}
 								type={CARD_TYPES.PIE}
 								cardOf={CARD_OF.BUDGET}
 								cardHeight="33vh"

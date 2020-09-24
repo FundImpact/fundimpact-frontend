@@ -46,6 +46,7 @@ export type ProjectCardConfig = {
 export type PieCardConfig = {
 	pieData: PieDataFormat;
 	moreButtonLink: string | undefined;
+	loading: boolean;
 };
 
 export type ProgressCardResponse = {
@@ -58,4 +59,11 @@ export type ProgressCardResponse = {
 export type ProgressCardConfig = {
 	dataToDisplay: ProgressCardResponse[];
 	dialogTitle?: string;
+};
+
+export type CategoryDataResponse = {
+	id: string | number;
+	name: string;
+	count?: string;
+	sum?: number;
 };

@@ -16,6 +16,13 @@ import {
 	GET_IMPACTS_PROJECTS_ACHIEVED,
 	GET_DONOR_BY_FUND_ALLOCATED,
 	GET_DONOR_BY_FUND_RECEIVED,
+	GET_BUDGET_CATEGORY_EXPENDITURE,
+	GET_BUDGET_CATEGORY_TARGET,
+	GET_DELIVERABLE_CATEGORY_ACHIEVED,
+	GET_DELIVERABLE_CATEGORY_PROJECT,
+	GET_IMPACT_CATEGORY_ACHIEVED,
+	GET_IMPACT_CATEGORY_PROJECT,
+	GET_COMPLETED_BUDGET_COUNT,
 } from "../../../../graphql/organizationDashboard/query";
 import { useQuery } from "@apollo/client";
 
@@ -86,12 +93,15 @@ export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } 
 	let { data: budgetSpentValue } = useQuery(GET_BUDGET_SPEND_VALUE, queryFilter);
 	let { data: budgetTargetSum } = useQuery(GET_BUDGET_TARGET_SUM, queryFilter);
 	let { data: fundRecipetValuesByOrg } = useQuery(GET_FUND_RECEIVED_VALUE, queryFilter);
-
+	let { data: completedProjectCount } = useQuery(GET_COMPLETED_BUDGET_COUNT, queryFilter);
 	return {
 		budgetTargetSum: budgetTargetSum ? budgetTargetSum.budgetTargetSum : 0,
 		budgetSpentValue: budgetSpentValue ? budgetSpentValue.budgetSpentValue : 0,
 		fundRecipetValuesByOrg: fundRecipetValuesByOrg
 			? fundRecipetValuesByOrg.fundRecipetValuesByOrg
+			: 0,
+		completedProjectCount: completedProjectCount
+			? completedProjectCount.completedProjectCount
 			: 0,
 	};
 }
@@ -145,5 +155,78 @@ export function GetDonors(
 				: donorsAllocationValue && filter === "Allocated"
 				? donorsAllocationValue.donorsAllocationValue
 				: null,
+	};
+}
+
+export function GetBudgetCategories(
+	filter: string | undefined,
+	queryFilter: { variables: { filter: object } }
+) {
+	let { data: budgetCategoryTarget, loading: budgetCategoryTargetLoading } = useQuery(
+		GET_BUDGET_CATEGORY_TARGET,
+		queryFilter
+	);
+	let { data: budgetCategoryExpenditure, loading: budgetCategoryExpenditureLoading } = useQuery(
+		GET_BUDGET_CATEGORY_EXPENDITURE,
+		queryFilter
+	);
+
+	return {
+		data:
+			budgetCategoryTarget && filter === "Allocation"
+				? budgetCategoryTarget.budgetCategoryTarget
+				: budgetCategoryExpenditure && filter === "Expenditure"
+				? budgetCategoryExpenditure.budgetCategoryExpenditure
+				: null,
+		loading: budgetCategoryTargetLoading || budgetCategoryExpenditureLoading,
+	};
+}
+
+export function GetDeliverableCategory(
+	filter: string | undefined,
+	queryFilter: { variables: { filter: object } }
+) {
+	let {
+		data: deliverableCategoryProjectCount,
+		loading: deliverableCategoryProjectCountLoading,
+	} = useQuery(GET_DELIVERABLE_CATEGORY_PROJECT, queryFilter);
+
+	let {
+		data: deliverableCategoryAchievedTarget,
+		loading: deliverableCategoryAchievedTargetLoading,
+	} = useQuery(GET_DELIVERABLE_CATEGORY_ACHIEVED, queryFilter);
+
+	return {
+		data:
+			deliverableCategoryProjectCount && filter === "Projects"
+				? deliverableCategoryProjectCount.deliverableCategoryProjectCount
+				: deliverableCategoryAchievedTarget && filter === "Achieved"
+				? deliverableCategoryAchievedTarget.deliverableCategoryAchievedTarget
+				: null,
+		loading: deliverableCategoryProjectCountLoading || deliverableCategoryAchievedTargetLoading,
+	};
+}
+
+export function GetImpactCategory(
+	filter: string | undefined,
+	queryFilter: { variables: { filter: object } }
+) {
+	let { data: impactCategoryProjectCount, loading: impactCategoryProjectCountLoading } = useQuery(
+		GET_IMPACT_CATEGORY_PROJECT,
+		queryFilter
+	);
+	let {
+		data: impactCategoryAchievedValue,
+		loading: impactCategoryAchievedValueLoading,
+	} = useQuery(GET_IMPACT_CATEGORY_ACHIEVED, queryFilter);
+
+	return {
+		data:
+			impactCategoryProjectCount && filter === "Projects"
+				? impactCategoryProjectCount.impactCategoryProjectCount
+				: impactCategoryAchievedValue && filter === "Achieved"
+				? impactCategoryAchievedValue.impactCategoryAchievedValue
+				: null,
+		loading: impactCategoryProjectCountLoading || impactCategoryAchievedValueLoading,
 	};
 }

@@ -104,3 +104,10 @@ export function abbreviateNumber(number: number | string) {
 	// format number and add suffix
 	return scaled.toFixed(1) + suffix;
 }
+
+export const getMyColor = () => {
+	var r = Math.floor(Math.random() * 255);
+	var g = Math.floor(Math.random() * 255);
+	var b = Math.floor(Math.random() * 255);
+	return "rgb(" + r + "," + g + "," + b + ")";
+};

@@ -2,18 +2,23 @@ import { useTheme } from "@material-ui/core/styles";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import {
 	CardProps,
+	CategoryDataResponse,
 	PieCardConfig,
 	ProgressCardConfig,
 	ProjectCardConfig,
 } from "../../../../models/cards/cards";
-import { abbreviateNumber } from "../../../../utils";
+import { ChartDataset } from "../../../../models/charts/pie/datatypes";
+import { abbreviateNumber, getMyColor } from "../../../../utils";
 import { CARD_OF, CARD_TYPES } from "../constants";
 import {
+	GetBudgetCategories,
 	GetBudgetOrgStatus,
 	GetBudgetProjects,
+	GetDeliverableCategory,
 	GetDeliverableOrgStatus,
 	GetDeliverableProjects,
 	GetDonors,
+	GetImpactCategory,
 	GetImpactOrgStatus,
 	GetImpactProjects,
 } from "./OrgDashboardQuery";
@@ -32,15 +37,11 @@ export function GetCardTypeAndValues(props: CardProps) {
 		rightUpperTitle: "",
 	};
 	let pieCardConfig: PieCardConfig = {
+		loading: true,
 		pieData: {
 			datasets: [
 				{
-					backgroundColor: [
-						theme.palette.primary.main,
-						theme.palette.secondary.main,
-						theme.palette.grey[200],
-					],
-					data: [500, 200, 300],
+					backgroundColor: [],
 				},
 			],
 		},
@@ -71,14 +72,18 @@ export function GetCardTypeAndValues(props: CardProps) {
 			};
 		}
 		if (props.cardOf === CARD_OF.BUDGET) {
-			let { budgetTargetSum, budgetSpentValue, fundRecipetValuesByOrg } = GetBudgetOrgStatus({
+			let {
+				budgetTargetSum,
+				budgetSpentValue,
+				fundRecipetValuesByOrg,
+				completedProjectCount,
+			} = GetBudgetOrgStatus({
 				variables: { filter: { organization: organization } },
 			});
-
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: abbreviateNumber(budgetTargetSum),
-				rightUpperTitle: `${0} / ${39} Project`,
+				rightUpperTitle: `${completedProjectCount} / ${39} Project`,
 				firstBarHeading: `${abbreviateNumber(budgetSpentValue)} ${
 					props.projectCardConfig.firstBarHeading
 				}`,
@@ -113,6 +118,52 @@ export function GetCardTypeAndValues(props: CardProps) {
 
 	if (props.type === CARD_TYPES.PIE) {
 		pieCardConfig.moreButtonLink = props.pieCardConfig.moreButtonLink;
+		let fetchedData;
+		let labels: string[] = [];
+		let datasetsData: ChartDataset[] = [
+			{
+				data: [],
+				backgroundColor: [
+					theme.palette.primary.main,
+					theme.palette.secondary.main,
+					theme.palette.grey[200],
+				],
+			},
+		];
+
+		if (props.cardOf === CARD_OF.BUDGET) {
+			let { data, loading } = GetBudgetCategories(props.currentFilter, {
+				variables: { filter: { organization: organization } },
+			});
+			pieCardConfig.loading = loading;
+			fetchedData = data;
+		}
+		if (props.cardOf === CARD_OF.DELIVERABLE) {
+			let { data, loading } = GetDeliverableCategory(props.currentFilter, {
+				variables: { filter: { organization: organization } },
+			});
+			pieCardConfig.loading = loading;
+			fetchedData = data;
+		}
+		if (props.cardOf === CARD_OF.IMPACT) {
+			let { data, loading } = GetImpactCategory(props.currentFilter, {
+				variables: { filter: { organization: organization } },
+			});
+			pieCardConfig.loading = loading;
+			fetchedData = data;
+		}
+
+		fetchedData?.forEach((category: CategoryDataResponse, index: number) => {
+			if (index > 2) {
+				datasetsData[0].backgroundColor?.push(getMyColor());
+			}
+			labels.push(category.name);
+			datasetsData[0].data?.push(
+				category.count ? Number(category.count) : category.sum ? category.sum : 0
+			);
+		});
+		pieCardConfig.pieData.labels = labels;
+		pieCardConfig.pieData.datasets = datasetsData;
 	}
 
 	if (props.type === CARD_TYPES.PROGRESS) {

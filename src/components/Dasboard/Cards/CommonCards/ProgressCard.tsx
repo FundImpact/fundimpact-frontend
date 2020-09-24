@@ -5,6 +5,7 @@ import ProgressDialog from "../../../OrganizationDashboard/Cards/ProgressDialog"
 import CommonProgres from "../../../OrganizationDashboard/Cards/CommonProgress";
 import { ProgressCardConfig, ProgressCardResponse } from "../../../../models/cards/cards";
 import { Skeleton } from "@material-ui/lab";
+import { FormattedMessage } from "react-intl";
 
 export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 	const { dataToDisplay, dialogTitle } = progressCardConfig;
@@ -51,7 +52,11 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 				<Grid item md={12} justify="center" container>
 					<Box mt={2}>
 						<Typography variant="subtitle2" noWrap>
-							No Project Found
+							<FormattedMessage
+								id={`noProjectFound`}
+								defaultMessage={`No Project Found`}
+								description={`This text will be shown if no category found for organization dashboard project card`}
+							/>
 						</Typography>
 					</Box>
 				</Grid>

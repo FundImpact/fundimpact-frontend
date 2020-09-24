@@ -1,11 +1,10 @@
 export interface PieDataFormat {
-	label?: string[];
-
+	labels?: string[];
 	datasets: ChartDataset[];
 }
 
-interface ChartDataset {
-	data: number[];
-	backgroundColor: string[];
+export interface ChartDataset {
+	data?: number[];
+	backgroundColor?: string[];
 	hoverBackgroundColor?: string[];
 }
