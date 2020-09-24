@@ -11,7 +11,7 @@ const mapPermissionsControllerActionToPermission = (data: IGetUserRole) => {
 	data.role.permissions.forEach((permission) => {
 		userRoleHashObject[permission.controller + "-" + permission.action] = { ...permission };
 	});
-	userRoleHashObject["setting-view"] = { id: "123123", controller: "setting", action: "view" };
+	userRoleHashObject["setting-find"] = { id: "123123", controller: "setting", action: "find" };
 	return userRoleHashObject;
 };
 

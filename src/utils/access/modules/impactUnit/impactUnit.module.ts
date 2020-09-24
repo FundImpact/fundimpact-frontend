@@ -17,6 +17,10 @@ export const IMPACT_UNIT_MODULE = {
 			name: "Delete Impact Unit",
 			code: IMPACT_UNIT_ACTIONS.DELETE_IMPACT_UNIT,
 		},
+		[IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT]: {
+			name: "Find Impact Unit",
+			code: IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT,
+		},
 	},
 
 	// actionsAvailable: [
