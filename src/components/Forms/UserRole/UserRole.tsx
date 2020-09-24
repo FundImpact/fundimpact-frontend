@@ -13,6 +13,7 @@ import { UserRoleProps, IUserRole } from "../../../models/UserRole/UserRole";
 import { FormattedMessage } from "react-intl";
 import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
 import { useQuery } from "@apollo/client";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 function getInitialValues(props: UserRoleProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		return { ...props.data };
@@ -26,12 +27,14 @@ function getInitialValues(props: UserRoleProps) {
 function UserRoleForm(props: UserRoleProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IUserRole = getInitialValues(props);
+	const dashboardData = useDashBoardData();
 	const formAction = props.type;
-	// variables: { filter: { organization: dashboardData?.organization?.id } },
+	//
 	const { data: role } = useQuery(GET_ROLES_BY_ORG, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
 		onCompleted(data) {
-			if (data?.role) {
-				console.log("role", role);
+			if (data?.roles) {
+				userRoleForm[1].optionsArray = data.roles;
 			}
 		},
 		onError(err) {

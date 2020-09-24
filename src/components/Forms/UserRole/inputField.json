@@ -7,6 +7,7 @@
 			"testId": "userRoleFormEmailInput",
 			"label": "Email",
 			"type": "email",
+			"required": true,
 			"size": 9
 		},
 		{
@@ -20,7 +21,6 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"getInputValue": {},
 			"required": true,
 			"size": 3
 		}
