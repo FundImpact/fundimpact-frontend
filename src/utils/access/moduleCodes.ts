@@ -9,9 +9,16 @@
  */
 
 export enum MODULE_CODES {
-	BUDGET = "budget",
-	IMPACT = "impact",
-	DELIVERABLES = "deliverables",
-	// GRANT_PERIOD = "grant_period",
 	SETTING = "setting",
+	BUDGET_CATEGORY = "budget-category-organization",
+	BUDGET_TARGET = "budget-targets-project",
+	BUDGET_TARGET_LINE_ITEM = "budget-tracking-lineitem",
+	DELIVERABLE_CATEGORY = "deliverable-category-org",
+	DELIVERABLE_UNIT = "deliverable-units-org",
+	DELIVERABLE_TARGET = "deliverable-target-project",
+	DELIVERABLE_TRACKING_LINE_ITEM = "deliverable-tracking-lineitem",
+	IMPACT_CATEGORY = "impact-category-org",
+	IMPACT_UNIT = "impact-units-org",
+	IMPACT_TARGET = "impact-target-project",
+	IMPACT_TRACKING_LINE_ITEM = "impact-tracking-lineitem",
 }
