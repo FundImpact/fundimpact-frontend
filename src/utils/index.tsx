@@ -104,3 +104,7 @@ export function abbreviateNumber(number: number | string) {
 	// format number and add suffix
 	return scaled.toFixed(1) + suffix;
 }
+
+export const getMyColor = () => {
+	return "#" + Math.floor(Math.random() * 16777215).toString(16);
+};

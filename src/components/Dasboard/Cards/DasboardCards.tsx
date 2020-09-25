@@ -18,10 +18,10 @@ import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 
 export default function DashboardCard(props: CardProps) {
 	const { title, children, cardHeight = "24vh", cardFilter } = props;
-	const [currentFilter, setCurrentFilter] = useState<{ label: string }>();
+	const [currentFilter, setCurrentFilter] = useState<{ label: string; base: string }>();
 	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
 		...props,
-		currentFilter: currentFilter?.label,
+		currentFilter: currentFilter?.base,
 	});
 
 	const useStyles = makeStyles((theme: Theme) => ({
@@ -89,7 +89,10 @@ export default function DashboardCard(props: CardProps) {
 									onClose={handleClose}
 								>
 									{cardFilter.map(
-										(filter: { label: string }, mapIndex: number) => {
+										(
+											filter: { label: string; base: string },
+											mapIndex: number
+										) => {
 											return (
 												<MenuItem
 													key={mapIndex}

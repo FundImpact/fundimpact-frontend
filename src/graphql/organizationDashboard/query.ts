@@ -42,6 +42,12 @@ export const GET_FUND_RECEIVED_VALUE = gql`
 	}
 `;
 
+export const GET_COMPLETED_BUDGET_COUNT = gql`
+	query getCompletedProjectCount($filter: JSON) {
+		completedProjectCount(where: $filter)
+	}
+`;
+
 export const GET_TOTAL_DELIVERABLE = gql`
 	query getTotalDeliverableByOrg($filter: JSON) {
 		totalDeliverableByOrg(where: $filter)
@@ -98,5 +104,41 @@ export const GET_DONOR_BY_FUND_RECEIVED = gql`
 export const GET_DONOR_BY_FUND_ALLOCATED = gql`
 	query getDonorsAllocationValue($filter: JSON) {
 		donorsAllocationValue(where: $filter)
+	}
+`;
+
+export const GET_BUDGET_CATEGORY_TARGET = gql`
+	query getBudgetCategoryTarget($filter: JSON) {
+		budgetCategoryTarget(where: $filter)
+	}
+`;
+
+export const GET_BUDGET_CATEGORY_EXPENDITURE = gql`
+	query getBudgetCategoryExpenditure($filter: JSON) {
+		budgetCategoryExpenditure(where: $filter)
+	}
+`;
+
+export const GET_DELIVERABLE_CATEGORY_PROJECT = gql`
+	query getDeliverableCategoryProjectCount($filter: JSON) {
+		deliverableCategoryProjectCount(where: $filter)
+	}
+`;
+
+export const GET_DELIVERABLE_CATEGORY_ACHIEVED = gql`
+	query getDeliverableCategoryAchievedTarget($filter: JSON) {
+		deliverableCategoryAchievedTarget(where: $filter)
+	}
+`;
+
+export const GET_IMPACT_CATEGORY_PROJECT = gql`
+	query getImpactCategoryProjectCount($filter: JSON) {
+		impactCategoryProjectCount(where: $filter)
+	}
+`;
+
+export const GET_IMPACT_CATEGORY_ACHIEVED = gql`
+	query getImpactCategoryAchievedValue($filter: JSON) {
+		impactCategoryAchievedValue(where: $filter)
 	}
 `;

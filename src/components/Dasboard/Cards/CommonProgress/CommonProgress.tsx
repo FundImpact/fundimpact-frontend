@@ -7,13 +7,13 @@ export default function CommonProgress({
 	date,
 	percentage,
 	color = "primary",
-	size = "xs",
+	noBarDisplay = false,
 }: {
 	title: string;
 	date: string;
 	percentage: number;
 	color?: "primary" | "secondary";
-	size?: "xs" | "md" | "lg";
+	noBarDisplay?: boolean;
 }) {
 	return (
 		<Grid container>
@@ -25,18 +25,28 @@ export default function CommonProgress({
 				</Box>
 			</Grid>
 			<Grid item md={7} container>
-				<Grid item md={10}>
-					<Box mt={1}>
-						<BorderLinearProgress
-							variant="determinate"
-							value={percentage}
-							color={color}
-						/>
-					</Box>
-				</Grid>
-				<Grid item md={2} container justify="flex-start">
-					<Typography variant="caption">{`${percentage}%`}</Typography>
-				</Grid>
+				{!noBarDisplay && (
+					<>
+						<Grid item md={10}>
+							<Box mt={1}>
+								<BorderLinearProgress
+									variant="determinate"
+									value={percentage}
+									color={color}
+								/>
+							</Box>
+						</Grid>
+						<Grid item md={2} container justify="flex-start">
+							<Typography variant="caption">{`${percentage}%`}</Typography>
+						</Grid>
+					</>
+				)}
+				{noBarDisplay && (
+					<Grid item md={11} container justify="flex-end">
+						<Typography variant="subtitle2" color="secondary">{`₹
+						${percentage}`}</Typography>
+					</Grid>
+				)}
 				<Grid item md={11} justify="flex-end" container>
 					<Box display="flex">
 						<Typography

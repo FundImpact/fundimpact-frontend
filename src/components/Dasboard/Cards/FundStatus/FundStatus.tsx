@@ -66,6 +66,7 @@ export default function FundStatus() {
 		};
 
 		let pieData = {
+			labels: ["Approved", "Spend", "Received"],
 			datasets: [
 				{
 					backgroundColor: [

@@ -5,7 +5,7 @@ export type CardProps = {
 	title?: string;
 	children?: React.ReactElement | any;
 	cardHeight?: string;
-	cardFilter?: { label: string }[];
+	cardFilter?: { label: string; base: string }[];
 	currentFilter?: string;
 } & (
 	| {
@@ -46,6 +46,7 @@ export type ProjectCardConfig = {
 export type PieCardConfig = {
 	pieData: PieDataFormat;
 	moreButtonLink: string | undefined;
+	loading: boolean;
 };
 
 export type ProgressCardResponse = {
@@ -58,4 +59,12 @@ export type ProgressCardResponse = {
 export type ProgressCardConfig = {
 	dataToDisplay: ProgressCardResponse[];
 	dialogTitle?: string;
+	noBarDisplay?: boolean;
+};
+
+export type CategoryDataResponse = {
+	id: string | number;
+	name: string;
+	count?: string;
+	sum?: number;
 };
