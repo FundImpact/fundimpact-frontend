@@ -10,6 +10,9 @@ import { DELIVERABLE_TARGET_MODULE } from "./modules/deliverableTarget/deliverab
 import { DELIVERABLE_TRACKING_LINE_ITEM_MODULE } from "./modules/deliverableTrackingLineItem/deliverableTrackingLineItem.module";
 import { DELIVERABLE_UNIT_MODULE } from "./modules/deliverableUnit/deliverableUnit.module";
 import { SETTING_MODULE } from "./modules/setting/setting.module";
+import { PROJECT_MODULE } from "./modules/project/project.module";
+import { WORKSPACE_MODULE } from "./modules/workspaces/workspace.module";
+import { ORGANIZATION_MODULE } from "./modules/organization/organization.module";
 import { MODULE_CODES } from "./moduleCodes";
 
 /**
@@ -60,4 +63,7 @@ export const MODULES = {
 	[MODULE_CODES.IMPACT_TRACKING_LINE_ITEM]: IMPACT_TRACKING_LINE_ITEM_MODULE,
 	[MODULE_CODES.IMPACT_UNIT]: IMPACT_UNIT_MODULE,
 	[MODULE_CODES.SETTING]: SETTING_MODULE,
+	[MODULE_CODES.WORKSPACE]: WORKSPACE_MODULE,
+	[MODULE_CODES.PEOJECT]: PROJECT_MODULE,
+	[MODULE_CODES.ORGANIZATION]: ORGANIZATION_MODULE,
 } as const;

@@ -1,9 +1,9 @@
 import { MODULE_CODES } from "../../moduleCodes";
 import { PROJECT_ACTIONS } from "./actions";
 
-export const IMPACT_UNIT_MODULE = {
+export const PROJECT_MODULE = {
 	name: "Project",
-	code: MODULE_CODES.IMPACT_UNIT,
+	code: MODULE_CODES.PEOJECT,
 	actionsAvailable: {
 		[PROJECT_ACTIONS.CREATE_PROJECT]: {
 			name: "Create Project",
