@@ -22,7 +22,7 @@ export function PieCard(pieCardConfig: PieCardConfig) {
 		<>
 			{!pieData.datasets[0]?.data?.length ? (
 				<Grid item md={12} justify="center" container>
-					<Box mt={2}>
+					<Box mt={2} color="text.disabled">
 						<Typography variant="subtitle2" noWrap>
 							<FormattedMessage
 								id={`noCategoryFound`}

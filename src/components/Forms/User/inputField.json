@@ -37,5 +37,35 @@
 			"disabled": true,
 			"size": 6
 		}
+	],
+	"updateUserWithTokenForm": [
+		{
+			"name": "uploadPhoto",
+			"id": "uploadPhoto",
+			"dataTestId": "userFormAvatar",
+			"testId": "userFormAvatarInput",
+			"label": "Avatar",
+			"size": 2,
+			"logo": "",
+			"inputType": "upload"
+		},
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "userFormName",
+			"testId": "userFormNameInput",
+			"label": "Name",
+			"size": 12
+		},
+		{
+			"name": "password",
+			"id": "password",
+			"dataTestId": "userFormPassword",
+			"testId": "userFormPasswordInput",
+			"label": "Password",
+			"hidden": true,
+			"type": "password",
+			"size": 12
+		}
 	]
 }

@@ -24,33 +24,9 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 	}
 	return (
 		<>
-			<Grid item md={12}>
-				<Box mt={1}>
-					{dataToDisplay?.length > 0 &&
-						dataToDisplay
-							.slice(0, dataToDisplay.length > 3 ? 3 : dataToDisplay.length)
-							.map((data: ProgressCardResponse, index) => {
-								return (
-									<CommonProgres
-										key={index}
-										title={data.name}
-										date={"2017-12-03T10:15:30.000Z"}
-										percentage={
-											data.sum
-												? data.sum
-												: data.avg_value
-												? data.avg_value
-												: 0
-										}
-										noBarDisplay={noBarDisplay}
-									/>
-								);
-							})}
-				</Box>
-			</Grid>
 			{!dataToDisplay?.length && (
 				<Grid item md={12} justify="center" container>
-					<Box mt={2}>
+					<Box mt={2} color="text.disabled">
 						<Typography variant="subtitle2" noWrap>
 							<FormattedMessage
 								id={`noProjectFound`}
@@ -62,10 +38,32 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 				</Grid>
 			)}
 			{dataToDisplay?.length > 0 && (
-				<Grid item md={12} justify="flex-end" container>
-					<MoreButton handleClick={() => setProgressDialogOpen(true)} />
+				<Grid item md={12} style={{ height: "18vh" }}>
+					<Box mt={1}>
+						{dataToDisplay?.length > 0 &&
+							dataToDisplay
+								.slice(0, dataToDisplay.length > 3 ? 3 : dataToDisplay.length)
+								.map((data: ProgressCardResponse, index) => {
+									return (
+										<CommonProgres
+											key={index}
+											title={data.name}
+											date={"2017-12-03T10:15:30.000Z"}
+											percentage={
+												data.sum
+													? data.sum
+													: data.avg_value
+													? data.avg_value
+													: 0
+											}
+											noBarDisplay={noBarDisplay}
+										/>
+									);
+								})}
+					</Box>
 				</Grid>
 			)}
+
 			{progressDialogOpen && (
 				<ProgressDialog
 					open={progressDialogOpen}
@@ -93,6 +91,13 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 							);
 						})}
 				</ProgressDialog>
+			)}
+			{dataToDisplay?.length > 0 && (
+				<Grid justify="flex-end" container>
+					<Box>
+						<MoreButton handleClick={() => setProgressDialogOpen(true)} />
+					</Box>
+				</Grid>
 			)}
 		</>
 	);
