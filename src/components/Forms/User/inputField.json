@@ -11,13 +11,22 @@
 			"inputType": "upload"
 		},
 		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "userFormName",
+			"testId": "userFormNameInput",
+			"label": "Name",
+			"size": 12
+		},
+		{
 			"name": "email",
 			"id": "email",
 			"dataTestId": "userFormEmail",
 			"testId": "userFormEmailInput",
 			"label": "Email",
 			"type": "email",
-			"size": 12
+			"disabled": true,
+			"size": 6
 		},
 		{
 			"name": "username",
@@ -25,15 +34,7 @@
 			"dataTestId": "userFormUsername",
 			"testId": "userFormUsernameInput",
 			"label": "Username",
-			"size": 6
-		},
-
-		{
-			"name": "name",
-			"id": "name",
-			"dataTestId": "userFormName",
-			"testId": "userFormNameInput",
-			"label": "Name",
+			"disabled": true,
 			"size": 6
 		}
 	]

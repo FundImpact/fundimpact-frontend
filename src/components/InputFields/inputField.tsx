@@ -53,6 +53,7 @@ const InputFields = ({
 	required = false,
 	multiple = false,
 	logo,
+	disabled,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -222,6 +223,7 @@ const InputFields = ({
 			multiline={multiline}
 			rows={rows}
 			type={type}
+			disabled={disabled}
 		/>
 	);
 };
