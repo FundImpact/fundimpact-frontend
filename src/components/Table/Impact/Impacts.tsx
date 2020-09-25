@@ -173,6 +173,20 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	);
 }
 
+const getTableHeadingByImpactTracklineAccess = (
+	headings: (
+		| {
+				label: string;
+				keyMapping?: undefined;
+		  }
+		| {
+				label: string;
+				keyMapping: string;
+		  }
+	)[],
+	collapseTableAccess: boolean
+) => (collapseTableAccess ? headings : headings.slice(1));
+
 function ImpactTargetAchievementAndProgress({
 	impactTargetId,
 	impactTargetValue,
@@ -277,6 +291,11 @@ export default function ImpactsTable() {
 		impact_category_org: [],
 		sustainable_development_goal: [],
 	});
+
+	const impactTracklineFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.FIND_IMPACT_TRACKING_LINE_ITEM
+	);
 
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -506,9 +525,13 @@ export default function ImpactsTable() {
 						orderBy={orderBy}
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
-						tableHeading={ImpactHeadings}
 						rows={rows}
 						pagination={impactTablePagination}
+						tableHeading={getTableHeadingByImpactTracklineAccess(
+							ImpactHeadings,
+							impactTracklineFindAccess
+						)}
+						showNestedTable={impactTracklineFindAccess}
 					/>
 				</>
 			)}

@@ -250,6 +250,20 @@ const createChipArray = ({
 	return null;
 };
 
+const getTableHeadingByDeliverableTracklineAccess = (
+	headings: (
+		| {
+				label: string;
+				keyMapping?: undefined;
+		  }
+		| {
+				label: string;
+				keyMapping: string;
+		  }
+	)[],
+	collapseTableAccess: boolean
+) => (collapseTableAccess ? headings : headings.slice(1));
+
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
 	const [page, setPage] = React.useState(0);
@@ -267,6 +281,11 @@ export default function DeliverablesTable() {
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
+
+	const deliverableTracklineFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.FIND_DELIVERABLE_TRACKING_LINE_ITEM
+	);
 
 	useEffect(() => {
 		if (deliverableCategories) {
@@ -473,9 +492,13 @@ export default function DeliverablesTable() {
 						orderBy={orderBy}
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
-						tableHeading={deliverableHeadings}
+						tableHeading={getTableHeadingByDeliverableTracklineAccess(
+							deliverableHeadings,
+							deliverableTracklineFindAccess
+						)}
 						rows={rows}
 						pagination={deliverableTablePagination}
+						showNestedTable={deliverableTracklineFindAccess}
 					/>
 				</>
 			)}

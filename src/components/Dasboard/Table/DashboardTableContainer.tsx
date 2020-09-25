@@ -99,6 +99,12 @@ export default function DashboardTableContainer() {
 		MODULE_CODES.BUDGET_TARGET,
 		BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET
 	);
+
+	const budgetTargetFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET
+	);
+
 	const budgetCategoryCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,
 		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
@@ -119,6 +125,12 @@ export default function DashboardTableContainer() {
 		MODULE_CODES.IMPACT_TARGET,
 		IMPACT_TARGET_ACTIONS.CREATE_IMPACT_TARGET
 	);
+
+	const impactTargetFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	);
+
 	const impactTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
@@ -135,6 +147,12 @@ export default function DashboardTableContainer() {
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.CREATE_DELIVERABLE_TARGET
 	);
+
+	const deliverableTargetFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.FIND_DELIVERABLE_TARGET
+	);
+
 	const deliverableTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
@@ -196,6 +214,7 @@ export default function DashboardTableContainer() {
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
 			],
+			tabVisibility: budgetTargetFindAccess,
 		},
 		{
 			label: intl.formatMessage({
@@ -269,6 +288,7 @@ export default function DashboardTableContainer() {
 					createButtonAccess: deliverableTracklineCreateAccess,
 				},
 			],
+			tabVisibility: deliverableTargetFindAccess,
 		},
 		{
 			label: intl.formatMessage({
@@ -340,6 +360,7 @@ export default function DashboardTableContainer() {
 					createButtonAccess: impactTracklineCreateAccess,
 				},
 			],
+			tabVisibility: impactTargetFindAccess,
 		},
 		// {
 		// 	label: intl.formatMessage({
@@ -386,15 +407,19 @@ export default function DashboardTableContainer() {
 				scrollButtons="auto"
 				aria-label="wrapped label tabs example"
 			>
-				{tabs.map((tab, index) => (
-					<Tab
-						textColor="secondary"
-						key={tab.label}
-						value={index}
-						label={tab.label}
-						{...a11yProps(index)}
-					/>
-				))}
+				{tabs.map(
+					(tab, index) => (
+						tab.tabVisibility && (
+						<Tab
+							textColor="secondary"
+							key={tab.label}
+							value={index}
+							label={tab.label}
+							{...a11yProps(index)}
+						/>
+					)
+					)
+				)}
 			</Tabs>
 
 			{tabs.map((tab, index) => {
