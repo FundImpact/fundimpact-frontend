@@ -63,6 +63,31 @@ export default function SettingContainer() {
 		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
 	);
 
+	const createBudgetCategoryAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	);
+
+	const deliverableCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+	);
+
+	const deliverableUnitCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+	);
+
+	const impactCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
+	);
+
+	const impactUnitCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	);
+
 	return (
 		<Container
 			disableGutters
@@ -86,22 +111,29 @@ export default function SettingContainer() {
 				</Grid>
 				<Grid item xs={12} md={9}>
 					<Routes>
+						<PrivateRoute path="donors" element={<DonorContainer />} />
 						<PrivateRoute
-							path="donors"
-							element={<DonorContainer />}
-						/>
-						<PrivateRoute
-							userAccess={budgetCategoryFindAccess}
+							userAccess={budgetCategoryFindAccess || createBudgetCategoryAccess}
 							path="budget"
 							element={<BudgetCategory />}
 						/>
 						<PrivateRoute
-							userAccess={impactCategoryFindAccess || impactUnitFindAccess}
+							userAccess={
+								impactCategoryFindAccess ||
+								impactUnitFindAccess ||
+								impactCategoryCreateAccess ||
+								impactUnitCreateAccess
+							}
 							path="impact"
 							element={<ImpactMaster />}
 						/>
 						<PrivateRoute
-							userAccess={deliverableCategoryFindAccess || deliverableUnitFindAccess}
+							userAccess={
+								deliverableCategoryFindAccess ||
+								deliverableUnitFindAccess ||
+								deliverableCategoryCreateAccess ||
+								deliverableUnitCreateAccess
+							}
 							path="deliverable"
 							element={<DeliverableMaster />}
 						/>

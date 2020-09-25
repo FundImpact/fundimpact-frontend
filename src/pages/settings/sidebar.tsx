@@ -92,14 +92,48 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
 	);
 
-	setSidebarBudgetCategoryUserAccess(sidebarList[2].subHeadings[0], budgetCategoryFindAccess);
+	const createBudgetCategoryAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	);
+
+	const deliverableCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+	);
+
+	const deliverableUnitCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+	);
+
+	const impactCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
+	);
+
+	const impactUnitCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	);
+
+	setSidebarBudgetCategoryUserAccess(
+		sidebarList[2].subHeadings[0],
+		budgetCategoryFindAccess || createBudgetCategoryAccess
+	);
 	setSidebarDeliverableCategoryAndUnitsUserAccess(
 		sidebarList[2].subHeadings[2],
-		deliverableCategoryFindAccess || deliverableUnitFindAccess
+		deliverableCategoryFindAccess ||
+			deliverableUnitFindAccess ||
+			deliverableCategoryCreateAccess ||
+			deliverableUnitCreateAccess
 	);
 	setSidebarImpactCategoryAndUnitsUserAccess(
 		sidebarList[2].subHeadings[1],
-		impactCategoryFindAccess || impactUnitFindAccess
+		impactCategoryFindAccess ||
+			impactUnitFindAccess ||
+			impactCategoryCreateAccess ||
+			impactUnitCreateAccess
 	);
 
 	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;

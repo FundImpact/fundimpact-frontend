@@ -73,6 +73,10 @@ const DeliverableMasterView = ({
 	removeFilteListElements,
 	setDeliverableCategoryFilterList,
 	setDeliverableUnitFilterList,
+	deliverableCategoryFindAccess,
+	deliverableUnitFindAccess,
+	deliverableCategoryCreateAccess,
+	deliverableUnitCreateAccess,
 }: {
 	value: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
@@ -83,6 +87,10 @@ const DeliverableMasterView = ({
 		React.SetStateAction<{ [key: string]: string }>
 	>;
 	setDeliverableUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+	deliverableCategoryFindAccess: boolean;
+	deliverableUnitFindAccess: boolean;
+	deliverableCategoryCreateAccess: boolean;
+	deliverableUnitCreateAccess: boolean;
 }) => {
 	const dashboardData = useDashBoardData();
 	const classes = useStyles();
@@ -90,16 +98,6 @@ const DeliverableMasterView = ({
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
 	};
-
-	const deliverableCategoryCreateAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
-	);
-
-	const deliverableUnitCreateAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
-	);
 
 	const tabs = [
 		{
@@ -117,6 +115,8 @@ const DeliverableMasterView = ({
 			table: <DeliverableCategoryTable tableFilterList={deliverableCategoryFilterList} />,
 			label: "Deliverable Category",
 			addButtonAccess: deliverableCategoryCreateAccess,
+			tableAccess: deliverableCategoryFindAccess,
+			tabAccess: deliverableCategoryFindAccess || deliverableCategoryCreateAccess,
 		},
 		{
 			label: "Deliverable Unit",
@@ -133,6 +133,8 @@ const DeliverableMasterView = ({
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
+			tableAccess: deliverableUnitFindAccess,
+			tabAccess: deliverableUnitFindAccess || deliverableUnitCreateAccess,
 		},
 	];
 
@@ -145,32 +147,39 @@ const DeliverableMasterView = ({
 					<Grid item xs={11}>
 						<Typography variant="h4">
 							<Box mt={2} fontWeight="fontWeightBold">
-								<FormattedMessage
-									description={`This text is the heding of deliverable ${
-										value === 0 ? "Categories" : "Unit"
-									} table`}
-									defaultMessage={`Deliverable ${
-										value === 0 ? "Categories" : "Unit"
-									} `}
-									id={`deliverableMasterPageHeading-${value}`}
-								/>
+								{(deliverableCategoryFindAccess ||
+									deliverableUnitFindAccess ||
+									deliverableUnitCreateAccess ||
+									deliverableCategoryCreateAccess) && (
+									<FormattedMessage
+										description={`This text is the heding of deliverable ${
+											value === 0 ? "Categories" : "Unit"
+										} table`}
+										defaultMessage={`Deliverable ${
+											value === 0 ? "Categories" : "Unit"
+										} `}
+										id={`deliverableMasterPageHeading-${value}`}
+									/>
+								)}
 							</Box>
 						</Typography>
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
-							<FilterList
-								setFilterList={
-									value === 0
-										? setDeliverableCategoryFilterList
-										: setDeliverableUnitFilterList
-								}
-								inputFields={
-									value === 0
-										? deliverableCategoryInputFields
-										: deliverableUnitInputFields
-								}
-							/>
+							{(deliverableCategoryFindAccess || deliverableUnitFindAccess) && (
+								<FilterList
+									setFilterList={
+										value === 0
+											? setDeliverableCategoryFilterList
+											: setDeliverableUnitFilterList
+									}
+									inputFields={
+										value === 0
+											? deliverableCategoryInputFields
+											: deliverableUnitInputFields
+									}
+								/>
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
@@ -219,27 +228,30 @@ const DeliverableMasterView = ({
 						scrollButtons="auto"
 						value={value}
 					>
-						{tabs.map((tab, index) => (
-							<Tab
-								value={index}
-								key={tab.label}
-								textColor="secondary"
-								label={intl.formatMessage({
-									id: `${tab.label
-										.toString()
-										.replace(/ /g, "")
-										.toLowerCase()}TabHeading`,
-									defaultMessage: tab.label,
-									description: `This text will be shown for ${tab.label} table heading`,
-								})}
-								{...a11yProp(index)}
-							/>
-						))}
+						{tabs.map(
+							(tab, index) =>
+								tab.tabAccess && (
+									<Tab
+										value={index}
+										key={tab.label}
+										textColor="secondary"
+										label={intl.formatMessage({
+											id: `${tab.label
+												.toString()
+												.replace(/ /g, "")
+												.toLowerCase()}TabHeading`,
+											defaultMessage: tab.label,
+											description: `This text will be shown for ${tab.label} table heading`,
+										})}
+										{...a11yProp(index)}
+									/>
+								)
+						)}
 					</Tabs>
 
 					{tabs.map((tab, index) => (
 						<TabContent key={index} value={value} index={index}>
-							{tab.table}
+							{tab.tableAccess && tab.table}
 							{tab.addButtonAccess && (
 								<AddButton
 									createButtons={tab.createButtons}

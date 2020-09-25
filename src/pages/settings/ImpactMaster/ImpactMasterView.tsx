@@ -20,9 +20,6 @@ import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import { impactCategoryInputFields, impactUnitInputFields } from "./inputFields.json"; //make seprate json
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
-import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -81,6 +78,10 @@ const ImpactMasterView = ({
 	removeFilteListElements,
 	setImpactCategoryFilterList,
 	setImpactUnitFilterList,
+	impactCategoryFindAccess,
+	impactUnitFindAccess,
+	impactCategoryCreateAccess,
+	impactUnitCreateAccess,
 }: {
 	showImpactUnitTable: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
@@ -89,22 +90,16 @@ const ImpactMasterView = ({
 	removeFilteListElements: (elementToDelete: string) => void;
 	setImpactCategoryFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 	setImpactUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+	impactCategoryFindAccess: boolean;
+	impactUnitFindAccess: boolean;
+	impactCategoryCreateAccess: boolean;
+	impactUnitCreateAccess: boolean;
 }) => {
 	const classes = useStyles();
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
 	};
-
-	const impactCategoryCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_CATEGORY,
-		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
-	);
-
-	const impactUnitCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
-	);
 
 	const tabs = [
 		{
@@ -121,6 +116,8 @@ const ImpactMasterView = ({
 				),
 			},
 			addButtonAccess: impactCategoryCreateAccess,
+			tabAccess: impactCategoryFindAccess || impactCategoryCreateAccess,
+			tableAccess: impactCategoryFindAccess,
 		},
 		{
 			label: "Impact Unit",
@@ -136,6 +133,8 @@ const ImpactMasterView = ({
 				),
 			},
 			addButtonAccess: impactUnitCreateAccess,
+			tabAccess: impactUnitFindAccess || impactUnitCreateAccess,
+			tableAccess: impactUnitFindAccess,
 		},
 	];
 
@@ -148,32 +147,39 @@ const ImpactMasterView = ({
 					<Grid item xs={11}>
 						<Typography variant="h4">
 							<Box mt={2} fontWeight="fontWeightBold">
-								<FormattedMessage
-									description={`This text is the heding of impact ${
-										showImpactUnitTable === 0 ? "Categories" : "Unit"
-									} table`}
-									defaultMessage={`Impact ${
-										showImpactUnitTable === 0 ? "Categories" : "Unit"
-									} `}
-									id={`impactMasterPageHeading-${showImpactUnitTable}`}
-								/>
+								{(impactCategoryFindAccess ||
+									impactUnitFindAccess ||
+									impactUnitCreateAccess ||
+									impactCategoryCreateAccess) && (
+									<FormattedMessage
+										description={`This text is the heding of impact ${
+											showImpactUnitTable === 0 ? "Categories" : "Unit"
+										} table`}
+										defaultMessage={`Impact ${
+											showImpactUnitTable === 0 ? "Categories" : "Unit"
+										} `}
+										id={`impactMasterPageHeading-${showImpactUnitTable}`}
+									/>
+								)}
 							</Box>
 						</Typography>
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
-							<FilterList
-								setFilterList={
-									showImpactUnitTable === 0
-										? setImpactCategoryFilterList
-										: setImpactUnitFilterList
-								}
-								inputFields={
-									showImpactUnitTable === 0
-										? impactCategoryInputFields
-										: impactUnitInputFields
-								}
-							/>
+							{(impactCategoryFindAccess || impactUnitFindAccess) && (
+								<FilterList
+									setFilterList={
+										showImpactUnitTable === 0
+											? setImpactCategoryFilterList
+											: setImpactUnitFilterList
+									}
+									inputFields={
+										showImpactUnitTable === 0
+											? impactCategoryInputFields
+											: impactUnitInputFields
+									}
+								/>
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
@@ -222,27 +228,30 @@ const ImpactMasterView = ({
 						scrollButtons="auto"
 						aria-label="wrapped label tabs example"
 					>
-						{tabs.map((tab, index) => (
-							<Tab
-								textColor="secondary"
-								key={tab.label}
-								value={index}
-								label={intl.formatMessage({
-									id: `${tab.label
-										.toString()
-										.replace(/ /g, "")
-										.toLowerCase()}TabHeading`,
-									defaultMessage: tab.label,
-									description: `This text will be shown for ${tab.label} table heading`,
-								})}
-								{...a11yProps(index)}
-							/>
-						))}
+						{tabs.map(
+							(tab, index) =>
+								tab.tabAccess && (
+									<Tab
+										textColor="secondary"
+										key={tab.label}
+										value={index}
+										label={intl.formatMessage({
+											id: `${tab.label
+												.toString()
+												.replace(/ /g, "")
+												.toLowerCase()}TabHeading`,
+											defaultMessage: tab.label,
+											description: `This text will be shown for ${tab.label} table heading`,
+										})}
+										{...a11yProps(index)}
+									/>
+								)
+						)}
 					</Tabs>
 
 					{tabs.map((tab, index) => (
 						<TabContent key={index} value={showImpactUnitTable} index={index}>
-							{tab.table}
+							{tab.tableAccess && tab.table}
 							{tab.addButtonAccess && (
 								<AddButton
 									createButtons={tab.createButtons}
