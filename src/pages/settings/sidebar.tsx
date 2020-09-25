@@ -18,6 +18,8 @@ import { DELIVERABLE_CATEGORY_ACTIONS } from "../../utils/access/modules/deliver
 import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverableUnit/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
+import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
+import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 
 const setSidebarBudgetCategoryUserAccess = (
 	budgetCategory: { userAccess: boolean },
@@ -36,6 +38,20 @@ const setSidebarImpactCategoryAndUnitsUserAccess = (
 	userAccess: boolean
 ) => {
 	impactCategoryAndUnits.userAccess = userAccess;
+};
+
+const setSidebarOrganizationUpdateUserAccess = (
+	organization: { userAccess: boolean },
+	userAccess: boolean
+) => {
+	organization.userAccess = userAccess;
+};
+
+const setSidebarDonorUserAccess = (
+	donor: { userAccess: boolean },
+	userAccess: boolean
+) => {
+	donor.userAccess = userAccess;
 };
 
 /**
@@ -117,6 +133,15 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
 	);
 
+	const organizationEditAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
+	);
+
+	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
+
+	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+
 	setSidebarBudgetCategoryUserAccess(
 		sidebarList[2].subHeadings[0],
 		budgetCategoryFindAccess || createBudgetCategoryAccess
@@ -135,6 +160,10 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 			impactCategoryCreateAccess ||
 			impactUnitCreateAccess
 	);
+
+	setSidebarOrganizationUpdateUserAccess(sidebarList[0].subHeadings[0], organizationEditAccess);
+
+	setSidebarDonorUserAccess(sidebarList[1].subHeadings[0], donorFindAccess || donorCreateAccess);
 
 	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
 	return (

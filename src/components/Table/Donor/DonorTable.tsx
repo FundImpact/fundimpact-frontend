@@ -26,6 +26,8 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { donorTableHeading as tableHeading } from "../constants";
 import { getValueFromObject } from "../../../utils";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 
 const useStyles = makeStyles({
 	table: {
@@ -111,6 +113,8 @@ function DonorTable({
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
 
 	const menuList = [
 		{
@@ -199,17 +203,22 @@ function DonorTable({
 										selectedDonor.current = donor;
 										handleClick(event);
 									}}
+									style={{ visibility: donorEditAccess ? "visible" : "hidden" }}
 								>
 									<MoreVertIcon />
 								</IconButton>
-								<SimpleMenu
-									handleClose={handleClose}
-									id={`organizationMenu-${donor.id}`}
-									anchorEl={
-										selectedDonor?.current?.id === donor.id ? anchorEl : null
-									}
-									menuList={menuList}
-								/>
+								{donorEditAccess && (
+									<SimpleMenu
+										handleClose={handleClose}
+										id={`organizationMenu-${donor.id}`}
+										anchorEl={
+											selectedDonor?.current?.id === donor.id
+												? anchorEl
+												: null
+										}
+										menuList={menuList}
+									/>
+								)}
 							</TableCell>
 						</TableRow>
 					))}
