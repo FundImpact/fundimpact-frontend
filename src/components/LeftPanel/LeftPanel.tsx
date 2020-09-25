@@ -46,9 +46,11 @@ export default function LeftPanel() {
 			to: "/dashboard",
 		},
 	]);
-
-	const settingButtonAccess = userHasAccess(MODULE_CODES.SETTING, SETTING_MODULE_ACTION.FIND_SETTING);
-
+	const settingButtonAccess = userHasAccess(
+		MODULE_CODES.SETTING,
+		SETTING_MODULE_ACTION.FIND_SETTING
+	);
+	console.log("settingButtonAccess :>> ", settingButtonAccess);
 	useEffect(() => {
 		if (settingButtonAccess) {
 			setLeftPannelList((currentLeftPannelList) => [

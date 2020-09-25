@@ -13,6 +13,7 @@ export const GET_USER_ROLES = gql`
 				id
 				controller
 				action
+				enabled
 			}
 		}
 	}
