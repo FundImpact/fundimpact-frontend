@@ -1,5 +1,5 @@
 import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationData } from "../../../contexts/notificationContext";
@@ -90,6 +90,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const filterCreateButtonsAccordingToUserAccess = (createButtons: CreateButton[]) =>
 	createButtons.filter((createButton) => createButton.createButtonAccess);
+
+enum tabType {
+	budgetTab = 0,
+	deliverableTab = 1,
+	impactTab = 2,
+}
+
+const getTabToShow = (
+	budgetTargetFindAccess: boolean,
+	impactTargetFindAccess: boolean,
+	deliverableTargetFindAccess: boolean
+) => {
+	if (budgetTargetFindAccess) {
+		return tabType.budgetTab;
+	}
+	if (deliverableTargetFindAccess) {
+		return tabType.deliverableTab;
+	}
+	if (impactTargetFindAccess) {
+		return tabType.impactTab;
+	}
+	return tabType.budgetTab;
+};
 
 export default function DashboardTableContainer() {
 	const intl = useIntl();
@@ -214,7 +237,12 @@ export default function DashboardTableContainer() {
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
 			],
-			tabVisibility: budgetTargetFindAccess,
+			tabVisibility:
+				budgetTargetFindAccess ||
+				budgetCategoryCreateAccess ||
+				budgetTargetCreateAccess ||
+				budgetTargetLineItemCreateAccess,
+			tableVisibility: budgetTargetFindAccess,
 		},
 		{
 			label: intl.formatMessage({
@@ -288,7 +316,13 @@ export default function DashboardTableContainer() {
 					createButtonAccess: deliverableTracklineCreateAccess,
 				},
 			],
-			tabVisibility: deliverableTargetFindAccess,
+			tabVisibility:
+				deliverableTargetFindAccess ||
+				deliverableTargetCreateAccess ||
+				deliverableUnitCreateAccess ||
+				deliverableCategoryCreateAccess ||
+				deliverableTracklineCreateAccess,
+			tableVisibility: deliverableTargetFindAccess,
 		},
 		{
 			label: intl.formatMessage({
@@ -360,7 +394,13 @@ export default function DashboardTableContainer() {
 					createButtonAccess: impactTracklineCreateAccess,
 				},
 			],
-			tabVisibility: impactTargetFindAccess,
+			tabVisibility:
+				impactTargetFindAccess ||
+				impactTargetCreateAccess ||
+				impactUnitCreateAccess ||
+				impactCategoryCreateAccess ||
+				impactTracklineCreateAccess,
+			tableVisibility: impactTargetFindAccess,
 		},
 		// {
 		// 	label: intl.formatMessage({
@@ -391,8 +431,19 @@ export default function DashboardTableContainer() {
 	const [value, setValue] = React.useState(0);
 	const notificationData = useNotificationData();
 
+	useEffect(() => {
+		if (budgetTargetFindAccess || impactTargetFindAccess || deliverableTargetFindAccess) {
+			setValue(
+				getTabToShow(
+					budgetTargetFindAccess,
+					impactTargetFindAccess,
+					deliverableTargetFindAccess
+				)
+			);
+		}
+	}, [budgetTargetFindAccess, impactTargetFindAccess, deliverableTargetFindAccess]);
+
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-		console.log(`setting tab index `, newValue);
 		setValue(newValue);
 	};
 
@@ -408,17 +459,16 @@ export default function DashboardTableContainer() {
 				aria-label="wrapped label tabs example"
 			>
 				{tabs.map(
-					(tab, index) => (
+					(tab, index) =>
 						tab.tabVisibility && (
-						<Tab
-							textColor="secondary"
-							key={tab.label}
-							value={index}
-							label={tab.label}
-							{...a11yProps(index)}
-						/>
-					)
-					)
+							<Tab
+								textColor="secondary"
+								key={tab.label}
+								value={index}
+								label={tab.label}
+								{...a11yProps(index)}
+							/>
+						)
 				)}
 			</Tabs>
 
@@ -427,11 +477,7 @@ export default function DashboardTableContainer() {
 
 				return (
 					<TabContent key={index} value={value} index={index}>
-						{/* <Box className={classes.contentHeading}>
-						<Typography variant="subtitle2">Budget Tracker</Typography>
-					</Box> */}
-						{tab.table}
-						{/* {GetTable(tab.label)} */}
+						{tab.tableVisibility && tab.table}
 						{createButtons.length > 0 && <AddButton createButtons={createButtons} />}
 					</TabContent>
 				);

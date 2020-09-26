@@ -31,6 +31,11 @@ const BudgetMasterView = ({
 		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
 	);
 
+	const budgetCategoryFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
+	);
+
 	return (
 		<>
 			<Box p={2}>
@@ -48,10 +53,12 @@ const BudgetMasterView = ({
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
-							<FilterList
-								setFilterList={setTableFilterList}
-								inputFields={budgetCategoryInputFields}
-							/>
+							{budgetCategoryFindAccess && (
+								<FilterList
+									setFilterList={setTableFilterList}
+									inputFields={budgetCategoryInputFields}
+								/>
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
@@ -89,7 +96,9 @@ const BudgetMasterView = ({
 						</Box>
 					</Grid>
 				</Grid>
-				<BudgetCategoryTable tableFilterList={tableFilterList} />
+				{budgetCategoryFindAccess && (
+					<BudgetCategoryTable tableFilterList={tableFilterList} />
+				)}
 				{createBudgetCategoryAccess && (
 					<AddButton
 						createButtons={[]}

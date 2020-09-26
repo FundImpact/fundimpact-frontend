@@ -37,30 +37,53 @@ function PrivateRoute({
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
 	const notificationData = useNotificationData();
+	
+	const impactUnitFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
+	);
+	
+	const deliverableCategoryFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+	);
 
 	const budgetCategoryFindAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,
 		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
 	);
+	const impactCategoryFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
+	);
 
-	const deliverableCategoryFindAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+
+	const createBudgetCategoryAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
 	);
 
 	const deliverableUnitFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
 	);
-
-	const impactCategoryFindAccess = userHasAccess(
-		MODULE_CODES.IMPACT_CATEGORY,
-		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
+	const deliverableCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
 	);
 
-	const impactUnitFindAccess = userHasAccess(
+	const impactUnitCreateAccess = userHasAccess(
 		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
+		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	);
+	const deliverableUnitCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+	);
+
+	const impactCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
 	);
 
 	return (
@@ -86,22 +109,29 @@ export default function SettingContainer() {
 				</Grid>
 				<Grid item xs={12} md={9}>
 					<Routes>
+						<PrivateRoute path="donors" element={<DonorContainer />} />
 						<PrivateRoute
-							path="donors"
-							element={<DonorContainer />}
-						/>
-						<PrivateRoute
-							userAccess={budgetCategoryFindAccess}
+							userAccess={budgetCategoryFindAccess || createBudgetCategoryAccess}
 							path="budget"
 							element={<BudgetCategory />}
 						/>
 						<PrivateRoute
-							userAccess={impactCategoryFindAccess || impactUnitFindAccess}
+							userAccess={
+								impactCategoryFindAccess ||
+								impactUnitFindAccess ||
+								impactCategoryCreateAccess ||
+								impactUnitCreateAccess
+							}
 							path="impact"
 							element={<ImpactMaster />}
 						/>
 						<PrivateRoute
-							userAccess={deliverableCategoryFindAccess || deliverableUnitFindAccess}
+							userAccess={
+								deliverableCategoryFindAccess ||
+								deliverableUnitFindAccess ||
+								deliverableCategoryCreateAccess ||
+								deliverableUnitCreateAccess
+							}
 							path="deliverable"
 							element={<DeliverableMaster />}
 						/>
