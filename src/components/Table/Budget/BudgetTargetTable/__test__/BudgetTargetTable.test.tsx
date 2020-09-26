@@ -44,7 +44,7 @@ import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../../c
 import { getTodaysDate } from "../../../../../utils";
 import { GET_ORG_DONOR } from "../../../../../graphql/donor";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
-import { mockUserRoles } from "../../../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 
 let table: any;
 

@@ -16,7 +16,7 @@ import { organizationDetail } from "../../../utils/testMock.json";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import DeliverableTarget from "../DeliverableTarget";
 import { deliverableCategoryMock, deliverableCategoryUnitListMock, projectsMock } from "./testHelp";
-import { mockUserRoles } from "../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 
 let createDeliverableTargetMutation = false;

@@ -29,7 +29,7 @@ import { organizationDetail, financialYearListMock } from "../../../../utils/tes
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../../graphql/Impact/query";
 import { GET_SDG } from "../../../../graphql/SDG/query";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../../graphql";
-import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let intialFormValue = {

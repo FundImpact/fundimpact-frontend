@@ -32,7 +32,7 @@ import {
 } from "../../../../graphql";
 import BudgetCategoryTable from "../BudgetCategoryTableGraphql";
 import { budgetCategoryHeading } from "../../constants";
-import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let table: any;

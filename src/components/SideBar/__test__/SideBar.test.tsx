@@ -9,7 +9,7 @@ import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { organizationDetail } from "../../../utils/testMock.json";
 import { act } from "react-dom/test-utils";
-import { mockUserRoles } from "../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 
 let sidebar: any;

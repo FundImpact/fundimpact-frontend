@@ -37,7 +37,7 @@ import {
 import { GET_IMPACT_CATEGORY_PROJECT_COUNT } from "../../../../graphql/Impact/category";
 import { impactUnitInputFields } from "../../../../pages/settings/ImpactMaster/inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
-import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let table: any;

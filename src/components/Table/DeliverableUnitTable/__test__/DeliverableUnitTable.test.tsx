@@ -34,7 +34,7 @@ import {
 } from "../../../../graphql/Deliverable/unit";
 import { deliverableCategoryInputFields } from "../../../../pages/settings/DeliverableMaster/inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
-import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let intialFormValue = {

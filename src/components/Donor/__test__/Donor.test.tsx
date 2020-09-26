@@ -13,7 +13,7 @@ import { CREATE_ORG_DONOR } from "../../../graphql/donor/mutation";
 import { addDonorForm, addDonorFormSelectFields } from "../inputField.json";
 import { commonFormTestUtil } from "../../../utils/commonFormTest.util";
 import { fireEvent, wait } from "@testing-library/dom";
-import { mockUserRoles } from "../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 
 const handleClose = jest.fn();

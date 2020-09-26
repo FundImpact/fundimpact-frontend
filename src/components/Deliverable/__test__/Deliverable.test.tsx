@@ -12,7 +12,7 @@ import {
 	GET_DELIVERABLE_ORG_CATEGORY,
 } from "../../../graphql/Deliverable/category";
 import { deliverableCategoryMock } from "./testHelp";
-import { mockUserRoles } from "../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 let deliverableMutation = false;
 

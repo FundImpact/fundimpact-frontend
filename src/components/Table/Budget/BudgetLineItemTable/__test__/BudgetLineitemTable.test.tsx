@@ -32,7 +32,7 @@ import BudgetLineItemTable from "../BudgetLineItemTableGraphql";
 import { budgetLineItemTableHeading } from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
-import { mockUserRoles } from "../../../../../utils/testMockUserRoles";
+import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 
 let table: any;
 
