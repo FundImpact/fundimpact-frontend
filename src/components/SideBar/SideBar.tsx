@@ -3,7 +3,7 @@ import { Box, Divider, List, MenuItem, Typography, Avatar } from "@material-ui/c
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { GET_ORGANISATIONS } from "../../graphql";
@@ -15,6 +15,10 @@ import SidebarSkeleton from "../Skeletons/SidebarSkeleton";
 import { WORKSPACE_ACTIONS } from "../workspace/constants";
 import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
+import { userHasAccess, MODULE_CODES } from "../../utils/access";
+import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../utils/access/modules/workspaces/actions";
+
+let menuList: { children: JSX.Element }[] = [];
 
 export default function SideBar({ children }: { children?: Function }) {
 	const classes = sidePanelStyles();
@@ -47,10 +51,18 @@ export default function SideBar({ children }: { children?: Function }) {
 		handleClose();
 	};
 
-	const menuList = [
-		{ children: <MenuItem>Edit Orgnisation</MenuItem> },
-		{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
-	];
+	const workspaceCreateAccess = userHasAccess(
+		MODULE_CODES.WORKSPACE,
+		WORKSPACE_USER_ACCESS_ACTIONS.CREATE_WORKSPACE
+	);
+
+	useEffect(() => {
+		if (workspaceCreateAccess) {
+			menuList = [
+				{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
+			];
+		}
+	}, [workspaceCreateAccess]);
 
 	if (!dashboardData?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
@@ -76,21 +88,25 @@ export default function SideBar({ children }: { children?: Function }) {
 							)}
 						</Box>
 						<Box>
-							<IconButton
-								edge="end"
-								aria-label="edit"
-								aria-controls={`organizationMenu`}
-								aria-haspopup="true"
-								onClick={handleClick}
-							>
-								<MoreVertOutlinedIcon />
-							</IconButton>
-							<SimpleMenu
-								handleClose={handleClose}
-								id={`organizationMenu`}
-								anchorEl={anchorEl}
-								menuList={menuList}
-							/>
+							{workspaceCreateAccess && (
+								<IconButton
+									edge="end"
+									aria-label="edit"
+									aria-controls={`organizationMenu`}
+									aria-haspopup="true"
+									onClick={handleClick}
+								>
+									<MoreVertOutlinedIcon />
+								</IconButton>
+							)}
+							{workspaceCreateAccess && (
+								<SimpleMenu
+									handleClose={handleClose}
+									id={`organizationMenu`}
+									anchorEl={anchorEl}
+									menuList={menuList}
+								/>
+							)}
 						</Box>
 					</Box>
 					<Divider />

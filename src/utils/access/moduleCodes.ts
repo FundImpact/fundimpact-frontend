@@ -21,4 +21,7 @@ export enum MODULE_CODES {
 	IMPACT_UNIT = "impact-units-org",
 	IMPACT_TARGET = "impact-target-project",
 	IMPACT_TRACKING_LINE_ITEM = "impact-tracking-lineitem",
+	WORKSPACE = "workspace",
+	PEOJECT = "project",
+	ORGANIZATION = "organization",
 }

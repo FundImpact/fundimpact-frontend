@@ -10,6 +10,9 @@ import { setActiveWorkSpace, setProject } from "../../../reducers/dashboardReduc
 import ProjectListSkeleton from "../../Skeletons/projectList";
 import Project from "../../Project/Project";
 import { PROJECT_ACTIONS } from "../../Project/constants";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { PROJECT_ACTIONS as PROJECT_USER_ACCESS_ACTIONS } from "../../../utils/access/modules/project/actions";
+
 // import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
 // import { setProject } from "../../../reducers/dashboardReducer";
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,13 +47,18 @@ export default function ProjectList({
 		}
 	}, [data, dispatch, projectIndex]);
 
+	const projectCreateAccess = userHasAccess(
+		MODULE_CODES.PEOJECT,
+		PROJECT_USER_ACCESS_ACTIONS.CREATE_PROJECT
+	);
+
 	return (
 		<>
 			{loading ? (
 				<ProjectListSkeleton />
 			) : (
 				<>
-					{!data?.orgProject?.length && (
+					{!data?.orgProject?.length && projectCreateAccess && (
 						<Button
 							variant="contained"
 							color="secondary"
