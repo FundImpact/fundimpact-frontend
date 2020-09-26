@@ -47,10 +47,10 @@ export default function LeftPanel() {
 		},
 	]);
 
-	const userAccess = userHasAccess(MODULE_CODES.SETTING, SETTING_MODULE_ACTION.VIEW_SETTING);
+	const settingButtonAccess = userHasAccess(MODULE_CODES.SETTING, SETTING_MODULE_ACTION.VIEW_SETTING);
 
 	useEffect(() => {
-		if (userAccess) {
+		if (settingButtonAccess) {
 			setLeftPannelList((currentLeftPannelList) => [
 				...currentLeftPannelList,
 				{
@@ -61,7 +61,7 @@ export default function LeftPanel() {
 				},
 			]);
 		}
-	}, []);
+	}, [settingButtonAccess]);
 
 	return (
 		<Grid container className={classes.leftPanel} direction="column">

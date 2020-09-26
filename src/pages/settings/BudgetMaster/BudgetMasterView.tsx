@@ -8,6 +8,8 @@ import { FormattedMessage } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import Chip from "@material-ui/core/Chip";
 import { budgetCategoryInputFields } from "./inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
 
 const BudgetMasterView = ({
 	tableFilterList,
@@ -24,6 +26,11 @@ const BudgetMasterView = ({
 	>;
 	removeFilteListElements: (elementToDelete: string) => void;
 }) => {
+	const createBudgetCategoryAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	);
+
 	return (
 		<>
 			<Box p={2}>
@@ -62,10 +69,19 @@ const BudgetMasterView = ({
 															height: "30px",
 														}}
 													>
-														<span>{tableFilterListObjectKeyValuePair[0].slice(0, 4)}</span>
+														<span>
+															{tableFilterListObjectKeyValuePair[0].slice(
+																0,
+																4
+															)}
+														</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(tableFilterListObjectKeyValuePair[0])}
+												onDelete={() =>
+													removeFilteListElements(
+														tableFilterListObjectKeyValuePair[0]
+													)
+												}
 											/>
 										</Box>
 									)
@@ -74,24 +90,26 @@ const BudgetMasterView = ({
 					</Grid>
 				</Grid>
 				<BudgetCategoryTable tableFilterList={tableFilterList} />
-				<AddButton
-					createButtons={[]}
-					buttonAction={{
-						dialog: ({
-							open,
-							handleClose,
-						}: {
-							open: boolean;
-							handleClose: () => void;
-						}) => (
-							<BudgetCategory
-								open={open}
-								handleClose={handleClose}
-								formAction={FORM_ACTIONS.CREATE}
-							/>
-						),
-					}}
-				/>
+				{createBudgetCategoryAccess && (
+					<AddButton
+						createButtons={[]}
+						buttonAction={{
+							dialog: ({
+								open,
+								handleClose,
+							}: {
+								open: boolean;
+								handleClose: () => void;
+							}) => (
+								<BudgetCategory
+									open={open}
+									handleClose={handleClose}
+									formAction={FORM_ACTIONS.CREATE}
+								/>
+							),
+						}}
+					/>
+				)}
 			</Box>
 		</>
 	);

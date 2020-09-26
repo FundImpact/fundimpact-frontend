@@ -54,9 +54,9 @@ function DeliverableCategoryTableContainer({
 
 	const dashboardData = useDashBoardData();
 
-	const toggleDialogs = (index: number, val: boolean) => {
+	const toggleDialogs = (index: number, dialogOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
-			openStatus.map((element: boolean, i) => (i === index ? val : element))
+			openStatus.map((element: boolean, i) => (i === index ? dialogOpenStatus : element))
 		);
 	};
 	return (

@@ -12,6 +12,9 @@ import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -88,6 +91,16 @@ const DeliverableMasterView = ({
 		setValue(newValue);
 	};
 
+	const deliverableCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+	);
+
+	const deliverableUnitCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+	);
+
 	const tabs = [
 		{
 			buttonAction: {
@@ -103,6 +116,7 @@ const DeliverableMasterView = ({
 			createButtons: [],
 			table: <DeliverableCategoryTable tableFilterList={deliverableCategoryFilterList} />,
 			label: "Deliverable Category",
+			addButtonAccess: deliverableCategoryCreateAccess,
 		},
 		{
 			label: "Deliverable Unit",
@@ -118,6 +132,7 @@ const DeliverableMasterView = ({
 					/>
 				),
 			},
+			addButtonAccess: deliverableUnitCreateAccess,
 		},
 	];
 
@@ -173,10 +188,19 @@ const DeliverableMasterView = ({
 													<Avatar
 														style={{ width: "30px", height: "30px" }}
 													>
-														<span>{filterListObjectKeyValuePair[0].slice(0, 4)}</span>
+														<span>
+															{filterListObjectKeyValuePair[0].slice(
+																0,
+																4
+															)}
+														</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(filterListObjectKeyValuePair[0])}
+												onDelete={() =>
+													removeFilteListElements(
+														filterListObjectKeyValuePair[0]
+													)
+												}
 											/>
 										</Box>
 									)
@@ -216,10 +240,12 @@ const DeliverableMasterView = ({
 					{tabs.map((tab, index) => (
 						<TabContent key={index} value={value} index={index}>
 							{tab.table}
-							<AddButton
-								createButtons={tab.createButtons}
-								buttonAction={tab.buttonAction}
-							/>
+							{tab.addButtonAccess && (
+								<AddButton
+									createButtons={tab.createButtons}
+									buttonAction={tab.buttonAction}
+								/>
+							)}
 						</TabContent>
 					))}
 				</Box>

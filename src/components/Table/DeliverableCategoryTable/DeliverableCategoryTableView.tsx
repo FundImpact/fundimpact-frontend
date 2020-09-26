@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 import Deliverable from "../../Deliverable/Deliverable";
@@ -9,6 +9,8 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableCategoryInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -113,6 +115,18 @@ function DeliverableCategoryView({
 
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
+	let deliverableCategoryTableEditMenu: string[] = [];
+	const deliverableCategoryEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+	);
+
+	useEffect(() => {
+		if (deliverableCategoryEditAccess) {
+			deliverableCategoryTableEditMenu = ["Edit Deliverable Category"];
+		}
+	}, [deliverableCategoryEditAccess]);
+
 	return (
 		<>
 			{!collapsableTable && (
@@ -148,7 +162,7 @@ function DeliverableCategoryView({
 				rows={rows}
 				selectedRow={selectedDeliverableCategory}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Deliverable Category"]}
+				editMenuName={deliverableCategoryTableEditMenu}
 				collapsableTable={collapsableTable}
 				changePage={changePage}
 				loading={loading}
