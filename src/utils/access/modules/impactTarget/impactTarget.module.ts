@@ -17,5 +17,9 @@ export const IMPACT_TARGET_MODULE = {
 			name: "Delete Impact Target",
 			code: IMPACT_TARGET_ACTIONS.DELETE_IMPACT_TARGET,
 		},
+		[IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET]: {
+			name: "Find Impact Target",
+			code: IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET,
+		},
 	},
 };

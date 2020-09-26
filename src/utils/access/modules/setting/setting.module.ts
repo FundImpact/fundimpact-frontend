@@ -6,9 +6,9 @@ export const SETTING_MODULE: IMODULE = {
 	name: "setting",
 	code: MODULE_CODES.SETTING,
 	actionsAvailable: {
-		[SETTING_MODULE_ACTION.VIEW_SETTING]: {
+		[SETTING_MODULE_ACTION.FIND_SETTING]: {
 			name: "View Setting",
-			code: SETTING_MODULE_ACTION.VIEW_SETTING,
+			code: SETTING_MODULE_ACTION.FIND_SETTING,
 		},
 	},
 };

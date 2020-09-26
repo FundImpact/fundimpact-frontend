@@ -47,7 +47,7 @@ export default function LeftPanel() {
 		},
 	]);
 
-	const settingButtonAccess = userHasAccess(MODULE_CODES.SETTING, SETTING_MODULE_ACTION.VIEW_SETTING);
+	const settingButtonAccess = userHasAccess(MODULE_CODES.SETTING, SETTING_MODULE_ACTION.FIND_SETTING);
 
 	useEffect(() => {
 		if (settingButtonAccess) {
