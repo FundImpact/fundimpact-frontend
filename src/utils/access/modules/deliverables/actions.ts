@@ -1,4 +1,4 @@
-export const enum DELIVERABLE_MODULE_ACTIONS {
+export enum DELIVERABLE_MODULE_ACTIONS {
 	CREATE_TARGET = "create_target",
 	UPDATE_TARGET = "update_target",
 	DELETE_TARGET = "delete_target",

@@ -1,4 +1,4 @@
-import { MODULE_CODES } from "../../modules.list";
+import { MODULE_CODES } from "../../moduleCodes";
 import { BUDGET_MODULE_ACTIONS } from "./actions";
 
 export const BUDGET_MODULE = {

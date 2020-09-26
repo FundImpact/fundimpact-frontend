@@ -1,4 +1,4 @@
-import { userHasAccess } from "./accessChecker";
-import { MODULE_CODES } from "./modules.list";
+import userHasAccess from "./accessChecker";
+import { MODULE_CODES } from "./moduleCodes";
 
-export default { userHasAccess, MODULE_CODES };
+export { userHasAccess, MODULE_CODES };

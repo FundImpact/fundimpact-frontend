@@ -14,6 +14,8 @@ import {
 import { GET_COUNTRY_LIST } from "../../../../graphql";
 import DonorTable from "../DonorTable";
 import { donorTableHeading } from "../../constants";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let table: any;
 
@@ -51,6 +53,15 @@ const mocks = [
 			},
 		},
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_COUNTRY_LIST,

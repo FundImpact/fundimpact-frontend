@@ -1,6 +1,8 @@
 import { BUDGET_MODULE } from "./modules/budget/budget.module";
 import { DELIVERABLES_MODULE } from "./modules/deliverables/deliverable.module";
 import { IMPACT_MODULE } from "./modules/impact/impact.module";
+import { SETTING_MODULE } from "./modules/setting/setting.module";
+import { MODULE_CODES } from "./moduleCodes";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -18,12 +20,6 @@ import { IMPACT_MODULE } from "./modules/impact/impact.module";
  * must be added / removed from the list. Keep the module code property name in UPPERCASE
  * and value in lowercase.
  */
-export enum MODULE_CODES {
-	BUDGET = "budget",
-	IMPACT = "impact",
-	DELIVERABLES = "deliverables",
-	// GRANT_PERIOD = "grant_period",
-}
 
 /**
  ************************************* Module MAPPING ****************************
@@ -47,4 +43,5 @@ export const MODULES = {
 	[MODULE_CODES.BUDGET]: BUDGET_MODULE,
 	[MODULE_CODES.IMPACT]: IMPACT_MODULE,
 	[MODULE_CODES.DELIVERABLES]: DELIVERABLES_MODULE,
+	[MODULE_CODES.SETTING]: SETTING_MODULE,
 } as const;

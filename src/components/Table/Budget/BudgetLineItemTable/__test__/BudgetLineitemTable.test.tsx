@@ -31,6 +31,8 @@ import {
 import BudgetLineItemTable from "../BudgetLineItemTableGraphql";
 import { budgetLineItemTableHeading } from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
+import { GET_USER_ROLES } from "../../../../../graphql/User/query";
+import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 
 let table: any;
 
@@ -85,6 +87,15 @@ const mocks = [
 			},
 		},
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_PROJECT_BUDGET_TARCKING,
