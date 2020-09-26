@@ -1,6 +1,14 @@
-import { BUDGET_MODULE } from "./modules/budget/budget.module";
-import { DELIVERABLES_MODULE } from "./modules/deliverables/deliverable.module";
-import { IMPACT_MODULE } from "./modules/impact/impact.module";
+import { BUDGET_CATEGORY_MODULE } from "./modules/budgetCategory/budgetCategory.module";
+import { BUDGET_TARGET_MODULE } from "./modules/budgetTarget/budgetTarget.module";
+import { BUDGET_TARGET_LINE_ITEM_MODULE } from "./modules/budgetTargetLineItem/budgetTargetLineItem.module";
+import { IMPACT_CATEGORY_MODULE } from "./modules/impactCategory/impactCategory.module";
+import { IMPACT_TARGET_MODULE } from "./modules/impactTarget/impactTarget.module";
+import { IMPACT_UNIT_MODULE } from "./modules/impactUnit/impactUnit.module";
+import { IMPACT_TRACKING_LINE_ITEM_MODULE } from "./modules/impactTrackingLineItem/impactTrackingLineItem.module";
+import { DELIVERABLE_CATEGORY_MODULE } from "./modules/deliverableCategory/deliverableCategory.module";
+import { DELIVERABLE_TARGET_MODULE } from "./modules/deliverableTarget/deliverableTarget.module";
+import { DELIVERABLE_TRACKING_LINE_ITEM_MODULE } from "./modules/deliverableTrackingLineItem/deliverableTrackingLineItem.module";
+import { DELIVERABLE_UNIT_MODULE } from "./modules/deliverableUnit/deliverableUnit.module";
 import { SETTING_MODULE } from "./modules/setting/setting.module";
 import { MODULE_CODES } from "./moduleCodes";
 
@@ -40,8 +48,16 @@ import { MODULE_CODES } from "./moduleCodes";
  *
  */
 export const MODULES = {
-	[MODULE_CODES.BUDGET]: BUDGET_MODULE,
-	[MODULE_CODES.IMPACT]: IMPACT_MODULE,
-	[MODULE_CODES.DELIVERABLES]: DELIVERABLES_MODULE,
+	[MODULE_CODES.BUDGET_CATEGORY]: BUDGET_CATEGORY_MODULE,
+	[MODULE_CODES.BUDGET_TARGET]: BUDGET_TARGET_MODULE,
+	[MODULE_CODES.BUDGET_TARGET_LINE_ITEM]: BUDGET_TARGET_LINE_ITEM_MODULE,
+	[MODULE_CODES.DELIVERABLE_CATEGORY]: DELIVERABLE_CATEGORY_MODULE,
+	[MODULE_CODES.DELIVERABLE_TARGET]: DELIVERABLE_TARGET_MODULE,
+	[MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM]: DELIVERABLE_TRACKING_LINE_ITEM_MODULE,
+	[MODULE_CODES.DELIVERABLE_UNIT]: DELIVERABLE_UNIT_MODULE,
+	[MODULE_CODES.IMPACT_CATEGORY]: IMPACT_CATEGORY_MODULE,
+	[MODULE_CODES.IMPACT_TARGET]: IMPACT_TARGET_MODULE,
+	[MODULE_CODES.IMPACT_TRACKING_LINE_ITEM]: IMPACT_TRACKING_LINE_ITEM_MODULE,
+	[MODULE_CODES.IMPACT_UNIT]: IMPACT_UNIT_MODULE,
 	[MODULE_CODES.SETTING]: SETTING_MODULE,
 } as const;
