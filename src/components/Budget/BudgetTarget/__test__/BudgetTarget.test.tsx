@@ -19,6 +19,8 @@ import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "../in
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
 import { fireEvent, wait } from "@testing-library/dom";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 const handleClose = jest.fn();
 
@@ -71,6 +73,15 @@ const mocks = [
 			},
 		},
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_PROJ_DONORS,

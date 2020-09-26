@@ -12,6 +12,8 @@ import {
 	GET_DELIVERABLE_ORG_CATEGORY,
 } from "../../../graphql/Deliverable/category";
 import { deliverableCategoryMock } from "./testHelp";
+import { mockUserRoles } from "../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../graphql/User/query";
 let deliverableMutation = false;
 
 const mocks = [
@@ -27,6 +29,15 @@ const mocks = [
 			return {};
 		},
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_DELIVERABLE_ORG_CATEGORY,

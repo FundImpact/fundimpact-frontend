@@ -32,6 +32,8 @@ import {
 } from "../../../../graphql";
 import BudgetCategoryTable from "../BudgetCategoryTableGraphql";
 import { budgetCategoryHeading } from "../../constants";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let table: any;
 
@@ -189,6 +191,15 @@ const mocks = [
 	},
 	getOrgBudgetCategoryCountQuery,
 	getAnnualYearListQuery,
+	{
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				id: "1",
+			},
+		},
+		result: { data: mockUserRoles },
+	},
 	{
 		request: {
 			query: GET_PROJECT_BUDGET_TARCKING,

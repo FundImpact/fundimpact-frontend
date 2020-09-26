@@ -34,6 +34,8 @@ import {
 } from "../../../../graphql/Deliverable/unit";
 import { deliverableCategoryInputFields } from "../../../../pages/settings/DeliverableMaster/inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let intialFormValue = {
 	name: "new unit name",
@@ -57,6 +59,15 @@ const mocks = [
 			data: mockDeliverableCategoryCount,
 		},
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,

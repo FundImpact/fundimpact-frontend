@@ -11,6 +11,8 @@ import { budgetCategoryFormInputFields } from "../inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { IBudgetCategory } from "../../../../models/budget";
 import { FORM_ACTIONS } from "../../../../models/budget/constants";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 const handleClose = jest.fn();
 
@@ -26,6 +28,15 @@ const intialFormValue: IBudgetCategory = {
 let orgDetails = organizationDetails;
 
 const mocks = [
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: CREATE_ORG_BUDGET_CATEGORY,

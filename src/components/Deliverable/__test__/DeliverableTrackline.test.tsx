@@ -25,6 +25,8 @@ import {
 	projectDonorMock,
 	financialYearListMock,
 } from "../../../utils/testMock.json";
+import { mockUserRoles } from "../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../graphql/User/query";
 let createDeliverableTracklineMutation = false;
 const mocks = [
 	{
@@ -48,6 +50,15 @@ const mocks = [
 		},
 		result: { data: { deliverableTargetList: DeliverableTargetMock } },
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_ANNUAL_YEARS,

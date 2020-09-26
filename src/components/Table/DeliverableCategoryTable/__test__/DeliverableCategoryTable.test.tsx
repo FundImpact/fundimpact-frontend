@@ -31,6 +31,8 @@ import {
 import { GET_DELIVERABLE_UNIT_PROJECT_COUNT } from "../../../../graphql/Deliverable/unit";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { deliverableUnitInputFields } from "../../../../pages/settings/DeliverableMaster/inputFields.json";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
 
 let table: any;
 
@@ -68,6 +70,15 @@ const mocks = [
 			data: { projectCountDelCatByOrg: [{ count: 1 }] },
 		},
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	deliverableCategoryProjectCountQuery,
 	{
 		request: {
