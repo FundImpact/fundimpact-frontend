@@ -17,6 +17,10 @@ export const IMPACT_CATEGORY_MODULE = {
 			name: "Delete Impact Category",
 			code: IMPACT_CATEGORY_ACTIONS.DELETE_IMPACT_CATEGORY,
 		},
+		[IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY]: {
+			name: "Find Impact Category",
+			code: IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY,
+		},
 	},
 
 	// actionsAvailable: [
