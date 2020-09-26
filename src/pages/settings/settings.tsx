@@ -37,42 +37,45 @@ function PrivateRoute({
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
 	const notificationData = useNotificationData();
-
-	const budgetCategoryFindAccess = userHasAccess(
-		MODULE_CODES.BUDGET_CATEGORY,
-		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
+	
+	const impactUnitFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
 	);
-
+	
 	const deliverableCategoryFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
 
-	const deliverableUnitFindAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	const budgetCategoryFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
 	);
-
 	const impactCategoryFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_CATEGORY,
 		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
 	);
 
-	const impactUnitFindAccess = userHasAccess(
-		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
-	);
 
 	const createBudgetCategoryAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,
 		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
 	);
 
+	const deliverableUnitFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	);
 	const deliverableCategoryCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
 	);
 
+	const impactUnitCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	);
 	const deliverableUnitCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
@@ -81,11 +84,6 @@ export default function SettingContainer() {
 	const impactCategoryCreateAccess = userHasAccess(
 		MODULE_CODES.IMPACT_CATEGORY,
 		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
-	);
-
-	const impactUnitCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
 	);
 
 	return (
