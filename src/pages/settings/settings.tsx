@@ -89,11 +89,6 @@ export default function SettingContainer() {
 		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
 	);
 
-	const impactUnitCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
-	);
-
 	const organizationEditAccess = userHasAccess(
 		MODULE_CODES.ORGANIZATION,
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
