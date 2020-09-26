@@ -19,6 +19,9 @@ import { DELIVERABLE_CATEGORY_ACTIONS } from "../../utils/access/modules/deliver
 import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverableUnit/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
+import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
+import DefaultSettingsView from "./defaultView";
+import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -31,7 +34,7 @@ function PrivateRoute({
 }: IPrivateRouterProps): React.ReactElement | null {
 	if (userAccess) {
 		return <Route children={children} {...rest} />;
-	} else return <Navigate to="/dashboard" state={{ redirectedFrom: rest.path }} />;
+	} else return <Navigate to="/settings/settingsDefault" state={{ redirectedFrom: rest.path }} />;
 }
 
 export default function SettingContainer() {
@@ -86,6 +89,15 @@ export default function SettingContainer() {
 		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
 	);
 
+	const organizationEditAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
+	);
+
+	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
+
+	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+
 	return (
 		<Container
 			disableGutters
@@ -109,7 +121,11 @@ export default function SettingContainer() {
 				</Grid>
 				<Grid item xs={12} md={9}>
 					<Routes>
-						<PrivateRoute path="donors" element={<DonorContainer />} />
+						<PrivateRoute
+							path="donors"
+							userAccess={donorFindAccess || donorCreateAccess}
+							element={<DonorContainer />}
+						/>
 						<PrivateRoute
 							userAccess={budgetCategoryFindAccess || createBudgetCategoryAccess}
 							path="budget"
@@ -135,9 +151,18 @@ export default function SettingContainer() {
 							path="deliverable"
 							element={<DeliverableMaster />}
 						/>
-						<PrivateRoute path="organization" element={<Organization />} />
+						<PrivateRoute
+							path="organization"
+							userAccess={organizationEditAccess}
+							element={<Organization />}
+						/>
+						<Route path="settingsDefault" element={<DefaultSettingsView />} />
 						<PrivateRoute path="">
-							<Navigate to="organization" />
+							{organizationEditAccess ? (
+								<Navigate to="organization" />
+							) : (
+								<Navigate to="settingsDefault" />
+							)}
 						</PrivateRoute>
 					</Routes>
 				</Grid>

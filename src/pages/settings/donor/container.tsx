@@ -10,6 +10,8 @@ import { donorInputFields } from "./inputFields.json";
 import { GET_COUNTRY_LIST } from "../../../graphql";
 import { useLazyQuery } from "@apollo/client";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 
 const chipArray = ({
 	arr,
@@ -42,7 +44,10 @@ const chipArray = ({
 
 let countryHash: { [key: string]: string } = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
@@ -98,6 +103,9 @@ export const DonorContainer = () => {
 		country: [],
 	});
 
+	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
+	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+
 	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
 
 	const removeFilterListElements = (key: string, index?: number) =>
@@ -131,16 +139,18 @@ export const DonorContainer = () => {
 				</Grid>
 				<Grid item xs={1}>
 					<Box mt={2}>
-						<FilterList
-							setFilterList={setTableFilterList}
-							inputFields={donorInputFields}
-							initialValues={{
-								name: "",
-								legal_name: "",
-								short_name: "",
-								country: [],
-							}}
-						/>
+						{donorFindAccess && (
+							<FilterList
+								setFilterList={setTableFilterList}
+								inputFields={donorInputFields}
+								initialValues={{
+									name: "",
+									legal_name: "",
+									short_name: "",
+									country: [],
+								}}
+							/>
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={12}>
@@ -155,19 +165,27 @@ export const DonorContainer = () => {
 				</Grid>
 			</Grid>
 
-			<DonorTable tableFilterList={tableFilterList} />
-			<AddButton
-				createButtons={[]}
-				buttonAction={{
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<Donor
-							open={open}
-							handleClose={handleClose}
-							formAction={FORM_ACTIONS.CREATE}
-						/>
-					),
-				}}
-			/>
+			{donorFindAccess && <DonorTable tableFilterList={tableFilterList} />}
+			{donorCreateAccess && (
+				<AddButton
+					createButtons={[]}
+					buttonAction={{
+						dialog: ({
+							open,
+							handleClose,
+						}: {
+							open: boolean;
+							handleClose: () => void;
+						}) => (
+							<Donor
+								open={open}
+								handleClose={handleClose}
+								formAction={FORM_ACTIONS.CREATE}
+							/>
+						),
+					}}
+				/>
+			)}
 		</>
 	);
 };

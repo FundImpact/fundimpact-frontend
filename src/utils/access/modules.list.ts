@@ -13,6 +13,8 @@ import { SETTING_MODULE } from "./modules/setting/setting.module";
 import { PROJECT_MODULE } from "./modules/project/project.module";
 import { WORKSPACE_MODULE } from "./modules/workspaces/workspace.module";
 import { ORGANIZATION_MODULE } from "./modules/organization/organization.module";
+import { DONOR_MODULE } from "./modules/donor/donor.module";
+import { GRANT_PERIOD_MODULE } from "./modules/grantPeriod/grantPeriod.module";
 import { MODULE_CODES } from "./moduleCodes";
 
 /**
@@ -66,4 +68,6 @@ export const MODULES = {
 	[MODULE_CODES.WORKSPACE]: WORKSPACE_MODULE,
 	[MODULE_CODES.PEOJECT]: PROJECT_MODULE,
 	[MODULE_CODES.ORGANIZATION]: ORGANIZATION_MODULE,
+	[MODULE_CODES.DONOR]: DONOR_MODULE,
+	[MODULE_CODES.GRANT_PERIOD]: GRANT_PERIOD_MODULE,
 } as const;

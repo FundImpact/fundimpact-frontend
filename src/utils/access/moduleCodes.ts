@@ -24,4 +24,6 @@ export enum MODULE_CODES {
 	WORKSPACE = "workspace",
 	PEOJECT = "project",
 	ORGANIZATION = "organization",
+	DONOR = "organization-donor",
+	GRANT_PERIOD = "grant-periods-project",
 }
