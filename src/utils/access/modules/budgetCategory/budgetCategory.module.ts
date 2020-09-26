@@ -17,6 +17,10 @@ export const BUDGET_CATEGORY_MODULE = {
 			name: "Delete Budget Category",
 			code: BUDGET_CATEGORY_ACTIONS.DELETE_BUDGET_CATEGORY,
 		},
+		[BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY]: {
+			name: "Find Budget Category",
+			code: BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY,
+		},
 	},
 
 	// actionsAvailable: [

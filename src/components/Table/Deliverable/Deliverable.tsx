@@ -33,6 +33,9 @@ import FilterList from "../../FilterList";
 import { deliverableTargetInputFields } from "./inputFields.json";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
+import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 
 const chipArray = ({
 	removeChip,
@@ -74,10 +77,29 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 		setMenuAnchor(null);
 	};
 
+	const deliverableTragetEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.UPDATE_DELIVERABLE_TARGET
+	);
+
+	const deliverableTracklineCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
+
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<IconButton
+					style={{
+						visibility:
+							deliverableTragetEditAccess || deliverableTracklineCreateAccess
+								? "visible"
+								: "hidden",
+					}}
+					aria-label="delete"
+					onClick={handleMenuClick}
+				>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
@@ -88,44 +110,48 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 				open={Boolean(menuAnchor)}
 				onClose={handleMenuClose}
 			>
-				<MenuItem
-					onClick={() => {
-						setTargetData({
-							id: deliverableTarget.id,
-							name: deliverableTarget.name,
-							target_value: deliverableTarget.target_value,
-							description: deliverableTarget.description,
-							deliverableCategory:
-								deliverableTarget.deliverable_category_unit
-									?.deliverable_category_org?.id,
-							deliverableUnit:
-								deliverableTarget.deliverable_category_unit?.deliverable_units_org
-									?.id,
-							deliverable_category_unit:
-								deliverableTarget.deliverable_category_unit.id,
-							project: deliverableTarget.project.id,
-						});
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="editTargetMenu"
-						defaultMessage="Edit Target"
-						description="This text will be show on deliverable or impact target table for edit target menu"
-					/>
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						handleMenuClose();
-						setTargetLineDialog(true);
-					}}
-				>
-					<FormattedMessage
-						id="reportAchievementMenu"
-						defaultMessage="Report Achievement"
-						description="This text will be show on deliverable or impact target table for report achievement menu"
-					/>
-				</MenuItem>
+				{deliverableTragetEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setTargetData({
+								id: deliverableTarget.id,
+								name: deliverableTarget.name,
+								target_value: deliverableTarget.target_value,
+								description: deliverableTarget.description,
+								deliverableCategory:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_category_org?.id,
+								deliverableUnit:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_units_org?.id,
+								deliverable_category_unit:
+									deliverableTarget.deliverable_category_unit.id,
+								project: deliverableTarget.project.id,
+							});
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="editTargetMenu"
+							defaultMessage="Edit Target"
+							description="This text will be show on deliverable or impact target table for edit target menu"
+						/>
+					</MenuItem>
+				)}
+				{deliverableTracklineCreateAccess && (
+					<MenuItem
+						onClick={() => {
+							handleMenuClose();
+							setTargetLineDialog(true);
+						}}
+					>
+						<FormattedMessage
+							id="reportAchievementMenu"
+							defaultMessage="Report Achievement"
+							description="This text will be show on deliverable or impact target table for report achievement menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{targetData && (
 				<DeliverableTarget
@@ -179,7 +205,10 @@ function DeliverableTargetAchievementAndProgress({
 	);
 }
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
@@ -190,7 +219,6 @@ const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key:
 };
 
 let deliverableCategoryHash: { [key: string]: string } = {};
-
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,
