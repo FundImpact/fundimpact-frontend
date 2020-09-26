@@ -26,7 +26,7 @@ import ImpactTrackLine from "../../Impact/impactTrackLine";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
 import pagination from "../../../hooks/pagination/pagination";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { impactTracklineInputFields } from "./inputFields.json";
 import FilterList from "../../FilterList";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
@@ -384,6 +384,20 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+	const intl = useIntl();
+
+	let rowHeadingImpact = intl.formatMessage({
+		id: `AchievementsHeading`,
+		defaultMessage: `Achievements`,
+		description: `This text will be shown for description of table`,
+	});
+
+	let noRowHeadingImpact = intl.formatMessage({
+		id: `noAchievementsReported`,
+		defaultMessage: `No Achievements Reported`,
+		description: `This text will be shown if no target found for table`,
+	});
+
 	return (
 		<>
 			{countLoading ? <FullScreenLoader /> : null}
@@ -448,6 +462,8 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				orderBy={orderBy}
 				setOrder={setOrder}
 				setOrderBy={setOrderBy}
+				noRowHeading={noRowHeadingImpact}
+				rowHeading={rowHeadingImpact}
 			/>
 		</>
 	);
