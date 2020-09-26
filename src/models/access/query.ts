@@ -4,6 +4,7 @@ export interface IGetUserRole {
 			id: string;
 			controller: string;
 			action: string;
+			enabled: boolean;
 		}[];
 	};
 }

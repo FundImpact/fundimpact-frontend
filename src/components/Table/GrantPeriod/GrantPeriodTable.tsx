@@ -34,6 +34,8 @@ import FilterList from "../../FilterList";
 import { grantPeriodInputFields } from "./inputFields.json";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
 
 const useStyles = makeStyles({
 	table: {
@@ -104,6 +106,11 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 		setAnchorEl(array);
 	};
 
+	const grantPeriodEditAccess = userHasAccess(
+		MODULE_CODES.GRANT_PERIOD,
+		GRANT_PERIOD_ACTIONS.UPDATE_GRANT_PERIOD
+	);
+
 	return (
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="simple table">
@@ -115,7 +122,7 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 								{header.label}
 							</TableCell>
 						))}
-						<TableCell>Action</TableCell>
+						<TableCell>{grantPeriodEditAccess && "Action"}</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
@@ -134,29 +141,34 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 									onClick={(e) => {
 										handleClick(e, index);
 									}}
+									style={{
+										visibility: grantPeriodEditAccess ? "visible" : "hidden",
+									}}
 								>
 									<MoreVertOutlinedIcon fontSize="small" />
 								</IconButton>
-								<SimpleMenu
-									handleClose={() => closeMenuItems(index)}
-									id={`projectmenu${index}`}
-									anchorEl={anchorEl[index]}
-								>
-									<MenuItem
-										onClick={() => {
-											console.log(data[index]);
-											editGrantPeriod(data[index]);
-											// seteditWorkspace(workpsaceToEdit as any);
-											closeMenuItems(index);
-										}}
+								{grantPeriodEditAccess && (
+									<SimpleMenu
+										handleClose={() => closeMenuItems(index)}
+										id={`projectmenu${index}`}
+										anchorEl={anchorEl[index]}
 									>
-										<FormattedMessage
-											id="editMenu"
-											defaultMessage="Edit"
-											description="This text will be show on menus for EDIT"
-										/>
-									</MenuItem>
-								</SimpleMenu>
+										<MenuItem
+											onClick={() => {
+												console.log(data[index]);
+												editGrantPeriod(data[index]);
+												// seteditWorkspace(workpsaceToEdit as any);
+												closeMenuItems(index);
+											}}
+										>
+											<FormattedMessage
+												id="editMenu"
+												defaultMessage="Edit"
+												description="This text will be show on menus for EDIT"
+											/>
+										</MenuItem>
+									</SimpleMenu>
+								)}
 							</TableCell>
 						</TableRow>
 					))}

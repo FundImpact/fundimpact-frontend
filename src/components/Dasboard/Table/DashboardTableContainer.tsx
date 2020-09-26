@@ -38,6 +38,7 @@ import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deli
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
+import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -95,21 +96,26 @@ enum tabType {
 	budgetTab = 0,
 	deliverableTab = 1,
 	impactTab = 2,
+	grantPeriodTab = 3,
 }
 
 const getTabToShow = (
-	budgetTargetFindAccess: boolean,
-	impactTargetFindAccess: boolean,
-	deliverableTargetFindAccess: boolean
+	budgetTabVisibility: boolean,
+	impactTabVisibility: boolean,
+	deliverableTabVisibility: boolean,
+	grantPeriodTabVisibility: boolean
 ) => {
-	if (budgetTargetFindAccess) {
+	if (budgetTabVisibility) {
 		return tabType.budgetTab;
 	}
-	if (deliverableTargetFindAccess) {
+	if (deliverableTabVisibility) {
 		return tabType.deliverableTab;
 	}
-	if (impactTargetFindAccess) {
+	if (impactTabVisibility) {
 		return tabType.impactTab;
+	}
+	if (grantPeriodTabVisibility) {
+		return tabType.grantPeriodTab;
 	}
 	return tabType.budgetTab;
 };
@@ -179,6 +185,16 @@ export default function DashboardTableContainer() {
 	const deliverableTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
+
+	const grantPeriodCreateAccess = userHasAccess(
+		MODULE_CODES.GRANT_PERIOD,
+		GRANT_PERIOD_ACTIONS.CREATE_GRANT_PERIOD
+	);
+
+	const grantPeriodFindAccess = userHasAccess(
+		MODULE_CODES.GRANT_PERIOD,
+		GRANT_PERIOD_ACTIONS.FIND_GRANT_PERIOD
 	);
 
 	const tabs = [
@@ -402,46 +418,95 @@ export default function DashboardTableContainer() {
 				impactTracklineCreateAccess,
 			tableVisibility: impactTargetFindAccess,
 		},
-		// {
-		// 	label: intl.formatMessage({
-		// 		id: "grantPeriodTabHeading",
-		// 		defaultMessage: "Grant Period",
-		// 		description: `This text will be show on tab for grant period`,
-		// 	}),
-		// 	table: <GrantPeriodTable />,
-		// 	createButtons: [
-		// 		{
-		// 			text: intl.formatMessage({
-		// 				id: "createGrantPeriod",
-		// 				defaultMessage: "Create Grant Period",
-		// 				description: `This text will be show on Add Button for Create Grant Period`,
-		// 			}),
-		// 			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-		// 				<GrantPeriodDialog
-		// 					open={open}
-		// 					onClose={handleClose}
-		// 					action={FORM_ACTIONS.CREATE}
-		// 				/>
-		// 			),
-		// 		},
-		// 	],
-		// },
+		{
+			label: intl.formatMessage({
+				id: "grantPeriodTabHeading",
+				defaultMessage: "Grant Period",
+				description: `This text will be show on tab for grant period`,
+			}),
+			table: <GrantPeriodTable />,
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "createGrantPeriod",
+						defaultMessage: "Create Grant Period",
+						description: `This text will be show on Add Button for Create Grant Period`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<GrantPeriodDialog
+							open={open}
+							onClose={handleClose}
+							action={FORM_ACTIONS.CREATE}
+						/>
+					),
+					createButtonAccess: grantPeriodCreateAccess,
+				},
+			],
+			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
+			tableVisibility: grantPeriodFindAccess,
+		},
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
 	const notificationData = useNotificationData();
 
 	useEffect(() => {
-		if (budgetTargetFindAccess || impactTargetFindAccess || deliverableTargetFindAccess) {
+		if (
+			budgetTargetFindAccess ||
+			budgetCategoryCreateAccess ||
+			budgetTargetCreateAccess ||
+			budgetTargetLineItemCreateAccess ||
+			impactTargetFindAccess ||
+			impactTargetCreateAccess ||
+			impactUnitCreateAccess ||
+			impactCategoryCreateAccess ||
+			impactTracklineCreateAccess ||
+			deliverableTargetFindAccess ||
+			deliverableTargetCreateAccess ||
+			deliverableUnitCreateAccess ||
+			deliverableCategoryCreateAccess ||
+			deliverableTracklineCreateAccess ||
+			grantPeriodFindAccess ||
+			grantPeriodCreateAccess
+		) {
 			setValue(
 				getTabToShow(
-					budgetTargetFindAccess,
-					impactTargetFindAccess,
-					deliverableTargetFindAccess
+					budgetTargetFindAccess ||
+						budgetCategoryCreateAccess ||
+						budgetTargetCreateAccess ||
+						budgetTargetLineItemCreateAccess,
+					impactTargetFindAccess ||
+						impactTargetCreateAccess ||
+						impactUnitCreateAccess ||
+						impactCategoryCreateAccess ||
+						impactTracklineCreateAccess,
+					deliverableTargetFindAccess ||
+						deliverableTargetCreateAccess ||
+						deliverableUnitCreateAccess ||
+						deliverableCategoryCreateAccess ||
+						deliverableTracklineCreateAccess,
+					grantPeriodFindAccess || grantPeriodCreateAccess
 				)
 			);
 		}
-	}, [budgetTargetFindAccess, impactTargetFindAccess, deliverableTargetFindAccess]);
+	}, [
+		budgetTargetFindAccess,
+		budgetCategoryCreateAccess,
+		budgetTargetCreateAccess,
+		budgetTargetLineItemCreateAccess,
+		impactTargetFindAccess,
+		impactTargetCreateAccess,
+		impactUnitCreateAccess,
+		impactCategoryCreateAccess,
+		impactTracklineCreateAccess,
+		deliverableTargetFindAccess,
+		deliverableTargetCreateAccess,
+		deliverableUnitCreateAccess,
+		deliverableCategoryCreateAccess,
+		deliverableTracklineCreateAccess,
+		grantPeriodFindAccess,
+		grantPeriodCreateAccess,
+	]);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
