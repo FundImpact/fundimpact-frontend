@@ -187,6 +187,11 @@ function BudgetTargetView({
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
 	);
 
+	const budgetTargetLineItemFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.FIND_BUDGET_TARGET_LINE_ITEM
+	);
+
 	useEffect(() => {
 		if (budgetTargetEditAccess) {
 			budgetTargetTableEditMenu[0] = "Edit Budget Target";
@@ -280,7 +285,12 @@ function BudgetTargetView({
 								</Box>
 							</Grid>
 						</Grid>
-						<BudgetLineItemTable budgetTargetId={rowData.id} donor={rowData.donor} />
+						{budgetTargetLineItemFindAccess && (
+							<BudgetLineItemTable
+								budgetTargetId={rowData.id}
+								donor={rowData.donor}
+							/>
+						)}
 					</>
 				)}
 			</CommonTable>

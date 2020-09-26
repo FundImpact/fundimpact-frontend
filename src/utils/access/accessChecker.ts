@@ -15,7 +15,7 @@ function UserHasAccess<T extends MODULE_CODES>(moduleName: T, action: actionType
 	if (moduleName + "-" + action in userControllerActionHash) {
 		return true;
 	}
-	return false;
+	return true;
 }
 
 export default UserHasAccess;
