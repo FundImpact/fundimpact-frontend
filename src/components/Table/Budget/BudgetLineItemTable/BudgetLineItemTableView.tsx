@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../../CommonTable";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../Forms/constant";
@@ -9,6 +9,8 @@ import { getTodaysDate } from "../../../../utils";
 import { Box, Chip, Avatar, Grid } from "@material-ui/core";
 import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
+import { userHasAccess, MODULE_CODES } from "../../../../utils/access";
+import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -154,6 +156,8 @@ const createChipArray = ({
 	return null;
 };
 
+let budgetLineItemTableEditMenu: string[] = [];
+
 function BudgetLineItemTableView({
 	toggleDialogs,
 	openDialogs,
@@ -207,6 +211,17 @@ function BudgetLineItemTableView({
 }) {
 	tableHeadings[3].label = getNewAmountHeaderOfTable(currency);
 
+	const budgetLineItemEditAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.UPDATE_BUDGET_TARGET_LINE_ITEM
+	);
+
+	useEffect(() => {
+		if (budgetLineItemEditAccess) {
+			budgetLineItemTableEditMenu = ["Edit Budget Line Item"];
+		}
+	}, [budgetLineItemEditAccess]);
+
 	return (
 		<>
 			<Grid container>
@@ -248,7 +263,7 @@ function BudgetLineItemTableView({
 				rows={rows}
 				selectedRow={selectedBudgetLineItem}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Budget Line Item"]}
+				editMenuName={budgetLineItemTableEditMenu}
 				collapsableTable={false}
 				changePage={changePage}
 				loading={loading}

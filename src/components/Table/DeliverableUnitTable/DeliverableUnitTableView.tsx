@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import {
 	IDeliverableUnitData,
@@ -13,6 +13,8 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -75,6 +77,8 @@ const createChipArray = ({
 	return null;
 };
 
+let deliverableUnitTableEditMenu: string[] = [];
+
 function DeliverableUnitTableView({
 	toggleDialogs,
 	openDialogs,
@@ -117,6 +121,18 @@ function DeliverableUnitTableView({
 	toggleDialogs: (index: number, val: boolean) => void;
 }) {
 	const dashboardData = useDashBoardData();
+
+	const deliverableUnitEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+	);
+
+	useEffect(() => {
+		if (deliverableUnitEditAccess) {
+			deliverableUnitTableEditMenu = ["Edit Deliverable Unit"];
+		}
+	}, [deliverableUnitEditAccess]);
+
 	return (
 		<>
 			{!collapsableTable && (
@@ -152,7 +168,7 @@ function DeliverableUnitTableView({
 				rows={rows}
 				selectedRow={selectedDeliverableUnit}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Deliverable Unit"]}
+				editMenuName={deliverableUnitTableEditMenu}
 				collapsableTable={collapsableTable}
 				changePage={changePage}
 				loading={loading}

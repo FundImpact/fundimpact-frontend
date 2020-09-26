@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -13,6 +13,9 @@ import BudgetLineItemTable from "../BudgetLineItemTable";
 import { Grid, Box, Typography, Chip, Avatar } from "@material-ui/core";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import FilterList from "../../../FilterList";
+import { BUDGET_TARGET_ACTIONS } from "../../../../utils/access/modules/budgetTarget/actions";
+import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
+import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -121,6 +124,8 @@ const createChipArray = ({
 	return null;
 };
 
+const budgetTargetTableEditMenu = ["", ""];
+
 function BudgetTargetView({
 	toggleDialogs,
 	openDialogs,
@@ -172,6 +177,25 @@ function BudgetTargetView({
 }) {
 	tableHeadings[5].label = getNewTotalAmountHeaderOfTable(currency);
 
+	const budgetTargetEditAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET
+	);
+
+	const budgetTargetLineItemCreateAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
+	);
+
+	useEffect(() => {
+		if (budgetTargetEditAccess) {
+			budgetTargetTableEditMenu[0] = "Edit Budget Target";
+		}
+		if (budgetTargetLineItemCreateAccess) {
+			budgetTargetTableEditMenu[1] = "Report Expenditure";
+		}
+	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
+
 	return (
 		<>
 			<Grid container>
@@ -208,7 +232,7 @@ function BudgetTargetView({
 				rows={rows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Budget Target", "Report Expenditure"]}
+				editMenuName={budgetTargetTableEditMenu}
 				collapsableTable={true}
 				changePage={changePage}
 				loading={loading}

@@ -7,4 +7,5 @@ export interface CreateButton {
 		open: boolean;
 		handleClose: () => void;
 	}) => React.ReactNode | void;
+	createButtonAccess: boolean;
 }
