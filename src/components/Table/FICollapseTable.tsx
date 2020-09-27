@@ -40,34 +40,39 @@ const styledTable = makeStyles((theme: Theme) =>
 function Row(props: {
 	row: { collaspeTable: React.ReactNode; column: React.ReactNode[] };
 	index: number;
+	showNestedTable?: boolean;
 }) {
-	const { row, index } = props;
+	const { row, index, showNestedTable = true } = props;
 	const [open, setOpen] = React.useState(false);
 
 	return (
 		<React.Fragment>
 			<TableRow key={index}>
-				<TableCell>
-					<IconButton
-						aria-label="expand row"
-						size="small"
-						onClick={() => setOpen(!open)}
-						data-testid={`collaspeButton${index}`}
-					>
-						{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-					</IconButton>
-				</TableCell>
+				{showNestedTable && (
+					<TableCell>
+						<IconButton
+							aria-label="expand row"
+							size="small"
+							onClick={() => setOpen(!open)}
+							data-testid={`collaspeButton${index}`}
+						>
+							{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+						</IconButton>
+					</TableCell>
+				)}
 				{row.column.map((col) => {
 					return col;
 				})}
 			</TableRow>
-			<TableRow>
-				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-					<Collapse in={open} timeout="auto" unmountOnExit>
-						<Box margin={1}>{row.collaspeTable}</Box>
-					</Collapse>
-				</TableCell>
-			</TableRow>
+			{showNestedTable && (
+				<TableRow>
+					<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+						<Collapse in={open} timeout="auto" unmountOnExit>
+							<Box margin={1}>{row.collaspeTable}</Box>
+						</Collapse>
+					</TableCell>
+				</TableRow>
+			)}
 		</React.Fragment>
 	);
 }
@@ -80,6 +85,7 @@ export default function CollapsibleTable({
 	setOrder,
 	orderBy,
 	setOrderBy,
+	showNestedTable = true,
 }: {
 	tableHeading: { label: string; keyMapping?: string }[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
@@ -88,6 +94,7 @@ export default function CollapsibleTable({
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+	showNestedTable?: boolean;
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
@@ -125,12 +132,12 @@ export default function CollapsibleTable({
 										/>
 										{order && heading.keyMapping && (
 											<TableSortLabel
-												active={orderBy == heading.keyMapping}
+												active={orderBy === heading.keyMapping}
 												onClick={() => {
-													if (orderBy == heading.keyMapping) {
+													if (orderBy === heading.keyMapping) {
 														setOrder &&
 															setOrder(
-																order == "asc" ? "desc" : "asc"
+																order === "asc" ? "desc" : "asc"
 															);
 													} else {
 														setOrderBy &&
@@ -146,7 +153,12 @@ export default function CollapsibleTable({
 					</TableHead>
 					<TableBody className={tableStyles.tbody}>
 						{rows.map((row, index) => (
-							<Row key={index} index={index} row={row} />
+							<Row
+								key={index}
+								index={index}
+								row={row}
+								showNestedTable={showNestedTable}
+							/>
 						))}
 					</TableBody>
 					<TableFooter>

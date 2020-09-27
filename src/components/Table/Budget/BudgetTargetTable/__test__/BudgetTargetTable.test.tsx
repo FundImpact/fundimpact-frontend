@@ -43,6 +43,8 @@ import BudgetTargetTable from "../BudgetTargetTableGraphql";
 import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
 import { GET_ORG_DONOR } from "../../../../../graphql/donor";
+import { GET_USER_ROLES } from "../../../../../graphql/User/query";
+import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 
 let table: any;
 
@@ -309,6 +311,15 @@ const mocks = [
 				grantPeriodsProjectList: mockGrantPeriodsProjectList,
 			},
 		},
+	},
+	{
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				id: "1",
+			},
+		},
+		result: { data: mockUserRoles },
 	},
 	{
 		request: {

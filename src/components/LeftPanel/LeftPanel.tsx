@@ -13,11 +13,14 @@ import {
 } from "@material-ui/core";
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import SettingsIcon from "@material-ui/icons/Settings";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { sidePanelStyles } from "../Dasboard/styles";
+import { userHasAccess } from "../../utils/access";
+import { MODULE_CODES } from "../../utils/access/moduleCodes";
+import { SETTING_MODULE_ACTION } from "../../utils/access/modules/setting/actions";
 
 /**
  * @description This is the Blue sidebar the we see on the left most side of the window.
@@ -35,6 +38,33 @@ export default function LeftPanel() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+	const [leftPannelList, setLeftPannelList] = useState([
+		{
+			name: "Dashboard",
+			Icon: DashboardOutlinedIcon,
+			color: "#bdbdbd",
+			to: "/dashboard",
+		},
+	]);
+	const settingButtonAccess = userHasAccess(
+		MODULE_CODES.SETTING,
+		SETTING_MODULE_ACTION.FIND_SETTING
+	);
+	console.log("settingButtonAccess :>> ", settingButtonAccess);
+	useEffect(() => {
+		if (settingButtonAccess) {
+			setLeftPannelList((currentLeftPannelList) => [
+				...currentLeftPannelList,
+				{
+					name: "Briefcase",
+					Icon: SettingsIcon,
+					color: "#bdbdbd",
+					to: "/settings",
+				},
+			]);
+		}
+	}, [settingButtonAccess]);
+
 	return (
 		<Grid container className={classes.leftPanel} direction="column">
 			<Grid xs item>
@@ -50,26 +80,7 @@ export default function LeftPanel() {
 				</Box>
 				<Divider />
 				<List>
-					{[
-						{
-							name: "Dashboard",
-							Icon: DashboardOutlinedIcon,
-							color: "#bdbdbd",
-							to: "/dashboard",
-						},
-						{
-							name: "Briefcase",
-							Icon: SettingsIcon,
-							color: "#bdbdbd",
-							to: "/settings",
-						},
-						// {
-						// 	name: "Star",
-						// 	Icon: GradeOutlinedIcon,
-						// 	color: "#bdbdbd",
-						// 	to: "/asd",
-						// },
-					].map((item, index) => (
+					{leftPannelList.map((item, index) => (
 						<NavLink
 							to={item.to}
 							key={index}

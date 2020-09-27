@@ -60,14 +60,14 @@ function ImpactUnitContainer({
 	);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 
-	const toggleDialogs = (index: number, val: boolean) => {
+	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
-			openStatus.map((element: boolean, i) => (i == index ? val : element))
+			openStatus.map((element: boolean, i) => (i === index ? dialogNewOpenStatus : element))
 		);
 	};
 
 	useEffect(() => {
-		if (selectedImpactUnit.current) {
+		if (selectedImpactUnit.current && openDialogs[0]) {
 			getImpactCategoryUnit({
 				variables: {
 					filter: {
@@ -76,7 +76,7 @@ function ImpactUnitContainer({
 				},
 			});
 		}
-	}, [getImpactCategoryUnit, selectedImpactUnit.current]);
+	}, [getImpactCategoryUnit, openDialogs]);
 
 	const impactCategoryMemoized = useMemo(
 		() =>

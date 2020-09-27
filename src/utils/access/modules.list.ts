@@ -1,6 +1,21 @@
-import { BUDGET_MODULE } from "./modules/budget/budget.module";
-import { DELIVERABLES_MODULE } from "./modules/deliverables/deliverable.module";
-import { IMPACT_MODULE } from "./modules/impact/impact.module";
+import { BUDGET_CATEGORY_MODULE } from "./modules/budgetCategory/budgetCategory.module";
+import { BUDGET_TARGET_MODULE } from "./modules/budgetTarget/budgetTarget.module";
+import { BUDGET_TARGET_LINE_ITEM_MODULE } from "./modules/budgetTargetLineItem/budgetTargetLineItem.module";
+import { IMPACT_CATEGORY_MODULE } from "./modules/impactCategory/impactCategory.module";
+import { IMPACT_TARGET_MODULE } from "./modules/impactTarget/impactTarget.module";
+import { IMPACT_UNIT_MODULE } from "./modules/impactUnit/impactUnit.module";
+import { IMPACT_TRACKING_LINE_ITEM_MODULE } from "./modules/impactTrackingLineItem/impactTrackingLineItem.module";
+import { DELIVERABLE_CATEGORY_MODULE } from "./modules/deliverableCategory/deliverableCategory.module";
+import { DELIVERABLE_TARGET_MODULE } from "./modules/deliverableTarget/deliverableTarget.module";
+import { DELIVERABLE_TRACKING_LINE_ITEM_MODULE } from "./modules/deliverableTrackingLineItem/deliverableTrackingLineItem.module";
+import { DELIVERABLE_UNIT_MODULE } from "./modules/deliverableUnit/deliverableUnit.module";
+import { SETTING_MODULE } from "./modules/setting/setting.module";
+import { PROJECT_MODULE } from "./modules/project/project.module";
+import { WORKSPACE_MODULE } from "./modules/workspaces/workspace.module";
+import { ORGANIZATION_MODULE } from "./modules/organization/organization.module";
+import { DONOR_MODULE } from "./modules/donor/donor.module";
+import { GRANT_PERIOD_MODULE } from "./modules/grantPeriod/grantPeriod.module";
+import { MODULE_CODES } from "./moduleCodes";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -18,12 +33,6 @@ import { IMPACT_MODULE } from "./modules/impact/impact.module";
  * must be added / removed from the list. Keep the module code property name in UPPERCASE
  * and value in lowercase.
  */
-export enum MODULE_CODES {
-	BUDGET = "budget",
-	IMPACT = "impact",
-	DELIVERABLES = "deliverables",
-	// GRANT_PERIOD = "grant_period",
-}
 
 /**
  ************************************* Module MAPPING ****************************
@@ -44,7 +53,21 @@ export enum MODULE_CODES {
  *
  */
 export const MODULES = {
-	[MODULE_CODES.BUDGET]: BUDGET_MODULE,
-	[MODULE_CODES.IMPACT]: IMPACT_MODULE,
-	[MODULE_CODES.DELIVERABLES]: DELIVERABLES_MODULE,
+	[MODULE_CODES.BUDGET_CATEGORY]: BUDGET_CATEGORY_MODULE,
+	[MODULE_CODES.BUDGET_TARGET]: BUDGET_TARGET_MODULE,
+	[MODULE_CODES.BUDGET_TARGET_LINE_ITEM]: BUDGET_TARGET_LINE_ITEM_MODULE,
+	[MODULE_CODES.DELIVERABLE_CATEGORY]: DELIVERABLE_CATEGORY_MODULE,
+	[MODULE_CODES.DELIVERABLE_TARGET]: DELIVERABLE_TARGET_MODULE,
+	[MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM]: DELIVERABLE_TRACKING_LINE_ITEM_MODULE,
+	[MODULE_CODES.DELIVERABLE_UNIT]: DELIVERABLE_UNIT_MODULE,
+	[MODULE_CODES.IMPACT_CATEGORY]: IMPACT_CATEGORY_MODULE,
+	[MODULE_CODES.IMPACT_TARGET]: IMPACT_TARGET_MODULE,
+	[MODULE_CODES.IMPACT_TRACKING_LINE_ITEM]: IMPACT_TRACKING_LINE_ITEM_MODULE,
+	[MODULE_CODES.IMPACT_UNIT]: IMPACT_UNIT_MODULE,
+	[MODULE_CODES.SETTING]: SETTING_MODULE,
+	[MODULE_CODES.WORKSPACE]: WORKSPACE_MODULE,
+	[MODULE_CODES.PEOJECT]: PROJECT_MODULE,
+	[MODULE_CODES.ORGANIZATION]: ORGANIZATION_MODULE,
+	[MODULE_CODES.DONOR]: DONOR_MODULE,
+	[MODULE_CODES.GRANT_PERIOD]: GRANT_PERIOD_MODULE,
 } as const;

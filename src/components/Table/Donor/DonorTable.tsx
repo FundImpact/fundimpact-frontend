@@ -25,6 +25,9 @@ import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { donorTableHeading as tableHeading } from "../constants";
+import { getValueFromObject } from "../../../utils";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 
 const useStyles = makeStyles({
 	table: {
@@ -58,16 +61,6 @@ const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 	};
 };
 
-function getValue(obj: any, key: string[]): any {
-	if (!obj?.hasOwnProperty(key[0])) {
-		return "";
-	}
-	if (key.length == 1) {
-		return obj[key[0]];
-	}
-	return getValue(obj[key[0]], key.slice(1));
-}
-
 function DonorTable({
 	tableFilterList,
 }: {
@@ -90,17 +83,17 @@ function DonorTable({
 	}, [dashboardData]);
 
 	useEffect(() => {
-		let obj: { [key: string]: string | string[] } = {};
+		let newFilterListObject: { [key: string]: string | string[] } = {};
 		for (let key in tableFilterList) {
 			if (tableFilterList[key] && tableFilterList[key].length) {
-				obj[key] = tableFilterList[key];
+				newFilterListObject[key] = tableFilterList[key];
 			}
 		}
 		setQueryFilter({
 			organization: dashboardData?.organization?.id,
-			...obj,
+			...newFilterListObject,
 		});
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	const [openDialog, setOpenDialog] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -120,6 +113,8 @@ function DonorTable({
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
 
 	const menuList = [
 		{
@@ -165,12 +160,12 @@ function DonorTable({
 											{heading.label}
 											{heading.keyMapping && (
 												<TableSortLabel
-													active={orderBy == heading.keyMapping}
+													active={orderBy === heading.keyMapping}
 													onClick={() => {
-														if (orderBy == heading.keyMapping) {
+														if (orderBy === heading.keyMapping) {
 															setOrder &&
 																setOrder(
-																	order == "asc" ? "desc" : "asc"
+																	order === "asc" ? "desc" : "asc"
 																);
 														} else {
 															setOrderBy &&
@@ -197,7 +192,7 @@ function DonorTable({
 							{keyNames.map((keyName: string, i: number) => {
 								return (
 									<TableCell key={i} align="left">
-										{getValue(donor, keyName.split(","))}
+										{getValueFromObject(donor, keyName.split(","))}
 									</TableCell>
 								);
 							})}
@@ -208,17 +203,22 @@ function DonorTable({
 										selectedDonor.current = donor;
 										handleClick(event);
 									}}
+									style={{ visibility: donorEditAccess ? "visible" : "hidden" }}
 								>
 									<MoreVertIcon />
 								</IconButton>
-								<SimpleMenu
-									handleClose={handleClose}
-									id={`organizationMenu-${donor.id}`}
-									anchorEl={
-										selectedDonor?.current?.id === donor.id ? anchorEl : null
-									}
-									menuList={menuList}
-								/>
+								{donorEditAccess && (
+									<SimpleMenu
+										handleClose={handleClose}
+										id={`organizationMenu-${donor.id}`}
+										anchorEl={
+											selectedDonor?.current?.id === donor.id
+												? anchorEl
+												: null
+										}
+										menuList={menuList}
+									/>
+								)}
 							</TableCell>
 						</TableRow>
 					))}

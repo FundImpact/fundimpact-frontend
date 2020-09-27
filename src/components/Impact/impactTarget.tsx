@@ -19,7 +19,7 @@ import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { IMPACT_ACTIONS } from "./constants";
-import { impactTargetForm, impactTargetUpdateForm } from "./inputField.json";
+import { impactTargetForm } from "./inputField.json";
 import {
 	IGET_IMPACT_TARGET_BY_PROJECT,
 	IImpactTargetByProjectResponse,

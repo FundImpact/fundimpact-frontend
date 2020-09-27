@@ -10,13 +10,93 @@ import { DonorContainer } from "./donor/container";
 import Organization from "./Organization";
 import BudgetCategory from "./BudgetMaster";
 import SettingsSidebar from "./sidebar";
-import ImpactCategory from "./ImpactMaster";
-import DeliverableCategory from "./DeliverableMaster";
+import ImpactMaster from "./ImpactMaster";
+import DeliverableMaster from "./DeliverableMaster";
+import { RouteProps } from "react-router";
+import { userHasAccess, MODULE_CODES } from "../../utils/access";
+import { BUDGET_CATEGORY_ACTIONS } from "../../utils/access/modules/budgetCategory/actions";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverableUnit/actions";
+import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
+import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
+import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
+import DefaultSettingsView from "./defaultView";
+import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
+
+interface IPrivateRouterProps extends RouteProps {
+	userAccess?: boolean;
+}
+
+function PrivateRoute({
+	children,
+	userAccess = true,
+	...rest
+}: IPrivateRouterProps): React.ReactElement | null {
+	if (userAccess) {
+		return <Route children={children} {...rest} />;
+	} else return <Navigate to="/settings/settingsDefault" state={{ redirectedFrom: rest.path }} />;
+}
 
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
 	const notificationData = useNotificationData();
+
+	const impactUnitFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
+	);
+
+	const deliverableCategoryFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+	);
+
+	const budgetCategoryFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
+	);
+	const impactCategoryFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
+	);
+
+	const createBudgetCategoryAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	);
+
+	const deliverableUnitFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	);
+	const deliverableCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+	);
+
+	const impactUnitCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	);
+	const deliverableUnitCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+	);
+
+	const impactCategoryCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
+	);
+
+	const organizationEditAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
+	);
+
+	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
+
+	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
 
 	return (
 		<Container
@@ -41,15 +121,50 @@ export default function SettingContainer() {
 				</Grid>
 				<Grid item xs={12} md={9}>
 					<Routes>
-						<Route path="donors" element={<DonorContainer />} />
-						<Route path="budget" element={<BudgetCategory />} />
-						<Route path="impact" element={<ImpactCategory />} />
-						<Route path="deliverable" element={<DeliverableCategory />} />
-						<Route path="organization" element={<Organization />} />
+						<PrivateRoute
+							path="donors"
+							userAccess={donorFindAccess || donorCreateAccess}
+							element={<DonorContainer />}
+						/>
+						<PrivateRoute
+							userAccess={budgetCategoryFindAccess || createBudgetCategoryAccess}
+							path="budget"
+							element={<BudgetCategory />}
+						/>
+						<PrivateRoute
+							userAccess={
+								impactCategoryFindAccess ||
+								impactUnitFindAccess ||
+								impactCategoryCreateAccess ||
+								impactUnitCreateAccess
+							}
+							path="impact"
+							element={<ImpactMaster />}
+						/>
+						<PrivateRoute
+							userAccess={
+								deliverableCategoryFindAccess ||
+								deliverableUnitFindAccess ||
+								deliverableCategoryCreateAccess ||
+								deliverableUnitCreateAccess
+							}
+							path="deliverable"
+							element={<DeliverableMaster />}
+						/>
+						<PrivateRoute
+							path="organization"
+							userAccess={organizationEditAccess}
+							element={<Organization />}
+						/>
+						<Route path="settingsDefault" element={<DefaultSettingsView />} />
+						<PrivateRoute path="">
+							{organizationEditAccess ? (
+								<Navigate to="organization" />
+							) : (
+								<Navigate to="settingsDefault" />
+							)}
+						</PrivateRoute>
 						<Route path="user_roles" element={<UserRoleContainer />} />
-						<Route path="">
-							<Navigate to="organization" />
-						</Route>
 					</Routes>
 				</Grid>
 			</Grid>

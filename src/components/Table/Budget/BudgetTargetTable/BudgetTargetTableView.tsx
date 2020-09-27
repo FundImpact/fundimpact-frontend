@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -13,6 +13,9 @@ import BudgetLineItemTable from "../BudgetLineItemTable";
 import { Grid, Box, Typography, Chip, Avatar } from "@material-ui/core";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import FilterList from "../../../FilterList";
+import { BUDGET_TARGET_ACTIONS } from "../../../../utils/access/modules/budgetTarget/actions";
+import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
+import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -76,6 +79,53 @@ const chipArray = ({
 	));
 };
 
+const getNewTotalAmountHeaderOfTable = (currency: string) => `Total Amount (${currency})`;
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	donorHash,
+	budgetCategoryHash,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	donorHash: { [key: string]: string };
+	budgetCategoryHash: { [key: string]: string };
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			elementList: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "donor") {
+			return chipArray({
+				elementList: filterListObjectKeyValuePair[1].map((ele) => donorHash[ele]),
+				name: "do",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "budget_category_organization") {
+			return chipArray({
+				elementList: filterListObjectKeyValuePair[1].map((ele) => budgetCategoryHash[ele]),
+				name: "bc",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	return null;
+};
+
+const budgetTargetTableEditMenu = ["", ""];
+
 function BudgetTargetView({
 	toggleDialogs,
 	openDialogs,
@@ -125,46 +175,45 @@ function BudgetTargetView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
 }) {
-	tableHeadings[5].label = "Total Amount " + `(${currency})`;
+	tableHeadings[5].label = getNewTotalAmountHeaderOfTable(currency);
+
+	const budgetTargetEditAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET
+	);
+
+	const budgetTargetLineItemCreateAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
+	);
+
+	const budgetTargetLineItemFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.FIND_BUDGET_TARGET_LINE_ITEM
+	);
+
+	useEffect(() => {
+		if (budgetTargetEditAccess) {
+			budgetTargetTableEditMenu[0] = "Edit Budget Target";
+		}
+		if (budgetTargetLineItemCreateAccess) {
+			budgetTargetTableEditMenu[1] = "Report Expenditure";
+		}
+	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
 
 	return (
 		<>
 			<Grid container>
 				<Grid item xs={11}>
 					<Box my={2} display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									elementList: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChip: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
-							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "donor") {
-									return chipArray({
-										elementList: element[1].map((ele) => donorHash[ele]),
-										name: "do",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-								if (element[0] == "budget_category_organization") {
-									return chipArray({
-										elementList: element[1].map(
-											(ele) => budgetCategoryHash[ele]
-										),
-										name: "bc",
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-							}
-						})}
+						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+							createChipArray({
+								filterListObjectKeyValuePair,
+								donorHash,
+								budgetCategoryHash,
+								removeFilterListElements,
+							})
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={1}>
@@ -188,7 +237,7 @@ function BudgetTargetView({
 				rows={rows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Budget Target", "Report Expenditure"]}
+				editMenuName={budgetTargetTableEditMenu}
 				collapsableTable={true}
 				changePage={changePage}
 				loading={loading}
@@ -236,7 +285,12 @@ function BudgetTargetView({
 								</Box>
 							</Grid>
 						</Grid>
-						<BudgetLineItemTable budgetTargetId={rowData.id} donor={rowData.donor} />
+						{budgetTargetLineItemFindAccess && (
+							<BudgetLineItemTable
+								budgetTargetId={rowData.id}
+								donor={rowData.donor}
+							/>
+						)}
 					</>
 				)}
 			</CommonTable>

@@ -238,5 +238,14 @@
 	],
 	"mockDeliverableCategoryCount": {
 		"deliverableCategoryCount": 2
+	},
+	"mockUser": {
+		"jwt": "22",
+		"user": {
+			"id": "1",
+			"role": {
+				"id": "1"
+			}
+		}
 	}
 }

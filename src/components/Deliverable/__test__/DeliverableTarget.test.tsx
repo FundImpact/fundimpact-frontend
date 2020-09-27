@@ -16,6 +16,8 @@ import { organizationDetail } from "../../../utils/testMock.json";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import DeliverableTarget from "../DeliverableTarget";
 import { deliverableCategoryMock, deliverableCategoryUnitListMock, projectsMock } from "./testHelp";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
+import { GET_USER_ROLES } from "../../../graphql/User/query";
 
 let createDeliverableTargetMutation = false;
 const mocks = [
@@ -40,6 +42,15 @@ const mocks = [
 		},
 		result: { data: { deliverableCategoryUnitList: deliverableCategoryUnitListMock } },
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_CATEGORY_UNIT,

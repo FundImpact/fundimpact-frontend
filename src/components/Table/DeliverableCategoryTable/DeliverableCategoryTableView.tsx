@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 import Deliverable from "../../Deliverable/Deliverable";
@@ -9,6 +9,8 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableCategoryInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -52,6 +54,26 @@ const chipArr = ({
 	));
 };
 
+const createChipArray = ({
+	removeFilterListElements,
+	filterListObjectKeyValuePair,
+}: {
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	filterListObjectKeyValuePair: any;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArr({
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+			list: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+		});
+	}
+	return null;
+};
+let deliverableCategoryTableEditMenu: string[] = [];
+
 function DeliverableCategoryView({
 	toggleDialogs,
 	openDialogs,
@@ -94,35 +116,41 @@ function DeliverableCategoryView({
 
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
+	const deliverableCategoryEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
+	);
+
+	useEffect(() => {
+		if (deliverableCategoryEditAccess) {
+			deliverableCategoryTableEditMenu = ["Edit Deliverable Category"];
+		}
+	}, [deliverableCategoryEditAccess]);
+
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={11}>
 						<Box my={2} display="flex" flexWrap="wrap">
-							{Object.entries(filterList).map((element) => {
-								if (element[1] && typeof element[1] == "string") {
-									return chipArr({
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0]);
-										},
-										name: element[0].slice(0, 4),
-										list: [element[1]],
-									});
-								}
-							})}
+							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+								createChipArray({
+									removeFilterListElements,
+									filterListObjectKeyValuePair,
+								})
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
 							<FilterList
 								initialValues={{
-									name: "",
 									code: "",
+									name: "",
 									description: "",
 								}}
-								setFilterList={setFilterList}
 								inputFields={deliverableCategoryInputFields}
+								setFilterList={setFilterList}
 							/>
 						</Box>
 					</Grid>
@@ -134,7 +162,7 @@ function DeliverableCategoryView({
 				rows={rows}
 				selectedRow={selectedDeliverableCategory}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Deliverable Category"]}
+				editMenuName={deliverableCategoryTableEditMenu}
 				collapsableTable={collapsableTable}
 				changePage={changePage}
 				loading={loading}

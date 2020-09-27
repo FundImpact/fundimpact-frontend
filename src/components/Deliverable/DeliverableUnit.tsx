@@ -43,6 +43,14 @@ function getInitialValues(props: DeliverableUnitProps) {
 	};
 }
 
+const getNewDeliverableCategories = (
+	deliverableCategories: string[],
+	oldDeliverableCategories: string[]
+) =>
+	deliverableCategories.filter(
+		(element: string) => oldDeliverableCategories.indexOf(element) === -1
+	) || [];
+
 interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	deliverableCategory?: string;
 }
@@ -295,11 +303,12 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		try {
 			const submittedValue = Object.assign({}, value);
 			const id = submittedValue.id;
-			setDeliverableCategory(
-				submittedValue?.deliverableCategory?.filter(
-					(element: string) => initialValues?.deliverableCategory?.indexOf(element) == -1
-				) || []
+			const newDeliverableCategories = getNewDeliverableCategories(
+				submittedValue?.deliverableCategory || [],
+				initialValues?.deliverableCategory || []
 			);
+			setDeliverableCategory(newDeliverableCategories);
+			
 			delete submittedValue.id;
 			delete submittedValue.deliverableCategory;
 			await updateDeliverableUnit({

@@ -13,13 +13,13 @@ import { IImpactCategoryData, IImpactUnitData } from "../../../models/impact/imp
 import pagination from "../../../hooks/pagination";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
-	let obj: { [key: string]: string } = {};
+	let newFilterList: { [key: string]: string } = {};
 	for (let key in filterList) {
 		if (filterList[key] && filterList[key].length) {
-			obj[key] = filterList[key];
+			newFilterList[key] = filterList[key];
 		}
 	}
-	return obj;
+	return newFilterList;
 };
 
 function ImpactCategoryTableGraphql({
@@ -60,35 +60,35 @@ function ImpactCategoryTableGraphql({
 
 	useEffect(() => {
 		if (tableFilterList) {
-			let obj: { [key: string]: string } = removeEmptyKeys(tableFilterList);
+			let newTableFilterListObject: { [key: string]: string } = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
 				organization: dashboardData?.organization?.id,
-				...obj,
+				...newTableFilterListObject,
 			});
 		}
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
-			const obj = removeEmptyKeys(nestedTableFilterList);
+			const newNestedTableFilterListObject = removeEmptyKeys(nestedTableFilterList);
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
 					{ impact_units_org: impactUnitId },
-					Object.keys(obj).length && {
+					Object.keys(newNestedTableFilterListObject).length && {
 						impact_category_org: {
-							...obj,
+							...newNestedTableFilterListObject,
 						},
 					}
 				)
 			);
 		}
-	}, [nestedTableFilterList]);
+	}, [nestedTableFilterList, impactUnitId]);
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
-		setNestedTableFilterList((obj) => {
-			obj[key] = "";
-			return { ...obj };
+		setNestedTableFilterList((nestedTableFilterListObject) => {
+			nestedTableFilterListObject[key] = "";
+			return { ...nestedTableFilterListObject };
 		});
 	};
 

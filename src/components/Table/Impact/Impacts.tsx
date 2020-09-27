@@ -33,6 +33,10 @@ import FilterList from "../../FilterList";
 import { impactTargetInputFields } from "./inputFields.json";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
 import { GET_SDG } from "../../../graphql/SDG/query";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
+import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
 
 const chipArray = ({
 	arr,
@@ -73,10 +77,30 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const handleMenuClose = () => {
 		setImpactTargetMenuAnchor(null);
 	};
+
+	const impactTragetEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.UPDATE_IMPACT_TARGET
+	);
+
+	const impactTracklineCreateAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
+	);
+
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="impact-target-edit" onClick={handleMenuClick}>
+				<IconButton
+					aria-label="impact-target-edit"
+					onClick={handleMenuClick}
+					style={{
+						visibility:
+							impactTragetEditAccess || impactTracklineCreateAccess
+								? "visible"
+								: "hidden",
+					}}
+				>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
@@ -87,42 +111,46 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 				open={Boolean(impactTargetMenuAnchor)}
 				onClose={handleMenuClose}
 			>
-				<MenuItem
-					onClick={() => {
-						setImpactTargetData({
-							id: impactTarget.id,
-							name: impactTarget.name,
-							target_value: impactTarget.target_value,
-							description: impactTarget.description,
-							impactCategory:
-								impactTarget.impact_category_unit?.impact_category_org.id,
-							impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
-							impact_category_unit: impactTarget.impact_category_unit.id,
-							sustainable_development_goal:
-								impactTarget.sustainable_development_goal?.id,
-							project: impactTarget.project.id,
-						});
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="editTargetMenu"
-						defaultMessage="Edit Target"
-						description="This text will be show on deliverable or impact target table for edit target menu"
-					/>
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						handleMenuClose();
-						setImpactTargetLineDialog(true);
-					}}
-				>
-					<FormattedMessage
-						id="reportAchievementMenu"
-						defaultMessage="Report Achievement"
-						description="This text will be show on deliverable or impact target table for report achievement menu"
-					/>
-				</MenuItem>
+				{impactTragetEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTargetData({
+								id: impactTarget.id,
+								name: impactTarget.name,
+								target_value: impactTarget.target_value,
+								description: impactTarget.description,
+								impactCategory:
+									impactTarget.impact_category_unit?.impact_category_org.id,
+								impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
+								impact_category_unit: impactTarget.impact_category_unit.id,
+								sustainable_development_goal:
+									impactTarget.sustainable_development_goal?.id,
+								project: impactTarget.project.id,
+							});
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="editTargetMenu"
+							defaultMessage="Edit Target"
+							description="This text will be show on deliverable or impact target table for edit target menu"
+						/>
+					</MenuItem>
+				)}
+				{impactTracklineCreateAccess && (
+					<MenuItem
+						onClick={() => {
+							handleMenuClose();
+							setImpactTargetLineDialog(true);
+						}}
+					>
+						<FormattedMessage
+							id="reportAchievementMenu"
+							defaultMessage="Report Achievement"
+							description="This text will be show on deliverable or impact target table for report achievement menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{impactTargetData && (
 				<ImpactTarget
@@ -144,6 +172,20 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		</>
 	);
 }
+
+const getTableHeadingByImpactTracklineAccess = (
+	headings: (
+		| {
+				label: string;
+				keyMapping?: undefined;
+		  }
+		| {
+				label: string;
+				keyMapping: string;
+		  }
+	)[],
+	collapseTableAccess: boolean
+) => (collapseTableAccess ? headings : headings.slice(1));
 
 function ImpactTargetAchievementAndProgress({
 	impactTargetId,
@@ -178,14 +220,56 @@ function ImpactTargetAchievementAndProgress({
 let impactCategoryHash: { [key: string]: string } = {};
 let sustainableDevelopmentHash: { [key: string]: string } = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
+};
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any[];
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "impact_category_org") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((ele) => impactCategoryHash[ele]),
+				name: "ic",
+				removeChips: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "sustainable_development_goal") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((ele) => sustainableDevelopmentHash[ele]),
+				name: "sdg",
+				removeChips: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			arr: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChips: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
 };
 
 export default function ImpactsTable() {
@@ -207,6 +291,11 @@ export default function ImpactsTable() {
 		impact_category_org: [],
 		sustainable_development_goal: [],
 	});
+
+	const impactTracklineFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.FIND_IMPACT_TRACKING_LINE_ITEM
+	);
 
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -237,16 +326,10 @@ export default function ImpactsTable() {
 		}
 	}, [sdgList]);
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	useEffect(() => {
 		if (filterList) {
@@ -273,7 +356,7 @@ export default function ImpactsTable() {
 				return filter;
 			});
 		}
-	}, [filterList]);
+	}, [filterList, dashboardData]);
 
 	let {
 		count,
@@ -414,41 +497,12 @@ export default function ImpactsTable() {
 					<Grid container>
 						<Grid item xs={11}>
 							<Box my={2} display="flex" flexWrap="wrap">
-								{Object.entries(filterList).map((element) => {
-									if (element[1] && Array.isArray(element[1])) {
-										if (element[0] == "impact_category_org") {
-											return chipArray({
-												arr: element[1].map(
-													(ele) => impactCategoryHash[ele]
-												),
-												name: "ic",
-												removeChips: (index: number) => {
-													removeFilterListElements(element[0], index);
-												},
-											});
-										}
-										if (element[0] == "sustainable_development_goal") {
-											return chipArray({
-												arr: element[1].map(
-													(ele) => sustainableDevelopmentHash[ele]
-												),
-												name: "sdg",
-												removeChips: (index: number) => {
-													removeFilterListElements(element[0], index);
-												},
-											});
-										}
-									}
-									if (element[1] && typeof element[1] == "string") {
-										return chipArray({
-											arr: [element[1]],
-											name: element[0].slice(0, 4),
-											removeChips: (index: number) => {
-												removeFilterListElements(element[0]);
-											},
-										});
-									}
-								})}
+								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+									createChipArray({
+										filterListObjectKeyValuePair,
+										removeFilterListElements,
+									})
+								)}
 							</Box>
 						</Grid>
 						<Grid item xs={1}>
@@ -471,9 +525,13 @@ export default function ImpactsTable() {
 						orderBy={orderBy}
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
-						tableHeading={ImpactHeadings}
 						rows={rows}
 						pagination={impactTablePagination}
+						tableHeading={getTableHeadingByImpactTracklineAccess(
+							ImpactHeadings,
+							impactTracklineFindAccess
+						)}
+						showNestedTable={impactTracklineFindAccess}
 					/>
 				</>
 			)}

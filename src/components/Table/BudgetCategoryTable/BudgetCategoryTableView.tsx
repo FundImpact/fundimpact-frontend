@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { budgetCategoryHeading as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import { IBudgetCategory } from "../../../models/budget";
 import BudgetCategory from "../../Budget/BudgetCategory";
 import { FORM_ACTIONS } from "../../../models/constants";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -18,6 +20,8 @@ const rows = [
 	},
 	{ valueAccessKey: "" },
 ];
+
+let budgetCategoryTableEditMenu: string[] = [];
 
 function BudgetCategoryTableView({
 	toggleDialogs,
@@ -48,6 +52,17 @@ function BudgetCategoryTableView({
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }) {
+	const budgetCategoryEditAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.UPDATE_BUDGET_CATEGORY
+	);
+
+	useEffect(() => {
+		if (budgetCategoryEditAccess) {
+			budgetCategoryTableEditMenu = ["Edit Budget Category"];
+		}
+	}, [budgetCategoryEditAccess]);
+
 	return (
 		<CommonTable
 			tableHeadings={tableHeadings}
@@ -55,7 +70,7 @@ function BudgetCategoryTableView({
 			rows={rows}
 			selectedRow={selectedBudgetCategory}
 			toggleDialogs={toggleDialogs}
-			editMenuName={["Edit Budget Category"]}
+			editMenuName={budgetCategoryTableEditMenu}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}

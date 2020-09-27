@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import {
 	IDeliverableUnitData,
@@ -13,6 +13,8 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -56,6 +58,27 @@ const chipArray = ({
 	));
 };
 
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			arr: [filterListObjectKeyValuePair[1]],
+			chipName: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
+};
+
+let deliverableUnitTableEditMenu: string[] = [];
+
 function DeliverableUnitTableView({
 	toggleDialogs,
 	openDialogs,
@@ -98,23 +121,30 @@ function DeliverableUnitTableView({
 	toggleDialogs: (index: number, val: boolean) => void;
 }) {
 	const dashboardData = useDashBoardData();
+
+	const deliverableUnitEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+	);
+
+	useEffect(() => {
+		if (deliverableUnitEditAccess) {
+			deliverableUnitTableEditMenu = ["Edit Deliverable Unit"];
+		}
+	}, [deliverableUnitEditAccess]);
+
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid xs={11} item>
 						<Box display="flex" my={2} flexWrap="wrap">
-							{Object.entries(filterList).map((element) => {
-								if (element[1] && typeof element[1] == "string") {
-									return chipArray({
-										arr: [element[1]],
-										chipName: element[0].slice(0, 4),
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0]);
-										},
-									});
-								}
-							})}
+							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+								createChipArray({
+									filterListObjectKeyValuePair,
+									removeFilterListElements,
+								})
+							)}
 						</Box>
 					</Grid>
 					<Grid xs={1} item>
@@ -138,7 +168,7 @@ function DeliverableUnitTableView({
 				rows={rows}
 				selectedRow={selectedDeliverableUnit}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Deliverable Unit"]}
+				editMenuName={deliverableUnitTableEditMenu}
 				collapsableTable={collapsableTable}
 				changePage={changePage}
 				loading={loading}

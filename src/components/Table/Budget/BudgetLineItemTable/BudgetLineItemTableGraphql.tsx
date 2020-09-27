@@ -10,6 +10,7 @@ import pagination from "../../../../hooks/pagination";
 import { budgetLineItemInputFields } from "./inputFields.json";
 import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS, GET_CURRENCY_LIST } from "../../../../graphql";
 import { useLazyQuery } from "@apollo/client";
+import { removeFilterListObjectElements } from "../../../../utils/filterList";
 
 //make input field hidden
 let grantPeriodHash = {};
@@ -17,13 +18,13 @@ let annualYearHash = {};
 let financialYearDonorHash = {};
 let financialYearOrgHash = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
 };
 
@@ -51,16 +52,10 @@ function BudgetLineItemTableGraphql({
 		reporting_date: "",
 	});
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -70,18 +65,18 @@ function BudgetLineItemTableGraphql({
 
 	useEffect(() => {
 		if (filterList) {
-			let obj: { [key: string]: string | string[] } = {};
+			let newFilterListObject: { [key: string]: string | string[] } = {};
 			for (let key in filterList) {
 				if (filterList[key] && filterList[key].length) {
-					obj[key] = filterList[key];
+					newFilterListObject[key] = filterList[key];
 				}
 			}
 			setQueryFilter({
 				budget_targets_project: budgetTargetId,
-				...obj,
+				...newFilterListObject,
 			});
 		}
-	}, [filterList]);
+	}, [filterList, budgetTargetId]);
 
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
@@ -128,18 +123,19 @@ function BudgetLineItemTableGraphql({
 			console.log(err);
 		},
 	});
-	if (annualYears && Object.keys(annualYearHash).length == 0) {
+	if (annualYears && Object.keys(annualYearHash).length === 0) {
 		annualYearHash = mapIdToName(annualYears.annualYearList, annualYearHash);
 	}
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS, {
 		onCompleted: (data) => {
-			financialYearDonorHash = mapIdToName(data.financialYearList, financialYearDonorHash);
+			financialYearOrgHash = mapIdToName(data.financialYearList, financialYearOrgHash);
 		},
 	});
+
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS, {
 		onCompleted: (data) => {
-			financialYearOrgHash = mapIdToName(data.financialYearList, financialYearOrgHash);
+			financialYearDonorHash = mapIdToName(data.financialYearList, financialYearDonorHash);
 		},
 	});
 
@@ -154,7 +150,7 @@ function BudgetLineItemTableGraphql({
 				},
 			});
 		}
-	}, [donor, getGrantPeriodProject]);
+	}, [donor, getGrantPeriodProject, currentProject]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -166,7 +162,7 @@ function BudgetLineItemTableGraphql({
 				},
 			});
 		}
-	}, [dashboardData?.organization, getFinancialYearOrg]);
+	}, [dashboardData, getFinancialYearOrg]);
 
 	useEffect(() => {
 		if (donor) {
@@ -182,7 +178,7 @@ function BudgetLineItemTableGraphql({
 
 	useEffect(() => {
 		getAnnualYears();
-	}, []);
+	}, [getAnnualYears]);
 
 	if (grantPeriodProject) {
 		budgetLineItemInputFields[2].optionsArray =

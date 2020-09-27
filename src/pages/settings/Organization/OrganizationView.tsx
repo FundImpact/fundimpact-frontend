@@ -20,7 +20,6 @@ import {
 	Divider,
 	CircularProgress,
 } from "@material-ui/core";
-import { IInputFields } from "../../../models";
 import UploadFile from "../../../components/UploadFile";
 import { Form, Formik } from "formik";
 import { FormattedMessage } from "react-intl";

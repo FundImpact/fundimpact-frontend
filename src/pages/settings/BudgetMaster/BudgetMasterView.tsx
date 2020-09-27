@@ -8,6 +8,8 @@ import { FormattedMessage } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import Chip from "@material-ui/core/Chip";
 import { budgetCategoryInputFields } from "./inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
 
 const BudgetMasterView = ({
 	tableFilterList,
@@ -24,6 +26,16 @@ const BudgetMasterView = ({
 	>;
 	removeFilteListElements: (elementToDelete: string) => void;
 }) => {
+	const createBudgetCategoryAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	);
+
+	const budgetCategoryFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
+	);
+
 	return (
 		<>
 			<Box p={2}>
@@ -41,20 +53,22 @@ const BudgetMasterView = ({
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
-							<FilterList
-								setFilterList={setTableFilterList}
-								inputFields={budgetCategoryInputFields}
-							/>
+							{budgetCategoryFindAccess && (
+								<FilterList
+									setFilterList={setTableFilterList}
+									inputFields={budgetCategoryInputFields}
+								/>
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
 							{Object.entries(tableFilterList).map(
-								(element, index) =>
-									element[1] && (
+								(tableFilterListObjectKeyValuePair, index) =>
+									tableFilterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
-												label={element[1]}
+												label={tableFilterListObjectKeyValuePair[1]}
 												avatar={
 													<Avatar
 														style={{
@@ -62,10 +76,19 @@ const BudgetMasterView = ({
 															height: "30px",
 														}}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>
+															{tableFilterListObjectKeyValuePair[0].slice(
+																0,
+																4
+															)}
+														</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(element[0])}
+												onDelete={() =>
+													removeFilteListElements(
+														tableFilterListObjectKeyValuePair[0]
+													)
+												}
 											/>
 										</Box>
 									)
@@ -73,25 +96,29 @@ const BudgetMasterView = ({
 						</Box>
 					</Grid>
 				</Grid>
-				<BudgetCategoryTable tableFilterList={tableFilterList} />
-				<AddButton
-					createButtons={[]}
-					buttonAction={{
-						dialog: ({
-							open,
-							handleClose,
-						}: {
-							open: boolean;
-							handleClose: () => void;
-						}) => (
-							<BudgetCategory
-								open={open}
-								handleClose={handleClose}
-								formAction={FORM_ACTIONS.CREATE}
-							/>
-						),
-					}}
-				/>
+				{budgetCategoryFindAccess && (
+					<BudgetCategoryTable tableFilterList={tableFilterList} />
+				)}
+				{createBudgetCategoryAccess && (
+					<AddButton
+						createButtons={[]}
+						buttonAction={{
+							dialog: ({
+								open,
+								handleClose,
+							}: {
+								open: boolean;
+								handleClose: () => void;
+							}) => (
+								<BudgetCategory
+									open={open}
+									handleClose={handleClose}
+									formAction={FORM_ACTIONS.CREATE}
+								/>
+							),
+						}}
+					/>
+				)}
 			</Box>
 		</>
 	);

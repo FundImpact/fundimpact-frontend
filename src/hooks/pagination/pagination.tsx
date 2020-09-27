@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLazyQuery, useApolloClient } from "@apollo/client";
 
 function getStartValue(startingValue: number, limit: number, prev: boolean): number {
@@ -6,10 +6,17 @@ function getStartValue(startingValue: number, limit: number, prev: boolean): num
 		return startingValue;
 	}
 
-	if (startingValue % limit == 0) {
+	//at the end of the pagination the number of elements left might not be equal to the 
+	//value of limit provided bu the user that is why we are checking starting value is divisible 
+	//by the limit we are shifting the stating value by 2*limit due to following reason.
+	//let us conside we have 3 starting value 0, 10, 20 and we are at 20 , user has seen value from
+	//10 to 20 but we have to show value 0 t0 10 that is why we subtarct 2*limit from starting value
+	if (startingValue % limit === 0) {
 		return startingValue - 2 * limit < 0 ? 0 : startingValue - 2 * limit;
 	}
 
+	//staring value is not divisible by limit so we are shifting by the number of elements at the
+	//end and the value of limit
 	return startingValue - limit - +(startingValue % limit);
 }
 
@@ -57,73 +64,76 @@ function Pagination({
 		if (fireRequest) {
 			getRequestedDataLength();
 		}
-	}, [fireRequest]);
+	}, [fireRequest, getRequestedDataLength]);
+
+	const changePage = useCallback(
+		(prev: boolean = false) => {
+			if (countQueryLoading) {
+				return;
+			}
+
+			if (!prev && startingValue.current > count.current) {
+				setError("Start Cannot Be More Than Count");
+				return;
+			}
+
+			if (prev && startingValue.current === 0) {
+				setError("Start Cannot Be Zero When Going Previous");
+				return;
+			}
+
+			let correctStartingValue = getStartValue(startingValue.current, limit, prev);
+
+			let currentLimit =
+				correctStartingValue + limit > count.current
+					? count.current - correctStartingValue
+					: limit;
+
+			let oldCacheQueryData: any = null;
+			try {
+				oldCacheQueryData = apolloClient.readQuery({
+					query,
+					variables: {
+						filter: queryFilter,
+						limit: currentLimit,
+						start: correctStartingValue,
+						sort,
+					},
+				});
+			} catch (err) {}
+
+			setOldCache(oldCacheQueryData);
+
+			if (!oldCacheQueryData) {
+				getQueryData({
+					variables: {
+						filter: queryFilter,
+						limit: currentLimit,
+						start: correctStartingValue,
+						sort,
+					},
+				});
+			}
+
+			startingValue.current =
+				correctStartingValue + currentLimit > count.current
+					? count.current
+					: correctStartingValue + currentLimit;
+		},
+		[apolloClient, countQueryLoading, getQueryData, limit, query, queryFilter, sort]
+	);
 
 	useEffect(() => {
 		if (countData) {
 			startingValue.current = start;
 			count.current = Object.values(countData)[0] as number;
-			ChangePage();
+			changePage();
 		}
-	}, [countData, sort]);
-
-	function ChangePage(prev: boolean = false) {
-		if (countQueryLoading) {
-			return;
-		}
-
-		if (!prev && startingValue.current > count.current) {
-			setError("Start Cannot Be More Than Count");
-			return;
-		}
-
-		if (prev && startingValue.current == 0) {
-			setError("Start Cannot Be Zero When Going Previous");
-			return;
-		}
-
-		let correctStartingValue = getStartValue(startingValue.current, limit, prev);
-
-		let currentLimit =
-			correctStartingValue + limit > count.current
-				? count.current - correctStartingValue
-				: limit;
-
-		let oldCacheQueryData: any = null;
-		try {
-			oldCacheQueryData = apolloClient.readQuery({
-				query,
-				variables: {
-					filter: queryFilter,
-					limit: currentLimit,
-					start: correctStartingValue,
-					sort,
-				},
-			});
-		} catch (err) {}
-
-		setOldCache(oldCacheQueryData);
-
-		if (!oldCacheQueryData) {
-			getQueryData({
-				variables: {
-					filter: queryFilter,
-					limit: currentLimit,
-					start: correctStartingValue,
-					sort,
-				},
-			});
-		}
-
-		startingValue.current =
-			correctStartingValue + currentLimit > count.current
-				? count.current
-				: correctStartingValue + currentLimit;
-	}
+	}, [countData, sort, start, changePage]);
 
 	return {
 		count: count.current,
-		changePage: ChangePage,
+		changePage,
 		queryData: oldCache ? oldCache : queryData,
 		error,
 		queryLoading,

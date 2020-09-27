@@ -1,6 +1,5 @@
 import {
 	Checkbox,
-	Chip,
 	createStyles,
 	FormControl,
 	FormHelperText,
