@@ -1,0 +1,28 @@
+{
+	"userRoleForm": [
+		{
+			"name": "email",
+			"id": "email",
+			"dataTestId": "userRoleFormEmail",
+			"testId": "userRoleFormEmailInput",
+			"label": "Email",
+			"type": "email",
+			"required": true,
+			"size": 9
+		},
+		{
+			"name": "role",
+			"id": "role",
+			"dataTestId": "userRoleFormRole",
+			"testId": "userRoleFormRoleInput",
+			"label": "Role",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"size": 3
+		}
+	]
+}

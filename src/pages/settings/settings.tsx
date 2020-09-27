@@ -22,6 +22,7 @@ import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actio
 import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
 import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
+import { UserRoleContainer } from "./UserRole/container";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -40,12 +41,12 @@ function PrivateRoute({
 export default function SettingContainer() {
 	const classes = sidePanelStyles();
 	const notificationData = useNotificationData();
-	
+
 	const impactUnitFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_UNIT,
 		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
 	);
-	
+
 	const deliverableCategoryFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
@@ -59,7 +60,6 @@ export default function SettingContainer() {
 		MODULE_CODES.IMPACT_CATEGORY,
 		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
 	);
-
 
 	const createBudgetCategoryAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,
@@ -164,6 +164,7 @@ export default function SettingContainer() {
 								<Navigate to="settingsDefault" />
 							)}
 						</PrivateRoute>
+						<Route path="user_roles" element={<UserRoleContainer />} />
 					</Routes>
 				</Grid>
 			</Grid>

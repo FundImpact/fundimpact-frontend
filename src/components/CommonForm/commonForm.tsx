@@ -32,6 +32,8 @@ function CommonInputForm({
 	inputFields,
 	formAction,
 	cancelButtonName = "Cancel",
+	createButtonName = "Create",
+	updateButtonName = "Update",
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -101,7 +103,9 @@ function CommonInputForm({
 										data-testid="createSaveButton"
 										disabled={!formik.isValid}
 									>
-										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
+										{formAction === FORM_ACTIONS.CREATE
+											? createButtonName
+											: updateButtonName}
 									</Button>
 									<Button
 										className={classes.cancelButton}

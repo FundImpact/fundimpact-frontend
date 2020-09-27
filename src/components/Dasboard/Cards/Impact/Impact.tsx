@@ -26,7 +26,7 @@ export default function Impact() {
 						{`#${index + 1} ${impact}`}
 					</Typography>
 				);
-			})} */}
+			})}*/}
 		</Box>
 	);
 }
