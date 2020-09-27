@@ -47,4 +47,15 @@ export const sidebarList: {
 			},
 		],
 	},
+	{
+		mainHeading: "Manage Roles",
+		subHeadings: [
+			{
+				to: "user_roles",
+				dataTestId: "user-role-link",
+				title: "User Roles",
+				userAccess: true,
+			},
+		],
+	},
 ];
