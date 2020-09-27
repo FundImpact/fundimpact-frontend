@@ -13,7 +13,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { CARD_TYPES } from "./constants";
 import { CardProps } from "../../../models/cards/cards";
-import { GetCardTypeAndValues } from "./CardHooks/GetCardType";
+import { GetCardTypeAndValues } from "./cardHooks/GetCardType";
 import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 
 export default function DashboardCard(props: CardProps) {
