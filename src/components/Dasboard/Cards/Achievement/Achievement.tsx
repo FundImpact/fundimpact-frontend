@@ -146,7 +146,7 @@ export default function Achievement() {
 
 	return (
 		<>
-			<Box m={1}>
+			<Box m={1} mt={0}>
 				<ISTATUS {...DELIVERABLE_STATUS} />
 			</Box>
 			<Box m={1}>

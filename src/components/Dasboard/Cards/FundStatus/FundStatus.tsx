@@ -66,6 +66,7 @@ export default function FundStatus() {
 		};
 
 		let pieData = {
+			labels: ["Approved", "Spend", "Received"],
 			datasets: [
 				{
 					backgroundColor: [
@@ -170,7 +171,7 @@ export default function FundStatus() {
 		);
 
 	return (
-		<Box mt={1} className={classes.root}>
+		<Box className={classes.root}>
 			<Grid container spacing={0} direction="row">
 				<Grid item xs={6} container={true} alignContent="center">
 					{FUND_DETAILS.map((fund, index) => (

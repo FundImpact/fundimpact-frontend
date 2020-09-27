@@ -3,7 +3,7 @@ export const options = {
 		display: false,
 	},
 	tooltips: {
-		enabled: false,
+		enabled: true,
 	},
 	hover: false,
 };
