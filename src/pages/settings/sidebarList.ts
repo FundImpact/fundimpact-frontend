@@ -48,14 +48,10 @@ export const sidebarList: {
 		],
 	},
 	{
-		mainHeading: "Manage Roles",
+		mainHeading: "Manage Users",
 		subHeadings: [
-			{
-				to: "user_roles",
-				dataTestId: "user-role-link",
-				title: "User Roles",
-				userAccess: true,
-			},
+			{ to: "user_roles", dataTestId: "user-role-link", title: "Roles", userAccess: true },
+			{ to: "users", dataTestId: "users-link", title: "Users", userAccess: true },
 		],
 	},
 ];

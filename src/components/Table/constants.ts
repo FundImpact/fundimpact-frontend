@@ -22,6 +22,12 @@ export const ImpactHeadings = [
 	{ label: "" }, //edit icon
 ];
 
+export const invitedUserTable = [
+	{ label: "#" },
+	{ label: "Name" },
+	{ label: "Role" },
+	{ label: "" }, //edit icon
+];
 export const deliverableAndimpactTracklineHeading = [
 	{ label: "#" },
 	{ label: "Date", keyMapping: "reporting_date" },

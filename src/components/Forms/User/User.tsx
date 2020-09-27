@@ -2,7 +2,7 @@ import React from "react";
 import { FORM_ACTIONS } from "../constant";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
-import { updateUserForm } from "./inputField.json";
+import { updateUserForm, updateUserWithTokenForm } from "./inputField.json";
 import { Typography, Grid } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER_DETAILS } from "../../../graphql/User/mutation";
@@ -35,6 +35,10 @@ function UserForm(props: UserProps) {
 	let initialValues: IUser = getInitialValues(props);
 	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
 	const formAction = props.type;
+	let verifyAndUpdateUserForm: boolean | undefined = false;
+	if (props.type === FORM_ACTIONS.UPDATE) {
+		verifyAndUpdateUserForm = props.updateWithaToken;
+	}
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
 		onError() {
 			notificationDispatch(setErrorNotification("Profile updation Failed !"));
@@ -75,30 +79,37 @@ function UserForm(props: UserProps) {
 				formData.append("files", value.uploadPhoto);
 				uploadResponse = await uploadFile(formData);
 			}
-			updateUser({
-				variables: {
-					id: value.id,
-					input: {
-						name: value.name,
-						username: value.username,
-						email: value.email,
-						profile_photo:
-							value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
+			if (verifyAndUpdateUserForm) {
+				console.log("QUERRY");
+			} else {
+				updateUser({
+					variables: {
+						id: value.id,
+						input: {
+							name: value.name,
+							username: value.username,
+							email: value.email,
+							profile_photo:
+								value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
+						},
 					},
-				},
-			});
+				});
+			}
 		} else {
-			updateUser({
-				variables: {
-					id: value.id,
-					input: {
-						name: value.name,
-						username: value.username,
-						email: value.email,
-						profile_photo: value.profile_photo,
+			if (verifyAndUpdateUserForm) {
+				console.log("QUERRY");
+			} else
+				updateUser({
+					variables: {
+						id: value.id,
+						input: {
+							name: value.name,
+							username: value.username,
+							email: value.email,
+							profile_photo: value.profile_photo,
+						},
 					},
-				},
-			});
+				});
 		}
 	};
 
@@ -136,7 +147,9 @@ function UserForm(props: UserProps) {
 							cancelButtonName: "Reset",
 							formAction,
 							onUpdate,
-							inputFields: updateUserForm,
+							inputFields: verifyAndUpdateUserForm
+								? updateUserWithTokenForm
+								: updateUserForm,
 						}}
 					/>
 				</Grid>

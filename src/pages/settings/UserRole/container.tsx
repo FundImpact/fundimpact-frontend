@@ -1,23 +1,41 @@
 import React from "react";
 import UserRoleForm from "../../../components/Forms/UserRole";
-import { Box, Paper } from "@material-ui/core";
+import { Box, Grid, Paper, Typography } from "@material-ui/core";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
-
+import InvitedUserTable from "../../../components/Table/InvitedUser";
 export const UserRoleContainer = () => {
 	return (
 		<Box>
-			<h1>
-				<FormattedMessage
-					id={`userRoleHeading`}
-					defaultMessage={`User Roles`}
-					description={`This text will be shown on Setting page for user role heading`}
-				/>
-			</h1>
-			<Paper style={{ height: "90vh" }}>
-				<Box m={3} p={2}>
-					<UserRoleForm type={FORM_ACTIONS.CREATE} />
-				</Box>
+			<Box m={1}>
+				<Typography variant="h6">
+					<FormattedMessage
+						id={`userRoleHeading`}
+						defaultMessage={`User Roles`}
+						description={`This text will be shown on Setting page for user role heading`}
+					/>
+				</Typography>
+			</Box>
+			<Paper style={{ height: "30vh" }}>
+				<Grid item md={12}>
+					<Box m={1} p={3}>
+						<UserRoleForm type={FORM_ACTIONS.CREATE} />
+					</Box>
+				</Grid>
+				<Grid md={12}>
+					<Box m={1} mb={0}>
+						<Typography variant="h6">
+							<FormattedMessage
+								id={`invitedUserHeading`}
+								defaultMessage={`Invited Users`}
+								description={`This text will be shown on Setting page for invited user heading on role tab`}
+							/>
+						</Typography>
+					</Box>
+					<Box>
+						<InvitedUserTable />
+					</Box>
+				</Grid>
 			</Paper>
 		</Box>
 	);

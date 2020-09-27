@@ -19,6 +19,15 @@ export const ProfileContainer = () => {
 		uploadPhoto: "",
 	};
 	const [openResetPassForm, setOpenResetPassForm] = useState<boolean>(false);
+
+	let verifyJwt = false;
+	let params = new URLSearchParams(window.location.search);
+	const token: string | null = params.get("token");
+	if (token) {
+		console.log("xxxx", token);
+		verifyJwt = true;
+	}
+
 	return (
 		<Box>
 			<h1>
@@ -30,18 +39,23 @@ export const ProfileContainer = () => {
 			</h1>
 			<Paper style={{ height: "50vh" }}>
 				<Box m={3} p={2}>
-					<UserForm data={data} type={FORM_ACTIONS.UPDATE} />
+					<UserForm data={data} type={FORM_ACTIONS.UPDATE} updateWithaToken={verifyJwt} />
 				</Box>
 			</Paper>
-			<Box m={1}>
-				<Button color="primary" onClick={() => setOpenResetPassForm(!openResetPassForm)}>
-					<FormattedMessage
-						id={`profileResetPassword`}
-						defaultMessage={`Reset Password`}
-						description={`This text will be shown on Setting page for reset password button`}
-					/>
-				</Button>
-			</Box>
+			{!verifyJwt && (
+				<Box m={1}>
+					<Button
+						color="primary"
+						onClick={() => setOpenResetPassForm(!openResetPassForm)}
+					>
+						<FormattedMessage
+							id={`profileResetPassword`}
+							defaultMessage={`Reset Password`}
+							description={`This text will be shown on Setting page for reset password button`}
+						/>
+					</Button>
+				</Box>
+			)}
 			{openResetPassForm && (
 				<Paper style={{ height: "30vh" }}>
 					<Box m={2} p={3}>

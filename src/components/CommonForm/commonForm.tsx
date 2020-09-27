@@ -87,6 +87,7 @@ function CommonInputForm({
 											required={element.required ? true : false}
 											multiple={element.multiple ? element.multiple : false}
 											logo={element.logo ? element.logo : ""}
+											disabled={element.disabled ? element.disabled : false}
 										/>
 									</Grid>
 								);
