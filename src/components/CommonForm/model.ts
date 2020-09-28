@@ -1,7 +1,16 @@
+import { FormikState } from "formik";
+
 export interface ICommonForm {
 	initialValues: any;
 	validate: (initialValue: any) => object;
-	onCreate: (values: any) => void;
+	onCreate: (
+		values: any,
+		{
+			resetForm,
+		}: {
+			resetForm?: (nextState?: Partial<FormikState<any>> | undefined) => void;
+		}
+	) => void;
 	onUpdate: (values: any) => void;
 	onCancel?: () => void;
 	inputFields: any[];
