@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IImpactUnitData } from "../../../models/impact/impact";
@@ -10,6 +10,8 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import FilterList from "../../FilterList";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import { impactUnitInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 
 const rows = [
 	{
@@ -55,6 +57,26 @@ const chipArr = ({
 	));
 };
 
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArr({
+			arr: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	return null;
+};
+let impactUnitTableEditMenu: string[] = [];
+
 function ImpactUnitTableContainer({
 	toggleDialogs,
 	openDialogs,
@@ -96,23 +118,29 @@ function ImpactUnitTableContainer({
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) {
+	const impactUnitEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.UPDATE_IMPACT_UNIT
+	);
+
+	useEffect(() => {
+		if (impactUnitEditAccess) {
+			impactUnitTableEditMenu = ["Edit Impact Unit"];
+		}
+	}, [impactUnitEditAccess]);
+
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={11}>
-						<Box my={2} display="flex" flexWrap="wrap">
-							{Object.entries(filterList).map((element) => {
-								if (element[1] && typeof element[1] == "string") {
-									return chipArr({
-										arr: [element[1]],
-										name: element[0].slice(0, 4),
-										removeChip: (index: number) => {
-											removeFilterListElements(element[0]);
-										},
-									});
-								}
-							})}
+						<Box my={2} flexWrap="wrap" display="flex">
+							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+								createChipArray({
+									removeFilterListElements,
+									filterListObjectKeyValuePair,
+								})
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={1}>
@@ -123,8 +151,8 @@ function ImpactUnitTableContainer({
 									code: "",
 									description: "",
 								}}
-								setFilterList={setFilterList}
 								inputFields={impactUnitInputFields}
+								setFilterList={setFilterList}
 							/>
 						</Box>
 					</Grid>
@@ -136,7 +164,7 @@ function ImpactUnitTableContainer({
 				rows={rows}
 				selectedRow={selectedImpactUnit}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Impact Unit"]}
+				editMenuName={impactUnitTableEditMenu}
 				collapsableTable={collapsableTable}
 				changePage={changePage}
 				loading={loading}

@@ -71,21 +71,29 @@ function TabContent(props: TabPanelProps) {
 }
 
 const ImpactMasterView = ({
-	value,
+	showImpactUnitTable,
 	setValue,
 	impactCategoryFilterList,
 	impactUnitFilterList,
 	removeFilteListElements,
 	setImpactCategoryFilterList,
 	setImpactUnitFilterList,
+	impactCategoryFindAccess,
+	impactUnitFindAccess,
+	impactCategoryCreateAccess,
+	impactUnitCreateAccess,
 }: {
-	value: number;
+	showImpactUnitTable: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
 	impactCategoryFilterList: { [key: string]: string };
 	impactUnitFilterList: { [key: string]: string };
 	removeFilteListElements: (elementToDelete: string) => void;
 	setImpactCategoryFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 	setImpactUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+	impactCategoryFindAccess: boolean;
+	impactUnitFindAccess: boolean;
+	impactCategoryCreateAccess: boolean;
+	impactUnitCreateAccess: boolean;
 }) => {
 	const classes = useStyles();
 
@@ -107,6 +115,9 @@ const ImpactMasterView = ({
 					/>
 				),
 			},
+			addButtonAccess: impactCategoryCreateAccess,
+			tabAccess: impactCategoryFindAccess || impactCategoryCreateAccess,
+			tableAccess: impactCategoryFindAccess,
 		},
 		{
 			label: "Impact Unit",
@@ -121,6 +132,9 @@ const ImpactMasterView = ({
 					/>
 				),
 			},
+			addButtonAccess: impactUnitCreateAccess,
+			tabAccess: impactUnitFindAccess || impactUnitCreateAccess,
+			tableAccess: impactUnitFindAccess,
 		},
 	];
 
@@ -133,49 +147,69 @@ const ImpactMasterView = ({
 					<Grid item xs={11}>
 						<Typography variant="h4">
 							<Box mt={2} fontWeight="fontWeightBold">
-								<FormattedMessage
-									description={`This text is the heding of impact ${
-										value == 0 ? "Categories" : "Unit"
-									} table`}
-									defaultMessage={`Impact ${value == 0 ? "Categories" : "Unit"} `}
-									id={`impactMasterPageHeading-${value}`}
-								/>
+								{(impactCategoryFindAccess ||
+									impactUnitFindAccess ||
+									impactUnitCreateAccess ||
+									impactCategoryCreateAccess) && (
+									<FormattedMessage
+										description={`This text is the heding of impact ${
+											showImpactUnitTable === 0 ? "Categories" : "Unit"
+										} table`}
+										defaultMessage={`Impact ${
+											showImpactUnitTable === 0 ? "Categories" : "Unit"
+										} `}
+										id={`impactMasterPageHeading-${showImpactUnitTable}`}
+									/>
+								)}
 							</Box>
 						</Typography>
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
-							<FilterList
-								setFilterList={
-									value == 0
-										? setImpactCategoryFilterList
-										: setImpactUnitFilterList
-								}
-								inputFields={
-									value == 0 ? impactCategoryInputFields : impactUnitInputFields
-								}
-							/>
+							{(impactCategoryFindAccess || impactUnitFindAccess) && (
+								<FilterList
+									setFilterList={
+										showImpactUnitTable === 0
+											? setImpactCategoryFilterList
+											: setImpactUnitFilterList
+									}
+									inputFields={
+										showImpactUnitTable === 0
+											? impactCategoryInputFields
+											: impactUnitInputFields
+									}
+								/>
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
-							{(value == 0
+							{(showImpactUnitTable === 0
 								? Object.entries(impactCategoryFilterList)
 								: Object.entries(impactUnitFilterList)
 							).map(
-								(element, index) =>
-									element[1] && (
+								(filterListObjectKeyValuePair, index) =>
+									filterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
 												avatar={
 													<Avatar
 														style={{ height: "30px", width: "30px" }}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>
+															{filterListObjectKeyValuePair[0].slice(
+																0,
+																4
+															)}
+														</span>
 													</Avatar>
 												}
-												label={element[1]}
-												onDelete={() => removeFilteListElements(element[0])}
+												label={filterListObjectKeyValuePair[1]}
+												onDelete={() =>
+													removeFilteListElements(
+														filterListObjectKeyValuePair[0]
+													)
+												}
 											/>
 										</Box>
 									)
@@ -186,7 +220,7 @@ const ImpactMasterView = ({
 
 				<Box className={classes.root} boxShadow={0}>
 					<Tabs
-						value={value}
+						value={showImpactUnitTable}
 						indicatorColor="primary"
 						textColor="primary"
 						onChange={handleChange}
@@ -194,31 +228,36 @@ const ImpactMasterView = ({
 						scrollButtons="auto"
 						aria-label="wrapped label tabs example"
 					>
-						{tabs.map((tab, index) => (
-							<Tab
-								textColor="secondary"
-								key={tab.label}
-								value={index}
-								label={intl.formatMessage({
-									id: `${tab.label
-										.toString()
-										.replace(/ /g, "")
-										.toLowerCase()}TabHeading`,
-									defaultMessage: tab.label,
-									description: `This text will be shown for ${tab.label} table heading`,
-								})}
-								{...a11yProps(index)}
-							/>
-						))}
+						{tabs.map(
+							(tab, index) =>
+								tab.tabAccess && (
+									<Tab
+										textColor="secondary"
+										key={tab.label}
+										value={index}
+										label={intl.formatMessage({
+											id: `${tab.label
+												.toString()
+												.replace(/ /g, "")
+												.toLowerCase()}TabHeading`,
+											defaultMessage: tab.label,
+											description: `This text will be shown for ${tab.label} table heading`,
+										})}
+										{...a11yProps(index)}
+									/>
+								)
+						)}
 					</Tabs>
 
 					{tabs.map((tab, index) => (
-						<TabContent key={index} value={value} index={index}>
-							{tab.table}
-							<AddButton
-								createButtons={tab.createButtons}
-								buttonAction={tab.buttonAction}
-							/>
+						<TabContent key={index} value={showImpactUnitTable} index={index}>
+							{tab.tableAccess && tab.table}
+							{tab.addButtonAccess && (
+								<AddButton
+									createButtons={tab.createButtons}
+									buttonAction={tab.buttonAction}
+								/>
+							)}
 						</TabContent>
 					))}
 				</Box>

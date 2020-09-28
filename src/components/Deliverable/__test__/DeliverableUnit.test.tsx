@@ -10,6 +10,8 @@ import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { organizationDetail } from "../../../utils/testMock.json";
 import { deliverableCategoryMock } from "./testHelp";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
+import { GET_USER_ROLES } from "../../../graphql/User/query";
 
 const mocks = [
 	{
@@ -19,6 +21,15 @@ const mocks = [
 		},
 		result: { data: { deliverableCategory: [] } },
 	},
+	{
+    request: {
+      query: GET_USER_ROLES,
+      variables: {
+        id: "1",
+      },
+    },
+    result: { data: mockUserRoles },
+  },
 	{
 		request: {
 			query: GET_DELIVERABLE_ORG_CATEGORY,

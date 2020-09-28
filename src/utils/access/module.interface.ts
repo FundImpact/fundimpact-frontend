@@ -1,4 +1,4 @@
-import { MODULE_CODES } from "./modules.list";
+import { MODULE_CODES } from "./moduleCodes";
 
 export interface IMODULE {
 	name: string;

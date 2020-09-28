@@ -42,6 +42,9 @@ const defaultValues: IImpactUnitFormInput = {
 	impactCategory: [],
 };
 
+const getNewImpactCategories = (impactCategories: string[], oldImpactCategories: string[]) =>
+	impactCategories.filter((element: string) => oldImpactCategories.indexOf(element) === -1) || [];
+
 const validate = (values: IImpactUnitFormInput) => {
 	let errors: Partial<IImpactUnitFormInput> = {};
 	if (!values.name) {
@@ -242,7 +245,7 @@ function ImpactUnitDialog({
 		}
 	);
 
-	const initialValues = formAction == FORM_ACTIONS.CREATE ? defaultValues : formValues;
+	const initialValues = formAction === FORM_ACTIONS.CREATE ? defaultValues : formValues;
 	useEffect(() => {
 		if (impactCategories) {
 			impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
@@ -352,11 +355,11 @@ function ImpactUnitDialog({
 	const onUpdate = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
 			const values = Object.assign({}, valuesSubmitted);
-			setImpactCategory(
-				values?.impactCategory?.filter(
-					(element: string) => initialValues?.impactCategory?.indexOf(element) == -1
-				) || []
+			const newImpactCategories = getNewImpactCategories(
+				values?.impactCategory || [],
+				initialValues?.impactCategory || []
 			);
+			setImpactCategory(newImpactCategories);
 			delete values.impactCategory;
 			delete values.id;
 			await updateImpactUnitsOrgInput({

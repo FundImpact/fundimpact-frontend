@@ -12,6 +12,9 @@ import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -70,6 +73,10 @@ const DeliverableMasterView = ({
 	removeFilteListElements,
 	setDeliverableCategoryFilterList,
 	setDeliverableUnitFilterList,
+	deliverableCategoryFindAccess,
+	deliverableUnitFindAccess,
+	deliverableCategoryCreateAccess,
+	deliverableUnitCreateAccess,
 }: {
 	value: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
@@ -80,6 +87,10 @@ const DeliverableMasterView = ({
 		React.SetStateAction<{ [key: string]: string }>
 	>;
 	setDeliverableUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+	deliverableCategoryFindAccess: boolean;
+	deliverableUnitFindAccess: boolean;
+	deliverableCategoryCreateAccess: boolean;
+	deliverableUnitCreateAccess: boolean;
 }) => {
 	const dashboardData = useDashBoardData();
 	const classes = useStyles();
@@ -103,6 +114,9 @@ const DeliverableMasterView = ({
 			createButtons: [],
 			table: <DeliverableCategoryTable tableFilterList={deliverableCategoryFilterList} />,
 			label: "Deliverable Category",
+			addButtonAccess: deliverableCategoryCreateAccess,
+			tableAccess: deliverableCategoryFindAccess,
+			tabAccess: deliverableCategoryFindAccess || deliverableCategoryCreateAccess,
 		},
 		{
 			label: "Deliverable Unit",
@@ -118,6 +132,9 @@ const DeliverableMasterView = ({
 					/>
 				),
 			},
+			addButtonAccess: deliverableUnitCreateAccess,
+			tableAccess: deliverableUnitFindAccess,
+			tabAccess: deliverableUnitFindAccess || deliverableUnitCreateAccess,
 		},
 	];
 
@@ -130,53 +147,69 @@ const DeliverableMasterView = ({
 					<Grid item xs={11}>
 						<Typography variant="h4">
 							<Box mt={2} fontWeight="fontWeightBold">
-								<FormattedMessage
-									description={`This text is the heding of deliverable ${
-										value == 0 ? "Categories" : "Unit"
-									} table`}
-									defaultMessage={`Deliverable ${
-										value == 0 ? "Categories" : "Unit"
-									} `}
-									id={`deliverableMasterPageHeading-${value}`}
-								/>
+								{(deliverableCategoryFindAccess ||
+									deliverableUnitFindAccess ||
+									deliverableUnitCreateAccess ||
+									deliverableCategoryCreateAccess) && (
+									<FormattedMessage
+										description={`This text is the heding of deliverable ${
+											value === 0 ? "Categories" : "Unit"
+										} table`}
+										defaultMessage={`Deliverable ${
+											value === 0 ? "Categories" : "Unit"
+										} `}
+										id={`deliverableMasterPageHeading-${value}`}
+									/>
+								)}
 							</Box>
 						</Typography>
 					</Grid>
 					<Grid item xs={1}>
 						<Box mt={2}>
-							<FilterList
-								setFilterList={
-									value == 0
-										? setDeliverableCategoryFilterList
-										: setDeliverableUnitFilterList
-								}
-								inputFields={
-									value == 0
-										? deliverableCategoryInputFields
-										: deliverableUnitInputFields
-								}
-							/>
+							{(deliverableCategoryFindAccess || deliverableUnitFindAccess) && (
+								<FilterList
+									setFilterList={
+										value === 0
+											? setDeliverableCategoryFilterList
+											: setDeliverableUnitFilterList
+									}
+									inputFields={
+										value === 0
+											? deliverableCategoryInputFields
+											: deliverableUnitInputFields
+									}
+								/>
+							)}
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
-							{(value == 0
+							{(value === 0
 								? Object.entries(deliverableCategoryFilterList)
 								: Object.entries(deliverableUnitFilterList)
 							).map(
-								(element, index) =>
-									element[1] && (
+								(filterListObjectKeyValuePair, index) =>
+									filterListObjectKeyValuePair[1] && (
 										<Box key={index} mx={1}>
 											<Chip
-												label={element[1]}
+												label={filterListObjectKeyValuePair[1]}
 												avatar={
 													<Avatar
 														style={{ width: "30px", height: "30px" }}
 													>
-														<span>{element[0].slice(0, 4)}</span>
+														<span>
+															{filterListObjectKeyValuePair[0].slice(
+																0,
+																4
+															)}
+														</span>
 													</Avatar>
 												}
-												onDelete={() => removeFilteListElements(element[0])}
+												onDelete={() =>
+													removeFilteListElements(
+														filterListObjectKeyValuePair[0]
+													)
+												}
 											/>
 										</Box>
 									)
@@ -195,31 +228,36 @@ const DeliverableMasterView = ({
 						scrollButtons="auto"
 						value={value}
 					>
-						{tabs.map((tab, index) => (
-							<Tab
-								value={index}
-								key={tab.label}
-								textColor="secondary"
-								label={intl.formatMessage({
-									id: `${tab.label
-										.toString()
-										.replace(/ /g, "")
-										.toLowerCase()}TabHeading`,
-									defaultMessage: tab.label,
-									description: `This text will be shown for ${tab.label} table heading`,
-								})}
-								{...a11yProp(index)}
-							/>
-						))}
+						{tabs.map(
+							(tab, index) =>
+								tab.tabAccess && (
+									<Tab
+										value={index}
+										key={tab.label}
+										textColor="secondary"
+										label={intl.formatMessage({
+											id: `${tab.label
+												.toString()
+												.replace(/ /g, "")
+												.toLowerCase()}TabHeading`,
+											defaultMessage: tab.label,
+											description: `This text will be shown for ${tab.label} table heading`,
+										})}
+										{...a11yProp(index)}
+									/>
+								)
+						)}
 					</Tabs>
 
 					{tabs.map((tab, index) => (
 						<TabContent key={index} value={value} index={index}>
-							{tab.table}
-							<AddButton
-								createButtons={tab.createButtons}
-								buttonAction={tab.buttonAction}
-							/>
+							{tab.tableAccess && tab.table}
+							{tab.addButtonAccess && (
+								<AddButton
+									createButtons={tab.createButtons}
+									buttonAction={tab.buttonAction}
+								/>
+							)}
 						</TabContent>
 					))}
 				</Box>

@@ -9,6 +9,9 @@ import FilterList from "../../../components/FilterList";
 import { donorInputFields } from "./inputFields.json";
 import { GET_COUNTRY_LIST } from "../../../graphql";
 import { useLazyQuery } from "@apollo/client";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 
 const chipArray = ({
 	arr,
@@ -41,14 +44,53 @@ const chipArray = ({
 
 let countryHash: { [key: string]: string } = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
+};
+
+const createChipArray = ({
+	tableFilterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	tableFilterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (
+		tableFilterListObjectKeyValuePair[1] &&
+		typeof tableFilterListObjectKeyValuePair[1] == "string"
+	) {
+		return chipArray({
+			arr: [tableFilterListObjectKeyValuePair[1]],
+			name: tableFilterListObjectKeyValuePair[0].slice(0, 4),
+			removeChips: (index: number) => {
+				removeFilterListElements(tableFilterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	if (
+		tableFilterListObjectKeyValuePair[1] &&
+		Array.isArray(tableFilterListObjectKeyValuePair[1])
+	) {
+		if (tableFilterListObjectKeyValuePair[0] === "country") {
+			return chipArray({
+				arr: tableFilterListObjectKeyValuePair[1].map((ele) => countryHash[ele]),
+				name: "co",
+				removeChips: (index: number) => {
+					removeFilterListElements(tableFilterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	return null;
 };
 
 export const DonorContainer = () => {
@@ -61,18 +103,16 @@ export const DonorContainer = () => {
 		country: [],
 	});
 
+	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
+	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+
 	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setTableFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setTableFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
+
 	donorInputFields[3].optionsArray = countries?.countryList || [];
 
 	if (!Object.keys(countryHash).length && countries?.countryList) {
@@ -81,7 +121,7 @@ export const DonorContainer = () => {
 
 	useEffect(() => {
 		getCountryList();
-	}, []);
+	}, [getCountryList]);
 
 	return (
 		<>
@@ -99,59 +139,53 @@ export const DonorContainer = () => {
 				</Grid>
 				<Grid item xs={1}>
 					<Box mt={2}>
-						<FilterList
-							setFilterList={setTableFilterList}
-							inputFields={donorInputFields}
-							initialValues={{
-								name: "",
-								legal_name: "",
-								short_name: "",
-								country: [],
-							}}
-						/>
+						{donorFindAccess && (
+							<FilterList
+								setFilterList={setTableFilterList}
+								inputFields={donorInputFields}
+								initialValues={{
+									name: "",
+									legal_name: "",
+									short_name: "",
+									country: [],
+								}}
+							/>
+						)}
 					</Box>
 				</Grid>
 				<Grid item xs={12}>
 					<Box my={2} display="flex">
-						{Object.entries(tableFilterList).map((element) => {
-							if (element[1] && typeof element[1] == "string") {
-								return chipArray({
-									arr: [element[1]],
-									name: element[0].slice(0, 4),
-									removeChips: (index: number) => {
-										removeFilterListElements(element[0]);
-									},
-								});
-							}
-							if (element[1] && Array.isArray(element[1])) {
-								if (element[0] == "country") {
-									return chipArray({
-										arr: element[1].map((ele) => countryHash[ele]),
-										name: "co",
-										removeChips: (index: number) => {
-											removeFilterListElements(element[0], index);
-										},
-									});
-								}
-							}
-						})}
+						{Object.entries(tableFilterList).map((tableFilterListObjectKeyValuePair) =>
+							createChipArray({
+								tableFilterListObjectKeyValuePair,
+								removeFilterListElements,
+							})
+						)}
 					</Box>
 				</Grid>
 			</Grid>
 
-			<DonorTable tableFilterList={tableFilterList} />
-			<AddButton
-				createButtons={[]}
-				buttonAction={{
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<Donor
-							open={open}
-							handleClose={handleClose}
-							formAction={FORM_ACTIONS.CREATE}
-						/>
-					),
-				}}
-			/>
+			{donorFindAccess && <DonorTable tableFilterList={tableFilterList} />}
+			{donorCreateAccess && (
+				<AddButton
+					createButtons={[]}
+					buttonAction={{
+						dialog: ({
+							open,
+							handleClose,
+						}: {
+							open: boolean;
+							handleClose: () => void;
+						}) => (
+							<Donor
+								open={open}
+								handleClose={handleClose}
+								formAction={FORM_ACTIONS.CREATE}
+							/>
+						),
+					}}
+				/>
+			)}
 		</>
 	);
 };

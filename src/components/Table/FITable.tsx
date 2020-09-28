@@ -102,12 +102,12 @@ export default function FITable({
 												/>
 												{order && heading.keyMapping && (
 													<TableSortLabel
-														active={orderBy == heading.keyMapping}
+														active={orderBy === heading.keyMapping}
 														onClick={() => {
-															if (orderBy == heading.keyMapping) {
+															if (orderBy === heading.keyMapping) {
 																setOrder &&
 																	setOrder(
-																		order == "asc"
+																		order === "asc"
 																			? "desc"
 																			: "asc"
 																	);

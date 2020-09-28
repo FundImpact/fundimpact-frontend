@@ -32,6 +32,10 @@ import DeliverableTracklineTable from "./DeliverableTrackLine";
 import FilterList from "../../FilterList";
 import { deliverableTargetInputFields } from "./inputFields.json";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
+import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 
 const chipArray = ({
 	removeChip,
@@ -73,10 +77,29 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 		setMenuAnchor(null);
 	};
 
+	const deliverableTragetEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.UPDATE_DELIVERABLE_TARGET
+	);
+
+	const deliverableTracklineCreateAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
+
 	return (
 		<>
 			<TableCell>
-				<IconButton aria-label="delete" onClick={handleMenuClick}>
+				<IconButton
+					style={{
+						visibility:
+							deliverableTragetEditAccess || deliverableTracklineCreateAccess
+								? "visible"
+								: "hidden",
+					}}
+					aria-label="delete"
+					onClick={handleMenuClick}
+				>
 					<MoreVertIcon />
 				</IconButton>
 			</TableCell>
@@ -87,44 +110,48 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 				open={Boolean(menuAnchor)}
 				onClose={handleMenuClose}
 			>
-				<MenuItem
-					onClick={() => {
-						setTargetData({
-							id: deliverableTarget.id,
-							name: deliverableTarget.name,
-							target_value: deliverableTarget.target_value,
-							description: deliverableTarget.description,
-							deliverableCategory:
-								deliverableTarget.deliverable_category_unit
-									?.deliverable_category_org?.id,
-							deliverableUnit:
-								deliverableTarget.deliverable_category_unit?.deliverable_units_org
-									?.id,
-							deliverable_category_unit:
-								deliverableTarget.deliverable_category_unit.id,
-							project: deliverableTarget.project.id,
-						});
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="editTargetMenu"
-						defaultMessage="Edit Target"
-						description="This text will be show on deliverable or impact target table for edit target menu"
-					/>
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						handleMenuClose();
-						setTargetLineDialog(true);
-					}}
-				>
-					<FormattedMessage
-						id="reportAchievementMenu"
-						defaultMessage="Report Achievement"
-						description="This text will be show on deliverable or impact target table for report achievement menu"
-					/>
-				</MenuItem>
+				{deliverableTragetEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setTargetData({
+								id: deliverableTarget.id,
+								name: deliverableTarget.name,
+								target_value: deliverableTarget.target_value,
+								description: deliverableTarget.description,
+								deliverableCategory:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_category_org?.id,
+								deliverableUnit:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_units_org?.id,
+								deliverable_category_unit:
+									deliverableTarget.deliverable_category_unit.id,
+								project: deliverableTarget.project.id,
+							});
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="editTargetMenu"
+							defaultMessage="Edit Target"
+							description="This text will be show on deliverable or impact target table for edit target menu"
+						/>
+					</MenuItem>
+				)}
+				{deliverableTracklineCreateAccess && (
+					<MenuItem
+						onClick={() => {
+							handleMenuClose();
+							setTargetLineDialog(true);
+						}}
+					>
+						<FormattedMessage
+							id="reportAchievementMenu"
+							defaultMessage="Report Achievement"
+							description="This text will be show on deliverable or impact target table for report achievement menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{targetData && (
 				<DeliverableTarget
@@ -178,17 +205,64 @@ function DeliverableTargetAchievementAndProgress({
 	);
 }
 
-let deliverableCategoryHash: { [key: string]: string } = {};
-
-const mapIdToName = (arr: { id: string; name: string }[], obj: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
 			return accumulator;
 		},
-		obj
+		initialObject
 	);
 };
+
+let deliverableCategoryHash: { [key: string]: string } = {};
+
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		return chipArray({
+			list: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChip: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+		});
+	}
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "deliverable_category_org") {
+			return chipArray({
+				list: filterListObjectKeyValuePair[1].map((ele) => deliverableCategoryHash[ele]),
+				name: "dc",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	return null;
+};
+
+const getTableHeadingByDeliverableTracklineAccess = (
+	headings: (
+		| {
+				label: string;
+				keyMapping?: undefined;
+		  }
+		| {
+				label: string;
+				keyMapping: string;
+		  }
+	)[],
+	collapseTableAccess: boolean
+) => (collapseTableAccess ? headings : headings.slice(1));
 
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
@@ -207,6 +281,11 @@ export default function DeliverablesTable() {
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
+
+	const deliverableTracklineFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.FIND_DELIVERABLE_TRACKING_LINE_ITEM
+	);
 
 	useEffect(() => {
 		if (deliverableCategories) {
@@ -231,16 +310,10 @@ export default function DeliverablesTable() {
 		setPage(newPage);
 	};
 
-	const removeFilterListElements = (key: string, index?: number) => {
-		setFilterList((obj) => {
-			if (Array.isArray(obj[key])) {
-				obj[key] = (obj[key] as string[]).filter((ele, i) => index != i);
-			} else {
-				obj[key] = "";
-			}
-			return { ...obj };
-		});
-	};
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -270,7 +343,7 @@ export default function DeliverablesTable() {
 				return filter;
 			});
 		}
-	}, [filterList]);
+	}, [filterList, dashboardData]);
 
 	let {
 		count,
@@ -392,30 +465,12 @@ export default function DeliverablesTable() {
 					<Grid container>
 						<Grid item xs={11}>
 							<Box my={2} display="flex" flexWrap="wrap">
-								{Object.entries(filterList).map((element) => {
-									if (element[1] && typeof element[1] == "string") {
-										return chipArray({
-											list: [element[1]],
-											name: element[0].slice(0, 4),
-											removeChip: (index: number) => {
-												removeFilterListElements(element[0]);
-											},
-										});
-									}
-									if (element[1] && Array.isArray(element[1])) {
-										if (element[0] == "deliverable_category_org") {
-											return chipArray({
-												list: element[1].map(
-													(ele) => deliverableCategoryHash[ele]
-												),
-												name: "dc",
-												removeChip: (index: number) => {
-													removeFilterListElements(element[0], index);
-												},
-											});
-										}
-									}
-								})}
+								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+									createChipArray({
+										filterListObjectKeyValuePair,
+										removeFilterListElements,
+									})
+								)}
 							</Box>
 						</Grid>
 						<Grid item xs={1}>
@@ -437,9 +492,13 @@ export default function DeliverablesTable() {
 						orderBy={orderBy}
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
-						tableHeading={deliverableHeadings}
+						tableHeading={getTableHeadingByDeliverableTracklineAccess(
+							deliverableHeadings,
+							deliverableTracklineFindAccess
+						)}
 						rows={rows}
 						pagination={deliverableTablePagination}
+						showNestedTable={deliverableTracklineFindAccess}
 					/>
 				</>
 			)}

@@ -21,7 +21,7 @@ import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
-import { deliverableTargetForm, deliverableTargetUpdateForm } from "./inputField.json";
+import { deliverableTargetForm } from "./inputField.json";
 import {
 	IGET_DELIVERABLE_TARGET_BY_PROJECT,
 	IDeliverableTargetByProjectResponse,

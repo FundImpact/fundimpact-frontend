@@ -5,5 +5,8 @@ export interface IUserDataContext {
 	user?: {
 		id: string | number;
 		theme?: ThemeOptions;
+		role?: {
+			id: string;
+		};
 	};
 }

@@ -14,13 +14,13 @@ import { IDeliverableCategoryData } from "../../../models/deliverable/deliverabl
 import pagination from "../../../hooks/pagination";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
-	let obj: { [key: string]: string } = {};
+	let newFilterListObject: { [key: string]: string } = {};
 	for (let key in filterList) {
 		if (filterList[key] && filterList[key].length) {
-			obj[key] = filterList[key];
+			newFilterListObject[key] = filterList[key];
 		}
 	}
-	return obj;
+	return newFilterListObject;
 };
 
 function DeliverableUnitTableGraphql({
@@ -54,9 +54,9 @@ function DeliverableUnitTableGraphql({
 	}, [dashboardData]);
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
-		setNestedTableFilterList((obj) => {
-			obj[key] = "";
-			return { ...obj };
+		setNestedTableFilterList((nestedTableFilterListObject) => {
+			nestedTableFilterListObject[key] = "";
+			return { ...nestedTableFilterListObject };
 		});
 	};
 
@@ -68,30 +68,30 @@ function DeliverableUnitTableGraphql({
 
 	useEffect(() => {
 		if (tableFilterList) {
-			const obj = removeEmptyKeys(tableFilterList);
+			const newFilterListObject = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
 				organization: dashboardData?.organization?.id,
-				...obj,
+				...newFilterListObject,
 			});
 		}
-	}, [tableFilterList]);
+	}, [tableFilterList, dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
-			const obj = removeEmptyKeys(nestedTableFilterList);
+			const newFilterListObject = removeEmptyKeys(nestedTableFilterList);
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
 					{ deliverable_category_org: deliverableCategoryId },
-					Object.keys(obj).length && {
+					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
-							...obj,
+							...newFilterListObject,
 						},
 					}
 				)
 			);
 		}
-	}, [nestedTableFilterList]);
+	}, [nestedTableFilterList, deliverableCategoryId]);
 
 	let {
 		changePage: changeDeliverableUnitPage,

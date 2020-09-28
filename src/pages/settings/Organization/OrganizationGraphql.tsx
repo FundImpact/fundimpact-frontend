@@ -16,7 +16,7 @@ function OrganizationGraphql() {
 	>(GET_ORGANIZATION_REGISTRATION_TYPES);
 
 	const [getCountryList, { data: countryList }] = useLazyQuery<IGetCountryList>(GET_COUNTRY_LIST);
-	const [updateOrganization, { loading, data }] = useMutation<
+	const [updateOrganization, { loading }] = useMutation<
 		IUpdateOrganization,
 		IUpdateOrganizationVariables
 	>(UPDATE_ORGANIZATION);

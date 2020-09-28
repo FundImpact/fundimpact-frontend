@@ -45,7 +45,7 @@ function Donor(props: IDonorProps) {
 	addDonorFormSelectFields[0].optionsArray = countries?.countryList || [];
 
 	const initialValues =
-		props.formAction == FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -173,7 +173,7 @@ function Donor(props: IDonorProps) {
 
 	useEffect(() => {
 		getCountryList();
-	}, []);
+	}, [getCountryList]);
 
 	return (
 		<>

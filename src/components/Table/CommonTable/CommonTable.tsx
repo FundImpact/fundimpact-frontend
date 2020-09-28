@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, MutableRefObject } from "react";
+import React, { useState } from "react";
 import {
 	TableContainer,
 	Table,
@@ -23,6 +23,7 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { ICommonTableRow, ICommonTable } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { getValueFromObject } from "../../../utils";
 
 const useStyles = makeStyles({
 	table: {
@@ -42,20 +43,6 @@ const styledTable = makeStyles((theme: Theme) =>
 		},
 	})
 );
-
-//change any
-function getValue<U extends { [key: string]: any }>(
-	obj: U,
-	key: string[]
-): string | number | boolean {
-	if (!obj?.hasOwnProperty(key[0])) {
-		return "";
-	}
-	if (key.length == 1) {
-		return obj[key[0]];
-	}
-	return getValue(obj[key[0]], key.slice(1));
-}
 
 function CommonTableRow<T extends { id: string }>({
 	rowData,
@@ -95,7 +82,7 @@ function CommonTableRow<T extends { id: string }>({
 					return (
 						<TableCell key={i} align="left">
 							{(row.valueAccessKey &&
-								getValue<T>(rowData, row.valueAccessKey.split(","))) ||
+								getValueFromObject(rowData, row.valueAccessKey.split(","))) ||
 								(row.renderComponent && row.renderComponent(rowData))}
 						</TableCell>
 					);
@@ -115,7 +102,8 @@ function CommonTableRow<T extends { id: string }>({
 
 const defaultRows = 10;
 
-//check how to set the value of T
+const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) => element.children;
+
 function CommonTable<T extends { id: string }>({
 	tableHeadings,
 	rows,
@@ -133,7 +121,6 @@ function CommonTable<T extends { id: string }>({
 	orderBy,
 	setOrderBy,
 }: ICommonTable<T>) {
-	const classes = useStyles();
 	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -146,18 +133,24 @@ function CommonTable<T extends { id: string }>({
 		setAnchorEl(null);
 	};
 
-	const menuList = editMenuName.map((element, index) => ({
-		children: (
-			<MenuItem
-				onClick={() => {
-					toggleDialogs(index, true);
-					handleClose();
-				}}
-			>
-				{element}
-			</MenuItem>
-		),
-	}));
+	const menuList = editMenuName
+		.map((element, index) => ({
+			children:
+				(element && (
+					<MenuItem
+						onClick={() => {
+							toggleDialogs(index, true);
+							handleClose();
+						}}
+					>
+						{element}
+					</MenuItem>
+				)) ||
+				null,
+		}))
+		.filter(removeNullElementsFromMenuList);
+
+	const classes = useStyles();
 
 	if (loading) {
 		return <TableSkeleton />;
@@ -189,12 +182,12 @@ function CommonTable<T extends { id: string }>({
 											{heading.label}
 											{order && heading.keyMapping && (
 												<TableSortLabel
-													active={orderBy == heading.keyMapping}
+													active={orderBy === heading.keyMapping}
 													onClick={() => {
-														if (orderBy == heading.keyMapping) {
+														if (orderBy === heading.keyMapping) {
 															setOrder &&
 																setOrder(
-																	order == "asc" ? "desc" : "asc"
+																	order === "asc" ? "desc" : "asc"
 																);
 														} else {
 															setOrderBy &&
@@ -230,19 +223,24 @@ function CommonTable<T extends { id: string }>({
 											selectedRow.current = rowData;
 											handleClick(event);
 										}}
+										style={{
+											visibility: menuList.length > 0 ? "visible" : "hidden",
+										}}
 									>
 										<MoreVertIcon />
 									</IconButton>
-									<SimpleMenu
-										handleClose={handleClose}
-										id={`organizationMenu-${rowData?.id}`}
-										anchorEl={
-											selectedRow?.current?.id === rowData?.id
-												? anchorEl
-												: null
-										}
-										menuList={menuList}
-									/>
+									{menuList.length > 0 && (
+										<SimpleMenu
+											handleClose={handleClose}
+											id={`organizationMenu-${rowData?.id}`}
+											anchorEl={
+												selectedRow?.current?.id === rowData?.id
+													? anchorEl
+													: null
+											}
+											menuList={menuList}
+										/>
+									)}
 								</TableCell>
 
 								{Array.isArray(children) && children?.length >= 1 && children[1]}
