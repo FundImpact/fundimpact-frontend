@@ -12,7 +12,6 @@ function AddRoleFormGraphql() {
 		ICreateOrganizationUserRole,
 		ICreateOrganizationUserRoleVariables
 	>(CREATE_ORGANIZATION_USER_ROLE);
-
 	return (
 		<AddRoleFormContainer
 			roleCreationLoading={loading}
