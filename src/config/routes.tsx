@@ -23,7 +23,16 @@ const MainOrganizationDashboard = React.lazy(
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
 	const { jwt } = useAuth();
+	/*TODO: change this logic with verify-jwt-api*/
+	let verifyJwt = false;
+	let params = new URLSearchParams(window.location.search);
+	const token: string | null = params.get("token");
+	if (token) {
+		verifyJwt = true;
+	}
 	if (jwt) {
+		return <Route children={children} {...rest} />;
+	} else if (verifyJwt) {
 		return <Route children={children} {...rest} />;
 	} else return <Navigate to="/login" state={{ redirectedFrom: rest.path }} />;
 }

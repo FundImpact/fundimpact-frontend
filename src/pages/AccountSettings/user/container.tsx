@@ -37,9 +37,9 @@ export const ProfileContainer = () => {
 					description={`This text will be shown on Setting page for profile heading`}
 				/>
 			</h1>
-			<Paper style={{ height: "50vh" }}>
+			<Paper style={{ height: "60vh" }}>
 				<Box m={3} p={2}>
-					<UserForm data={data} type={FORM_ACTIONS.UPDATE} updateWithaToken={verifyJwt} />
+					<UserForm data={data} type={FORM_ACTIONS.UPDATE} updateWithToken={verifyJwt} />
 				</Box>
 			</Paper>
 			{!verifyJwt && (
@@ -57,7 +57,7 @@ export const ProfileContainer = () => {
 				</Box>
 			)}
 			{openResetPassForm && (
-				<Paper style={{ height: "30vh" }}>
+				<Paper style={{ height: "40vh" }}>
 					<Box m={2} p={3}>
 						<PasswordReset userId={data?.id} type={FORM_ACTIONS.UPDATE} />
 					</Box>

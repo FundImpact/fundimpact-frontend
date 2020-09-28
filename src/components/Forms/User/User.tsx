@@ -37,7 +37,7 @@ function UserForm(props: UserProps) {
 	const formAction = props.type;
 	let verifyAndUpdateUserForm: boolean | undefined = false;
 	if (props.type === FORM_ACTIONS.UPDATE) {
-		verifyAndUpdateUserForm = props.updateWithaToken;
+		verifyAndUpdateUserForm = props.updateWithToken;
 	}
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
 		onError() {
@@ -80,7 +80,17 @@ function UserForm(props: UserProps) {
 				uploadResponse = await uploadFile(formData);
 			}
 			if (verifyAndUpdateUserForm) {
-				console.log("QUERRY");
+				updateUser({
+					variables: {
+						id: value.id,
+						input: {
+							name: value.name,
+							password: value.password,
+							profile_photo:
+								value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
+						},
+					},
+				});
 			} else {
 				updateUser({
 					variables: {
@@ -97,7 +107,15 @@ function UserForm(props: UserProps) {
 			}
 		} else {
 			if (verifyAndUpdateUserForm) {
-				console.log("QUERRY");
+				updateUser({
+					variables: {
+						id: value.id,
+						input: {
+							name: value.name,
+							password: value.password,
+						},
+					},
+				});
 			} else
 				updateUser({
 					variables: {
@@ -115,14 +133,24 @@ function UserForm(props: UserProps) {
 
 	const validate = (values: IUser) => {
 		let errors: Partial<IUser> = {};
-		if (!values.name) {
-			errors.name = "Name is required";
+		if (props.type === FORM_ACTIONS.UPDATE && !verifyAndUpdateUserForm) {
+			if (!values.name) {
+				errors.name = "Name is required";
+			}
+			if (!values.username) {
+				errors.username = "Username is required";
+			}
+			if (!values.email) {
+				errors.email = "Email is required";
+			}
 		}
-		if (!values.username) {
-			errors.username = "Username is required";
-		}
-		if (!values.email) {
-			errors.email = "Email is required";
+		if (props.type === FORM_ACTIONS.UPDATE && verifyAndUpdateUserForm) {
+			if (!values.name) {
+				errors.name = "Name is required";
+			}
+			if (!values.password) {
+				errors.password = "Password is required";
+			}
 		}
 		return errors;
 	};

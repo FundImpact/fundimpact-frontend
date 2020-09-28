@@ -17,6 +17,6 @@ export type UserProps =
 	  }
 	| {
 			type: FORM_ACTIONS.UPDATE;
-			updateWithaToken?: boolean;
+			updateWithToken?: boolean;
 			data: IUser;
 	  };

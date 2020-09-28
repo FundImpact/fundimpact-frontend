@@ -2,17 +2,32 @@ import { gql } from "@apollo/client";
 
 export const GET_ROLES_BY_ORG = gql`
 	query getRoles($filter: JSON) {
-		roles(where: $filter) {
+		organizationRoles(where: $filter, sort: "name") {
 			id
 			name
+			type
 			organization {
 				id
 				name
 			}
-			permissions {
+		}
+	}
+`;
+
+export const GET_INVITED_USER_LIST = gql`
+	query userList($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		userList(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			email
+			confirmed
+			blocked
+			role {
 				id
-				controller
-				action
+				name
+			}
+			organization {
+				id
+				name
 			}
 		}
 	}

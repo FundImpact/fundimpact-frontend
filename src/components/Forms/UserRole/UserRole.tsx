@@ -11,9 +11,15 @@ import { Typography, Grid } from "@material-ui/core";
 // } from "../../../reducers/notificationReducer";
 import { UserRoleProps, IUserRole } from "../../../models/UserRole/UserRole";
 import { FormattedMessage } from "react-intl";
-import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
-import { useQuery } from "@apollo/client";
+import { GET_INVITED_USER_LIST, GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
+import { useMutation, useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { INVITE_USER } from "../../../graphql/UserRoles/mutation";
+import {
+	setErrorNotification,
+	setSuccessNotification,
+} from "../../../reducers/notificationReducer";
+import FullScreenLoader from "../../commons/GlobalLoader";
 function getInitialValues(props: UserRoleProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		return { ...props.data };
@@ -29,12 +35,29 @@ function UserRoleForm(props: UserRoleProps) {
 	let initialValues: IUserRole = getInitialValues(props);
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
-	//
-	const { data: role } = useQuery(GET_ROLES_BY_ORG, {
+	const [
+		sendInvitationToUser,
+		{ data: sendInvitationToUserResponse, loading: sendInvitationToUserLoading },
+	] = useMutation(INVITE_USER, {
+		onCompleted(data) {
+			notificationDispatch(setSuccessNotification("Invitation Sent"));
+		},
+		onError(err) {
+			notificationDispatch(setErrorNotification("Inviting User Failed !"));
+		},
+	});
+	useQuery(GET_ROLES_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 		onCompleted(data) {
-			if (data?.roles) {
-				userRoleForm[1].optionsArray = data.roles;
+			if (data?.organizationRoles) {
+				let roleArr: any = [];
+				data.organizationRoles.forEach((role: any) => {
+					/*excluding Admin role here from roles*/
+					if (role.type !== `admin-org-${dashboardData?.organization?.id}`) {
+						roleArr.push(role);
+					}
+				});
+				userRoleForm[1].optionsArray = roleArr;
 			}
 		},
 		onError(err) {
@@ -57,7 +80,27 @@ function UserRoleForm(props: UserRoleProps) {
 		/>
 	);
 
-	const onCreate = (value: IUserRole) => {};
+	const onCreate = (value: IUserRole) => {
+		sendInvitationToUser({
+			variables: {
+				input: {
+					...value,
+					redirectTo: `${window.location.protocol}//${window.location.host}/account/profile`,
+				},
+			},
+			refetchQueries: [
+				{
+					query: GET_INVITED_USER_LIST,
+					variables: {
+						sort: "name",
+						limit: 5,
+						start: 0,
+						filter: {},
+					},
+				},
+			],
+		});
+	};
 
 	const onUpdate = async (value: IUserRole) => {};
 
@@ -97,6 +140,7 @@ function UserRoleForm(props: UserRoleProps) {
 						}}
 					/>
 				</Grid>
+				{sendInvitationToUserLoading ? <FullScreenLoader /> : null}
 			</Grid>
 		</React.Fragment>
 	);
