@@ -5,15 +5,6 @@ export const GET_ROLES_BY_ORG = gql`
 		roles(where: $filter) {
 			id
 			name
-			organization {
-				id
-				name
-			}
-			permissions {
-				id
-				controller
-				action
-			}
 		}
 	}
 `;
