@@ -35,7 +35,7 @@ export default function SettingContainer() {
 				</Grid>
 				<Grid item xs={12} md={9}>
 					<Routes>
-						<Route path="profile" element={<ProfileContainer />} />
+						<Route path="profile/*" element={<ProfileContainer />} />
 					</Routes>
 				</Grid>
 			</Grid>

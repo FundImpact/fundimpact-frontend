@@ -1,12 +1,12 @@
 import { ApolloProvider } from "@apollo/client";
-import React from "react";
-import { RouteProps } from "react-router";
+import React, { useState } from "react";
+import { RouteProps, useLocation } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-
 import MainDashboard from "../components/Dasboard/MainDashboard";
 import { DashboardProvider } from "../contexts/dashboardContext";
 import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
+import { SetTokenAndRedirect } from "../hooks/userDetailsWithToken";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
 
@@ -23,16 +23,14 @@ const MainOrganizationDashboard = React.lazy(
 
 function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | null {
 	const { jwt } = useAuth();
-	/*TODO: change this logic with verify-jwt-api*/
-	let verifyJwt = false;
+
 	let params = new URLSearchParams(window.location.search);
-	const token: string | null = params.get("token");
-	if (token) {
-		verifyJwt = true;
+	const tokenInUrl: string | null = params.get("token");
+
+	if (tokenInUrl) {
+		SetTokenAndRedirect(tokenInUrl, window.location.pathname);
 	}
 	if (jwt) {
-		return <Route children={children} {...rest} />;
-	} else if (verifyJwt) {
 		return <Route children={children} {...rest} />;
 	} else return <Navigate to="/login" state={{ redirectedFrom: rest.path }} />;
 }

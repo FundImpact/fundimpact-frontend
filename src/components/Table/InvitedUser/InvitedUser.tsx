@@ -1,9 +1,13 @@
-import { Chip, TableCell, IconButton, Box, Avatar, Grid } from "@material-ui/core";
+import { Chip, TableCell, IconButton, Box, Avatar, Grid, TablePagination } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { invitedUserTable } from "../constants";
 import FITable from "../FITable";
-import { GET_INVITED_USER_LIST, GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
+import {
+	GET_INVITED_USER_LIST,
+	GET_INVITED_USER_LIST_COUNT,
+	GET_ROLES_BY_ORG,
+} from "../../../graphql/UserRoles/query";
 import { useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { invitedUserFilter } from "./inputFields.json";
@@ -11,6 +15,8 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import FilterListContainer from "../../FilterList";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
+import pagination from "../../../hooks/pagination";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 const chipArray = ({
 	arr,
 	name,
@@ -90,12 +96,15 @@ export default function InvitedUserTable() {
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const dashBoardData = useDashBoardData();
 	const [queryFilter, setQueryFilter] = useState({});
+	const [invitedUserPage, setInvitedUserPage] = React.useState(0);
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
 	}>({
 		email: "",
 		role: [],
 	});
+	const [orderBy, setOrderBy] = useState<string>("created_at");
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
 
 	useQuery(GET_ROLES_BY_ORG, {
 		variables: { filter: { organization: dashBoardData?.organization?.id } },
@@ -110,15 +119,32 @@ export default function InvitedUserTable() {
 		},
 	});
 
-	const { data: invitedUserList } = useQuery(GET_INVITED_USER_LIST, {
-		variables: {
-			sort: "name",
-			limit: 5,
-			start: 0,
-			filter: queryFilter,
-		},
+	let {
+		count,
+		queryData: invitedUserList,
+		changePage,
+		countQueryLoading,
+		queryLoading: loading,
+	} = pagination({
+		query: GET_INVITED_USER_LIST,
+		countQuery: GET_INVITED_USER_LIST_COUNT,
+		countFilter: queryFilter,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
+	const handleInvitedUserLineChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > invitedUserPage) {
+			changePage();
+		} else {
+			changePage(true);
+		}
+		setInvitedUserPage(newPage);
+	};
+	const limit = 10;
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
 			removeFilterListObjectElements({ filterListObject, key, index })
@@ -165,33 +191,61 @@ export default function InvitedUserTable() {
 		});
 		setRows(row);
 	}, [invitedUserList]);
+
+	let invitedUserTablePagination = (
+		<TablePagination
+			rowsPerPageOptions={[]}
+			colSpan={9}
+			count={count}
+			rowsPerPage={count > limit ? limit : count}
+			page={invitedUserPage}
+			onChangePage={handleInvitedUserLineChangePage}
+			onChangeRowsPerPage={() => {}}
+			style={{ paddingRight: "40px" }}
+		/>
+	);
+
 	return (
 		<>
-			<Grid container>
-				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
-							createChipArray({
-								filterListObjectKeyValuePair,
-								removeFilterListElements,
-							})
-						)}
-					</Box>
-				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterListContainer
-							initialValues={{
-								email: "",
-								role: [],
-							}}
-							setFilterList={setFilterList}
-							inputFields={invitedUserFilter}
-						/>
-					</Box>
-				</Grid>
-			</Grid>
-			<FITable tableHeading={invitedUserTable} rows={rows} />
+			{countQueryLoading || loading ? (
+				<TableSkeleton />
+			) : (
+				<>
+					<Grid container>
+						<Grid item xs={11}>
+							<Box my={2} display="flex" flexWrap="wrap">
+								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+									createChipArray({
+										filterListObjectKeyValuePair,
+										removeFilterListElements,
+									})
+								)}
+							</Box>
+						</Grid>
+						<Grid item xs={1}>
+							<Box mt={2}>
+								<FilterListContainer
+									initialValues={{
+										email: "",
+										role: [],
+									}}
+									setFilterList={setFilterList}
+									inputFields={invitedUserFilter}
+								/>
+							</Box>
+						</Grid>
+					</Grid>
+					<FITable
+						tableHeading={invitedUserTable}
+						rows={rows}
+						pagination={invitedUserTablePagination}
+						order={order}
+						orderBy={orderBy}
+						setOrder={setOrder}
+						setOrderBy={setOrderBy}
+					/>
+				</>
+			)}
 		</>
 	);
 }

@@ -32,3 +32,9 @@ export const GET_INVITED_USER_LIST = gql`
 		}
 	}
 `;
+
+export const GET_INVITED_USER_LIST_COUNT = gql`
+	query userListCount($filter: JSON) {
+		userListCount(where: $filter)
+	}
+`;

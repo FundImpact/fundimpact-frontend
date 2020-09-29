@@ -19,6 +19,8 @@ function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		updateUserForm[0].logo = props.data?.logo;
 		props.data.uploadPhoto = "";
+		console.log("checksuserdata", props.data);
+
 		return { ...props.data };
 	}
 	return {
