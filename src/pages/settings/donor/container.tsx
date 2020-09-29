@@ -106,6 +106,8 @@ export const DonorContainer = () => {
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
 
+	console.log("donorCreateAccess :>> ", donorCreateAccess);
+	console.log("donorFindAccess :>> ", donorFindAccess);
 	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
 
 	const removeFilterListElements = (key: string, index?: number) =>

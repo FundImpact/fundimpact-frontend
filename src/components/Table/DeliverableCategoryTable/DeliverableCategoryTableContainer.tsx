@@ -2,6 +2,9 @@ import React, { useState, useRef } from "react";
 import DeliverableCategoryTableView from "./DeliverableCategoryTableView";
 import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 const getInitialValues = (
 	deliverableCategory: IDeliverableCategoryData | null,
@@ -59,6 +62,17 @@ function DeliverableCategoryTableContainer({
 			openStatus.map((element: boolean, i) => (i === index ? dialogOpenStatus : element))
 		);
 	};
+
+	const deliverableCategoryEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
+	);
+
+	const deliverableUnitFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	);
+
 	return (
 		<DeliverableCategoryTableView
 			openDialogs={openDialogs}
@@ -80,6 +94,8 @@ function DeliverableCategoryTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			deliverableCategoryEditAccess={deliverableCategoryEditAccess}
+			deliverableUnitFindAccess={deliverableUnitFindAccess}
 		/>
 	);
 }
