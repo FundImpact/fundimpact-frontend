@@ -11,7 +11,8 @@ function AddRoleFormGraphql() {
 	const [createOrganizationUserRole, { loading }] = useMutation<
 		ICreateOrganizationUserRole,
 		ICreateOrganizationUserRoleVariables
-	>(CREATE_ORGANIZATION_USER_ROLE);
+	>(CREATE_ORGANIZATION_USER_ROLE)
+
 	return (
 		<AddRoleFormContainer
 			roleCreationLoading={loading}
