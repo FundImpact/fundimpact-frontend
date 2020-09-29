@@ -1,10 +1,17 @@
-import { IAddRole } from ".";
+import { IAddRole, IControllerAction } from ".";
 
 export interface ICreateOrganizationUserRole {
-	createOrganizationUserRole: { id: string; role: string };
+	createOrganizationUserRole: { id: string; name: string };
 }
 
 export interface ICreateOrganizationUserRoleVariables {
 	id: string;
-	input: IAddRole;
+	input: {
+		name: string;
+		permissions: {
+			application: {
+				controllers: IControllerAction | {};
+			};
+		};
+	};
 }
