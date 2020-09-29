@@ -91,6 +91,8 @@ function ImpactCategoryTableView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	impactCategoryEditAccess,
+	impactUnitFindAccess,
 }: {
 	openDialogs: boolean[];
 	initialValues: IImpactCategoryData;
@@ -114,12 +116,9 @@ function ImpactCategoryTableView({
 		[key: string]: string;
 	};
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	impactCategoryEditAccess: boolean;
+	impactUnitFindAccess: boolean;
 }) {
-	const impactCategoryEditAccess = userHasAccess(
-		MODULE_CODES.IMPACT_CATEGORY,
-		IMPACT_CATEGORY_ACTIONS.UPDATE_IMPACT_CATEGORY
-	);
-
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
 			impactCategoryTableEditMenu = ["Edit Impact Category"];
@@ -156,13 +155,17 @@ function ImpactCategoryTableView({
 				</Grid>
 			)}
 			<CommonTable
-				tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
+				tableHeadings={
+					collapsableTable && impactUnitFindAccess
+						? tableHeadings
+						: tableHeadings.slice(1)
+				}
 				valuesList={impactCategoryList}
 				rows={rows}
 				selectedRow={selectedImpactCategory}
 				toggleDialogs={toggleDialogs}
 				editMenuName={impactCategoryTableEditMenu}
-				collapsableTable={collapsableTable}
+				collapsableTable={collapsableTable && impactUnitFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
