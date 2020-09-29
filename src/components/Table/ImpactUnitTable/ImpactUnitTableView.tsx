@@ -94,6 +94,8 @@ function ImpactUnitTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	impactUnitEditAccess,
+	impactCategoryFindAccess,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -117,12 +119,9 @@ function ImpactUnitTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	impactUnitEditAccess: boolean;
+	impactCategoryFindAccess: boolean;
 }) {
-	const impactUnitEditAccess = userHasAccess(
-		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.UPDATE_IMPACT_UNIT
-	);
-
 	useEffect(() => {
 		if (impactUnitEditAccess) {
 			impactUnitTableEditMenu = ["Edit Impact Unit"];
@@ -159,13 +158,17 @@ function ImpactUnitTableContainer({
 				</Grid>
 			)}
 			<CommonTable
-				tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
+				tableHeadings={
+					collapsableTable && impactCategoryFindAccess
+						? tableHeadings
+						: tableHeadings.slice(1)
+				}
 				valuesList={impactUnitList}
 				rows={rows}
 				selectedRow={selectedImpactUnit}
 				toggleDialogs={toggleDialogs}
 				editMenuName={impactUnitTableEditMenu}
-				collapsableTable={collapsableTable}
+				collapsableTable={collapsableTable && impactCategoryFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}

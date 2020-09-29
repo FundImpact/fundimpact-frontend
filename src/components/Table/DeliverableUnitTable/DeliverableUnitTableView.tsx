@@ -96,6 +96,8 @@ function DeliverableUnitTableView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	deliverableUnitEditAccess,
+	deliverableCategoryFindAccess,
 }: {
 	filterList: {
 		[key: string]: string;
@@ -119,13 +121,10 @@ function DeliverableUnitTableView({
 	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
 	openDialogs: boolean[];
 	toggleDialogs: (index: number, val: boolean) => void;
+	deliverableUnitEditAccess: boolean;
+	deliverableCategoryFindAccess: boolean;
 }) {
 	const dashboardData = useDashBoardData();
-
-	const deliverableUnitEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
-	);
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
@@ -163,13 +162,17 @@ function DeliverableUnitTableView({
 				</Grid>
 			)}
 			<CommonTable
-				tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
+				tableHeadings={
+					collapsableTable && deliverableCategoryFindAccess
+						? tableHeadings
+						: tableHeadings.slice(1)
+				}
 				valuesList={deliverableUnitList}
 				rows={rows}
 				selectedRow={selectedDeliverableUnit}
 				toggleDialogs={toggleDialogs}
 				editMenuName={deliverableUnitTableEditMenu}
-				collapsableTable={collapsableTable}
+				collapsableTable={collapsableTable && deliverableCategoryFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
