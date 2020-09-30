@@ -24,8 +24,9 @@ export const ImpactHeadings = [
 
 export const invitedUserTable = [
 	{ label: "#" },
-	{ label: "Name" },
-	{ label: "Role" },
+	{ label: "Email", keyMapping: "email" },
+	{ label: "Role", keyMapping: "role" },
+	{ label: "Confirmed" },
 	{ label: "" }, //edit icon
 ];
 export const deliverableAndimpactTracklineHeading = [

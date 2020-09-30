@@ -152,7 +152,10 @@ export function GetCardTypeAndValues(props: CardProps) {
 			pieCardConfig.loading = loading;
 			fetchedData = data;
 		}
-
+		console.log("fetched", fetchedData);
+		if (fetchedData === 0) {
+			fetchedData = [];
+		}
 		fetchedData?.forEach((category: CategoryDataResponse, index: number) => {
 			if (index > 2) {
 				datasetsData[0].backgroundColor?.push(getMyColor());

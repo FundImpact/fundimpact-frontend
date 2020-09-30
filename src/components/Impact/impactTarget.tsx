@@ -26,6 +26,7 @@ import {
 } from "../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import { GET_IMPACT_TARGET_SDG_COUNT } from "../../graphql/project";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -120,6 +121,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 						query: GET_ACHIEVED_VALLUE_BY_TARGET,
 						variables: {
 							filter: { impactTargetProject: impactId },
+						},
+					},
+					{
+						query: GET_IMPACT_TARGET_SDG_COUNT,
+						variables: {
+							filter: { organization: dashboardData?.organization?.id },
 						},
 					},
 				],
@@ -230,6 +237,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 					{
 						query: GET_IMPACT_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },
+					},
+					{
+						query: GET_IMPACT_TARGET_SDG_COUNT,
+						variables: {
+							filter: { organization: dashboardData?.organization?.id },
+						},
 					},
 				],
 			});

@@ -247,5 +247,13 @@
 				"id": "1"
 			}
 		}
-	}
+	},
+	"impactTargetSdgCountMock": [
+		{
+			"id": 5,
+			"name": "Recycle",
+			"icon": "https://img.pngio.com/sustainability-icon-png-328527-free-icons-library-sustainability-png-500_500.jpg",
+			"count": "12"
+		}
+	]
 }

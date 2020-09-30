@@ -26,7 +26,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import FITable from "../FITable";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { deliverableTracklineInputFields } from "./inputFields.json";
 import FilterList from "../../FilterList";
@@ -429,6 +429,7 @@ export default function DeliverablesTrackLineTable({
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+	const intl = useIntl();
 	return (
 		<>
 			{countQueryLoading ? <FullScreenLoader /> : null}
@@ -468,6 +469,16 @@ export default function DeliverablesTrackLineTable({
 				orderBy={orderBy}
 				setOrder={setOrder}
 				setOrderBy={setOrderBy}
+				noRowHeading={intl.formatMessage({
+					id: `noAchievementsReported`,
+					defaultMessage: `No Achievements Reported`,
+					description: `This text will be shown if no target found for table`,
+				})}
+				rowHeading={intl.formatMessage({
+					id: `AchievementsHeading`,
+					defaultMessage: `Achievements`,
+					description: `This text will be shown for description of table`,
+				})}
 			/>
 		</>
 	);

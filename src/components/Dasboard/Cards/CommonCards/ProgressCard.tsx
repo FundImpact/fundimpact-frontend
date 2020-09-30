@@ -38,7 +38,7 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 				</Grid>
 			)}
 			{dataToDisplay?.length > 0 && (
-				<Grid item md={12} style={{ height: "18vh" }}>
+				<Grid item md={12} style={{ height: "120px" }}>
 					<Box mt={1}>
 						{dataToDisplay?.length > 0 &&
 							dataToDisplay

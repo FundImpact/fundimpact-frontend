@@ -6,8 +6,8 @@ function getStartValue(startingValue: number, limit: number, prev: boolean): num
 		return startingValue;
 	}
 
-	//at the end of the pagination the number of elements left might not be equal to the 
-	//value of limit provided bu the user that is why we are checking starting value is divisible 
+	//at the end of the pagination the number of elements left might not be equal to the
+	//value of limit provided bu the user that is why we are checking starting value is divisible
 	//by the limit we are shifting the stating value by 2*limit due to following reason.
 	//let us conside we have 3 starting value 0, 10, 20 and we are at 20 , user has seen value from
 	//10 to 20 but we have to show value 0 t0 10 that is why we subtarct 2*limit from starting value
@@ -103,7 +103,6 @@ function Pagination({
 			} catch (err) {}
 
 			setOldCache(oldCacheQueryData);
-
 			if (!oldCacheQueryData) {
 				getQueryData({
 					variables: {

@@ -1,7 +1,6 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import BorderLinearProgress from "../../../BorderLinearProgress";
-import { getLastUpdatedInWords } from "../../../../utils/index";
 export default function CommonProgress({
 	title,
 	date,
@@ -47,7 +46,7 @@ export default function CommonProgress({
 						${percentage}`}</Typography>
 					</Grid>
 				)}
-				<Grid item md={11} justify="flex-end" container>
+				{/* <Grid item md={11} justify="flex-end" container>
 					<Box display="flex">
 						<Typography
 							variant="caption"
@@ -55,7 +54,7 @@ export default function CommonProgress({
 							noWrap
 						>{`${getLastUpdatedInWords(new Date(date))}`}</Typography>
 					</Box>
-				</Grid>
+				</Grid> */}
 			</Grid>
 		</Grid>
 	);

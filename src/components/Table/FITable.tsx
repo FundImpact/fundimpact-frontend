@@ -35,6 +35,8 @@ export default function FITable({
 	setOrder,
 	orderBy,
 	setOrderBy,
+	noRowHeading,
+	rowHeading,
 }: {
 	tableHeading: { label: string; keyMapping?: string }[];
 	rows: React.ReactNode[];
@@ -43,6 +45,8 @@ export default function FITable({
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+	noRowHeading?: string;
+	rowHeading?: string;
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
@@ -52,29 +56,29 @@ export default function FITable({
 		<>
 			{!rows.length ? (
 				<Grid container style={{ backgroundColor: theme.palette.action.hover }}>
-					<Grid item xs={12}>
-						<Box>
-							<Typography
-								align="center"
-								variant="subtitle1"
-								variantMapping={{
-									subtitle1: "h1",
-								}}
-							>
-								<FormattedMessage
-									id={`noAchievementsReported`}
-									defaultMessage={`No Achievements Reported`}
-									description={`This text will be shown if no target found for table`}
-								/>
-							</Typography>
-						</Box>
-					</Grid>
+					{noRowHeading && (
+						<Grid item xs={12}>
+							<Box>
+								<Typography
+									align="center"
+									variant="subtitle1"
+									variantMapping={{
+										subtitle1: "h1",
+									}}
+								>
+									{noRowHeading}
+								</Typography>
+							</Box>
+						</Grid>
+					)}
 				</Grid>
 			) : (
 				<Grid>
-					<Box m={1}>
-						<Typography variant="subtitle2">Achievements</Typography>
-					</Box>
+					{rowHeading && (
+						<Box m={1}>
+							<Typography variant="subtitle2">{rowHeading}</Typography>
+						</Box>
+					)}
 					<TableContainer component={Paper}>
 						<Table className={classes.table} aria-label="simple table">
 							<TableHead>

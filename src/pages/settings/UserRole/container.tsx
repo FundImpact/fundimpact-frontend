@@ -16,27 +16,28 @@ export const UserRoleContainer = () => {
 					/>
 				</Typography>
 			</Box>
-			<Paper style={{ height: "30vh" }}>
-				<Grid item md={12}>
+
+			<Grid item md={12}>
+				<Paper style={{ height: "250px" }}>
 					<Box m={1} p={3}>
 						<UserRoleForm type={FORM_ACTIONS.CREATE} />
 					</Box>
-				</Grid>
-				<Grid md={12}>
-					<Box m={1} mb={0}>
-						<Typography variant="h6">
-							<FormattedMessage
-								id={`invitedUserHeading`}
-								defaultMessage={`Invited Users`}
-								description={`This text will be shown on Setting page for invited user heading on role tab`}
-							/>
-						</Typography>
-					</Box>
-					<Box>
-						<InvitedUserTable />
-					</Box>
-				</Grid>
-			</Paper>
+				</Paper>
+			</Grid>
+			<Grid md={12}>
+				<Box m={1} mb={0}>
+					<Typography variant="h6">
+						<FormattedMessage
+							id={`invitedUserHeading`}
+							defaultMessage={`Invited Users`}
+							description={`This text will be shown on Setting page for invited user heading on role tab`}
+						/>
+					</Typography>
+				</Box>
+				<Box>
+					<InvitedUserTable />
+				</Box>
+			</Grid>
 		</Box>
 	);
 };
