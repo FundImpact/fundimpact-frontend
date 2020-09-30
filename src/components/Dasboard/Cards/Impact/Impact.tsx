@@ -1,32 +1,43 @@
-import { Box } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { useQuery } from "@apollo/client";
+import { Avatar, Badge, Grid } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import React from "react";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { GET_IMPACT_TARGET_SDG_COUNT } from "../../../../graphql/project";
 
-const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		height: "100vh",
-	},
-	alertmsg: {
-		marginTop: theme.spacing(2),
-	},
-}));
-
-const impacts = [
-	"Lorem ipsum dolor sit amet,",
-	"Lorem ipsum dolor sit amet,",
-	"Lorem ipsum dolor sit amet,",
-];
 export default function Impact() {
-	const classes = useStyles();
+	const dashboardData = useDashBoardData();
+	const { data, loading } = useQuery(GET_IMPACT_TARGET_SDG_COUNT, {
+		variables: {
+			filter: { organization: dashboardData?.organization?.id },
+		},
+	});
+	if (loading) {
+		return (
+			<>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+				<Skeleton variant="text" animation="wave"></Skeleton>
+			</>
+		);
+	}
 	return (
-		<Box className={classes.root}>
-			{/* {impacts.map((impact, index) => {
-				return (
-					<Typography variant="subtitle1" gutterBottom key={index}>
-						{`#${index + 1} ${impact}`}
-					</Typography>
-				);
-			})}*/}
-		</Box>
+		<Grid container spacing={2}>
+			{data?.impactTargetSdgCount?.map(
+				(sdg: { id: string; name: string; count: string; icon: string }) => {
+					return (
+						<Grid item>
+							<Badge badgeContent={sdg?.count} color="primary">
+								<Avatar alt="SD" src={sdg?.icon}>
+									{sdg?.name}
+								</Avatar>
+							</Badge>
+						</Grid>
+					);
+				}
+			)}
+		</Grid>
 	);
 }

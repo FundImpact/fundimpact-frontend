@@ -68,7 +68,6 @@ const createChipArray = ({
 	filterListObjectKeyValuePair: any;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) => {
-	console.log("roleHashx", filterListObjectKeyValuePair);
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] === "string") {
 		return chipArray({
 			name: filterListObjectKeyValuePair[0].slice(0, 4),
@@ -182,7 +181,7 @@ export default function InvitedUserTable() {
 					)}
 				</TableCell>,
 				<TableCell>
-					<IconButton>
+					<IconButton disabled>
 						<MoreVertIcon />
 					</IconButton>
 				</TableCell>,

@@ -1,18 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FORM_ACTIONS } from "../constant";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
 import { userRoleForm } from "./inputField.json";
 import { Typography, Grid } from "@material-ui/core";
-// import { useMutation } from "@apollo/client";
-// import {
-// 	setSuccessNotification,
-// 	setErrorNotification,
-// } from "../../../reducers/notificationReducer";
 import { UserRoleProps, IUserRole } from "../../../models/UserRole/UserRole";
 import { FormattedMessage } from "react-intl";
-import { GET_INVITED_USER_LIST, GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
-import { useMutation, useQuery } from "@apollo/client";
+import {
+	GET_INVITED_USER_LIST,
+	GET_INVITED_USER_LIST_COUNT,
+	GET_ROLES_BY_ORG,
+} from "../../../graphql/UserRoles/query";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { INVITE_USER } from "../../../graphql/UserRoles/mutation";
 import {
@@ -34,6 +33,7 @@ function UserRoleForm(props: UserRoleProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IUserRole = getInitialValues(props);
 	const dashboardData = useDashBoardData();
+	const [formValues, setFormValues] = useState<{ email: string; role: string } | null>();
 	const formAction = props.type;
 	const [
 		sendInvitationToUser,
@@ -46,6 +46,13 @@ function UserRoleForm(props: UserRoleProps) {
 			notificationDispatch(setErrorNotification("Inviting User Failed !"));
 		},
 	});
+
+	const [getInvitedUserCount, { data: count }] = useLazyQuery(GET_INVITED_USER_LIST_COUNT, {
+		onCompleted(data) {
+			setFormValues(null);
+		},
+	});
+
 	useQuery(GET_ROLES_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 		onCompleted(data) {
@@ -80,25 +87,42 @@ function UserRoleForm(props: UserRoleProps) {
 		/>
 	);
 
-	const onCreate = (value: IUserRole) => {
-		sendInvitationToUser({
-			variables: {
-				input: {
-					...value,
-					redirectTo: `${window.location.protocol}//${window.location.host}/account/profile`,
-				},
-			},
-			refetchQueries: [
-				{
-					query: GET_INVITED_USER_LIST,
-					variables: {
-						sort: "name",
-						limit: 5,
-						start: 0,
-						filter: {},
+	useEffect(() => {
+		if (count && formValues) {
+			const limit = count?.userListCount;
+			sendInvitationToUser({
+				variables: {
+					input: {
+						...formValues,
+						redirectTo: `${window.location.protocol}//${window.location.host}/account/profile`,
 					},
 				},
-			],
+				refetchQueries: [
+					{
+						query: GET_INVITED_USER_LIST,
+						variables: {
+							filter: {},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+					},
+					{
+						query: GET_INVITED_USER_LIST_COUNT,
+						variables: {
+							filter: {},
+						},
+					},
+				],
+			});
+		}
+	}, [count, formValues]);
+
+	const onCreate = (value: IUserRole) => {
+		setFormValues(value);
+		// need count to refetch the invited user table count and list
+		getInvitedUserCount({
+			variables: { filter: {} },
 		});
 	};
 

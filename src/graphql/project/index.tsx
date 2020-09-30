@@ -78,3 +78,9 @@ export const GET_ALL_DELIVERABLES_SPEND_AMOUNT = gql`
 		deliverableTrackingTotalSpendAmount(where: $filter)
 	}
 `;
+
+export const GET_IMPACT_TARGET_SDG_COUNT = gql`
+	query getImpactTargetSdgCount($filter: JSON) {
+		impactTargetSdgCount(where: $filter)
+	}
+`;
