@@ -17,18 +17,21 @@ import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import pagination from "../../../hooks/pagination";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+
+let roleHash: { [key: string]: string } = {};
 const chipArray = ({
 	arr,
 	name,
-	removeChip,
+	removeChips,
 }: {
-	removeChip: (index: number) => void;
+	removeChips: (index: number) => void;
 	name: string;
 	arr: string[];
 }) => {
 	return arr.map((element, index) => (
 		<Box key={index} m={1}>
 			<Chip
+				onDelete={() => removeChips(index)}
 				label={element}
 				avatar={
 					<Avatar
@@ -40,13 +43,41 @@ const chipArray = ({
 						<span>{name}</span>
 					</Avatar>
 				}
-				onDelete={() => removeChip(index)}
 			/>
 		</Box>
 	));
 };
 
-let roleHash: { [key: string]: string } = {};
+const createChipArray = ({
+	filterListObjectKeyValuePair,
+	removeFilterListElements,
+}: {
+	filterListObjectKeyValuePair: any;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+}) => {
+	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+		if (filterListObjectKeyValuePair[0] === "role") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((ele) => roleHash[ele]),
+				name: "role",
+				removeChips: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+	}
+	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] === "string") {
+		return chipArray({
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChips: (index: number) => {
+				removeFilterListElements(filterListObjectKeyValuePair[0]);
+			},
+			arr: [filterListObjectKeyValuePair[1]],
+		});
+	}
+
+	return null;
+};
 
 const mapIdToName = (
 	arr: { id: string; name: string }[],
@@ -60,37 +91,6 @@ const mapIdToName = (
 		initialObject
 	);
 };
-
-const createChipArray = ({
-	filterListObjectKeyValuePair,
-	removeFilterListElements,
-}: {
-	filterListObjectKeyValuePair: any;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-}) => {
-	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] === "string") {
-		return chipArray({
-			name: filterListObjectKeyValuePair[0].slice(0, 4),
-			removeChip: (index: number) => {
-				removeFilterListElements(filterListObjectKeyValuePair[0]);
-			},
-			arr: [filterListObjectKeyValuePair[1]],
-		});
-	}
-	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
-		if (filterListObjectKeyValuePair[0] === "role") {
-			return chipArray({
-				arr: filterListObjectKeyValuePair[1].map((ele) => roleHash[ele]),
-				name: "role",
-				removeChip: (index: number) => {
-					removeFilterListElements(filterListObjectKeyValuePair[0], index);
-				},
-			});
-		}
-	}
-	return null;
-};
-
 export default function InvitedUserTable() {
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const dashBoardData = useDashBoardData();
