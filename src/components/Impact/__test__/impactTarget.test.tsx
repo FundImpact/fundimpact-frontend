@@ -1,13 +1,12 @@
 import React from "react";
 import ImpactTarget from "../impactTarget";
 import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
-import { IImpactTarget } from "../../../models/impact/impactTarget";
 import { IMPACT_ACTIONS } from "../constants";
 import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetail } from "../../../utils/testMock.json";
+import { organizationDetail, impactTargetSdgCountMock } from "../../../utils/testMock.json";
 import { impactTargetTestField } from "./testInputField.json";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../../graphql/Impact/categoryUnit";
 import {
@@ -18,6 +17,7 @@ import {
 } from "./testHelp";
 import { CREATE_IMPACT_TARGET, GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/Impact/target";
 import { GET_SDG } from "../../../graphql/SDG/query";
+import { GET_IMPACT_TARGET_SDG_COUNT } from "../../../graphql/project";
 
 let createimpactTargetFormMutation = false;
 const mocks = [
@@ -75,6 +75,15 @@ const mocks = [
 			},
 		},
 		result: { data: { impactTargetProjectList: impactTargetMock } },
+	},
+	{
+		request: {
+			query: GET_IMPACT_TARGET_SDG_COUNT,
+			variables: {
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { impactTargetSdgCount: impactTargetSdgCountMock } },
 	},
 ];
 
