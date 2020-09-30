@@ -35,17 +35,17 @@ function UserRoleForm(props: UserRoleProps) {
 	const dashboardData = useDashBoardData();
 	const [formValues, setFormValues] = useState<{ email: string; role: string } | null>();
 	const formAction = props.type;
-	const [
-		sendInvitationToUser,
-		{ data: sendInvitationToUserResponse, loading: sendInvitationToUserLoading },
-	] = useMutation(INVITE_USER, {
-		onCompleted(data) {
-			notificationDispatch(setSuccessNotification("Invitation Sent"));
-		},
-		onError(err) {
-			notificationDispatch(setErrorNotification("Inviting User Failed !"));
-		},
-	});
+	const [sendInvitationToUser, { loading: sendInvitationToUserLoading }] = useMutation(
+		INVITE_USER,
+		{
+			onCompleted(data) {
+				notificationDispatch(setSuccessNotification("Invitation Sent"));
+			},
+			onError(err) {
+				notificationDispatch(setErrorNotification("Inviting User Failed !"));
+			},
+		}
+	);
 
 	const [getInvitedUserCount, { data: count }] = useLazyQuery(GET_INVITED_USER_LIST_COUNT, {
 		onCompleted(data) {
@@ -121,9 +121,7 @@ function UserRoleForm(props: UserRoleProps) {
 	const onCreate = (value: IUserRole) => {
 		setFormValues(value);
 		// need count to refetch the invited user table count and list
-		getInvitedUserCount({
-			variables: { filter: {} },
-		});
+		getInvitedUserCount();
 	};
 
 	const onUpdate = async (value: IUserRole) => {};
