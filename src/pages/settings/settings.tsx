@@ -23,6 +23,7 @@ import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/ac
 import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
+import AddRole from "./AddRole";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -165,6 +166,7 @@ export default function SettingContainer() {
 							)}
 						</PrivateRoute>
 						<Route path="user_roles" element={<UserRoleContainer />} />
+						<Route path="add_role" element={<AddRole />} />
 					</Routes>
 				</Grid>
 			</Grid>
