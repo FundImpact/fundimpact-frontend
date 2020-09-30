@@ -4,6 +4,9 @@ import { IImpactUnitData, IImpactCategoryData } from "../../../models/impact/imp
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../../graphql/Impact/categoryUnit";
 import { useLazyQuery } from "@apollo/client";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
+import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 
 const getInitialValues = (
 	impactUnit: IImpactUnitData | null,
@@ -89,6 +92,16 @@ function ImpactUnitContainer({
 		[impactCategoryUnitList]
 	);
 
+	const impactUnitEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.UPDATE_IMPACT_UNIT
+	);
+
+	const impactCategoryFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
+	);
+
 	return (
 		<ImpactUnitView
 			openDialogs={openDialogs}
@@ -110,6 +123,8 @@ function ImpactUnitContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			impactUnitEditAccess={impactUnitEditAccess}
+			impactCategoryFindAccess={impactCategoryFindAccess}
 		/>
 	);
 }

@@ -8,6 +8,9 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
 import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 
 const getInitialValues = (
 	deliverableUnit: IDeliverableUnitData | null,
@@ -97,6 +100,16 @@ function DeliverableUnitTableContainer({
 		[deliverableCategoryUnitList]
 	);
 
+	const deliverableUnitEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+	);
+
+	const deliverableCategoryFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+	);
+
 	return (
 		<DeliverableUnitTableView
 			openDialogs={openDialogs}
@@ -119,6 +132,8 @@ function DeliverableUnitTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			deliverableUnitEditAccess={deliverableUnitEditAccess}
+			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
 		/>
 	);
 }

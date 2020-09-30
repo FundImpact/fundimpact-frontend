@@ -91,6 +91,8 @@ function DeliverableCategoryView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	deliverableCategoryEditAccess,
+	deliverableUnitFindAccess,
 }: {
 	count: number;
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -115,12 +117,9 @@ function DeliverableCategoryView({
 	};
 
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	deliverableCategoryEditAccess: boolean;
+	deliverableUnitFindAccess: boolean;
 }) {
-	const deliverableCategoryEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
-	);
-
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
 			deliverableCategoryTableEditMenu = ["Edit Deliverable Category"];
@@ -157,13 +156,17 @@ function DeliverableCategoryView({
 				</Grid>
 			)}
 			<CommonTable
-				tableHeadings={collapsableTable ? tableHeadings : tableHeadings.slice(1)}
+				tableHeadings={
+					collapsableTable && deliverableUnitFindAccess
+						? tableHeadings
+						: tableHeadings.slice(1)
+				}
 				valuesList={deliverableCategoryList}
 				rows={rows}
 				selectedRow={selectedDeliverableCategory}
 				toggleDialogs={toggleDialogs}
 				editMenuName={deliverableCategoryTableEditMenu}
-				collapsableTable={collapsableTable}
+				collapsableTable={collapsableTable && deliverableUnitFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
