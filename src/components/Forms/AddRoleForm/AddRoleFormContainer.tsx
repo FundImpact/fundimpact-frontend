@@ -108,7 +108,7 @@ const onFormSubmit = async ({
 					if (data) {
 						let { createOrganizationUserRole } = data;
 						const userRoles = store.readQuery<{
-							roles: { name: string; id: string }[];
+							organizationRoles: { name: string; id: string }[];
 						}>({
 							query: GET_ROLES_BY_ORG,
 							variables: {
@@ -117,7 +117,7 @@ const onFormSubmit = async ({
 								},
 							},
 						});
-						store.writeQuery<{ roles: { name: string; id: string }[] }>({
+						store.writeQuery<{ organizationRoles: { name: string; id: string }[] }>({
 							query: GET_ROLES_BY_ORG,
 							variables: {
 								filter: {
@@ -125,7 +125,7 @@ const onFormSubmit = async ({
 								},
 							},
 							data: {
-								roles: [createOrganizationUserRole, ...(userRoles?.roles || [])],
+								organizationRoles: [createOrganizationUserRole, ...(userRoles?.organizationRoles || [])],
 							},
 						});
 					}
