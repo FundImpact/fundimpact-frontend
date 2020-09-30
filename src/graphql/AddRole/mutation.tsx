@@ -5,6 +5,7 @@ export const CREATE_ORGANIZATION_USER_ROLE = gql`
 		createOrganizationUserRole(input: $input) {
 			id
 			name
+			type
 			organization {
 				id
 				name
