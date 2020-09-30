@@ -1,20 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const GET_USER_ROLES = gql`
-	query getRole($id: ID!) {
-		role(id: $id) {
+	query getRole($filter: JSON) {
+		getRolePemissions(where: $filter) {
 			id
-			name
-			organization {
-				id
-				name
-			}
-			permissions {
-				id
-				controller
-				action
-				enabled
-			}
+			controller
+			action
+			enabled
 		}
 	}
 `;

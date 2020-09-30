@@ -17,7 +17,7 @@ const mapPermissionsControllerActionToPermission = (data: IGetUserRole) => {
 	let userRoleHashObject: {
 		[key: string]: { id: string; controller: string; action: string; enabled: boolean };
 	} = getCustomFrontendUserHash();
-	data.role.permissions.forEach((permission) => {
+	data.getRolePemissions.forEach((permission) => {
 		userRoleHashObject[permission.controller + "-" + permission.action] = { ...permission };
 	});
 	return userRoleHashObject;
@@ -27,7 +27,7 @@ function UserRoles() {
 	const user = useAuth();
 	const [getUserRoles, { loading, error }] = useLazyQuery<IGetUserRole>(GET_USER_ROLES, {
 		onCompleted: (data) => {
-			console.log("data :>> ", data);
+			// console.log("data :>> ", data);
 			let userRoleHashTempObject: {
 				[key: string]: { id: string; controller: string; action: string; enabled: boolean };
 			} = mapPermissionsControllerActionToPermission(data);
@@ -44,7 +44,9 @@ function UserRoles() {
 		if (user) {
 			getUserRoles({
 				variables: {
-					id: user.user?.role?.id,
+					filter: {
+						role: user.user?.role?.id,
+					},
 				},
 			});
 		}
