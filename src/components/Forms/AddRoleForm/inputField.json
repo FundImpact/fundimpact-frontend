@@ -1,7 +1,7 @@
 {
 	"addRoleForm": [
 		{
-			"name": "role",
+			"name": "name",
 			"id": "add-role",
 			"dataTestId": "addRoleForm",
 			"testId": "addRoleFormInput",
