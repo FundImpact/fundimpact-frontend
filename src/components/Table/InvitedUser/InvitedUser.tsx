@@ -42,18 +42,6 @@ const chipArray = ({
 		</Box>
 	));
 };
-const mapIdToName = (
-	arr: { id: string; name: string }[],
-	initialObject: { [key: string]: string }
-) => {
-	return arr.reduce(
-		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-			accumulator[current.id] = current.name;
-			return accumulator;
-		},
-		initialObject
-	);
-};
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,
@@ -84,6 +72,19 @@ const createChipArray = ({
 	}
 
 	return null;
+};
+
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		initialObject
+	);
 };
 
 export default function InvitedUserTable() {
