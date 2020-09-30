@@ -40,7 +40,7 @@ function UserRoles() {
 	// console.log('userRoleHash :>> ', userRoleHash);
 	useEffect(() => {
 		if (user) {
-			getUserRoles({
+			getUserRoles({ 
 				variables: {
 					filter: {
 						role: user.user?.role?.id,
