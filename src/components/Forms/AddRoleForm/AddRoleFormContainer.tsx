@@ -143,11 +143,11 @@ const onFormSubmit = async ({
 	}
 };
 
-const getControllerActionHash = (controllerActionArr: IGetUserRole["role"]["permissions"]) => {
+const getControllerActionHash = (controllerActionArr: IGetUserRole["getRolePemissions"]) => {
 	return controllerActionArr.reduce(
 		(
 			controllerActionHash: IControllerAction,
-			current: IGetUserRole["role"]["permissions"][0]
+			current: IGetUserRole["getRolePemissions"][0]
 		) => {
 			if (!controllerActionHash[current.controller as MODULE_CODES]) {
 				controllerActionHash[current.controller as MODULE_CODES] = {};
@@ -190,7 +190,9 @@ function AddRoleFormContainer({
 		if (user) {
 			getUserRoles({
 				variables: {
-					id: user.user?.role?.id,
+					filter: {
+						role: user.user?.role?.id,
+					},
 				},
 			});
 		}
@@ -198,10 +200,9 @@ function AddRoleFormContainer({
 
 	useEffect(() => {
 		if (userRoleData) {
-			setControllerActionHash(getControllerActionHash(userRoleData.role.permissions));
+			setControllerActionHash(getControllerActionHash(userRoleData.getRolePemissions));
 		}
 	}, [userRoleData]);
-
 	const onCreate = useCallback(
 		(
 			valuesSubmitted: IAddRole,
