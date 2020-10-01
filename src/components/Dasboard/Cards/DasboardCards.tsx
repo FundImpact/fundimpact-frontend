@@ -17,7 +17,7 @@ import { GetCardTypeAndValues } from "./cardHooks/GetCardType";
 import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 
 export default function DashboardCard(props: CardProps) {
-	const { title, children, cardHeight = "24vh", cardFilter } = props;
+	const { title, children, cardHeight = "180px", cardFilter } = props;
 	const [currentFilter, setCurrentFilter] = useState<{ label: string; base: string }>();
 	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
 		...props,
@@ -68,7 +68,7 @@ export default function DashboardCard(props: CardProps) {
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
 				<Grid container>
-					<Grid item md={12} container justify="space-between">
+					<Grid item md={12} xs={6} container justify="space-between">
 						{title && (
 							<Box mt={1} mb={1}>
 								<Typography color="primary" gutterBottom>

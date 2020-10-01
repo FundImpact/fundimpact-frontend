@@ -173,7 +173,7 @@ export default function MainOrganizationDashboard() {
 						]}
 						type={CARD_TYPES.PROGRESS}
 						cardOf={CARD_OF.BUDGET}
-						cardHeight="33vh"
+						cardHeight="240px"
 					/>
 				</Grid>
 				<Grid item md={4}>
@@ -185,7 +185,7 @@ export default function MainOrganizationDashboard() {
 								"This text will be show on dashboard for deliverable achieved card title",
 						})}
 						type={CARD_TYPES.PROGRESS}
-						cardHeight="33vh"
+						cardHeight="240px"
 						cardOf={CARD_OF.DELIVERABLE}
 					/>
 				</Grid>
@@ -199,7 +199,7 @@ export default function MainOrganizationDashboard() {
 						})}
 						type={CARD_TYPES.PROGRESS}
 						cardOf={CARD_OF.IMPACT}
-						cardHeight="33vh"
+						cardHeight="240px"
 					/>
 				</Grid>
 				<Box m={2} mb={0} mt={0}>
@@ -229,7 +229,7 @@ export default function MainOrganizationDashboard() {
 								]}
 								type={CARD_TYPES.PROGRESS}
 								cardOf={CARD_OF.DONOR}
-								cardHeight="33vh"
+								cardHeight="240px"
 							/>
 						</Grid>
 						<Grid item md={3}>
@@ -246,7 +246,7 @@ export default function MainOrganizationDashboard() {
 								})}
 								type={CARD_TYPES.PIE}
 								cardOf={CARD_OF.BUDGET}
-								cardHeight="33vh"
+								cardHeight="240px"
 								pieCardConfig={{
 									moreButtonLink: "/settings/budget",
 								}}
@@ -265,7 +265,7 @@ export default function MainOrganizationDashboard() {
 									{ label: achieved, base: "Achieved" },
 								]}
 								type={CARD_TYPES.PIE}
-								cardHeight="33vh"
+								cardHeight="240px"
 								pieCardConfig={{
 									moreButtonLink: "/settings/deliverable",
 								}}
@@ -285,7 +285,7 @@ export default function MainOrganizationDashboard() {
 									{ label: projects, base: "Projects" },
 									{ label: achieved, base: "Achieved" },
 								]}
-								cardHeight="33vh"
+								cardHeight="240px"
 								pieCardConfig={{
 									moreButtonLink: "/settings/impact",
 								}}

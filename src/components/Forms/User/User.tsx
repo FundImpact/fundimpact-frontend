@@ -15,6 +15,7 @@ import { UserDispatchContext } from "../../../contexts/userContext";
 import { IUser, UserProps } from "../../../models/User/user";
 import useFileUpload from "../../../hooks/fileUpload";
 import { FormattedMessage } from "react-intl";
+import { useNavigate } from "react-router";
 function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		updateUserForm[0].logo = props.data?.logo;
@@ -37,11 +38,17 @@ function UserForm(props: UserProps) {
 	let initialValues: IUser = getInitialValues(props);
 	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
 	const formAction = props.type;
+	const navigate = useNavigate();
 	let verifyAndUpdateUserForm: boolean | undefined = false;
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		verifyAndUpdateUserForm = props.updateWithToken;
 	}
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
+		onCompleted() {
+			if (verifyAndUpdateUserForm) {
+				navigate("/account/profile");
+			}
+		},
 		onError() {
 			notificationDispatch(setErrorNotification("Profile updation Failed !"));
 		},

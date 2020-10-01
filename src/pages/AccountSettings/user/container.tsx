@@ -5,10 +5,12 @@ import { Box, Button, Paper } from "@material-ui/core";
 import { useAuth, UserDispatchContext } from "../../../contexts/userContext";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAILS } from "../../../graphql/User/query";
 import { setUser } from "../../../reducers/userReducer";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { setErrorNotification } from "../../../reducers/notificationReducer";
 
 export const ProfileContainer = () => {
 	const auth = useAuth();
@@ -25,12 +27,17 @@ export const ProfileContainer = () => {
 	const [openResetPassForm, setOpenResetPassForm] = useState<boolean>(false);
 	const userDispatch = React.useContext(UserDispatchContext);
 	let { data: userDetails, error: userDetailsError } = useQuery(GET_USER_DETAILS);
-
+	const navigate = useNavigate();
+	const notificationDispatch = useNotificationDispatch();
 	useEffect(() => {
+		console.log("errorData", userDetailsError, userDetails);
 		if (userDetailsError) {
-			/*Invalid Token*/
+			/*Invalid Token or forbidden*/
 			if (userDispatch) {
-				userDispatch({ type: "LOGOUT_USER" });
+				userDispatch({
+					type: "LOGOUT_USER",
+					payload: { logoutMsg: "Invalid user or user dont have access" },
+				});
 			}
 		}
 		if (userDetails?.userCustomer) {

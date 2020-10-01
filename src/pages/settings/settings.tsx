@@ -165,7 +165,7 @@ export default function SettingContainer() {
 								<Navigate to="settingsDefault" />
 							)}
 						</PrivateRoute>
-						<Route path="user_roles" element={<UserRoleContainer />} />
+						<Route path="users" element={<UserRoleContainer />} />
 						<Route path="add_role" element={<AddRole />} />
 					</Routes>
 				</Grid>

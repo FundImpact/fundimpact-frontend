@@ -6,11 +6,15 @@ export interface IUserRole {
 	role: string;
 }
 
-export type UserRoleProps =
+export type UserRoleProps = {
+	open: boolean;
+	handleClose: () => void;
+} & (
 	| {
 			type: FORM_ACTIONS.CREATE;
 	  }
 	| {
 			type: FORM_ACTIONS.UPDATE;
 			data: IUserRole;
-	  };
+	  }
+);
