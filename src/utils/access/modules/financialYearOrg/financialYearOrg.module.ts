@@ -1,0 +1,25 @@
+import { MODULE_CODES } from "../../moduleCodes";
+import { FINANCIAL_YEAR_ORG_ACTIONS } from "./actions";
+
+export const FINANCIAL_YEAR_ORG_MODULE = {
+	name: "Financial Year Org",
+	code: MODULE_CODES.FINANCIAL_YEAR_ORG,
+	actionsAvailable: {
+		[FINANCIAL_YEAR_ORG_ACTIONS.CREATE_FINANCIAL_YEAR_ORG]: {
+			name: "Create Financial Year Org",
+			code: FINANCIAL_YEAR_ORG_ACTIONS.CREATE_FINANCIAL_YEAR_ORG,
+		},
+		[FINANCIAL_YEAR_ORG_ACTIONS.UPDATE_FINANCIAL_YEAR_ORG]: {
+			name: "Update Financial Year Org",
+			code: FINANCIAL_YEAR_ORG_ACTIONS.UPDATE_FINANCIAL_YEAR_ORG,
+		},
+		[FINANCIAL_YEAR_ORG_ACTIONS.DELETE_FINANCIAL_YEAR_ORG]: {
+			name: "Delete Financial Year Org",
+			code: FINANCIAL_YEAR_ORG_ACTIONS.DELETE_FINANCIAL_YEAR_ORG,
+		},
+		[FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG]: {
+			name: "Find Financial Year Org",
+			code: FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG,
+		},
+	},
+};
