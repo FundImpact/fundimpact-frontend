@@ -1,0 +1,6 @@
+export enum PROJECT_DONOR_ACTIONS {
+	CREATE_PROJECT_DONOR = "create",
+	UPDATE_PROJECT_DONOR = "update",
+	DELETE_PROJECT_DONOR = "delete",
+	FIND_PROJECT_DONOR = "find",
+}

@@ -5,6 +5,8 @@ import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from "../../../graphql/project";
 import { IProject } from "../../../models/project/project";
 import EditableText from "../../EditableText/EditableText";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { PROJECT_ACTIONS } from "../../../utils/access/modules/project/actions";
 
 export default function ProjectName() {
 	const dashboardData = useDashBoardData();
@@ -37,6 +39,9 @@ export default function ProjectName() {
 		});
 		getProject({ variables: { id: dashboardData?.project?.id } });
 	};
+
+	const projectEditAccess = userHasAccess(MODULE_CODES.PEOJECT, PROJECT_ACTIONS.UPDATE_PROJECT);
+
 	return (
 		<Box display="flex">
 			{loading ? (
@@ -45,7 +50,11 @@ export default function ProjectName() {
 				</Box>
 			) : null}
 			{project && project.name && (
-				<EditableText textValue={project.name} handleSubmit={handleSubmit} />
+				<EditableText
+					textValue={project.name}
+					handleSubmit={handleSubmit}
+					showEditIcon={projectEditAccess}
+				/>
 			)}
 		</Box>
 	);
