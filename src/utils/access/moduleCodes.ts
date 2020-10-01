@@ -32,4 +32,6 @@ export enum MODULE_CODES {
 	FINANCIAL_YEAR_DONOR = "financial-years-donor",
 	FINANCIAL_YEAR_ORG = "financial-years-org",
 	FINANCIAL_YEAR = "financial-year",
+	SUSTAINABLE_DEVELOPMENT_GOALS = "sustainable-development-goals",
+	ACCOUNT = "account",
 }

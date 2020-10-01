@@ -38,6 +38,7 @@ import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/delive
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 enum tableHeaders {
 	name = 2,
@@ -220,10 +221,17 @@ function DeliverableTargetAchievementAndProgress({
 		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
 	);
 
+	const deliverableUnitFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	);
+
 	return (
 		<>
 			{deliverableAchievedFindAccess && (
-				<TableCell>{`${DeliverableTargetAchieved} ${deliverableTargetUnit}`}</TableCell>
+				<TableCell>{`${DeliverableTargetAchieved} ${
+					deliverableUnitFindAccess ? deliverableTargetUnit : ""
+				}`}</TableCell>
 			)}
 			<TableCell>{DeliverableTargetProgess} %</TableCell>
 		</>
