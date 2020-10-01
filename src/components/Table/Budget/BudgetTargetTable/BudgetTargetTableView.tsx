@@ -18,8 +18,7 @@ import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
 import { BUDGET_CATEGORY_ACTIONS } from "../../../../utils/access/modules/budgetCategory/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
-import { PROJECT_DONOR_ACTIONS } from "../../../../utils/access/modules/projectDonor/actions";
-import { BUDGET_TARGET_DONOR } from "../../../../utils/access/modules/budgetTargetDonor/actions";
+import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
 
 enum tableHeader {
 	targetName = 2,
@@ -235,7 +234,7 @@ function BudgetTargetView({
 
 	const budgetTargetDonorFindAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET_DONOR,
-		BUDGET_TARGET_DONOR.FIND_BUDGET_TARGET_DONOR
+		BUDGET_TARGET_DONOR_ACTION.FIND_BUDGET_TARGET_DONOR
 	);
 
 	const budgetTargetProjectExpenditureValue = userHasAccess(
