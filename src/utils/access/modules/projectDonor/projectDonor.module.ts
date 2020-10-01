@@ -2,8 +2,8 @@ import { MODULE_CODES } from "../../moduleCodes";
 import { PROJECT_DONOR_ACTIONS } from "./actions";
 
 export const PROJECT_DONOR_MODULE = {
-	name: "Project",
-	code: MODULE_CODES.PEOJECT,
+	name: "Project Donor",
+	code: MODULE_CODES.PROJECT_DONOR,
 	actionsAvailable: {
 		[PROJECT_DONOR_ACTIONS.CREATE_PROJECT_DONOR]: {
 			name: "Create Project Donor",

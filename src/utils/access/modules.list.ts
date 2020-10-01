@@ -17,6 +17,8 @@ import { DONOR_MODULE } from "./modules/donor/donor.module";
 import { GRANT_PERIOD_MODULE } from "./modules/grantPeriod/grantPeriod.module";
 import { MODULE_CODES } from "./moduleCodes";
 import { PROJECT_DONOR_MODULE } from "./modules/projectDonor/projectDonor.module";
+import { BUDGET_TARGET_DONOR_MODULE } from "./modules/budgetTargetDonor/budgetTargetDonor.module";
+import { ANNUAL_YEAR_ACTIONS } from "./modules/annualYear/actions";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -72,4 +74,6 @@ export const MODULES = {
 	[MODULE_CODES.DONOR]: DONOR_MODULE,
 	[MODULE_CODES.GRANT_PERIOD]: GRANT_PERIOD_MODULE,
 	[MODULE_CODES.PROJECT_DONOR]: PROJECT_DONOR_MODULE,
+	[MODULE_CODES.BUDGET_TARGET_DONOR]: BUDGET_TARGET_DONOR_MODULE,
+	[MODULE_CODES.ANNUAL_YEAR]: ANNUAL_YEAR_ACTIONS,
 } as const;

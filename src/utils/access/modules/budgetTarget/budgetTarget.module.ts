@@ -21,5 +21,13 @@ export const BUDGET_TARGET_MODULE = {
 			name: "Find Budget Target",
 			code: BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET,
 		},
+		[BUDGET_TARGET_ACTIONS.PROJECT_EXPENDITURE_VALUE]: {
+			name: "Budget Target Project Expenditure Value",
+			code: BUDGET_TARGET_ACTIONS.PROJECT_EXPENDITURE_VALUE,
+		},
+		[BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE]: {
+			name: "Budget Target Project Allocation Value",
+			code: BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE,
+		},
 	},
 };
