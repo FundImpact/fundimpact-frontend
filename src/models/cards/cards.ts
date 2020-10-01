@@ -6,7 +6,7 @@ export type CardProps = {
 	children?: React.ReactElement | any;
 	cardHeight?: string;
 	cardFilter?: { label: string; base: string }[];
-	currentFilter?: string;
+	currentFilter?: { label: string; base: string };
 } & (
 	| {
 			type: CARD_TYPES.PIE;
@@ -59,6 +59,7 @@ export type ProgressCardResponse = {
 export type ProgressCardConfig = {
 	dataToDisplay: ProgressCardResponse[];
 	dialogTitle?: string;
+	dialogFilterTitle?: string;
 	noBarDisplay?: boolean;
 };
 

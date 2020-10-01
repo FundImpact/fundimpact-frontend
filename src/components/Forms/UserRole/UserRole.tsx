@@ -35,11 +35,14 @@ function UserRoleForm(props: UserRoleProps) {
 	const dashboardData = useDashBoardData();
 	const [formValues, setFormValues] = useState<{ email: string; role: string } | null>();
 	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 	const [sendInvitationToUser, { loading: sendInvitationToUserLoading }] = useMutation(
 		INVITE_USER,
 		{
 			onCompleted(data) {
 				notificationDispatch(setSuccessNotification("Invitation Sent"));
+				onCancel();
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Inviting User Failed !"));
@@ -71,8 +74,6 @@ function UserRoleForm(props: UserRoleProps) {
 			console.log("role", err);
 		},
 	});
-	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
 
 	const intl = useIntl();
 	let title = intl.formatMessage({

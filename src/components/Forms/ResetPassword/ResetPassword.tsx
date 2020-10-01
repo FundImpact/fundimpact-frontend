@@ -10,7 +10,8 @@ import {
 } from "../../../reducers/notificationReducer";
 import { IPassword, ResetPasswordProps } from "../../../models/ResetPassword/ResetPassword";
 import { UPDATE_PASSWORD } from "../../../graphql/Password/mutation";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
+import FormDialog from "../../FormDialog";
 
 function PasswordReset(props: ResetPasswordProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -19,9 +20,12 @@ function PasswordReset(props: ResetPasswordProps) {
 		passwordConfirmation: "",
 	};
 	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 	const [resetPassword] = useMutation(UPDATE_PASSWORD, {
 		onCompleted() {
 			notificationDispatch(setSuccessNotification("Password updated successfully !"));
+			onCancel();
 		},
 		onError() {
 			notificationDispatch(setErrorNotification("Password updation Failed !"));
@@ -51,40 +55,38 @@ function PasswordReset(props: ResetPasswordProps) {
 
 		return errors;
 	};
+	const intl = useIntl();
+	let resetPasswordTitle = intl.formatMessage({
+		id: "reserPasswordFormTitle",
+		defaultMessage: "Password",
+		description: "This text will be show on reset password form for title",
+	});
+	let resetPasswordSubtitle = intl.formatMessage({
+		id: "reserPasswordFormSubtitle",
+		defaultMessage: "Update your password",
+		description: "This text will be show on reset password form for subtitle",
+	});
 
 	return (
 		<React.Fragment>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<Typography data-testid="reset-password-heading" variant="h6" gutterBottom>
-						<FormattedMessage
-							id="reserPasswordFormTitle"
-							defaultMessage="Password"
-							description="This text will be show on reset password form for title"
-						/>
-					</Typography>
-					<Typography variant="subtitle2" color="textSecondary" gutterBottom>
-						<FormattedMessage
-							id="reserPasswordFormSubtitle"
-							defaultMessage="update your password"
-							description="This text will be show on reset password form for subtitle"
-						/>
-					</Typography>
-				</Grid>
-				<Grid item xs={9}>
-					<CommonForm
-						{...{
-							initialValues,
-							validate,
-							onCreate: () => {},
-							cancelButtonName: "Reset",
-							formAction,
-							onUpdate,
-							inputFields: newPasswordForm,
-						}}
-					/>
-				</Grid>
-			</Grid>
+			<FormDialog
+				title={resetPasswordTitle}
+				subtitle={resetPasswordSubtitle}
+				open={formIsOpen}
+				handleClose={onCancel}
+			>
+				<CommonForm
+					{...{
+						initialValues,
+						validate,
+						onCreate: () => {},
+						onCancel,
+						formAction,
+						onUpdate,
+						inputFields: newPasswordForm,
+					}}
+				/>
+			</FormDialog>
 		</React.Fragment>
 	);
 }

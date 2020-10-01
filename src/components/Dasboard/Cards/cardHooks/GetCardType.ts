@@ -50,6 +50,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 	let progressCardConfig: ProgressCardConfig = {
 		dataToDisplay: [],
 		dialogTitle: props.title,
+		dialogFilterTitle: props.currentFilter?.label,
 	};
 
 	if (props.type === CARD_TYPES.PROJECT) {
@@ -132,21 +133,21 @@ export function GetCardTypeAndValues(props: CardProps) {
 		];
 
 		if (props.cardOf === CARD_OF.BUDGET) {
-			let { data, loading } = GetBudgetCategories(props.currentFilter, {
+			let { data, loading } = GetBudgetCategories(props.currentFilter?.base, {
 				variables: { filter: { organization: organization } },
 			});
 			pieCardConfig.loading = loading;
 			fetchedData = data;
 		}
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
-			let { data, loading } = GetDeliverableCategory(props.currentFilter, {
+			let { data, loading } = GetDeliverableCategory(props.currentFilter?.base, {
 				variables: { filter: { organization: organization } },
 			});
 			pieCardConfig.loading = loading;
 			fetchedData = data;
 		}
 		if (props.cardOf === CARD_OF.IMPACT) {
-			let { data, loading } = GetImpactCategory(props.currentFilter, {
+			let { data, loading } = GetImpactCategory(props.currentFilter?.base, {
 				variables: { filter: { organization: organization } },
 			});
 			pieCardConfig.loading = loading;
@@ -171,7 +172,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 
 	if (props.type === CARD_TYPES.PROGRESS) {
 		if (props.cardOf === CARD_OF.BUDGET) {
-			let { data: budgetProject } = GetBudgetProjects(props.currentFilter, {
+			let { data: budgetProject } = GetBudgetProjects(props.currentFilter?.base, {
 				variables: { filter: { organization: organization } },
 			});
 			progressCardConfig.dataToDisplay = budgetProject;
@@ -189,7 +190,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 			progressCardConfig.dataToDisplay = impactAchieved;
 		}
 		if (props.cardOf === CARD_OF.DONOR) {
-			let { data: donors } = GetDonors(props.currentFilter, {
+			let { data: donors } = GetDonors(props.currentFilter?.base, {
 				variables: { filter: { organization: organization } },
 			});
 			progressCardConfig.dataToDisplay = donors;

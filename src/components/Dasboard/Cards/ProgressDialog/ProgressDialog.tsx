@@ -6,11 +6,18 @@ import { Box } from "@material-ui/core";
 export interface ProgressDialogProps {
 	open: boolean;
 	title: string;
+	filterTitle: string;
 	children?: React.ReactNode;
 	onClose: (value: string) => void;
 }
 
-export default function ProgressDialog({ open, title, onClose, children }: ProgressDialogProps) {
+export default function ProgressDialog({
+	open,
+	title,
+	onClose,
+	children,
+	filterTitle,
+}: ProgressDialogProps) {
 	return (
 		<Dialog
 			onClose={onClose}
@@ -19,7 +26,7 @@ export default function ProgressDialog({ open, title, onClose, children }: Progr
 			maxWidth="sm"
 			fullWidth
 		>
-			<DialogTitle id="simple-dialog-title">{title}</DialogTitle>
+			<DialogTitle id="simple-dialog-title">{`${title} by ${filterTitle}`}</DialogTitle>
 			<Box m={1}>{children}</Box>
 		</Dialog>
 	);

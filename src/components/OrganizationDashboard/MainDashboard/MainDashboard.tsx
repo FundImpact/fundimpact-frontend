@@ -8,10 +8,12 @@ import {
 	Theme,
 	Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
 import { FormattedMessage, useIntl } from "react-intl";
 import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
+import { useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { setProject } from "../../../reducers/dashboardReducer";
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
 		marginTop: theme.spacing(2),
@@ -56,6 +58,10 @@ export default function MainOrganizationDashboard() {
 		defaultMessage: "Achieved",
 		description: "This text will be show on cards for achieved button",
 	});
+	const dispatch = useDashboardDispatch();
+	useEffect(() => {
+		dispatch(setProject(undefined));
+	}, [dispatch, setProject]);
 	return (
 		<>
 			<Grid item container style={{ flex: 1.5 }}>

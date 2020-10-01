@@ -27,8 +27,7 @@ export const ProfileContainer = () => {
 	const [openResetPassForm, setOpenResetPassForm] = useState<boolean>(false);
 	const userDispatch = React.useContext(UserDispatchContext);
 	let { data: userDetails, error: userDetailsError } = useQuery(GET_USER_DETAILS);
-	const navigate = useNavigate();
-	const notificationDispatch = useNotificationDispatch();
+
 	useEffect(() => {
 		console.log("errorData", userDetailsError, userDetails);
 		if (userDetailsError) {
@@ -74,10 +73,7 @@ export const ProfileContainer = () => {
 			</Paper>
 			{!verifyUrlJwt && (
 				<Box m={1}>
-					<Button
-						color="primary"
-						onClick={() => setOpenResetPassForm(!openResetPassForm)}
-					>
+					<Button color="primary" onClick={() => setOpenResetPassForm(true)}>
 						<FormattedMessage
 							id={`profileResetPassword`}
 							defaultMessage={`Reset Password`}
@@ -87,11 +83,12 @@ export const ProfileContainer = () => {
 				</Box>
 			)}
 			{openResetPassForm && (
-				<Paper style={{ height: "200px" }}>
-					<Box m={2} p={3}>
-						<PasswordReset userId={data?.id} type={FORM_ACTIONS.UPDATE} />
-					</Box>
-				</Paper>
+				<PasswordReset
+					open={openResetPassForm}
+					handleClose={() => setOpenResetPassForm(false)}
+					userId={data?.id}
+					type={FORM_ACTIONS.UPDATE}
+				/>
 			)}
 		</Box>
 	);

@@ -21,7 +21,7 @@ export default function DashboardCard(props: CardProps) {
 	const [currentFilter, setCurrentFilter] = useState<{ label: string; base: string }>();
 	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
 		...props,
-		currentFilter: currentFilter?.base,
+		currentFilter,
 	});
 
 	const useStyles = makeStyles((theme: Theme) => ({
@@ -68,47 +68,60 @@ export default function DashboardCard(props: CardProps) {
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
 				<Grid container>
-					<Grid item md={12} xs={6} container justify="space-between">
-						{title && (
-							<Box mt={1} mb={1}>
-								<Typography color="primary" gutterBottom>
-									{title}
-								</Typography>
-							</Box>
-						)}
-						{cardFilter && cardFilter.length > 0 && (
-							<>
-								<IconButton onClick={handleClick}>
-									<FilterListIcon fontSize="small" />
-								</IconButton>
-								<Menu
-									id="simple-menu-budget-org"
-									anchorEl={anchorEl}
-									keepMounted
-									open={Boolean(anchorEl)}
-									onClose={handleClose}
-								>
-									{cardFilter.map(
-										(
-											filter: { label: string; base: string },
-											mapIndex: number
-										) => {
-											return (
-												<MenuItem
-													key={mapIndex}
-													onClick={() => {
-														setCurrentFilter(filter);
-														handleClose();
-													}}
-												>
-													{filter.label}
-												</MenuItem>
-											);
-										}
-									)}
-								</Menu>
-							</>
-						)}
+					<Grid item container justify="space-between">
+						<Grid item xs={7}>
+							{title && (
+								<Box mt={1} mb={1} mr={1}>
+									<Typography color="primary" gutterBottom noWrap>
+										{title}
+									</Typography>
+								</Box>
+							)}
+						</Grid>
+						<Grid item xs={3}>
+							{cardFilter && cardFilter.length > 0 && (
+								<Box mt={1} mb={1} color="text.disabled">
+									<Typography variant="caption" gutterBottom noWrap>
+										{currentFilter?.label}
+									</Typography>
+								</Box>
+							)}
+						</Grid>
+						<Grid item xs={2}>
+							{cardFilter && cardFilter.length > 0 && (
+								<>
+									<IconButton onClick={handleClick}>
+										<FilterListIcon fontSize="small" />
+									</IconButton>
+									<Menu
+										id="simple-menu-budget-org"
+										anchorEl={anchorEl}
+										keepMounted
+										open={Boolean(anchorEl)}
+										onClose={handleClose}
+									>
+										{cardFilter.map(
+											(
+												filter: { label: string; base: string },
+												mapIndex: number
+											) => {
+												return (
+													<MenuItem
+														key={mapIndex}
+														onClick={() => {
+															setCurrentFilter(filter);
+															handleClose();
+														}}
+													>
+														{filter.label}
+													</MenuItem>
+												);
+											}
+										)}
+									</Menu>
+								</>
+							)}
+						</Grid>
 					</Grid>
 					{renderCard()}
 				</Grid>

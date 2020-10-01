@@ -63,7 +63,7 @@ function UserForm(props: UserProps) {
 	let subtitle = (
 		<FormattedMessage
 			id="updateUserFormSubtitle"
-			defaultMessage="your personal details"
+			defaultMessage="Your personal details"
 			description="This text will be show on user update form for subtitle"
 		/>
 	);
