@@ -11,7 +11,7 @@ import {
 	Avatar,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -36,6 +36,23 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+
+enum tableHeaders {
+	name = 2,
+	category = 3,
+	target = 4,
+	achieved = 5,
+	progress = 6,
+}
+
+enum tableColumn {
+	name = 1,
+	category = 2,
+	target = 3,
+	achievedAndProgress = 4,
+}
 
 const chipArray = ({
 	removeChip,
@@ -197,9 +214,17 @@ function DeliverableTargetAchievementAndProgress({
 			);
 		}
 	}, [data, deliverableTargetValue]);
+
+	const deliverableAchievedFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
+	);
+
 	return (
 		<>
-			<TableCell>{`${DeliverableTargetAchieved} ${deliverableTargetUnit}`}</TableCell>
+			{deliverableAchievedFindAccess && (
+				<TableCell>{`${DeliverableTargetAchieved} ${deliverableTargetUnit}`}</TableCell>
+			)}
 			<TableCell>{DeliverableTargetProgess} %</TableCell>
 		</>
 	);
@@ -361,6 +386,17 @@ export default function DeliverablesTable() {
 
 	const [rows, setRows] = useState<any>([]);
 	const limit = 10;
+
+	const deliverableCategoryFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+	);
+
+	const deliverableAchievedFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
+	);
+
 	useEffect(() => {
 		if (
 			deliverableTargetData &&
@@ -433,7 +469,12 @@ export default function DeliverablesTable() {
 							deliverableTarget={deliverableTargetList[i]}
 						/>
 					);
-					row.column = column;
+
+					const filteredDeliverableTableColumns = filterTableHeadingsAndRows(column, {
+						[tableColumn.category]: !deliverableCategoryFindAccess,
+					});
+
+					row.column = filteredDeliverableTableColumns;
 					array.push(row);
 				}
 			}
@@ -443,6 +484,15 @@ export default function DeliverablesTable() {
 			setRows([]);
 		}
 	}, [deliverableTargetData]);
+
+	const filteredDeliverableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(deliverableHeadings, {
+				[tableHeaders.category]: !deliverableCategoryFindAccess,
+				[tableHeaders.achieved]: !deliverableAchievedFindAccess,
+			}),
+		[deliverableCategoryFindAccess, deliverableAchievedFindAccess]
+	);
 
 	let deliverableTablePagination = (
 		<TablePagination
@@ -493,7 +543,7 @@ export default function DeliverablesTable() {
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
 						tableHeading={getTableHeadingByDeliverableTracklineAccess(
-							deliverableHeadings,
+							filteredDeliverableHeadings,
 							deliverableTracklineFindAccess
 						)}
 						rows={rows}
