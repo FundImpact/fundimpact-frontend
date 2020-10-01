@@ -21,5 +21,9 @@ export const WORKSPACE_MODULE = {
 			name: "Find Workspace",
 			code: WORKSPACE_ACTIONS.FIND_WORKSPACE,
 		},
+		[WORKSPACE_ACTIONS.COUNT_WORKSPACE]: {
+			name: "Count Workspace",
+			code: WORKSPACE_ACTIONS.COUNT_WORKSPACE,
+		},
 	},
 };
