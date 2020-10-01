@@ -10,17 +10,17 @@ type actionType<T extends MODULE_CODES> = keyof typeof MODULES[T]["actionsAvaila
 
 function UserHasAccess<T extends MODULE_CODES>(moduleName: T, action: actionType<T>) {
 	const { data: userControllerActionHash } = userRoles();
-	// console.log("userControllerActionHash :>> ", userControllerActionHash);
+	console.log("userControllerActionHash :>> ", userControllerActionHash);
 	if (!userControllerActionHash || !Object.keys(userControllerActionHash).length) {
 		return false;
 	}
-	if (moduleName + "-" + action in userControllerActionHash) {
-		if (userControllerActionHash[moduleName + "-" + action]?.enabled) {
-			return true;
-		}
-		return false;
+	if (
+		moduleName + "-" + action in userControllerActionHash &&
+		userControllerActionHash[moduleName + "-" + action]?.enabled
+	) {
+		return true;
 	}
-	return true;
+	return false;
 }
 
 export default UserHasAccess;

@@ -26,9 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function EditableText({
 	textValue,
 	handleSubmit,
+	showEditIcon = true,
 }: {
 	textValue: string;
 	handleSubmit: Function;
+	showEditIcon?: boolean;
 }) {
 	const classes = useStyles();
 	const [text, setText] = useState<string>(textValue);
@@ -58,11 +60,13 @@ export default function EditableText({
 							<Typography variant="h5">{textValue}</Typography>
 						</Box>
 					)}
-					<Box className={classes.EditIcon}>
-						<IconButton onClick={handleOpenInput} data-testid="editable-edit">
-							<EditOutlinedIcon fontSize="small" />
-						</IconButton>
-					</Box>
+					{showEditIcon && (
+						<Box className={classes.EditIcon}>
+							<IconButton onClick={handleOpenInput} data-testid="editable-edit">
+								<EditOutlinedIcon fontSize="small" />
+							</IconButton>
+						</Box>
+					)}
 				</Box>
 			)}
 			{openInput && (

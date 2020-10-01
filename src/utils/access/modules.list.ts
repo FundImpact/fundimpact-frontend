@@ -16,6 +16,7 @@ import { ORGANIZATION_MODULE } from "./modules/organization/organization.module"
 import { DONOR_MODULE } from "./modules/donor/donor.module";
 import { GRANT_PERIOD_MODULE } from "./modules/grantPeriod/grantPeriod.module";
 import { MODULE_CODES } from "./moduleCodes";
+import { PROJECT_DONOR_MODULE } from "./modules/projectDonor/projectDonor.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -70,4 +71,5 @@ export const MODULES = {
 	[MODULE_CODES.ORGANIZATION]: ORGANIZATION_MODULE,
 	[MODULE_CODES.DONOR]: DONOR_MODULE,
 	[MODULE_CODES.GRANT_PERIOD]: GRANT_PERIOD_MODULE,
+	[MODULE_CODES.PROJECT_DONOR]: PROJECT_DONOR_MODULE,
 } as const;
