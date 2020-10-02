@@ -9,6 +9,8 @@ import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
 import { useIntl } from "react-intl";
 import ListItemLink from "../../components/ListItemLink";
+import { userHasAccess, MODULE_CODES } from "../../utils/access";
+import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
 /**
  *
  * @description The to url must be relative to the /account.
@@ -36,6 +38,8 @@ export default function AccountSettingsSidebar({ children }: { children?: Functi
 		}
 	}, [orgData, dispatch]);
 
+	const accountEditAccess = userHasAccess(MODULE_CODES.ACCOUNT, ACCOUNT_ACTIONS.UPDATE_ACCOUNT);
+
 	if (!orgData?.organizationList) return <SidebarSkeleton />;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
@@ -52,15 +56,17 @@ export default function AccountSettingsSidebar({ children }: { children?: Functi
 				</Box>
 			</Box>
 			<Divider />
-			<ListItemLink
-				to="profile"
-				data-testid="update-user-link"
-				primary={intl.formatMessage({
-					id: `profileSettingLink`,
-					defaultMessage: "Profile",
-					description: `This text will be shown for profile link on setting page`,
-				})}
-			></ListItemLink>
+			{accountEditAccess && (
+				<ListItemLink
+					to="profile"
+					data-testid="update-user-link"
+					primary={intl.formatMessage({
+						id: `profileSettingLink`,
+						defaultMessage: "Profile",
+						description: `This text will be shown for profile link on setting page`,
+					})}
+				></ListItemLink>
+			)}
 		</Box>
 	);
 }

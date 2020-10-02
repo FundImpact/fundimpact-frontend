@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
 	TableContainer,
 	Table,
@@ -28,6 +28,15 @@ import { donorTableHeading as tableHeading } from "../constants";
 import { getValueFromObject } from "../../../utils";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
+import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+
+enum tableHeader {
+	name = 1,
+	legalName = 2,
+	shortName = 3,
+	country = 4,
+}
 
 const useStyles = makeStyles({
 	table: {
@@ -75,6 +84,16 @@ function DonorTable({
 	const [queryFilter, setQueryFilter] = useState({});
 
 	const dashboardData = useDashBoardData();
+
+	const countryFindAccess = userHasAccess(MODULE_CODES.COUNTRY, COUNTRY_ACTION.FIND_COUNTRY);
+	
+	const filteredTableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(tableHeading, {
+				[tableHeader.country]: !countryFindAccess,
+			}),
+		[countryFindAccess]
+	);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -147,7 +166,7 @@ function DonorTable({
 				<TableHead>
 					<TableRow color="primary">
 						{donorList?.orgDonors?.length
-							? tableHeading.map(
+							? filteredTableHeadings.map(
 									(
 										heading: { label: string; keyMapping?: string },
 										index: number

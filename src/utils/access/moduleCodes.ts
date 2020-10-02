@@ -34,4 +34,6 @@ export enum MODULE_CODES {
 	FINANCIAL_YEAR = "financial-year",
 	SUSTAINABLE_DEVELOPMENT_GOALS = "sustainable-development-goals",
 	ACCOUNT = "account",
+	COUNTRY = "country",
+	CURRENCY = "currency",
 }
