@@ -24,6 +24,8 @@ import { FINANCIAL_YEAR_DONOR_MODULE } from "./modules/financialYearDonor/financ
 import { FINANCIAL_YEAR_MODULE } from "./modules/financialYear/financialYear.module";
 import { SUSTAINABLE_DEVELOPMENT_GOALS_MODULE } from "./modules/sustainableDevelopmentGoals/sustainableDevelopmentGoals.module";
 import { ACCOUNT_MODULE } from "./modules/account/account.module";
+import { COUNTRY_MODULE } from "./modules/country/country.module";
+import { CURRENCY_MODULE } from "./modules/currency/currency.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -86,4 +88,6 @@ export const MODULES = {
 	[MODULE_CODES.FINANCIAL_YEAR]: FINANCIAL_YEAR_MODULE,
 	[MODULE_CODES.SUSTAINABLE_DEVELOPMENT_GOALS]: SUSTAINABLE_DEVELOPMENT_GOALS_MODULE,
 	[MODULE_CODES.ACCOUNT]: ACCOUNT_MODULE,
+	[MODULE_CODES.COUNTRY]: COUNTRY_MODULE,
+	[MODULE_CODES.CURRENCY]: CURRENCY_MODULE,
 } as const;

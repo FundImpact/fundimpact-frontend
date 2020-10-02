@@ -21,6 +21,7 @@ import { sidePanelStyles } from "../Dasboard/styles";
 import { userHasAccess } from "../../utils/access";
 import { MODULE_CODES } from "../../utils/access/moduleCodes";
 import { SETTING_MODULE_ACTION } from "../../utils/access/modules/setting/actions";
+import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
 
 /**
  * @description This is the Blue sidebar the we see on the left most side of the window.
@@ -64,6 +65,8 @@ export default function LeftPanel() {
 			]);
 		}
 	}, [settingButtonAccess]);
+
+	const accountEditAccess = userHasAccess(MODULE_CODES.ACCOUNT, ACCOUNT_ACTIONS.UPDATE_ACCOUNT);
 
 	return (
 		<Grid container className={classes.leftPanel} direction="column">
@@ -120,9 +123,11 @@ export default function LeftPanel() {
 					onClose={handleClose}
 				>
 					{" "}
-					<MenuItem component={Link} to={"/account/profile"}>
-						Account Settings
-					</MenuItem>
+					{accountEditAccess && (
+						<MenuItem component={Link} to={"/account/profile"}>
+							Account Settings
+						</MenuItem>
+					)}
 					<MenuItem
 						onClick={() => {
 							if (userDispatch) {
