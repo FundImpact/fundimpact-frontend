@@ -18,6 +18,8 @@ import { useAuth } from "../../../contexts/userContext";
 import { IGetUserRole } from "../../../models/access/query";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
+import { useLocation } from "react-router-dom";
+import { FORM_ACTIONS } from "../constant";
 
 const getInitialValues = (controllerActionHash: IControllerAction | {}): IAddRole => {
 	let initialValues: IAddRole = {
@@ -33,7 +35,9 @@ const getInitialValues = (controllerActionHash: IControllerAction | {}): IAddRol
 			}
 			(initialValues.permissions as IAddRolePermissions)[controller as MODULE_CODES][
 				action
-			] = false;
+			] = (controllerActionHash as IControllerAction)[controller as MODULE_CODES][
+				action
+			].enabled;
 		}
 	}
 	return initialValues;
@@ -125,7 +129,10 @@ const onFormSubmit = async ({
 								},
 							},
 							data: {
-								organizationRoles: [createOrganizationUserRole, ...(userRoles?.organizationRoles || [])],
+								organizationRoles: [
+									createOrganizationUserRole,
+									...(userRoles?.organizationRoles || []),
+								],
 							},
 						});
 					}
@@ -143,7 +150,10 @@ const onFormSubmit = async ({
 	}
 };
 
-const getControllerActionHash = (controllerActionArr: IGetUserRole["getRolePemissions"]) => {
+const getControllerActionHash = (
+	controllerActionArr: IGetUserRole["getRolePemissions"],
+	formType: FORM_ACTIONS
+) => {
 	return controllerActionArr.reduce(
 		(
 			controllerActionHash: IControllerAction,
@@ -153,7 +163,7 @@ const getControllerActionHash = (controllerActionArr: IGetUserRole["getRolePemis
 				controllerActionHash[current.controller as MODULE_CODES] = {};
 			}
 			controllerActionHash[current.controller as MODULE_CODES][current.action] = {
-				enabled: false,
+				enabled: formType == FORM_ACTIONS.CREATE ? false : current.enabled,
 				policy: "",
 			};
 			return controllerActionHash;
@@ -165,6 +175,8 @@ const getControllerActionHash = (controllerActionArr: IGetUserRole["getRolePemis
 function AddRoleFormContainer({
 	createOrganizationUserRole,
 	roleCreationLoading,
+	formType,
+	userRoleData,
 }: {
 	roleCreationLoading: boolean;
 	createOrganizationUserRole: (
@@ -177,32 +189,21 @@ function AddRoleFormContainer({
 	) => Promise<
 		FetchResult<ICreateOrganizationUserRole, Record<string, any>, Record<string, any>>
 	>;
+	formType: FORM_ACTIONS;
+	userRoleData?: IGetUserRole;
 }) {
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
-	const user = useAuth();
-	const [getUserRoles, { data: userRoleData, loading, error }] = useLazyQuery<IGetUserRole>(
-		GET_USER_ROLES
-	);
 	const [controllerActionHash, setControllerActionHash] = useState<IControllerAction | {}>({});
 
 	useEffect(() => {
-		if (user) {
-			getUserRoles({
-				variables: {
-					filter: {
-						role: user.user?.role?.id,
-					},
-				},
-			});
-		}
-	}, [user, getUserRoles]);
-
-	useEffect(() => {
 		if (userRoleData) {
-			setControllerActionHash(getControllerActionHash(userRoleData.getRolePemissions));
+			setControllerActionHash(
+				getControllerActionHash(userRoleData.getRolePemissions, formType)
+			);
 		}
 	}, [userRoleData]);
+
 	const onCreate = useCallback(
 		(
 			valuesSubmitted: IAddRole,
