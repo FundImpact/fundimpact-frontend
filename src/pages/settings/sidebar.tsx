@@ -20,39 +20,18 @@ import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCatego
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
 import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
+import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
+import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 
-const setSidebarBudgetCategoryUserAccess = (
-	budgetCategory: { userAccess: boolean },
-	userAccess: boolean
-) => (budgetCategory.userAccess = userAccess);
+const setSidebarTabUserAccess = (tab: { userAccess: boolean }, userAccess: boolean) =>
+	(tab.userAccess = userAccess);
 
-const setSidebarDeliverableCategoryAndUnitsUserAccess = (
-	deliverableCategoryAndUnits: { userAccess: boolean },
-	userAccess: boolean
-) => {
-	deliverableCategoryAndUnits.userAccess = userAccess;
-};
-
-const setSidebarImpactCategoryAndUnitsUserAccess = (
-	impactCategoryAndUnits: { userAccess: boolean },
-	userAccess: boolean
-) => {
-	impactCategoryAndUnits.userAccess = userAccess;
-};
-
-const setSidebarOrganizationUpdateUserAccess = (
-	organization: { userAccess: boolean },
-	userAccess: boolean
-) => {
-	organization.userAccess = userAccess;
-};
-
-const setSidebarDonorUserAccess = (
-	donor: { userAccess: boolean },
-	userAccess: boolean
-) => {
-	donor.userAccess = userAccess;
-};
+enum sidebar {
+	default = 0,
+	managePortal = 1,
+	manageMasters = 2,
+	manageUsers = 3,
+}
 
 /**
  *
@@ -138,32 +117,52 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
 
+	const userRoleFindAccess = userHasAccess(
+		MODULE_CODES.USER_PERMISSIONS,
+		USER_PERMISSIONS_ACTIONS.FIND_USER_PERMISSIONS
+	);
+
+	const userRoleCreateAccess = userHasAccess(
+		MODULE_CODES.USER_PERMISSIONS,
+		USER_PERMISSIONS_ACTIONS.CREATE_USER_PERMISSIONS
+	);
+
+	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
+
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
 
-	setSidebarBudgetCategoryUserAccess(
-		sidebarList[2].subHeadings[0],
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.manageMasters].subHeadings[0],
 		budgetCategoryFindAccess || createBudgetCategoryAccess
 	);
-	setSidebarDeliverableCategoryAndUnitsUserAccess(
-		sidebarList[2].subHeadings[2],
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.manageMasters].subHeadings[2],
 		deliverableCategoryFindAccess ||
 			deliverableUnitFindAccess ||
 			deliverableCategoryCreateAccess ||
 			deliverableUnitCreateAccess
 	);
-	setSidebarImpactCategoryAndUnitsUserAccess(
-		sidebarList[2].subHeadings[1],
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.manageMasters].subHeadings[1],
 		impactCategoryFindAccess ||
 			impactUnitFindAccess ||
 			impactCategoryCreateAccess ||
 			impactUnitCreateAccess
 	);
 
-	setSidebarOrganizationUpdateUserAccess(sidebarList[0].subHeadings[0], organizationEditAccess);
+	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[0], organizationEditAccess);
 
-	setSidebarDonorUserAccess(sidebarList[1].subHeadings[0], donorFindAccess || donorCreateAccess);
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.managePortal].subHeadings[0],
+		donorFindAccess || donorCreateAccess
+	);
+
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.manageUsers].subHeadings[0],
+		userRoleFindAccess || userRoleCreateAccess || authInviteUser
+	);
 
 	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
 	return (

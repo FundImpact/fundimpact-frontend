@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/userContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
+import { AUTH_ACTIONS } from "../../../utils/access/modules/auth/actions";
 
 export const UserRoleContainer = () => {
 	const user = useAuth();
@@ -25,26 +26,32 @@ export const UserRoleContainer = () => {
 		USER_PERMISSIONS_ACTIONS.CREATE_USER_PERMISSIONS
 	);
 
+	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
+
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
-				<Grid item xs={12}>
-					<Typography variant="h6">
-						<FormattedMessage
-							id={`userRoleHeading`}
-							defaultMessage={`User Roles`}
-							description={`This text will be shown on Setting page for user role heading`}
-						/>
-					</Typography>
-				</Grid>
+				{authInviteUser && (
+					<>
+						<Grid item xs={12}>
+							<Typography variant="h6">
+								<FormattedMessage
+									id={`userRoleHeading`}
+									defaultMessage={`User Roles`}
+									description={`This text will be shown on Setting page for user role heading`}
+								/>
+							</Typography>
+						</Grid>
 
-				<Grid item xs={12}>
-					<Paper style={{ height: "250px" }}>
-						<Box p={2}>
-							<UserRoleForm type={FORM_ACTIONS.CREATE} />
-						</Box>
-					</Paper>
-				</Grid>
+						<Grid item xs={12}>
+							<Paper style={{ height: "250px" }}>
+								<Box p={2}>
+									<UserRoleForm type={FORM_ACTIONS.CREATE} />
+								</Box>
+							</Paper>
+						</Grid>
+					</>
+				)}
 				{userRoleFindAccess && (
 					<>
 						<Grid item xs={12}>

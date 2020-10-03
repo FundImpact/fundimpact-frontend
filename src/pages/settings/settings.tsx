@@ -24,6 +24,8 @@ import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
 import AddRole from "./AddRole";
+import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
+import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -95,6 +97,18 @@ export default function SettingContainer() {
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
 
+	const userRoleFindAccess = userHasAccess(
+		MODULE_CODES.USER_PERMISSIONS,
+		USER_PERMISSIONS_ACTIONS.FIND_USER_PERMISSIONS
+	);
+
+	const userRoleCreateAccess = userHasAccess(
+		MODULE_CODES.USER_PERMISSIONS,
+		USER_PERMISSIONS_ACTIONS.CREATE_USER_PERMISSIONS
+	);
+
+	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
+
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
@@ -165,7 +179,13 @@ export default function SettingContainer() {
 								<Navigate to="settingsDefault" />
 							)}
 						</PrivateRoute>
-						<Route path="user_roles" element={<UserRoleContainer />} />
+						<PrivateRoute
+							userAccess={
+								userRoleFindAccess || userRoleCreateAccess || authInviteUser
+							}
+							path="user_roles"
+							element={<UserRoleContainer />}
+						/>
 						<Route path="add_role" element={<AddRole />} />
 					</Routes>
 				</Grid>

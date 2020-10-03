@@ -27,6 +27,7 @@ import { ACCOUNT_MODULE } from "./modules/account/account.module";
 import { COUNTRY_MODULE } from "./modules/country/country.module";
 import { CURRENCY_MODULE } from "./modules/currency/currency.module";
 import { USER_PERMISSIONS_MODULE } from "./modules/userPermissions/userPermissions.module";
+import { AUTH_MODULE } from "./modules/auth/auth.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -92,4 +93,5 @@ export const MODULES = {
 	[MODULE_CODES.COUNTRY]: COUNTRY_MODULE,
 	[MODULE_CODES.CURRENCY]: CURRENCY_MODULE,
 	[MODULE_CODES.USER_PERMISSIONS]: USER_PERMISSIONS_MODULE,
+	[MODULE_CODES.AUTH]: AUTH_MODULE,
 } as const;

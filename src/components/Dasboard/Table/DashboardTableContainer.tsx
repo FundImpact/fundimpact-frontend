@@ -39,6 +39,7 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
+import FundReceived from "../../FundReceived";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -251,6 +252,21 @@ export default function DashboardTableContainer() {
 						/>
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "reportFundReceived",
+						defaultMessage: "Report Fund Received",
+						description: `This text will be show on Add Button for Report Fund Received`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<FundReceived
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+					createButtonAccess: true,
 				},
 			],
 			tabVisibility:
