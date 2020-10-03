@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableFooter from "@material-ui/core/TableFooter";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { ITableHeadings } from "../../models";
 
 const useStyles = makeStyles({
 	table: {},
@@ -38,7 +39,7 @@ export default function FITable({
 	noRowHeading,
 	rowHeading,
 }: {
-	tableHeading: { label: string; keyMapping?: string }[];
+	tableHeading: ITableHeadings[];
 	rows: React.ReactNode[];
 	pagination?: React.ReactNode;
 	order?: "asc" | "desc";
@@ -91,35 +92,46 @@ export default function FITable({
 												key={heading.label}
 												align="left"
 											>
-												{/* {heading.label} */}
-												<FormattedMessage
-													id={
-														"tableHeading" +
-														heading.label.replace(/ /g, "")
-													}
-													defaultMessage={`${heading.label}`}
-													description={`This text will be shown on table for ${heading.label} heading`}
-												/>
-												{order && heading.keyMapping && (
-													<TableSortLabel
-														active={orderBy === heading.keyMapping}
-														onClick={() => {
-															if (orderBy === heading.keyMapping) {
-																setOrder &&
-																	setOrder(
-																		order === "asc"
-																			? "desc"
-																			: "asc"
-																	);
-															} else {
-																setOrderBy &&
-																	setOrderBy(
-																		heading.keyMapping || ""
-																	);
+												{heading.renderComponent ? (
+													heading.renderComponent()
+												) : (
+													<>
+														<FormattedMessage
+															id={
+																"tableHeading" +
+																heading.label.replace(/ /g, "")
 															}
-														}}
-														direction={order}
-													></TableSortLabel>
+															defaultMessage={`${heading.label}`}
+															description={`This text will be shown on table for ${heading.label} heading`}
+														/>
+														{order && heading.keyMapping && (
+															<TableSortLabel
+																active={
+																	orderBy === heading.keyMapping
+																}
+																onClick={() => {
+																	if (
+																		orderBy ===
+																		heading.keyMapping
+																	) {
+																		setOrder &&
+																			setOrder(
+																				order === "asc"
+																					? "desc"
+																					: "asc"
+																			);
+																	} else {
+																		setOrderBy &&
+																			setOrderBy(
+																				heading.keyMapping ||
+																					""
+																			);
+																	}
+																}}
+																direction={order}
+															></TableSortLabel>
+														)}
+													</>
 												)}
 											</TableCell>
 										))}

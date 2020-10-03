@@ -446,7 +446,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		} else {
 			setRows([]);
 		}
-	}, [impactTracklineData]);
+	}, [impactTracklineData, annualYearFindAccess, financialYearFindAccess, impactTracklinePage]);
 
 	const filteredImpactTracklineTableHeadings = useMemo(
 		() =>
@@ -482,12 +482,28 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		description: `This text will be shown if no target found for table`,
 	});
 
+	filteredImpactTracklineTableHeadings[
+		filteredImpactTracklineTableHeadings.length - 1
+	].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				reporting_date: "",
+				note: "",
+				value: "",
+				annual_year: [],
+				financial_year: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={impactTracklineInputFields}
+		/>
+	);
+
 	return (
 		<>
 			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<Grid container>
-				<Grid item xs={11}>
+				<Grid item xs={12}>
 					<Box my={2} display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
@@ -495,21 +511,6 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								removeFilterListElements,
 							})
 						)}
-					</Box>
-				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								reporting_date: "",
-								note: "",
-								value: "",
-								annual_year: [],
-								financial_year: [],
-							}}
-							setFilterList={setFilterList}
-							inputFields={impactTracklineInputFields}
-						/>
 					</Box>
 				</Grid>
 			</Grid>
