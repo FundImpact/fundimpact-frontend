@@ -20,7 +20,7 @@ import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { ICommonTableRow, ICommonTable } from "../../../models";
+import { ICommonTableRow, ICommonTable, ITableHeadings } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { getValueFromObject } from "../../../utils";
@@ -102,7 +102,8 @@ function CommonTableRow<T extends { id: string }>({
 
 const defaultRows = 10;
 
-const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) => element.children;
+const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) =>
+	element.children;
 
 function CommonTable<T extends { id: string }>({
 	tableHeadings,
@@ -169,39 +170,38 @@ function CommonTable<T extends { id: string }>({
 				<TableHead>
 					<TableRow color="primary">
 						{valuesList.length
-							? tableHeadings.map(
-									(
-										heading: { label: string; keyMapping?: string },
-										index: number
-									) => (
-										<TableCell
-											className={tableStyles.th}
-											key={index}
-											align="left"
-										>
-											{heading.label}
-											{order && heading.keyMapping && (
-												<TableSortLabel
-													active={orderBy === heading.keyMapping}
-													onClick={() => {
-														if (orderBy === heading.keyMapping) {
-															setOrder &&
-																setOrder(
-																	order === "asc" ? "desc" : "asc"
-																);
-														} else {
-															setOrderBy &&
-																setOrderBy(
-																	heading.keyMapping || ""
-																);
-														}
-													}}
-													direction={order}
-												></TableSortLabel>
-											)}
-										</TableCell>
-									)
-							  )
+							? tableHeadings.map((heading: ITableHeadings, index: number) => (
+									<TableCell className={tableStyles.th} key={index} align="left">
+										{heading.renderComponent ? (
+											heading.renderComponent()
+										) : (
+											<>
+												{heading.label}
+												{order && heading.keyMapping && (
+													<TableSortLabel
+														active={orderBy === heading.keyMapping}
+														onClick={() => {
+															if (orderBy === heading.keyMapping) {
+																setOrder &&
+																	setOrder(
+																		order === "asc"
+																			? "desc"
+																			: "asc"
+																	);
+															} else {
+																setOrderBy &&
+																	setOrderBy(
+																		heading.keyMapping || ""
+																	);
+															}
+														}}
+														direction={order}
+													></TableSortLabel>
+												)}
+											</>
+										)}
+									</TableCell>
+							  ))
 							: null}
 					</TableRow>
 				</TableHead>

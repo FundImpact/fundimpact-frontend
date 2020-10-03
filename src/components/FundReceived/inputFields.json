@@ -22,8 +22,8 @@
 			"required": true
 		},
 		{
-			"name": "project_donor_id",
-			"id": "project_donor_id",
+			"name": "project_donor",
+			"id": "project_donor",
 			"dataTestId": "fundReceivedCategory",
 			"testId": "fundReceivedCategoryInput",
 			"label": "Donor",
@@ -32,7 +32,6 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"getInputValue": {},
 			"required": true,
 			"size": 12
 		}
