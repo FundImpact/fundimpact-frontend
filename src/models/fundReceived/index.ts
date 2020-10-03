@@ -1,7 +1,7 @@
 export interface IFundReceived {
 	amount: number;
 	id?: string;
-	project_donor_id: string;
+	project_donor: string;
 	reporting_date: string;
 }
 

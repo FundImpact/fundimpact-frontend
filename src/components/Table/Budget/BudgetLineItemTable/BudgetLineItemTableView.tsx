@@ -318,11 +318,27 @@ function BudgetLineItemTableView({
 		[annualYearFindAccess, financialYearOrgFindAccess, financialYearDonorFindAccess]
 	);
 
+	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				note: "",
+				amount: "",
+				grant_periods_project: [],
+				annual_year: [],
+				fy_org: [],
+				fy_donor: [],
+				reporting_date: "",
+			}}
+			setFilterList={setFilterList}
+			inputFields={inputFields}
+		/>
+	);
+
 	return (
 		<>
 			<Grid container>
 				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
@@ -333,23 +349,6 @@ function BudgetLineItemTableView({
 								financialYearOrgHash,
 							})
 						)}
-					</Box>
-				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								note: "",
-								amount: "",
-								grant_periods_project: [],
-								annual_year: [],
-								fy_org: [],
-								fy_donor: [],
-								reporting_date: "",
-							}}
-							setFilterList={setFilterList}
-							inputFields={inputFields}
-						/>
 					</Box>
 				</Grid>
 			</Grid>

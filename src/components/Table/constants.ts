@@ -1,3 +1,5 @@
+import { ITableHeadings } from "../../models";
+
 export const deliverableHeadings = [
 	{ label: "" },
 	{ label: "#" },
@@ -38,7 +40,7 @@ export const deliverableAndimpactTracklineHeading = [
 	{ label: "" }, //edit icon
 ];
 
-export const budgetTargetTableHeading = [
+export const budgetTargetTableHeading: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Target Name", keyMapping: "name" },
@@ -50,7 +52,7 @@ export const budgetTargetTableHeading = [
 	{ label: "" },
 ];
 
-export const budgetLineItemTableHeading = [
+export const budgetLineItemTableHeading: ITableHeadings[] = [
 	{ label: "#" },
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
