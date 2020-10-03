@@ -32,7 +32,6 @@ function FundReceivedGraphql({
 			});
 		}
 	}, [dashboardData]);
-
 	return (
 		<FundReceivedContainer
 			donorList={(donorList?.projDonors && getDonors(donorList?.projDonors)) || []}
