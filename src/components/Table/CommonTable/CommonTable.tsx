@@ -24,6 +24,7 @@ import { ICommonTableRow, ICommonTable, ITableHeadings } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { getValueFromObject } from "../../../utils";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {
@@ -176,7 +177,14 @@ function CommonTable<T extends { id: string }>({
 											heading.renderComponent()
 										) : (
 											<>
-												{heading.label}
+												<FormattedMessage
+													id={
+														"tableHeading" +
+														heading.label.replace(/ /g, "")
+													}
+													defaultMessage={`${heading.label}`}
+													description={`This text will be shown on table for ${heading.label} heading`}
+												/>
 												{order && heading.keyMapping && (
 													<TableSortLabel
 														active={orderBy === heading.keyMapping}

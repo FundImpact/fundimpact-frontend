@@ -1,6 +1,6 @@
 import { ITableHeadings } from "../../models";
 
-export const deliverableHeadings = [
+export const deliverableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Name", keyMapping: "name" },
@@ -12,7 +12,7 @@ export const deliverableHeadings = [
 	{ label: "" }, //edit icon
 ];
 
-export const ImpactHeadings = [
+export const ImpactHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Name", keyMapping: "name" },
@@ -31,7 +31,7 @@ export const invitedUserTable = [
 	{ label: "Confirmed" },
 	{ label: "" }, //edit icon
 ];
-export const deliverableAndimpactTracklineHeading = [
+export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [
 	{ label: "#" },
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
@@ -81,7 +81,7 @@ export const budgetCategoryHeading = [
 	{ label: "" },
 ];
 
-export const deliverableCategoryTableHeading = [
+export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Deliverable Category", keyMapping: "name" },
@@ -92,7 +92,7 @@ export const deliverableCategoryTableHeading = [
 	{ label: "" },
 ];
 
-export const deliverableUnitTableHeadings = [
+export const deliverableUnitTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Deliverable Unit", keyMapping: "name" },
@@ -103,7 +103,7 @@ export const deliverableUnitTableHeadings = [
 	{ label: "" },
 ];
 
-export const impactUnitTableHeadings = [
+export const impactUnitTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Impact Unit", keyMapping: "name" },
@@ -114,7 +114,7 @@ export const impactUnitTableHeadings = [
 	{ label: "" },
 ];
 
-export const impactCategoryTableHeadings = [
+export const impactCategoryTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
 	{ label: "Impact Category", keyMapping: "name" },

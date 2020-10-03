@@ -39,6 +39,7 @@ import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/mo
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { ITableHeadings } from "../../../models";
 
 enum tableHeaders {
 	name = 2,
@@ -284,16 +285,7 @@ const createChipArray = ({
 };
 
 const getTableHeadingByDeliverableTracklineAccess = (
-	headings: (
-		| {
-				label: string;
-				keyMapping?: undefined;
-		  }
-		| {
-				label: string;
-				keyMapping: string;
-		  }
-	)[],
+	headings: ITableHeadings[],
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
@@ -491,7 +483,7 @@ export default function DeliverablesTable() {
 		} else {
 			setRows([]);
 		}
-	}, [deliverableTargetData]);
+	}, [deliverableTargetData, deliverableCategoryFindAccess, page]);
 
 	const filteredDeliverableHeadings = useMemo(
 		() =>
@@ -514,6 +506,18 @@ export default function DeliverablesTable() {
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+
+	filteredDeliverableHeadings[filteredDeliverableHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				name: "",
+				target_value: "",
+				deliverable_category_org: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={deliverableTargetInputFields}
+		/>
+	);
 	return (
 		<>
 			{countQueryLoading || queryLoading ? (
@@ -521,27 +525,14 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<Grid container>
-						<Grid item xs={11}>
-							<Box my={2} display="flex" flexWrap="wrap">
+						<Grid item xs={12}>
+							<Box display="flex" flexWrap="wrap">
 								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 									createChipArray({
 										filterListObjectKeyValuePair,
 										removeFilterListElements,
 									})
 								)}
-							</Box>
-						</Grid>
-						<Grid item xs={1}>
-							<Box mt={2}>
-								<FilterList
-									initialValues={{
-										name: "",
-										target_value: "",
-										deliverable_category_org: [],
-									}}
-									setFilterList={setFilterList}
-									inputFields={deliverableTargetInputFields}
-								/>
 							</Box>
 						</Grid>
 					</Grid>

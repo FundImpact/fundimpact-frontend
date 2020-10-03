@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FORM_ACTIONS } from "../constant";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
@@ -28,6 +28,11 @@ function getInitialValues(props: UserRoleProps) {
 		role: "",
 	};
 }
+
+const filterOrganizationRoles = (
+	roles: { type: string; id: string; name: string }[],
+	organizationId: string
+) => roles.filter((role) => role.type !== `admin-org-${organizationId}`);
 
 function UserRoleForm(props: UserRoleProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -60,9 +65,18 @@ function UserRoleForm(props: UserRoleProps) {
 		},
 	});
 
-	if (userRoles) {
-		userRoleForm[1].optionsArray = userRoles.organizationRoles;
-	}
+	(userRoleForm[1].optionsArray as {
+		type: string;
+		id: string;
+		name: string;
+	}[]) = useMemo(
+		() =>
+			filterOrganizationRoles(
+				userRoles?.organizationRoles || [],
+				dashboardData?.organization?.id || ""
+			),
+		[filterOrganizationRoles, userRoles, dashboardData]
+	);
 
 	let title = (
 		<FormattedMessage

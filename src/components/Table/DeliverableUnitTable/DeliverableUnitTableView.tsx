@@ -132,31 +132,34 @@ function DeliverableUnitTableView({
 		}
 	}, [deliverableUnitEditAccess]);
 
+	{
+		(!collapsableTable &&
+			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+				<FilterList
+					initialValues={{
+						name: "",
+						code: "",
+						description: "",
+					}}
+					setFilterList={setFilterList}
+					inputFields={deliverableUnitInputFields}
+				/>
+			))) ||
+			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	}
+
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
-					<Grid xs={11} item>
-						<Box display="flex" my={2} flexWrap="wrap">
+					<Grid xs={12} item>
+						<Box display="flex" flexWrap="wrap">
 							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 								createChipArray({
 									filterListObjectKeyValuePair,
 									removeFilterListElements,
 								})
 							)}
-						</Box>
-					</Grid>
-					<Grid xs={1} item>
-						<Box mt={2}>
-							<FilterList
-								initialValues={{
-									name: "",
-									code: "",
-									description: "",
-								}}
-								setFilterList={setFilterList}
-								inputFields={deliverableUnitInputFields}
-							/>
 						</Box>
 					</Grid>
 				</Grid>
