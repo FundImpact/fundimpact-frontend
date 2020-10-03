@@ -36,4 +36,5 @@ export enum MODULE_CODES {
 	ACCOUNT = "account",
 	COUNTRY = "country",
 	CURRENCY = "currency",
+	USER_PERMISSIONS = "userspermissions",
 }

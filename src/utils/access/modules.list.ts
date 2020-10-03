@@ -26,6 +26,7 @@ import { SUSTAINABLE_DEVELOPMENT_GOALS_MODULE } from "./modules/sustainableDevel
 import { ACCOUNT_MODULE } from "./modules/account/account.module";
 import { COUNTRY_MODULE } from "./modules/country/country.module";
 import { CURRENCY_MODULE } from "./modules/currency/currency.module";
+import { USER_PERMISSIONS_MODULE } from "./modules/userPermissions/userPermissions.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -90,4 +91,5 @@ export const MODULES = {
 	[MODULE_CODES.ACCOUNT]: ACCOUNT_MODULE,
 	[MODULE_CODES.COUNTRY]: COUNTRY_MODULE,
 	[MODULE_CODES.CURRENCY]: CURRENCY_MODULE,
+	[MODULE_CODES.USER_PERMISSIONS]: USER_PERMISSIONS_MODULE,
 } as const;

@@ -53,24 +53,16 @@ function UserRoleForm(props: UserRoleProps) {
 		},
 	});
 
-	useQuery(GET_ROLES_BY_ORG, {
+	const { data: userRoles } = useQuery(GET_ROLES_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
-		onCompleted(data) {
-			if (data?.organizationRoles) {
-				let roleArr: any = [];
-				data.organizationRoles.forEach((role: any) => {
-					/*excluding Admin role here from roles*/
-					if (role.type !== `admin-org-${dashboardData?.organization?.id}`) {
-						roleArr.push(role);
-					}
-				});
-				userRoleForm[1].optionsArray = roleArr;
-			}
-		},
 		onError(err) {
 			console.log("role", err);
 		},
 	});
+
+	if (userRoles) {
+		userRoleForm[1].optionsArray = userRoles.organizationRoles;
+	}
 
 	let title = (
 		<FormattedMessage
