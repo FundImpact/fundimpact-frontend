@@ -1,0 +1,5 @@
+export enum USER_PERMISSIONS_ACTIONS {
+	CREATE_USER_PERMISSIONS = "createrole",
+	UPDATE_USER_PERMISSIONS = "updaterole",
+	FIND_USER_PERMISSIONS = "getroles",
+}
