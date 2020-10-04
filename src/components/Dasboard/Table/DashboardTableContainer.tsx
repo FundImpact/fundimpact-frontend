@@ -40,6 +40,7 @@ import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/delive
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
 import FundReceived from "../../FundReceived";
+import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -198,6 +199,11 @@ export default function DashboardTableContainer() {
 		GRANT_PERIOD_ACTIONS.FIND_GRANT_PERIOD
 	);
 
+	const fundReceiptCreateAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.CREATE_FUND_RECEIPT
+	);
+
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -266,14 +272,15 @@ export default function DashboardTableContainer() {
 							handleClose={handleClose}
 						/>
 					),
-					createButtonAccess: true,
+					createButtonAccess: fundReceiptCreateAccess,
 				},
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
 				budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
-				budgetTargetLineItemCreateAccess,
+				budgetTargetLineItemCreateAccess ||
+				fundReceiptCreateAccess,
 			tableVisibility: budgetTargetFindAccess,
 		},
 		{
@@ -472,6 +479,7 @@ export default function DashboardTableContainer() {
 			budgetCategoryCreateAccess ||
 			budgetTargetCreateAccess ||
 			budgetTargetLineItemCreateAccess ||
+			fundReceiptCreateAccess ||
 			impactTargetFindAccess ||
 			impactTargetCreateAccess ||
 			impactUnitCreateAccess ||
@@ -490,7 +498,8 @@ export default function DashboardTableContainer() {
 					budgetTargetFindAccess ||
 						budgetCategoryCreateAccess ||
 						budgetTargetCreateAccess ||
-						budgetTargetLineItemCreateAccess,
+						budgetTargetLineItemCreateAccess ||
+						fundReceiptCreateAccess,
 					impactTargetFindAccess ||
 						impactTargetCreateAccess ||
 						impactUnitCreateAccess ||
@@ -510,6 +519,7 @@ export default function DashboardTableContainer() {
 		budgetCategoryCreateAccess,
 		budgetTargetCreateAccess,
 		budgetTargetLineItemCreateAccess,
+		fundReceiptCreateAccess,
 		impactTargetFindAccess,
 		impactTargetCreateAccess,
 		impactUnitCreateAccess,
