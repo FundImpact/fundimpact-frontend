@@ -57,11 +57,13 @@ const mocks = [
 	},
 	{
     request: {
-      query: GET_USER_ROLES,
-      variables: {
-        id: "1",
-      },
-    },
+		query: GET_USER_ROLES,
+		variables: {
+			filter:{
+				role: "1",
+			}
+		},
+	},
     result: { data: mockUserRoles },
   },
 	{
