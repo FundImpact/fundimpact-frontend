@@ -31,6 +31,15 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_ROLES_BY_ORG,
+			variables: {
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { organizationRoles: rolesMock } },
+	},
+	{
+		request: {
 			query: GET_INVITED_USER_LIST,
 			variables: {
 				filter: {},
@@ -40,15 +49,6 @@ const mocks = [
 			},
 		},
 		result: { data: { userList: userListMock } },
-	},
-	{
-		request: {
-			query: GET_ROLES_BY_ORG,
-			variables: {
-				filter: { organization: "13" },
-			},
-		},
-		result: { data: { organizationRoles: rolesMock } },
 	},
 ];
 
