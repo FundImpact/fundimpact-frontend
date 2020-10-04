@@ -12,6 +12,7 @@ import { act } from "react-dom/test-utils";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { BrowserRouter } from "react-router-dom";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 
 let sidebar: any;
 
@@ -51,6 +52,8 @@ const ProjectMockOne = [
 	{
 		id: "1",
 		name: "ARTISTAAN",
+		short_name: "",
+		description: "",
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
 	},
 ];
@@ -58,10 +61,21 @@ const ProjectMockTwo = [
 	{
 		id: "2",
 		name: "KALAMKAAR",
+		short_name: "",
+		description: "",
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
 	},
 ];
 
+const projDonorsMock = [
+	{
+		id: "244",
+		donor: {
+			id: "23",
+			name: "wer",
+		},
+	},
+];
 const mocks = [
 	{
 		request: { query: GET_ORGANISATIONS },
@@ -96,6 +110,20 @@ const mocks = [
 			variables: { filter: { workspace: "13" } },
 		},
 		result: { data: { orgProject: ProjectMockTwo } },
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: { filter: { project: "1" } },
+		},
+		result: { data: { projectDonors: projDonorsMock } },
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: { filter: { project: "2" } },
+		},
+		result: { data: { projectDonors: projDonorsMock } },
 	},
 ];
 

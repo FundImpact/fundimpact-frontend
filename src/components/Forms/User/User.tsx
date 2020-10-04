@@ -104,7 +104,6 @@ function UserForm(props: UserProps) {
 						id: value.id,
 						input: {
 							name: value.name,
-							username: value.username,
 							email: value.email,
 							profile_photo:
 								value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
@@ -129,7 +128,6 @@ function UserForm(props: UserProps) {
 						id: value.id,
 						input: {
 							name: value.name,
-							username: value.username,
 							email: value.email,
 							profile_photo: value.profile_photo,
 						},

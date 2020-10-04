@@ -53,13 +53,12 @@ function ProjectEditButton({
 		variables: { filter: { project: project.id } },
 	});
 	const [projectDetails, setProjectDetails] = useState<any>();
-	console.log("projectDetailsprojDonors", projDonors);
-	console.log("projectDetailsprojDonorssss", projectDetails);
+
 	const [openUpdateForm, setOpenUpdateForm] = useState<boolean>(false);
 	useEffect(() => {
 		if (projDonors) {
 			let donorIds = projDonors?.projectDonors?.map((donors: any) => donors?.donor?.id);
-			console.log("valuesdo", donorIds);
+
 			setProjectDetails({
 				id: project.id,
 				name: project.name,

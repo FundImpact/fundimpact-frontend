@@ -17,7 +17,6 @@ const mocks = [
 			variables: {
 				id: "2",
 				input: {
-					username: "username",
 					email: "my@my.com",
 					name: "name",
 					profile_photo: "1",
@@ -36,7 +35,6 @@ let data = {
 	id: "2",
 	name: "name",
 	email: "email.com",
-	username: "username",
 	profile_photo: "1",
 	uploadPhoto: "",
 };
