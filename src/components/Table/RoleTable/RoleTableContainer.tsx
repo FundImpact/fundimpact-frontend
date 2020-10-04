@@ -5,7 +5,7 @@ import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPerm
 
 function RoleTableContainer({
 	userRoles,
-	loading
+	loading,
 }: {
 	loading: boolean;
 	userRoles: { id: string; name: string; type: string }[];
