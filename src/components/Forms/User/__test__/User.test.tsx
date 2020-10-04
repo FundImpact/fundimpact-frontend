@@ -7,6 +7,7 @@ import { renderApollo } from "../../../../utils/test.util";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { updateUserForm } from "./testInputField.json";
 import { UPDATE_USER_DETAILS } from "../../../../graphql/User/mutation";
+import { BrowserRouter } from "react-router-dom";
 
 let userUpdateFormMutation = false;
 const mocks = [
@@ -43,7 +44,9 @@ beforeEach(() => {
 	act(() => {
 		userUpdateForm = renderApollo(
 			<NotificationProvider>
-				<UserForm data={data} type={FORM_ACTIONS.UPDATE} />
+				<BrowserRouter>
+					<UserForm data={data} type={FORM_ACTIONS.UPDATE} />
+				</BrowserRouter>
 			</NotificationProvider>,
 			{
 				mocks,
