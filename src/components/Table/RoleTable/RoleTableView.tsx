@@ -16,6 +16,7 @@ import {
 	Grid,
 	TableFooter,
 	TablePagination,
+	Typography,
 } from "@material-ui/core";
 import { getValueFromObject } from "../../../utils";
 import { Link } from "react-router-dom";
@@ -53,6 +54,14 @@ function RoleTableView({
 }) {
 	if (loading) {
 		return <TableSkeleton />;
+	}
+
+	if (!userRoles.length) {
+		return (
+			<Typography align="center" variant="h5">
+				No Roles Created
+			</Typography>
+		);
 	}
 
 	const tableStyles = styledTable();
