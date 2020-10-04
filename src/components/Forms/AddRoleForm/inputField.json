@@ -1,0 +1,14 @@
+{
+	"addRoleForm": [
+		{
+			"name": "name",
+			"id": "add-role",
+			"dataTestId": "addRoleForm",
+			"testId": "addRoleFormInput",
+			"label": "Add Role",
+			"type": "text",
+			"required": true,
+			"size": 12
+		}
+	]
+}

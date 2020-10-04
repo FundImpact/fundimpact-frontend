@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import ImpactCategoryTableView from "./ImpactCategoryTableView";
 import { IImpactCategoryData } from "../../../models/impact/impact";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
+import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 
 const getInitialValues = (impactCategory: IImpactCategoryData | null): IImpactCategoryData => {
 	return {
@@ -54,6 +57,16 @@ function ImpactCategoryTableContainer({
 		);
 	};
 
+	const impactCategoryEditAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.UPDATE_IMPACT_CATEGORY
+	);
+
+	const impactUnitFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
+	);
+
 	return (
 		<ImpactCategoryTableView
 			openDialogs={openDialogs}
@@ -72,6 +85,8 @@ function ImpactCategoryTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			impactCategoryEditAccess={impactCategoryEditAccess}
+			impactUnitFindAccess={impactUnitFindAccess}
 		/>
 	);
 }

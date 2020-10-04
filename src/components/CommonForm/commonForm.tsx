@@ -44,8 +44,10 @@ function CommonInputForm({
 	return (
 		<Formik
 			initialValues={initialValues}
-			onSubmit={(values: any) => {
-				formAction === FORM_ACTIONS.CREATE ? onCreate(values) : onUpdate(values);
+			onSubmit={(values: any, { resetForm }) => {
+				formAction === FORM_ACTIONS.CREATE
+					? onCreate(values, { resetForm })
+					: onUpdate(values);
 			}}
 			validate={validate}
 			isInitialValid={() => validateInitialValue(initialValues)}
