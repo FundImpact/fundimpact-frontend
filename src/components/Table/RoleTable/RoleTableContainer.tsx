@@ -20,6 +20,10 @@ function RoleTableContainer({
 	return (
 		<RoleTableView
 			userRoles={userRoles}
+			page={page}
+			setPage={setPage}
+			changePage={(prev?: boolean) => {}}
+			count={0}
 			userRoleEditAccess={true}
 			loading={loading}
 		/>
