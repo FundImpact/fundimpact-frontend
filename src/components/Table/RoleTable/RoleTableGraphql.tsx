@@ -18,7 +18,7 @@ function RoleTableGraphql() {
 		}
 	}, [dashboardData]);
 
-	return <RoleTableContainer userRoles={userRoles?.organizationRoles || []} />;
+	return <RoleTableContainer loading={loading} userRoles={userRoles?.organizationRoles || []} />;
 }
 
 export default RoleTableGraphql;

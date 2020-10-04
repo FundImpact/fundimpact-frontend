@@ -19,6 +19,7 @@ import {
 } from "@material-ui/core";
 import { getValueFromObject } from "../../../utils";
 import { Link } from "react-router-dom";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 const tableHeadings = [{ label: "#" }, { label: "Name" }, { label: "" }];
 
@@ -40,6 +41,7 @@ function RoleTableView({
 	changePage,
 	count,
 	userRoleEditAccess,
+	loading,
 }: {
 	userRoles: { id: string; name: string; type: string }[];
 	page: number;
@@ -47,7 +49,12 @@ function RoleTableView({
 	changePage: (prev?: boolean) => void;
 	count: number;
 	userRoleEditAccess: boolean;
+	loading: boolean;
 }) {
+	if (loading) {
+		return <TableSkeleton />;
+	}
+
 	const tableStyles = styledTable();
 	let tableHeader = filterTableHeadingAccordingToUserAccess(userRoleEditAccess);
 
