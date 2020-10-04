@@ -36,8 +36,8 @@ const styledTable = makeStyles((theme: Theme) =>
 
 const keyNames = ["name"];
 
-// const filterTableHeadingAccordingToUserAccess = (accessAllowed: boolean) =>
-// 	accessAllowed ? tableHeadings : tableHeadings.slice(0, -1);
+const filterTableHeadingAccordingToUserAccess = (accessAllowed: boolean) =>
+	accessAllowed ? tableHeadings : tableHeadings.slice(0, -1);
 
 function RoleTableView({
 	userRoles,
