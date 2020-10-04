@@ -19,7 +19,7 @@ export const ProfileContainer = () => {
 		id: user?.id,
 		name: user?.name,
 		email: user?.email,
-		username: user?.username,
+		// username: user?.username,
 		profile_photo: user?.profile_photo?.id,
 		logo: user?.profile_photo?.url,
 		uploadPhoto: "",
@@ -28,24 +28,6 @@ export const ProfileContainer = () => {
 	const userDispatch = React.useContext(UserDispatchContext);
 	let { data: userDetails, error: userDetailsError } = useQuery(GET_USER_DETAILS);
 
-	useEffect(() => {
-		console.log("errorData", userDetailsError, userDetails);
-		if (userDetailsError) {
-			/*Invalid Token or forbidden*/
-			if (userDispatch) {
-				userDispatch({
-					type: "LOGOUT_USER",
-					payload: { logoutMsg: "Invalid user or user dont have access" },
-				});
-			}
-		}
-		if (userDetails?.userCustomer) {
-			if (userDispatch) {
-				userDispatch(setUser({ user: userDetails?.userCustomer }));
-			}
-		}
-	}, [userDetails, userDispatch, userDetailsError]);
-
 	let verifyUrlJwt = false;
 	let { pathname } = useLocation();
 
@@ -53,6 +35,25 @@ export const ProfileContainer = () => {
 	if (pathnameArr?.length > 3) {
 		if (pathnameArr[3] === "verify") verifyUrlJwt = true;
 	}
+
+	useEffect(() => {
+		if (verifyUrlJwt) {
+			if (userDetailsError) {
+				/*Invalid Token or forbidden*/
+				if (userDispatch) {
+					userDispatch({
+						type: "LOGOUT_USER",
+						payload: { logoutMsg: "Invalid user or user dont have access" },
+					});
+				}
+			}
+			if (userDetails?.userCustomer) {
+				if (userDispatch) {
+					userDispatch(setUser({ user: userDetails?.userCustomer }));
+				}
+			}
+		}
+	}, [userDetails, userDispatch, userDetailsError, verifyUrlJwt]);
 	return (
 		<Box>
 			<h1>

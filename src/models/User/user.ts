@@ -2,7 +2,7 @@ import { FORM_ACTIONS } from "../../components/Forms/constant";
 
 export interface IUser {
 	id?: string | number;
-	username: string;
+	username?: string;
 	password?: string;
 	email: string;
 	name: string;

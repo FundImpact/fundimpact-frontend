@@ -165,15 +165,21 @@ const InputFields = ({
 							</MenuItem>
 						))}
 					{multiple &&
-						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
-							<MenuItem key={index} value={elem.id}>
-								<Checkbox
-									color="primary"
-									checked={formik.values[name].indexOf(elem.id) > -1}
-								/>
-								<ListItemText primary={elem.name} />
-							</MenuItem>
-						))}
+						optionsArray?.map(
+							(
+								elem: { id: string; name: string; disabled?: boolean },
+								index: number
+							) => (
+								<MenuItem key={index} value={elem.id} disabled={elem.disabled}>
+									<Checkbox
+										color="primary"
+										checked={formik.values[name].indexOf(elem.id) > -1}
+										disabled={elem.disabled}
+									/>
+									<ListItemText primary={elem.name} />
+								</MenuItem>
+							)
+						)}
 				</Select>
 				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 			</FormControl>

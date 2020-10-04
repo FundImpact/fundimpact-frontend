@@ -6,7 +6,7 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
-import { CREATE_PROJECT, UPDATE_PROJECT } from "../../graphql/project";
+import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
 import { IProject, ProjectProps } from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -42,6 +42,19 @@ function Project(props: ProjectProps) {
 			notificationDispatch(setErrorNotification("Error Occured While Fetching Donors")),
 	});
 
+	let mappedDonors: any = [];
+	if (props.type === PROJECT_ACTIONS.UPDATE) {
+		/*Disable already mapped donors*/
+		mappedDonors = props?.data?.donor;
+		let donorList: any = [];
+		donors?.orgDonors?.forEach((fetchedDonor: any) => {
+			const isInDonorList = mappedDonors.includes(fetchedDonor?.id);
+			if (isInDonorList) donorList.push({ ...fetchedDonor, disabled: true });
+			else donorList.push(fetchedDonor);
+		});
+		projectForm[4].optionsArray = donorList;
+	} else projectForm[4].optionsArray = donors?.orgDonors ? donors.orgDonors : [];
+
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getOrganizationDonors({
@@ -63,6 +76,12 @@ function Project(props: ProjectProps) {
 						donor: donorId,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_PROJ_DONORS,
+						variables: { filter: { project: projectId } },
+					},
+				],
 			});
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Donor creation Failed !"));
@@ -98,13 +117,45 @@ function Project(props: ProjectProps) {
 	};
 
 	const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
-		UPDATE_PROJECT
+		UPDATE_PROJECT,
+		{
+			onCompleted() {
+				notificationDispatch(setSuccessNotification("Project Successfully updated !"));
+			},
+		}
 	);
 
-	useEffect(() => {}, [updateResponse]);
-
-	const onUpdate = (value: IProject) => {
+	const onUpdate = async (value: IPROJECT_FORM) => {
 		// updateProject({ variables: { payload: value, projectID: 4 } });
+
+		try {
+			let formData: any = { ...value };
+			let projectId = formData.id;
+			let newDonors = formData?.donor?.filter(function (el: string) {
+				return !mappedDonors.includes(el);
+			});
+			delete formData.id;
+			delete formData.donor;
+			const updatedResponse = await updateProject({
+				variables: { id: projectId, input: formData },
+				refetchQueries: [
+					{
+						query: GET_PROJECTS_BY_WORKSPACE,
+						variables: { filter: { workspace: value.workspace } },
+					},
+				],
+			});
+			newDonors.forEach(async (donorId: string) => {
+				await createDonors({
+					projectId: updatedResponse?.data.updateOrgProject.id,
+					donorId,
+				});
+			});
+		} catch (error) {
+			notificationDispatch(setErrorNotification("Project creation Failed !"));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	const clearErrors = (values: IProject) => {};
@@ -125,7 +176,7 @@ function Project(props: ProjectProps) {
 	const onCancel = props.handleClose;
 	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
-	projectForm[4].optionsArray = donors?.orgDonors ? donors.orgDonors : [];
+
 	return (
 		<>
 			<FormDialog

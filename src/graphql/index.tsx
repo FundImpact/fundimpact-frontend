@@ -62,6 +62,8 @@ export const GET_PROJECTS_BY_WORKSPACE = gql`
 		orgProject(where: $filter) {
 			id
 			name
+			short_name
+			description
 			workspace {
 				id
 				name

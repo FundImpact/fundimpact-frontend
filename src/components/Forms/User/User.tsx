@@ -20,13 +20,11 @@ function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		updateUserForm[0].logo = props.data?.logo;
 		props.data.uploadPhoto = "";
-		console.log("checksuserdata", props.data);
 
 		return { ...props.data };
 	}
 	return {
 		name: "",
-		username: "",
 		email: "",
 		uploadPhoto: "",
 	};
@@ -145,9 +143,6 @@ function UserForm(props: UserProps) {
 		if (props.type === FORM_ACTIONS.UPDATE && !verifyAndUpdateUserForm) {
 			if (!values.name) {
 				errors.name = "Name is required";
-			}
-			if (!values.username) {
-				errors.username = "Username is required";
 			}
 			if (!values.email) {
 				errors.email = "Email is required";
