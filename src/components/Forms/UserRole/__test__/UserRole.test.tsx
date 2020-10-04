@@ -74,13 +74,14 @@ const mocks = [
 ];
 
 let sendUserInvitationForm: RenderResult<typeof queries>;
-
+let open = true;
+let close = jest.fn();
 beforeEach(() => {
 	act(() => {
 		sendUserInvitationForm = renderApollo(
 			<DashboardProvider defaultState={{ organization: organizationDetail }}>
 				<NotificationProvider>
-					<UserRoleForm type={FORM_ACTIONS.CREATE} />
+					<UserRoleForm open={open} handleClose={close} type={FORM_ACTIONS.CREATE} />
 				</NotificationProvider>
 			</DashboardProvider>,
 			{

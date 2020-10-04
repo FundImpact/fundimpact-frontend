@@ -11,6 +11,7 @@ import { organizationDetail } from "../../../utils/testMock.json";
 import { act } from "react-dom/test-utils";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
+import { BrowserRouter } from "react-router-dom";
 
 let sidebar: any;
 
@@ -74,14 +75,14 @@ const mocks = [
 		result: { data: { orgWorkspaces: WSMock } },
 	},
 	{
-    request: {
-      query: GET_USER_ROLES,
-      variables: {
-        id: "1",
-      },
-    },
-    result: { data: mockUserRoles },
-  },
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				id: "1",
+			},
+		},
+		result: { data: mockUserRoles },
+	},
 	{
 		request: {
 			query: GET_PROJECTS_BY_WORKSPACE,
@@ -102,9 +103,11 @@ beforeEach(() => {
 	act(() => {
 		sidebar = renderApollo(
 			<DashboardProvider defaultState={{ organization: organizationDetail }}>
-				<NotificationProvider>
-					<SideBar />
-				</NotificationProvider>
+				<BrowserRouter>
+					<NotificationProvider>
+						<SideBar />
+					</NotificationProvider>
+				</BrowserRouter>
 			</DashboardProvider>,
 			{
 				mocks,
