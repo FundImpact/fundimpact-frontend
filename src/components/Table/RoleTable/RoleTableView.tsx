@@ -48,7 +48,7 @@ function RoleTableView({
 		return <TableSkeleton />;
 	}
 
-	if (!userRoles?.length) {
+	if (!userRoles.length) {
 		return (
 			<Typography align="center" variant="h5">
 				No Roles Created
