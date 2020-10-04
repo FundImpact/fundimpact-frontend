@@ -17,19 +17,21 @@ function RoleTableContainer({
 		USER_PERMISSIONS_ACTIONS.UPDATE_USER_PERMISSIONS
 	);
 
-	return (
-		//change page and count written temporairly
+	return <div>hello</div>
 
-		<RoleTableView
-			userRoles={userRoles}
-			page={page}
-			setPage={setPage}
-			changePage={(prev?: boolean) => {}}
-			count={0}
-			userRoleEditAccess={userRoleEditAccess}
-			loading={loading}
-		/>
-	);
+	// return (
+	// 	//change page and count written temporairly
+
+	// 	<RoleTableView
+	// 		userRoles={userRoles}
+	// 		page={page}
+	// 		setPage={setPage}
+	// 		changePage={(prev?: boolean) => {}}
+	// 		count={0}
+	// 		userRoleEditAccess={userRoleEditAccess}
+	// 		loading={loading}
+	// 	/>
+	// );
 }
 
 export default RoleTableContainer;
