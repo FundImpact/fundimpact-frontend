@@ -86,7 +86,7 @@ export const UserRoleContainer = () => {
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
-				{authInviteUser && (
+				{/* {authInviteUser && (
 					<>
 						<Grid item xs={12}>
 							<Typography variant="h6">
@@ -106,7 +106,7 @@ export const UserRoleContainer = () => {
 							</Paper>
 						</Grid>
 					</>
-				)}
+				)} */}
 				{userRoleFindAccess && (
 					<>
 						<Grid item xs={11}>
