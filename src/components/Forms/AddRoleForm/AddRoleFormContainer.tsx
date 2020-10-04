@@ -107,35 +107,35 @@ const createRole = async ({
 			if (!data) {
 				return;
 			}
-			// try {
-			// 	let { createOrganizationUserRole } = data;
-			// 	const userRoles = store.readQuery<{
-			// 		organizationRoles: { name: string; id: string }[];
-			// 	}>({
-			// 		query: GET_ROLES_BY_ORG,
-			// 		variables: {
-			// 			filter: {
-			// 				organization: organizationId,
-			// 			},
-			// 		},
-			// 	});
-			// 	store.writeQuery<{ organizationRoles: { name: string; id: string }[] }>({
-			// 		query: GET_ROLES_BY_ORG,
-			// 		variables: {
-			// 			filter: {
-			// 				organization: organizationId,
-			// 			},
-			// 		},
-			// 		data: {
-			// 			organizationRoles: [
-			// 				createOrganizationUserRole,
-			// 				...(userRoles?.organizationRoles || []),
-			// 			],
-			// 		},
-			// 	});
-			// } catch (err) {
-			// 	console.log("err :>> ", err);
-			// }
+			try {
+				let { createOrganizationUserRole } = data;
+				const userRoles = store.readQuery<{
+					organizationRoles: { name: string; id: string }[];
+				}>({
+					query: GET_ROLES_BY_ORG,
+					variables: {
+						filter: {
+							organization: organizationId,
+						},
+					},
+				});
+				store.writeQuery<{ organizationRoles: { name: string; id: string }[] }>({
+					query: GET_ROLES_BY_ORG,
+					variables: {
+						filter: {
+							organization: organizationId,
+						},
+					},
+					data: {
+						organizationRoles: [
+							createOrganizationUserRole,
+							...(userRoles?.organizationRoles || []),
+						],
+					},
+				});
+			} catch (err) {
+				console.log("err :>> ", err);
+			}
 			try {
 				const count = await store.readQuery<{ organizationRolesCount: { count: number } }>({
 					query: ORGANIZATION_ROLES_COUNT,
