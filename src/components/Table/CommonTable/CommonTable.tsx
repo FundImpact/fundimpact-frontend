@@ -14,6 +14,7 @@ import {
 	Box,
 	Typography,
 	TableSortLabel,
+	Grid,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -34,9 +35,10 @@ const useStyles = makeStyles({
 
 const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main },
+		th: { color: theme.palette.primary.main, backgroundColor: theme.palette.background.paper },
 		tbody: {
-			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
+			"& tr:nth-child(4n+1)": { background: theme.palette.action.hover },
+			"& tr:nth-child(even)": { background: theme.palette.action.selected },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",

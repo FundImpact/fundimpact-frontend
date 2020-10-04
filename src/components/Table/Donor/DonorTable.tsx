@@ -48,7 +48,7 @@ const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main, fontSize: "13px" },
 		tbody: {
-			"& tr:nth-child(even) td": { background: theme.palette.action.hover },
+			"& tr:nth-child(odd) td": { background: theme.palette.action.hover },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",

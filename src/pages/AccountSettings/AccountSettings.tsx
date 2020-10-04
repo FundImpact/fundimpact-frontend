@@ -22,7 +22,8 @@ function PrivateRoute({
 }: IPrivateRouterProps): React.ReactElement | null {
 	if (userAccess) {
 		return <Route children={children} {...rest} />;
-	} else return <Navigate to="/account" state={{ redirectedFrom: rest.path }} />;
+	}
+	return null;
 }
 
 export default function SettingContainer() {
@@ -30,6 +31,12 @@ export default function SettingContainer() {
 	const notificationData = useNotificationData();
 
 	const accountEditAccess = userHasAccess(MODULE_CODES.ACCOUNT, ACCOUNT_ACTIONS.UPDATE_ACCOUNT);
+
+	const getDefaultRoute = () => {
+		if (accountEditAccess) {
+			return <Navigate to="profile" />;
+		}
+	};
 
 	return (
 		<Container
@@ -59,6 +66,7 @@ export default function SettingContainer() {
 							userAccess={accountEditAccess}
 							element={<ProfileContainer />}
 						/>
+						<PrivateRoute path="">{getDefaultRoute()}</PrivateRoute>
 					</Routes>
 				</Grid>
 			</Grid>

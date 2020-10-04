@@ -17,9 +17,10 @@ const useStyles = makeStyles({
 
 const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main },
+		th: { color: theme.palette.primary.main, backgroundColor: theme.palette.background.paper },
 		tbody: {
-			"& tr:nth-child(odd) td": { background: theme.palette.action.hover },
+			"& tr:nth-child(odd)": { background: theme.palette.action.hover },
+			"& tr:nth-child(even)": { background: theme.palette.background.paper },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -56,7 +57,7 @@ export default function FITable({
 	return (
 		<>
 			{!rows.length ? (
-				<Grid container style={{ backgroundColor: theme.palette.action.hover }}>
+				<Grid container>
 					{noRowHeading && (
 						<Grid item xs={12}>
 							<Box>

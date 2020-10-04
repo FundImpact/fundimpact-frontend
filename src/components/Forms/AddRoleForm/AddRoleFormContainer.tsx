@@ -18,7 +18,7 @@ import { useAuth } from "../../../contexts/userContext";
 import { IGetUserRole } from "../../../models/access/query";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { FORM_ACTIONS } from "../constant";
 
 const getInitialValues = (controllerActionHash: IControllerAction | {}): IAddRole => {
@@ -146,7 +146,7 @@ const onFormSubmit = async ({
 
 		notificationDispatch(setSuccessNotification("Role Added Successfully"));
 	} catch (err) {
-		notificationDispatch(setErrorNotification("Error Occured While Adding Role"));
+		notificationDispatch(setErrorNotification(err.message));
 	}
 };
 
@@ -195,6 +195,7 @@ function AddRoleFormContainer({
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	const [controllerActionHash, setControllerActionHash] = useState<IControllerAction | {}>({});
+	const [redirect, setRedirect] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (userRoleData) {
@@ -204,22 +205,34 @@ function AddRoleFormContainer({
 		}
 	}, [userRoleData]);
 	const onCreate = useCallback(
-		(
+		async (
 			valuesSubmitted: IAddRole,
 			{
 				resetForm,
 			}: { resetForm?: (nextState?: Partial<FormikState<any>> | undefined) => void }
-		) =>
-			onFormSubmit({
+		) => {
+			await onFormSubmit({
 				valuesSubmitted,
 				createOrganizationUserRole,
 				organizationId: dashboardData?.organization?.id || "",
 				notificationDispatch: notificationDispatch,
 				controllerActionHash,
 				resetForm,
-			}),
-		[createOrganizationUserRole, dashboardData, notificationDispatch, controllerActionHash]
+			});
+			setRedirect(true);
+		},
+		[
+			createOrganizationUserRole,
+			dashboardData,
+			notificationDispatch,
+			controllerActionHash,
+			setRedirect,
+		]
 	);
+
+	if (redirect) {
+		return <Navigate to="/settings/user_roles" />;
+	}
 
 	return (
 		<AddRoleFormView

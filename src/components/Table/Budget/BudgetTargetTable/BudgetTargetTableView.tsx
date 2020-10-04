@@ -262,7 +262,6 @@ function BudgetTargetView({
 			budgetTargetProjectAllocationValue,
 		]
 	);
-	console.log("filteredTableHeadings :>> ", filteredTableHeadings);
 	const filteredRows = useMemo(
 		() =>
 			filterTableHeadingsAndRows(rows, {
