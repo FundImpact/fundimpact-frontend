@@ -359,7 +359,7 @@ export default function DashboardTableContainer() {
 		{
 			label: intl.formatMessage({
 				id: "impactTabHeading",
-				defaultMessage: "Impact Indicator",
+				defaultMessage: "Impact",
 				description: `This text will be show on tab for Impact`,
 			}),
 			table: <ImpactsTable />,
@@ -437,7 +437,7 @@ export default function DashboardTableContainer() {
 		{
 			label: intl.formatMessage({
 				id: "grantPeriodTabHeading",
-				defaultMessage: "Grant Period",
+				defaultMessage: "Grant Periods",
 				description: `This text will be show on tab for grant period`,
 			}),
 			table: <GrantPeriodTable />,

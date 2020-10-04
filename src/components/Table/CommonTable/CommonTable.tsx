@@ -14,6 +14,7 @@ import {
 	Box,
 	Typography,
 	TableSortLabel,
+	Grid,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -34,9 +35,10 @@ const useStyles = makeStyles({
 
 const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main },
+		th: { color: theme.palette.primary.main, backgroundColor: theme.palette.background.paper },
 		tbody: {
-			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
+			"& tr:nth-child(4n+1)": { background: theme.palette.action.hover },
+			"& tr:nth-child(even)": { background: theme.palette.action.selected },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -176,37 +178,41 @@ function CommonTable<T extends { id: string }>({
 										{heading.renderComponent ? (
 											heading.renderComponent()
 										) : (
-											<>
-												<FormattedMessage
-													id={
-														"tableHeading" +
-														heading.label.replace(/ /g, "")
-													}
-													defaultMessage={`${heading.label}`}
-													description={`This text will be shown on table for ${heading.label} heading`}
-												/>
-												{order && heading.keyMapping && (
-													<TableSortLabel
-														active={orderBy === heading.keyMapping}
-														onClick={() => {
-															if (orderBy === heading.keyMapping) {
-																setOrder &&
-																	setOrder(
-																		order === "asc"
-																			? "desc"
-																			: "asc"
-																	);
-															} else {
-																setOrderBy &&
-																	setOrderBy(
-																		heading.keyMapping || ""
-																	);
-															}
-														}}
-														direction={order}
-													></TableSortLabel>
-												)}
-											</>
+											<Grid container>
+												<Grid item xs={12} style={{ display: "flex" }}>
+													<FormattedMessage
+														id={
+															"tableHeading" +
+															heading.label.replace(/ /g, "")
+														}
+														defaultMessage={`${heading.label}`}
+														description={`This text will be shown on table for ${heading.label} heading`}
+													/>
+													{order && heading.keyMapping && (
+														<TableSortLabel
+															active={orderBy === heading.keyMapping}
+															onClick={() => {
+																if (
+																	orderBy === heading.keyMapping
+																) {
+																	setOrder &&
+																		setOrder(
+																			order === "asc"
+																				? "desc"
+																				: "asc"
+																		);
+																} else {
+																	setOrderBy &&
+																		setOrderBy(
+																			heading.keyMapping || ""
+																		);
+																}
+															}}
+															direction={order}
+														></TableSortLabel>
+													)}
+												</Grid>
+											</Grid>
 										)}
 									</TableCell>
 							  ))
