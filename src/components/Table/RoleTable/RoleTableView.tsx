@@ -22,18 +22,18 @@ import { getValueFromObject } from "../../../utils";
 import { Link } from "react-router-dom";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 
-const tableHeadings = [{ label: "#" }, { label: "Name" }, { label: "" }];
+// const tableHeadings = [{ label: "#" }, { label: "Name" }, { label: "" }];
 
-const styledTable = makeStyles((theme: Theme) =>
-	createStyles({
-		th: { color: theme.palette.primary.main, fontSize: "13px" },
-	})
-);
+// const styledTable = makeStyles((theme: Theme) =>
+// 	createStyles({
+// 		th: { color: theme.palette.primary.main, fontSize: "13px" },
+// 	})
+// );
 
 const keyNames = ["name"];
 
-const filterTableHeadingAccordingToUserAccess = (accessAllowed: boolean) =>
-	accessAllowed ? tableHeadings : tableHeadings.slice(0, -1);
+// const filterTableHeadingAccordingToUserAccess = (accessAllowed: boolean) =>
+// 	accessAllowed ? tableHeadings : tableHeadings.slice(0, -1);
 
 function RoleTableView({
 	userRoles,
@@ -44,17 +44,17 @@ function RoleTableView({
 	userRoleEditAccess: boolean;
 	loading: boolean;
 }) {
-	if (loading) {
-		return <TableSkeleton />;
-	}
+	// if (loading) {
+	// 	return <TableSkeleton />;
+	// }
 
-	if (!userRoles?.length) {
-		return (
-			<Typography align="center" variant="h5">
-				No Roles Created
-			</Typography>
-		);
-	}
+	// if (!userRoles?.length) {
+	// 	return (
+	// 		<Typography align="center" variant="h5">
+	// 			No Roles Created
+	// 		</Typography>
+	// 	);
+	// }
 
 	return <div>Hello</div>;
 
