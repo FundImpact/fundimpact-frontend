@@ -1,0 +1,12 @@
+{
+	"roleInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "roleName",
+			"testId": "roleNameInput",
+			"label": "Name",
+			"size": 6
+		}
+	]
+}

@@ -18,6 +18,7 @@ import { FormikState, Formik, Form, FormikProps } from "formik";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MODULE_CODES } from "../../../utils/access";
 import { compareObjectKeys } from "../../../utils";
+import { FORM_ACTIONS } from "../constant";
 
 interface IControllerActionsFormProps {
 	controllerAction: { [key: string]: { enabled: boolean; policy: "" } };
@@ -129,6 +130,8 @@ function AddRoleView({
 	onCreate,
 	roleCreationLoading,
 	controllerActionHash,
+	formType,
+	onCancel,
 }: {
 	initialValues: IAddRole;
 	validate: (values: IAddRole) => Partial<IAddRole>;
@@ -142,6 +145,8 @@ function AddRoleView({
 	) => Promise<void>;
 	roleCreationLoading: boolean;
 	controllerActionHash: {} | IControllerAction;
+	formType: FORM_ACTIONS;
+	onCancel: () => void;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -212,18 +217,19 @@ function AddRoleView({
 										>
 											<FormattedMessage
 												id="addRoleButton"
-												defaultMessage="Add Role"
+												defaultMessage={`${
+													formType == FORM_ACTIONS.CREATE
+														? "Add"
+														: "Update"
+												} Role`}
 												description="This text will tell user to create role"
 											/>
 										</Button>
-										<Button
-											className={classes.cancelButton}
-											onClick={formik.handleReset}
-										>
+										<Button className={classes.cancelButton} onClick={onCancel}>
 											<FormattedMessage
-												id="resetButton"
-												defaultMessage="Reset"
-												description="This text will tell user to reset data"
+												id="cancelButton"
+												defaultMessage="Cancel"
+												description="This text will tell user to  Cancel"
 											/>
 										</Button>
 									</Box>

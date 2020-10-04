@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import UserRoleForm from "../../../components/Forms/UserRole";
-import { Box, Grid, Paper, Typography, Fab } from "@material-ui/core";
+import { Box, Grid, Paper, Typography, Fab, Chip, Avatar } from "@material-ui/core";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
 import InvitedUserTable from "../../../components/Table/InvitedUser";
@@ -12,9 +12,64 @@ import { useAuth } from "../../../contexts/userContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../../utils/access/modules/auth/actions";
+import FilterList from "../../../components/FilterList";
+import { roleInputFields } from "./inputFields.json";
+
+const chipArray = ({
+	tableFilterList,
+	removeFilteListElements,
+}: {
+	tableFilterList: {
+		[key: string]: string;
+	};
+	removeFilteListElements: (elementToDelete: string | number) => void;
+}) => {
+	return (
+		<Box display="flex">
+			{Object.entries(tableFilterList).map(
+				(tableFilterListObjectKeyValuePair, index) =>
+					tableFilterListObjectKeyValuePair[1] && (
+						<Box key={index} mx={1}>
+							<Chip
+								label={tableFilterListObjectKeyValuePair[1]}
+								avatar={
+									<Avatar
+										style={{
+											width: "30px",
+											height: "30px",
+										}}
+									>
+										<span>
+											{tableFilterListObjectKeyValuePair[0].slice(0, 4)}
+										</span>
+									</Avatar>
+								}
+								onDelete={() =>
+									removeFilteListElements(tableFilterListObjectKeyValuePair[0])
+								}
+							/>
+						</Box>
+					)
+			)}
+		</Box>
+	);
+};
 
 export const UserRoleContainer = () => {
 	const user = useAuth();
+
+	const [tableFilterList, setTableFilterList] = useState<{
+		[key: string]: string;
+	}>({
+		name: "",
+	});
+
+	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
+		setTableFilterList((filterListObject) => {
+			filterListObject[elementToDelete] = "";
+			return { ...filterListObject };
+		});
+	};
 
 	const userRoleFindAccess = userHasAccess(
 		MODULE_CODES.USER_PERMISSIONS,
@@ -31,7 +86,7 @@ export const UserRoleContainer = () => {
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
-				{/* {authInviteUser && (
+				{authInviteUser && (
 					<>
 						<Grid item xs={12}>
 							<Typography variant="h6">
@@ -51,10 +106,10 @@ export const UserRoleContainer = () => {
 							</Paper>
 						</Grid>
 					</>
-				)} */}
+				)}
 				{userRoleFindAccess && (
 					<>
-						<Grid item xs={12}>
+						<Grid item xs={11}>
 							<Typography variant="h6">
 								<FormattedMessage
 									id={`rolesHeading`}
@@ -63,8 +118,17 @@ export const UserRoleContainer = () => {
 								/>
 							</Typography>
 						</Grid>
+						<Grid item xs={1}>
+							<FilterList
+								setFilterList={setTableFilterList}
+								inputFields={roleInputFields}
+							/>
+						</Grid>
 						<Grid item xs={12}>
-							<RoleTable />
+							{chipArray({ removeFilteListElements, tableFilterList })}
+						</Grid>
+						<Grid item xs={12}>
+							<RoleTable tableFilterList={tableFilterList} />
 						</Grid>
 					</>
 				)}

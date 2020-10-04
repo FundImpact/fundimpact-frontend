@@ -6,9 +6,17 @@ import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPerm
 function RoleTableContainer({
 	userRoles,
 	loading,
+	count,
+	changePage,
+	order,
+	setOrder,
 }: {
 	loading: boolean;
 	userRoles: { id: string; name: string; type: string }[];
+	count: number;
+	changePage: (prev?: boolean) => void;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 }) {
 	const [page, setPage] = useState(0);
 
@@ -22,10 +30,12 @@ function RoleTableContainer({
 			userRoles={userRoles}
 			page={page}
 			setPage={setPage}
-			changePage={(prev?: boolean) => {}}
-			count={0}
+			changePage={changePage}
+			count={count}
 			userRoleEditAccess={userRoleEditAccess}
 			loading={loading}
+			order={order}
+			setOrder={setOrder}
 		/>
 	);
 }
