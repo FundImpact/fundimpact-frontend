@@ -20,10 +20,10 @@ function RoleTableContainer({
 }) {
 	const [page, setPage] = useState(0);
 
-	const userRoleEditAccess = userHasAccess(
-		MODULE_CODES.USER_PERMISSIONS,
-		USER_PERMISSIONS_ACTIONS.UPDATE_USER_PERMISSIONS
-	);
+	// const userRoleEditAccess = userHasAccess(
+	// 	MODULE_CODES.USER_PERMISSIONS,
+	// 	USER_PERMISSIONS_ACTIONS.UPDATE_USER_PERMISSIONS
+	// );
 
 	return (
 		<RoleTableView
