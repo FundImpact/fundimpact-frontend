@@ -29,12 +29,18 @@ const mocks = [
 ];
 
 let resetPasswordForm: RenderResult<typeof queries>;
-
+let open = true;
+let close = jest.fn();
 beforeEach(() => {
 	act(() => {
 		resetPasswordForm = renderApollo(
 			<NotificationProvider>
-				<PasswordReset userId="2" type={FORM_ACTIONS.UPDATE} />
+				<PasswordReset
+					open={open}
+					handleClose={close}
+					userId="2"
+					type={FORM_ACTIONS.UPDATE}
+				/>
 			</NotificationProvider>,
 			{
 				mocks,
