@@ -69,7 +69,7 @@ function RoleTableView({
 	if (!userRoles.length) {
 		return (
 			<Typography align="center" variant="h5">
-				No Roles Created
+				No Roles
 			</Typography>
 		);
 	}
