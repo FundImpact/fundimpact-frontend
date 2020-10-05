@@ -1,7 +1,7 @@
 import { Chip, TableCell, IconButton, Box, Avatar, Grid, TablePagination } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { invitedUserTable } from "../constants";
+import { invitedUserTableHeadings } from "../constants";
 import FITable from "../FITable";
 import {
 	GET_INVITED_USER_LIST,
@@ -235,7 +235,7 @@ export default function InvitedUserTable() {
 						</Grid>
 					</Grid>
 					<FITable
-						tableHeading={invitedUserTable}
+						tableHeading={invitedUserTableHeadings}
 						rows={rows}
 						pagination={invitedUserTablePagination}
 						order={order}

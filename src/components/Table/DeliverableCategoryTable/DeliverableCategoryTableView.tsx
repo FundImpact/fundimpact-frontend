@@ -156,7 +156,11 @@ function DeliverableCategoryView({
 				</Grid>
 			)}
 			<CommonTable
-				tableHeadings={collapsableTable && deliverableUnitFindAccess ? tableHeadings : tableHeadings.slice(1)}
+				tableHeadings={
+					collapsableTable && deliverableUnitFindAccess
+						? tableHeadings
+						: tableHeadings.slice(1)
+				}
 				valuesList={deliverableCategoryList}
 				rows={rows}
 				selectedRow={selectedDeliverableCategory}

@@ -27,7 +27,7 @@ function UserRoles() {
 	const user = useAuth();
 	const [getUserRoles, { loading, error }] = useLazyQuery<IGetUserRole>(GET_USER_ROLES, {
 		onCompleted: (data) => {
-			console.log('data :>> ', data);
+			console.log("data :>> ", data);
 			let userRoleHashTempObject: {
 				[key: string]: { id: string; controller: string; action: string; enabled: boolean };
 			} = mapPermissionsControllerActionToPermission(data);

@@ -1,0 +1,16 @@
+{
+	"sendUserInvitation": [
+		{
+			"name": "email",
+			"dataTestId": "userRoleFormEmail",
+			"testId": "userRoleFormEmailInput",
+			"value": "my@my.com"
+		},
+		{
+			"name": "role",
+			"dataTestId": "userRoleFormRole",
+			"testId": "userRoleFormRoleInput",
+			"value": "40"
+		}
+	]
+}

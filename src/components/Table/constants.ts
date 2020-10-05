@@ -22,7 +22,7 @@ export const ImpactHeadings = [
 	{ label: "" }, //edit icon
 ];
 
-export const invitedUserTable = [
+export const invitedUserTableHeadings = [
 	{ label: "#" },
 	{ label: "Email", keyMapping: "email" },
 	{ label: "Role", keyMapping: "role" },

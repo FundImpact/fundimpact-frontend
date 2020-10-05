@@ -4,7 +4,7 @@ export type IAddRolePermissions = {
 	[key in MODULE_CODES]: {
 		[key: string]: boolean;
 	};
-}
+};
 
 export interface IAddRole {
 	name: string;
