@@ -86,27 +86,6 @@ export const UserRoleContainer = () => {
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
-				{authInviteUser && (
-					<>
-						<Grid item xs={12}>
-							<Typography variant="h6">
-								<FormattedMessage
-									id={`userRoleHeading`}
-									defaultMessage={`User Roles`}
-									description={`This text will be shown on Setting page for user role heading`}
-								/>
-							</Typography>
-						</Grid>
-
-						<Grid item xs={12}>
-							<Paper style={{ height: "250px" }}>
-								<Box p={2}>
-									<UserRoleForm type={FORM_ACTIONS.CREATE} />
-								</Box>
-							</Paper>
-						</Grid>
-					</>
-				)}
 				{userRoleFindAccess && (
 					<>
 						<Grid item xs={11}>

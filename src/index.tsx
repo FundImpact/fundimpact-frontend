@@ -8,6 +8,7 @@ import App from "./App";
 import { UIProvider } from "./contexts/uiContext";
 import { UserProvider } from "./contexts/userContext";
 import * as serviceWorker from "./serviceWorker";
+import { DashboardProvider } from "./contexts/dashboardContext";
 
 function loadLocaleData(locale: string) {
 	const defaultLocal = import(`../src/compiled-lang/en.json`);
@@ -40,9 +41,11 @@ function loadLocaleData(locale: string) {
 	ReactDOM.render(
 		<IntlProvider messages={messages.default} locale={locale} defaultLocale="en">
 			<UserProvider>
-				<UIProvider>
-					<App />
-				</UIProvider>
+				<DashboardProvider>
+					<UIProvider>
+						<App />
+					</UIProvider>
+				</DashboardProvider>
 			</UserProvider>
 		</IntlProvider>,
 		document.getElementById("root")

@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import AddRoleFormView from "./AddRoleFormView";
 import { IAddRole, IControllerAction, IAddRolePermissions } from "../../../models/AddRole";
-import { MutationFunctionOptions, FetchResult, useLazyQuery } from "@apollo/client";
+import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	setSuccessNotification,
 	setErrorNotification,
 } from "../../../reducers/notificationReducer";
-import { FormikState } from "formik";
 import { GET_ROLES_BY_ORG, ORGANIZATION_ROLES_COUNT } from "../../../graphql/UserRoles/query";
 import {
 	ICreateOrganizationUserRoleVariables,
@@ -16,7 +15,6 @@ import {
 	IUpdateOrganizationUserRoleVariables,
 	IUpdateOrganizationUserRole,
 } from "../../../models/AddRole/mutation";
-import { useAuth } from "../../../contexts/userContext";
 import { IGetUserRole } from "../../../models/access/query";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
@@ -223,19 +221,6 @@ const updateRole = async ({
 	>;
 	roleId: string;
 }) => {
-	console.log({
-		variables: {
-			id: roleId,
-			input: {
-				name,
-				permissions: {
-					application: {
-						controllers: permissions,
-					},
-				},
-			},
-		},
-	});
 	await updateOrganizationUserRole({
 		variables: {
 			id: roleId,
@@ -258,26 +243,6 @@ const updateRole = async ({
 				},
 			},
 		],
-		// update: (store, { data }) => {
-		// 	if (data) {
-		// 		let { updateOrganizationUserRole } = data;
-		// 		try {
-		// 			store.writeQuery<IGetUserRole>({
-		// 				query: GET_USER_ROLES,
-		// 				variables: {
-		// 					filter: {
-		// 						role: roleId,
-		// 					},
-		// 				},
-		// 				data: {
-		// 					getRolePemissions: updateOrganizationUserRole.permissions,
-		// 				},
-		// 			});
-		// 		} catch (err) {
-		// 			console.log("err :>> ", err);
-		// 		}
-		// 	}
-		// },
 	});
 };
 
@@ -286,8 +251,6 @@ const onFormSubmit = async ({
 	createOrganizationUserRole,
 	organizationId,
 	notificationDispatch,
-	resetForm,
-	controllerActionHash,
 	formType,
 	updateOrganizationUserRole,
 	roleId,
@@ -305,8 +268,6 @@ const onFormSubmit = async ({
 	>;
 	organizationId: string;
 	notificationDispatch: React.Dispatch<any>;
-	resetForm?: (nextState?: Partial<FormikState<any>> | undefined) => void;
-	controllerActionHash: IControllerAction | {};
 	formType: FORM_ACTIONS;
 	updateOrganizationUserRole: (
 		options?:
@@ -337,7 +298,6 @@ const onFormSubmit = async ({
 				permissions,
 				roleId,
 			}));
-		// resetForm && resetForm({ values: getInitialValues(controllerActionHash) });
 
 		notificationDispatch(
 			setSuccessNotification(
@@ -418,18 +378,13 @@ function AddRoleFormContainer({
 	}, [userRoleData]);
 	const onCreate = useCallback(
 		async (
-			valuesSubmitted: IAddRole,
-			{
-				resetForm,
-			}: { resetForm?: (nextState?: Partial<FormikState<any>> | undefined) => void }
+			valuesSubmitted: IAddRole
 		) => {
 			await onFormSubmit({
 				valuesSubmitted,
 				createOrganizationUserRole,
 				organizationId: dashboardData?.organization?.id || "",
 				notificationDispatch: notificationDispatch,
-				controllerActionHash,
-				resetForm,
 				updateOrganizationUserRole,
 				formType,
 				roleId,
@@ -441,7 +396,6 @@ function AddRoleFormContainer({
 			updateOrganizationUserRole,
 			dashboardData,
 			notificationDispatch,
-			controllerActionHash,
 			setRedirect,
 			formType,
 		]

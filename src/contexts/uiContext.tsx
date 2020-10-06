@@ -7,6 +7,8 @@ import {
 	SimplePaletteColorOptions,
 } from "@material-ui/core";
 import { useAuth } from "./userContext";
+import { useDashBoardData } from "./dashboardContext";
+import { primaryColor, secondaryColor } from "../models/constants";
 
 const getGlobalStylesOverride = (primaryColor: string) => {
 	return {
@@ -32,31 +34,44 @@ const getGlobalStylesOverride = (primaryColor: string) => {
 	};
 };
 
-function getMuiTheme(theme: ThemeOptions | undefined | null): ThemeOptions {
+function getMuiTheme(
+	theme: ThemeOptions | undefined | null,
+	themePaletteType: "dark" | "light"
+): ThemeOptions {
 	const globalStyleOverride = getGlobalStylesOverride(
-		(theme?.palette?.primary as SimplePaletteColorOptions)?.main || "rgb(85, 103, 255)"
+		(theme?.palette?.primary as SimplePaletteColorOptions)?.main || primaryColor
 	);
 
 	if (theme) {
-		return createMuiTheme(Object.assign({}, theme, globalStyleOverride));
+		return createMuiTheme(
+			Object.assign({}, theme, globalStyleOverride, {
+				palette: { ...theme?.palette, type: themePaletteType },
+			})
+		);
 	}
 
 	return createMuiTheme({
 		...globalStyleOverride,
 		palette: {
+			type: themePaletteType,
 			primary: {
-				main: "#5567FF",
+				main: primaryColor,
 			},
 			secondary: {
-				main: "#14BB4C",
+				main: secondaryColor,
 			},
 		},
 	});
 }
 
 function UIProvider({ children }: any) {
+	const dashboardData = useDashBoardData();
 	const { user } = useAuth();
-	const theme = getMuiTheme(user?.theme);
+
+	const theme = getMuiTheme(
+		dashboardData?.organization?.theme,
+		user?.theme?.palette?.type || "light"
+	);
 	return (
 		<ThemeProvider theme={{ ...theme }}>
 			<CssBaseline />
