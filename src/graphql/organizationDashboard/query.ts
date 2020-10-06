@@ -142,3 +142,9 @@ export const GET_IMPACT_CATEGORY_ACHIEVED = gql`
 		impactCategoryAchievedValue(where: $filter)
 	}
 `;
+
+export const GET_PROJECT_COUNT = gql`
+	query {
+		orgProjectCount
+	}
+`;

@@ -61,12 +61,13 @@ export function GetCardTypeAndValues(props: CardProps) {
 				avgAchivementImpactByOrg,
 				totalAchivedImpactProjectByOrg,
 				totalImpactProjectByOrg,
+				orgProjectCount,
 			} = GetImpactOrgStatus({ variables: { filter: { organization: organization } } });
 
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: totalImpactProjectByOrg,
-				rightUpperTitle: `${totalAchivedImpactProjectByOrg} / ${totalImpactProjectByOrg} Project`,
+				rightUpperTitle: `${totalAchivedImpactProjectByOrg} / ${orgProjectCount} Project`,
 				firstBarHeading: `${avgAchivementImpactByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementImpactByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
@@ -79,13 +80,14 @@ export function GetCardTypeAndValues(props: CardProps) {
 				budgetSpentValue,
 				fundRecipetValuesByOrg,
 				completedProjectCount,
+				orgProjectCount,
 			} = GetBudgetOrgStatus({
 				variables: { filter: { organization: organization } },
 			});
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: abbreviateNumber(budgetTargetSum),
-				rightUpperTitle: `${completedProjectCount} / ${39} Project`,
+				rightUpperTitle: `${completedProjectCount} / ${orgProjectCount} Project`,
 				firstBarHeading: `${abbreviateNumber(budgetSpentValue)} ${
 					props.projectCardConfig.firstBarHeading
 				}`,
@@ -104,12 +106,13 @@ export function GetCardTypeAndValues(props: CardProps) {
 				avgAchivementDeliverableByOrg,
 				totalAchivedProjectByOrg,
 				totalDeliverableByOrg,
+				orgProjectCount,
 			} = GetDeliverableOrgStatus({ variables: { filter: { organization: organization } } });
 
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: totalDeliverableByOrg,
-				rightUpperTitle: `${totalAchivedProjectByOrg} / ${totalDeliverableByOrg} Project`,
+				rightUpperTitle: `${totalAchivedProjectByOrg} / ${orgProjectCount} Project`,
 				firstBarHeading: `${avgAchivementDeliverableByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementDeliverableByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,

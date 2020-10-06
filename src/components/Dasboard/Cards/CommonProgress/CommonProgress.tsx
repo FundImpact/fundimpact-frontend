@@ -40,7 +40,7 @@ export default function CommonProgress({
 						labels={({ datum }) => `${datum.name}: ${datum.y}`}
 						padding={{
 							left: 120, // Adjusted to accommodate labels
-							right: 20,
+							right: 30,
 							bottom: 120,
 						}}
 						primarySegmentedMeasureData={chartConfig?.primarySegmentedMeasureData}
