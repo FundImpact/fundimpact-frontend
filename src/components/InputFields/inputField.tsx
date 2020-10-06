@@ -138,6 +138,7 @@ const InputFields = ({
 					inputProps={{
 						"data-testid": testId,
 					}}
+					disabled={disabled}
 				>
 					{!optionsArray?.length && (
 						<MenuItem value="">

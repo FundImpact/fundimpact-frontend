@@ -43,7 +43,11 @@ function Project(props: ProjectProps) {
 	});
 
 	let mappedDonors: any = [];
+
+	projectForm[1].disabled = false;
 	if (props.type === PROJECT_ACTIONS.UPDATE) {
+		/*Disable workspace field*/
+		projectForm[1].disabled = true;
 		/*Disable already mapped donors*/
 		mappedDonors = props?.data?.donor;
 		let donorList: any = [];

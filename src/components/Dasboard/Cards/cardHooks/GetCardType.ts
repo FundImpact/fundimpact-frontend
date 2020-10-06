@@ -5,6 +5,7 @@ import {
 	CategoryDataResponse,
 	PieCardConfig,
 	ProgressCardConfig,
+	ProgressCardResponse,
 	ProjectCardConfig,
 } from "../../../../models/cards/cards";
 import { ChartDataset } from "../../../../models/charts/pie/datatypes";
@@ -66,7 +67,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				title: props.projectCardConfig.title,
 				mainHeading: totalImpactProjectByOrg,
 				rightUpperTitle: `${totalAchivedImpactProjectByOrg} / ${totalImpactProjectByOrg} Project`,
-				firstBarHeading: `${avgAchivementImpactByOrg} % ${props.projectCardConfig.firstBarHeading}`,
+				firstBarHeading: `${avgAchivementImpactByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementImpactByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
 				secondBarValue: Number(achiveImpactVsTargetByOrg),
@@ -109,7 +110,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				title: props.projectCardConfig.title,
 				mainHeading: totalDeliverableByOrg,
 				rightUpperTitle: `${totalAchivedProjectByOrg} / ${totalDeliverableByOrg} Project`,
-				firstBarHeading: `${avgAchivementDeliverableByOrg} % ${props.projectCardConfig.firstBarHeading}`,
+				firstBarHeading: `${avgAchivementDeliverableByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementDeliverableByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
 				secondBarValue: Number(achiveDeliverableVsTargetByOrg),
@@ -172,10 +173,22 @@ export function GetCardTypeAndValues(props: CardProps) {
 
 	if (props.type === CARD_TYPES.PROGRESS) {
 		if (props.cardOf === CARD_OF.BUDGET) {
-			let { data: budgetProject } = GetBudgetProjects(props.currentFilter?.base, {
+			let { data: budgetProject } = GetBudgetProjects({
 				variables: { filter: { organization: organization } },
 			});
-			progressCardConfig.dataToDisplay = budgetProject;
+
+			budgetProject.expenditure?.forEach((expData: ProgressCardResponse) => {
+				budgetProject.allocation?.forEach((allData: ProgressCardResponse) => {
+					if (expData.project_id === allData.project_id) {
+						progressCardConfig.dataToDisplay.push({
+							...expData,
+							avg_value_two: allData.avg_value,
+							label: "Expenditure",
+							labelTwo: "Allocated",
+						});
+					}
+				});
+			});
 		}
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
 			let { deliverableAchieved } = GetDeliverableProjects({

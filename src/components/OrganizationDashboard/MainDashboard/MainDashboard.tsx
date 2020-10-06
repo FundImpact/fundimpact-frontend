@@ -173,13 +173,9 @@ export default function MainOrganizationDashboard() {
 							description:
 								"This text will be show on dashboard for budget project card title",
 						})}
-						cardFilter={[
-							{ label: expenditure, base: "Expenditure" },
-							{ label: allocation, base: "Allocation" },
-						]}
 						type={CARD_TYPES.PROGRESS}
 						cardOf={CARD_OF.BUDGET}
-						cardHeight="240px"
+						cardHeight="280px"
 					/>
 				</Grid>
 				<Grid item md={4}>
@@ -191,7 +187,7 @@ export default function MainOrganizationDashboard() {
 								"This text will be show on dashboard for deliverable achieved card title",
 						})}
 						type={CARD_TYPES.PROGRESS}
-						cardHeight="240px"
+						cardHeight="280px"
 						cardOf={CARD_OF.DELIVERABLE}
 					/>
 				</Grid>
@@ -205,7 +201,7 @@ export default function MainOrganizationDashboard() {
 						})}
 						type={CARD_TYPES.PROGRESS}
 						cardOf={CARD_OF.IMPACT}
-						cardHeight="240px"
+						cardHeight="280px"
 					/>
 				</Grid>
 				<Box m={2} mb={0} mt={0}>

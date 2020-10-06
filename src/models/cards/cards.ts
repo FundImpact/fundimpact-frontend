@@ -50,10 +50,14 @@ export type PieCardConfig = {
 };
 
 export type ProgressCardResponse = {
+	project_id: string | number;
 	id: string | number;
 	name: string;
 	avg_value?: number;
+	avg_value_two?: number;
 	sum?: number;
+	label?: string;
+	labelTwo: string;
 };
 
 export type ProgressCardConfig = {

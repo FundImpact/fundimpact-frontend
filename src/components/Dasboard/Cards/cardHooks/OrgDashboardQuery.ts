@@ -106,10 +106,7 @@ export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } 
 	};
 }
 
-export function GetBudgetProjects(
-	filter: string | undefined,
-	queryFilter: { variables: { filter: object } }
-) {
+export function GetBudgetProjects(queryFilter: { variables: { filter: object } }) {
 	let { data: projectExpenditureValue } = useQuery(
 		GET_BUDGET_PROJECTS_BY_EXPENDITURE,
 		queryFilter
@@ -117,12 +114,10 @@ export function GetBudgetProjects(
 	let { data: projectAllocationValue } = useQuery(GET_BUDGET_PROJECTS_BY_ALLOCATION, queryFilter);
 
 	return {
-		data:
-			projectExpenditureValue && filter === "Expenditure"
-				? projectExpenditureValue.projectExpenditureValue
-				: projectAllocationValue && filter === "Allocation"
-				? projectAllocationValue.projectAllocationValue
-				: null,
+		data: {
+			expenditure: projectExpenditureValue?.projectExpenditureValue,
+			allocation: projectAllocationValue?.projectAllocationValue,
+		},
 	};
 }
 
