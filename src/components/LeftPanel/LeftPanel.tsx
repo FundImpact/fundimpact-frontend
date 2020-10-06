@@ -21,6 +21,10 @@ import { sidePanelStyles } from "../Dasboard/styles";
 import { userHasAccess } from "../../utils/access";
 import { MODULE_CODES } from "../../utils/access/moduleCodes";
 import { SETTING_MODULE_ACTION } from "../../utils/access/modules/setting/actions";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
+import { useQuery } from "@apollo/client";
+import { setProject } from "../../reducers/dashboardReducer";
+import { useDashboardDispatch } from "../../contexts/dashboardContext";
 
 /**
  * @description This is the Blue sidebar the we see on the left most side of the window.
@@ -32,6 +36,7 @@ export default function LeftPanel() {
 	const userDispatch = React.useContext(UserDispatchContext);
 	const auth = useAuth();
 	const user: any = auth.user;
+	const { data } = useQuery(GET_PROJECTS_BY_WORKSPACE);
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -44,13 +49,22 @@ export default function LeftPanel() {
 			Icon: DashboardOutlinedIcon,
 			color: "#bdbdbd",
 			to: "/dashboard",
+			onClick: () => {},
 		},
 	]);
+	const dispatch = useDashboardDispatch();
+
+	useEffect(() => {
+		if (data) {
+			leftPannelList[0].onClick = () => dispatch(setProject(data.orgProject[0]));
+		}
+	}, [data]);
+
 	const settingButtonAccess = userHasAccess(
 		MODULE_CODES.SETTING,
 		SETTING_MODULE_ACTION.FIND_SETTING
 	);
-	console.log("settingButtonAccess :>> ", settingButtonAccess);
+
 	useEffect(() => {
 		if (settingButtonAccess) {
 			setLeftPannelList((currentLeftPannelList) => [
@@ -60,6 +74,7 @@ export default function LeftPanel() {
 					Icon: SettingsIcon,
 					color: "#bdbdbd",
 					to: "/settings",
+					onClick: () => {},
 				},
 			]);
 		}
@@ -85,6 +100,7 @@ export default function LeftPanel() {
 							to={item.to}
 							key={index}
 							activeClassName={classes.leftPanelActiveLink}
+							onClick={item.onClick}
 						>
 							<ListItemIcon>
 								<item.Icon

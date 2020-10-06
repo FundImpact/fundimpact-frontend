@@ -110,10 +110,12 @@ export default function ProjectList({
 	const { data, loading } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
 	let { pathname } = useLocation();
 	const navigate = useNavigate();
+	const [isAnyActiveProject, setIsAnyActiveProject] = useState<boolean>(false);
 
 	React.useEffect(() => {
-		if (data && projectIndex === 0 && pathname === "/dashboard") {
+		if (data && projectIndex === 0 && pathname === "/dashboard" && !isAnyActiveProject) {
 			dispatch(setProject(data.orgProject[0]));
+			setIsAnyActiveProject(true);
 		}
 		console.log("datadata", data);
 	}, [data, dispatch, projectIndex, pathname]);
@@ -164,6 +166,7 @@ export default function ProjectList({
 											key={project.id}
 											onClick={() => {
 												dispatch(setProject(project));
+												setIsAnyActiveProject(true);
 												if (pathname !== "/dashboard")
 													navigate("/dashboard");
 											}}
