@@ -108,7 +108,7 @@ const onFormSubmit = async ({
 					if (data) {
 						let { createOrganizationUserRole } = data;
 						const userRoles = store.readQuery<{
-							roles: { name: string; id: string }[];
+							organizationRoles: { name: string; id: string }[];
 						}>({
 							query: GET_ROLES_BY_ORG,
 							variables: {
@@ -117,7 +117,7 @@ const onFormSubmit = async ({
 								},
 							},
 						});
-						store.writeQuery<{ roles: { name: string; id: string }[] }>({
+						store.writeQuery<{ organizationRoles: { name: string; id: string }[] }>({
 							query: GET_ROLES_BY_ORG,
 							variables: {
 								filter: {
@@ -125,7 +125,7 @@ const onFormSubmit = async ({
 								},
 							},
 							data: {
-								roles: [createOrganizationUserRole, ...(userRoles?.roles || [])],
+								organizationRoles: [createOrganizationUserRole, ...(userRoles?.organizationRoles || [])],
 							},
 						});
 					}
@@ -143,11 +143,11 @@ const onFormSubmit = async ({
 	}
 };
 
-const getControllerActionHash = (controllerActionArr: IGetUserRole["role"]["permissions"]) => {
+const getControllerActionHash = (controllerActionArr: IGetUserRole["getRolePemissions"]) => {
 	return controllerActionArr.reduce(
 		(
 			controllerActionHash: IControllerAction,
-			current: IGetUserRole["role"]["permissions"][0]
+			current: IGetUserRole["getRolePemissions"][0]
 		) => {
 			if (!controllerActionHash[current.controller as MODULE_CODES]) {
 				controllerActionHash[current.controller as MODULE_CODES] = {};
@@ -190,7 +190,9 @@ function AddRoleFormContainer({
 		if (user) {
 			getUserRoles({
 				variables: {
-					id: user.user?.role?.id,
+					filter: {
+						role: user.user?.role?.id,
+					},
 				},
 			});
 		}
@@ -198,10 +200,9 @@ function AddRoleFormContainer({
 
 	useEffect(() => {
 		if (userRoleData) {
-			setControllerActionHash(getControllerActionHash(userRoleData.role.permissions));
+			setControllerActionHash(getControllerActionHash(userRoleData.getRolePemissions));
 		}
 	}, [userRoleData]);
-
 	const onCreate = useCallback(
 		(
 			valuesSubmitted: IAddRole,

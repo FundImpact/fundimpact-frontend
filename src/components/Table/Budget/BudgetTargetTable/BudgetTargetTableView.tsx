@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -16,6 +16,27 @@ import FilterList from "../../../FilterList";
 import { BUDGET_TARGET_ACTIONS } from "../../../../utils/access/modules/budgetTarget/actions";
 import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
+import { BUDGET_CATEGORY_ACTIONS } from "../../../../utils/access/modules/budgetCategory/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
+import { PROJECT_DONOR_ACTIONS } from "../../../../utils/access/modules/projectDonor/actions";
+
+enum tableHeader {
+	targetName = 2,
+	budgetCategory = 3,
+	donor = 4,
+	totalAmout = 5,
+	spent = 6,
+	progress = 7,
+}
+
+enum tableRow {
+	name = 0,
+	budgetCategory = 1,
+	donor = 2,
+	totalAmount = 3,
+	spent = 4,
+	progress = 5,
+}
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -192,6 +213,34 @@ function BudgetTargetView({
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.FIND_BUDGET_TARGET_LINE_ITEM
 	);
 
+	const budgetCategoryFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
+	);
+
+	const projectDonorFindAccess = userHasAccess(
+		MODULE_CODES.PROJECT_DONOR,
+		PROJECT_DONOR_ACTIONS.FIND_PROJECT_DONOR
+	);
+
+	const filteredTableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(tableHeadings, {
+				[tableHeader.budgetCategory]: !budgetCategoryFindAccess,
+				[tableHeader.donor]: !projectDonorFindAccess,
+			}),
+		[budgetCategoryFindAccess, filterTableHeadingsAndRows, projectDonorFindAccess]
+	);
+
+	const filteredRows = useMemo(
+		() =>
+			filterTableHeadingsAndRows(rows, {
+				[tableRow.budgetCategory]: !budgetCategoryFindAccess,
+				[tableRow.donor]: !projectDonorFindAccess,
+			}),
+		[budgetCategoryFindAccess, filterTableHeadingsAndRows, projectDonorFindAccess]
+	);
+
 	useEffect(() => {
 		if (budgetTargetEditAccess) {
 			budgetTargetTableEditMenu[0] = "Edit Budget Target";
@@ -232,9 +281,9 @@ function BudgetTargetView({
 				</Grid>
 			</Grid>
 			<CommonTable
-				tableHeadings={tableHeadings}
+				tableHeadings={filteredTableHeadings}
 				valuesList={budgegtTargetList}
-				rows={rows}
+				rows={filteredRows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}
 				editMenuName={budgetTargetTableEditMenu}

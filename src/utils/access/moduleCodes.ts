@@ -26,4 +26,5 @@ export enum MODULE_CODES {
 	ORGANIZATION = "organization",
 	DONOR = "donor",
 	GRANT_PERIOD = "grant-periods-project",
+	PROJECT_DONOR = "project-donor",
 }

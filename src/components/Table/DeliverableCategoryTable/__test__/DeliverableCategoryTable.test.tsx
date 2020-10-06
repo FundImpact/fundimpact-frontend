@@ -71,14 +71,16 @@ const mocks = [
 		},
 	},
 	{
-    request: {
-      query: GET_USER_ROLES,
-      variables: {
-        id: "1",
-      },
-    },
-    result: { data: mockUserRoles },
-  },
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				filter: {
+					role: "1",
+				},
+			},
+		},
+		result: { data: mockUserRoles },
+	},
 	deliverableCategoryProjectCountQuery,
 	{
 		request: {

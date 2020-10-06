@@ -3,4 +3,5 @@ export enum WORKSPACE_ACTIONS {
 	UPDATE_WORKSPACE = "update",
 	DELETE_WORKSPACE = "delete",
 	FIND_WORKSPACE = "find",
+	COUNT_WORKSPACE = "count",
 }
