@@ -27,4 +27,8 @@ export enum MODULE_CODES {
 	DONOR = "donor",
 	GRANT_PERIOD = "grant-periods-project",
 	PROJECT_DONOR = "project-donor",
+	BUDGET_TARGET_DONOR = "budget-targets-donor",
+	ANNUAL_YEAR = "annual-year",
+	FINANCIAL_YEAR_DONOR = "financial-years-donor",
+	FINANCIAL_YEAR_ORG = "financial-years-org",
 }

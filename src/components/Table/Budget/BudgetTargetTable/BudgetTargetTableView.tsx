@@ -18,7 +18,7 @@ import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
 import { BUDGET_CATEGORY_ACTIONS } from "../../../../utils/access/modules/budgetCategory/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
-import { PROJECT_DONOR_ACTIONS } from "../../../../utils/access/modules/projectDonor/actions";
+import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
 
 enum tableHeader {
 	targetName = 2,
@@ -70,6 +70,20 @@ const rows = [
 		),
 	},
 ];
+
+const getTableHeadingByBudgetTrackingLineItemAccess = (
+	headings: (
+		| {
+				label: string;
+				keyMapping?: undefined;
+		  }
+		| {
+				label: string;
+				keyMapping: string;
+		  }
+	)[],
+	collapseTableAccess: boolean
+) => (collapseTableAccess ? headings : headings.slice(1));
 
 const chipArray = ({
 	elementList,
@@ -218,27 +232,53 @@ function BudgetTargetView({
 		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
 	);
 
-	const projectDonorFindAccess = userHasAccess(
-		MODULE_CODES.PROJECT_DONOR,
-		PROJECT_DONOR_ACTIONS.FIND_PROJECT_DONOR
+	const budgetTargetDonorFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_DONOR,
+		BUDGET_TARGET_DONOR_ACTION.FIND_BUDGET_TARGET_DONOR
+	);
+
+	const budgetTargetProjectExpenditureValue = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.PROJECT_EXPENDITURE_VALUE
+	);
+
+	const budgetTargetProjectAllocationValue = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE
 	);
 
 	const filteredTableHeadings = useMemo(
 		() =>
 			filterTableHeadingsAndRows(tableHeadings, {
 				[tableHeader.budgetCategory]: !budgetCategoryFindAccess,
-				[tableHeader.donor]: !projectDonorFindAccess,
+				[tableHeader.donor]: !budgetTargetDonorFindAccess,
+				[tableHeader.spent]: !budgetTargetProjectExpenditureValue,
+				[tableHeader.totalAmout]: !budgetTargetProjectAllocationValue,
 			}),
-		[budgetCategoryFindAccess, filterTableHeadingsAndRows, projectDonorFindAccess]
+		[
+			budgetCategoryFindAccess,
+			filterTableHeadingsAndRows,
+			budgetTargetDonorFindAccess,
+			budgetTargetProjectExpenditureValue,
+			budgetTargetProjectAllocationValue,
+		]
 	);
 
 	const filteredRows = useMemo(
 		() =>
 			filterTableHeadingsAndRows(rows, {
 				[tableRow.budgetCategory]: !budgetCategoryFindAccess,
-				[tableRow.donor]: !projectDonorFindAccess,
+				[tableRow.donor]: !budgetTargetDonorFindAccess,
+				[tableRow.spent]: !budgetTargetProjectExpenditureValue,
+				[tableRow.totalAmount]: !budgetTargetProjectAllocationValue,
 			}),
-		[budgetCategoryFindAccess, filterTableHeadingsAndRows, projectDonorFindAccess]
+		[
+			budgetCategoryFindAccess,
+			filterTableHeadingsAndRows,
+			budgetTargetDonorFindAccess,
+			budgetTargetProjectExpenditureValue,
+			budgetTargetProjectAllocationValue,
+		]
 	);
 
 	useEffect(() => {
@@ -281,13 +321,16 @@ function BudgetTargetView({
 				</Grid>
 			</Grid>
 			<CommonTable
-				tableHeadings={filteredTableHeadings}
+				tableHeadings={getTableHeadingByBudgetTrackingLineItemAccess(
+					filteredTableHeadings,
+					budgetTargetLineItemFindAccess
+				)}
 				valuesList={budgegtTargetList}
 				rows={filteredRows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}
 				editMenuName={budgetTargetTableEditMenu}
-				collapsableTable={true}
+				collapsableTable={budgetTargetLineItemFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
