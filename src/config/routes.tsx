@@ -1,9 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
-import React, { useState } from "react";
-import { RouteProps, useLocation } from "react-router";
+import React from "react";
+import { RouteProps } from "react-router";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MainDashboard from "../components/Dasboard/MainDashboard";
-import { DashboardProvider } from "../contexts/dashboardContext";
 import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
 import { SetTokenAndRedirect } from "../hooks/userDetailsWithToken";
@@ -40,32 +39,28 @@ function AppRoutes() {
 		<BrowserRouter>
 			<ApolloProvider client={client}>
 				<NotificationProvider>
-					<DashboardProvider>
-						<Routes>
-							<PrivateRoute
-								path="dashboard"
-								element={
-									<DashboardContainer left={null} main={<MainDashboard />} />
-								}
-							/>
-							<PrivateRoute
-								path="organization/dashboard"
-								element={
-									<DashboardContainer
-										left={null}
-										main={<MainOrganizationDashboard />}
-									/>
-								}
-							/>
-							<PrivateRoute path="settings/*" element={<SettingsContainer />} />
-							<PrivateRoute path="account/*" element={<AccountSettingsContainer />} />
-							<Route path="" element={<LandingPage />}>
-								<Route path="login" element={<Login />} />
-								<Route path="signup/:id" element={<SignUp />} />
-								<Route path="signup" element={<SignUp />} />
-							</Route>
-						</Routes>
-					</DashboardProvider>
+					<Routes>
+						<PrivateRoute
+							path="dashboard"
+							element={<DashboardContainer left={null} main={<MainDashboard />} />}
+						/>
+						<PrivateRoute
+							path="organization/dashboard"
+							element={
+								<DashboardContainer
+									left={null}
+									main={<MainOrganizationDashboard />}
+								/>
+							}
+						/>
+						<PrivateRoute path="settings/*" element={<SettingsContainer />} />
+						<PrivateRoute path="account/*" element={<AccountSettingsContainer />} />
+						<Route path="" element={<LandingPage />}>
+							<Route path="login" element={<Login />} />
+							<Route path="signup/:id" element={<SignUp />} />
+							<Route path="signup" element={<SignUp />} />
+						</Route>
+					</Routes>
 				</NotificationProvider>
 			</ApolloProvider>
 		</BrowserRouter>

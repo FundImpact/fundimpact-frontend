@@ -12,7 +12,6 @@ export const useFileUpload = <T>() => {
 
 	const uploadFile = useCallback(
 		async (payload) => {
-			console.log("payload", payload);
 			const response = await intiatePostRequest(payload, setLoading, setData, setError, jwt);
 			return response;
 		},

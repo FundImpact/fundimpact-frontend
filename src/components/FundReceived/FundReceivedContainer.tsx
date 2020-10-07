@@ -52,7 +52,7 @@ const onFormSubmit = async ({
 			},
 			update: (store, { data }) => {
 				try {
-					console.log("data :>> ", data);
+				
 					const fundReceived = store.readQuery<{ fundReceiptProjectTotalAmount: number }>(
 						{
 							query: GET_PROJECT_AMOUNT_RECEIVED,

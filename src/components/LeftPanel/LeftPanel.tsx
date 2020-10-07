@@ -22,6 +22,7 @@ import { userHasAccess } from "../../utils/access";
 import { MODULE_CODES } from "../../utils/access/moduleCodes";
 import { SETTING_MODULE_ACTION } from "../../utils/access/modules/setting/actions";
 import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
+import ToggleDarkTheme from "./ToggleDarkTheme";
 
 /**
  * @description This is the Blue sidebar the we see on the left most side of the window.
@@ -51,7 +52,6 @@ export default function LeftPanel() {
 		MODULE_CODES.SETTING,
 		SETTING_MODULE_ACTION.FIND_SETTING
 	);
-	console.log("settingButtonAccess :>> ", settingButtonAccess);
 	useEffect(() => {
 		if (settingButtonAccess) {
 			setLeftPannelList((currentLeftPannelList) => [
@@ -123,6 +123,7 @@ export default function LeftPanel() {
 					onClose={handleClose}
 				>
 					{" "}
+					<ToggleDarkTheme />
 					{accountEditAccess && (
 						<MenuItem component={Link} to={"/account/profile"}>
 							Account Settings

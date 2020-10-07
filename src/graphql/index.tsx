@@ -26,6 +26,7 @@ export const GET_ORGANISATIONS = gql`
 				id
 				url
 			}
+			theme
 		}
 	}
 `;

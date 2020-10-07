@@ -188,7 +188,6 @@ function ImpactUnitTableContainer({
 				/>
 				{(rowData: { id: string }) => (
 					<>
-						{console.log("rowData :>> ", rowData)}
 						<ImpactCategory
 							tableFilterList={filterList}
 							rowId={rowData.id}

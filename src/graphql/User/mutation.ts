@@ -8,6 +8,8 @@ export const UPDATE_USER_DETAILS = gql`
 			name
 			email
 			provider
+			confirmed
+			blocked
 			profile_photo {
 				id
 				url
@@ -17,6 +19,12 @@ export const UPDATE_USER_DETAILS = gql`
 				name
 			}
 			account {
+				id
+				name
+				account_no
+			}
+			theme
+			organization {
 				id
 				name
 			}
