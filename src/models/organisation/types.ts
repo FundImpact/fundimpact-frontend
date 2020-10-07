@@ -1,4 +1,5 @@
 import { IInputFields } from "..";
+import { ThemeOptions } from "@material-ui/core";
 
 export interface IOrganisationType {
 	id: string;
@@ -6,7 +7,6 @@ export interface IOrganisationType {
 }
 
 export interface IOrganisation {
-	__typename: string;
 	id: string;
 	name: string;
 	short_name: string;
@@ -23,6 +23,7 @@ export interface IOrganisation {
 		id: string;
 		url: string;
 	};
+	theme: ThemeOptions;
 }
 
 export interface IOrganisationForm
@@ -32,9 +33,7 @@ export interface IOrganisationForm
 	> {
 	organization_registration_type?: string;
 	country: string;
-	icon?: File | string;
-	logo?: string;
-	id?: string;
+	logo?: string | File;
 }
 
 export interface IOrganizationCurrency {

@@ -39,12 +39,7 @@ beforeEach(() => {
 describe("Progress Card and data listing", () => {
 	test("renders correctly", async () => {
 		await waitForElement(() =>
-			progressCard.getByText(new RegExp("" + projectCardConfig.dataToDisplay[0].name, "i"))
-		);
-		await waitForElement(() =>
-			progressCard.getByText(
-				new RegExp("" + projectCardConfig.dataToDisplay[0].avg_value, "i")
-			)
+			progressCard.getAllByText(new RegExp("" + projectCardConfig.dataToDisplay[0].name, "i"))
 		);
 		let moreButton = await progressCard.findByTestId(`fundImpactMoreButton`);
 		expect(moreButton).toBeInTheDocument();

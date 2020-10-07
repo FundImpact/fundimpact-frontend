@@ -175,11 +175,7 @@ export default function InvitedUserTable() {
 					</Box>
 				</TableCell>,
 				<TableCell>
-					{user?.confirmed ? (
-						<CheckIcon color="secondary" />
-					) : (
-						<CloseIcon color="error" />
-					)}
+					{user?.confirmed ? <CheckIcon color="action" /> : <CloseIcon color="error" />}
 				</TableCell>,
 				<TableCell>
 					<IconButton disabled>

@@ -47,6 +47,7 @@ export const UPDATE_ORGANIZATION = gql`
 				id
 				url
 			}
+			theme
 		}
 	}
 `;

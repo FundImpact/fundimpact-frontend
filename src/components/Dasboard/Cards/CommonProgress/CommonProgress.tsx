@@ -28,7 +28,7 @@ export default function CommonProgress({
 		<Grid container style={{ width: "100%" }}>
 			{!noBarDisplay && (
 				<>
-					<Grid xs={3}>
+					<Grid item xs={3}>
 						<Box mt={1}>
 							<Typography noWrap>{title}</Typography>
 						</Box>

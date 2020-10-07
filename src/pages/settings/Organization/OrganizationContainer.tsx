@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import OrganizationView from "./OrganizationView";
-import { IOrganisationForm } from "../../../models/organisation/types";
+import { IOrganisationForm, IOrganisation } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { organizationFormInputFields } from "./inputFields.json";
 import { ICountry } from "../../../models";
@@ -13,14 +13,15 @@ import {
 	IUpdateOrganization,
 	IUpdateOrganizationVariables,
 } from "../../../models/organisation/query";
-import { FetchResult, MutationFunctionOptions } from "@apollo/client";
+import { FetchResult, MutationFunctionOptions, ApolloCache } from "@apollo/client";
 import useFileUpload from "../../../hooks/fileUpload";
+import { SimplePaletteColorOptions } from "@material-ui/core";
+import { primaryColor, secondaryColor } from "../../../models/constants";
+import { GET_ORGANISATIONS } from "../../../graphql";
 
 //change this
 let inputFields: any[] = organizationFormInputFields;
 
-//change icon on api update
-//check everywhere if organization cache is updating properly
 function OrganizationContainer({
 	registrationTypes,
 	countryList,
@@ -36,23 +37,59 @@ function OrganizationContainer({
 			| undefined
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
-	organizationFormInputFields[4].optionsArray = countryList as any;
+	(organizationFormInputFields[4].optionsArray as ICountry[]) = countryList;
 	let { uploadFile, loading: fileUploading } = useFileUpload();
 
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 
-	const initialValues = {
-		id: dashboardData?.organization?.id || "",
+	const initialValues: IOrganisationForm = {
 		organization_registration_type:
 			dashboardData?.organization?.organization_registration_type?.id || "",
 		country: (countryList.length && dashboardData?.organization?.country?.id) || "",
-		icon: "",
+		logo: dashboardData?.organization?.logo?.url || "",
 		name: dashboardData?.organization?.name || "",
 		legal_name: dashboardData?.organization?.legal_name || "",
 		short_name: dashboardData?.organization?.short_name || "",
+		theme: {
+			palette: {
+				primary: {
+					main:
+						(dashboardData?.organization?.theme?.palette
+							?.primary as SimplePaletteColorOptions)?.main || primaryColor,
+				},
+				secondary: {
+					main:
+						(dashboardData?.organization?.theme?.palette
+							?.secondary as SimplePaletteColorOptions)?.main || secondaryColor,
+				},
+			},
+		},
 	};
-	
+
+	const updateOrganizationCache = (
+		store: ApolloCache<IUpdateOrganization>,
+		response: FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>
+	) => {
+		try {
+			if (!response.data) {
+				return;
+			}
+			let { organizationUpdate } = response.data;
+
+			store.writeQuery<{
+				organizationList: IOrganisation[];
+			}>({
+				query: GET_ORGANISATIONS,
+				data: {
+					organizationList: [organizationUpdate],
+				},
+			});
+		} catch (err) {
+			console.log("err ", err);
+		}
+	};
+
 	const validate = useCallback(
 		(values: IOrganisationForm) => {
 			let errors: Partial<IOrganisationForm> = {};
@@ -83,27 +120,32 @@ function OrganizationContainer({
 		async (valuesSubmitted: IOrganisationForm) => {
 			try {
 				const values = Object.assign({}, valuesSubmitted);
-				delete values.id;
-				if (values.icon) {
+
+				if (values.logo instanceof File) {
 					let formData = new FormData();
-					formData.append("files", values.icon);
+					formData.append("files", values.logo);
 					const response = await uploadFile(formData);
 					values.logo = response[0].id;
+				} else {
+					//deleting because if we send same value in backend we would get error
+					delete values.logo;
 				}
 
-				delete values.icon;
+				//deleting because if we send empty value in backend we would get error
 				if (!values.organization_registration_type) {
 					delete values.organization_registration_type;
 				}
+
 				await updateOrganization({
 					variables: {
-						id: initialValues.id,
+						id: dashboardData?.organization?.id || "",
 						input: values,
 					},
+					update: updateOrganizationCache,
 				});
 				notificationDispatch(setSuccessNotification("Organization Updation Success"));
 			} catch (err) {
-				notificationDispatch(setErrorNotification("Organization Updation Failure"));
+				notificationDispatch(setErrorNotification(err.message));
 			}
 		},
 		[updateOrganization, initialValues, uploadFile, notificationDispatch]

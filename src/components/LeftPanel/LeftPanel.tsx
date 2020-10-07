@@ -26,6 +26,7 @@ import { useQuery } from "@apollo/client";
 import { setProject } from "../../reducers/dashboardReducer";
 import { useDashboardDispatch } from "../../contexts/dashboardContext";
 import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
+import ToggleDarkTheme from "./ToggleDarkTheme";
 
 /**
  * @description This is the Blue sidebar the we see on the left most side of the window.
@@ -139,6 +140,7 @@ export default function LeftPanel() {
 					onClose={handleClose}
 				>
 					{" "}
+					<ToggleDarkTheme />
 					{accountEditAccess && (
 						<MenuItem component={Link} to={"/account/profile"}>
 							Account Settings
