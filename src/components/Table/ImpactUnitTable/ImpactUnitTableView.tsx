@@ -128,31 +128,34 @@ function ImpactUnitTableContainer({
 		}
 	}, [impactUnitEditAccess]);
 
+	{
+		(!collapsableTable &&
+			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+				<FilterList
+					initialValues={{
+						name: "",
+						code: "",
+						description: "",
+					}}
+					inputFields={impactUnitInputFields}
+					setFilterList={setFilterList}
+				/>
+			))) ||
+			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	}
+
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
-					<Grid item xs={11}>
-						<Box my={2} flexWrap="wrap" display="flex">
+					<Grid item xs={12}>
+						<Box flexWrap="wrap" display="flex">
 							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 								createChipArray({
 									removeFilterListElements,
 									filterListObjectKeyValuePair,
 								})
 							)}
-						</Box>
-					</Grid>
-					<Grid item xs={1}>
-						<Box mt={2}>
-							<FilterList
-								initialValues={{
-									name: "",
-									code: "",
-									description: "",
-								}}
-								inputFields={impactUnitInputFields}
-								setFilterList={setFilterList}
-							/>
 						</Box>
 					</Grid>
 				</Grid>
@@ -185,7 +188,12 @@ function ImpactUnitTableContainer({
 				/>
 				{(rowData: { id: string }) => (
 					<>
-						<ImpactCategory rowId={rowData.id} collapsableTable={false} />
+						{console.log("rowData :>> ", rowData)}
+						<ImpactCategory
+							tableFilterList={filterList}
+							rowId={rowData.id}
+							collapsableTable={false}
+						/>
 					</>
 				)}
 			</CommonTable>

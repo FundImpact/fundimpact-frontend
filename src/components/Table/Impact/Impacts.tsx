@@ -41,6 +41,7 @@ import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCat
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS } from "../../../utils/access/modules/sustainableDevelopmentGoals/actions";
+import { ITableHeadings } from "../../../models";
 
 enum tableHeaders {
 	name = 2,
@@ -195,16 +196,7 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 }
 
 const getTableHeadingByImpactTracklineAccess = (
-	headings: (
-		| {
-				label: string;
-				keyMapping?: undefined;
-		  }
-		| {
-				label: string;
-				keyMapping: string;
-		  }
-	)[],
+	headings: ITableHeadings[],
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
@@ -530,7 +522,7 @@ export default function ImpactsTable() {
 		} else {
 			setRows([]);
 		}
-	}, [impactTargets]);
+	}, [impactTargets, impactCategoryFindAccess, sdgFindAccess, impactPage]);
 
 	const filteredImpactHeadings = useMemo(
 		() =>
@@ -539,7 +531,7 @@ export default function ImpactsTable() {
 				[tableHeaders.achieved]: !impactAchievedFindAccess,
 				[tableHeaders.sdg]: !sdgFindAccess,
 			}),
-		[impactCategoryFindAccess, impactAchievedFindAccess, !sdgFindAccess]
+		[impactCategoryFindAccess, impactAchievedFindAccess, sdgFindAccess]
 	);
 
 	let impactTablePagination = (
@@ -554,6 +546,20 @@ export default function ImpactsTable() {
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+
+	filteredImpactHeadings[filteredImpactHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				name: "",
+				target_value: "",
+				sustainable_development_goal: [],
+				impact_category_org: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={impactTargetInputFields}
+		/>
+	);
+
 	return (
 		<>
 			{queryLoading || countQueryLoading ? (
@@ -561,28 +567,14 @@ export default function ImpactsTable() {
 			) : (
 				<>
 					<Grid container>
-						<Grid item xs={11}>
-							<Box my={2} display="flex" flexWrap="wrap">
+						<Grid item xs={12}>
+							<Box display="flex" flexWrap="wrap">
 								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 									createChipArray({
 										filterListObjectKeyValuePair,
 										removeFilterListElements,
 									})
 								)}
-							</Box>
-						</Grid>
-						<Grid item xs={1}>
-							<Box mt={2}>
-								<FilterList
-									initialValues={{
-										name: "",
-										target_value: "",
-										sustainable_development_goal: [],
-										impact_category_org: [],
-									}}
-									setFilterList={setFilterList}
-									inputFields={impactTargetInputFields}
-								/>
 							</Box>
 						</Grid>
 					</Grid>

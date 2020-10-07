@@ -337,7 +337,7 @@ function BudgetLineItemTableView({
 	return (
 		<>
 			<Grid container>
-				<Grid item xs={11}>
+				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
