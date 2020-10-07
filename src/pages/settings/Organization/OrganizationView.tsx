@@ -642,9 +642,7 @@ function OrganizationView({
 																							)
 																						)}
 																					</Select>
-																					<FormHelperText
-																						error
-																					>
+																					<FormHelperText>
 																						{formik
 																							.touched[
 																							element.name as keyof IOrganisationForm
