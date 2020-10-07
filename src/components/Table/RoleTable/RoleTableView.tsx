@@ -45,12 +45,20 @@ function RoleTableView({
 	loading,
 	order,
 	setOrder,
+	page,
+	setPage,
+	changePage,
+	count
 }: {
 	userRoles: { id: string; name: string; type: string }[];
 	userRoleEditAccess: boolean;
 	loading: boolean;
 	order: "asc" | "desc";
+	page: number;
+	setPage: React.Dispatch<React.SetStateAction<number>>;
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	changePage: (prev?: boolean) => void;
+	count: number
 }) {
 	const dashboardData = useDashBoardData();
 	const tableStyles = styledTable();
