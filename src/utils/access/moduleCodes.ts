@@ -38,4 +38,5 @@ export enum MODULE_CODES {
 	CURRENCY = "currency",
 	USER_PERMISSIONS = "userspermissions",
 	AUTH = "auth",
+	FUND_RECEIPT = "fund-receipt-project",
 }
