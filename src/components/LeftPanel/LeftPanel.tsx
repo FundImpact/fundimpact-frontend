@@ -52,7 +52,6 @@ export default function LeftPanel() {
 		MODULE_CODES.SETTING,
 		SETTING_MODULE_ACTION.FIND_SETTING
 	);
-	console.log("settingButtonAccess :>> ", settingButtonAccess);
 	useEffect(() => {
 		if (settingButtonAccess) {
 			setLeftPannelList((currentLeftPannelList) => [
