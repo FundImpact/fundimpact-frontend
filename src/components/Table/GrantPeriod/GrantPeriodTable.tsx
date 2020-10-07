@@ -230,6 +230,13 @@ const createChipArray = ({
 	}
 };
 
+const getDefaultFilterList = () => ({
+	name: "",
+	start_date: "",
+	end_date: "",
+	donor: [],
+});
+
 export default function GrantPeriodTable() {
 	const apolloClient = useApolloClient();
 	const [queryFilter, setQueryFilter] = useState({});
@@ -246,18 +253,14 @@ export default function GrantPeriodTable() {
 	const dashboardData = useDashBoardData();
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
-	}>({
-		name: "",
-		start_date: "",
-		end_date: "",
-		donor: [],
-	});
+	}>(getDefaultFilterList());
 
 	useEffect(() => {
 		setQueryFilter({
 			project: dashboardData?.project?.id,
 		});
-	}, [dashboardData]);
+		setFilterList(getDefaultFilterList());
+	}, [dashboardData, setFilterList, setQueryFilter]);
 
 	const removeFilterListElements = (key: string, index?: number) => {
 		setFilterList((filterListObject) =>
@@ -285,7 +288,7 @@ export default function GrantPeriodTable() {
 			});
 		}
 	}, [filterList]);
-	console.log("queryFilter :>> ", queryFilter);
+
 	let filter = { project: dashboardData?.project?.id };
 	try {
 		data = apolloClient.readQuery(

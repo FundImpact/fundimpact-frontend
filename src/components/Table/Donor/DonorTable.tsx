@@ -125,6 +125,11 @@ function DonorTable({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
+	//this means new element has been added to the list
+	useEffect(() => {
+		setPage(0);
+	}, [count, setPage]);
+
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};

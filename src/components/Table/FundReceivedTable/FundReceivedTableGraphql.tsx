@@ -32,6 +32,12 @@ const mapIdToName = (
 	);
 };
 
+const getDefaultFilterList = () => ({
+	amount: "",
+	reporting_date: "",
+	project_donor: [],
+});
+
 const convertProjectDonorListToIdNameFormat = (
 	projectDonors: { id: string; donor: { id: string; name: string } }[]
 ) => projectDonors.map((projectDonor) => ({ id: projectDonor.id, name: projectDonor.donor.name }));
@@ -43,11 +49,7 @@ function FundReceivedTableGraphql() {
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
-	}>({
-		amount: "",
-		reporting_date: "",
-		project_donor: [],
-	});
+	}>(getDefaultFilterList());
 
 	const [getProjectDonors, { data }] = useLazyQuery<{
 		projDonors: { id: string; donor: { id: string; name: string } }[];
@@ -87,8 +89,9 @@ function FundReceivedTableGraphql() {
 			setQueryFilter({
 				project: dashboardData?.project?.id || "",
 			});
+			setFilterList(getDefaultFilterList());
 		}
-	}, [dashboardData]);
+	}, [dashboardData, setFilterList, setQueryFilter]);
 
 	useEffect(() => {
 		if (filterList) {
