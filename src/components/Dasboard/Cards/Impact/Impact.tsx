@@ -26,7 +26,7 @@ export default function Impact() {
 	}
 	return (
 		<Grid container spacing={2}>
-			{!data?.impactTargetSdgCount && (
+			{data?.impactTargetSdgCount.length === 0 && (
 				<Grid item md={12} justify="center" container>
 					<Box mt={2} color="text.disabled">
 						<Typography variant="subtitle2" noWrap>
