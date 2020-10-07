@@ -26,9 +26,11 @@ export default function ProgressDialog({
 			maxWidth="sm"
 			fullWidth
 		>
-			<DialogTitle id="simple-dialog-title">{`${title} ${
-				filterTitle ? "By " + filterTitle : ""
-			}`}</DialogTitle>
+			{title && (
+				<DialogTitle id="simple-dialog-title">{`${title} ${
+					filterTitle ? "By " + filterTitle : ""
+				}`}</DialogTitle>
+			)}
 			<Box m={1}>{children}</Box>
 		</Dialog>
 	);

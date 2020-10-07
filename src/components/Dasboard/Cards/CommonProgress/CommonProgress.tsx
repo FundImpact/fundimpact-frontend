@@ -1,5 +1,5 @@
-import { Box, Grid, Typography, useTheme } from "@material-ui/core";
-import React from "react";
+import { Box, Divider, Grid, Typography, useTheme } from "@material-ui/core";
+import React, { ReactText } from "react";
 import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 export default function CommonProgress({
@@ -20,10 +20,8 @@ export default function CommonProgress({
 	};
 	size?: "card" | "dialog";
 	norBarDisplayConfig?: {
-		sum: number;
-		sum_two: number;
-		label?: string;
-		label_two?: string;
+		sum: number | ReactText;
+		sum_two: number | ReactText;
 	};
 }) {
 	return (
@@ -60,23 +58,21 @@ export default function CommonProgress({
 			{noBarDisplay && (
 				<>
 					<Grid item xs={4}>
-						<Box m={1} mt={0}>
+						<Box>
 							<Typography variant="subtitle2" noWrap>
 								{title}
 							</Typography>
 						</Box>
 					</Grid>
-					<Grid item xs={4} container>
-						<Grid item xs={11} container justify="flex-end">
-							<Typography variant="subtitle2" color="secondary">{`₹
-						${norBarDisplayConfig?.sum}`}</Typography>
-						</Grid>
+					<Grid item xs={4}>
+						<Typography variant="subtitle2" color="secondary">
+							{norBarDisplayConfig?.sum}
+						</Typography>
 					</Grid>
-					<Grid item xs={4} container>
-						<Grid item xs={11} container justify="flex-end">
-							<Typography variant="subtitle2" color="secondary">{`₹
-						${norBarDisplayConfig?.sum_two}`}</Typography>
-						</Grid>
+					<Grid item xs={4}>
+						<Typography variant="subtitle2" color="secondary">
+							{norBarDisplayConfig?.sum_two}
+						</Typography>
 					</Grid>
 				</>
 			)}

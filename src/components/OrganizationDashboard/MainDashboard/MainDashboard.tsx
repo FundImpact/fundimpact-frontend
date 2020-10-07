@@ -217,83 +217,83 @@ export default function MainOrganizationDashboard() {
 				</Box>
 				<Fade in={checked}>
 					<Grid container className={classes.bottonContainer}>
-						<Grid item md={3}>
-							<DashboardCard
-								title={intl.formatMessage({
-									id: "donorsCardTitle",
-									defaultMessage: "Donors",
-									description:
-										"This text will be show on dashboard for donor card title",
-								})}
-								cardFilter={[
-									{ label: allocated, base: "Allocated" },
-									{ label: received, base: "Received" },
-								]}
-								type={CARD_TYPES.PROGRESS}
-								cardOf={CARD_OF.DONOR}
-								cardHeight="240px"
-							/>
-						</Grid>
-						<Grid item md={3}>
-							<DashboardCard
-								cardFilter={[
-									{ label: expenditure, base: "Expenditure" },
-									{ label: allocation, base: "Allocation" },
-								]}
-								title={intl.formatMessage({
-									id: "budgetCategoryCardTitle",
-									defaultMessage: "Budget Category",
-									description:
-										"This text will be show on dashboard for budget category card title",
-								})}
-								type={CARD_TYPES.PIE}
-								cardOf={CARD_OF.BUDGET}
-								cardHeight="240px"
-								pieCardConfig={{
-									moreButtonLink: "/settings/budget",
-								}}
-							/>
-						</Grid>
-						<Grid item md={3}>
-							<DashboardCard
-								title={intl.formatMessage({
-									id: "deliverableCategoryCardTitle",
-									defaultMessage: "Deliverable Category",
-									description:
-										"This text will be show on dashboard for deliverable category card title",
-								})}
-								cardFilter={[
-									{ label: projects, base: "Projects" },
-									{ label: achieved, base: "Achieved" },
-								]}
-								type={CARD_TYPES.PIE}
-								cardHeight="240px"
-								pieCardConfig={{
-									moreButtonLink: "/settings/deliverable",
-								}}
-								cardOf={CARD_OF.DELIVERABLE}
-							/>
-						</Grid>
-						<Grid item md={3}>
-							<DashboardCard
-								title={intl.formatMessage({
-									id: "impactCategoryCardTitle",
-									defaultMessage: "Impact Category",
-									description:
-										"This text will be show on dashboard for impact category card title",
-								})}
-								type={CARD_TYPES.PIE}
-								cardFilter={[
-									{ label: projects, base: "Projects" },
-									{ label: achieved, base: "Achieved" },
-								]}
-								cardHeight="240px"
-								pieCardConfig={{
-									moreButtonLink: "/settings/impact",
-								}}
-								cardOf={CARD_OF.IMPACT}
-							/>
-						</Grid>
+						{checked && (
+							<>
+								<Grid item md={3}>
+									<DashboardCard
+										// title={intl.formatMessage({
+										// 	id: "donorsCardTitle",
+										// 	defaultMessage: "Donors",
+										// 	description:
+										// 		"This text will be show on dashboard for donor card title",
+										// })}
+										type={CARD_TYPES.PROGRESS}
+										cardOf={CARD_OF.DONOR}
+										cardHeight="240px"
+									/>
+								</Grid>
+								<Grid item md={3}>
+									<DashboardCard
+										cardFilter={[
+											{ label: expenditure, base: "Expenditure" },
+											{ label: allocation, base: "Allocation" },
+										]}
+										title={intl.formatMessage({
+											id: "budgetCategoryCardTitle",
+											defaultMessage: "Budget Category",
+											description:
+												"This text will be show on dashboard for budget category card title",
+										})}
+										type={CARD_TYPES.PIE}
+										cardOf={CARD_OF.BUDGET}
+										cardHeight="240px"
+										pieCardConfig={{
+											moreButtonLink: "/settings/budget",
+										}}
+									/>
+								</Grid>
+								<Grid item md={3}>
+									<DashboardCard
+										title={intl.formatMessage({
+											id: "deliverableCategoryCardTitle",
+											defaultMessage: "Deliverable Category",
+											description:
+												"This text will be show on dashboard for deliverable category card title",
+										})}
+										cardFilter={[
+											{ label: projects, base: "Projects" },
+											{ label: achieved, base: "Achieved" },
+										]}
+										type={CARD_TYPES.PIE}
+										cardHeight="240px"
+										pieCardConfig={{
+											moreButtonLink: "/settings/deliverable",
+										}}
+										cardOf={CARD_OF.DELIVERABLE}
+									/>
+								</Grid>
+								<Grid item md={3}>
+									<DashboardCard
+										title={intl.formatMessage({
+											id: "impactCategoryCardTitle",
+											defaultMessage: "Impact Category",
+											description:
+												"This text will be show on dashboard for impact category card title",
+										})}
+										type={CARD_TYPES.PIE}
+										cardFilter={[
+											{ label: projects, base: "Projects" },
+											{ label: achieved, base: "Achieved" },
+										]}
+										cardHeight="240px"
+										pieCardConfig={{
+											moreButtonLink: "/settings/impact",
+										}}
+										cardOf={CARD_OF.IMPACT}
+									/>
+								</Grid>
+							</>
+						)}
 					</Grid>
 				</Fade>
 			</Grid>

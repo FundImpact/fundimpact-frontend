@@ -230,13 +230,12 @@ export function GetCardTypeAndValues(props: CardProps) {
 						progressCardConfig.dataToDisplay.push({
 							...recData,
 							sum_two: allData.sum,
-							label: "Received",
-							labelTwo: "Allocated",
 						});
 					}
 				});
 			});
 
+			progressCardConfig.noBarDisplayTitle = ["Donors", "Received", "Allocated"];
 			progressCardConfig.noBarDisplay = true;
 		}
 	}

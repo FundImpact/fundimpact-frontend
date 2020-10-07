@@ -70,6 +70,7 @@ export type ProgressCardConfig = {
 	dialogTitle?: string;
 	dialogFilterTitle?: string;
 	noBarDisplay?: boolean;
+	noBarDisplayTitle?: string[];
 	loading?: boolean;
 };
 
