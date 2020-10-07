@@ -54,15 +54,12 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 											key={index}
 											title={data.name}
 											date={"2017-12-03T10:15:30.000Z"}
-											percentage={
-												data.sum
-													? data.sum
-													: data.avg_value_two && data.avg_value
-													? Math.max(data.avg_value_two, data.avg_value)
-													: data.avg_value
-													? data.avg_value
-													: 0
-											}
+											norBarDisplayConfig={{
+												sum: data.sum ? data.sum : 0,
+												sum_two: data.sum_two ? data.sum_two : 0,
+												label: data.label,
+												label_two: data.labelTwo,
+											}}
 											chartConfig={{
 												primarySegmentedMeasureData: data.label
 													? [
@@ -122,15 +119,12 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 										key={index}
 										title={data.name}
 										// date={"2017-12-03T10:15:30.000Z"}
-										percentage={
-											data.sum
-												? data.sum
-												: data.avg_value_two && data.avg_value
-												? Math.max(data.avg_value_two, data.avg_value)
-												: data.avg_value
-												? data.avg_value
-												: 0
-										}
+										norBarDisplayConfig={{
+											sum: data.sum ? data.sum : 0,
+											sum_two: data.sum_two ? data.sum_two : 0,
+											label: data.label,
+											label_two: data.labelTwo,
+										}}
 										chartConfig={{
 											primarySegmentedMeasureData: data.label
 												? [

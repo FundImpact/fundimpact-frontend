@@ -4,8 +4,10 @@ import { ProjectCardConfig } from "../../../../models/cards/cards";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { Skeleton } from "@material-ui/lab";
+import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 export function ProjectCard(projectCardConfig: ProjectCardConfig) {
+	const { chartConfig } = projectCardConfig;
 	if (!projectCardConfig.mainHeading) {
 		return (
 			<>
@@ -30,17 +32,19 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 	}
 	return (
 		<>
-			<Grid item md={5} justify="center" container>
+			<Grid item md={6} justify="center" container>
 				<Box ml={1}>
 					<Box mt={2} ml={3}>
 						<Typography variant="h6">{projectCardConfig.mainHeading}</Typography>
 					</Box>
 					{projectCardConfig.title && (
-						<Typography variant="subtitle1">{projectCardConfig.title}</Typography>
+						<Typography variant="subtitle1" noWrap>
+							{projectCardConfig.title}
+						</Typography>
 					)}
 				</Box>
 			</Grid>
-			<Grid item md={7}>
+			<Grid item md={5}>
 				<Box ml={1} mt={2} display="flex">
 					<AssignmentTurnedInIcon color="secondary" />
 					<Box ml={1}>
@@ -51,34 +55,47 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 					</Box>
 				</Box>
 				{/* <BorderLinearProgress variant="determinate" value={60} /> */}
-				<Box ml={1} mt={2}>
-					{projectCardConfig.firstBarHeading && (
-						<Typography variant="caption">
-							{" "}
-							{projectCardConfig.firstBarHeading}
-						</Typography>
-					)}
-				</Box>
-				<BorderLinearProgress
-					variant="determinate"
-					value={projectCardConfig.firstBarValue}
-					color={"primary"}
-				/>
+				{projectCardConfig.firstBarValue && (
+					<>
+						<Box ml={1} mt={2}>
+							{projectCardConfig.firstBarHeading && (
+								<Typography variant="caption" noWrap>
+									{" "}
+									{projectCardConfig.firstBarHeading}
+								</Typography>
+							)}
+						</Box>
+						<BorderLinearProgress
+							variant="determinate"
+							value={projectCardConfig.firstBarValue}
+							color={"primary"}
+						/>
+					</>
+				)}
 			</Grid>
 
 			<Grid item md={12}>
-				<Box ml={1} mt={2}>
-					{projectCardConfig.secondBarHeading && (
-						<Typography variant="caption">
-							{projectCardConfig.secondBarHeading}
-						</Typography>
-					)}
+				<Box
+					style={{ height: "60px", width: "100%" }}
+					mt={projectCardConfig.firstBarValue ? 2 : 3}
+				>
+					<ChartBullet
+						ariaTitle={projectCardConfig.secondBarHeading}
+						comparativeErrorMeasureData={chartConfig?.comparativeErrorMeasureData}
+						labels={({ datum }: { datum: { name: string; y: string } }) =>
+							`${datum.name}: ${datum.y}`
+						}
+						padding={{
+							left: 10,
+							right: 10,
+							bottom: 100,
+						}}
+						primarySegmentedMeasureData={chartConfig?.primarySegmentedMeasureData}
+						height={100}
+						themeColor={ChartThemeColor.green}
+						qualitativeRangeData={chartConfig?.qualitativeRangeData}
+					/>
 				</Box>
-				<BorderLinearProgress
-					variant="determinate"
-					value={projectCardConfig.secondBarValue}
-					color={"secondary"}
-				/>
 			</Grid>
 		</>
 	);

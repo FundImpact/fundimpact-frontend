@@ -1,32 +1,31 @@
 import { Box, Grid, Typography, useTheme } from "@material-ui/core";
 import React from "react";
-import BorderLinearProgress from "../../../BorderLinearProgress";
-import { ChartAxis, ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
+import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 export default function CommonProgress({
 	title,
 	date,
-	percentage,
 	noBarDisplay = false,
+	norBarDisplayConfig,
 	chartConfig,
 	size = "card",
 }: {
 	title: string;
 	date?: string;
-	percentage: number;
+
 	noBarDisplay?: boolean;
 	chartConfig?: {
 		primarySegmentedMeasureData: { name: string; y: number }[];
 		qualitativeRangeData: { name: string; y: number }[];
 	};
 	size?: "card" | "dialog";
+	norBarDisplayConfig?: {
+		sum: number;
+		sum_two: number;
+		label?: string;
+		label_two?: string;
+	};
 }) {
-	const theme = useTheme();
-	let maxDomain = 100;
-	if (percentage > 100) {
-		maxDomain = percentage;
-	}
-
 	return (
 		<Grid container style={{ width: "100%" }}>
 			{!noBarDisplay && (
@@ -44,7 +43,6 @@ export default function CommonProgress({
 						<ChartBullet
 							ariaTitle={title}
 							comparativeErrorMeasureData={[{ name: "Target", y: 100 }]}
-							maxDomain={{ y: maxDomain }}
 							labels={({ datum }) => `${datum.name}: ${datum.y}`}
 							padding={{
 								left: 20, // Adjusted to accommodate labels
@@ -61,17 +59,23 @@ export default function CommonProgress({
 			)}
 			{noBarDisplay && (
 				<>
-					<Grid item md={6}>
+					<Grid item xs={4}>
 						<Box m={1} mt={0}>
 							<Typography variant="subtitle2" noWrap>
 								{title}
 							</Typography>
 						</Box>
 					</Grid>
-					<Grid item md={6} container>
-						<Grid item md={11} container justify="flex-end">
+					<Grid item xs={4} container>
+						<Grid item xs={11} container justify="flex-end">
 							<Typography variant="subtitle2" color="secondary">{`₹
-						${percentage}`}</Typography>
+						${norBarDisplayConfig?.sum}`}</Typography>
+						</Grid>
+					</Grid>
+					<Grid item xs={4} container>
+						<Grid item xs={11} container justify="flex-end">
+							<Typography variant="subtitle2" color="secondary">{`₹
+						${norBarDisplayConfig?.sum_two}`}</Typography>
 						</Grid>
 					</Grid>
 				</>

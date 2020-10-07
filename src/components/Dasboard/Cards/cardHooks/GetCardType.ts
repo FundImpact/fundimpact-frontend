@@ -34,8 +34,12 @@ export function GetCardTypeAndValues(props: CardProps) {
 		firstBarHeading: "",
 		secondBarHeading: "",
 		firstBarValue: 0,
-		secondBarValue: 0,
 		rightUpperTitle: "",
+		chartConfig: {
+			primarySegmentedMeasureData: [],
+			qualitativeRangeData: [],
+			comparativeErrorMeasureData: [],
+		},
 	};
 	let pieCardConfig: PieCardConfig = {
 		loading: true,
@@ -71,7 +75,13 @@ export function GetCardTypeAndValues(props: CardProps) {
 				firstBarHeading: `${avgAchivementImpactByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementImpactByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
-				secondBarValue: Number(achiveImpactVsTargetByOrg),
+				chartConfig: {
+					primarySegmentedMeasureData: [
+						{ name: "Achieved", y: achiveImpactVsTargetByOrg },
+					],
+					qualitativeRangeData: [],
+					comparativeErrorMeasureData: [{ name: "Target", y: totalImpactProjectByOrg }],
+				},
 			};
 		}
 		if (props.cardOf === CARD_OF.BUDGET) {
@@ -88,15 +98,12 @@ export function GetCardTypeAndValues(props: CardProps) {
 				title: props.projectCardConfig.title,
 				mainHeading: abbreviateNumber(budgetTargetSum),
 				rightUpperTitle: `${completedProjectCount} / ${orgProjectCount} Project`,
-				firstBarHeading: `${abbreviateNumber(budgetSpentValue)} ${
-					props.projectCardConfig.firstBarHeading
-				}`,
-				firstBarValue:
-					budgetSpentValue && budgetTargetSum
-						? (budgetSpentValue / budgetTargetSum) * 100
-						: 0,
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
-				secondBarValue: Number(fundRecipetValuesByOrg),
+				chartConfig: {
+					primarySegmentedMeasureData: [{ name: "Spend", y: budgetSpentValue }],
+					qualitativeRangeData: [{ name: "Received", y: fundRecipetValuesByOrg }],
+					comparativeErrorMeasureData: [{ name: "Target", y: budgetTargetSum }],
+				},
 			};
 		}
 
@@ -116,7 +123,13 @@ export function GetCardTypeAndValues(props: CardProps) {
 				firstBarHeading: `${avgAchivementDeliverableByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementDeliverableByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
-				secondBarValue: Number(achiveDeliverableVsTargetByOrg),
+				chartConfig: {
+					primarySegmentedMeasureData: [
+						{ name: "Achieved", y: achiveDeliverableVsTargetByOrg },
+					],
+					qualitativeRangeData: [],
+					comparativeErrorMeasureData: [{ name: "Target", y: totalDeliverableByOrg }],
+				},
 			};
 		}
 	}
@@ -210,7 +223,20 @@ export function GetCardTypeAndValues(props: CardProps) {
 			let { data: donors } = GetDonors(props.currentFilter?.base, {
 				variables: { filter: { organization: organization } },
 			});
-			progressCardConfig.dataToDisplay = donors;
+
+			donors.received?.forEach((recData: ProgressCardResponse) => {
+				donors.allocation?.forEach((allData: ProgressCardResponse) => {
+					if (recData.id === allData.id) {
+						progressCardConfig.dataToDisplay.push({
+							...recData,
+							sum_two: allData.sum,
+							label: "Received",
+							labelTwo: "Allocated",
+						});
+					}
+				});
+			});
+
 			progressCardConfig.noBarDisplay = true;
 		}
 	}

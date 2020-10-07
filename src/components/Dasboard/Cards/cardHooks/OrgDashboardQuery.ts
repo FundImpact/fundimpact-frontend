@@ -153,12 +153,10 @@ export function GetDonors(
 	let { data: donorsAllocationValue } = useQuery(GET_DONOR_BY_FUND_ALLOCATED, queryFilter);
 	let { data: donorsRecievedValue } = useQuery(GET_DONOR_BY_FUND_RECEIVED, queryFilter);
 	return {
-		data:
-			donorsRecievedValue && filter === "Received"
-				? donorsRecievedValue.donorsRecievedValue
-				: donorsAllocationValue && filter === "Allocated"
-				? donorsAllocationValue.donorsAllocationValue
-				: null,
+		data: {
+			received: donorsRecievedValue?.donorsRecievedValue,
+			allocation: donorsAllocationValue?.donorsAllocationValue,
+		},
 	};
 }
 

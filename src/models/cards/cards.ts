@@ -37,10 +37,14 @@ export type ProjectCardConfig = {
 	title: string;
 	mainHeading: string | number;
 	rightUpperTitle: string;
-	firstBarHeading: string;
-	firstBarValue: number;
+	firstBarHeading?: string;
+	firstBarValue?: number;
 	secondBarHeading: string;
-	secondBarValue: number;
+	chartConfig: {
+		primarySegmentedMeasureData: { name: string; y: number }[];
+		qualitativeRangeData: { name: string; y: number }[];
+		comparativeErrorMeasureData: { name: string; y: number }[];
+	};
 };
 
 export type PieCardConfig = {
@@ -56,6 +60,7 @@ export type ProgressCardResponse = {
 	avg_value?: number;
 	avg_value_two?: number;
 	sum?: number;
+	sum_two?: number;
 	label?: string;
 	labelTwo: string;
 };
