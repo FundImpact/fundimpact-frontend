@@ -191,37 +191,41 @@ function CommonTable<T extends { id: string }>({
 										{heading.renderComponent ? (
 											heading.renderComponent()
 										) : (
-											<>
-												<FormattedMessage
-													id={
-														"tableHeading" +
-														heading.label.replace(/ /g, "")
-													}
-													description={`This text will be shown on table for ${heading.label} heading`}
-													defaultMessage={`${heading.label}`}
-												/>
-												{order && heading.keyMapping && (
-													<TableSortLabel
-														direction={order}
-														active={orderBy === heading.keyMapping}
-														onClick={() => {
-															if (orderBy === heading.keyMapping) {
-																setOrder &&
-																	setOrder(
-																		order === "asc"
-																			? "desc"
-																			: "asc"
-																	);
-															} else {
-																setOrderBy &&
-																	setOrderBy(
-																		heading.keyMapping || ""
-																	);
-															}
-														}}
-													></TableSortLabel>
-												)}
-											</>
+											<Grid container>
+												<Grid item xs={12} style={{ display: "flex" }}>
+													<FormattedMessage
+														id={
+															"tableHeading" +
+															heading.label.replace(/ /g, "")
+														}
+														description={`This text will be shown on table for ${heading.label} heading`}
+														defaultMessage={`${heading.label}`}
+													/>
+													{order && heading.keyMapping && (
+														<TableSortLabel
+															direction={order}
+															active={orderBy === heading.keyMapping}
+															onClick={() => {
+																if (
+																	orderBy === heading.keyMapping
+																) {
+																	setOrder &&
+																		setOrder(
+																			order === "asc"
+																				? "desc"
+																				: "asc"
+																		);
+																} else {
+																	setOrderBy &&
+																		setOrderBy(
+																			heading.keyMapping || ""
+																		);
+																}
+															}}
+														></TableSortLabel>
+													)}
+												</Grid>
+											</Grid>
 										)}
 									</TableCell>
 							  ))

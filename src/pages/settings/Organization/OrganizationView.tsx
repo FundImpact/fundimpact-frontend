@@ -193,7 +193,6 @@ function OrganizationView({
 	}, []);
 
 	const intl = useIntl();
-
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
@@ -208,7 +207,6 @@ function OrganizationView({
 								onSubmit={onSubmit}
 								validate={validate}
 								isInitialValid={() => validateInitialValue(initialValues)}
-								enableReinitialize
 							>
 								{(formik) => {
 									formikInstanceRef.current = formik;

@@ -15,7 +15,7 @@ import {
 } from "../../../models/organisation/query";
 import { FetchResult, MutationFunctionOptions, ApolloCache } from "@apollo/client";
 import useFileUpload from "../../../hooks/fileUpload";
-import { SimplePaletteColorOptions } from "@material-ui/core";
+import { SimplePaletteColorOptions, CircularProgress, Box } from "@material-ui/core";
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { GET_ORGANISATIONS } from "../../../graphql";
 
@@ -37,7 +37,7 @@ function OrganizationContainer({
 			| undefined
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
-	(organizationFormInputFields[4].optionsArray as ICountry[]) = countryList;
+	(inputFields[4].optionsArray as ICountry[]) = countryList;
 	let { uploadFile, loading: fileUploading } = useFileUpload();
 
 	const dashboardData = useDashBoardData();
@@ -150,6 +150,19 @@ function OrganizationContainer({
 		},
 		[updateOrganization, initialValues, uploadFile, notificationDispatch]
 	);
+
+	if (!dashboardData || !countryList?.length) {
+		return (
+			<Box
+				position="absolute"
+				left="50%"
+				top="50%"
+				style={{ transform: "translate(-50%, -50%)" }}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return (
 		<OrganizationView
