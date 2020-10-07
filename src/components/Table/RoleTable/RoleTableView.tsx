@@ -21,12 +21,16 @@ import {
 import { getValueFromObject } from "../../../utils";
 import { Link } from "react-router-dom";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
-const tableHeadings = [{ label: "#" }, { label: "Name" }, { label: "" }];
+const tableHeadings = [{ label: "#" }, { label: "Name", keyMapping: "name" }, { label: "" }];
 
 const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
 		th: { color: theme.palette.primary.main, fontSize: "13px" },
+		tbody: {
+			"& tr:nth-child(odd) td": { background: theme.palette.action.hover },
+		},
 	})
 );
 
@@ -43,6 +47,8 @@ function RoleTableView({
 	count,
 	userRoleEditAccess,
 	loading,
+	order,
+	setOrder,
 }: {
 	userRoles: { id: string; name: string; type: string }[];
 	page: number;
@@ -51,7 +57,11 @@ function RoleTableView({
 	count: number;
 	userRoleEditAccess: boolean;
 	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 }) {
+	const dashboardData = useDashBoardData();
+	const tableStyles = styledTable();
 	if (loading) {
 		return <TableSkeleton />;
 	}
@@ -59,12 +69,11 @@ function RoleTableView({
 	if (!userRoles.length) {
 		return (
 			<Typography align="center" variant="h5">
-				No Roles Created
+				No Roles
 			</Typography>
 		);
 	}
 
-	const tableStyles = styledTable();
 	let tableHeader = filterTableHeadingAccordingToUserAccess(userRoleEditAccess);
 
 	return (
@@ -85,38 +94,28 @@ function RoleTableView({
 											align="left"
 										>
 											{heading.label}
-											{/* {heading.keyMapping && (
+											{heading.keyMapping && (
 												<TableSortLabel
-													active={orderBy === heading.keyMapping}
+													active={heading.keyMapping == "name"}
 													onClick={() => {
-														if (orderBy === heading.keyMapping) {
-															setOrder &&
-																setOrder(
-																	order === "asc" ? "desc" : "asc"
-																);
-														} else {
-															setOrderBy &&
-																setOrderBy(
-																	heading.keyMapping || ""
-																);
-														}
+														setOrder(order === "asc" ? "desc" : "asc");
 													}}
 													direction={order}
 												></TableSortLabel>
-											)} */}
+											)}
 										</TableCell>
 									)
 								)}
 							</TableRow>
 						</TableHead>
-						<TableBody>
+						<TableBody className={tableStyles.tbody}>
 							{userRoles.map(
 								(
 									role: { id: string; name: string; type: string },
 									index: number
 								) => (
 									<TableRow key={role.id}>
-										<TableCell align="left">{index + 1}</TableCell>
+										<TableCell align="left">{page * 10 + index + 1}</TableCell>
 										{keyNames.map((keyName: string, i: number) => {
 											return (
 												<TableCell key={i} align="left">
@@ -126,52 +125,56 @@ function RoleTableView({
 										})}
 										{userRoleEditAccess && (
 											<TableCell align="left">
-												<Button
-													variant="contained"
-													size="small"
-													color="primary"
-													component={Link}
-													to="/settings/add_role"
-													state={{ role: role.id }}
-												>
-													Edit Role
-												</Button>
+												{role.type !==
+													`admin-org-${dashboardData?.organization?.id}` && (
+													<Button
+														variant="contained"
+														size="small"
+														color="primary"
+														component={Link}
+														to="/settings/add_role"
+														state={{
+															role: role.id,
+															name: role.name,
+														}}
+													>
+														Edit Role
+													</Button>
+												)}
 											</TableCell>
 										)}
 									</TableRow>
 								)
 							)}
 						</TableBody>
-						{
-							// <TableFooter>
-							// 	<TableRow>
-							// 		<TablePagination
-							// 			rowsPerPageOptions={[]}
-							// 			colSpan={8}
-							// 			count={count}
-							// 			rowsPerPage={count > 10 ? 10 : count}
-							// 			page={page}
-							// 			SelectProps={{
-							// 				inputProps: { "aria-label": "rows per page" },
-							// 				native: true,
-							// 			}}
-							// 			onChangePage={(
-							// 				event: React.MouseEvent<HTMLButtonElement> | null,
-							// 				newPage: number
-							// 			) => {
-							// 				if (newPage > page) {
-							// 					changePage();
-							// 				} else {
-							// 					changePage(true);
-							// 				}
-							// 				setPage(newPage);
-							// 			}}
-							// 			onChangeRowsPerPage={() => {}}
-							// 			style={{ paddingRight: "40px" }}
-							// 		/>
-							// 	</TableRow>
-							// </TableFooter>
-						}
+						<TableFooter>
+							<TableRow>
+								<TablePagination
+									page={page}
+									count={count}
+									rowsPerPage={count > 10 ? 10 : count}
+									colSpan={8}
+									SelectProps={{
+										inputProps: { "aria-label": "rows per page" },
+										native: true,
+									}}
+									onChangeRowsPerPage={() => {}}
+									onChangePage={(
+										event: React.MouseEvent<HTMLButtonElement> | null,
+										newPage: number
+									) => {
+										if (newPage > page) {
+											changePage();
+										} else {
+											changePage(true);
+										}
+										setPage(newPage);
+									}}
+									style={{ paddingRight: "40px" }}
+									rowsPerPageOptions={[]}
+								/>
+							</TableRow>
+						</TableFooter>
 					</Table>
 				</TableContainer>
 			</Grid>

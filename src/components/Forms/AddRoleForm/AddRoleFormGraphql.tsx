@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import AddRoleFormContainer from "./AddRoleFormContainer";
 import { useMutation, useLazyQuery } from "@apollo/client";
-import { CREATE_ORGANIZATION_USER_ROLE } from "../../../graphql/AddRole/mutation";
+import {
+	CREATE_ORGANIZATION_USER_ROLE,
+	UPDATE_ORGANIZATION_USER_ROLE,
+} from "../../../graphql/AddRole/mutation";
 import {
 	ICreateOrganizationUserRole,
 	ICreateOrganizationUserRoleVariables,
+	IUpdateOrganizationUserRoleVariables,
+	IUpdateOrganizationUserRole,
 } from "../../../models/AddRole/mutation";
 import { useLocation } from "react-router-dom";
 import { FORM_ACTIONS } from "../../../models/constants";
@@ -13,10 +18,15 @@ import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { useAuth } from "../../../contexts/userContext";
 
 function AddRoleFormGraphql() {
-	const [createOrganizationUserRole, { loading }] = useMutation<
+	const [createOrganizationUserRole, { loading: creatingRole }] = useMutation<
 		ICreateOrganizationUserRole,
 		ICreateOrganizationUserRoleVariables
 	>(CREATE_ORGANIZATION_USER_ROLE);
+
+	const [updateOrganizationUserRole, { loading: updatingRole }] = useMutation<
+		IUpdateOrganizationUserRole,
+		IUpdateOrganizationUserRoleVariables
+	>(UPDATE_ORGANIZATION_USER_ROLE);
 
 	const user = useAuth();
 	const location = useLocation();
@@ -37,8 +47,9 @@ function AddRoleFormGraphql() {
 
 	return (
 		<AddRoleFormContainer
-			roleCreationLoading={loading}
+			roleCreationLoading={creatingRole || updatingRole}
 			createOrganizationUserRole={createOrganizationUserRole}
+			updateOrganizationUserRole={updateOrganizationUserRole}
 			userRoleData={userRoleData}
 			formType={
 				(location?.state as { role: string })?.role
