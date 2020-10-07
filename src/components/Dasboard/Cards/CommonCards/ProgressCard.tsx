@@ -12,9 +12,10 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 		dialogTitle,
 		noBarDisplay = false,
 		dialogFilterTitle,
+		loading,
 	} = progressCardConfig;
 	const [progressDialogOpen, setProgressDialogOpen] = React.useState(false);
-	if (!dataToDisplay) {
+	if (!dataToDisplay || loading) {
 		return (
 			<Grid item md={12}>
 				<Skeleton variant="text" animation="wave"></Skeleton>

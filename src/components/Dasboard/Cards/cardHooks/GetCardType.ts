@@ -176,7 +176,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 
 	if (props.type === CARD_TYPES.PROGRESS) {
 		if (props.cardOf === CARD_OF.BUDGET) {
-			let { data: budgetProject } = GetBudgetProjects({
+			let { data: budgetProject, loading } = GetBudgetProjects({
 				variables: { filter: { organization: organization } },
 			});
 
@@ -187,11 +187,12 @@ export function GetCardTypeAndValues(props: CardProps) {
 							...expData,
 							avg_value_two: allData.avg_value,
 							label: "Expenditure",
-							labelTwo: "Allocated",
+							labelTwo: "Received",
 						});
 					}
 				});
 			});
+			progressCardConfig.loading = loading;
 		}
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
 			let { deliverableAchieved } = GetDeliverableProjects({
