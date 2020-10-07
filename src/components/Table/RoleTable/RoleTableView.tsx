@@ -14,6 +14,8 @@ import {
 	TableBody,
 	Button,
 	Grid,
+	TableFooter,
+	TablePagination,
 } from "@material-ui/core";
 import { getValueFromObject } from "../../../utils";
 import { Link } from "react-router-dom";
@@ -28,8 +30,27 @@ const styledTable = makeStyles((theme: Theme) =>
 
 const keyNames = ["name"];
 
-function RoleTableView({ userRoles }: { userRoles: { id: string; name: string; type: string }[] }) {
+const filterTableHeadingAccordingToUserAccess = (accessAllowed: boolean) =>
+	accessAllowed ? tableHeadings : tableHeadings.slice(0, -1);
+
+function RoleTableView({
+	userRoles,
+	page,
+	setPage,
+	changePage,
+	count,
+	userRoleEditAccess,
+}: {
+	userRoles: { id: string; name: string; type: string }[];
+	page: number;
+	setPage: (value: React.SetStateAction<number>) => void;
+	changePage: (prev?: boolean) => void;
+	count: number;
+	userRoleEditAccess: boolean;
+}) {
 	const tableStyles = styledTable();
+	let tableHeader = filterTableHeadingAccordingToUserAccess(userRoleEditAccess);
+
 	return (
 		<Grid container justify="center">
 			<Grid item xs={7}>
@@ -37,7 +58,7 @@ function RoleTableView({ userRoles }: { userRoles: { id: string; name: string; t
 					<Table aria-label="simple table">
 						<TableHead>
 							<TableRow color="primary">
-								{tableHeadings.map(
+								{tableHeader.map(
 									(
 										heading: { label: string; keyMapping?: string },
 										index: number
@@ -87,22 +108,54 @@ function RoleTableView({ userRoles }: { userRoles: { id: string; name: string; t
 												</TableCell>
 											);
 										})}
-										<TableCell align="left">
-											<Button
-												variant="contained"
-												size="small"
-												color="primary"
-												component={Link}
-												to="/settings/add_role"
-												state={{ role: role.id }}
-											>
-												Edit Role
-											</Button>
-										</TableCell>
+										{userRoleEditAccess && (
+											<TableCell align="left">
+												<Button
+													variant="contained"
+													size="small"
+													color="primary"
+													component={Link}
+													to="/settings/add_role"
+													state={{ role: role.id }}
+												>
+													Edit Role
+												</Button>
+											</TableCell>
+										)}
 									</TableRow>
 								)
 							)}
 						</TableBody>
+						{
+							// <TableFooter>
+							// 	<TableRow>
+							// 		<TablePagination
+							// 			rowsPerPageOptions={[]}
+							// 			colSpan={8}
+							// 			count={count}
+							// 			rowsPerPage={count > 10 ? 10 : count}
+							// 			page={page}
+							// 			SelectProps={{
+							// 				inputProps: { "aria-label": "rows per page" },
+							// 				native: true,
+							// 			}}
+							// 			onChangePage={(
+							// 				event: React.MouseEvent<HTMLButtonElement> | null,
+							// 				newPage: number
+							// 			) => {
+							// 				if (newPage > page) {
+							// 					changePage();
+							// 				} else {
+							// 					changePage(true);
+							// 				}
+							// 				setPage(newPage);
+							// 			}}
+							// 			onChangeRowsPerPage={() => {}}
+							// 			style={{ paddingRight: "40px" }}
+							// 		/>
+							// 	</TableRow>
+							// </TableFooter>
+						}
 					</Table>
 				</TableContainer>
 			</Grid>

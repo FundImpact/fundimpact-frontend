@@ -1,0 +1,40 @@
+{
+	"fundReceivedForm": [
+		{
+			"name": "amount",
+			"id": "amount",
+			"dataTestId": "fundReceivedAmount",
+			"testId": "fundReceivedAmountInput",
+			"label": "Amount",
+			"inputType": "textarea",
+			"required": true,
+			"size": 6,
+			"type": "number"
+		},
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"dataTestId": "fundReceivedDate",
+			"testId": "fundReceivedDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "project_donor_id",
+			"id": "project_donor_id",
+			"dataTestId": "fundReceivedCategory",
+			"testId": "fundReceivedCategoryInput",
+			"label": "Donor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"getInputValue": {},
+			"required": true,
+			"size": 12
+		}
+	]
+}

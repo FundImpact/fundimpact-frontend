@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import RoleTableView from "./RoleTableView";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
 
 function RoleTableContainer({
 	userRoles,
 }: {
 	userRoles: { id: string; name: string; type: string }[];
 }) {
-	return <RoleTableView userRoles={userRoles} />;
+	const [page, setPage] = useState(0);
+
+	const userRoleEditAccess = userHasAccess(
+		MODULE_CODES.USER_PERMISSIONS,
+		USER_PERMISSIONS_ACTIONS.UPDATE_USER_PERMISSIONS
+	);
+
+	return (
+		//change page and count written temporairly
+
+		<RoleTableView
+			userRoles={userRoles}
+			page={page}
+			setPage={setPage}
+			changePage={(prev?: boolean) => {}}
+			count={0}
+			userRoleEditAccess={userRoleEditAccess}
+		/>
+	);
 }
 
 export default RoleTableContainer;
