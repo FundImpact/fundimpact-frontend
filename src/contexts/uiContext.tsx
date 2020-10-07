@@ -10,7 +10,7 @@ import { useAuth } from "./userContext";
 import { useDashBoardData } from "./dashboardContext";
 import { primaryColor, secondaryColor } from "../models/constants";
 
-const getGlobalStylesOverride = (primaryColor: string) => {
+const getGlobalStylesOverride = (primaryColor: string, textPrimaryColor: string) => {
 	return {
 		overrides: {
 			MuiCssBaseline: {
@@ -28,6 +28,9 @@ const getGlobalStylesOverride = (primaryColor: string) => {
 						backgroundColor: primaryColor,
 						borderRadius: "50px",
 					},
+					tspan: {
+						fill: `${textPrimaryColor} !important`,
+					},
 				},
 			},
 		},
@@ -39,7 +42,8 @@ function getMuiTheme(
 	themePaletteType: "dark" | "light"
 ): ThemeOptions {
 	const globalStyleOverride = getGlobalStylesOverride(
-		(theme?.palette?.primary as SimplePaletteColorOptions)?.main || primaryColor
+		(theme?.palette?.primary as SimplePaletteColorOptions)?.main || primaryColor,
+		themePaletteType === "dark" ? "white" : "black"
 	);
 
 	if (theme) {
