@@ -21,6 +21,7 @@ import { BUDGET_TARGET_DONOR_MODULE } from "./modules/budgetTargetDonor/budgetTa
 import { ANNUAL_YEAR_MODULE } from "./modules/annualYear/annualYear.module";
 import { FINANCIAL_YEAR_ORG_MODULE } from "./modules/financialYearOrg/financialYearOrg.module";
 import { FINANCIAL_YEAR_DONOR_MODULE } from "./modules/financialYearDonor/financialYearDonor.module";
+import { FINANCIAL_YEAR_MODULE } from "./modules/financialYear/financialYear.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -80,4 +81,5 @@ export const MODULES = {
 	[MODULE_CODES.ANNUAL_YEAR]: ANNUAL_YEAR_MODULE,
 	[MODULE_CODES.FINANCIAL_YEAR_ORG]: FINANCIAL_YEAR_ORG_MODULE,
 	[MODULE_CODES.FINANCIAL_YEAR_DONOR]: FINANCIAL_YEAR_DONOR_MODULE,
+	[MODULE_CODES.FINANCIAL_YEAR]: FINANCIAL_YEAR_MODULE,
 } as const;

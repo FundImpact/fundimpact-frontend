@@ -3,4 +3,5 @@ export enum IMPACT_TARGET_ACTIONS {
 	UPDATE_IMPACT_TARGET = "update",
 	DELETE_IMPACT_TARGET = "delete",
 	FIND_IMPACT_TARGET = "find",
+	IMPACT_ACHIEVED = "project-impact_achieved",
 }
