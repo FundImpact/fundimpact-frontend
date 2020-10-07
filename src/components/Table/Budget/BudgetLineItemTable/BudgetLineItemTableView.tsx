@@ -15,6 +15,7 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { ANNUAL_YEAR_ACTIONS } from "../../../../utils/access/modules/annualYear/actions";
 import { FINANCIAL_YEAR_ORG_ACTIONS } from "../../../../utils/access/modules/financialYearOrg/actions";
 import { FINANCIAL_YEAR_DONOR_ACTIONS } from "../../../../utils/access/modules/financialYearDonor/actions";
+import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -266,7 +267,8 @@ function BudgetLineItemTableView({
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
 }) {
-	tableHeadings[3].label = getNewAmountHeaderOfTable(currency);
+	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
+	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
 
 	const budgetLineItemEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,

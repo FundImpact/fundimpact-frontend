@@ -19,6 +19,7 @@ import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/module
 import { BUDGET_CATEGORY_ACTIONS } from "../../../../utils/access/modules/budgetCategory/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
 import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
+import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 
 enum tableHeader {
 	targetName = 2,
@@ -210,7 +211,12 @@ function BudgetTargetView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
 }) {
-	tableHeadings[5].label = getNewTotalAmountHeaderOfTable(currency);
+	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
+
+	currencyFindAccess &&
+		(tableHeadings[5].label = getNewTotalAmountHeaderOfTable(
+			currencyFindAccess ? currency : ""
+		));
 
 	const budgetTargetEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
