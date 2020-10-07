@@ -150,15 +150,15 @@ function RoleTableView({
 						<TableFooter>
 							<TableRow>
 								<TablePagination
-									rowsPerPageOptions={[]}
-									colSpan={8}
+									page={page}
 									count={count}
 									rowsPerPage={count > 10 ? 10 : count}
-									page={page}
+									colSpan={8}
 									SelectProps={{
 										inputProps: { "aria-label": "rows per page" },
 										native: true,
 									}}
+									onChangeRowsPerPage={() => {}}
 									onChangePage={(
 										event: React.MouseEvent<HTMLButtonElement> | null,
 										newPage: number
@@ -170,8 +170,8 @@ function RoleTableView({
 										}
 										setPage(newPage);
 									}}
-									onChangeRowsPerPage={() => {}}
 									style={{ paddingRight: "40px" }}
+									rowsPerPageOptions={[]}
 								/>
 							</TableRow>
 						</TableFooter>
