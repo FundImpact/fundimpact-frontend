@@ -12,6 +12,16 @@
 		"country": {
 			"id": "1",
 			"name": "INDIA"
+		},
+		"theme": {
+			"palette": {
+				"primary": {
+					"main": "#5567ff"
+				},
+				"secondary": {
+					"main": "#14bb4c"
+				}
+			}
 		}
 	},
 	"organizationDetail": {
