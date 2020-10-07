@@ -27,6 +27,7 @@ function getInitialValues(props: UserProps) {
 		name: "",
 		email: "",
 		uploadPhoto: "",
+		theme: {},
 	};
 }
 
@@ -38,8 +39,10 @@ function UserForm(props: UserProps) {
 	const formAction = props.type;
 	const navigate = useNavigate();
 	let verifyAndUpdateUserForm: boolean | undefined = false;
+	let userTheme = {};
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		verifyAndUpdateUserForm = props.updateWithToken;
+		userTheme = props.data?.theme;
 	}
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
 		onCompleted() {
@@ -68,7 +71,9 @@ function UserForm(props: UserProps) {
 	React.useEffect(() => {
 		if (userResponse) {
 			if (userDispatch) {
-				userDispatch(setUser({ user: userResponse.updateUserCustomerInput }));
+				userDispatch(
+					setUser({ user: { ...userResponse.updateUserCustomerInput, theme: userTheme } })
+				);
 			}
 			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
 		}

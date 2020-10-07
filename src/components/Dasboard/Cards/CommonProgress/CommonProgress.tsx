@@ -26,30 +26,38 @@ export default function CommonProgress({
 	if (percentage > 100) {
 		maxDomain = percentage;
 	}
-	if (title?.length > 8 && !noBarDisplay) {
-		title = title.slice(0, 8).concat("..");
-	}
+
 	return (
 		<Grid container style={{ width: "100%" }}>
 			{!noBarDisplay && (
-				<Grid item style={{ height: size === "dialog" ? "90px" : "70px", width: "100%" }}>
-					<ChartBullet
-						ariaTitle={title}
-						comparativeErrorMeasureData={[{ name: "Target", y: 100 }]}
-						maxDomain={{ y: maxDomain }}
-						labels={({ datum }) => `${datum.name}: ${datum.y}`}
-						padding={{
-							left: 120, // Adjusted to accommodate labels
-							right: 30,
-							bottom: 120,
-						}}
-						primarySegmentedMeasureData={chartConfig?.primarySegmentedMeasureData}
-						title={title}
-						height={100}
-						themeColor={ChartThemeColor.green}
-						qualitativeRangeData={chartConfig?.qualitativeRangeData}
-					/>
-				</Grid>
+				<>
+					<Grid xs={3}>
+						<Box mt={1}>
+							<Typography noWrap>{title}</Typography>
+						</Box>
+					</Grid>
+					<Grid
+						item
+						xs={9}
+						style={{ height: size === "dialog" ? "90px" : "60px", width: "100%" }}
+					>
+						<ChartBullet
+							ariaTitle={title}
+							comparativeErrorMeasureData={[{ name: "Target", y: 100 }]}
+							maxDomain={{ y: maxDomain }}
+							labels={({ datum }) => `${datum.name}: ${datum.y}`}
+							padding={{
+								left: 20, // Adjusted to accommodate labels
+								right: 30,
+								bottom: 90,
+							}}
+							primarySegmentedMeasureData={chartConfig?.primarySegmentedMeasureData}
+							height={100}
+							themeColor={ChartThemeColor.green}
+							qualitativeRangeData={chartConfig?.qualitativeRangeData}
+						/>
+					</Grid>
+				</>
 			)}
 			{noBarDisplay && (
 				<>

@@ -9,6 +9,7 @@ export interface IUser {
 	profile_photo?: string;
 	uploadPhoto: string;
 	logo?: string;
+	theme: any;
 }
 
 export type UserProps =

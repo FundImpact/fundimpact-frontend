@@ -20,6 +20,7 @@ export const ProfileContainer = () => {
 		name: user?.name,
 		email: user?.email,
 		// username: user?.username,
+		theme: user?.theme,
 		profile_photo: user?.profile_photo?.id,
 		logo: user?.profile_photo?.url,
 		uploadPhoto: "",
