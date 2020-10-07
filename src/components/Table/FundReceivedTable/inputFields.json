@@ -1,0 +1,34 @@
+{
+	"fundReceiptInputFields": [
+		{
+			"name": "amount",
+			"id": "fundReceiptAmount",
+			"dataTestId": "createFundReceiptAmount",
+			"testId": "createFundReceiptAmountInput",
+			"label": "Amount",
+			"size": 6
+		},
+		{
+			"name": "project_donor",
+			"label": "Choose Donor",
+			"size": 12,
+			"testId": "createProjectDonorOption",
+			"dataTestId": "createProjectDonor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "reporting_date",
+			"id": "Date",
+			"dataTestId": "createReporingDate",
+			"testId": "createReporingDateInput",
+			"label": "Date",
+			"size": 6,
+			"type": "date"
+		}
+	]
+}

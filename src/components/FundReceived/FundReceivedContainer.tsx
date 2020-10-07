@@ -6,17 +6,20 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import CommonForm from "../CommonForm";
 import { IFundReceivedForm } from "../../models/fundReceived";
 import { fundReceivedForm } from "./inputFields.json";
-import { getTodaysDate } from "../../utils";
-import { FetchResult, MutationFunctionOptions } from "@apollo/client";
+import { FetchResult, MutationFunctionOptions, ApolloCache } from "@apollo/client";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setSuccessNotification, setErrorNotification } from "../../reducers/notificationReducer";
 import { GET_PROJECT_AMOUNT_RECEIVED } from "../../graphql/project";
-
-const defaultFormValues: IFundReceivedForm = {
-	amount: "",
-	project_donor: "",
-	reporting_date: getTodaysDate(),
-};
+import {
+	ICreateFundReceiptVariables,
+	ICreateFundReceipt,
+	IUpdateFundReceipt,
+	IUpdateFundReceiptVariables,
+} from "../../models/fundReceived/query";
+import {
+	GET_FUND_RECEIPT_PROJECT_LIST,
+	GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
+} from "../../graphql/FundRecevied";
 
 const validate = (values: IFundReceivedForm) => {
 	let errors: Partial<IFundReceivedForm> = {};
@@ -32,52 +35,206 @@ const validate = (values: IFundReceivedForm) => {
 	return errors;
 };
 
+const updateFundReceiptProjectTotalAmount = ({
+	store,
+	project,
+	fundReceipt,
+}: {
+	store: ApolloCache<ICreateFundReceipt | IUpdateFundReceipt>;
+	project: string | number;
+	fundReceipt: ICreateFundReceipt["createFundReceiptProjectInput"];
+}) => {
+	const fundReceived = store.readQuery<{ fundReceiptProjectTotalAmount: number }>({
+		query: GET_PROJECT_AMOUNT_RECEIVED,
+		variables: {
+			filter: {
+				project,
+			},
+		},
+	});
+
+	store.writeQuery<{ fundReceiptProjectTotalAmount: number }>({
+		query: GET_PROJECT_AMOUNT_RECEIVED,
+		variables: {
+			filter: {
+				project,
+			},
+		},
+		data: {
+			fundReceiptProjectTotalAmount:
+				(fundReceived?.fundReceiptProjectTotalAmount || 0) + fundReceipt.amount,
+		},
+	});
+};
+
+const updateFundReceiptListCount = (
+	store: ApolloCache<ICreateFundReceipt | IUpdateFundReceipt>,
+	project: number | string
+) => {
+	try {
+		let fundReceiptListCountCache = store.readQuery<{ fundReceiptProjectListCount: number }>({
+			query: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
+			variables: {
+				filter: {
+					project,
+				},
+			},
+		});
+
+		store.writeQuery<{ fundReceiptProjectListCount: number }>({
+			query: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
+			variables: {
+				filter: {
+					project,
+				},
+			},
+			data: {
+				fundReceiptProjectListCount:
+					(fundReceiptListCountCache &&
+						fundReceiptListCountCache?.fundReceiptProjectListCount + 1) ||
+					0,
+			},
+		});
+	} catch (err) {
+		console.log("err :>> ", err);
+	}
+};
+
+const createProjectFundReceipt = async ({
+	createFundReceipt,
+	valuesSubmitted,
+	project,
+}: {
+	valuesSubmitted: IFundReceivedForm;
+	createFundReceipt: (
+		options?:
+			| MutationFunctionOptions<ICreateFundReceipt, ICreateFundReceiptVariables>
+			| undefined
+	) => Promise<FetchResult<ICreateFundReceipt, Record<string, any>, Record<string, any>>>;
+	project: number | string;
+}) => {
+	await createFundReceipt({
+		variables: {
+			input: valuesSubmitted,
+		},
+		update: (store, { data }) => {
+			try {
+				if (!data) {
+					return;
+				}
+
+				updateFundReceiptProjectTotalAmount({
+					project,
+					store,
+					fundReceipt: data.createFundReceiptProjectInput,
+				});
+				updateFundReceiptListCount(store, project);
+			} catch (err) {
+				console.log("err :>> ", err);
+			}
+		},
+		refetchQueries: [
+			{
+				query: GET_FUND_RECEIPT_PROJECT_LIST,
+				variables: {
+					filter: {
+						project,
+					},
+					limit: 10,
+					start: 0,
+					sort: "created_at:DESC",
+				},
+			},
+		],
+	});
+};
+
+const getChangeInFundReceiptAmount = (
+	updatedFundReceipt: ICreateFundReceipt["createFundReceiptProjectInput"],
+	fundReceiptToUpdate: IFundReceivedForm
+) => updatedFundReceipt.amount - +fundReceiptToUpdate.amount;
+
+const updateProjectFundReceipt = async ({
+	valuesSubmitted,
+	updateFundReceipt,
+	project,
+	fundReceiptToUpdate,
+}: {
+	valuesSubmitted: IFundReceivedForm;
+	updateFundReceipt: (
+		options?:
+			| MutationFunctionOptions<IUpdateFundReceipt, IUpdateFundReceiptVariables>
+			| undefined
+	) => Promise<FetchResult<IUpdateFundReceipt, Record<string, any>, Record<string, any>>>;
+	project: string | number;
+	fundReceiptToUpdate: IFundReceivedForm;
+}) => {
+	const fundReceiptId = valuesSubmitted.id;
+	delete valuesSubmitted.id;
+	await updateFundReceipt({
+		variables: {
+			id: fundReceiptId || "",
+			input: valuesSubmitted,
+		},
+		update: (store, { data }) => {
+			try {
+				if (!data) {
+					return;
+				}
+				let updatedFundReceipt = { ...data.updateFundReceiptProjectInput };
+				updatedFundReceipt.amount = getChangeInFundReceiptAmount(
+					updatedFundReceipt,
+					fundReceiptToUpdate
+				);
+				updateFundReceiptProjectTotalAmount({
+					project,
+					store,
+					fundReceipt: updatedFundReceipt,
+				});
+			} catch (err) {
+				console.log("err :>> ", err);
+			}
+		},
+	});
+};
+
 const onFormSubmit = async ({
 	valuesSubmitted,
 	notificationDispatch,
 	createFundReceipt,
 	project,
+	formAction,
+	updateFundReceipt,
+	initialFormValues,
 }: {
 	valuesSubmitted: IFundReceivedForm;
 	notificationDispatch: React.Dispatch<any>;
 	createFundReceipt: (
-		options?: MutationFunctionOptions<any, Record<string, any>> | undefined
-	) => Promise<FetchResult<any, Record<string, any>, Record<string, any>>>;
+		options?:
+			| MutationFunctionOptions<ICreateFundReceipt, ICreateFundReceiptVariables>
+			| undefined
+	) => Promise<FetchResult<ICreateFundReceipt, Record<string, any>, Record<string, any>>>;
 	project: number | string;
+	formAction: FORM_ACTIONS;
+	updateFundReceipt: (
+		options?:
+			| MutationFunctionOptions<IUpdateFundReceipt, IUpdateFundReceiptVariables>
+			| undefined
+	) => Promise<FetchResult<IUpdateFundReceipt, Record<string, any>, Record<string, any>>>;
+	initialFormValues: IFundReceivedForm;
 }) => {
 	try {
-		await createFundReceipt({
-			variables: {
-				input: valuesSubmitted,
-			},
-			update: (store, { data }) => {
-				try {
-					const fundReceived = store.readQuery<{ fundReceiptProjectTotalAmount: number }>(
-						{
-							query: GET_PROJECT_AMOUNT_RECEIVED,
-							variables: {
-								filter: {
-									project,
-								},
-							},
-						}
-					);
-					store.writeQuery<{ fundReceiptProjectTotalAmount: number }>({
-						query: GET_PROJECT_AMOUNT_RECEIVED,
-						variables: {
-							filter: {
-								project,
-							},
-						},
-						data: {
-							fundReceiptProjectTotalAmount:
-								(fundReceived?.fundReceiptProjectTotalAmount || 0) +
-								data?.createFundReceiptProjectInput?.amount,
-						},
-					});
-				} catch (err) {}
-			},
-		});
+		formAction == FORM_ACTIONS.CREATE &&
+			(await createProjectFundReceipt({ valuesSubmitted, createFundReceipt, project }));
+
+		formAction == FORM_ACTIONS.UPDATE &&
+			(await updateProjectFundReceipt({
+				valuesSubmitted,
+				updateFundReceipt,
+				project,
+				fundReceiptToUpdate: initialFormValues,
+			}));
+
 		notificationDispatch(setSuccessNotification("Fund Received Reported"));
 	} catch (err) {
 		notificationDispatch(setErrorNotification(err.message));
@@ -91,6 +248,8 @@ function FundReceivedContainer({
 	donorList,
 	loading,
 	createFundReceipt,
+	initialValues,
+	updateFundReceipt,
 }: {
 	formAction: FORM_ACTIONS;
 	open: boolean;
@@ -98,25 +257,43 @@ function FundReceivedContainer({
 	donorList: { id: string; name: string }[];
 	loading: boolean;
 	createFundReceipt: (
-		options?: MutationFunctionOptions<any, Record<string, any>> | undefined
-	) => Promise<FetchResult<any, Record<string, any>, Record<string, any>>>;
+		options?:
+			| MutationFunctionOptions<ICreateFundReceipt, ICreateFundReceiptVariables>
+			| undefined
+	) => Promise<FetchResult<ICreateFundReceipt, Record<string, any>, Record<string, any>>>;
+	initialValues: IFundReceivedForm;
+	updateFundReceipt: (
+		options?:
+			| MutationFunctionOptions<IUpdateFundReceipt, IUpdateFundReceiptVariables>
+			| undefined
+	) => Promise<FetchResult<IUpdateFundReceipt, Record<string, any>, Record<string, any>>>;
 }) {
 	const dashboardData = useDashBoardData();
 	const intl = useIntl();
 	(fundReceivedForm[2].optionsArray as { id: string; name: string }[]) = donorList;
 	const notificationDispatch = useNotificationDispatch();
-
-	const onCreate = useCallback(
+	const submitForm = useCallback(
 		async (valuesSubmitted: IFundReceivedForm) => {
 			await onFormSubmit({
 				valuesSubmitted,
 				createFundReceipt,
 				notificationDispatch,
 				project: dashboardData?.project?.id || "",
+				formAction,
+				updateFundReceipt,
+				initialFormValues: initialValues,
 			});
 			handleClose();
 		},
-		[createFundReceipt, dashboardData, notificationDispatch]
+		[
+			createFundReceipt,
+			dashboardData,
+			updateFundReceipt,
+			notificationDispatch,
+			initialValues,
+			formAction,
+			handleClose,
+		]
 	);
 
 	return (
@@ -138,13 +315,13 @@ function FundReceivedContainer({
 			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
 		>
 			<CommonForm
-				initialValues={defaultFormValues}
+				initialValues={initialValues}
 				validate={validate}
-				onCreate={onCreate}
+				onCreate={submitForm}
 				onCancel={handleClose}
 				inputFields={fundReceivedForm}
 				formAction={formAction}
-				onUpdate={() => {}}
+				onUpdate={submitForm}
 			/>
 		</FormDialog>
 	);

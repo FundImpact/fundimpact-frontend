@@ -13,6 +13,7 @@ import {
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Close from "@material-ui/icons/Close";
 import { FormikProps } from "formik";
+import { useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	uploadBox: {
@@ -53,7 +54,7 @@ function UploadFiles<T>({
 }) {
 	const classes = useStyles(props);
 	const [previewImage, setPreviewImage] = useState<string | null>(logo || null);
-
+	const intl = useIntl();
 	useEffect(() => {
 		setPreviewImage(logo || "");
 	}, [logo]);
@@ -85,7 +86,13 @@ function UploadFiles<T>({
 									<AddCircleOutlineIcon fontSize="large" />
 								</IconButton>
 								<br />
-								<Button component="span">{title}</Button>
+								<Button component="span">
+									{intl.formatMessage({
+										id: `uploadInput title`,
+										defaultMessage: `${title}`,
+										description: `This text will be show on upload button ${title}`,
+									})}
+								</Button>
 							</Typography>
 						</InputLabel>
 

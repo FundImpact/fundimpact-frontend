@@ -204,20 +204,20 @@ export default function SettingContainer() {
 							userAccess={organizationEditAccess}
 							element={<Organization />}
 						/>
-						<Route path="settingsDefault" element={<DefaultSettingsView />} />
-						<PrivateRoute path="">
+						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}
+						{/* <PrivateRoute path="">
 							{organizationEditAccess ? (
 								<Navigate to="organization" />
 							) : (
 								<Navigate to="settingsDefault" />
 							)}
-						</PrivateRoute>
+						</PrivateRoute> */}
 						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}
 						<PrivateRoute path="">{getDefaultRoute()}</PrivateRoute>
 						<PrivateRoute path="users" element={<UserRoleContainer />} />
 						<PrivateRoute
 							userAccess={userRoleFindAccess || userRoleCreateAccess}
-							path="roles"
+							path="user_roles"
 							element={<RolesContainer />}
 						/>
 						<Route path="add_role" element={<AddRole />} />

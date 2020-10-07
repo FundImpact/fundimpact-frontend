@@ -41,24 +41,24 @@ const filterTableHeadingAccordingToUserAccess = (accessAllowed: boolean) =>
 
 function RoleTableView({
 	userRoles,
-	page,
-	setPage,
-	changePage,
-	count,
 	userRoleEditAccess,
 	loading,
 	order,
 	setOrder,
+	page,
+	setPage,
+	changePage,
+	count
 }: {
 	userRoles: { id: string; name: string; type: string }[];
-	page: number;
-	setPage: (value: React.SetStateAction<number>) => void;
-	changePage: (prev?: boolean) => void;
-	count: number;
 	userRoleEditAccess: boolean;
 	loading: boolean;
 	order: "asc" | "desc";
+	page: number;
+	setPage: React.Dispatch<React.SetStateAction<number>>;
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	changePage: (prev?: boolean) => void;
+	count: number
 }) {
 	const dashboardData = useDashBoardData();
 	const tableStyles = styledTable();

@@ -124,3 +124,11 @@ export const impactCategoryTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "" },
 ];
+
+export const fundReceivedTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Date", keyMapping: "reporting_date" },
+	{ label: "Amount", keyMapping: "amount" },
+	{ label: "Donor" },
+	{ label: "" },
+];
