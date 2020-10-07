@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Grid, Paper, Typography, Fab, Chip, Avatar } from "@material-ui/core";
+import { Box, Grid, Typography, Fab, Chip, Avatar } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import RoleTable from "../../../components/Table/RoleTable";
 import AddIcon from "@material-ui/icons/Add";
@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/userContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
-import { AUTH_ACTIONS } from "../../../utils/access/modules/auth/actions";
 import FilterList from "../../../components/FilterList";
 import { roleInputFields } from "./inputFields.json";
 
@@ -52,8 +51,6 @@ const chipArray = ({
 };
 
 export const RolesContainer = () => {
-	const user = useAuth();
-
 	const [tableFilterList, setTableFilterList] = useState<{
 		[key: string]: string;
 	}>({

@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Typography, useTheme } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import React, { ReactText } from "react";
 import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 

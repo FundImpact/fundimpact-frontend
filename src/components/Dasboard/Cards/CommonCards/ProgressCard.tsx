@@ -6,7 +6,6 @@ import CommonProgres from "../CommonProgress";
 import { ProgressCardConfig, ProgressCardResponse } from "../../../../models/cards/cards";
 import { Skeleton } from "@material-ui/lab";
 import { FormattedMessage } from "react-intl";
-import { AccountBox } from "@material-ui/icons";
 import { abbreviateNumber } from "../../../../utils";
 export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 	const {

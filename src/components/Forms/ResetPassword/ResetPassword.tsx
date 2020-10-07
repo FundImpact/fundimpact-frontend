@@ -2,7 +2,6 @@ import React from "react";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
 import { newPasswordForm } from "./inputField.json";
-import { Typography, Grid } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
 import {
 	setSuccessNotification,
@@ -10,7 +9,7 @@ import {
 } from "../../../reducers/notificationReducer";
 import { IPassword, ResetPasswordProps } from "../../../models/ResetPassword/ResetPassword";
 import { UPDATE_PASSWORD } from "../../../graphql/Password/mutation";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import FormDialog from "../../FormDialog";
 
 function PasswordReset(props: ResetPasswordProps) {

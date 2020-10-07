@@ -5,12 +5,10 @@ import { Box, Button, Paper } from "@material-ui/core";
 import { useAuth, UserDispatchContext } from "../../../contexts/userContext";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAILS } from "../../../graphql/User/query";
 import { setUser } from "../../../reducers/userReducer";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { setErrorNotification } from "../../../reducers/notificationReducer";
 
 export const ProfileContainer = () => {
 	const auth = useAuth();

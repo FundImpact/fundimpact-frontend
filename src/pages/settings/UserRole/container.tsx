@@ -1,6 +1,6 @@
 import React from "react";
 import UserRoleForm from "../../../components/Forms/UserRole";
-import { Box, Grid, Typography, Avatar } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
 import InvitedUserTable from "../../../components/Table/InvitedUser";
