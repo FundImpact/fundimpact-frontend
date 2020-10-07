@@ -16,6 +16,19 @@ import { ORGANIZATION_MODULE } from "./modules/organization/organization.module"
 import { DONOR_MODULE } from "./modules/donor/donor.module";
 import { GRANT_PERIOD_MODULE } from "./modules/grantPeriod/grantPeriod.module";
 import { MODULE_CODES } from "./moduleCodes";
+import { PROJECT_DONOR_MODULE } from "./modules/projectDonor/projectDonor.module";
+import { BUDGET_TARGET_DONOR_MODULE } from "./modules/budgetTargetDonor/budgetTargetDonor.module";
+import { ANNUAL_YEAR_MODULE } from "./modules/annualYear/annualYear.module";
+import { FINANCIAL_YEAR_ORG_MODULE } from "./modules/financialYearOrg/financialYearOrg.module";
+import { FINANCIAL_YEAR_DONOR_MODULE } from "./modules/financialYearDonor/financialYearDonor.module";
+import { FINANCIAL_YEAR_MODULE } from "./modules/financialYear/financialYear.module";
+import { SUSTAINABLE_DEVELOPMENT_GOALS_MODULE } from "./modules/sustainableDevelopmentGoals/sustainableDevelopmentGoals.module";
+import { ACCOUNT_MODULE } from "./modules/account/account.module";
+import { COUNTRY_MODULE } from "./modules/country/country.module";
+import { CURRENCY_MODULE } from "./modules/currency/currency.module";
+import { USER_PERMISSIONS_MODULE } from "./modules/userPermissions/userPermissions.module";
+import { AUTH_MODULE } from "./modules/auth/auth.module";
+import { FUND_RECEIPT_MODULE } from "./modules/fundReceipt/fundReceipt.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -70,4 +83,17 @@ export const MODULES = {
 	[MODULE_CODES.ORGANIZATION]: ORGANIZATION_MODULE,
 	[MODULE_CODES.DONOR]: DONOR_MODULE,
 	[MODULE_CODES.GRANT_PERIOD]: GRANT_PERIOD_MODULE,
+	[MODULE_CODES.PROJECT_DONOR]: PROJECT_DONOR_MODULE,
+	[MODULE_CODES.BUDGET_TARGET_DONOR]: BUDGET_TARGET_DONOR_MODULE,
+	[MODULE_CODES.ANNUAL_YEAR]: ANNUAL_YEAR_MODULE,
+	[MODULE_CODES.FINANCIAL_YEAR_ORG]: FINANCIAL_YEAR_ORG_MODULE,
+	[MODULE_CODES.FINANCIAL_YEAR_DONOR]: FINANCIAL_YEAR_DONOR_MODULE,
+	[MODULE_CODES.FINANCIAL_YEAR]: FINANCIAL_YEAR_MODULE,
+	[MODULE_CODES.SUSTAINABLE_DEVELOPMENT_GOALS]: SUSTAINABLE_DEVELOPMENT_GOALS_MODULE,
+	[MODULE_CODES.ACCOUNT]: ACCOUNT_MODULE,
+	[MODULE_CODES.COUNTRY]: COUNTRY_MODULE,
+	[MODULE_CODES.CURRENCY]: CURRENCY_MODULE,
+	[MODULE_CODES.USER_PERMISSIONS]: USER_PERMISSIONS_MODULE,
+	[MODULE_CODES.AUTH]: AUTH_MODULE,
+	[MODULE_CODES.FUND_RECEIPT]: FUND_RECEIPT_MODULE,
 } as const;

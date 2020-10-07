@@ -14,16 +14,18 @@ import {
 	Box,
 	Typography,
 	TableSortLabel,
+	Grid,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { ICommonTableRow, ICommonTable } from "../../../models";
+import { ICommonTableRow, ICommonTable, ITableHeadings } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { getValueFromObject } from "../../../utils";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {
@@ -33,9 +35,10 @@ const useStyles = makeStyles({
 
 const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main },
+		th: { color: theme.palette.primary.main, backgroundColor: theme.palette.background.paper },
 		tbody: {
-			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
+			"& tr:nth-child(4n+1)": { background: theme.palette.action.hover },
+			"& tr:nth-child(even)": { background: theme.palette.action.selected },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -102,7 +105,8 @@ function CommonTableRow<T extends { id: string }>({
 
 const defaultRows = 10;
 
-const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) => element.children;
+const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) =>
+	element.children;
 
 function CommonTable<T extends { id: string }>({
 	tableHeadings,
@@ -169,39 +173,45 @@ function CommonTable<T extends { id: string }>({
 				<TableHead>
 					<TableRow color="primary">
 						{valuesList.length
-							? tableHeadings.map(
-									(
-										heading: { label: string; keyMapping?: string },
-										index: number
-									) => (
-										<TableCell
-											className={tableStyles.th}
-											key={index}
-											align="left"
-										>
-											{heading.label}
-											{order && heading.keyMapping && (
-												<TableSortLabel
-													active={orderBy === heading.keyMapping}
-													onClick={() => {
-														if (orderBy === heading.keyMapping) {
-															setOrder &&
-																setOrder(
-																	order === "asc" ? "desc" : "asc"
-																);
-														} else {
-															setOrderBy &&
-																setOrderBy(
-																	heading.keyMapping || ""
-																);
-														}
-													}}
-													direction={order}
-												></TableSortLabel>
-											)}
-										</TableCell>
-									)
-							  )
+							? tableHeadings.map((heading: ITableHeadings, index: number) => (
+									<TableCell className={tableStyles.th} key={index} align="left">
+										{heading.renderComponent ? (
+											heading.renderComponent()
+										) : (
+											<>
+												<FormattedMessage
+													id={
+														"tableHeading" +
+														heading.label.replace(/ /g, "")
+													}
+													description={`This text will be shown on table for ${heading.label} heading`}
+													defaultMessage={`${heading.label}`}
+												/>
+												{order && heading.keyMapping && (
+													<TableSortLabel
+														direction={order}
+														active={orderBy === heading.keyMapping}
+														onClick={() => {
+															if (orderBy === heading.keyMapping) {
+																setOrder &&
+																	setOrder(
+																		order === "asc"
+																			? "desc"
+																			: "asc"
+																	);
+															} else {
+																setOrderBy &&
+																	setOrderBy(
+																		heading.keyMapping || ""
+																	);
+															}
+														}}
+													></TableSortLabel>
+												)}
+											</>
+										)}
+									</TableCell>
+							  ))
 							: null}
 					</TableRow>
 				</TableHead>

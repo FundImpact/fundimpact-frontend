@@ -125,7 +125,11 @@ function BudgetCategory({
 								orgBudgetCategory: [createOrgBudgetCategory, ...budgetCategories],
 							},
 						});
+					} catch (err) {
+						console.log("err :>> ", err);
+					}
 
+					try {
 						const data = store.readQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
@@ -148,7 +152,9 @@ function BudgetCategory({
 								orgBudgetCategory: [createOrgBudgetCategory, ...budgetCategory],
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.log("err :>> ", err);
+					}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Creation Success"));

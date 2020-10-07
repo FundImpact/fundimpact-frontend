@@ -9,19 +9,23 @@ import {
 	setErrorNotification,
 } from "../../../reducers/notificationReducer";
 import { FormikState } from "formik";
-import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
+import { GET_ROLES_BY_ORG, ORGANIZATION_ROLES_COUNT } from "../../../graphql/UserRoles/query";
 import {
 	ICreateOrganizationUserRoleVariables,
 	ICreateOrganizationUserRole,
+	IUpdateOrganizationUserRoleVariables,
+	IUpdateOrganizationUserRole,
 } from "../../../models/AddRole/mutation";
 import { useAuth } from "../../../contexts/userContext";
 import { IGetUserRole } from "../../../models/access/query";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
+import { useLocation, Navigate } from "react-router-dom";
+import { FORM_ACTIONS } from "../constant";
 
-const getInitialValues = (controllerActionHash: IControllerAction | {}): IAddRole => {
+const getInitialValues = (name: string, controllerActionHash: IControllerAction | {}): IAddRole => {
 	let initialValues: IAddRole = {
-		name: "",
+		name,
 		permissions: {},
 	};
 	for (let controller in controllerActionHash) {
@@ -33,7 +37,9 @@ const getInitialValues = (controllerActionHash: IControllerAction | {}): IAddRol
 			}
 			(initialValues.permissions as IAddRolePermissions)[controller as MODULE_CODES][
 				action
-			] = false;
+			] = (controllerActionHash as IControllerAction)[controller as MODULE_CODES][
+				action
+			].enabled;
 		}
 	}
 	return initialValues;
@@ -65,6 +71,216 @@ const getSubmittedPermissions = (permissions: {} | IAddRolePermissions): IContro
 	return currentPermissions;
 };
 
+const createRole = async ({
+	name,
+	organizationId,
+	permissions,
+	createOrganizationUserRole,
+}: {
+	name: string;
+	organizationId: string;
+	permissions: {} | IControllerAction;
+	createOrganizationUserRole: (
+		options?:
+			| MutationFunctionOptions<
+					ICreateOrganizationUserRole,
+					ICreateOrganizationUserRoleVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<ICreateOrganizationUserRole, Record<string, any>, Record<string, any>>
+	>;
+}) => {
+	await createOrganizationUserRole({
+		variables: {
+			id: organizationId,
+			input: {
+				name,
+				permissions: {
+					application: {
+						controllers: permissions,
+					},
+				},
+			},
+		},
+		update: async (store, { data }) => {
+			if (!data) {
+				return;
+			}
+			try {
+				let { createOrganizationUserRole } = data;
+				const userRoles = store.readQuery<{
+					organizationRoles: { name: string; id: string }[];
+				}>({
+					query: GET_ROLES_BY_ORG,
+					variables: {
+						filter: {
+							organization: organizationId,
+						},
+					},
+				});
+				store.writeQuery<{ organizationRoles: { name: string; id: string }[] }>({
+					query: GET_ROLES_BY_ORG,
+					variables: {
+						filter: {
+							organization: organizationId,
+						},
+					},
+					data: {
+						organizationRoles: [
+							createOrganizationUserRole,
+							...(userRoles?.organizationRoles || []),
+						],
+					},
+				});
+			} catch (err) {
+				console.log("err :>> ", err);
+			}
+			try {
+				const count = await store.readQuery<{ organizationRolesCount: { count: number } }>({
+					query: ORGANIZATION_ROLES_COUNT,
+					variables: {
+						filter: {},
+					},
+				});
+
+				store.writeQuery<{ organizationRolesCount: { count: number } }>({
+					query: ORGANIZATION_ROLES_COUNT,
+					variables: {
+						filter: {},
+					},
+					data: {
+						organizationRolesCount: {
+							count: (count && count.organizationRolesCount.count + 1) || 0,
+						},
+					},
+				});
+
+				let limit = 0;
+				if (count) {
+					limit = count.organizationRolesCount.count;
+				}
+
+				const dataRead = await store.readQuery<{
+					organizationRoles: { id: string; name: string }[];
+				}>({
+					query: GET_ROLES_BY_ORG,
+					variables: {
+						filter: {
+							organization: organizationId,
+						},
+						limit: limit > 10 ? 10 : limit,
+						start: 0,
+						sort: "name:ASC",
+					},
+				});
+
+				let userRoles: {
+					id: string;
+					name: string;
+				}[] = dataRead?.organizationRoles || [];
+
+				store.writeQuery<{
+					organizationRoles: { id: string; name: string }[];
+				}>({
+					query: GET_ROLES_BY_ORG,
+					variables: {
+						filter: {
+							organization: organizationId,
+						},
+						limit: limit > 10 ? 10 : limit,
+						start: 0,
+						sort: "name:ASC",
+					},
+					data: {
+						organizationRoles: [data.createOrganizationUserRole, ...userRoles],
+					},
+				});
+			} catch (err) {
+				console.log("err :>> ", err);
+			}
+		},
+	});
+};
+
+const updateRole = async ({
+	name,
+	permissions,
+	updateOrganizationUserRole,
+	roleId,
+}: {
+	name: string;
+	permissions: {} | IControllerAction;
+	updateOrganizationUserRole: (
+		options?:
+			| MutationFunctionOptions<
+					IUpdateOrganizationUserRole,
+					IUpdateOrganizationUserRoleVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
+	>;
+	roleId: string;
+}) => {
+	console.log({
+		variables: {
+			id: roleId,
+			input: {
+				name,
+				permissions: {
+					application: {
+						controllers: permissions,
+					},
+				},
+			},
+		},
+	});
+	await updateOrganizationUserRole({
+		variables: {
+			id: roleId,
+			input: {
+				name,
+				permissions: {
+					application: {
+						controllers: permissions,
+					},
+				},
+			},
+		},
+		refetchQueries: [
+			{
+				query: GET_USER_ROLES,
+				variables: {
+					filter: {
+						role: roleId,
+					},
+				},
+			},
+		],
+		// update: (store, { data }) => {
+		// 	if (data) {
+		// 		let { updateOrganizationUserRole } = data;
+		// 		try {
+		// 			store.writeQuery<IGetUserRole>({
+		// 				query: GET_USER_ROLES,
+		// 				variables: {
+		// 					filter: {
+		// 						role: roleId,
+		// 					},
+		// 				},
+		// 				data: {
+		// 					getRolePemissions: updateOrganizationUserRole.permissions,
+		// 				},
+		// 			});
+		// 		} catch (err) {
+		// 			console.log("err :>> ", err);
+		// 		}
+		// 	}
+		// },
+	});
+};
+
 const onFormSubmit = async ({
 	valuesSubmitted,
 	createOrganizationUserRole,
@@ -72,6 +288,9 @@ const onFormSubmit = async ({
 	notificationDispatch,
 	resetForm,
 	controllerActionHash,
+	formType,
+	updateOrganizationUserRole,
+	roleId,
 }: {
 	valuesSubmitted: IAddRole;
 	createOrganizationUserRole: (
@@ -88,72 +307,62 @@ const onFormSubmit = async ({
 	notificationDispatch: React.Dispatch<any>;
 	resetForm?: (nextState?: Partial<FormikState<any>> | undefined) => void;
 	controllerActionHash: IControllerAction | {};
+	formType: FORM_ACTIONS;
+	updateOrganizationUserRole: (
+		options?:
+			| MutationFunctionOptions<
+					IUpdateOrganizationUserRole,
+					IUpdateOrganizationUserRoleVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
+	>;
+	roleId: string;
 }) => {
 	const permissions = getSubmittedPermissions({ ...valuesSubmitted.permissions });
 	try {
-		await createOrganizationUserRole({
-			variables: {
-				id: organizationId,
-				input: {
-					name: valuesSubmitted.name,
-					permissions: {
-						application: {
-							controllers: permissions,
-						},
-					},
-				},
-			},
-			update: (store, { data }) => {
-				try {
-					if (data) {
-						let { createOrganizationUserRole } = data;
-						const userRoles = store.readQuery<{
-							roles: { name: string; id: string }[];
-						}>({
-							query: GET_ROLES_BY_ORG,
-							variables: {
-								filter: {
-									organization: organizationId,
-								},
-							},
-						});
-						store.writeQuery<{ roles: { name: string; id: string }[] }>({
-							query: GET_ROLES_BY_ORG,
-							variables: {
-								filter: {
-									organization: organizationId,
-								},
-							},
-							data: {
-								roles: [createOrganizationUserRole, ...(userRoles?.roles || [])],
-							},
-						});
-					}
-				} catch (err) {
-					console.log("err :>> ", err);
-				}
-			},
-		});
+		formType == FORM_ACTIONS.CREATE &&
+			(await createRole({
+				name: valuesSubmitted.name,
+				createOrganizationUserRole,
+				organizationId,
+				permissions,
+			}));
 
-		resetForm && resetForm({ values: getInitialValues(controllerActionHash) });
+		formType == FORM_ACTIONS.UPDATE &&
+			(await updateRole({
+				name: valuesSubmitted.name,
+				updateOrganizationUserRole,
+				permissions,
+				roleId,
+			}));
+		// resetForm && resetForm({ values: getInitialValues(controllerActionHash) });
 
-		notificationDispatch(setSuccessNotification("Role Added Successfully"));
+		notificationDispatch(
+			setSuccessNotification(
+				`Role ${formType == FORM_ACTIONS.CREATE ? "Created" : "Updated"} Successfully`
+			)
+		);
 	} catch (err) {
-		notificationDispatch(setErrorNotification("Error Occured While Adding Role"));
+		notificationDispatch(setErrorNotification(err.message));
 	}
 };
 
-const getControllerActionHash = (controllerActionArr: IGetUserRole["role"]["permissions"]) => {
+const getControllerActionHash = (
+	controllerActionArr: IGetUserRole["getRolePemissions"],
+	formType: FORM_ACTIONS
+) => {
 	return controllerActionArr.reduce(
 		(
 			controllerActionHash: IControllerAction,
-			current: IGetUserRole["role"]["permissions"][0]
+			current: IGetUserRole["getRolePemissions"][0]
 		) => {
 			if (!controllerActionHash[current.controller as MODULE_CODES]) {
 				controllerActionHash[current.controller as MODULE_CODES] = {};
 			}
 			controllerActionHash[current.controller as MODULE_CODES][current.action] = {
-				enabled: false,
+				enabled: formType == FORM_ACTIONS.CREATE ? false : current.enabled,
 				policy: "",
 			};
 			return controllerActionHash;
@@ -165,6 +374,9 @@ const getControllerActionHash = (controllerActionArr: IGetUserRole["role"]["perm
 function AddRoleFormContainer({
 	createOrganizationUserRole,
 	roleCreationLoading,
+	formType,
+	userRoleData,
+	updateOrganizationUserRole,
 }: {
 	roleCreationLoading: boolean;
 	createOrganizationUserRole: (
@@ -177,56 +389,79 @@ function AddRoleFormContainer({
 	) => Promise<
 		FetchResult<ICreateOrganizationUserRole, Record<string, any>, Record<string, any>>
 	>;
+	formType: FORM_ACTIONS;
+	userRoleData?: IGetUserRole;
+	updateOrganizationUserRole: (
+		options?:
+			| MutationFunctionOptions<
+					IUpdateOrganizationUserRole,
+					IUpdateOrganizationUserRoleVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
+	>;
 }) {
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
-	const user = useAuth();
-	const [getUserRoles, { data: userRoleData, loading, error }] = useLazyQuery<IGetUserRole>(
-		GET_USER_ROLES
-	);
 	const [controllerActionHash, setControllerActionHash] = useState<IControllerAction | {}>({});
-
-	useEffect(() => {
-		if (user) {
-			getUserRoles({
-				variables: {
-					id: user.user?.role?.id,
-				},
-			});
-		}
-	}, [user, getUserRoles]);
-
+	const [redirect, setRedirect] = useState<boolean>(false);
+	const location = useLocation();
+	const roleId = (location?.state as { role: string; name: string })?.role;
+	const roleName = (location?.state as { role: string; name: string })?.name;
 	useEffect(() => {
 		if (userRoleData) {
-			setControllerActionHash(getControllerActionHash(userRoleData.role.permissions));
+			setControllerActionHash(
+				getControllerActionHash(userRoleData.getRolePemissions, formType)
+			);
 		}
 	}, [userRoleData]);
-
 	const onCreate = useCallback(
-		(
+		async (
 			valuesSubmitted: IAddRole,
 			{
 				resetForm,
 			}: { resetForm?: (nextState?: Partial<FormikState<any>> | undefined) => void }
-		) =>
-			onFormSubmit({
+		) => {
+			await onFormSubmit({
 				valuesSubmitted,
 				createOrganizationUserRole,
 				organizationId: dashboardData?.organization?.id || "",
 				notificationDispatch: notificationDispatch,
 				controllerActionHash,
 				resetForm,
-			}),
-		[createOrganizationUserRole, dashboardData, notificationDispatch, controllerActionHash]
+				updateOrganizationUserRole,
+				formType,
+				roleId,
+			});
+			setRedirect(true);
+		},
+		[
+			createOrganizationUserRole,
+			updateOrganizationUserRole,
+			dashboardData,
+			notificationDispatch,
+			controllerActionHash,
+			setRedirect,
+			formType,
+		]
 	);
+
+	if (redirect) {
+		return <Navigate to="/settings/user_roles" />;
+	}
 
 	return (
 		<AddRoleFormView
-			initialValues={getInitialValues(controllerActionHash)}
+			initialValues={getInitialValues(roleName || "", controllerActionHash)}
 			validate={validate}
 			onCreate={onCreate}
 			roleCreationLoading={roleCreationLoading}
 			controllerActionHash={controllerActionHash}
+			formType={formType}
+			onCancel={() => {
+				setRedirect(true);
+			}}
 		/>
 	);
 }

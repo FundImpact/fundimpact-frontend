@@ -21,5 +21,9 @@ export const IMPACT_TARGET_MODULE = {
 			name: "Find Impact Target",
 			code: IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET,
 		},
+		[IMPACT_TARGET_ACTIONS.IMPACT_ACHIEVED]: {
+			name: "Impact Achieved",
+			code: IMPACT_TARGET_ACTIONS.IMPACT_ACHIEVED,
+		},
 	},
 };

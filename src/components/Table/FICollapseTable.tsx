@@ -14,6 +14,7 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { ITableHeadings } from "../../models";
 
 const useStyles = makeStyles({
 	table: {
@@ -26,9 +27,10 @@ const useStyles = makeStyles({
 
 const styledTable = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main },
+		th: { color: theme.palette.primary.main, backgroundColor: theme.palette.background.paper },
 		tbody: {
-			"& tr:nth-child(4n+1) td": { background: theme.palette.action.hover },
+			"& tr:nth-child(4n+1)": { background: theme.palette.action.hover },
+			"& tr:nth-child(even)": { background: theme.palette.action.selected },
 			"& td.MuiTableCell-root": {
 				paddingTop: "1px",
 				paddingBottom: "1px",
@@ -87,7 +89,7 @@ export default function CollapsibleTable({
 	setOrderBy,
 	showNestedTable = true,
 }: {
-	tableHeading: { label: string; keyMapping?: string }[];
+	tableHeading: ITableHeadings[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
 	pagination?: React.ReactNode;
 	order?: "asc" | "desc";
@@ -123,29 +125,40 @@ export default function CollapsibleTable({
 										align="left"
 										className={tableStyles.th}
 									>
-										{/* {heading.label} */}
-										{/* {heading.label} */}
-										<FormattedMessage
-											id={"tableHeading" + heading.label.replace(/ /g, "")}
-											defaultMessage={`${heading.label}`}
-											description={`This text will be shown on table for ${heading.label} heading`}
-										/>
-										{order && heading.keyMapping && (
-											<TableSortLabel
-												active={orderBy === heading.keyMapping}
-												onClick={() => {
-													if (orderBy === heading.keyMapping) {
-														setOrder &&
-															setOrder(
-																order === "asc" ? "desc" : "asc"
-															);
-													} else {
-														setOrderBy &&
-															setOrderBy(heading.keyMapping || "");
+										{heading.renderComponent ? (
+											heading.renderComponent()
+										) : (
+											<>
+												<FormattedMessage
+													id={
+														"tableHeading" +
+														heading.label.replace(/ /g, "")
 													}
-												}}
-												direction={order}
-											></TableSortLabel>
+													defaultMessage={`${heading.label}`}
+													description={`This text will be shown on table for ${heading.label} heading`}
+												/>
+												{order && heading.keyMapping && (
+													<TableSortLabel
+														active={orderBy === heading.keyMapping}
+														onClick={() => {
+															if (orderBy === heading.keyMapping) {
+																setOrder &&
+																	setOrder(
+																		order === "asc"
+																			? "desc"
+																			: "asc"
+																	);
+															} else {
+																setOrderBy &&
+																	setOrderBy(
+																		heading.keyMapping || ""
+																	);
+															}
+														}}
+														direction={order}
+													></TableSortLabel>
+												)}
+											</>
 										)}
 									</TableCell>
 								))}

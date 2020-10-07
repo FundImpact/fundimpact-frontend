@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../Forms/constant";
@@ -11,6 +11,11 @@ import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
 import { userHasAccess, MODULE_CODES } from "../../../../utils/access";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
+import { ANNUAL_YEAR_ACTIONS } from "../../../../utils/access/modules/annualYear/actions";
+import { FINANCIAL_YEAR_ORG_ACTIONS } from "../../../../utils/access/modules/financialYearOrg/actions";
+import { FINANCIAL_YEAR_DONOR_ACTIONS } from "../../../../utils/access/modules/financialYearDonor/actions";
+import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -18,6 +23,61 @@ const yearTags = {
 	FYO: "fy_org,name",
 	FYD: "fy_donor,name",
 	AY: "annual_year,name",
+};
+
+const filterYearTagsAccordingToUserAccess = () => {
+	const tags: { [key: string]: string } = { ...yearTags };
+	const annualYearFindAccess = userHasAccess(
+		MODULE_CODES.ANNUAL_YEAR,
+		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
+	);
+
+	const financialYearOrgFindAccess = userHasAccess(
+		MODULE_CODES.FINANCIAL_YEAR_ORG,
+		FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG
+	);
+
+	const financialYearDonorFindAccess = userHasAccess(
+		MODULE_CODES.FINANCIAL_YEAR_DONOR,
+		FINANCIAL_YEAR_DONOR_ACTIONS.FIND_FINANCIAL_YEAR_DONOR
+	);
+	if (!annualYearFindAccess) {
+		delete tags.AY;
+	}
+	if (!financialYearOrgFindAccess) {
+		delete tags.FYO;
+	}
+	if (!financialYearDonorFindAccess) {
+		delete tags.FYD;
+	}
+	return tags;
+};
+
+const BudgetLineitemYearTags: React.SFC<{ budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE }> = ({
+	budgetLineItem,
+}) => {
+	const tags = filterYearTagsAccordingToUserAccess();
+	return (
+		<Box display="flex">
+			{Object.entries(tags).map(([yearTag, yearTagValue], arrIndex) => {
+				return (
+					getValueFromObject(budgetLineItem, yearTagValue.split(",")) && (
+						<Box mr={1} key={arrIndex}>
+							<Chip
+								avatar={
+									<Avatar>
+										<span>{yearTag}</span>
+									</Avatar>
+								}
+								label={getValueFromObject(budgetLineItem, yearTagValue.split(","))}
+								size="small"
+							/>
+						</Box>
+					)
+				);
+			})}
+		</Box>
+	);
 };
 
 const rows = [
@@ -32,29 +92,27 @@ const rows = [
 	{ valueAccessKey: "grant_periods_project,name" },
 	{
 		valueAccessKey: "",
-		renderComponent: (budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE) => (
-			<Box display="flex">
-				{Object.entries(yearTags).map(([objKey, objVal], arrIndex) => {
-					return (
-						getValueFromObject(budgetLineItem, objVal.split(",")) && (
-							<Box mr={1} key={arrIndex}>
-								<Chip
-									avatar={
-										<Avatar>
-											<span>{objKey}</span>
-										</Avatar>
-									}
-									label={getValueFromObject(budgetLineItem, objVal.split(","))}
-									size="small"
-								/>
-							</Box>
-						)
-					);
-				})}
-			</Box>
-		),
+		renderComponent: (budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE) => {
+			return <BudgetLineitemYearTags budgetLineItem={budgetLineItem} />;
+		},
 	},
 ];
+
+enum tableHeader {
+	date = 1,
+	note = 2,
+	amount = 3,
+	grantPeriod = 4,
+	year = 5,
+}
+
+enum tableRow {
+	date = 0,
+	note = 1,
+	amount = 2,
+	grantPeriod = 3,
+	year = 4,
+}
 
 const chipArray = ({
 	arr,
@@ -209,7 +267,8 @@ function BudgetLineItemTableView({
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
 }) {
-	tableHeadings[3].label = getNewAmountHeaderOfTable(currency);
+	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
+	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
 
 	const budgetLineItemEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
@@ -222,11 +281,64 @@ function BudgetLineItemTableView({
 		}
 	}, [budgetLineItemEditAccess]);
 
+	const annualYearFindAccess = userHasAccess(
+		MODULE_CODES.ANNUAL_YEAR,
+		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
+	);
+
+	const financialYearOrgFindAccess = userHasAccess(
+		MODULE_CODES.FINANCIAL_YEAR_ORG,
+		FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG
+	);
+
+	const financialYearDonorFindAccess = userHasAccess(
+		MODULE_CODES.FINANCIAL_YEAR_DONOR,
+		FINANCIAL_YEAR_DONOR_ACTIONS.FIND_FINANCIAL_YEAR_DONOR
+	);
+
+	const filteredTableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(tableHeadings, {
+				[tableHeader.year]:
+					!annualYearFindAccess &&
+					!financialYearOrgFindAccess &&
+					!financialYearDonorFindAccess,
+			}),
+		[annualYearFindAccess, financialYearOrgFindAccess, financialYearDonorFindAccess]
+	);
+
+	const filteredTableRows = useMemo(
+		() =>
+			filterTableHeadingsAndRows(rows, {
+				[tableRow.year]:
+					!annualYearFindAccess &&
+					!financialYearOrgFindAccess &&
+					!financialYearDonorFindAccess,
+			}),
+		[annualYearFindAccess, financialYearOrgFindAccess, financialYearDonorFindAccess]
+	);
+
+	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				note: "",
+				amount: "",
+				grant_periods_project: [],
+				annual_year: [],
+				fy_org: [],
+				fy_donor: [],
+				reporting_date: "",
+			}}
+			setFilterList={setFilterList}
+			inputFields={inputFields}
+		/>
+	);
+
 	return (
 		<>
 			<Grid container>
-				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
+				<Grid item xs={12}>
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
@@ -239,28 +351,11 @@ function BudgetLineItemTableView({
 						)}
 					</Box>
 				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								note: "",
-								amount: "",
-								grant_periods_project: [],
-								annual_year: [],
-								fy_org: [],
-								fy_donor: [],
-								reporting_date: "",
-							}}
-							setFilterList={setFilterList}
-							inputFields={inputFields}
-						/>
-					</Box>
-				</Grid>
 			</Grid>
 			<CommonTable
-				tableHeadings={tableHeadings}
+				tableHeadings={filteredTableHeadings}
 				valuesList={budgetLineitemList}
-				rows={rows}
+				rows={filteredTableRows}
 				selectedRow={selectedBudgetLineItem}
 				toggleDialogs={toggleDialogs}
 				editMenuName={budgetLineItemTableEditMenu}

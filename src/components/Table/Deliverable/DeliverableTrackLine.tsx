@@ -11,7 +11,7 @@ import {
 	Grid,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import {
 	GET_DELIVERABLE_LINEITEM_FYDONOR,
@@ -34,6 +34,16 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
+import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+
+enum tableHeaders {
+	date = 1,
+	note = 2,
+	achieved = 3,
+	year = 4,
+}
 
 const chipArray = ({
 	arr,
@@ -327,6 +337,17 @@ export default function DeliverablesTrackLineTable({
 	});
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
+
+	const financialYearFindAccess = userHasAccess(
+		MODULE_CODES.FINANCIAL_YEAR,
+		FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
+	);
+
+	const annualYearFindAccess = userHasAccess(
+		MODULE_CODES.ANNUAL_YEAR,
+		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
+	);
+
 	useEffect(() => {
 		if (
 			deliverableTracklineData &&
@@ -377,29 +398,34 @@ export default function DeliverablesTrackLineTable({
 							}
 						>
 							<Box display="flex">
-								<Box mr={1}>
+								{financialYearFindAccess && (
+									<Box mr={1}>
+										<Chip
+											avatar={<Avatar>FY</Avatar>}
+											label={
+												deliverableTrackingLineitemList[i]?.financial_year
+													? deliverableTrackingLineitemList[i]
+															?.financial_year?.name
+													: "-"
+											}
+											size="small"
+											color="primary"
+										/>
+									</Box>
+								)}
+								{annualYearFindAccess && (
 									<Chip
-										avatar={<Avatar>FY</Avatar>}
+										avatar={<Avatar>AY</Avatar>}
 										label={
-											deliverableTrackingLineitemList[i]?.financial_year
-												? deliverableTrackingLineitemList[i]?.financial_year
+											deliverableTrackingLineitemList[i]?.annual_year
+												? deliverableTrackingLineitemList[i]?.annual_year
 														?.name
 												: "-"
 										}
 										size="small"
 										color="primary"
 									/>
-								</Box>
-								<Chip
-									avatar={<Avatar>AY</Avatar>}
-									label={
-										deliverableTrackingLineitemList[i]?.annual_year
-											? deliverableTrackingLineitemList[i]?.annual_year?.name
-											: "-"
-									}
-									size="small"
-									color="primary"
-								/>
+								)}
 							</Box>
 						</TableCell>,
 					];
@@ -416,7 +442,16 @@ export default function DeliverablesTrackLineTable({
 		} else {
 			setRows([]);
 		}
-	}, [deliverableTracklineData]);
+	}, [deliverableTracklineData, annualYearFindAccess, financialYearFindAccess, TracklinePage]);
+
+	const filteredDeliverableTracklineTableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(deliverableAndimpactTracklineHeading, {
+				[tableHeaders.year]: !annualYearFindAccess && !financialYearFindAccess,
+			}),
+		[annualYearFindAccess, financialYearFindAccess]
+	);
+
 	let deliverableTracklineTablePagination = (
 		<TablePagination
 			rowsPerPageOptions={[]}
@@ -430,13 +465,30 @@ export default function DeliverablesTrackLineTable({
 		/>
 	);
 	const intl = useIntl();
+
+	filteredDeliverableTracklineTableHeadings[
+		filteredDeliverableTracklineTableHeadings.length - 1
+	].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				reporting_date: "",
+				note: "",
+				value: "",
+				annual_year: [],
+				financial_year: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={deliverableTracklineInputFields}
+		/>
+	);
+
 	return (
 		<>
 			{countQueryLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<Grid container>
-				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
+				<Grid item xs={12}>
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
@@ -445,24 +497,9 @@ export default function DeliverablesTrackLineTable({
 						)}
 					</Box>
 				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								reporting_date: "",
-								note: "",
-								value: "",
-								annual_year: [],
-								financial_year: [],
-							}}
-							setFilterList={setFilterList}
-							inputFields={deliverableTracklineInputFields}
-						/>
-					</Box>
-				</Grid>
 			</Grid>
 			<FITable
-				tableHeading={deliverableAndimpactTracklineHeading}
+				tableHeading={filteredDeliverableTracklineTableHeadings}
 				rows={rows}
 				pagination={deliverableTracklineTablePagination}
 				order={order}

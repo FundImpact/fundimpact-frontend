@@ -11,7 +11,7 @@ import {
 	Grid,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import {
 	GET_IMPACT_LINEITEM_FYDONOR,
@@ -34,6 +34,16 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
+import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
+
+enum tableHeaders {
+	date = 1,
+	note = 2,
+	achieved = 3,
+	year = 4,
+}
 
 const chipArray = ({
 	removeChip,
@@ -337,6 +347,17 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 	});
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
+
+	const financialYearFindAccess = userHasAccess(
+		MODULE_CODES.FINANCIAL_YEAR,
+		FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
+	);
+
+	const annualYearFindAccess = userHasAccess(
+		MODULE_CODES.ANNUAL_YEAR,
+		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
+	);
+
 	useEffect(() => {
 		if (
 			impactTracklineData &&
@@ -382,29 +403,33 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						<TableCell key={Math.random() + `${impactTrackingLineitemList[i]?.id}-4`}>
 							{" "}
 							<Box display="flex">
-								<Box mr={1}>
+								{financialYearFindAccess && (
+									<Box mr={1}>
+										<Chip
+											avatar={<Avatar>FY</Avatar>}
+											label={
+												impactTrackingLineitemList[i]?.financial_year
+													? impactTrackingLineitemList[i]?.financial_year
+															?.name
+													: "-"
+											}
+											size="small"
+											color="primary"
+										/>
+									</Box>
+								)}
+								{annualYearFindAccess && (
 									<Chip
-										avatar={<Avatar>FY</Avatar>}
+										avatar={<Avatar>AY</Avatar>}
 										label={
-											impactTrackingLineitemList[i]?.financial_year
-												? impactTrackingLineitemList[i]?.financial_year
-														?.name
+											impactTrackingLineitemList[i]?.annual_year
+												? impactTrackingLineitemList[i]?.annual_year?.name
 												: "-"
 										}
 										size="small"
 										color="primary"
 									/>
-								</Box>
-								<Chip
-									avatar={<Avatar>AY</Avatar>}
-									label={
-										impactTrackingLineitemList[i]?.annual_year
-											? impactTrackingLineitemList[i]?.annual_year?.name
-											: "-"
-									}
-									size="small"
-									color="primary"
-								/>
+								)}
 							</Box>
 						</TableCell>,
 					];
@@ -421,7 +446,15 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		} else {
 			setRows([]);
 		}
-	}, [impactTracklineData]);
+	}, [impactTracklineData, annualYearFindAccess, financialYearFindAccess, impactTracklinePage]);
+
+	const filteredImpactTracklineTableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(deliverableAndimpactTracklineHeading, {
+				[tableHeaders.year]: !annualYearFindAccess && !financialYearFindAccess,
+			}),
+		[annualYearFindAccess, financialYearFindAccess]
+	);
 
 	let tablePagination = (
 		<TablePagination
@@ -449,12 +482,28 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		description: `This text will be shown if no target found for table`,
 	});
 
+	filteredImpactTracklineTableHeadings[
+		filteredImpactTracklineTableHeadings.length - 1
+	].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				reporting_date: "",
+				note: "",
+				value: "",
+				annual_year: [],
+				financial_year: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={impactTracklineInputFields}
+		/>
+	);
+
 	return (
 		<>
 			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<Grid container>
-				<Grid item xs={11}>
+				<Grid item xs={12}>
 					<Box my={2} display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
@@ -464,24 +513,9 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						)}
 					</Box>
 				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								reporting_date: "",
-								note: "",
-								value: "",
-								annual_year: [],
-								financial_year: [],
-							}}
-							setFilterList={setFilterList}
-							inputFields={impactTracklineInputFields}
-						/>
-					</Box>
-				</Grid>
 			</Grid>
 			<FITable
-				tableHeading={deliverableAndimpactTracklineHeading}
+				tableHeading={filteredImpactTracklineTableHeadings}
 				rows={rows}
 				pagination={tablePagination}
 				order={order}

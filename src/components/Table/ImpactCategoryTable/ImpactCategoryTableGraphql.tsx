@@ -60,7 +60,9 @@ function ImpactCategoryTableGraphql({
 
 	useEffect(() => {
 		if (tableFilterList) {
-			let newTableFilterListObject: { [key: string]: string } = removeEmptyKeys(tableFilterList);
+			let newTableFilterListObject: { [key: string]: string } = removeEmptyKeys(
+				tableFilterList
+			);
 			setQueryFilter({
 				organization: dashboardData?.organization?.id,
 				...newTableFilterListObject,

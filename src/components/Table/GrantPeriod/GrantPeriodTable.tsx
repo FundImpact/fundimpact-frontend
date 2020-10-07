@@ -59,6 +59,7 @@ interface ISImpleTableProps {
 	headers: { label: string; key: string }[];
 	data: { [key: string]: string | number }[];
 	editGrantPeriod: (value: any) => void;
+	children: React.ReactNode;
 }
 
 const chipArr = ({
@@ -90,7 +91,7 @@ const chipArr = ({
 	));
 };
 
-function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
+function SimpleTable({ headers, data, editGrantPeriod, children }: ISImpleTableProps) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
 
@@ -122,7 +123,7 @@ function SimpleTable({ headers, data, editGrantPeriod }: ISImpleTableProps) {
 								{header.label}
 							</TableCell>
 						))}
-						<TableCell>{grantPeriodEditAccess && "Action"}</TableCell>
+						<TableCell>{children}</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
@@ -330,19 +331,12 @@ export default function GrantPeriodTable() {
 	grantPeriodInputFields[3].optionsArray = donors?.orgDonors || [];
 
 	if (loading) return <TableSkeleton />;
-	if (!data?.grantPeriodsProjectList?.length) {
-		return (
-			<Box p={2}>
-				<Typography align="center">No Grant Period Created </Typography>
-			</Box>
-		);
-	}
 
 	return (
 		<>
 			<Grid container>
-				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
+				<Grid item xs={12}>
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
@@ -351,8 +345,22 @@ export default function GrantPeriodTable() {
 						)}
 					</Box>
 				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
+			</Grid>
+			{data?.grantPeriodsProjectList?.length ? (
+				<>
+					<SimpleTable
+						headers={headers}
+						data={data?.grantPeriodsProjectList}
+						editGrantPeriod={(grantPeriodToEdit) => {
+							const newObj: IGrantPeriod = {
+								...grantPeriodToEdit,
+								donor: grantPeriodToEdit.donor.id,
+								project: grantPeriodToEdit.project.id,
+							};
+							// console.log(`grantPeriodToEdit`, newObj);
+							setGrantPeriodDialog(newObj);
+						}}
+					>
 						<FilterList
 							initialValues={{
 								name: "",
@@ -363,28 +371,19 @@ export default function GrantPeriodTable() {
 							setFilterList={setFilterList}
 							inputFields={grantPeriodInputFields}
 						/>
-					</Box>
-				</Grid>
-			</Grid>
-			<SimpleTable
-				headers={headers}
-				data={data?.grantPeriodsProjectList}
-				editGrantPeriod={(grantPeriodToEdit) => {
-					const newObj: IGrantPeriod = {
-						...grantPeriodToEdit,
-						donor: grantPeriodToEdit.donor.id,
-						project: grantPeriodToEdit.project.id,
-					};
-					// console.log(`grantPeriodToEdit`, newObj);
-					setGrantPeriodDialog(newObj);
-				}}
-			/>
-			<GrantPeriodDialog
-				open={!!grantPeriodToEdit}
-				onClose={() => setGrantPeriodDialog(null)}
-				action={FORM_ACTIONS.UPDATE}
-				initialValues={(grantPeriodToEdit as any) as IGrantPeriod}
-			/>
+					</SimpleTable>
+					<GrantPeriodDialog
+						open={!!grantPeriodToEdit}
+						onClose={() => setGrantPeriodDialog(null)}
+						action={FORM_ACTIONS.UPDATE}
+						initialValues={(grantPeriodToEdit as any) as IGrantPeriod}
+					/>
+				</>
+			) : (
+				<Box p={2}>
+					<Typography align="center">No Grant Period</Typography>
+				</Box>
+			)}
 		</>
 	);
 

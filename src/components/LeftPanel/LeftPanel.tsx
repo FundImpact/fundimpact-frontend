@@ -25,6 +25,7 @@ import { GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
 import { useQuery } from "@apollo/client";
 import { setProject } from "../../reducers/dashboardReducer";
 import { useDashboardDispatch } from "../../contexts/dashboardContext";
+import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
 
 /**
  * @description This is the Blue sidebar the we see on the left most side of the window.
@@ -79,6 +80,8 @@ export default function LeftPanel() {
 			]);
 		}
 	}, [settingButtonAccess]);
+
+	const accountEditAccess = userHasAccess(MODULE_CODES.ACCOUNT, ACCOUNT_ACTIONS.UPDATE_ACCOUNT);
 
 	return (
 		<Grid container className={classes.leftPanel} direction="column">
@@ -136,9 +139,11 @@ export default function LeftPanel() {
 					onClose={handleClose}
 				>
 					{" "}
-					<MenuItem component={Link} to={"/account/profile"}>
-						Account Settings
-					</MenuItem>
+					{accountEditAccess && (
+						<MenuItem component={Link} to={"/account/profile"}>
+							Account Settings
+						</MenuItem>
+					)}
 					<MenuItem
 						onClick={() => {
 							if (userDispatch) {

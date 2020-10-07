@@ -11,7 +11,7 @@ import {
 	Avatar,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -36,6 +36,25 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { ITableHeadings } from "../../../models";
+
+enum tableHeaders {
+	name = 2,
+	category = 3,
+	target = 4,
+	achieved = 5,
+	progress = 6,
+}
+
+enum tableColumn {
+	name = 1,
+	category = 2,
+	target = 3,
+	achievedAndProgress = 4,
+}
 
 const chipArray = ({
 	removeChip,
@@ -197,9 +216,24 @@ function DeliverableTargetAchievementAndProgress({
 			);
 		}
 	}, [data, deliverableTargetValue]);
+
+	const deliverableAchievedFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
+	);
+
+	const deliverableUnitFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	);
+
 	return (
 		<>
-			<TableCell>{`${DeliverableTargetAchieved} ${deliverableTargetUnit}`}</TableCell>
+			{deliverableAchievedFindAccess && (
+				<TableCell>{`${DeliverableTargetAchieved} ${
+					deliverableUnitFindAccess ? deliverableTargetUnit : ""
+				}`}</TableCell>
+			)}
 			<TableCell>{DeliverableTargetProgess} %</TableCell>
 		</>
 	);
@@ -251,16 +285,7 @@ const createChipArray = ({
 };
 
 const getTableHeadingByDeliverableTracklineAccess = (
-	headings: (
-		| {
-				label: string;
-				keyMapping?: undefined;
-		  }
-		| {
-				label: string;
-				keyMapping: string;
-		  }
-	)[],
+	headings: ITableHeadings[],
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
@@ -361,6 +386,17 @@ export default function DeliverablesTable() {
 
 	const [rows, setRows] = useState<any>([]);
 	const limit = 10;
+
+	const deliverableCategoryFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+	);
+
+	const deliverableAchievedFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
+	);
+
 	useEffect(() => {
 		if (
 			deliverableTargetData &&
@@ -433,7 +469,12 @@ export default function DeliverablesTable() {
 							deliverableTarget={deliverableTargetList[i]}
 						/>
 					);
-					row.column = column;
+
+					const filteredDeliverableTableColumns = filterTableHeadingsAndRows(column, {
+						[tableColumn.category]: !deliverableCategoryFindAccess,
+					});
+
+					row.column = filteredDeliverableTableColumns;
 					array.push(row);
 				}
 			}
@@ -442,7 +483,16 @@ export default function DeliverablesTable() {
 		} else {
 			setRows([]);
 		}
-	}, [deliverableTargetData]);
+	}, [deliverableTargetData, deliverableCategoryFindAccess, page]);
+
+	const filteredDeliverableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(deliverableHeadings, {
+				[tableHeaders.category]: !deliverableCategoryFindAccess,
+				[tableHeaders.achieved]: !deliverableAchievedFindAccess,
+			}),
+		[deliverableCategoryFindAccess, deliverableAchievedFindAccess]
+	);
 
 	let deliverableTablePagination = (
 		<TablePagination
@@ -456,6 +506,18 @@ export default function DeliverablesTable() {
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+
+	filteredDeliverableHeadings[filteredDeliverableHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				name: "",
+				target_value: "",
+				deliverable_category_org: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={deliverableTargetInputFields}
+		/>
+	);
 	return (
 		<>
 			{countQueryLoading || queryLoading ? (
@@ -463,27 +525,14 @@ export default function DeliverablesTable() {
 			) : (
 				<>
 					<Grid container>
-						<Grid item xs={11}>
-							<Box my={2} display="flex" flexWrap="wrap">
+						<Grid item xs={12}>
+							<Box display="flex" flexWrap="wrap">
 								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 									createChipArray({
 										filterListObjectKeyValuePair,
 										removeFilterListElements,
 									})
 								)}
-							</Box>
-						</Grid>
-						<Grid item xs={1}>
-							<Box mt={2}>
-								<FilterList
-									initialValues={{
-										name: "",
-										target_value: "",
-										deliverable_category_org: [],
-									}}
-									setFilterList={setFilterList}
-									inputFields={deliverableTargetInputFields}
-								/>
 							</Box>
 						</Grid>
 					</Grid>
@@ -493,7 +542,7 @@ export default function DeliverablesTable() {
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
 						tableHeading={getTableHeadingByDeliverableTracklineAccess(
-							deliverableHeadings,
+							filteredDeliverableHeadings,
 							deliverableTracklineFindAccess
 						)}
 						rows={rows}

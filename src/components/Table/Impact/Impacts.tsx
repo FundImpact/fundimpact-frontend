@@ -11,7 +11,7 @@ import {
 	Chip,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -37,6 +37,28 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
 import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
+import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
+import { SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS } from "../../../utils/access/modules/sustainableDevelopmentGoals/actions";
+import { ITableHeadings } from "../../../models";
+
+enum tableHeaders {
+	name = 2,
+	category = 3,
+	target = 4,
+	achieved = 5,
+	progress = 6,
+	sdg = 7,
+}
+
+enum tableColumn {
+	name = 1,
+	category = 2,
+	target = 3,
+	achievedAndProgress = 4,
+	sdg = 5,
+}
 
 const chipArray = ({
 	arr,
@@ -174,16 +196,7 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 }
 
 const getTableHeadingByImpactTracklineAccess = (
-	headings: (
-		| {
-				label: string;
-				keyMapping?: undefined;
-		  }
-		| {
-				label: string;
-				keyMapping: string;
-		  }
-	)[],
+	headings: ITableHeadings[],
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
@@ -209,9 +222,24 @@ function ImpactTargetAchievementAndProgress({
 			);
 		}
 	}, [data, impactTargetValue]);
+
+	const impactAchievedFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.IMPACT_ACHIEVED
+	);
+
+	const impactUnitFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT
+	);
+
 	return (
 		<>
-			<TableCell>{`${impactTargetAchieved} ${impactTargetUnit}`}</TableCell>
+			{impactAchievedFindAccess && (
+				<TableCell>{`${impactTargetAchieved} ${
+					impactUnitFindAccess ? impactTargetUnit : ""
+				}`}</TableCell>
+			)}
 			<TableCell>{impactTargetProgess} %</TableCell>
 		</>
 	);
@@ -295,6 +323,21 @@ export default function ImpactsTable() {
 	const impactTracklineFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.FIND_IMPACT_TRACKING_LINE_ITEM
+	);
+
+	const impactCategoryFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY
+	);
+
+	const impactAchievedFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.IMPACT_ACHIEVED
+	);
+
+	const sdgFindAccess = userHasAccess(
+		MODULE_CODES.SUSTAINABLE_DEVELOPMENT_GOALS,
+		SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS.FIND_SUSTAINABLE_DEVELOPMENT_GOALS
 	);
 
 	const { data: categories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
@@ -466,7 +509,12 @@ export default function ImpactsTable() {
 						/>
 					);
 
-					row.column = column;
+					const filteredImpactTableColumns = filterTableHeadingsAndRows(column, {
+						[tableColumn.category]: !impactCategoryFindAccess,
+						[tableColumn.sdg]: !sdgFindAccess,
+					});
+
+					row.column = filteredImpactTableColumns;
 					array.push(row);
 				}
 			}
@@ -474,7 +522,17 @@ export default function ImpactsTable() {
 		} else {
 			setRows([]);
 		}
-	}, [impactTargets]);
+	}, [impactTargets, impactCategoryFindAccess, sdgFindAccess, impactPage]);
+
+	const filteredImpactHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(ImpactHeadings, {
+				[tableHeaders.category]: !impactCategoryFindAccess,
+				[tableHeaders.achieved]: !impactAchievedFindAccess,
+				[tableHeaders.sdg]: !sdgFindAccess,
+			}),
+		[impactCategoryFindAccess, impactAchievedFindAccess, sdgFindAccess]
+	);
 
 	let impactTablePagination = (
 		<TablePagination
@@ -488,6 +546,20 @@ export default function ImpactsTable() {
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+
+	filteredImpactHeadings[filteredImpactHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				name: "",
+				target_value: "",
+				sustainable_development_goal: [],
+				impact_category_org: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={impactTargetInputFields}
+		/>
+	);
+
 	return (
 		<>
 			{queryLoading || countQueryLoading ? (
@@ -495,28 +567,14 @@ export default function ImpactsTable() {
 			) : (
 				<>
 					<Grid container>
-						<Grid item xs={11}>
-							<Box my={2} display="flex" flexWrap="wrap">
+						<Grid item xs={12}>
+							<Box display="flex" flexWrap="wrap">
 								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 									createChipArray({
 										filterListObjectKeyValuePair,
 										removeFilterListElements,
 									})
 								)}
-							</Box>
-						</Grid>
-						<Grid item xs={1}>
-							<Box mt={2}>
-								<FilterList
-									initialValues={{
-										name: "",
-										target_value: "",
-										sustainable_development_goal: [],
-										impact_category_org: [],
-									}}
-									setFilterList={setFilterList}
-									inputFields={impactTargetInputFields}
-								/>
 							</Box>
 						</Grid>
 					</Grid>
@@ -528,7 +586,7 @@ export default function ImpactsTable() {
 						rows={rows}
 						pagination={impactTablePagination}
 						tableHeading={getTableHeadingByImpactTracklineAccess(
-							ImpactHeadings,
+							filteredImpactHeadings,
 							impactTracklineFindAccess
 						)}
 						showNestedTable={impactTracklineFindAccess}

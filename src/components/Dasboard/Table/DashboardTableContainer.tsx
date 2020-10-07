@@ -39,6 +39,8 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
+import FundReceived from "../../FundReceived";
+import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -197,6 +199,11 @@ export default function DashboardTableContainer() {
 		GRANT_PERIOD_ACTIONS.FIND_GRANT_PERIOD
 	);
 
+	const fundReceiptCreateAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.CREATE_FUND_RECEIPT
+	);
+
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -252,12 +259,28 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "reportFundReceived",
+						defaultMessage: "Report Fund Received",
+						description: `This text will be show on Add Button for Report Fund Received`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<FundReceived
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+					createButtonAccess: fundReceiptCreateAccess,
+				},
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
 				budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
-				budgetTargetLineItemCreateAccess,
+				budgetTargetLineItemCreateAccess ||
+				fundReceiptCreateAccess,
 			tableVisibility: budgetTargetFindAccess,
 		},
 		{
@@ -343,7 +366,7 @@ export default function DashboardTableContainer() {
 		{
 			label: intl.formatMessage({
 				id: "impactTabHeading",
-				defaultMessage: "Impact Indicator",
+				defaultMessage: "Impact",
 				description: `This text will be show on tab for Impact`,
 			}),
 			table: <ImpactsTable />,
@@ -421,7 +444,7 @@ export default function DashboardTableContainer() {
 		{
 			label: intl.formatMessage({
 				id: "grantPeriodTabHeading",
-				defaultMessage: "Grant Period",
+				defaultMessage: "Grant Periods",
 				description: `This text will be show on tab for grant period`,
 			}),
 			table: <GrantPeriodTable />,
@@ -456,6 +479,7 @@ export default function DashboardTableContainer() {
 			budgetCategoryCreateAccess ||
 			budgetTargetCreateAccess ||
 			budgetTargetLineItemCreateAccess ||
+			fundReceiptCreateAccess ||
 			impactTargetFindAccess ||
 			impactTargetCreateAccess ||
 			impactUnitCreateAccess ||
@@ -474,7 +498,8 @@ export default function DashboardTableContainer() {
 					budgetTargetFindAccess ||
 						budgetCategoryCreateAccess ||
 						budgetTargetCreateAccess ||
-						budgetTargetLineItemCreateAccess,
+						budgetTargetLineItemCreateAccess ||
+						fundReceiptCreateAccess,
 					impactTargetFindAccess ||
 						impactTargetCreateAccess ||
 						impactUnitCreateAccess ||
@@ -494,6 +519,7 @@ export default function DashboardTableContainer() {
 		budgetCategoryCreateAccess,
 		budgetTargetCreateAccess,
 		budgetTargetLineItemCreateAccess,
+		fundReceiptCreateAccess,
 		impactTargetFindAccess,
 		impactTargetCreateAccess,
 		impactUnitCreateAccess,

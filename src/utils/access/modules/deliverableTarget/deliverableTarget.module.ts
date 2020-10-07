@@ -21,5 +21,9 @@ export const DELIVERABLE_TARGET_MODULE = {
 			name: "Find Deliverable Target",
 			code: DELIVERABLE_TARGET_ACTIONS.FIND_DELIVERABLE_TARGET,
 		},
+		[DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED]: {
+			name: "Deliverable Achieved",
+			code: DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED,
+		},
 	},
 };

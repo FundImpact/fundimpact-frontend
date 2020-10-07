@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FORM_ACTIONS } from "../constant";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
@@ -29,6 +29,11 @@ function getInitialValues(props: UserRoleProps) {
 	};
 }
 
+const filterOrganizationRoles = (
+	roles: { type: string; id: string; name: string }[],
+	organizationId: string
+) => roles.filter((role) => role.type !== `admin-org-${organizationId}`);
+
 function UserRoleForm(props: UserRoleProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IUserRole = getInitialValues(props);
@@ -56,20 +61,8 @@ function UserRoleForm(props: UserRoleProps) {
 		},
 	});
 
-	useQuery(GET_ROLES_BY_ORG, {
+	const { data: userRoles } = useQuery(GET_ROLES_BY_ORG, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
-		onCompleted(data) {
-			if (data?.organizationRoles) {
-				let roleArr: any = [];
-				data.organizationRoles.forEach((role: any) => {
-					/*excluding Admin role here from roles*/
-					if (role.type !== `admin-org-${dashboardData?.organization?.id}`) {
-						roleArr.push(role);
-					}
-				});
-				userRoleForm[1].optionsArray = roleArr;
-			}
-		},
 		onError(err) {
 			console.log("role", err);
 		},
@@ -86,6 +79,18 @@ function UserRoleForm(props: UserRoleProps) {
 		defaultMessage: "give user a role",
 		description: "This text will be show on user update form for subtitle",
 	});
+	(userRoleForm[1].optionsArray as {
+		type: string;
+		id: string;
+		name: string;
+	}[]) = useMemo(
+		() =>
+			filterOrganizationRoles(
+				userRoles?.organizationRoles || [],
+				dashboardData?.organization?.id || ""
+			),
+		[filterOrganizationRoles, userRoles, dashboardData]
+	);
 
 	useEffect(() => {
 		if (count && formValues) {

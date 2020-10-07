@@ -125,31 +125,34 @@ function ImpactCategoryTableView({
 		}
 	}, [impactCategoryEditAccess]);
 
+	{
+		(!collapsableTable &&
+			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+				<FilterList
+					initialValues={{
+						name: "",
+						code: "",
+						description: "",
+					}}
+					setFilterList={setFilterList}
+					inputFields={impactCategoryInputFields}
+				/>
+			))) ||
+			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	}
+
 	return (
 		<>
 			{!collapsableTable && (
 				<Grid container>
-					<Grid item xs={11}>
-						<Box my={2} display="flex" flexWrap="wrap">
+					<Grid item xs={12}>
+						<Box display="flex" flexWrap="wrap">
 							{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 								createChipArray({
 									filterListObjectKeyValuePair,
 									removeFilterListElements,
 								})
 							)}
-						</Box>
-					</Grid>
-					<Grid item xs={1}>
-						<Box mt={2}>
-							<FilterList
-								initialValues={{
-									name: "",
-									code: "",
-									description: "",
-								}}
-								setFilterList={setFilterList}
-								inputFields={impactCategoryInputFields}
-							/>
 						</Box>
 					</Grid>
 				</Grid>

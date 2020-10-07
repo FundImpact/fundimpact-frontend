@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -16,6 +16,30 @@ import FilterList from "../../../FilterList";
 import { BUDGET_TARGET_ACTIONS } from "../../../../utils/access/modules/budgetTarget/actions";
 import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../../utils/access/modules/budgetTargetLineItem/actions";
+import { BUDGET_CATEGORY_ACTIONS } from "../../../../utils/access/modules/budgetCategory/actions";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
+import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
+import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
+import { ITableHeadings } from "../../../../models";
+
+enum tableHeader {
+	targetName = 2,
+	budgetCategory = 3,
+	donor = 4,
+	totalAmout = 5,
+	spent = 6,
+	progress = 7,
+	filterList = 8,
+}
+
+enum tableRow {
+	name = 0,
+	budgetCategory = 1,
+	donor = 2,
+	totalAmount = 3,
+	spent = 4,
+	progress = 5,
+}
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -49,6 +73,11 @@ const rows = [
 		),
 	},
 ];
+
+const getTableHeadingByBudgetTrackingLineItemAccess = (
+	headings: ITableHeadings[],
+	collapseTableAccess: boolean
+) => (collapseTableAccess ? headings : headings.slice(1));
 
 const chipArray = ({
 	elementList,
@@ -175,7 +204,12 @@ function BudgetTargetView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
 }) {
-	tableHeadings[5].label = getNewTotalAmountHeaderOfTable(currency);
+	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
+
+	currencyFindAccess &&
+		(tableHeadings[5].label = getNewTotalAmountHeaderOfTable(
+			currencyFindAccess ? currency : ""
+		));
 
 	const budgetTargetEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
@@ -192,6 +226,59 @@ function BudgetTargetView({
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.FIND_BUDGET_TARGET_LINE_ITEM
 	);
 
+	const budgetCategoryFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
+	);
+
+	const budgetTargetDonorFindAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_DONOR,
+		BUDGET_TARGET_DONOR_ACTION.FIND_BUDGET_TARGET_DONOR
+	);
+
+	const budgetTargetProjectExpenditureValue = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.PROJECT_EXPENDITURE_VALUE
+	);
+
+	const budgetTargetProjectAllocationValue = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE
+	);
+
+	const filteredTableHeadings = useMemo(
+		() =>
+			filterTableHeadingsAndRows(tableHeadings, {
+				[tableHeader.budgetCategory]: !budgetCategoryFindAccess,
+				[tableHeader.donor]: !budgetTargetDonorFindAccess,
+				[tableHeader.spent]: !budgetTargetProjectExpenditureValue,
+				[tableHeader.totalAmout]: !budgetTargetProjectAllocationValue,
+			}),
+		[
+			budgetCategoryFindAccess,
+			filterTableHeadingsAndRows,
+			budgetTargetDonorFindAccess,
+			budgetTargetProjectExpenditureValue,
+			budgetTargetProjectAllocationValue,
+		]
+	);
+	const filteredRows = useMemo(
+		() =>
+			filterTableHeadingsAndRows(rows, {
+				[tableRow.budgetCategory]: !budgetCategoryFindAccess,
+				[tableRow.donor]: !budgetTargetDonorFindAccess,
+				[tableRow.spent]: !budgetTargetProjectExpenditureValue,
+				[tableRow.totalAmount]: !budgetTargetProjectAllocationValue,
+			}),
+		[
+			budgetCategoryFindAccess,
+			filterTableHeadingsAndRows,
+			budgetTargetDonorFindAccess,
+			budgetTargetProjectExpenditureValue,
+			budgetTargetProjectAllocationValue,
+		]
+	);
+
 	useEffect(() => {
 		if (budgetTargetEditAccess) {
 			budgetTargetTableEditMenu[0] = "Edit Budget Target";
@@ -201,11 +288,24 @@ function BudgetTargetView({
 		}
 	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
 
+	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				name: "",
+				total_target_amount: "",
+				donor: [],
+				budget_category_organization: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={inputFields}
+		/>
+	);
+
 	return (
 		<>
 			<Grid container>
-				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
+				<Grid item xs={12}>
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
@@ -216,29 +316,18 @@ function BudgetTargetView({
 						)}
 					</Box>
 				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								name: "",
-								total_target_amount: "",
-								donor: [],
-								budget_category_organization: [],
-							}}
-							setFilterList={setFilterList}
-							inputFields={inputFields}
-						/>
-					</Box>
-				</Grid>
 			</Grid>
 			<CommonTable
-				tableHeadings={tableHeadings}
+				tableHeadings={getTableHeadingByBudgetTrackingLineItemAccess(
+					filteredTableHeadings,
+					budgetTargetLineItemFindAccess
+				)}
 				valuesList={budgegtTargetList}
-				rows={rows}
+				rows={filteredRows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}
 				editMenuName={budgetTargetTableEditMenu}
-				collapsableTable={true}
+				collapsableTable={budgetTargetLineItemFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
