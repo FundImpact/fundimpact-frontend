@@ -34,7 +34,7 @@ export default function MainDashboard() {
 					<DashboardCard
 						title={intl.formatMessage({
 							id: "achievementCardTitle",
-							defaultMessage: "Achievement",
+							defaultMessage: "ACHIEVEMENT",
 							description: `This text will be show on dashboard for achievement card title`,
 						})}
 						type={CARD_TYPES.DEFAULT}
@@ -46,7 +46,7 @@ export default function MainDashboard() {
 					<DashboardCard
 						title={intl.formatMessage({
 							id: "impactCardTitle",
-							defaultMessage: "Impacts",
+							defaultMessage: "IMPACT",
 							description: `This text will be show on dashboard for impacts card title`,
 						})}
 						type={CARD_TYPES.DEFAULT}

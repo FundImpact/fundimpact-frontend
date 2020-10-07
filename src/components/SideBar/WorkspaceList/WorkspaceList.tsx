@@ -5,7 +5,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React, { useState } from "react";
 
 import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
@@ -115,7 +115,7 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 
 	return (
 		<React.Fragment>
-			<List className={classes.workspace}>
+			<List>
 				{workspaceFindAccess &&
 					cachedWorkspaces?.orgWorkspaces.map(
 						(workspace: IOrganisationWorkspaces, index: number) => {
@@ -125,59 +125,63 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 									key={workspace.id}
 									onClick={() => dispatch(setActiveWorkSpace(workspace))}
 								>
-									<Box display="flex">
-										<Box flexGrow={1}>
-											<ListItemText
-												primary={workspace.name}
-												className={classes.workspaceListText}
-											/>
-										</Box>
-										<Box>
-											{(workspaceEditAccess || projectCreateAccess) && (
-												<IconButton
-													className={classes.workspaceEditIcon}
-													aria-controls={`projectmenu${index}`}
-													aria-haspopup="true"
-													onClick={(e) => {
-														handleClick(e, index);
-													}}
+									<Box className={classes.workspace}>
+										<Box display="flex">
+											<Box flexGrow={1}>
+												<ListItemText
+													primary={workspace.name}
+													className={classes.workspaceListText}
+												/>
+											</Box>
+											<Box>
+												{(workspaceEditAccess || projectCreateAccess) && (
+													<IconButton
+														className={classes.workspaceEditIcon}
+														aria-controls={`projectmenu${index}`}
+														aria-haspopup="true"
+														onClick={(e) => {
+															handleClick(e, index);
+														}}
+													>
+														<MoreVertOutlinedIcon fontSize="small" />
+													</IconButton>
+												)}
+												<SimpleMenu
+													handleClose={() => closeMenuItems(index)}
+													id={`projectmenu${index}`}
+													anchorEl={anchorEl[index]}
 												>
-													<EditOutlinedIcon fontSize="small" />
-												</IconButton>
-											)}
-											<SimpleMenu
-												handleClose={() => closeMenuItems(index)}
-												id={`projectmenu${index}`}
-												anchorEl={anchorEl[index]}
-											>
-												{workspaceEditAccess && (
-													<MenuItem
-														onClick={() => {
-															const workpsaceToEdit = {
-																...workspace,
-																organization:
-																	workspace["organization"]["id"],
-															};
-															seteditWorkspace(
-																workpsaceToEdit as any
-															);
-															closeMenuItems(index);
-														}}
-													>
-														Edit Workspace
-													</MenuItem>
-												)}
-												{projectCreateAccess && (
-													<MenuItem
-														onClick={() => {
-															setProjectDialogOpen(true);
-															closeMenuItems(index);
-														}}
-													>
-														Add Project
-													</MenuItem>
-												)}
-											</SimpleMenu>
+													{workspaceEditAccess && (
+														<MenuItem
+															onClick={() => {
+																const workpsaceToEdit = {
+																	...workspace,
+																	organization:
+																		workspace["organization"][
+																			"id"
+																		],
+																};
+																seteditWorkspace(
+																	workpsaceToEdit as any
+																);
+																closeMenuItems(index);
+															}}
+														>
+															Edit Workspace
+														</MenuItem>
+													)}
+													{projectCreateAccess && (
+														<MenuItem
+															onClick={() => {
+																setProjectDialogOpen(true);
+																closeMenuItems(index);
+															}}
+														>
+															Add Project
+														</MenuItem>
+													)}
+												</SimpleMenu>
+											</Box>
 										</Box>
 									</Box>
 									{projectFindAccess && (

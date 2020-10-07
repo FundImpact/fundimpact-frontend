@@ -377,9 +377,7 @@ function AddRoleFormContainer({
 		}
 	}, [userRoleData]);
 	const onCreate = useCallback(
-		async (
-			valuesSubmitted: IAddRole
-		) => {
+		async (valuesSubmitted: IAddRole) => {
 			await onFormSubmit({
 				valuesSubmitted,
 				createOrganizationUserRole,

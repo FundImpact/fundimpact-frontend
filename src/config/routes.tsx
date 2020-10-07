@@ -25,7 +25,6 @@ function PrivateRoute({ children, ...rest }: RouteProps): React.ReactElement | n
 
 	let params = new URLSearchParams(window.location.search);
 	const tokenInUrl: string | null = params.get("token");
-
 	if (tokenInUrl) {
 		SetTokenAndRedirect(tokenInUrl, window.location.pathname);
 	}

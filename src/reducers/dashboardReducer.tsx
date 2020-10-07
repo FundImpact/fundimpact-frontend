@@ -47,7 +47,7 @@ export const setActiveWorkSpace = (data: IOrganisationWorkspaces): Action => {
 	};
 };
 
-export const setProject = (data: IProject): Action => {
+export const setProject = (data: IProject | undefined): Action => {
 	return {
 		type: "SET_PROJECT",
 		payload: data,

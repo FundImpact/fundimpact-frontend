@@ -9,4 +9,5 @@ export interface IUserDataContext {
 			id: string;
 		};
 	};
+	logoutMsg?: string;
 }

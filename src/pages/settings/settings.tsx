@@ -23,6 +23,7 @@ import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/ac
 import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
+import { RolesContainer } from "./Roles/container";
 import AddRole from "./AddRole";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
@@ -203,12 +204,21 @@ export default function SettingContainer() {
 							userAccess={organizationEditAccess}
 							element={<Organization />}
 						/>
+						<Route path="settingsDefault" element={<DefaultSettingsView />} />
+						<PrivateRoute path="">
+							{organizationEditAccess ? (
+								<Navigate to="organization" />
+							) : (
+								<Navigate to="settingsDefault" />
+							)}
+						</PrivateRoute>
 						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}
 						<PrivateRoute path="">{getDefaultRoute()}</PrivateRoute>
+						<PrivateRoute path="users" element={<UserRoleContainer />} />
 						<PrivateRoute
 							userAccess={userRoleFindAccess || userRoleCreateAccess}
-							path="user_roles"
-							element={<UserRoleContainer />}
+							path="roles"
+							element={<RolesContainer />}
 						/>
 						<Route path="add_role" element={<AddRole />} />
 					</Routes>

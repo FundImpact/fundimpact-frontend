@@ -80,7 +80,7 @@ function LandingPage() {
 								{loginPathMatch ? (
 									<FormattedMessage
 										id="dontHaveAccount"
-										defaultMessage="Dont have account?"
+										defaultMessage="Don't have account?"
 										description="This text will be show on login page on left side over blue cover"
 									/>
 								) : (

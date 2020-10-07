@@ -1,61 +1,81 @@
 import { Box, Grid, Typography } from "@material-ui/core";
-import React from "react";
-import BorderLinearProgress from "../../../BorderLinearProgress";
+import React, { ReactText } from "react";
+import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
+
 export default function CommonProgress({
 	title,
 	date,
-	percentage,
-	color = "primary",
 	noBarDisplay = false,
+	norBarDisplayConfig,
+	chartConfig,
+	size = "card",
 }: {
 	title: string;
-	date: string;
-	percentage: number;
-	color?: "primary" | "secondary";
+	date?: string;
+
 	noBarDisplay?: boolean;
+	chartConfig?: {
+		primarySegmentedMeasureData: { name: string; y: number }[];
+		qualitativeRangeData: { name: string; y: number }[];
+	};
+	size?: "card" | "dialog";
+	norBarDisplayConfig?: {
+		sum: number | ReactText;
+		sum_two: number | ReactText;
+	};
 }) {
 	return (
-		<Grid container>
-			<Grid item md={5}>
-				<Box m={1} mt={0}>
-					<Typography variant="subtitle2" noWrap>
-						{title}
-					</Typography>
-				</Box>
-			</Grid>
-			<Grid item md={7} container>
-				{!noBarDisplay && (
-					<>
-						<Grid item md={10}>
-							<Box mt={1}>
-								<BorderLinearProgress
-									variant="determinate"
-									value={percentage}
-									color={color}
-								/>
-							</Box>
-						</Grid>
-						<Grid item md={2} container justify="flex-start">
-							<Typography variant="caption">{`${percentage}%`}</Typography>
-						</Grid>
-					</>
-				)}
-				{noBarDisplay && (
-					<Grid item md={11} container justify="flex-end">
-						<Typography variant="subtitle2" color="secondary">{`₹
-						${percentage}`}</Typography>
+		<Grid container style={{ width: "100%" }}>
+			{!noBarDisplay && (
+				<>
+					<Grid item xs={3}>
+						<Box mt={1}>
+							<Typography noWrap>{title}</Typography>
+						</Box>
 					</Grid>
-				)}
-				{/* <Grid item md={11} justify="flex-end" container>
-					<Box display="flex">
-						<Typography
-							variant="caption"
-							color="textSecondary"
-							noWrap
-						>{`${getLastUpdatedInWords(new Date(date))}`}</Typography>
-					</Box>
-				</Grid> */}
-			</Grid>
+					<Grid
+						item
+						xs={9}
+						style={{ height: size === "dialog" ? "90px" : "60px", width: "100%" }}
+					>
+						<ChartBullet
+							ariaTitle={title}
+							comparativeErrorMeasureData={[{ name: "Target", y: 100 }]}
+							labels={({ datum }) => `${datum.name}: ${datum.y}`}
+							padding={{
+								left: 20, // Adjusted to accommodate labels
+								right: 30,
+								bottom: 90,
+							}}
+							primarySegmentedMeasureData={chartConfig?.primarySegmentedMeasureData}
+							height={100}
+							themeColor={ChartThemeColor.green}
+							qualitativeRangeData={chartConfig?.qualitativeRangeData}
+						/>
+					</Grid>
+				</>
+			)}
+			{noBarDisplay && (
+				<>
+					<Grid item xs={4}>
+						<Box>
+							<Typography variant="subtitle2" noWrap>
+								{title}
+							</Typography>
+						</Box>
+					</Grid>
+					<Grid item xs={4}>
+						<Typography variant="subtitle2" color="secondary">
+							{norBarDisplayConfig?.sum}
+						</Typography>
+					</Grid>
+					<Grid item xs={4}>
+						<Typography variant="subtitle2" color="secondary">
+							{norBarDisplayConfig?.sum_two}
+						</Typography>
+					</Grid>
+				</>
+			)}
 		</Grid>
 	);
 }

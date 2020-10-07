@@ -15,19 +15,19 @@ import { UserDispatchContext } from "../../../contexts/userContext";
 import { IUser, UserProps } from "../../../models/User/user";
 import useFileUpload from "../../../hooks/fileUpload";
 import { FormattedMessage } from "react-intl";
+import { useNavigate } from "react-router";
 function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		updateUserForm[0].logo = props.data?.logo;
 		props.data.uploadPhoto = "";
-		console.log("checksuserdata", props.data);
 
 		return { ...props.data };
 	}
 	return {
 		name: "",
-		username: "",
 		email: "",
 		uploadPhoto: "",
+		theme: {},
 	};
 }
 
@@ -37,11 +37,19 @@ function UserForm(props: UserProps) {
 	let initialValues: IUser = getInitialValues(props);
 	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
 	const formAction = props.type;
+	const navigate = useNavigate();
 	let verifyAndUpdateUserForm: boolean | undefined = false;
+	let userTheme = {};
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		verifyAndUpdateUserForm = props.updateWithToken;
+		userTheme = props.data?.theme;
 	}
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
+		onCompleted() {
+			if (verifyAndUpdateUserForm) {
+				navigate("/account/profile");
+			}
+		},
 		onError() {
 			notificationDispatch(setErrorNotification("Profile updation Failed !"));
 		},
@@ -56,14 +64,16 @@ function UserForm(props: UserProps) {
 	let subtitle = (
 		<FormattedMessage
 			id="updateUserFormSubtitle"
-			defaultMessage="your personal details"
+			defaultMessage="Your personal details"
 			description="This text will be show on user update form for subtitle"
 		/>
 	);
 	React.useEffect(() => {
 		if (userResponse) {
 			if (userDispatch) {
-				userDispatch(setUser({ user: userResponse.updateUserCustomerInput }));
+				userDispatch(
+					setUser({ user: { ...userResponse.updateUserCustomerInput, theme: userTheme } })
+				);
 			}
 			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
 		}
@@ -99,7 +109,6 @@ function UserForm(props: UserProps) {
 						id: value.id,
 						input: {
 							name: value.name,
-							username: value.username,
 							email: value.email,
 							profile_photo:
 								value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
@@ -124,7 +133,6 @@ function UserForm(props: UserProps) {
 						id: value.id,
 						input: {
 							name: value.name,
-							username: value.username,
 							email: value.email,
 							profile_photo: value.profile_photo,
 						},
@@ -138,9 +146,6 @@ function UserForm(props: UserProps) {
 		if (props.type === FORM_ACTIONS.UPDATE && !verifyAndUpdateUserForm) {
 			if (!values.name) {
 				errors.name = "Name is required";
-			}
-			if (!values.username) {
-				errors.username = "Username is required";
 			}
 			if (!values.email) {
 				errors.email = "Email is required";

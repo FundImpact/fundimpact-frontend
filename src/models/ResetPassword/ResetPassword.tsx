@@ -6,6 +6,8 @@ export interface IPassword {
 }
 
 export type ResetPasswordProps = {
+	open: boolean;
+	handleClose: () => void;
 	type: FORM_ACTIONS.UPDATE;
 	userId: string;
 };

@@ -15,7 +15,7 @@ function FormDialog({
 	handleClose: () => void;
 	title: string;
 	subtitle: string;
-	workspace: string;
+	workspace?: string;
 	project?: string;
 	children: any;
 	loading?: boolean;

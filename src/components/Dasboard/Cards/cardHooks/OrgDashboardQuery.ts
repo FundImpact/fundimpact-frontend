@@ -23,6 +23,7 @@ import {
 	GET_IMPACT_CATEGORY_ACHIEVED,
 	GET_IMPACT_CATEGORY_PROJECT,
 	GET_COMPLETED_BUDGET_COUNT,
+	GET_PROJECT_COUNT,
 } from "../../../../graphql/organizationDashboard/query";
 import { useQuery } from "@apollo/client";
 
@@ -40,7 +41,7 @@ export function GetImpactOrgStatus(queryFilter: { variables: { filter: object } 
 		queryFilter
 	);
 	let { data: totalImpactProjectByOrg } = useQuery(GET_TOTAL_IMPACT_PROJECT, queryFilter);
-
+	let { data: orgProjectCount } = useQuery(GET_PROJECT_COUNT);
 	return {
 		achiveImpactVsTargetByOrg: achiveImpactVsTargetByOrg
 			? achiveImpactVsTargetByOrg.achiveImpactVsTargetByOrg
@@ -54,6 +55,7 @@ export function GetImpactOrgStatus(queryFilter: { variables: { filter: object } 
 		totalImpactProjectByOrg: totalImpactProjectByOrg
 			? totalImpactProjectByOrg.totalImpactProjectByOrg
 			: 0,
+		orgProjectCount: orgProjectCount ? orgProjectCount.orgProjectCount : 0,
 	};
 }
 
@@ -71,7 +73,7 @@ export function GetDeliverableOrgStatus(queryFilter: { variables: { filter: obje
 		queryFilter
 	);
 	let { data: totalDeliverableByOrg } = useQuery(GET_TOTAL_DELIVERABLE, queryFilter);
-
+	let { data: orgProjectCount } = useQuery(GET_PROJECT_COUNT);
 	return {
 		achiveDeliverableVsTargetByOrg: achiveDeliverableVsTargetByOrg
 			? achiveDeliverableVsTargetByOrg.achiveDeliverableVsTargetByOrg
@@ -86,6 +88,7 @@ export function GetDeliverableOrgStatus(queryFilter: { variables: { filter: obje
 		totalDeliverableByOrg: totalDeliverableByOrg
 			? totalDeliverableByOrg.totalDeliverableByOrg
 			: 0,
+		orgProjectCount: orgProjectCount ? orgProjectCount.orgProjectCount : 0,
 	};
 }
 
@@ -94,6 +97,7 @@ export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } 
 	let { data: budgetTargetSum } = useQuery(GET_BUDGET_TARGET_SUM, queryFilter);
 	let { data: fundRecipetValuesByOrg } = useQuery(GET_FUND_RECEIVED_VALUE, queryFilter);
 	let { data: completedProjectCount } = useQuery(GET_COMPLETED_BUDGET_COUNT, queryFilter);
+	let { data: orgProjectCount } = useQuery(GET_PROJECT_COUNT);
 	return {
 		budgetTargetSum: budgetTargetSum ? budgetTargetSum.budgetTargetSum : 0,
 		budgetSpentValue: budgetSpentValue ? budgetSpentValue.budgetSpentValue : 0,
@@ -103,26 +107,26 @@ export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } 
 		completedProjectCount: completedProjectCount
 			? completedProjectCount.completedProjectCount
 			: 0,
+		orgProjectCount: orgProjectCount ? orgProjectCount.orgProjectCount : 0,
 	};
 }
 
-export function GetBudgetProjects(
-	filter: string | undefined,
-	queryFilter: { variables: { filter: object } }
-) {
-	let { data: projectExpenditureValue } = useQuery(
+export function GetBudgetProjects(queryFilter: { variables: { filter: object } }) {
+	let { data: projectExpenditureValue, loading } = useQuery(
 		GET_BUDGET_PROJECTS_BY_EXPENDITURE,
 		queryFilter
 	);
-	let { data: projectAllocationValue } = useQuery(GET_BUDGET_PROJECTS_BY_ALLOCATION, queryFilter);
+	let { data: projectAllocationValue, loading: projectAllcoationLoading } = useQuery(
+		GET_BUDGET_PROJECTS_BY_ALLOCATION,
+		queryFilter
+	);
 
 	return {
-		data:
-			projectExpenditureValue && filter === "Expenditure"
-				? projectExpenditureValue.projectExpenditureValue
-				: projectAllocationValue && filter === "Allocation"
-				? projectAllocationValue.projectAllocationValue
-				: null,
+		data: {
+			expenditure: projectExpenditureValue?.projectExpenditureValue,
+			allocation: projectAllocationValue?.projectAllocationValue,
+		},
+		loading: projectAllcoationLoading || loading,
 	};
 }
 
@@ -149,12 +153,10 @@ export function GetDonors(
 	let { data: donorsAllocationValue } = useQuery(GET_DONOR_BY_FUND_ALLOCATED, queryFilter);
 	let { data: donorsRecievedValue } = useQuery(GET_DONOR_BY_FUND_RECEIVED, queryFilter);
 	return {
-		data:
-			donorsRecievedValue && filter === "Received"
-				? donorsRecievedValue.donorsRecievedValue
-				: donorsAllocationValue && filter === "Allocated"
-				? donorsAllocationValue.donorsAllocationValue
-				: null,
+		data: {
+			received: donorsRecievedValue?.donorsRecievedValue,
+			allocation: donorsAllocationValue?.donorsAllocationValue,
+		},
 	};
 }
 

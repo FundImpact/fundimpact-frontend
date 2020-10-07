@@ -73,8 +73,8 @@ beforeEach(() => {
 });
 
 jest.setTimeout(30000);
-describe("Deliverable Table and Deliverable trackline table Graphql Calls and data listing", () => {
-	test("Table Headings for Deliverable Table", async () => {
+describe("Invited User TableGraphql Calls and data listing", () => {
+	test("Table Headings for Invited User Table", async () => {
 		const { getAllByText } = invitedUserTable;
 		for (let i = 0; i < invitedUserTableHeadings.length; i++) {
 			await waitForElement(() =>
@@ -82,7 +82,7 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 			);
 		}
 	});
-	test("Data listing of Deliverable table", async () => {
+	test("Data listing of Invited User table", async () => {
 		const { getByText } = invitedUserTable;
 		await waitForElement(() => getByText(new RegExp("" + userListMock[0].email, "i")));
 		await waitForElement(() => getByText(new RegExp("" + userListMock[0].role.name, "i")));

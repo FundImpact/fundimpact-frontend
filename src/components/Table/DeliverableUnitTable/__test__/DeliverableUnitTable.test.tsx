@@ -60,16 +60,16 @@ const mocks = [
 		},
 	},
 	{
-    request: {
-		query: GET_USER_ROLES,
-		variables: {
-			filter:{
-				role: "1",
-			}
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				filter: {
+					role: "1",
+				},
+			},
 		},
+		result: { data: mockUserRoles },
 	},
-    result: { data: mockUserRoles },
-  },
 	{
 		request: {
 			query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,

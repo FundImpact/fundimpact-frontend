@@ -7,12 +7,6 @@
 			"value": "my@my.com"
 		},
 		{
-			"name": "username",
-			"dataTestId": "userFormUsername",
-			"testId": "userFormUsernameInput",
-			"value": "username"
-		},
-		{
 			"name": "name",
 			"dataTestId": "userFormName",
 			"testId": "userFormNameInput",

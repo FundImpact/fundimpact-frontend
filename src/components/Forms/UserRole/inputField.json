@@ -8,7 +8,7 @@
 			"label": "Email",
 			"type": "email",
 			"required": true,
-			"size": 9
+			"size": 8
 		},
 		{
 			"name": "role",
@@ -22,7 +22,7 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"required": true,
-			"size": 3
+			"size": 4
 		}
 	]
 }

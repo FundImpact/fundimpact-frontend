@@ -51,16 +51,16 @@ const mocks = [
 		result: { data: { deliverableTargetList: DeliverableTargetMock } },
 	},
 	{
-    request: {
-		query: GET_USER_ROLES,
-		variables: {
-			filter:{
-				role: "1",
-			}
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				filter: {
+					role: "1",
+				},
+			},
 		},
+		result: { data: mockUserRoles },
 	},
-    result: { data: mockUserRoles },
-  },
 	{
 		request: {
 			query: GET_ANNUAL_YEARS,

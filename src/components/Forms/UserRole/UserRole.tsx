@@ -3,9 +3,8 @@ import { FORM_ACTIONS } from "../constant";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
 import { userRoleForm } from "./inputField.json";
-import { Typography, Grid } from "@material-ui/core";
 import { UserRoleProps, IUserRole } from "../../../models/UserRole/UserRole";
-import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
@@ -19,6 +18,7 @@ import {
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
 import FullScreenLoader from "../../commons/GlobalLoader";
+import FormDialog from "../../FormDialog";
 function getInitialValues(props: UserRoleProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		return { ...props.data };
@@ -40,11 +40,14 @@ function UserRoleForm(props: UserRoleProps) {
 	const dashboardData = useDashBoardData();
 	const [formValues, setFormValues] = useState<{ email: string; role: string } | null>();
 	const formAction = props.type;
+	const formIsOpen = props.open;
+	const onCancel = props.handleClose;
 	const [sendInvitationToUser, { loading: sendInvitationToUserLoading }] = useMutation(
 		INVITE_USER,
 		{
 			onCompleted(data) {
 				notificationDispatch(setSuccessNotification("Invitation Sent"));
+				onCancel();
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Inviting User Failed !"));
@@ -65,6 +68,17 @@ function UserRoleForm(props: UserRoleProps) {
 		},
 	});
 
+	const intl = useIntl();
+	let title = intl.formatMessage({
+		id: "addUserRoleFormTitle",
+		defaultMessage: "Add Role to a User",
+		description: "This text will be show on user update form for title",
+	});
+	let subtitle = intl.formatMessage({
+		id: "addUserRoleFormTitle",
+		defaultMessage: "give user a role",
+		description: "This text will be show on user update form for subtitle",
+	});
 	(userRoleForm[1].optionsArray as {
 		type: string;
 		id: string;
@@ -76,21 +90,6 @@ function UserRoleForm(props: UserRoleProps) {
 				dashboardData?.organization?.id || ""
 			),
 		[filterOrganizationRoles, userRoles, dashboardData]
-	);
-
-	let title = (
-		<FormattedMessage
-			id="addUserRoleFormTitle"
-			defaultMessage="Add Role to a User"
-			description="This text will be show on user update form for title"
-		/>
-	);
-	let subtitle = (
-		<FormattedMessage
-			id="addUserRoleFormTitle"
-			defaultMessage="give user a role"
-			description="This text will be show on user update form for subtitle"
-		/>
 	);
 
 	useEffect(() => {
@@ -145,31 +144,21 @@ function UserRoleForm(props: UserRoleProps) {
 
 	return (
 		<React.Fragment>
-			<Grid container spacing={2}>
-				<Grid item xs={12}>
-					<Typography data-testid="add-user-role-heading" variant="h6" gutterBottom>
-						{title}
-					</Typography>
-					{/* <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-						{subtitle}
-					</Typography> */}
-				</Grid>
-				<Grid item xs={12}>
-					<CommonForm
-						{...{
-							initialValues,
-							validate,
-							onCreate,
-							cancelButtonName: "Reset",
-							createButtonName: "Add",
-							formAction,
-							onUpdate,
-							inputFields: userRoleForm,
-						}}
-					/>
-				</Grid>
-				{sendInvitationToUserLoading ? <FullScreenLoader /> : null}
-			</Grid>
+			<FormDialog title={title} subtitle={subtitle} open={formIsOpen} handleClose={onCancel}>
+				<CommonForm
+					{...{
+						initialValues,
+						validate,
+						onCreate,
+						cancelButtonName: "Reset",
+						createButtonName: "Add",
+						formAction,
+						onUpdate,
+						inputFields: userRoleForm,
+					}}
+				/>
+			</FormDialog>
+			{sendInvitationToUserLoading ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

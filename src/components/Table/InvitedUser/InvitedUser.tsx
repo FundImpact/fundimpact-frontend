@@ -17,6 +17,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import pagination from "../../../hooks/pagination";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { useIntl } from "react-intl";
 
 let roleHash: { [key: string]: string } = {};
 const chipArray = ({
@@ -174,11 +175,7 @@ export default function InvitedUserTable() {
 					</Box>
 				</TableCell>,
 				<TableCell>
-					{user?.confirmed ? (
-						<CheckIcon color="secondary" />
-					) : (
-						<CloseIcon color="error" />
-					)}
+					{user?.confirmed ? <CheckIcon color="action" /> : <CloseIcon color="error" />}
 				</TableCell>,
 				<TableCell>
 					<IconButton disabled>
@@ -203,6 +200,12 @@ export default function InvitedUserTable() {
 			style={{ paddingRight: "40px" }}
 		/>
 	);
+	const intl = useIntl();
+	let noRowHeadingInvitedUser = intl.formatMessage({
+		id: `noUserFoundHeading`,
+		defaultMessage: "No users found",
+		description: `This text will be shown if no users found for table`,
+	});
 
 	return (
 		<>
@@ -221,18 +224,20 @@ export default function InvitedUserTable() {
 								)}
 							</Box>
 						</Grid>
-						<Grid item xs={1}>
-							<Box mt={2}>
-								<FilterListContainer
-									initialValues={{
-										email: "",
-										role: [],
-									}}
-									setFilterList={setFilterList}
-									inputFields={invitedUserFilter}
-								/>
-							</Box>
-						</Grid>
+						{rows?.length > 0 && (
+							<Grid item xs={1}>
+								<Box mt={2}>
+									<FilterListContainer
+										initialValues={{
+											email: "",
+											role: [],
+										}}
+										setFilterList={setFilterList}
+										inputFields={invitedUserFilter}
+									/>
+								</Box>
+							</Grid>
+						)}
 					</Grid>
 					<FITable
 						tableHeading={invitedUserTableHeadings}
@@ -242,6 +247,7 @@ export default function InvitedUserTable() {
 						orderBy={orderBy}
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
+						noRowHeading={noRowHeadingInvitedUser}
 					/>
 				</>
 			)}

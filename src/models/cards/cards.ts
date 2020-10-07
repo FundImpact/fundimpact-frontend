@@ -6,7 +6,7 @@ export type CardProps = {
 	children?: React.ReactElement | any;
 	cardHeight?: string;
 	cardFilter?: { label: string; base: string }[];
-	currentFilter?: string;
+	currentFilter?: { label: string; base: string };
 } & (
 	| {
 			type: CARD_TYPES.PIE;
@@ -37,10 +37,14 @@ export type ProjectCardConfig = {
 	title: string;
 	mainHeading: string | number;
 	rightUpperTitle: string;
-	firstBarHeading: string;
-	firstBarValue: number;
+	firstBarHeading?: string;
+	firstBarValue?: number;
 	secondBarHeading: string;
-	secondBarValue: number;
+	chartConfig: {
+		primarySegmentedMeasureData: { name: string; y: number }[];
+		qualitativeRangeData: { name: string; y: number }[];
+		comparativeErrorMeasureData: { name: string; y: number }[];
+	};
 };
 
 export type PieCardConfig = {
@@ -50,16 +54,24 @@ export type PieCardConfig = {
 };
 
 export type ProgressCardResponse = {
+	project_id: string | number;
 	id: string | number;
 	name: string;
 	avg_value?: number;
+	avg_value_two?: number;
 	sum?: number;
+	sum_two?: number;
+	label?: string;
+	labelTwo: string;
 };
 
 export type ProgressCardConfig = {
 	dataToDisplay: ProgressCardResponse[];
 	dialogTitle?: string;
+	dialogFilterTitle?: string;
 	noBarDisplay?: boolean;
+	noBarDisplayTitle?: string[];
+	loading?: boolean;
 };
 
 export type CategoryDataResponse = {

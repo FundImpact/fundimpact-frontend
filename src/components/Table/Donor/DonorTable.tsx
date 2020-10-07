@@ -86,7 +86,7 @@ function DonorTable({
 	const dashboardData = useDashBoardData();
 
 	const countryFindAccess = userHasAccess(MODULE_CODES.COUNTRY, COUNTRY_ACTION.FIND_COUNTRY);
-	
+
 	const filteredTableHeadings = useMemo(
 		() =>
 			filterTableHeadingsAndRows(tableHeading, {
