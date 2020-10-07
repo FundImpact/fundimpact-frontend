@@ -63,6 +63,7 @@ function CommonTableRow<T extends { id: string }>({
 	const [openRow, setOpenRow] = useState(false);
 	const childrenArray = React.Children.toArray(children);
 	const intl = useIntl();
+
 	return (
 		<>
 			<TableRow>
@@ -85,6 +86,7 @@ function CommonTableRow<T extends { id: string }>({
 					return (
 						<TableCell key={i} align="left">
 							{(row.valueAccessKey &&
+								getValueFromObject(rowData, row.valueAccessKey.split(",")) &&
 								intl.formatMessage({
 									id: `rowData${getValueFromObject(
 										rowData,
