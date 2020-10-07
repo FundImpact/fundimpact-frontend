@@ -20,6 +20,7 @@ import { BUDGET_CATEGORY_ACTIONS } from "../../../../utils/access/modules/budget
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../../utils";
 import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
+import { ITableHeadings } from "../../../../models";
 
 enum tableHeader {
 	targetName = 2,
@@ -28,6 +29,7 @@ enum tableHeader {
 	totalAmout = 5,
 	spent = 6,
 	progress = 7,
+	filterList = 8,
 }
 
 enum tableRow {
@@ -73,16 +75,7 @@ const rows = [
 ];
 
 const getTableHeadingByBudgetTrackingLineItemAccess = (
-	headings: (
-		| {
-				label: string;
-				keyMapping?: undefined;
-		  }
-		| {
-				label: string;
-				keyMapping: string;
-		  }
-	)[],
+	headings: ITableHeadings[],
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
@@ -269,7 +262,7 @@ function BudgetTargetView({
 			budgetTargetProjectAllocationValue,
 		]
 	);
-
+	console.log("filteredTableHeadings :>> ", filteredTableHeadings);
 	const filteredRows = useMemo(
 		() =>
 			filterTableHeadingsAndRows(rows, {
@@ -296,11 +289,24 @@ function BudgetTargetView({
 		}
 	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
 
+	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
+		<FilterList
+			initialValues={{
+				name: "",
+				total_target_amount: "",
+				donor: [],
+				budget_category_organization: [],
+			}}
+			setFilterList={setFilterList}
+			inputFields={inputFields}
+		/>
+	);
+
 	return (
 		<>
 			<Grid container>
 				<Grid item xs={11}>
-					<Box my={2} display="flex" flexWrap="wrap">
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
@@ -309,20 +315,6 @@ function BudgetTargetView({
 								removeFilterListElements,
 							})
 						)}
-					</Box>
-				</Grid>
-				<Grid item xs={1}>
-					<Box mt={2}>
-						<FilterList
-							initialValues={{
-								name: "",
-								total_target_amount: "",
-								donor: [],
-								budget_category_organization: [],
-							}}
-							setFilterList={setFilterList}
-							inputFields={inputFields}
-						/>
 					</Box>
 				</Grid>
 			</Grid>

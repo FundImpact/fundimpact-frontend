@@ -160,7 +160,7 @@ export type ICommonTableRow = {
 };
 
 export interface ICommonTable<T> {
-	tableHeadings: { label: string; keyMapping?: string }[];
+	tableHeadings: ITableHeadings[];
 	rows: ICommonTableRow[];
 	selectedRow: MutableRefObject<T | null>;
 	children: ReactNode | [ReactNode, () => ReactNode];
@@ -175,4 +175,10 @@ export interface ICommonTable<T> {
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface ITableHeadings {
+	label: string;
+	keyMapping?: string;
+	renderComponent?: () => React.ReactNode;
 }
