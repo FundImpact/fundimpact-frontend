@@ -182,11 +182,12 @@ function CommonTable<T extends { id: string }>({
 														"tableHeading" +
 														heading.label.replace(/ /g, "")
 													}
-													defaultMessage={`${heading.label}`}
 													description={`This text will be shown on table for ${heading.label} heading`}
+													defaultMessage={`${heading.label}`}
 												/>
 												{order && heading.keyMapping && (
 													<TableSortLabel
+														direction={order}
 														active={orderBy === heading.keyMapping}
 														onClick={() => {
 															if (orderBy === heading.keyMapping) {
@@ -203,7 +204,6 @@ function CommonTable<T extends { id: string }>({
 																	);
 															}
 														}}
-														direction={order}
 													></TableSortLabel>
 												)}
 											</>
