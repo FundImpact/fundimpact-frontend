@@ -41,6 +41,7 @@ import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/mo
 import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
 import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
+import FundReceivedTable from "../../Table/FundReceivedTable";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -99,13 +100,15 @@ enum tabType {
 	deliverableTab = 1,
 	impactTab = 2,
 	grantPeriodTab = 3,
+	fundReceiptTab = 3,
 }
 
 const getTabToShow = (
 	budgetTabVisibility: boolean,
 	impactTabVisibility: boolean,
 	deliverableTabVisibility: boolean,
-	grantPeriodTabVisibility: boolean
+	grantPeriodTabVisibility: boolean,
+	fundReceiptTabVisibility: boolean
 ) => {
 	if (budgetTabVisibility) {
 		return tabType.budgetTab;
@@ -118,6 +121,9 @@ const getTabToShow = (
 	}
 	if (grantPeriodTabVisibility) {
 		return tabType.grantPeriodTab;
+	}
+	if (fundReceiptTabVisibility) {
+		return tabType.fundReceiptTab;
 	}
 	return tabType.budgetTab;
 };
@@ -204,6 +210,11 @@ export default function DashboardTableContainer() {
 		FUND_RECEIPT_ACTIONS.CREATE_FUND_RECEIPT
 	);
 
+	const fundReceiptFindAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.FIND_FUND_RECEIPT
+	);
+
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -259,28 +270,12 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
-				{
-					text: intl.formatMessage({
-						id: "reportFundReceived",
-						defaultMessage: "Report Fund Received",
-						description: `This text will be show on Add Button for Report Fund Received`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<FundReceived
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-						/>
-					),
-					createButtonAccess: fundReceiptCreateAccess,
-				},
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
 				budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
-				budgetTargetLineItemCreateAccess ||
-				fundReceiptCreateAccess,
+				budgetTargetLineItemCreateAccess,
 			tableVisibility: budgetTargetFindAccess,
 		},
 		{
@@ -443,6 +438,33 @@ export default function DashboardTableContainer() {
 		},
 		{
 			label: intl.formatMessage({
+				id: "fundReceivedTabHeading",
+				defaultMessage: "Fund Received",
+				description: `This text will be show on tab for fund received`,
+			}),
+			table: <FundReceivedTable />,
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "reportFundReceived",
+						defaultMessage: "Report Fund Received",
+						description: `This text will be show on Add Button for Report Fund Received`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<FundReceived
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+					createButtonAccess: fundReceiptCreateAccess,
+				},
+			],
+			tabVisibility: fundReceiptFindAccess || fundReceiptCreateAccess,
+			tableVisibility: fundReceiptFindAccess,
+		},
+		{
+			label: intl.formatMessage({
 				id: "grantPeriodTabHeading",
 				defaultMessage: "Grant Periods",
 				description: `This text will be show on tab for grant period`,
@@ -498,8 +520,7 @@ export default function DashboardTableContainer() {
 					budgetTargetFindAccess ||
 						budgetCategoryCreateAccess ||
 						budgetTargetCreateAccess ||
-						budgetTargetLineItemCreateAccess ||
-						fundReceiptCreateAccess,
+						budgetTargetLineItemCreateAccess,
 					impactTargetFindAccess ||
 						impactTargetCreateAccess ||
 						impactUnitCreateAccess ||
@@ -510,7 +531,8 @@ export default function DashboardTableContainer() {
 						deliverableUnitCreateAccess ||
 						deliverableCategoryCreateAccess ||
 						deliverableTracklineCreateAccess,
-					grantPeriodFindAccess || grantPeriodCreateAccess
+					grantPeriodFindAccess || grantPeriodCreateAccess,
+					fundReceiptCreateAccess || fundReceiptFindAccess
 				)
 			);
 		}
@@ -519,7 +541,6 @@ export default function DashboardTableContainer() {
 		budgetCategoryCreateAccess,
 		budgetTargetCreateAccess,
 		budgetTargetLineItemCreateAccess,
-		fundReceiptCreateAccess,
 		impactTargetFindAccess,
 		impactTargetCreateAccess,
 		impactUnitCreateAccess,
@@ -532,6 +553,8 @@ export default function DashboardTableContainer() {
 		deliverableTracklineCreateAccess,
 		grantPeriodFindAccess,
 		grantPeriodCreateAccess,
+		fundReceiptFindAccess,
+		fundReceiptCreateAccess,
 	]);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {

@@ -25,7 +25,7 @@ import { ICommonTableRow, ICommonTable, ITableHeadings } from "../../../models";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { getValueFromObject } from "../../../utils";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const useStyles = makeStyles({
 	table: {
@@ -62,7 +62,7 @@ function CommonTableRow<T extends { id: string }>({
 }) {
 	const [openRow, setOpenRow] = useState(false);
 	const childrenArray = React.Children.toArray(children);
-
+	const intl = useIntl();
 	return (
 		<>
 			<TableRow>
@@ -85,7 +85,20 @@ function CommonTableRow<T extends { id: string }>({
 					return (
 						<TableCell key={i} align="left">
 							{(row.valueAccessKey &&
-								getValueFromObject(rowData, row.valueAccessKey.split(","))) ||
+								intl.formatMessage({
+									id: `rowData${getValueFromObject(
+										rowData,
+										row.valueAccessKey.split(",")
+									)}`,
+									defaultMessage: `${getValueFromObject(
+										rowData,
+										row.valueAccessKey.split(",")
+									)}`,
+									description: `This text will be show in row as ${getValueFromObject(
+										rowData,
+										row.valueAccessKey.split(",")
+									)}`,
+								})) ||
 								(row.renderComponent && row.renderComponent(rowData))}
 						</TableCell>
 					);

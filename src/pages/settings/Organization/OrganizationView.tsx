@@ -24,7 +24,7 @@ import {
 import { IDashboardDataContext } from "../../../models";
 import UploadFile from "../../../components/UploadFile";
 import { Form, Formik, FormikProps } from "formik";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
 import { secondaryColor, primaryColor } from "../../../models/constants";
@@ -192,6 +192,8 @@ function OrganizationView({
 		};
 	}, []);
 
+	const intl = useIntl();
+
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
@@ -248,7 +250,11 @@ function OrganizationView({
 																}}
 																onBlur={formik.handleBlur}
 																fullWidth
-																label={"Choose Primary Color"}
+																label={intl.formatMessage({
+																	id: `colorPicker${"Choose Primary Color"}`,
+																	defaultMessage: `${"Choose Primary Color"}`,
+																	description: `This text will be show on color picker as ${"Choose Primary Color"}`,
+																})}
 																required={
 																	!!(initialValues.theme?.palette
 																		?.primary as SimplePaletteColorOptions)
@@ -316,7 +322,11 @@ function OrganizationView({
 																}}
 																onBlur={formik.handleBlur}
 																fullWidth
-																label={"Choose Secondary Color"}
+																label={intl.formatMessage({
+																	id: `colorPicker${"Choose Secondary Color"}`,
+																	defaultMessage: `${"Choose Secondary Color"}`,
+																	description: `This text will be show on color picker as ${"Choose Secondary Color"}`,
+																})}
 																required={
 																	!!(initialValues.theme?.palette
 																		?.secondary as SimplePaletteColorOptions)
@@ -402,9 +412,13 @@ function OrganizationView({
 																					formik.handleBlur
 																				}
 																				fullWidth
-																				label={
-																					element.label
-																				}
+																				label={intl.formatMessage(
+																					{
+																						id: `textFiled${element.label}`,
+																						defaultMessage: `${element.label}`,
+																						description: `This text will be show on input field as ${element.label}`,
+																					}
+																				)}
 																				required={
 																					!!initialValues[
 																						element.name as keyof IOrganisationForm
@@ -471,9 +485,13 @@ function OrganizationView({
 																					control={
 																						<Radio color="primary" />
 																					}
-																					label={
-																						element.reg_type
-																					}
+																					label={intl.formatMessage(
+																						{
+																							id: `radioElement${element.reg_type}`,
+																							defaultMessage: `${element.reg_type}`,
+																							description: `This text will be show on input field as ${element.reg_type}`,
+																						}
+																					)}
 																					value={
 																						element.id
 																					}
@@ -524,9 +542,13 @@ function OrganizationView({
 																							true
 																						}
 																					>
-																						{
-																							element.label
-																						}
+																						{intl.formatMessage(
+																							{
+																								id: `selectField${element.label}`,
+																								defaultMessage: `${element.label}`,
+																								description: `This text will be show on input field as ${element.label}`,
+																							}
+																						)}
 																					</InputLabel>
 
 																					<Select
@@ -582,11 +604,13 @@ function OrganizationView({
 																								disabled
 																							>
 																								<em>
-																									No{" "}
-																									{
-																										element.displayName
-																									}{" "}
-																									available
+																									{intl.formatMessage(
+																										{
+																											id: `textFiled${element.displayName}`,
+																											defaultMessage: `No ${element.displayName} available`,
+																											description: `This text will be show on input field as ${element.displayName}`,
+																										}
+																									)}
 																								</em>
 																							</MenuItem>
 																						) : null}
@@ -607,9 +631,13 @@ function OrganizationView({
 																										elem.id
 																									}
 																								>
-																									{
-																										elem.name
-																									}
+																									{intl.formatMessage(
+																										{
+																											id: `menuItem${elem.name}`,
+																											defaultMessage: `${elem.name}`,
+																											description: `This text will be show on menu item as ${elem.name}`,
+																										}
+																									)}
 																								</MenuItem>
 																							)
 																						)}

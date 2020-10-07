@@ -47,7 +47,6 @@ function Pagination({
 	const apolloClient = useApolloClient();
 
 	const [error, setError] = useState<null | string>(null);
-	const [oldCache, setOldCache] = useState(null);
 
 	let [
 		getRequestedDataLength,
@@ -92,30 +91,14 @@ function Pagination({
 					? count.current - correctStartingValue
 					: limit;
 
-			let oldCacheQueryData: any = null;
-			try {
-				oldCacheQueryData = apolloClient.readQuery({
-					query,
-					variables: {
-						filter: queryFilter,
-						limit: currentLimit,
-						start: correctStartingValue,
-						sort,
-					},
-				});
-			} catch (err) {}
-
-			setOldCache(oldCacheQueryData);
-			if (!oldCacheQueryData) {
-				getQueryData({
-					variables: {
-						filter: queryFilter,
-						limit: currentLimit,
-						start: correctStartingValue,
-						sort,
-					},
-				});
-			}
+			getQueryData({
+				variables: {
+					filter: queryFilter,
+					limit: currentLimit,
+					start: correctStartingValue,
+					sort,
+				},
+			});
 
 			startingValue.current =
 				correctStartingValue + currentLimit > count.current
@@ -139,7 +122,7 @@ function Pagination({
 	return {
 		count: count.current,
 		changePage,
-		queryData: oldCache ? oldCache : queryData,
+		queryData: queryData,
 		error,
 		queryLoading,
 		countQueryLoading,
