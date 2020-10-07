@@ -9,5 +9,9 @@ export const AUTH_MODULE = {
 			name: "Invite User",
 			code: AUTH_ACTIONS.INVITE_USER,
 		},
+		[AUTH_ACTIONS.FIND]: {
+			name: "Find User",
+			code: AUTH_ACTIONS.FIND,
+		},
 	},
 };

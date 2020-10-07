@@ -111,6 +111,8 @@ export default function SettingContainer() {
 
 	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
 
+	const authFindUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.FIND);
+
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
@@ -214,7 +216,11 @@ export default function SettingContainer() {
 						</PrivateRoute> */}
 						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}
 						<PrivateRoute path="">{getDefaultRoute()}</PrivateRoute>
-						<PrivateRoute path="users" element={<UserRoleContainer />} />
+						<PrivateRoute
+							path="users"
+							userAccess={authFindUser || authInviteUser}
+							element={<UserRoleContainer />}
+						/>
 						<PrivateRoute
 							userAccess={userRoleFindAccess || userRoleCreateAccess}
 							path="user_roles"
