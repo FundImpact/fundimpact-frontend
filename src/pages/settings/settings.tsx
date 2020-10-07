@@ -147,11 +147,11 @@ export default function SettingContainer() {
 
 	return (
 		<Container
-			disableGutters
-			container
+			component={Grid}
 			className={classes.root}
 			maxWidth={"xl"}
-			component={Grid}
+			container
+			disableGutters
 		>
 			<Grid container>
 				<Grid item xs={12} md={3}>
