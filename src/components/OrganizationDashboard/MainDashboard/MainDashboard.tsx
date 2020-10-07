@@ -15,11 +15,6 @@ import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
 import { useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { setProject } from "../../../reducers/dashboardReducer";
 const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		"& text": {
-			color: theme.palette.primary.main,
-		},
-	},
 	bottonContainer: {
 		marginTop: theme.spacing(2),
 	},
@@ -69,7 +64,7 @@ export default function MainOrganizationDashboard() {
 	}, [dispatch, setProject]);
 	return (
 		<>
-			<Grid item container style={{ flex: 1.5 }} className={classes.root}>
+			<Grid item container style={{ flex: 1.5 }}>
 				<Grid item md={12}>
 					<Box m={1}>
 						<Typography variant="h6">
