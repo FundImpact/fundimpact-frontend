@@ -10,7 +10,7 @@ import { useAuth } from "./userContext";
 import { useDashBoardData } from "./dashboardContext";
 import { primaryColor, secondaryColor } from "../models/constants";
 
-const getGlobalStylesOverride = (primaryColor: string) => {
+const getGlobalStylesOverride = (themePrimaryColor: string) => {
 	return {
 		overrides: {
 			MuiCssBaseline: {
@@ -25,7 +25,7 @@ const getGlobalStylesOverride = (primaryColor: string) => {
 						background: "rgba(0, 0, 0, 0.08)",
 					},
 					"*::-webkit-scrollbar-thumb": {
-						backgroundColor: primaryColor,
+						backgroundColor: themePrimaryColor,
 						borderRadius: "50px",
 					},
 					tspan: {
