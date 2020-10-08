@@ -300,6 +300,13 @@ const createChipArray = ({
 	return null;
 };
 
+const getDefaultFilterList = () => ({
+	name: "",
+	target_value: "",
+	impact_category_org: [],
+	sustainable_development_goal: [],
+});
+
 export default function ImpactsTable() {
 	const dashboardData = useDashBoardData();
 	const [rows, setRows] = useState<
@@ -313,12 +320,7 @@ export default function ImpactsTable() {
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
-	}>({
-		name: "",
-		target_value: "",
-		impact_category_org: [],
-		sustainable_development_goal: [],
-	});
+	}>(getDefaultFilterList());
 
 	const impactTracklineFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
@@ -357,7 +359,8 @@ export default function ImpactsTable() {
 		setQueryFilter({
 			project: dashboardData?.project?.id,
 		});
-	}, [dashboardData]);
+		setFilterList(getDefaultFilterList());
+	}, [dashboardData, setFilterList, setQueryFilter]);
 
 	useEffect(() => {
 		if (sdgList) {

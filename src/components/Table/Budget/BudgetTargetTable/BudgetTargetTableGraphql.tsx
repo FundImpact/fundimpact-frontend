@@ -16,7 +16,10 @@ import { removeFilterListObjectElements } from "../../../../utils/filterList";
 let donorHash = {};
 let budgetCategoryHash = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
@@ -25,6 +28,14 @@ const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key:
 		initialObject
 	);
 };
+
+const getDefaultFilterList = () => ({
+	name: "",
+	code: "",
+	description: "",
+	donor: [],
+	budget_category_organization: [],
+});
 
 function BudgetTargetTableGraphql() {
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -64,13 +75,7 @@ function BudgetTargetTableGraphql() {
 
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
-	}>({
-		name: "",
-		code: "",
-		description: "",
-		donor: [],
-		budget_category_organization: [],
-	});
+	}>(getDefaultFilterList());
 
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
@@ -81,7 +86,8 @@ function BudgetTargetTableGraphql() {
 		setQueryFilter({
 			project: currentProject?.id,
 		});
-	}, [currentProject]);
+		setFilterList(getDefaultFilterList());
+	}, [currentProject, setFilterList, setQueryFilter]);
 
 	useEffect(() => {
 		if (filterList) {

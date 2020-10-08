@@ -115,6 +115,20 @@ function Donor(props: IDonorProps) {
 								orgDonors: [createOrgDonor, ...orgDonors],
 							},
 						});
+					} catch (err) {
+						console.log("err :>> ", err);
+					}
+					try {
+						const data = await store.readQuery<IGET_DONOR>({
+							query: GET_ORG_DONOR,
+							variables: {
+								filter: {
+									organization: dashboardData?.organization?.id,
+								},
+							},
+						});
+
+						let orgDonors = data?.orgDonors ? data?.orgDonors : [];
 
 						store.writeQuery<IGET_DONOR>({
 							query: GET_ORG_DONOR,
@@ -127,7 +141,9 @@ function Donor(props: IDonorProps) {
 								orgDonors: [createOrgDonor, ...orgDonors],
 							},
 						});
-					} catch (err) {}
+					} catch (err) {
+						console.log('err :>> ', err);
+					}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Donor Creation Success"));

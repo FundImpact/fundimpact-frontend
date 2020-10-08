@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	TableContainer,
 	Table,
@@ -63,6 +63,7 @@ function CommonTableRow<T extends { id: string }>({
 	const [openRow, setOpenRow] = useState(false);
 	const childrenArray = React.Children.toArray(children);
 	const intl = useIntl();
+
 	return (
 		<>
 			<TableRow>
@@ -85,6 +86,7 @@ function CommonTableRow<T extends { id: string }>({
 					return (
 						<TableCell key={i} align="left">
 							{(row.valueAccessKey &&
+								getValueFromObject(rowData, row.valueAccessKey.split(",")) &&
 								intl.formatMessage({
 									id: `rowData${getValueFromObject(
 										rowData,
@@ -150,6 +152,11 @@ function CommonTable<T extends { id: string }>({
 		setAnchorEl(null);
 	};
 
+	//this means that new item has been added
+	useEffect(() => {
+		setPage(0);
+	}, [count, setPage]);
+
 	const menuList = editMenuName
 		.map((element, index) => ({
 			children:
@@ -181,6 +188,7 @@ function CommonTable<T extends { id: string }>({
 
 	return (
 		<TableContainer component={Paper}>
+			{/* childrenArray[0]  is the dialog we want in the table*/}
 			{childrenArray[0]}
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
@@ -191,37 +199,41 @@ function CommonTable<T extends { id: string }>({
 										{heading.renderComponent ? (
 											heading.renderComponent()
 										) : (
-											<>
-												<FormattedMessage
-													id={
-														"tableHeading" +
-														heading.label.replace(/ /g, "")
-													}
-													description={`This text will be shown on table for ${heading.label} heading`}
-													defaultMessage={`${heading.label}`}
-												/>
-												{order && heading.keyMapping && (
-													<TableSortLabel
-														direction={order}
-														active={orderBy === heading.keyMapping}
-														onClick={() => {
-															if (orderBy === heading.keyMapping) {
-																setOrder &&
-																	setOrder(
-																		order === "asc"
-																			? "desc"
-																			: "asc"
-																	);
-															} else {
-																setOrderBy &&
-																	setOrderBy(
-																		heading.keyMapping || ""
-																	);
-															}
-														}}
-													></TableSortLabel>
-												)}
-											</>
+											<Grid container>
+												<Grid item xs={12} style={{ display: "flex" }}>
+													<FormattedMessage
+														id={
+															"tableHeading" +
+															heading.label.replace(/ /g, "")
+														}
+														description={`This text will be shown on table for ${heading.label} heading`}
+														defaultMessage={`${heading.label}`}
+													/>
+													{order && heading.keyMapping && (
+														<TableSortLabel
+															direction={order}
+															active={orderBy === heading.keyMapping}
+															onClick={() => {
+																if (
+																	orderBy === heading.keyMapping
+																) {
+																	setOrder &&
+																		setOrder(
+																			order === "asc"
+																				? "desc"
+																				: "asc"
+																		);
+																} else {
+																	setOrderBy &&
+																		setOrderBy(
+																			heading.keyMapping || ""
+																		);
+																}
+															}}
+														></TableSortLabel>
+													)}
+												</Grid>
+											</Grid>
 										)}
 									</TableCell>
 							  ))
@@ -265,7 +277,7 @@ function CommonTable<T extends { id: string }>({
 										/>
 									)}
 								</TableCell>
-
+								{/* children[1] is a function which is used to retrive the value of row*/}
 								{Array.isArray(children) && children?.length >= 1 && children[1]}
 							</CommonTableRow>
 						))}
@@ -305,4 +317,4 @@ function CommonTable<T extends { id: string }>({
 	);
 }
 
-export default React.memo(CommonTable);
+export default CommonTable;
