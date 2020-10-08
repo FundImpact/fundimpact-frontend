@@ -10,23 +10,22 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 
 export const UserRoleContainer = () => {
 	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
+	const authFindUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.FIND);
 
 	return (
 		<Box>
-			{authInviteUser && (
-				<Grid md={12}>
-					<Box m={1} mb={0}>
-						<Typography variant="h6">
-							<FormattedMessage
-								id={`invitedUserHeading`}
-								defaultMessage={`Invited Users`}
-								description={`This text will be shown on Setting page for invited user heading on role tab`}
-							/>
-						</Typography>
-					</Box>
-					<Box>
-						<InvitedUserTable />
-					</Box>
+			<Grid md={12}>
+				<Box m={1} mb={0}>
+					<Typography variant="h6">
+						<FormattedMessage
+							id={`invitedUserHeading`}
+							defaultMessage={`Invited Users`}
+							description={`This text will be shown on Setting page for invited user heading on role tab`}
+						/>
+					</Typography>
+				</Box>
+				<Box>{authFindUser && <InvitedUserTable />}</Box>
+				{authInviteUser && (
 					<AddButton
 						createButtons={[]}
 						buttonAction={{
@@ -45,8 +44,8 @@ export const UserRoleContainer = () => {
 							),
 						}}
 					/>
-				</Grid>
-			)}
+				)}
+			</Grid>
 		</Box>
 	);
 };

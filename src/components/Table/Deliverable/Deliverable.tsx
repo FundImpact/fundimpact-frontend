@@ -289,6 +289,12 @@ const getTableHeadingByDeliverableTracklineAccess = (
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
+const getDefaultFilterList = () => ({
+	name: "",
+	target_value: "",
+	deliverable_category_org: [],
+});
+
 export default function DeliverablesTable() {
 	const dashboardData = useDashBoardData();
 	const [page, setPage] = React.useState(0);
@@ -297,11 +303,7 @@ export default function DeliverablesTable() {
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
-	}>({
-		name: "",
-		target_value: "",
-		deliverable_category_org: [],
-	});
+	}>(getDefaultFilterList());
 
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -344,7 +346,8 @@ export default function DeliverablesTable() {
 		setQueryFilter({
 			project: dashboardData?.project?.id,
 		});
-	}, [dashboardData]);
+		setFilterList(getDefaultFilterList());
+	}, [dashboardData, setFilterList, setQueryFilter]);
 
 	useEffect(() => {
 		if (filterList) {

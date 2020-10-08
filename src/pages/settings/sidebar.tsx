@@ -127,6 +127,8 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		USER_PERMISSIONS_ACTIONS.CREATE_USER_PERMISSIONS
 	);
 
+	const authFindUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.FIND);
+
 	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
 
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
@@ -161,7 +163,12 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 
 	setSidebarTabUserAccess(
 		sidebarList[sidebar.manageUsers].subHeadings[0],
-		userRoleFindAccess || userRoleCreateAccess || authInviteUser
+		userRoleFindAccess || userRoleCreateAccess
+	);
+
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.manageUsers].subHeadings[1],
+		authInviteUser || authFindUser
 	);
 
 	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
