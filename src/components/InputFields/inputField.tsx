@@ -148,11 +148,16 @@ const InputFields = ({
 					{multiSelect &&
 						optionsArray &&
 						optionsArray.map((elem: any, index: number) => (
-							<MenuItem key={index} value={multiSelect ? elem : elem.id}>
+							<MenuItem
+								key={index}
+								value={multiSelect ? elem : elem.id}
+								disabled={elem.disabled}
+							>
 								{multiSelect ? (
 									<Checkbox
 										color="primary"
 										checked={elemName.indexOf(elem.id) > -1}
+										disabled={elem.disabled}
 									/>
 								) : null}
 								{elem.name}

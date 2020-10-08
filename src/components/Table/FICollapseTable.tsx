@@ -68,7 +68,7 @@ function Row(props: {
 			</TableRow>
 			{showNestedTable && (
 				<TableRow>
-					<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+					<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
 						<Collapse in={open} timeout="auto" unmountOnExit>
 							<Box margin={1}>{row.collaspeTable}</Box>
 						</Collapse>
