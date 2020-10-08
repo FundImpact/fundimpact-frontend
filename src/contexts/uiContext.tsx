@@ -29,7 +29,7 @@ const getGlobalStylesOverride = (primaryColor: string) => {
 						borderRadius: "50px",
 					},
 					tspan: {
-						fill: `${"grey"} !important`,
+						fill: `rgb(144,144,144) !important`,
 					},
 				},
 			},
