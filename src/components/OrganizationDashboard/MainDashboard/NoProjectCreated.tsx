@@ -20,19 +20,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-function NoProjectCreated() {
+function NoProjectCreated({
+	setRedirectToDashboard,
+}: {
+	setRedirectToDashboard: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
 	const classes = useStyles();
-	const [redirect, setRedirect] = useState<boolean>(false);
 	const [projectDialogOpen, setProjectDialogOpen] = useState<boolean>(false);
 	const dashboardData = useDashBoardData();
 	const [getWorkSpaces, { data: workSpaces, loading: fetchingWorkspaces }] = useLazyQuery<
 		IGET_WORKSPACES_BY_ORG
 	>(GET_WORKSPACES_BY_ORG);
 
-	const [getProjectByWorkSpace] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
+	const [getProjects] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
 		onCompleted: (projects) => {
 			if (projects?.orgProject?.length) {
-				setRedirect(true);
+				setRedirectToDashboard(true);
 			}
 		},
 		fetchPolicy: "network-only",
@@ -57,10 +60,6 @@ function NoProjectCreated() {
 		);
 	}
 
-	if (redirect) {
-		return <Navigate to="/dashboard" />;
-	}
-
 	return (
 		<Box p={2}>
 			<Project
@@ -70,11 +69,7 @@ function NoProjectCreated() {
 				workspace={workSpaces?.orgWorkspaces[0]?.id || ""}
 				handleClose={() => {
 					setProjectDialogOpen(false);
-					getProjectByWorkSpace({
-						variables: {
-							workspace: workSpaces?.orgWorkspaces[0]?.id,
-						},
-					});
+					getProjects();
 				}}
 			/>
 			<Grid container spacing={2}>

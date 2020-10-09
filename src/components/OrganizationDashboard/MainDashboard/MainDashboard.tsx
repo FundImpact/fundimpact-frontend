@@ -9,7 +9,7 @@ import {
 	Typography,
 	CircularProgress,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
 import { FormattedMessage, useIntl } from "react-intl";
 import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
@@ -18,6 +18,7 @@ import { setProject } from "../../../reducers/dashboardReducer";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import NoProjectCreated from "./NoProjectCreated";
+import { Navigate } from "react-router";
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
 		marginTop: theme.spacing(2),
@@ -68,8 +69,10 @@ export default function MainOrganizationDashboard() {
 	}, [dispatch, setProject]);
 
 	const [getProjects, { data: projectList, loading }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
-		fetchPolicy: "no-cache",
+		fetchPolicy: "network-only",
 	});
+
+	const [redirectToDashboard, setRedirectToDashboard] = useState<boolean>(false);
 
 	useEffect(() => {
 		getProjects();
@@ -88,8 +91,12 @@ export default function MainOrganizationDashboard() {
 		);
 	}
 
+	if (redirectToDashboard) {
+		return <Navigate to="/dashboard" />;
+	}
+
 	if (!projectList || projectList?.orgProject?.length == 0) {
-		return <NoProjectCreated />;
+		return <NoProjectCreated setRedirectToDashboard={setRedirectToDashboard} />;
 	}
 
 	return (
