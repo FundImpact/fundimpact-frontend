@@ -68,7 +68,7 @@ export default function MainOrganizationDashboard() {
 	}, [dispatch, setProject]);
 
 	const [getProjects, { data: projectList, loading }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
-		fetchPolicy: "network-only",
+		fetchPolicy: "no-cache",
 	});
 
 	useEffect(() => {
