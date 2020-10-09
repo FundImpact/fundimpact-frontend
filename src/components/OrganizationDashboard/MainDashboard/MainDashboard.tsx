@@ -16,7 +16,7 @@ import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
 import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
 import { setProject } from "../../../reducers/dashboardReducer";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import NoProjectCreated from "./NoProjectCreated";
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
@@ -67,7 +67,13 @@ export default function MainOrganizationDashboard() {
 		dispatch(setProject(undefined));
 	}, [dispatch, setProject]);
 
-	const { data: projectList, loading } = useQuery(GET_PROJECTS_BY_WORKSPACE);
+	const [getProjects, { data: projectList, loading }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
+		fetchPolicy: "network-only",
+	});
+
+	useEffect(() => {
+		getProjects();
+	}, []);
 
 	if (loading) {
 		return (
@@ -82,7 +88,7 @@ export default function MainOrganizationDashboard() {
 		);
 	}
 
-	if (projectList?.orgProject?.length == 0) {
+	if (!projectList || projectList?.orgProject?.length == 0) {
 		return <NoProjectCreated />;
 	}
 
