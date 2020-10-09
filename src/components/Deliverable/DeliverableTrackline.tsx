@@ -34,6 +34,7 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import AttachFileForm from "../Forms/AttachFiles";
 
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -72,6 +73,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const [donorForm, setDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [donorFormData, setDonorFormData] = React.useState<any>();
+	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -407,6 +410,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}
 			{updateDeliverableTrackLineLoading ? <FullScreenLoader /> : null}
+			{openAttachFiles && (
+				<AttachFileForm
+					open={openAttachFiles}
+					handleClose={() => setOpenAttachFiles(false)}
+				/>
+			)}
 		</React.Fragment>
 	);
 }

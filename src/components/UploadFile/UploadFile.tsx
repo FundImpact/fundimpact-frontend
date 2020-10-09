@@ -40,6 +40,7 @@ function UploadFiles<T>({
 	dataTestId,
 	id,
 	logo,
+	accept = "image/jpeg,image/gif,image/png",
 	...props
 }: {
 	title: string;
@@ -51,6 +52,7 @@ function UploadFiles<T>({
 	dataTestId: string;
 	id: string;
 	logo?: string;
+	accept?: string;
 }) {
 	const classes = useStyles(props);
 	const [previewImage, setPreviewImage] = useState<string | null>(logo || null);

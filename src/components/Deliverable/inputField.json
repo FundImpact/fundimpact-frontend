@@ -255,6 +255,16 @@
 			"multiline": true,
 			"rows": 2,
 			"size": 12
+		},
+		{
+			"name": "attachfiles",
+			"id": "attachfiles",
+			"dataTestId": "deliverableTracklineNote",
+			"testId": "deliverableTracklineNoteInput",
+			"label": "Attach files",
+			"inputType": "button",
+			"onClick": {},
+			"size": 12
 		}
 	]
 }

@@ -1,4 +1,5 @@
 import {
+	Button,
 	Checkbox,
 	createStyles,
 	FormControl,
@@ -10,6 +11,7 @@ import {
 	Select,
 	TextField,
 } from "@material-ui/core";
+import { BluetoothDisabled } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 
 import { IInputFields } from "../../models";
@@ -53,6 +55,7 @@ const InputFields = ({
 	multiple = false,
 	logo,
 	disabled,
+	onClick,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -204,6 +207,21 @@ const InputFields = ({
 				id={name}
 				logo={logo}
 			/>
+		);
+	}
+	if (inputType === "button") {
+		return (
+			<Button
+				className={classes.button}
+				disableRipple
+				variant="contained"
+				color="primary"
+				data-testid={`commonFormButton${label}`}
+				disabled={disabled}
+				onClick={onClick ? onClick : () => {}}
+			>
+				{label}
+			</Button>
 		);
 	}
 	return (

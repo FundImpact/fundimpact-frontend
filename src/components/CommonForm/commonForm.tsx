@@ -90,6 +90,7 @@ function CommonInputForm({
 											multiple={element.multiple ? element.multiple : false}
 											logo={element.logo ? element.logo : ""}
 											disabled={element.disabled ? element.disabled : false}
+											onClick={element.onClick ? element.onClick : null}
 										/>
 									</Grid>
 								);
