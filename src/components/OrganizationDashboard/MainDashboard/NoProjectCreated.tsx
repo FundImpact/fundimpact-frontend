@@ -40,11 +40,7 @@ function NoProjectCreated() {
 
 	useEffect(() => {
 		if (dashboardData) {
-			getWorkSpaces({
-				variables: {
-					organization: dashboardData?.organization?.id,
-				},
-			});
+			getWorkSpaces();
 		}
 	}, [dashboardData]);
 
