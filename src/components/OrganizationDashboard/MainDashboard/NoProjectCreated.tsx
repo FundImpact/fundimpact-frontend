@@ -42,6 +42,10 @@ function NoProjectCreated({
 	});
 
 	useEffect(() => {
+		getProjects();
+	}, []);
+
+	useEffect(() => {
 		if (dashboardData) {
 			getWorkSpaces();
 		}
