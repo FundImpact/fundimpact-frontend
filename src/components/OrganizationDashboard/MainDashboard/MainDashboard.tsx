@@ -73,10 +73,17 @@ export default function MainOrganizationDashboard() {
 	});
 
 	const [redirectToDashboard, setRedirectToDashboard] = useState<boolean>(false);
+	const [showOrgOverview, setShowOrgOverview] = useState<boolean>(true);
 
 	useEffect(() => {
 		getProjects();
 	}, []);
+
+	useEffect(() => {
+		if (projectList?.orgProject?.length == 0 && showOrgOverview == true) {
+			setShowOrgOverview(false);
+		}
+	}, [projectList, setShowOrgOverview, showOrgOverview]);
 
 	if (loading) {
 		return (
@@ -95,7 +102,7 @@ export default function MainOrganizationDashboard() {
 		return <Navigate to="/dashboard" />;
 	}
 
-	if (!projectList || projectList?.orgProject?.length == 0) {
+	if (!showOrgOverview) {
 		return <NoProjectCreated setRedirectToDashboard={setRedirectToDashboard} />;
 	}
 
