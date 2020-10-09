@@ -32,18 +32,19 @@ function NoProjectCreated({
 		IGET_WORKSPACES_BY_ORG
 	>(GET_WORKSPACES_BY_ORG);
 
-	const [getProjects] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
-		onCompleted: (projects) => {
-			if (projects?.orgProject?.length) {
-				setRedirectToDashboard(true);
-			}
-		},
+	const [getProjects, { data: projects }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
 		fetchPolicy: "network-only",
 	});
 
 	useEffect(() => {
 		getProjects();
 	}, []);
+
+	useEffect(() => {
+		if (projects?.orgProject?.length) {
+			setRedirectToDashboard(true);
+		}
+	}, [projects, setRedirectToDashboard]);
 
 	useEffect(() => {
 		if (dashboardData) {
