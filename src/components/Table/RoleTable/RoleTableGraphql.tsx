@@ -59,7 +59,7 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 				userRoles.organizationRoles
 					.filter((role) => role.type != adminRoletype)
 					.map((role) =>
-						getAsyncRolesAndPermissions({ filter: { role: role.id } }).then(	
+						getAsyncRolesAndPermissions({ filter: { role: role.id } }).then(
 							(response) => ({
 								roleId: role.id,
 								roleName: role.name,
@@ -69,11 +69,13 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 					)
 			).then((rolesPermissions) => {
 				setRolesPermissions(
-					rolesPermissions.map((rolePermissions) => ({
-						roleId: rolePermissions.roleId,
-						roleName: rolePermissions.roleName,
-						permissions: rolePermissions.response.data.getRolePemissions,
-					}))
+					rolesPermissions.map((rolePermissions) => {
+						return {
+							roleId: rolePermissions.roleId,
+							roleName: rolePermissions.roleName,
+							permissions: rolePermissions.response?.data?.getRolePemissions || [],
+						};
+					})
 				);
 			});
 		}
