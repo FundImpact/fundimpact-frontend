@@ -136,7 +136,6 @@ const getInitialValues = (
 	const initialValues: {
 		[key: string]: { name: string; permissions: IControllerAction | {} };
 	} = {};
-
 	controllerActionHashArr.forEach((controllerActionHashContainer) => {
 		initialValues[controllerActionHashContainer.roleId] = getRoleNameAndPermissionsObj(
 			controllerActionHashContainer.roleName,
