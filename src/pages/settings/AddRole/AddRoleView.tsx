@@ -19,7 +19,7 @@ function AddRoleView() {
 				<Grid item xs={12}>
 					<Paper>
 						<Box p={2}>
-							<AddRoleForm />
+				
 						</Box>
 					</Paper>
 				</Grid>
