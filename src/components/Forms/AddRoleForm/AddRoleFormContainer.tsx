@@ -20,6 +20,10 @@ import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
 import { useLocation, Navigate } from "react-router-dom";
 import { FORM_ACTIONS } from "../constant";
+import { useIntl } from "react-intl";
+import FormDialog from "../../FormDialog";
+import CommonForm from "../../CommonForm";
+import { addRoleForm } from "./inputField.json";
 
 const getInitialValues = (name: string, controllerActionHash: IControllerAction | {}): IAddRole => {
 	let initialValues: IAddRole = {
@@ -101,103 +105,14 @@ const createRole = async ({
 				},
 			},
 		},
-		update: async (store, { data }) => {
-			if (!data) {
-				return;
-			}
-			try {
-				let { createOrganizationUserRole } = data;
-				const userRoles = store.readQuery<{
-					organizationRoles: { name: string; id: string }[];
-				}>({
-					query: GET_ROLES_BY_ORG,
-					variables: {
-						filter: {
-							organization: organizationId,
-						},
-					},
-				});
-				store.writeQuery<{ organizationRoles: { name: string; id: string }[] }>({
-					query: GET_ROLES_BY_ORG,
-					variables: {
-						filter: {
-							organization: organizationId,
-						},
-					},
-					data: {
-						organizationRoles: [
-							createOrganizationUserRole,
-							...(userRoles?.organizationRoles || []),
-						],
-					},
-				});
-			} catch (err) {
-				console.log("err :>> ", err);
-			}
-			try {
-				const count = await store.readQuery<{ organizationRolesCount: { count: number } }>({
-					query: ORGANIZATION_ROLES_COUNT,
-					variables: {
-						filter: {},
-					},
-				});
-
-				store.writeQuery<{ organizationRolesCount: { count: number } }>({
-					query: ORGANIZATION_ROLES_COUNT,
-					variables: {
-						filter: {},
-					},
-					data: {
-						organizationRolesCount: {
-							count: (count && count.organizationRolesCount.count + 1) || 0,
-						},
-					},
-				});
-
-				let limit = 0;
-				if (count) {
-					limit = count.organizationRolesCount.count;
-				}
-
-				const dataRead = await store.readQuery<{
-					organizationRoles: { id: string; name: string }[];
-				}>({
-					query: GET_ROLES_BY_ORG,
-					variables: {
-						filter: {
-							organization: organizationId,
-						},
-						limit: limit > 10 ? 10 : limit,
-						start: 0,
-						sort: "name:ASC",
-					},
-				});
-
-				let userRoles: {
-					id: string;
-					name: string;
-				}[] = dataRead?.organizationRoles || [];
-
-				store.writeQuery<{
-					organizationRoles: { id: string; name: string }[];
-				}>({
-					query: GET_ROLES_BY_ORG,
-					variables: {
-						filter: {
-							organization: organizationId,
-						},
-						limit: limit > 10 ? 10 : limit,
-						start: 0,
-						sort: "name:ASC",
-					},
-					data: {
-						organizationRoles: [data.createOrganizationUserRole, ...userRoles],
-					},
-				});
-			} catch (err) {
-				console.log("err :>> ", err);
-			}
-		},
+		refetchQueries: [
+			{
+				query: GET_ROLES_BY_ORG,
+				variables: {
+					organization: organizationId,
+				},
+			},
+		],
 	});
 };
 
@@ -337,6 +252,8 @@ function AddRoleFormContainer({
 	formType,
 	userRoleData,
 	updateOrganizationUserRole,
+	open,
+	handleClose,
 }: {
 	roleCreationLoading: boolean;
 	createOrganizationUserRole: (
@@ -361,14 +278,16 @@ function AddRoleFormContainer({
 	) => Promise<
 		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
 	>;
+	open: boolean;
+	handleClose: () => void;
 }) {
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	const [controllerActionHash, setControllerActionHash] = useState<IControllerAction | {}>({});
-	const [redirect, setRedirect] = useState<boolean>(false);
 	const location = useLocation();
 	const roleId = (location?.state as { role: string; name: string })?.role;
 	const roleName = (location?.state as { role: string; name: string })?.name;
+	const intl = useIntl();
 	useEffect(() => {
 		if (userRoleData) {
 			setControllerActionHash(
@@ -387,34 +306,42 @@ function AddRoleFormContainer({
 				formType,
 				roleId,
 			});
-			setRedirect(true);
+			handleClose();
 		},
 		[
 			createOrganizationUserRole,
 			updateOrganizationUserRole,
 			dashboardData,
 			notificationDispatch,
-			setRedirect,
 			formType,
+			handleClose,
 		]
 	);
 
-	if (redirect) {
-		return <Navigate to="/settings/user_roles" />;
-	}
-
 	return (
-		<AddRoleFormView
-			initialValues={getInitialValues(roleName || "", controllerActionHash)}
-			validate={validate}
-			onCreate={onCreate}
-			roleCreationLoading={roleCreationLoading}
-			controllerActionHash={controllerActionHash}
-			formType={formType}
-			onCancel={() => {
-				setRedirect(true);
-			}}
-		/>
+		<FormDialog
+			handleClose={handleClose}
+			open={open}
+			loading={roleCreationLoading}
+			title={intl.formatMessage({
+				id: "addRole",
+				defaultMessage: "Add Role",
+				description: `This text will be show when user want to add role`,
+			})}
+			subtitle=""
+			workspace={dashboardData?.workspace?.name}
+			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+		>
+			<CommonForm
+				initialValues={getInitialValues("", controllerActionHash)}
+				validate={validate}
+				onCreate={onCreate}
+				onCancel={handleClose}
+				inputFields={addRoleForm}
+				formAction={FORM_ACTIONS.CREATE}
+				onUpdate={() => {}}
+			/>
+		</FormDialog>
 	);
 }
 
