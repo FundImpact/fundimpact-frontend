@@ -8,17 +8,14 @@ import {
 	setSuccessNotification,
 	setErrorNotification,
 } from "../../../reducers/notificationReducer";
-import { GET_ROLES_BY_ORG, ORGANIZATION_ROLES_COUNT } from "../../../graphql/UserRoles/query";
+import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
 import {
 	ICreateOrganizationUserRoleVariables,
 	ICreateOrganizationUserRole,
-	IUpdateOrganizationUserRoleVariables,
-	IUpdateOrganizationUserRole,
 } from "../../../models/AddRole/mutation";
 import { IGetUserRole } from "../../../models/access/query";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
-import { useLocation, Navigate } from "react-router-dom";
 import { FORM_ACTIONS } from "../constant";
 import { useIntl } from "react-intl";
 import FormDialog from "../../FormDialog";
@@ -116,59 +113,12 @@ const createRole = async ({
 	});
 };
 
-const updateRole = async ({
-	name,
-	permissions,
-	updateOrganizationUserRole,
-	roleId,
-}: {
-	name: string;
-	permissions: {} | IControllerAction;
-	updateOrganizationUserRole: (
-		options?:
-			| MutationFunctionOptions<
-					IUpdateOrganizationUserRole,
-					IUpdateOrganizationUserRoleVariables
-			  >
-			| undefined
-	) => Promise<
-		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
-	>;
-	roleId: string;
-}) => {
-	await updateOrganizationUserRole({
-		variables: {
-			id: roleId,
-			input: {
-				name,
-				permissions: {
-					application: {
-						controllers: permissions,
-					},
-				},
-			},
-		},
-		refetchQueries: [
-			{
-				query: GET_USER_ROLES,
-				variables: {
-					filter: {
-						role: roleId,
-					},
-				},
-			},
-		],
-	});
-};
-
 const onFormSubmit = async ({
 	valuesSubmitted,
 	createOrganizationUserRole,
 	organizationId,
 	notificationDispatch,
 	formType,
-	updateOrganizationUserRole,
-	roleId,
 }: {
 	valuesSubmitted: IAddRole;
 	createOrganizationUserRole: (
@@ -184,17 +134,6 @@ const onFormSubmit = async ({
 	organizationId: string;
 	notificationDispatch: React.Dispatch<any>;
 	formType: FORM_ACTIONS;
-	updateOrganizationUserRole: (
-		options?:
-			| MutationFunctionOptions<
-					IUpdateOrganizationUserRole,
-					IUpdateOrganizationUserRoleVariables
-			  >
-			| undefined
-	) => Promise<
-		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
-	>;
-	roleId: string;
 }) => {
 	const permissions = getSubmittedPermissions({ ...valuesSubmitted.permissions });
 	try {
@@ -204,14 +143,6 @@ const onFormSubmit = async ({
 				createOrganizationUserRole,
 				organizationId,
 				permissions,
-			}));
-
-		formType == FORM_ACTIONS.UPDATE &&
-			(await updateRole({
-				name: valuesSubmitted.name,
-				updateOrganizationUserRole,
-				permissions,
-				roleId,
 			}));
 
 		notificationDispatch(
@@ -251,7 +182,6 @@ function AddRoleFormContainer({
 	roleCreationLoading,
 	formType,
 	userRoleData,
-	updateOrganizationUserRole,
 	open,
 	handleClose,
 }: {
@@ -268,25 +198,12 @@ function AddRoleFormContainer({
 	>;
 	formType: FORM_ACTIONS;
 	userRoleData?: IGetUserRole;
-	updateOrganizationUserRole: (
-		options?:
-			| MutationFunctionOptions<
-					IUpdateOrganizationUserRole,
-					IUpdateOrganizationUserRoleVariables
-			  >
-			| undefined
-	) => Promise<
-		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
-	>;
 	open: boolean;
 	handleClose: () => void;
 }) {
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	const [controllerActionHash, setControllerActionHash] = useState<IControllerAction | {}>({});
-	const location = useLocation();
-	const roleId = (location?.state as { role: string; name: string })?.role;
-	const roleName = (location?.state as { role: string; name: string })?.name;
 	const intl = useIntl();
 	useEffect(() => {
 		if (userRoleData) {
@@ -302,20 +219,11 @@ function AddRoleFormContainer({
 				createOrganizationUserRole,
 				organizationId: dashboardData?.organization?.id || "",
 				notificationDispatch: notificationDispatch,
-				updateOrganizationUserRole,
 				formType,
-				roleId,
 			});
 			handleClose();
 		},
-		[
-			createOrganizationUserRole,
-			updateOrganizationUserRole,
-			dashboardData,
-			notificationDispatch,
-			formType,
-			handleClose,
-		]
+		[createOrganizationUserRole, dashboardData, notificationDispatch, formType, handleClose]
 	);
 
 	return (

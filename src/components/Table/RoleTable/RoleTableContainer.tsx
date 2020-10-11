@@ -14,9 +14,6 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { GET_USER_ROLES } from "../../../graphql/User/query";
-import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 const getControllerActionHashArr = (
 	rolesPermissions: {
@@ -46,7 +43,6 @@ const getControllerActionHashArr = (
 		),
 	}));
 
-//check type and remove admin type
 const onUpdate = async ({
 	valuesSubmitted,
 	updateOrganizationUserRole,
@@ -140,7 +136,7 @@ const getInitialValues = (
 	const initialValues: {
 		[key: string]: { name: string; permissions: IControllerAction | {} };
 	} = {};
-	
+
 	controllerActionHashArr.forEach((controllerActionHashContainer) => {
 		initialValues[controllerActionHashContainer.roleId] = getRoleNameAndPermissionsObj(
 			controllerActionHashContainer.roleName,

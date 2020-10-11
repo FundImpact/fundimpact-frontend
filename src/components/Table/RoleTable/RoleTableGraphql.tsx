@@ -91,8 +91,6 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 		}
 	}, [dashboardData]);
 
-	// console.log('rolesPermissions	 :>> ', rolesPermissions	);
-
 	return (
 		<RoleTableContainer
 			loading={fetchingUserRoles || fetchingRolePermissions}
