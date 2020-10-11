@@ -92,7 +92,10 @@ export default function FundStatus() {
 		let BulletChartConfig = {
 			comparativeErrorMeasureData: [{ name: approvedLabel, y: amountApproved }],
 			primarySegmentedMeasureData: [{ name: spendLabel, y: amountSpend }],
-			qualitativeRangeData: [{ name: receivedLabel, y: amountReceived }],
+			qualitativeRangeData: [
+				{ name: "", y: 0 },
+				{ name: receivedLabel, y: amountReceived },
+			],
 		};
 		let details = [
 			{
