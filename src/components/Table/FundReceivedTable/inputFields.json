@@ -4,7 +4,7 @@
 			"name": "amount",
 			"id": "fundReceiptAmount",
 			"dataTestId": "createFundReceiptAmount",
-			"testId": "createFundReceiptAmountInput",
+			"testId": "createFundReceiptAmountFilterInput",
 			"label": "Amount",
 			"size": 6
 		},
@@ -12,7 +12,7 @@
 			"name": "project_donor",
 			"label": "Choose Donor",
 			"size": 12,
-			"testId": "createProjectDonorOption",
+			"testId": "createProjectDonorFilterOption",
 			"dataTestId": "createProjectDonor",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
@@ -25,7 +25,7 @@
 			"name": "reporting_date",
 			"id": "Date",
 			"dataTestId": "createReporingDate",
-			"testId": "createReporingDateInput",
+			"testId": "createReporingDateFilterInput",
 			"label": "Date",
 			"size": 6,
 			"type": "date"
