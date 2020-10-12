@@ -498,23 +498,7 @@ export default function DashboardTableContainer() {
 				description: `This text will be show on tab for documents`,
 			}),
 			table: <DocumentsTable />,
-			createButtons: [
-				// {
-				// 	text: intl.formatMessage({
-				// 		id: "createGrantPeriod",
-				// 		defaultMessage: "Create Grant Period",
-				// 		description: `This text will be show on Add Button for Create Grant Period`,
-				// 	}),
-				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-				// 		<GrantPeriodDialog
-				// 			open={open}
-				// 			onClose={handleClose}
-				// 			action={FORM_ACTIONS.CREATE}
-				// 		/>
-				// 	),
-				// 	createButtonAccess: grantPeriodCreateAccess,
-				// },
-			],
+			createButtons: [],
 			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
 			tableVisibility: grantPeriodFindAccess,
 		},
