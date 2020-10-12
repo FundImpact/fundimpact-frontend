@@ -12,6 +12,17 @@ export const deliverableHeadings: ITableHeadings[] = [
 	{ label: "" }, //edit icon
 ];
 
+export const documentsHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "File" },
+	{ label: "Used in" },
+	{ label: "Size" },
+	{ label: "Type" },
+	{ label: "Date" },
+	{ label: "View" },
+	{ label: "" }, //edit icon
+];
+
 export const ImpactHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },

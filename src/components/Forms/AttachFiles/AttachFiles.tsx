@@ -12,21 +12,35 @@ import {
 } from "../../../reducers/notificationReducer";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import FormDialog from "../../FormDialog";
+import DoneIcon from "@material-ui/icons/Done";
+import CloseIcon from "@material-ui/icons/Close";
+
 import {
 	Box,
 	Button,
+	Card,
+	CardActionArea,
+	CardContent,
+	CardMedia,
 	Dialog,
+	DialogActions,
+	DialogContent,
 	DialogTitle,
 	FormControl,
+	FormControlLabel,
 	Grid,
 	GridList,
 	GridListTile,
+	IconButton,
 	Input,
 	InputLabel,
 	makeStyles,
+	Switch,
 	TextField,
 	Typography,
+	useTheme,
 } from "@material-ui/core";
+import { readableBytes } from "../../../utils";
 function getInitialValues(props: any) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		return { ...props.data };
@@ -38,11 +52,7 @@ function getInitialValues(props: any) {
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		display: "flex",
-		flexWrap: "wrap",
-		justifyContent: "space-around",
-		overflow: "hidden",
-		backgroundColor: theme.palette.background.paper,
+		maxWidth: 345,
 	},
 	gridList: {
 		width: 350,
@@ -50,6 +60,18 @@ const useStyles = makeStyles((theme) => ({
 	},
 	buttonAddFiles: {
 		marginLeft: theme.spacing(1),
+	},
+	media: {
+		height: 160,
+	},
+	mediaListBox: {
+		maxHeight: "400px",
+		minHeight: "400px",
+		overflow: "scroll",
+		border: `3px solid ${theme.palette.text.primary}`,
+		margin: theme.spacing(2),
+		width: "100%",
+		backgroundColor: theme.palette.action.selected,
 	},
 }));
 
@@ -61,8 +83,9 @@ function AttachFileForm(props: any) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
-	const [filesArray, setFilesArray] = React.useState<any>([]);
+	const { filesArray, setFilesArray } = props;
 	const intl = useIntl();
+
 	let title = intl.formatMessage({
 		id: "addAttachFileFormTitle",
 		defaultMessage: "Add Role to a User",
@@ -74,143 +97,187 @@ function AttachFileForm(props: any) {
 		description: "This text will be show on user update form for subtitle",
 	});
 
-	const onCreate = (value: any) => {};
-
-	const onUpdate = async (value: any) => {};
-
-	const validate = (values: any) => {
-		let errors: Partial<any> = {};
-		if (!values.files) {
-			errors.role = "Role is required";
-		}
-		return errors;
-	};
-
 	React.useEffect(() => {
-		console.log("filesArray", filesArray);
+		console.log("filesArrays", filesArray);
 	}, [filesArray]);
+	const [multiple, setMultiple] = useState(false);
 	const classes = useStyles();
+
 	return (
 		<React.Fragment>
 			<Dialog
 				onClose={props.onClose}
 				aria-labelledby="simple-dialog-title"
 				open={formIsOpen}
-				maxWidth="sm"
+				maxWidth="md"
 				fullWidth
 			>
-				<DialogTitle id="simple-dialog-title">Upload</DialogTitle>
-				<Grid container>
-					<Grid item xs={12}>
-						<FormControl fullWidth>
-							<InputLabel
-								shrink={false}
-								htmlFor={"id"}
-								style={{ width: "100%", position: "static" }}
-							>
-								<Button component="span" className={classes.buttonAddFiles}>
-									{filesArray?.length > 0 ? "Add more files" : "Add files"}
-								</Button>
-							</InputLabel>
+				<DialogTitle id="simple-dialog-title">Upload assets</DialogTitle>
+				<DialogContent dividers>
+					<Grid container>
+						<Grid item xs={12} container justify="space-between">
+							<FormControl>
+								<InputLabel
+									shrink={false}
+									htmlFor={"id"}
+									style={{ width: "100%", position: "static" }}
+								>
+									<Button component="span" className={classes.buttonAddFiles}>
+										{filesArray?.length > 0 ? "Add more files" : "Add files"}
+									</Button>
+								</InputLabel>
+								<Input
+									onChange={(e: any): void => {
+										e.persist();
+										e.preventDefault();
 
-							<Input
-								onChange={(e: any): void => {
-									e.persist();
-									e.preventDefault();
+										let fileArr: any = [];
+										Array.from(e.target?.files).map((file: any) => {
+											fileArr.push({
+												file: file,
+												preview: URL.createObjectURL(file),
+											});
+										});
 
-									setFilesArray([
-										...filesArray,
-										{
-											file: e.target.files[0],
-											preview: URL.createObjectURL(e.target.files[0]),
-										},
-									]);
-								}}
-								id={"id"}
-								// onBlur={formik.handleBlur}
-								// required={required}
-								// name={name}
-								data-testid={"dataTestId"}
-								inputProps={{
-									"data-testid": "testId",
-								}}
-								type={"file"}
-								style={{
-									visibility: "hidden",
-								}}
+										setFilesArray([...filesArray, ...fileArr]);
+									}}
+									id={"id"}
+									// onBlur={formik.handleBlur}
+									// required={required}
+									// name={name}
+									data-testid={"dataTestId"}
+									inputProps={{
+										"data-testid": "testId",
+										multiple: multiple,
+									}}
+									type={"file"}
+									style={{
+										visibility: "hidden",
+									}}
+								/>
+							</FormControl>
+							<FormControlLabel
+								control={
+									<Switch
+										checked={multiple}
+										onChange={() => setMultiple(!multiple)}
+										name="multiple"
+										color="primary"
+									/>
+								}
+								label="Select multiple files"
 							/>
-						</FormControl>
+						</Grid>
+						<Grid item xs={12} className={classes.mediaListBox} container spacing={1}>
+							{filesArray?.length === 0 && (
+								<Grid item xs={12} container justify="center" alignItems="center">
+									<Typography gutterBottom variant="h6" noWrap>
+										No files selected
+									</Typography>
+								</Grid>
+							)}
+							{filesArray.map((file: any, index: number) => (
+								<AttachedFileList
+									{...{
+										file,
+										addRemark: (remark: string) => {
+											let fileArr = [...filesArray];
+											fileArr[index].remark = remark;
+											setFilesArray(fileArr);
+										},
+									}}
+								/>
+							))}
+						</Grid>
 					</Grid>
-					<Grid item xs={12} style={{ minHeight: "600px", overflow: "scroll" }}>
-						<div className={classes.root}>
-							<GridList cellHeight={150} className={classes.gridList}>
-								{filesArray.map((file: any) => (
-									<GridListTile key={file?.preview} cols={1}>
-										<img src={file?.preview} alt={file?.file?.name} />
-									</GridListTile>
-								))}
-							</GridList>
-						</div>
-					</Grid>
-				</Grid>
+				</DialogContent>
+				<DialogActions>
+					<Button autoFocus color="primary" onClick={onCancel}>
+						Save
+					</Button>
+				</DialogActions>
 			</Dialog>
-			{/* <FormDialog title={title} subtitle={subtitle} open={formIsOpen} handleClose={onCancel}>
-				<CommonForm
-					{...{
-						initialValues,
-						validate,
-						onCreate,
-						cancelButtonName: "Reset",
-						createButtonName: "Add",
-						formAction,
-						onUpdate,
-						inputFields: [],
-					}}
-				/>
-			</FormDialog> */}
-			{/* {sendInvitationToUserLoading ? <FullScreenLoader /> : null} */}
 		</React.Fragment>
 	);
 }
 
-const AttachedFileList = (props: any) => {
+const AttachedFileList = (props: { file: any; addRemark: (text: string) => void }) => {
 	const [openAddRemark, setOpenAddRemark] = React.useState(false);
-	const { file } = props;
-	const [text, setText] = React.useState<any>();
+	const { file, addRemark } = props;
+	const [text, setText] = React.useState<string>("");
 	const handleTextField = (event: any) => {
 		setText(event.target.value);
 	};
+	const classes = useStyles();
+
+	React.useEffect(() => {
+		setText(file.remark);
+	}, []);
+
 	return (
-		<GridListTile key={file?.preview} cols={1}>
-			<Grid container>
-				<Grid item xs={12}>
-					<img src={file?.preview} alt={file?.file?.name} />
-				</Grid>
-				<Grid item xs={12} container>
+		<Grid item key={file?.preview} xs={3}>
+			<Card className={classes.root}>
+				<CardMedia
+					className={classes.media}
+					image={file?.preview}
+					title={file?.file?.name}
+				/>
+				<CardContent>
+					<Box ml={1}>
+						<Typography gutterBottom variant="subtitle2" noWrap>
+							{file?.file?.name}
+						</Typography>
+						<Typography gutterBottom variant="caption" noWrap>
+							{readableBytes(file?.file?.size)}
+						</Typography>
+					</Box>
+
 					{openAddRemark ? (
-						<>
-							<Grid item xs={8}>
-								<TextField
-									id="outlined-basic"
-									label="Enter Name"
-									value={text}
-									onChange={handleTextField}
-									inputProps={{
-										"data-testid": "editable-input",
+						<Box display="flex">
+							<TextField
+								id="outlined-basic"
+								label="Remark"
+								value={text}
+								onChange={handleTextField}
+								inputProps={{
+									"data-testid": "editable-input",
+								}}
+							/>
+							<Box display="flex">
+								<IconButton
+									onClick={() => {
+										addRemark(text);
+										setOpenAddRemark(false);
 									}}
-								/>
-							</Grid>
-							<Grid item xs={4}>
-								<Button onClick={() => setOpenAddRemark(true)}>Save</Button>
-							</Grid>
-						</>
+									style={{ backgroundColor: "transparent" }}
+									data-testid="editable-save"
+								>
+									<DoneIcon />
+								</IconButton>
+								<IconButton
+									onClick={() => setOpenAddRemark(false)}
+									style={{ backgroundColor: "transparent" }}
+									data-testid="editable-cancel"
+								>
+									<CloseIcon />
+								</IconButton>
+							</Box>
+						</Box>
 					) : (
-						<Button onClick={() => setOpenAddRemark(true)}>Add remark</Button>
+						<Box>
+							<Button
+								size="small"
+								color="primary"
+								onClick={() => setOpenAddRemark(true)}
+							>
+								{file.remark ? "View Remark" : "Add Remark"}
+							</Button>
+						</Box>
 					)}
-					<img src={file?.preview} alt={file?.file?.name} />
-				</Grid>
-			</Grid>
-		</GridListTile>
+				</CardContent>
+			</Card>
+		</Grid>
 	);
 };
+
 export default AttachFileForm;

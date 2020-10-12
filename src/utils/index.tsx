@@ -124,3 +124,11 @@ export const removeArrayElementsAtVariousIndex = <T,>(
 	arrayToFilter: T[],
 	checks: { [key: number]: boolean }
 ) => arrayToFilter.filter((element, index) => !checks[index]);
+
+export function readableBytes(bytes: any) {
+	var i = Math.floor(Math.log(bytes) / Math.log(1024)),
+		sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+	let sizeInBytes: any = (bytes / Math.pow(1024, i)).toFixed(2);
+	return sizeInBytes * 1 + " " + sizes[i];
+}

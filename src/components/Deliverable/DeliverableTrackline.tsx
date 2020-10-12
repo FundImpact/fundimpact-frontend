@@ -74,7 +74,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [donorForm, setDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [donorFormData, setDonorFormData] = React.useState<any>();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+	const [filesArray, setFilesArray] = React.useState([]);
+
+	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
+
+	if (filesArray.length) deliverableTragetLineForm[7].label = "View Files";
+	else deliverableTragetLineForm[7].label = "Attach Files";
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -414,6 +420,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
+					filesArray={filesArray}
+					setFilesArray={setFilesArray}
 				/>
 			)}
 		</React.Fragment>

@@ -42,6 +42,7 @@ import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/
 import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 import FundReceivedTable from "../../Table/FundReceivedTable";
+import DocumentsTable from "../../Table/DocumentsTable";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -486,6 +487,33 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: grantPeriodCreateAccess,
 				},
+			],
+			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
+			tableVisibility: grantPeriodFindAccess,
+		},
+		{
+			label: intl.formatMessage({
+				id: "documentsTabHeading",
+				defaultMessage: "Documents",
+				description: `This text will be show on tab for documents`,
+			}),
+			table: <DocumentsTable />,
+			createButtons: [
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "createGrantPeriod",
+				// 		defaultMessage: "Create Grant Period",
+				// 		description: `This text will be show on Add Button for Create Grant Period`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<GrantPeriodDialog
+				// 			open={open}
+				// 			onClose={handleClose}
+				// 			action={FORM_ACTIONS.CREATE}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: grantPeriodCreateAccess,
+				// },
 			],
 			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
 			tableVisibility: grantPeriodFindAccess,
