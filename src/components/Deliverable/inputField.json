@@ -257,8 +257,8 @@
 		{
 			"name": "attachfiles",
 			"id": "attachfiles",
-			"dataTestId": "deliverableTracklineNote",
-			"testId": "deliverableTracklineNoteInput",
+			"dataTestId": "deliverableTracklineAttachFile",
+			"testId": "deliverableTracklineAttachFileInput",
 			"label": "Attach files",
 			"inputType": "button",
 			"onClick": {},
