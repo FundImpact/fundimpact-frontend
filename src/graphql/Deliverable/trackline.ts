@@ -234,6 +234,13 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 					name
 				}
 			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+			}
 		}
 	}
 `;

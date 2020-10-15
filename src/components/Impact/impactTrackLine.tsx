@@ -92,7 +92,13 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		handleReset();
 	};
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
-	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
+		props.type === IMPACT_ACTIONS.UPDATE
+			? props.data.attachments
+				? [...props.data.attachments]
+				: []
+			: []
+	);
 
 	/* Open Attach File Form*/
 	impactTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -338,6 +344,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 		delete (input as any).donors;
 		delete (input as any).impactDonorMapValues;
+		delete (input as any).attachments;
 		if (!input.financial_year) delete (input as any).financial_year;
 		if (!input.annual_year) delete (input as any).annual_year;
 

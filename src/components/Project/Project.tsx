@@ -7,11 +7,14 @@ import { GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
+import useMultipleFileUpload from "../../hooks/multipleFileUpload";
+import { AttachFile } from "../../models/AttachFile";
 import { IProject, ProjectProps } from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
+import AttachFileForm from "../Forms/AttachFiles";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
@@ -32,7 +35,31 @@ function Project(props: ProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IPROJECT_FORM = getInitialValues(props);
-	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT);
+
+	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>([]);
+
+	/* Open Attach File Form*/
+	projectForm[5].onClick = () => setOpenAttachFiles(true);
+
+	if (projectFilesArray.length) projectForm[5].label = "View Files";
+	else projectForm[5].label = "Attach Files";
+
+	let { multiplefileUpload } = useMultipleFileUpload();
+
+	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
+		onCompleted(data) {
+			multiplefileUpload({
+				ref: "projects",
+				refId: data.createOrgProject.id,
+				field: "attachments",
+				path: `org-${DashBoardData?.organization?.id}/projects`,
+				filesArray: projectFilesArray,
+			});
+
+			setProjectFilesArray([]);
+		},
+	});
 	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
 		CREATE_PROJECT_DONOR
 	);
@@ -123,7 +150,17 @@ function Project(props: ProjectProps) {
 	const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
 		UPDATE_PROJECT,
 		{
-			onCompleted() {
+			onCompleted(data) {
+				multiplefileUpload({
+					ref: "projects",
+					refId: data.updateOrgProject.id,
+					field: "attachments",
+					path: `org-${DashBoardData?.organization?.id}/projects`,
+					filesArray: projectFilesArray,
+				});
+
+				setProjectFilesArray([]);
+
 				notificationDispatch(setSuccessNotification("Project Successfully updated !"));
 			},
 		}
@@ -205,6 +242,14 @@ function Project(props: ProjectProps) {
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
 			{creatingProjectDonors ? <FullScreenLoader /> : null}
+			{openAttachFiles && (
+				<AttachFileForm
+					open={openAttachFiles}
+					handleClose={() => setOpenAttachFiles(false)}
+					filesArray={projectFilesArray}
+					setFilesArray={setProjectFilesArray}
+				/>
+			)}
 		</>
 	);
 }

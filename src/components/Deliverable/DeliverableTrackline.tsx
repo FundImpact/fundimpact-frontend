@@ -76,7 +76,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [donorForm, setDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [donorFormData, setDonorFormData] = React.useState<any>();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
-	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
+		props.type === DELIVERABLE_ACTIONS.UPDATE
+			? props.data.attachments
+				? [...props.data.attachments]
+				: []
+			: []
+	);
 
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -134,7 +140,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					type={FORM_ACTIONS.CREATE}
 				/>
 			);
-
 			multiplefileUpload({
 				ref: "deliverable-tracking-lineitem",
 				refId: data.createDeliverableTrackingLineitemDetail.id,
@@ -350,6 +355,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (!input.financial_year) delete (input as any).financial_year;
 		delete (input as any).donors;
 		delete (input as any).donorMapValues;
+		delete (input as any).attachments;
 		updateDeliverableTrackLine({
 			variables: {
 				id: DeliverableTargetLineId,

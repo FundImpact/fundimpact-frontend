@@ -34,24 +34,19 @@ const useMultipleFileUpload = () => {
 			setTotalFiles(filesArray.length);
 			for (let i = 0; i < filesArray.length; i++) {
 				let file = filesArray[i];
-				if (!file.uploadingStatus) {
+				/*if file.id === already uploaded */
+				if (!file.id) {
 					let formData = new FormData();
 					formData.append("files", file.file);
 					formData.append("ref", ref);
 					formData.append("refId", refId);
 					formData.append("field", field);
 					let fileInfo: any = JSON.stringify({
-						alternativeText: file?.file?.name ? file.file.name : "WW",
+						alternativeText: file?.file?.name ? file.file.name : "",
 						caption: file?.remark ? file.remark : "",
 					});
 					formData.append("fileInfo", fileInfo);
 					formData.append("path", path);
-					let aa: any = formData.entries();
-					for (var pair of aa) {
-						console.log("checkcheckpayloadvalues", pair[0] + " - " + pair[1]);
-					}
-
-					console.log("checkcheckpayloadvalues", formData.values());
 					try {
 						let uploadResponse = await uploadFile(formData);
 						if (uploadResponse) {

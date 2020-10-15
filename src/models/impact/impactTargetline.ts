@@ -1,4 +1,5 @@
 import { IMPACT_ACTIONS } from "../../components/Impact/constants";
+import { AttachFile } from "../AttachFile";
 
 export interface IImpactTargetLine {
 	id?: number;
@@ -16,6 +17,7 @@ export interface IImpactTargetLine {
 		  }[]
 		| [];
 	note?: string;
+	attachments?: AttachFile[];
 }
 
 export type ImpactTargetLineProps = {

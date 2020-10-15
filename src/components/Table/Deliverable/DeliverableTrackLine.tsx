@@ -162,6 +162,7 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 								financial_year: deliverableTrackline.financial_year?.id,
 								donors: tracklineDonors,
 								donorMapValues: tracklineDonorsMapValues,
+								attachments: deliverableTrackline.attachments,
 							});
 
 							handleMenuClose();

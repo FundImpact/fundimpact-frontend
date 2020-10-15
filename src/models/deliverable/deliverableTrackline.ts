@@ -1,4 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
+import { AttachFile } from "../AttachFile";
 
 export interface IDeliverableTargetLine {
 	id?: number;
@@ -16,6 +17,7 @@ export interface IDeliverableTargetLine {
 		| [];
 	donorMapValues?: object;
 	note?: string;
+	attachments?: AttachFile[];
 }
 
 export type DeliverableTargetLineProps = {

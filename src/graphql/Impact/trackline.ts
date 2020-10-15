@@ -323,6 +323,13 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 					name
 				}
 			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+			}
 		}
 	}
 `;

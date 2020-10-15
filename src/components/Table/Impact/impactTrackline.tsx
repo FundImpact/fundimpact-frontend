@@ -175,6 +175,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 								financial_year: impactTargetLine.financial_year?.id,
 								donors: impactTracklineDonors,
 								impactDonorMapValues: impactTracklineDonorsMapValues,
+								attachments: impactTargetLine.attachments,
 							});
 							handleMenuClose();
 						}}

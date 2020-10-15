@@ -259,87 +259,104 @@ const AttachedFileList = (props: {
 	return (
 		<Grid item key={file?.preview} xs={3}>
 			<Card className={classes.root}>
-				<IconButton
-					className={classes.close}
-					onClick={() => {
-						removeFile();
-					}}
-				>
-					<Close />
-				</IconButton>
+				{/*if not uploaded*/}
+				{!file.id && (
+					<IconButton
+						className={classes.close}
+						onClick={() => {
+							removeFile();
+						}}
+					>
+						<Close />
+					</IconButton>
+				)}
 				<CardMedia
 					className={classes.media}
-					image={file?.preview}
-					title={file?.file?.name}
+					image={file?.preview ? file?.preview : file.url}
 				/>
 				<CardContent>
 					<Box ml={1}>
 						<Typography gutterBottom variant="subtitle2" noWrap>
-							{`File-${file?.file?.name}`}
+							{`File-${file?.file?.name ? file?.file?.name : file.name}`}
 						</Typography>
 						<Typography gutterBottom variant="body2" noWrap>
-							{`Size-${readableBytes(file?.file?.size)}`}
+							{`Size-${readableBytes(
+								file?.file?.size ? file?.file?.size : file.size
+							)}`}
 						</Typography>
 					</Box>
-
-					{openAddRemark ? (
-						<Box display="flex">
-							<TextField
-								id="outlined-basic"
-								label="Remark"
-								value={text}
-								onChange={handleTextField}
-								inputProps={{
-									"data-testid": "attachFile-input",
-								}}
-							/>
-							<Box display="flex">
-								<IconButton
-									onClick={() => {
-										addRemark(text);
-										setOpenAddRemark(false);
-									}}
-									style={{ backgroundColor: "transparent" }}
-									data-testid="attachFile-save"
-								>
-									<DoneIcon fontSize="small" />
-								</IconButton>
-								<IconButton
-									onClick={() => setOpenAddRemark(false)}
-									style={{ backgroundColor: "transparent" }}
-									data-testid="attachFile-cancel"
-								>
-									<CloseIcon fontSize="small" />
-								</IconButton>
-							</Box>
-						</Box>
-					) : (
-						<Box className={classes.remarkBox}>
-							{!file.remark ? (
-								<Box>
-									<Button
-										size="small"
-										color="primary"
-										onClick={() => setOpenAddRemark(true)}
-									>
-										{"Add Remark"}
-									</Button>
-								</Box>
-							) : (
-								<Box ml={1} mb={1} display="flex">
-									<Typography variant="body2" gutterBottom>
-										{`Remark-${file.remark}`}
-									</Typography>
-									<Box className={classes.EditIcon}>
+					{!file.id ? (
+						<>
+							{openAddRemark ? (
+								<Box display="flex">
+									<TextField
+										id="outlined-basic"
+										label="Remark"
+										value={text}
+										onChange={handleTextField}
+										inputProps={{
+											"data-testid": "attachFile-input",
+										}}
+									/>
+									<Box display="flex">
 										<IconButton
-											onClick={() => setOpenAddRemark(true)}
-											data-testid="attachFile-edit"
-											size="small"
+											onClick={() => {
+												addRemark(text);
+												setOpenAddRemark(false);
+											}}
+											style={{ backgroundColor: "transparent" }}
+											data-testid="attachFile-save"
 										>
-											<EditOutlinedIcon fontSize="small" />
+											<DoneIcon fontSize="small" />
+										</IconButton>
+										<IconButton
+											onClick={() => setOpenAddRemark(false)}
+											style={{ backgroundColor: "transparent" }}
+											data-testid="attachFile-cancel"
+										>
+											<CloseIcon fontSize="small" />
 										</IconButton>
 									</Box>
 								</Box>
+							) : (
+								<Box className={classes.remarkBox}>
+									{!file.remark ? (
+										<Box>
+											<Button
+												size="small"
+												color="primary"
+												onClick={() => setOpenAddRemark(true)}
+											>
+												{"Add Remark"}
+											</Button>
+										</Box>
+									) : (
+										<Box ml={1} mb={1} display="flex">
+											<Typography variant="body2" gutterBottom>
+												{`Remark-${
+													file.remark ? file.remark : file.caption
+												}`}
+											</Typography>
+											<Box className={classes.EditIcon}>
+												<IconButton
+													onClick={() => setOpenAddRemark(true)}
+													data-testid="attachFile-edit"
+													size="small"
+												>
+													<EditOutlinedIcon fontSize="small" />
+												</IconButton>
+											</Box>
+										</Box>
+									)}
+								</Box>
+							)}
+						</>
+					) : (
+						<Box ml={1}>
+							{file.caption?.length > 0 && (
+								<Typography variant="body2" gutterBottom>
+									{`Remark-${file.caption}`}
+								</Typography>
 							)}
 						</Box>
 					)}
