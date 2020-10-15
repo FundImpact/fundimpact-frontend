@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import React from "react";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 import { GET_FINANCIAL_YEARS, GET_GRANT_PERIOD } from "../../../graphql";
 import { FORM_ACTIONS } from "../constant";
@@ -49,14 +50,17 @@ const FinancialYearAndGrantPeriodFields = ({
 		donor: { id: string; name: string; country: { id: string; name: string } };
 	};
 }) => {
+	const classes = useStyles();
+	const dashboardData = useDashBoardData();
+	const project = dashboardData?.project?.id;
+
 	const { data: fyData } = useQuery(GET_FINANCIAL_YEARS, {
 		variables: { filter: { country: donor.donor.country?.id } },
 	});
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
-		variables: { filter: { donor: donor.donor.id } },
+		variables: { filter: { donor: donor.donor.id, project: project } },
 	});
-	console.log("formikV", formik.values);
-	const classes = useStyles();
+
 	return (
 		<>
 			<Grid item xs={12}>
@@ -91,7 +95,7 @@ const FinancialYearAndGrantPeriodFields = ({
 							"data-testid": `DeliverabletracklinefinancialYearInput${donor.id}`,
 						}}
 					>
-						{!fyData && (
+						{fyData?.financialYearList.length === 0 && (
 							<MenuItem value="">
 								<em>No (context) available</em>
 							</MenuItem>
@@ -137,7 +141,7 @@ const FinancialYearAndGrantPeriodFields = ({
 							"data-testid": `grantPeriod${donor.id}`,
 						}}
 					>
-						{!grantPeriods && (
+						{grantPeriods?.grantPeriodsProjectList.length === 0 && (
 							<MenuItem value="">
 								<em>No (context) available</em>
 							</MenuItem>

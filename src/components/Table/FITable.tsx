@@ -12,7 +12,9 @@ import { FormattedMessage } from "react-intl";
 import { ITableHeadings } from "../../models";
 
 const useStyles = makeStyles({
-	table: {},
+	table: {
+		width: "100%",
+	},
 });
 
 const styledTable = makeStyles((theme: Theme) =>
