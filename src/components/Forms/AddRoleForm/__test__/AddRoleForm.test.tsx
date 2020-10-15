@@ -1,8 +1,5 @@
 import React from "react";
-import {
-	organizationDetails,
-	projectDetails,
-} from "../../../../utils/testMock.json";
+import { organizationDetails, projectDetails } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
 import { renderApollo } from "../../../../utils/test.util";
@@ -77,6 +74,7 @@ const mocks = [
 							},
 						},
 					},
+					is_project_level: false,
 				},
 			},
 		},
