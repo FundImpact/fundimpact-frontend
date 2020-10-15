@@ -69,6 +69,13 @@ export const GET_PROJECTS_BY_WORKSPACE = gql`
 				id
 				name
 			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+			}
 		}
 	}
 `;

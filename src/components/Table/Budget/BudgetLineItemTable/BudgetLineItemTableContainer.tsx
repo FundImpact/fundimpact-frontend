@@ -17,6 +17,7 @@ const getInitialValues = (
 		grant_periods_project: budgetLineItem?.grant_periods_project?.id || "",
 		fy_org: budgetLineItem?.fy_org?.id || "",
 		fy_donor: budgetLineItem?.fy_donor?.id || "",
+		attachments: budgetLineItem?.attachments || [],
 	};
 };
 
@@ -71,7 +72,7 @@ function BudgetLineItemTableContainer({
 			openStatus.map((element: boolean, i) => (i === index ? dialogNewOpenStatus : element))
 		);
 	};
-
+	console.log("budgetLineitemList", budgetLineitemList);
 	return (
 		<BudgetLineItemTableView
 			toggleDialogs={toggleDialogs}

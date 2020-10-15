@@ -1,5 +1,6 @@
 import { FORM_ACTIONS } from "./constants";
 import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
+import { AttachFile } from "../AttachFile";
 
 export interface IBudgetCategory {
 	id?: string;
@@ -18,6 +19,7 @@ export interface IBudgetTrackingLineitem {
 	fy_donor: string;
 	fy_org: string;
 	grant_periods_project: string;
+	attachments?: AttachFile[];
 }
 
 export interface IBudgetTarget {

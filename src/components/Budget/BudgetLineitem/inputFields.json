@@ -96,7 +96,7 @@
 			"dataTestId": "createBudgetLineitemNote",
 			"testId": "createBudgetLineitemNoteInput",
 			"label": "Note",
-			"size": 12,
+			"size": 6,
 			"rows": 2,
 			"multiline": true
 		}

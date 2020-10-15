@@ -24,6 +24,7 @@ import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
+import { FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
@@ -129,6 +130,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+
+	useEffect(() => {
+		if (props?.initialValues?.attachments) setFilesArray(props?.initialValues?.attachments);
+		console.log("hhdchbabdcjh kjck");
+	}, [props?.initialValues?.attachments]);
 
 	/* Open Attach File Form*/
 	budgetLineitemFormButtons[0].onClick = () => setOpenAttachFiles(true);
@@ -377,6 +383,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				return;
 			}
 			delete (values as any).id;
+			delete (values as any).attachments;
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
 			}

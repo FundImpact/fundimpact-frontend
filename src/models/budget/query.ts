@@ -1,5 +1,6 @@
 import { IProject } from "../project/project";
 import { IBudgetCategory } from ".";
+import { AttachFile } from "../AttachFile";
 
 export interface IBudgetTargetProjectResponse {
 	id: string;
@@ -43,6 +44,7 @@ export interface IBUDGET_LINE_ITEM_RESPONSE {
 		id: string;
 		name: string;
 	};
+	attachments: AttachFile[];
 }
 
 export interface IGET_BUDGET_TARGET_PROJECT {

@@ -14,6 +14,7 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { PROJECT_ACTIONS as PROJECT_USER_ACCESS_ACTIONS } from "../../../utils/access/modules/project/actions";
 import { useLocation, useNavigate } from "react-router";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { AttachFile } from "../../../models/AttachFile";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		project: {
@@ -45,6 +46,7 @@ function ProjectEditButton({
 		short_name: string;
 		description: string;
 		workspace: IOrganisationWorkspaces;
+		attachments: AttachFile[];
 	};
 	workspaces: IOrganisationWorkspaces[];
 }) {
@@ -66,6 +68,7 @@ function ProjectEditButton({
 				description: project.description,
 				workspace: project.workspace.id,
 				donor: donorIds,
+				attachments: project.attachments,
 			});
 		}
 	}, [projDonors]);
@@ -153,6 +156,7 @@ export default function ProjectList({
 										short_name: string;
 										description: string;
 										workspace: IOrganisationWorkspaces;
+										attachments: AttachFile[];
 									},
 									index: number
 								) => (

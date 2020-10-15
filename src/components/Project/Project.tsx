@@ -37,7 +37,13 @@ function Project(props: ProjectProps) {
 	let initialValues: IPROJECT_FORM = getInitialValues(props);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
-	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>([]);
+	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>(
+		props.type === PROJECT_ACTIONS.UPDATE
+			? props.data.attachments
+				? [...props.data.attachments]
+				: []
+			: []
+	);
 
 	/* Open Attach File Form*/
 	projectForm[5].onClick = () => setOpenAttachFiles(true);
