@@ -253,6 +253,11 @@
 		"jwt": "22",
 		"user": {
 			"id": "1",
+			"theme": {
+				"palette": {
+					"type": "light"
+				}
+			},
 			"role": {
 				"id": "1"
 			}
@@ -265,5 +270,63 @@
 			"icon": "https://img.pngio.com/sustainability-icon-png-328527-free-icons-library-sustainability-png-500_500.jpg",
 			"count": "12"
 		}
-	]
+	],
+	"mockUserDetails": {
+		"id": "1",
+		"username": "user 001",
+		"name": "sherlock",
+		"email": "sherLocked@gmai.com",
+		"provider": "mycroft",
+		"confirmed": true,
+		"blocked": false,
+		"profile_photo": {
+			"id": "1",
+			"url": "https://ichef.bbci.co.uk/images/ic/1200x675/p04pxlg4.jpg"
+		},
+		"role": {
+			"id": "1",
+			"name": "admin"
+		},
+		"account": {
+			"id": "1",
+			"name": "watson",
+			"account_no": "221"
+		},
+		"theme": {
+			"palette": {
+				"type": "dark"
+			}
+		},
+		"organization": {
+			"id": "13",
+			"name": "myorg"
+		}
+	},
+	"mockFundReceiptProjectList": [
+		{
+			"id": "1",
+			"amount": 100,
+			"reporting_date": "10/10/2020",
+			"project_donor": {
+				"id": "18",
+				"donor": {
+					"id": "13",
+					"name": "ASGAR"
+				}
+			}
+		},
+		{
+			"id": "2",
+			"amount": 200,
+			"reporting_date": "11/10/2020",
+			"project_donor": {
+				"id": "18",
+				"donor": {
+					"id": "13",
+					"name": "ASGAR"
+				}
+			}
+		}
+	],
+	"fundReceiptProjectListCount": 2
 }

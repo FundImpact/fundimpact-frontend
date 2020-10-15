@@ -17,7 +17,7 @@ import { IGetUserRole } from "../../../models/access/query";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { useAuth } from "../../../contexts/userContext";
 
-function AddRoleFormGraphql() {
+function AddRoleFormGraphql({ open, handleClose }: { open: boolean; handleClose: () => void }) {
 	const [createOrganizationUserRole, { loading: creatingRole }] = useMutation<
 		ICreateOrganizationUserRole,
 		ICreateOrganizationUserRoleVariables
@@ -51,11 +51,9 @@ function AddRoleFormGraphql() {
 			createOrganizationUserRole={createOrganizationUserRole}
 			updateOrganizationUserRole={updateOrganizationUserRole}
 			userRoleData={userRoleData}
-			formType={
-				(location?.state as { role: string })?.role
-					? FORM_ACTIONS.UPDATE
-					: FORM_ACTIONS.CREATE
-			}
+			formType={FORM_ACTIONS.CREATE}
+			open={open}
+			handleClose={handleClose}
 		/>
 	);
 }

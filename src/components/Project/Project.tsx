@@ -18,6 +18,7 @@ import AttachFileForm from "../Forms/AttachFiles";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
+import { Box, CircularProgress } from "@material-ui/core";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -232,6 +233,7 @@ function Project(props: ProjectProps) {
 				workspace={DashBoardData?.workspace?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
+				loading={createLoading || updateLoading || creatingProjectDonors}
 			>
 				<CommonForm
 					{...{

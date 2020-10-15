@@ -24,7 +24,6 @@ import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
 import { RolesContainer } from "./Roles/container";
-import AddRole from "./AddRole";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 
@@ -226,7 +225,6 @@ export default function SettingContainer() {
 							path="user_roles"
 							element={<RolesContainer />}
 						/>
-						<Route path="add_role" element={<AddRole />} />
 					</Routes>
 				</Grid>
 			</Grid>

@@ -9,48 +9,51 @@ import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
 import FilterList from "../../../components/FilterList";
 import { roleInputFields } from "./inputFields.json";
+import AddRoleForm from "../../../components/Forms/AddRoleForm";
 
-const chipArray = ({
-	tableFilterList,
-	removeFilteListElements,
-}: {
-	tableFilterList: {
-		[key: string]: string;
-	};
-	removeFilteListElements: (elementToDelete: string | number) => void;
-}) => {
-	return (
-		<Box display="flex">
-			{Object.entries(tableFilterList).map(
-				(tableFilterListObjectKeyValuePair, index) =>
-					tableFilterListObjectKeyValuePair[1] && (
-						<Box key={index} mx={1}>
-							<Chip
-								label={tableFilterListObjectKeyValuePair[1]}
-								avatar={
-									<Avatar
-										style={{
-											width: "30px",
-											height: "30px",
-										}}
-									>
-										<span>
-											{tableFilterListObjectKeyValuePair[0].slice(0, 4)}
-										</span>
-									</Avatar>
-								}
-								onDelete={() =>
-									removeFilteListElements(tableFilterListObjectKeyValuePair[0])
-								}
-							/>
-						</Box>
-					)
-			)}
-		</Box>
-	);
-};
+// const chipArray = ({
+// 	tableFilterList,
+// 	removeFilteListElements,
+// }: {
+// 	tableFilterList: {
+// 		[key: string]: string;
+// 	};
+// 	removeFilteListElements: (elementToDelete: string | number) => void;
+// }) => {
+// 	return (
+// 		<Box display="flex">
+// 			{Object.entries(tableFilterList).map(
+// 				(tableFilterListObjectKeyValuePair, index) =>
+// 					tableFilterListObjectKeyValuePair[1] && (
+// 						<Box key={index} mx={1}>
+// 							<Chip
+// 								label={tableFilterListObjectKeyValuePair[1]}
+// 								avatar={
+// 									<Avatar
+// 										style={{
+// 											width: "30px",
+// 											height: "30px",
+// 										}}
+// 									>
+// 										<span>
+// 											{tableFilterListObjectKeyValuePair[0].slice(0, 4)}
+// 										</span>
+// 									</Avatar>
+// 								}
+// 								onDelete={() =>
+// 									removeFilteListElements(tableFilterListObjectKeyValuePair[0])
+// 								}
+// 							/>
+// 						</Box>
+// 					)
+// 			)}
+// 		</Box>
+// 	);
+// };
 
 export const RolesContainer = () => {
+	const [open, setOpen] = useState<boolean>(false);
+
 	const [tableFilterList, setTableFilterList] = useState<{
 		[key: string]: string;
 	}>({
@@ -89,15 +92,7 @@ export const RolesContainer = () => {
 									/>
 								</Typography>
 							</Grid>
-							<Grid item xs={1}>
-								<FilterList
-									setFilterList={setTableFilterList}
-									inputFields={roleInputFields}
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								{chipArray({ removeFilteListElements, tableFilterList })}
-							</Grid>
+
 							<Grid item xs={12}>
 								<RoleTable tableFilterList={tableFilterList} />
 							</Grid>
@@ -105,19 +100,19 @@ export const RolesContainer = () => {
 					)}
 				</Grid>
 				{userRoleCreateAccess && (
-					<Link to={{ pathname: "/settings/add_role" }}>
-						<Fab
-							style={{ position: "fixed", right: "10px", bottom: "10px" }}
-							data-testid="add-role-button"
-							color="primary"
-							aria-label="add"
-							disableRipple
-						>
-							<AddIcon />
-						</Fab>
-					</Link>
+					<Fab
+						style={{ position: "fixed", right: "0px", bottom: "10px" }}
+						data-testid="add-role-button"
+						color="primary"
+						aria-label="add"
+						disableRipple
+						onClick={() => setOpen(true)}
+					>
+						<AddIcon />
+					</Fab>
 				)}
 			</Box>
+			<AddRoleForm open={open} handleClose={() => setOpen(false)} />
 		</Box>
 	);
 };

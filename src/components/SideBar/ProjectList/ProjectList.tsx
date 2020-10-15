@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 			backgroundColor: theme.palette.action.selected,
 		},
 		addProject: {
-			color: "white",
+			color: theme.palette.background.paper,
 		},
 		projectEditIcon: {
 			opacity: 0,
