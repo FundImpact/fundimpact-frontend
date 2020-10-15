@@ -226,7 +226,7 @@ export default function SettingContainer() {
 							path="user_roles"
 							element={<RolesContainer />}
 						/>
-						<Route path="add_role" element={<AddRole />} />
+						{/* <Route path="add_role" element={<AddRole />} /> */}
 					</Routes>
 				</Grid>
 			</Grid>
