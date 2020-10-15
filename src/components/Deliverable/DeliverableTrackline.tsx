@@ -35,6 +35,8 @@ import {
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import AttachFileForm from "../Forms/AttachFiles";
+import { AttachFile } from "../../models/AttachFile";
+import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -74,7 +76,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [donorForm, setDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [donorFormData, setDonorFormData] = React.useState<any>();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
-	const [filesArray, setFilesArray] = React.useState([]);
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
 
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -113,6 +115,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
+	let {
+		percentage,
+		error: fileUploadError,
+		success: fileUploadSuccess,
+		multiplefileUpload,
+	} = useMultipleFileUpload();
+	console.log("checkcheck", percentage, fileUploadError, fileUploadSuccess);
+
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
 			setDonorForm(
@@ -124,10 +134,20 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					type={FORM_ACTIONS.CREATE}
 				/>
 			);
+
+			multiplefileUpload({
+				ref: "deliverable-tracking-lineitem",
+				refId: data.createDeliverableTrackingLineitemDetail.id,
+				field: "attachments",
+				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-item`,
+				filesArray: filesArray,
+			});
+
+			// empty array after sending to upload function
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
-			// setCreatedDeliverableTracklineId(data.createDeliverableTrackingLineitemDetail.id);
+			setFilesArray([]);
 			handleNext();
 		},
 		onError(data) {
@@ -159,9 +179,19 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					}
 				/>
 			);
+
+			multiplefileUpload({
+				ref: "deliverable-tracking-lineitem",
+				refId: data.updateDeliverableTrackingLineitemDetail.id,
+				field: "attachments",
+				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
+				filesArray: filesArray,
+			});
+
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline Updated successfully!")
 			);
+			setFilesArray([]);
 			handleNext();
 		},
 		onError(data) {
@@ -218,7 +248,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
 		delete (input as any).donors;
-
+		if (!input.annual_year) delete (input as any).annual_year;
+		if (!input.financial_year) delete (input as any).financial_year;
 		createDeliverableTrackline({
 			variables: { input },
 			update: async (
@@ -314,6 +345,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		setDonors(value.donors);
 		setDonorFormData(value.donorMapValues);
 		let input = { ...value };
+
+		if (!input.annual_year) delete (input as any).annual_year;
+		if (!input.financial_year) delete (input as any).financial_year;
 		delete (input as any).donors;
 		delete (input as any).donorMapValues;
 		updateDeliverableTrackLine({
@@ -420,8 +454,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
-					filesArray={filesArray}
-					setFilesArray={setFilesArray}
+					{...{
+						filesArray,
+						setFilesArray,
+					}}
 				/>
 			)}
 		</React.Fragment>

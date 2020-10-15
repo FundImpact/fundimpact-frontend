@@ -1,25 +1,13 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { FORM_ACTIONS } from "../constant";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import CommonForm from "../../CommonForm/commonForm";
-// import { AttachFileForm } from "./inputField.json";
+import React, { useState } from "react";
 import { useIntl } from "react-intl";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	setErrorNotification,
-	setSuccessNotification,
-} from "../../../reducers/notificationReducer";
-import FullScreenLoader from "../../commons/GlobalLoader";
-import FormDialog from "../../FormDialog";
 import DoneIcon from "@material-ui/icons/Done";
 import CloseIcon from "@material-ui/icons/Close";
-
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import Close from "@material-ui/icons/Close";
 import {
 	Box,
 	Button,
 	Card,
-	CardActionArea,
 	CardContent,
 	CardMedia,
 	Dialog,
@@ -29,8 +17,6 @@ import {
 	FormControl,
 	FormControlLabel,
 	Grid,
-	GridList,
-	GridListTile,
 	IconButton,
 	Input,
 	InputLabel,
@@ -38,25 +24,14 @@ import {
 	Switch,
 	TextField,
 	Typography,
-	useTheme,
 } from "@material-ui/core";
 import { readableBytes } from "../../../utils";
-function getInitialValues(props: any) {
-	if (props.type === FORM_ACTIONS.UPDATE) {
-		return { ...props.data };
-	}
-	return {
-		files: [],
-	};
-}
+import { AttachFile } from "../../../models/AttachFile";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		maxWidth: 345,
-	},
-	gridList: {
-		width: 350,
-		height: 350,
+		height: 290,
+		position: "relative",
 	},
 	buttonAddFiles: {
 		marginLeft: theme.spacing(1),
@@ -73,53 +48,103 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		backgroundColor: theme.palette.action.selected,
 	},
+	remarkBox: {
+		display: "flex",
+		"& :hover": {
+			"& $EditIcon": {
+				opacity: 1,
+			},
+		},
+	},
+	EditIcon: {
+		opacity: 0,
+	},
+	close: {
+		color: theme.palette.error.main,
+		position: "absolute",
+		right: "0px",
+		top: "0px",
+	},
+	button: {
+		color: theme.palette.background.paper,
+		marginRight: theme.spacing(2),
+	},
+	myCancelButton: {
+		"&:hover": {
+			color: "#d32f2f !important",
+		},
+		padding: theme.spacing(1),
+		marginRight: theme.spacing(2),
+	},
 }));
 
-function AttachFileForm(props: any) {
-	const notificationDispatch = useNotificationDispatch();
-	let initialValues: any = getInitialValues(props);
-	const dashboardData = useDashBoardData();
-	const [formValues, setFormValues] = useState<{ email: string; role: string } | null>();
-	const formAction = props.type;
+function AttachFileForm(props: {
+	open: boolean;
+	handleClose: () => void;
+	filesArray: AttachFile[];
+	setFilesArray: React.Dispatch<React.SetStateAction<AttachFile[]>>;
+}) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	const { filesArray, setFilesArray } = props;
 	const intl = useIntl();
-
-	let title = intl.formatMessage({
-		id: "addAttachFileFormTitle",
-		defaultMessage: "Add Role to a User",
-		description: "This text will be show on user update form for title",
-	});
-	let subtitle = intl.formatMessage({
-		id: "addAttachFileFormTitle",
-		defaultMessage: "give user a role",
-		description: "This text will be show on user update form for subtitle",
-	});
-
-	React.useEffect(() => {
-		console.log("filesArrays", filesArray);
-	}, [filesArray]);
 	const [multiple, setMultiple] = useState(false);
 	const classes = useStyles();
+
+	let nofilesSelected = intl.formatMessage({
+		id: "noFilesSelectedForAttachFileForm",
+		defaultMessage: "No Files Selected",
+		description: "This text will be show on attach file form if no files are selected",
+	});
+
+	let uploadAssests = intl.formatMessage({
+		id: "addAttachFileFormTitle",
+		defaultMessage: "Upload Assests",
+		description: "This text will be show on upload media form for title",
+	});
+
+	let saveButton = intl.formatMessage({
+		id: "saveButtonForAttachFileForm",
+		defaultMessage: "Save",
+		description: "This text will be show on attach file form for save button",
+	});
+
+	let closeButton = intl.formatMessage({
+		id: "addAttachFileFormTitle",
+		defaultMessage: "Close",
+		description: "This text will be show on attach file form for close button",
+	});
+	// React.useEffect(() => {
+	// 	let percentage =
+	// 		(filesArray.filter((elem) => elem.uploadingStatus === true).length /
+	// 			filesArray.length) *
+	// 		100;
+	// 	if (percentage === 100 || !percentage) percentage = 0;
+
+	// 	setLoadingPercentage(percentage);
+	// }, [filesArray, onSaveCall]);
+
+	const onSave = async () => {
+		onCancel();
+	};
 
 	return (
 		<React.Fragment>
 			<Dialog
-				onClose={props.onClose}
+				onClose={onCancel}
 				aria-labelledby="simple-dialog-title"
 				open={formIsOpen}
 				maxWidth="md"
 				fullWidth
 			>
-				<DialogTitle id="simple-dialog-title">Upload assets</DialogTitle>
+				<DialogTitle id="simple-dialog-title">{uploadAssests}</DialogTitle>
 				<DialogContent dividers>
 					<Grid container>
 						<Grid item xs={12} container justify="space-between">
 							<FormControl>
 								<InputLabel
 									shrink={false}
-									htmlFor={"id"}
+									htmlFor={"attachFileId"}
 									style={{ width: "100%", position: "static" }}
 								>
 									<Button component="span" className={classes.buttonAddFiles}>
@@ -136,15 +161,13 @@ function AttachFileForm(props: any) {
 											fileArr.push({
 												file: file,
 												preview: URL.createObjectURL(file),
+												uploadingStatus: false,
 											});
 										});
 
 										setFilesArray([...filesArray, ...fileArr]);
 									}}
-									id={"id"}
-									// onBlur={formik.handleBlur}
-									// required={required}
-									// name={name}
+									id={"attachFileId"}
 									data-testid={"dataTestId"}
 									inputProps={{
 										"data-testid": "testId",
@@ -172,7 +195,7 @@ function AttachFileForm(props: any) {
 							{filesArray?.length === 0 && (
 								<Grid item xs={12} container justify="center" alignItems="center">
 									<Typography gutterBottom variant="h6" noWrap>
-										No files selected
+										{nofilesSelected}
 									</Typography>
 								</Grid>
 							)}
@@ -185,15 +208,30 @@ function AttachFileForm(props: any) {
 											fileArr[index].remark = remark;
 											setFilesArray(fileArr);
 										},
+										removeFile: () => {
+											let fileArr = [...filesArray];
+											fileArr.splice(index, 1);
+											setFilesArray(fileArr);
+										},
 									}}
 								/>
 							))}
 						</Grid>
 					</Grid>
 				</DialogContent>
+
 				<DialogActions>
-					<Button autoFocus color="primary" onClick={onCancel}>
-						Save
+					<Button
+						autoFocus
+						className={classes.button}
+						variant="contained"
+						color="secondary"
+						onClick={onSave}
+					>
+						{saveButton}
+					</Button>
+					<Button className={classes.myCancelButton} onClick={onCancel}>
+						{closeButton}
 					</Button>
 				</DialogActions>
 			</Dialog>
@@ -201,9 +239,13 @@ function AttachFileForm(props: any) {
 	);
 }
 
-const AttachedFileList = (props: { file: any; addRemark: (text: string) => void }) => {
+const AttachedFileList = (props: {
+	file: any;
+	addRemark: (text: string) => void;
+	removeFile: () => void;
+}) => {
 	const [openAddRemark, setOpenAddRemark] = React.useState(false);
-	const { file, addRemark } = props;
+	const { file, addRemark, removeFile } = props;
 	const [text, setText] = React.useState<string>("");
 	const handleTextField = (event: any) => {
 		setText(event.target.value);
@@ -217,6 +259,14 @@ const AttachedFileList = (props: { file: any; addRemark: (text: string) => void 
 	return (
 		<Grid item key={file?.preview} xs={3}>
 			<Card className={classes.root}>
+				<IconButton
+					className={classes.close}
+					onClick={() => {
+						removeFile();
+					}}
+				>
+					<Close />
+				</IconButton>
 				<CardMedia
 					className={classes.media}
 					image={file?.preview}
@@ -225,10 +275,10 @@ const AttachedFileList = (props: { file: any; addRemark: (text: string) => void 
 				<CardContent>
 					<Box ml={1}>
 						<Typography gutterBottom variant="subtitle2" noWrap>
-							{file?.file?.name}
+							{`File-${file?.file?.name}`}
 						</Typography>
-						<Typography gutterBottom variant="caption" noWrap>
-							{readableBytes(file?.file?.size)}
+						<Typography gutterBottom variant="body2" noWrap>
+							{`Size-${readableBytes(file?.file?.size)}`}
 						</Typography>
 					</Box>
 
@@ -240,7 +290,7 @@ const AttachedFileList = (props: { file: any; addRemark: (text: string) => void 
 								value={text}
 								onChange={handleTextField}
 								inputProps={{
-									"data-testid": "editable-input",
+									"data-testid": "attachFile-input",
 								}}
 							/>
 							<Box display="flex">
@@ -250,28 +300,47 @@ const AttachedFileList = (props: { file: any; addRemark: (text: string) => void 
 										setOpenAddRemark(false);
 									}}
 									style={{ backgroundColor: "transparent" }}
-									data-testid="editable-save"
+									data-testid="attachFile-save"
 								>
-									<DoneIcon />
+									<DoneIcon fontSize="small" />
 								</IconButton>
 								<IconButton
 									onClick={() => setOpenAddRemark(false)}
 									style={{ backgroundColor: "transparent" }}
-									data-testid="editable-cancel"
+									data-testid="attachFile-cancel"
 								>
-									<CloseIcon />
+									<CloseIcon fontSize="small" />
 								</IconButton>
 							</Box>
 						</Box>
 					) : (
-						<Box>
-							<Button
-								size="small"
-								color="primary"
-								onClick={() => setOpenAddRemark(true)}
-							>
-								{file.remark ? "View Remark" : "Add Remark"}
-							</Button>
+						<Box className={classes.remarkBox}>
+							{!file.remark ? (
+								<Box>
+									<Button
+										size="small"
+										color="primary"
+										onClick={() => setOpenAddRemark(true)}
+									>
+										{"Add Remark"}
+									</Button>
+								</Box>
+							) : (
+								<Box ml={1} mb={1} display="flex">
+									<Typography variant="body2" gutterBottom>
+										{`Remark-${file.remark}`}
+									</Typography>
+									<Box className={classes.EditIcon}>
+										<IconButton
+											onClick={() => setOpenAddRemark(true)}
+											data-testid="attachFile-edit"
+											size="small"
+										>
+											<EditOutlinedIcon fontSize="small" />
+										</IconButton>
+									</Box>
+								</Box>
+							)}
 						</Box>
 					)}
 				</CardContent>

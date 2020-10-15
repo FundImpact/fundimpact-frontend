@@ -200,7 +200,6 @@
 			"name": "annual_year",
 			"id": "annual_year",
 			"label": "Annual Year",
-			"required": true,
 			"size": 6,
 			"dataTestId": "impactTracklineAnnualYear",
 			"testId": "impactTracklineAnnualYearInput",
@@ -213,7 +212,6 @@
 		{
 			"name": "financial_year",
 			"id": "financial_year",
-			"required": true,
 			"label": "Financial Year",
 			"size": 6,
 			"dataTestId": "ImpactTracklineFinancialYear",
@@ -232,6 +230,16 @@
 			"label": "Note",
 			"multiline": true,
 			"rows": 2,
+			"size": 12
+		},
+		{
+			"name": "attachfiles",
+			"id": "attachfiles",
+			"dataTestId": "deliverableTracklineNote",
+			"testId": "deliverableTracklineNoteInput",
+			"label": "Attach files",
+			"inputType": "button",
+			"onClick": {},
 			"size": 12
 		}
 	]

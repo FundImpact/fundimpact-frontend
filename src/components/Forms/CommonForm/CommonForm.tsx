@@ -14,6 +14,10 @@ const useStyles = makeStyles((theme: Theme) =>
 			color: theme.palette.background.paper,
 			marginRight: theme.spacing(2),
 		},
+		buttonArray: {
+			color: theme.palette.background.paper,
+			marginLeft: theme.spacing(2),
+		},
 		myCancelButton: {
 			"&:hover": {
 				color: "#d32f2f !important",
@@ -33,6 +37,7 @@ function CommonForm({
 	inputFields,
 	selectFields = [],
 	formAction = FORM_ACTIONS.CREATE,
+	buttons = [],
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -93,6 +98,21 @@ function CommonForm({
 											/>
 										</Grid>
 									)
+								);
+							})}
+							{buttons.map((button: any) => {
+								return (
+									<Button
+										className={classes.buttonArray}
+										disableRipple
+										variant="contained"
+										color="primary"
+										data-testid={`commonFormButton${button?.label}`}
+										disabled={button?.disabled}
+										onClick={button?.onClick ? button.onClick : () => {}}
+									>
+										{button?.label}
+									</Button>
 								);
 							})}
 							<Grid item xs={12}>

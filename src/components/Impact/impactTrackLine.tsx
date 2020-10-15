@@ -31,6 +31,9 @@ import {
 } from "../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import { AttachFile } from "../../models/AttachFile";
+import AttachFileForm from "../Forms/AttachFiles";
+import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -88,7 +91,19 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		props.handleClose();
 		handleReset();
 	};
+	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+
+	/* Open Attach File Form*/
+	impactTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
+
+	if (filesArray.length) impactTragetLineForm[7].label = "View Files";
+	else impactTragetLineForm[7].label = "Attach Files";
+
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+
+	let { multiplefileUpload } = useMultipleFileUpload();
+
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
 			setImpactDonorForm(
@@ -100,7 +115,18 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					type={FORM_ACTIONS.CREATE}
 				/>
 			);
+
+			multiplefileUpload({
+				ref: "impact-tracking-lineitem",
+				refId: data.createImpactTrackingLineitemInput.id,
+				field: "attachments",
+				path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
+				filesArray: filesArray,
+			});
+
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
+			setFilesArray([]);
+
 			handleNext();
 		},
 		onError(data) {
@@ -129,9 +155,20 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						}
 					/>
 				);
+
+				multiplefileUpload({
+					ref: "impact-tracking-lineitem",
+					refId: data.createImpactTrackingLineitemInput.id,
+					field: "attachments",
+					path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
+					filesArray: filesArray,
+				});
+
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
+				setFilesArray([]);
+
 				handleNext();
 			},
 			onError(data) {
@@ -185,6 +222,8 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		value.reporting_date = new Date(value.reporting_date);
 		setDonors(value.donors);
 		let input = { ...value };
+		if (!input.financial_year) delete (input as any).financial_year;
+		if (!input.annual_year) delete (input as any).annual_year;
 		delete (input as any).donors;
 		createImpactTrackline({
 			variables: { input },
@@ -296,8 +335,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		setDonors(value.donors);
 		setImpactDonorFormData(value.impactDonorMapValues);
 		let input = { ...value };
+
 		delete (input as any).donors;
 		delete (input as any).impactDonorMapValues;
+		if (!input.financial_year) delete (input as any).financial_year;
+		if (!input.annual_year) delete (input as any).annual_year;
+
 		updateImpactTrackLine({
 			variables: {
 				id: impactTargetLineId,
@@ -393,6 +436,16 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}
 			{updateImpactTrackLineLoading ? <FullScreenLoader /> : null}
+			{openAttachFiles && (
+				<AttachFileForm
+					open={openAttachFiles}
+					handleClose={() => setOpenAttachFiles(false)}
+					{...{
+						filesArray,
+						setFilesArray,
+					}}
+				/>
+			)}
 		</React.Fragment>
 	);
 }

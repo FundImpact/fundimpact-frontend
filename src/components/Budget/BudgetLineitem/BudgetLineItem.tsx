@@ -16,6 +16,8 @@ import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	UPDATE_PROJECT_BUDGET_TRACKING,
 } from "../../../graphql/Budget/mutation";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
+import { AttachFile } from "../../../models/AttachFile";
 import { IBudgetLineitemProps } from "../../../models/budget/";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import {
@@ -30,8 +32,13 @@ import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { getTodaysDate } from "../../../utils";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
+import AttachFileForm from "../../Forms/AttachFiles";
 import CommonForm from "../../Forms/CommonForm";
-import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "./inputFields.json";
+import {
+	budgetLineitemFormInputFields,
+	budgetLineitemFormSelectFields,
+	budgetLineitemFormButtons,
+} from "./inputFields.json";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -72,12 +79,39 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const currentProject = dashboardData?.project;
 	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
+	let { multiplefileUpload } = useMultipleFileUpload();
 
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
-		CREATE_PROJECT_BUDGET_TRACKING
+		CREATE_PROJECT_BUDGET_TRACKING,
+		{
+			onCompleted(data) {
+				multiplefileUpload({
+					ref: "budget-tracking-lineitem",
+					refId: data.createProjBudgetTracking.id,
+					field: "attachments",
+					path: `org-${dashboardData?.organization?.id}/budget-tracking-item`,
+					filesArray: filesArray,
+				});
+
+				setFilesArray([]);
+			},
+		}
 	);
 	const [updateProjectBudgetTracking, { loading: updatingLineItem }] = useMutation(
-		UPDATE_PROJECT_BUDGET_TRACKING
+		UPDATE_PROJECT_BUDGET_TRACKING,
+		{
+			onCompleted(data) {
+				multiplefileUpload({
+					ref: "budget-tracking-lineitem",
+					refId: data.updateProjBudgetTracking.id,
+					field: "attachments",
+					path: `org-${dashboardData?.organization?.id}/budget-tracking-item`,
+					filesArray: filesArray,
+				});
+
+				setFilesArray([]);
+			},
+		}
 	);
 
 	let [getBudgetTargetProject, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
@@ -92,6 +126,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
 
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
+
+	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+
+	/* Open Attach File Form*/
+	budgetLineitemFormButtons[0].onClick = () => setOpenAttachFiles(true);
+
+	if (filesArray.length) budgetLineitemFormButtons[0].label = "View Files";
+	else budgetLineitemFormButtons[0].label = "Attach Files";
 
 	useEffect(() => {
 		if (currentProject) {
@@ -431,7 +474,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				selectFields={budgetLineitemFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
+				buttons={budgetLineitemFormButtons}
 			/>
+			{openAttachFiles && (
+				<AttachFileForm
+					open={openAttachFiles}
+					handleClose={() => setOpenAttachFiles(false)}
+					{...{
+						filesArray,
+						setFilesArray,
+					}}
+				/>
+			)}
 		</FormDialog>
 	);
 }

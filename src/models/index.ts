@@ -147,6 +147,7 @@ export interface ICommonForm {
 	selectFields?: ISelectField[];
 	initialValues: any;
 	formAction?: FORM_ACTIONS;
+	buttons?: any;
 }
 
 export interface ICountry {
