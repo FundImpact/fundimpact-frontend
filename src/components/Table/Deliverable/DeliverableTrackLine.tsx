@@ -182,6 +182,7 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
 					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
+					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
 				/>
 			)}
 		</>

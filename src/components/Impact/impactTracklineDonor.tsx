@@ -8,40 +8,21 @@ import {
 	GET_IMPACT_LINEITEM_FYDONOR,
 	UPDATE_IMPACT_LINEITEM_FYDONOR,
 } from "../../graphql/Impact/trackline";
-import { TracklineDonorFormProps } from "../../models/TracklineDonor/tracklineDonor";
+import { FORMOF, TracklineDonorFormProps } from "../../models/TracklineDonor/tracklineDonor";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import FullScreenLoader from "../commons/GlobalLoader";
-import { FORM_ACTIONS } from "../Forms/constant";
+import { getTracklineDonorsInitialValues } from "../Deliverable/DeliverableTracklineDonor";
 import DonorYearTagForm from "../Forms/FYDonorYearTagsForm/FYDonorYearTags";
-
-function getInitialValues(props: TracklineDonorFormProps) {
-	if (props.type === FORM_ACTIONS.UPDATE) return { ...props.data };
-	let impactFyDonorinitialValuesObj: any = {};
-	props.donors?.forEach(
-		(elem: {
-			id: string;
-			name: string;
-			donor: { id: string; name: string; country: { id: string; name: string } };
-		}) => {
-			impactFyDonorinitialValuesObj[`${elem.id}mapValues`] = {
-				financial_year:
-					props.organizationCountry && props.organizationCountry === elem.donor.country.id
-						? props.TracklineFyId
-						: "", //
-				grant_periods_project: "",
-				project_donor: elem.id,
-				impact_tracking_lineitem: props.TracklineId,
-			};
-		}
-	);
-	return impactFyDonorinitialValuesObj;
-}
 
 function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 	const dashboardData = useDashBoardData();
 	let organizationCountry = dashboardData?.organization?.country?.id;
 	const notificationDispatch = useNotificationDispatch();
-	let initialValues: any = getInitialValues({ ...props, organizationCountry });
+	let initialValues: any = getTracklineDonorsInitialValues({
+		...props,
+		organizationCountry,
+		formType: FORMOF.IMPACT,
+	});
 	const [createImpactLineitemFydonor, { loading }] = useMutation(CREATE_IMPACT_LINEITEM_FYDONOR, {
 		onCompleted(data) {
 			notificationDispatch(
@@ -76,36 +57,36 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 		}
 	);
 
-	const onCreate = (value: any) => {
-		console.log("formik", value);
-		let impactFyDonorFinalvalues = Object.values(value);
-		console.log(impactFyDonorFinalvalues);
-		for (let i = 0; i < impactFyDonorFinalvalues.length; i++) {
-			createImpactLineitemFydonor({
-				variables: { input: impactFyDonorFinalvalues[i] },
-				refetchQueries: [
-					{
-						query: GET_IMPACT_LINEITEM_FYDONOR,
-						variables: { filter: { impact_tracking_lineitem: props.TracklineId } },
-					},
-				],
-			});
-		}
-	};
-	const onUpdate = (value: any) => {
+	const onSubmit = (value: any) => {
 		let impactFyDonorFinalvalues: any = Object.values(value);
+		console.log("donorsss", impactFyDonorFinalvalues, value);
 		for (let i = 0; i < impactFyDonorFinalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = impactFyDonorFinalvalues[i]?.id;
 			delete (impactFyDonorFinalvalues[i] as any).id;
-			updateImpactLineitemFydonor({
-				variables: { id: deliverable_lineitem_fy_id, input: impactFyDonorFinalvalues[i] },
-				refetchQueries: [
-					{
-						query: GET_IMPACT_LINEITEM_FYDONOR,
-						variables: { filter: { impact_tracking_lineitem: props.TracklineId } },
+			if (deliverable_lineitem_fy_id) {
+				updateImpactLineitemFydonor({
+					variables: {
+						id: deliverable_lineitem_fy_id,
+						input: impactFyDonorFinalvalues[i],
 					},
-				],
-			});
+					refetchQueries: [
+						{
+							query: GET_IMPACT_LINEITEM_FYDONOR,
+							variables: { filter: { impact_tracking_lineitem: props.TracklineId } },
+						},
+					],
+				});
+			} else {
+				createImpactLineitemFydonor({
+					variables: { input: impactFyDonorFinalvalues[i] },
+					refetchQueries: [
+						{
+							query: GET_IMPACT_LINEITEM_FYDONOR,
+							variables: { filter: { impact_tracking_lineitem: props.TracklineId } },
+						},
+					],
+				});
+			}
 		}
 	};
 
@@ -144,8 +125,8 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 						organizationCountry,
 						validate,
 						onCancel: props.onCancel,
-						onUpdate,
-						onCreate,
+						onUpdate: onSubmit,
+						onCreate: onSubmit,
 						formAction,
 					}}
 				/>

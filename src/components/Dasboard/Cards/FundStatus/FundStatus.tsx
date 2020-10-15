@@ -1,34 +1,57 @@
 import { useLazyQuery } from "@apollo/client";
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
-
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import {
 	GET_PROJECT_AMOUNT_RECEIVED,
 	GET_PROJECT_AMOUNT_SPEND,
 	GET_PROJECT_BUDGET_AMOUNT,
 } from "../../../../graphql/project";
-import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
-import { DoughnutChart } from "../../../Charts";
 import { IFunds } from "./models/funds";
 import { useIntl } from "react-intl";
+import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
+
+// import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
+// import { DoughnutChart } from "../../../Charts";
+// import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		height: "100vh",
+		marginTop: theme.spacing(3),
 	},
-	fundTextIcon: {
-		marginRight: theme.spacing(1),
-		fontSize: 15,
-	},
+	// fundTextIcon: {
+	// 	marginRight: theme.spacing(1),
+	// },
 }));
 
 export default function FundStatus() {
 	const intl = useIntl();
 
+	const receivedLabel = intl.formatMessage({
+		id: "receivedFundStatusCard",
+		defaultMessage: "Received",
+		description: `This text will be show on dashboard fund status card for fund Received`,
+	});
+
+	const approvedLabel = intl.formatMessage({
+		id: "approvedFundStatusCard",
+		defaultMessage: "Approved",
+		description: `This text will be show on dashboard fund status card for fund approved`,
+	});
+
+	const spendLabel = intl.formatMessage({
+		id: "spentFundStatusCard",
+		defaultMessage: "Spent",
+		description: `This text will be show on dashboard fund status card for fund spenty`,
+	});
+
+	const fundstatusLabel = intl.formatMessage({
+		id: "FundStatusBulletTitle",
+		defaultMessage: "Fund Status",
+		description: `This text will be show on dashboard fund status card for fund status bullet chart on hover`,
+	});
 	const createFundDetails = (
 		amountApproved: number,
 		amountSpend: number,
@@ -36,49 +59,44 @@ export default function FundStatus() {
 		theme: Theme
 	) => {
 		const FUNDS_APPROVED: IFunds = {
-			name: intl.formatMessage({
-				id: "approvedFundStatusCard",
-				defaultMessage: "Approved",
-				description: `This text will be show on dashboard fund status card for fund approved`,
-			}),
+			name: approvedLabel,
 			amountToShow: undefined,
 			color: theme.palette.grey[200],
 		};
 
 		const FUNDS_SPENT: IFunds = {
-			name: intl.formatMessage({
-				id: "spentFundStatusCard",
-				defaultMessage: "Spent",
-				description: `This text will be show on dashboard fund status card for fund spenty`,
-			}),
+			name: spendLabel,
 			amountToShow: undefined,
 			color: theme.palette.primary.main,
 		};
 
 		const FUNDS_RECEIVED: IFunds = {
-			name: intl.formatMessage({
-				id: "receivedFundStatusCard",
-				defaultMessage: "Received",
-				description: `This text will be show on dashboard fund status card for fund Received`,
-			}),
+			name: receivedLabel,
 			amountToShow: undefined,
 			color: theme.palette.secondary.main,
 		};
 
-		let pieData = {
-			labels: ["Approved", "Spend", "Received"],
-			datasets: [
-				{
-					backgroundColor: [
-						FUNDS_APPROVED.color,
-						FUNDS_SPENT.color,
-						FUNDS_RECEIVED.color,
-					],
-					data: [amountApproved, amountSpend, amountReceived],
-				},
+		// let pieData = {
+		// 	labels: ["Approved", "Spend", "Received"],
+		// 	datasets: [
+		// 		{
+		// 			backgroundColor: [
+		// 				FUNDS_APPROVED.color,
+		// 				FUNDS_SPENT.color,
+		// 				FUNDS_RECEIVED.color,
+		// 			],
+		// 			data: [amountApproved, amountSpend, amountReceived],
+		// 		},
+		// 	],
+		// };
+		let BulletChartConfig = {
+			comparativeErrorMeasureData: [{ name: approvedLabel, y: amountApproved }],
+			primarySegmentedMeasureData: [{ name: spendLabel, y: amountSpend }],
+			qualitativeRangeData: [
+				{ name: "", y: 0 },
+				{ name: receivedLabel, y: amountReceived },
 			],
 		};
-
 		let details = [
 			{
 				...FUNDS_APPROVED,
@@ -104,7 +122,7 @@ export default function FundStatus() {
 			},
 		];
 
-		return { pieData, details };
+		return { details, BulletChartConfig };
 	};
 
 	const dashboardData = useDashBoardData();
@@ -128,7 +146,7 @@ export default function FundStatus() {
 		GET_PROJECT_AMOUNT_RECEIVED
 	);
 
-	let [chartData, setChartData] = useState<PieDataFormat>();
+	let [chartData, setChartData] = useState<any>();
 
 	useEffect(() => {
 		if (!ProjectTotalBudgetApproved) return;
@@ -138,13 +156,13 @@ export default function FundStatus() {
 		const amountApproved = ProjectTotalBudgetApproved.projectBudgetTargetAmountSum;
 		const amountSpend = ProjectTotalSpendAmount.projBudgetTrackingsTotalSpendAmount;
 		const amountReceived = ProjectTotalRecievedAmount.fundReceiptProjectTotalAmount;
-		const { pieData, details } = createFundDetails(
+		const { details, BulletChartConfig } = createFundDetails(
 			amountApproved,
 			amountSpend,
 			amountReceived,
 			theme
 		);
-		setChartData(pieData);
+		setChartData(BulletChartConfig);
 		setFUND_DETAILS(details);
 	}, [ProjectTotalBudgetApproved, ProjectTotalSpendAmount, ProjectTotalRecievedAmount]);
 
@@ -159,7 +177,7 @@ export default function FundStatus() {
 		GetProjectTotalReceived({ variables: { filter: { project: projectId } } });
 	}, [projectId]);
 
-	if (!FUND_DETAILS)
+	if (!ProjectTotalBudgetApproved || !ProjectTotalSpendAmount || !ProjectTotalRecievedAmount)
 		return (
 			<>
 				<Skeleton variant="text" animation="wave"></Skeleton>
@@ -169,10 +187,23 @@ export default function FundStatus() {
 				<Skeleton variant="text" animation="wave"></Skeleton>
 			</>
 		);
-
 	return (
-		<Box className={classes.root}>
-			<Grid container spacing={0} direction="row">
+		<Grid className={classes.root}>
+			<ChartBullet
+				ariaTitle={fundstatusLabel}
+				comparativeErrorMeasureData={chartData?.comparativeErrorMeasureData}
+				labels={({ datum }) => `${datum.name}: ${datum.y}`}
+				padding={{
+					left: 50, // Adjusted to accommodate labels
+					right: 50,
+					bottom: 90,
+				}}
+				primarySegmentedMeasureData={chartData?.primarySegmentedMeasureData}
+				height={100}
+				themeColor={ChartThemeColor.green}
+				qualitativeRangeData={chartData?.qualitativeRangeData}
+			/>
+			{/* <Grid container spacing={0} direction="row">
 				<Grid item xs={6} container={true} alignContent="center">
 					{FUND_DETAILS.map((fund, index) => (
 						<React.Fragment key={fund.name}>
@@ -182,7 +213,6 @@ export default function FundStatus() {
 										className={classes.fundTextIcon}
 										style={{ color: fund.color }}
 									/>
-									{/* {`${fund.amountToShow} ${fund.name}`} */}
 									<Box display="flex">
 										<Box mr={1}>
 											<Typography variant="subtitle1">
@@ -199,7 +229,7 @@ export default function FundStatus() {
 				<Grid item xs={6}>
 					<DoughnutChart data={chartData} />
 				</Grid>
-			</Grid>
-		</Box>
+			</Grid> */}
+		</Grid>
 	);
 }

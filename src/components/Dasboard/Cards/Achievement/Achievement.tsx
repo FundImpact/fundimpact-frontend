@@ -1,16 +1,20 @@
 import { useLazyQuery } from "@apollo/client";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { GET_ALL_IMPACT_TARGET_AMOUNT } from "../../../../graphql/Impact/query";
+import {
+	GET_ALL_IMPACT_TARGET_AMOUNT,
+	GET_ALL_IMPACT_AMOUNT_SPEND,
+} from "../../../../graphql/Impact/query";
 import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 } from "../../../../graphql/project";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
+import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: { height: "100vh" },
@@ -18,25 +22,41 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IIndicatorProps_PROPS {
 	name: string;
-	percentage?: number;
+	achieved: number;
+	target: number;
 	lastUpdated: string;
 	color: "primary" | "secondary" | undefined;
+	loading?: boolean;
 }
 
 const ISTATUS = (props: IIndicatorProps_PROPS) => {
-	if (props.percentage === null || props.percentage === undefined)
-		return (
-			<>
-				<Skeleton variant="text" animation="wave" height="40px"></Skeleton>
-			</>
-		);
 	return (
 		<>
-			<Box display="flex">
+			<Grid item xs={3}>
+				<Box mt={1}>
+					<Typography noWrap>{props.name}</Typography>
+				</Box>
+			</Grid>
+			<Grid item xs={9} style={{ height: "60px", width: "100%" }}>
+				<ChartBullet
+					ariaTitle={props.name}
+					comparativeErrorMeasureData={[{ name: "Target", y: props.target }]}
+					labels={({ datum }) => `${datum.name}: ${datum.y}`}
+					padding={{
+						left: 50, // Adjusted to accommodate labels
+						right: 50,
+						bottom: 120,
+					}}
+					primarySegmentedMeasureData={[{ name: "Achieved", y: props.achieved }]}
+					height={70}
+					themeColor={ChartThemeColor.green}
+				/>
+			</Grid>
+			{/* <Box display="flex">
 				<Box flexGrow={1} ml={1}>
-					<Typography variant="subtitle2" gutterBottom>
-						{/*This text is for deliverable and impact headings in achievement card*/}
-						<FormattedMessage
+					<Typography variant="subtitle2" gutterBottom> */}
+			{/*This text is for deliverable and impact headings in achievement card*/}
+			{/* <FormattedMessage
 							id={`${props.name}AchievementCard`}
 							defaultMessage={props.name}
 							description={`This text will be shown on Dashboard achievement card for ${props.name}`}
@@ -58,11 +78,27 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 					</Typography>
 				</Box>
 			</Box>
-			<BorderLinearProgress
+			<Box style={{ height: "30px", width: "100%" }}>
+			<ChartBullet
+				ariaTitle={"title"}
+				comparativeErrorMeasureData={[{name: "Target" ,y:100}]}
+				labels={({ datum }) => `${datum.name}: ${datum.y}`}
+				padding={{
+					left: 50, // Adjusted to accommodate labels
+					right: 50,
+					bottom: 120,
+				}}
+				primarySegmentedMeasureData={[{ name : "Achieved" , y :props.percentage }]}
+				height={100}
+				themeColor={ChartThemeColor.green}	
+			/>
+			</Box> */}
+
+			{/* <BorderLinearProgress
 				variant="determinate"
 				value={props.percentage}
 				color={props.color}
-			/>
+			/> */}
 		</>
 	);
 };
@@ -82,11 +118,11 @@ export default function Achievement() {
 	);
 
 	let [GetImpactAmountSpend, { data: ImpactAmountSpend }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_SPEND_AMOUNT
+		GET_ALL_IMPACT_AMOUNT_SPEND
 	);
 	useEffect(() => {
-		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS, percentage: undefined });
-		setIMPACT_STATUS({ ...IMPACT_STATUS, percentage: undefined });
+		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS });
+		setIMPACT_STATUS({ ...IMPACT_STATUS });
 		if (!projectId) return;
 		GetDeliverableAmountSpend({ variables: { filter: { project: projectId } } });
 		GetDeliverableAmountTarget({ variables: { filter: { project: projectId } } });
@@ -100,7 +136,8 @@ export default function Achievement() {
 			defaultMessage: "Deliverable",
 			description: `This text will be show on dashboard achievement card for fund deliverable`,
 		}),
-		percentage: undefined,
+		achieved: 0,
+		target: 0,
 		lastUpdated: "20-5-2020",
 		color: "secondary",
 	});
@@ -111,7 +148,8 @@ export default function Achievement() {
 			defaultMessage: "Impact",
 			description: `This text will be show on dashboard achievement card for fund deliverable`,
 		}),
-		percentage: undefined,
+		achieved: 0,
+		target: 0,
 		lastUpdated: "20-5-2020",
 		color: "primary",
 	});
@@ -126,8 +164,12 @@ export default function Achievement() {
 		if (TargetAmount === undefined || TargetAmount === null) return;
 		if (AmoundSpend === undefined || AmoundSpend === null) return;
 
-		const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS, percentage: +totalPercentageSpend });
+		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		setDELIVERABLE_STATUS({
+			...DELIVERABLE_STATUS,
+			achieved: AmoundSpend,
+			target: TargetAmount,
+		});
 	}, [DeliverableAmountTarget, DeliverableAmountSpend]);
 
 	useEffect(() => {
@@ -135,23 +177,35 @@ export default function Achievement() {
 			? ImpactAmountTarget?.impactTargetProjectTotalAmount
 			: null;
 		const AmoundSpend = ImpactAmountSpend
-			? ImpactAmountSpend.deliverableTrackingTotalSpendAmount
+			? ImpactAmountSpend.impactTrackingLineitemTotalSpendAmount
 			: null;
 		if (TargetAmount === undefined || TargetAmount === null) return;
 		if (AmoundSpend === undefined || AmoundSpend === null) return;
-
-		const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setIMPACT_STATUS({ ...IMPACT_STATUS, percentage: +totalPercentageSpend });
+		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		setIMPACT_STATUS({ ...IMPACT_STATUS, achieved: AmoundSpend, target: TargetAmount });
 	}, [ImpactAmountSpend, ImpactAmountTarget]);
+
+	if (
+		!DeliverableAmountTarget ||
+		!DeliverableAmountSpend ||
+		!ImpactAmountTarget ||
+		!ImpactAmountSpend
+	)
+		return (
+			<Grid item xs={12}>
+				<Skeleton variant="text" animation="wave" height="40px"></Skeleton>
+				<Skeleton variant="text" animation="wave" height="40px"></Skeleton>
+			</Grid>
+		);
 
 	return (
 		<>
-			<Box m={1} mt={0}>
+			<Grid container>
 				<ISTATUS {...DELIVERABLE_STATUS} />
-			</Box>
-			<Box m={1}>
+			</Grid>
+			<Grid container>
 				<ISTATUS {...IMPACT_STATUS} />
-			</Box>
+			</Grid>
 		</>
 	);
 }

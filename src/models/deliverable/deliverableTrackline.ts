@@ -29,5 +29,6 @@ export type DeliverableTargetLineProps = {
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTargetLine;
+			alreadyMappedDonorsIds: string[];
 	  }
 );
