@@ -90,6 +90,7 @@ function ToggleDarkTheme() {
 				onClick={async () => {
 					await updateUserTheme({ notificationDispatch, user, updateUser, userDispatch });
 				}}
+				data-testid="dark-theme-toggle-button"
 			>
 				{user?.theme?.palette?.type === "dark" ? <Brightness7 /> : <Brightness4 />}
 			</MenuItem>
@@ -99,6 +100,7 @@ function ToggleDarkTheme() {
 					left="50%"
 					top="50%"
 					style={{ transform: "translate(-50%, -50%)" }}
+					data-testid="loader"
 				>
 					<CircularProgress />
 				</Box>
