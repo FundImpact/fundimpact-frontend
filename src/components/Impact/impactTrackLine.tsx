@@ -32,14 +32,6 @@ import {
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
-// import FullScreenLoader from "../commons/GlobalLoader";
-// import { IMPACT_ACTIONS } from "./constants";
-// import { GET_ANNUAL_YEARS } from "../../graphql";
-// import {
-// 	GET_ACHIEVED_VALLUE_BY_TARGET,
-// 	GET_IMPACT_TARGET_BY_PROJECT,
-// } from "../../graphql/Impact/target";
-
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -132,6 +124,9 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 								? FORM_ACTIONS.UPDATE
 								: FORM_ACTIONS.CREATE
 						}
+						alreadyMappedDonorsIds={
+							props.type === IMPACT_ACTIONS.UPDATE ? props.alreadyMappedDonorsIds : []
+						}
 					/>
 				);
 				notificationDispatch(
@@ -161,16 +156,21 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	useEffect(() => {
 		if (impactProjectDonors) {
-			let array: any = [];
+			let donorsArray: any = [];
 			impactProjectDonors.projDonors.forEach(
 				(elem: {
 					id: string;
 					donor: { id: string; name: string; country: { id: string; name: string } };
 				}) => {
-					array.push({ ...elem, name: elem.donor.name });
+					if (
+						props.type === IMPACT_ACTIONS.UPDATE &&
+						props.alreadyMappedDonorsIds?.includes(elem.id)
+					)
+						donorsArray.push({ ...elem, name: elem.donor.name, disabled: true });
+					else donorsArray.push({ ...elem, name: elem.donor.name });
 				}
 			);
-			impactTragetLineForm[3].optionsArray = array;
+			impactTragetLineForm[3].optionsArray = donorsArray;
 		}
 	}, [impactProjectDonors]);
 

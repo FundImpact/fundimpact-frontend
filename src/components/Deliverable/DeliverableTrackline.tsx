@@ -143,6 +143,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							? FORM_ACTIONS.UPDATE
 							: FORM_ACTIONS.CREATE
 					}
+					alreadyMappedDonorsIds={
+						props.type === DELIVERABLE_ACTIONS.UPDATE
+							? props.alreadyMappedDonorsIds
+							: []
+					}
 				/>
 			);
 			notificationDispatch(
@@ -178,7 +183,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					id: string;
 					donor: { id: string; name: string; country: { id: string; name: string } };
 				}) => {
-					array.push({ ...elem, name: elem.donor.name });
+					if (
+						props.type === DELIVERABLE_ACTIONS.UPDATE &&
+						props.alreadyMappedDonorsIds?.includes(elem.id)
+					)
+						array.push({ ...elem, name: elem.donor.name, disabled: true });
+					else array.push({ ...elem, name: elem.donor.name });
 				}
 			);
 			deliverableTragetLineForm[3].optionsArray = array;

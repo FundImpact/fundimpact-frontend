@@ -54,7 +54,12 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 		>
 			{(formik) => {
 				return (
-					<Form className={classes.root} autoComplete="off" data-testid="form">
+					<Form
+						className={classes.root}
+						autoComplete="off"
+						data-testid="form"
+						onChange={clearErrors}
+					>
 						<TextField
 							value={formik.values.email}
 							error={!!formik.errors.email && !!formik.touched.email}
