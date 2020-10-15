@@ -51,7 +51,7 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 		{ loading: fetchingRolePermissions, refetch: getAsyncRolesAndPermissions },
 	] = useLazyQuery<IGetUserRole>(GET_USER_ROLES);
 
-	let adminRoletype = `admin-org-${dashboardData?.organization?.id}`;
+	let adminRoletype = `owner-org-${dashboardData?.organization?.id}`;
 
 	useEffect(() => {
 		if (getAsyncRolesAndPermissions && userRoles) {
@@ -90,8 +90,6 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 			});
 		}
 	}, [dashboardData]);
-
-	// console.log('rolesPermissions	 :>> ', rolesPermissions	);
 
 	return (
 		<RoleTableContainer

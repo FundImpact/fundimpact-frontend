@@ -135,6 +135,7 @@ const TableCellCheckBox = React.memo(
 							: numeberOfTimesRolesChanged[roleId]--;
 						formik.handleChange(e);
 					}}
+					data-testid={`${controllerName}-${actionName}-${roleId}-input`}
 					onBlur={formik.handleBlur}
 					disableRipple
 				/>
@@ -168,11 +169,9 @@ const ControllerNameRow = React.memo(
 const initializeNoOfTimesRolesUpdated = (
 	userRoles: { id: string; name: string; type: string }[]
 ) => {
-	console.log("called");
 	let newNoOfTimesRolesChangedObject: { [key: string]: number } = {};
 	userRoles.forEach((role) => (newNoOfTimesRolesChangedObject[role.id] = 0));
 	numeberOfTimesRolesChanged = newNoOfTimesRolesChangedObject;
-	console.log("numeberOfTimesRolesChanged :>> ", numeberOfTimesRolesChanged);
 };
 
 function RoleTableView({
@@ -235,8 +234,8 @@ function RoleTableView({
 	}> | null>(null);
 
 	useEffect(() => {
-		if(userRoles.length && Object.keys(numeberOfTimesRolesChanged).length ==0){
-			initializeNoOfTimesRolesUpdated(userRoles);	
+		if (userRoles.length && Object.keys(numeberOfTimesRolesChanged).length == 0) {
+			initializeNoOfTimesRolesUpdated(userRoles);
 		}
 	}, [userRoles]);
 
@@ -371,7 +370,7 @@ function RoleTableView({
 					disableRipple
 					variant="contained"
 					color="secondary"
-					data-testid="createSaveButton"
+					data-testid="createUpdateButton"
 					onClick={() => {
 						formikInstanceRef.current && formikInstanceRef.current.submitForm();
 					}}
