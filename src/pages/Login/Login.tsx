@@ -1,6 +1,6 @@
 import { Box } from "@material-ui/core";
 import { FormikHelpers } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import AlertMsg from "../../components/AlertMessage/AlertMessage";
 import GlobalLoader from "../../components/commons/GlobalLoader";
@@ -10,12 +10,6 @@ import { usePostFetch } from "../../hooks/fetch/usePostFetch";
 import { ILoginForm } from "../../models";
 import { setUser } from "../../reducers/userReducer";
 import { LOGIN_API } from "../../utils/endpoints.util";
-
-// const useStyles = makeStyles((theme: Theme) =>
-// 	createStyles({
-// 		errorMessage: { width: "95%" },
-// 	})
-// );
 
 function validate(values: ILoginForm) {
 	let errors: Partial<ILoginForm> = {};
@@ -30,7 +24,6 @@ function validate(values: ILoginForm) {
 }
 
 function Login(props: { intialFormValue?: ILoginForm }) {
-	// const classes = useStyles();
 	const initialValues: ILoginForm = props.intialFormValue
 		? props.intialFormValue
 		: {
@@ -39,13 +32,24 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 		  };
 
 	const userDispatch = React.useContext(UserDispatchContext);
-
+	const [error, setError] = useState<string>();
 	let { data, loading, error: apiError, setPayload } = usePostFetch<any>({
 		url: LOGIN_API,
 		body: null,
 	});
+	const { logoutMsg } = useAuth();
 
-	React.useEffect(() => {
+	useEffect(() => {
+		if (apiError) {
+			if (apiError === "User not found") setError(apiError);
+			else setError("Internal server error");
+		}
+		if (logoutMsg) setError(logoutMsg);
+
+		console.log("apiError", apiError);
+	}, [apiError]);
+
+	useEffect(() => {
 		if (data)
 			if (userDispatch) {
 				userDispatch(setUser(data));
@@ -55,19 +59,16 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 	function onSubmit(values: ILoginForm, formikHelpers: FormikHelpers<ILoginForm>) {
 		setPayload(values);
 	}
-	const { logoutMsg } = useAuth();
+
 	const clearErrors = () => {
-		console.log("clearErors");
-		if (apiError) apiError = undefined;
+		if (error) setError("");
 	};
 
 	return (
 		<Box mx="auto" height={"100%"} width={{ xs: "100%", md: "75%", lg: "50%" }}>
 			<LoginForm {...{ onSubmit, initialValues, clearErrors, validate }} />
 			{loading ? <GlobalLoader /> : null}
-			{apiError ? <AlertMsg severity="error" msg={apiError} /> : null}
-			{logoutMsg ? <AlertMsg severity="error" msg={logoutMsg} /> : null}
-			{data ? <p> Login Successs </p> : null}
+			{error ? <AlertMsg severity="error" msg={error} /> : null}
 		</Box>
 	);
 }

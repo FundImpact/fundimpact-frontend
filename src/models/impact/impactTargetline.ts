@@ -29,5 +29,6 @@ export type ImpactTargetLineProps = {
 	| {
 			type: IMPACT_ACTIONS.UPDATE;
 			data: IImpactTargetLine;
+			alreadyMappedDonorsIds: string[];
 	  }
 );
