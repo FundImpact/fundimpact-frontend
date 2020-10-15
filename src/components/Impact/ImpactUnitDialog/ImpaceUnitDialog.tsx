@@ -36,7 +36,6 @@ const defaultValues: IImpactUnitFormInput = {
 	name: "",
 	description: "",
 	code: "",
-	target_unit: "",
 	prefix_label: "",
 	suffix_label: "",
 	impactCategory: [],
@@ -49,9 +48,6 @@ const validate = (values: IImpactUnitFormInput) => {
 	let errors: Partial<IImpactUnitFormInput> = {};
 	if (!values.name) {
 		errors.name = "Name is required";
-	}
-	if (!values.target_unit) {
-		errors.target_unit = "Target unit is required";
 	}
 	return errors;
 };

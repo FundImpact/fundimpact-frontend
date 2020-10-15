@@ -32,7 +32,6 @@
 	"impactUnitDialogFields": [
 		{ "id": "createInpactUnitNameInput", "key": "name", "name": "Name" },
 		{ "id": "createImpactUnitCodeInput", "key": "code", "name": "Code" },
-		{ "id": "createImpactUnitTargetUnitInput", "key": "target_unit", "name": "target unit" },
 		{ "id": "createImpactUnitDescriptionInput", "key": "description", "name": "Description" }
 	],
 	"budgetLineItemInputFields": [
