@@ -194,6 +194,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 					type={IMPACT_ACTIONS.UPDATE}
 					data={impactTargetLineData}
 					impactTarget={impactTargetLine.impact_target_project.id}
+					alreadyMappedDonorsIds={impactTracklineDonors?.map((donor) => donor.id)}
 				/>
 			)}
 		</>
@@ -504,7 +505,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 			{loading ? <FullScreenLoader /> : null}
 			<Grid container>
 				<Grid item xs={12}>
-					<Box my={2} display="flex" flexWrap="wrap">
+					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
 							createChipArray({
 								filterListObjectKeyValuePair,
