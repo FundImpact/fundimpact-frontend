@@ -26,6 +26,7 @@ const getInitialValues = (name: string, controllerActionHash: IControllerAction 
 	let initialValues: IAddRole = {
 		name,
 		permissions: {},
+		is_project_level: false,
 	};
 	for (let controller in controllerActionHash) {
 		for (let action in (controllerActionHash as IControllerAction)[
@@ -75,6 +76,7 @@ const createRole = async ({
 	organizationId,
 	permissions,
 	createOrganizationUserRole,
+	is_project_level,
 }: {
 	name: string;
 	organizationId: string;
@@ -89,6 +91,7 @@ const createRole = async ({
 	) => Promise<
 		FetchResult<ICreateOrganizationUserRole, Record<string, any>, Record<string, any>>
 	>;
+	is_project_level: boolean;
 }) => {
 	await createOrganizationUserRole({
 		variables: {
@@ -100,6 +103,7 @@ const createRole = async ({
 						controllers: permissions,
 					},
 				},
+				is_project_level,
 			},
 		},
 		refetchQueries: [
@@ -140,6 +144,7 @@ const onFormSubmit = async ({
 		formType == FORM_ACTIONS.CREATE &&
 			(await createRole({
 				name: valuesSubmitted.name,
+				is_project_level: valuesSubmitted.is_project_level,
 				createOrganizationUserRole,
 				organizationId,
 				permissions,
