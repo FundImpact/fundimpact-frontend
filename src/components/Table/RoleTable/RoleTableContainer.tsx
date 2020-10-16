@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import RoleTableView from "./RoleTableView";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
-import { IControllerAction, IAddRolePermissions } from "../../../models/AddRole";
+import { IControllerAction } from "../../../models/AddRole";
 import { IGetUserRole } from "../../../models/access/query";
 import {
 	IUpdateOrganizationUserRole,
@@ -14,6 +14,49 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
+
+interface IOnUpdateProps {
+	valuesSubmitted: { [key: string]: { name: string; permissions: {} | IControllerAction } };
+	updateOrganizationUserRole: (
+		options?:
+			| MutationFunctionOptions<
+					IUpdateOrganizationUserRole,
+					IUpdateOrganizationUserRoleVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
+	>;
+	notificationDispatch: React.Dispatch<any>;
+	numeberOfTimesRolesChanged: {
+		[key: string]: number;
+	};
+}
+
+interface IRoleTableContainerProps {
+	loading: boolean;
+	userRoles: { id: string; name: string; type: string }[];
+	count: number;
+	changePage: (prev?: boolean) => void;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	rolesPermissions: {
+		roleName: string;
+		roleId: string;
+		permissions: IGetUserRole["getRolePemissions"];
+	}[];
+	updateOrganizationUserRole: (
+		options?:
+			| MutationFunctionOptions<
+					IUpdateOrganizationUserRole,
+					IUpdateOrganizationUserRoleVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
+	>;
+	updatingRole: boolean;
+}
 
 const getControllerActionHashArr = (
 	rolesPermissions: {
@@ -48,23 +91,7 @@ const onUpdate = async ({
 	updateOrganizationUserRole,
 	notificationDispatch,
 	numeberOfTimesRolesChanged,
-}: {
-	valuesSubmitted: { [key: string]: { name: string; permissions: {} | IControllerAction } };
-	updateOrganizationUserRole: (
-		options?:
-			| MutationFunctionOptions<
-					IUpdateOrganizationUserRole,
-					IUpdateOrganizationUserRoleVariables
-			  >
-			| undefined
-	) => Promise<
-		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
-	>;
-	notificationDispatch: React.Dispatch<any>;
-	numeberOfTimesRolesChanged: {
-		[key: string]: number;
-	};
-}) => {
+}: IOnUpdateProps) => {
 	for (let roleId in valuesSubmitted) {
 		if (roleId in numeberOfTimesRolesChanged && numeberOfTimesRolesChanged[roleId] == 0) {
 			continue;
@@ -155,30 +182,7 @@ function RoleTableContainer({
 	rolesPermissions,
 	updateOrganizationUserRole,
 	updatingRole,
-}: {
-	loading: boolean;
-	userRoles: { id: string; name: string; type: string }[];
-	count: number;
-	changePage: (prev?: boolean) => void;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	rolesPermissions: {
-		roleName: string;
-		roleId: string;
-		permissions: IGetUserRole["getRolePemissions"];
-	}[];
-	updateOrganizationUserRole: (
-		options?:
-			| MutationFunctionOptions<
-					IUpdateOrganizationUserRole,
-					IUpdateOrganizationUserRoleVariables
-			  >
-			| undefined
-	) => Promise<
-		FetchResult<IUpdateOrganizationUserRole, Record<string, any>, Record<string, any>>
-	>;
-	updatingRole: boolean;
-}) {
+}: IRoleTableContainerProps) {
 	const [page, setPage] = useState(0);
 	const [controllerActionHashArr, setControllerActionHashArr] = useState<
 		{ roleId: string; roleName: string; controllerActionHash: IControllerAction }[]
@@ -194,7 +198,7 @@ function RoleTableContainer({
 		USER_PERMISSIONS_ACTIONS.UPDATE_USER_PERMISSIONS
 	);
 
-	const onFormSubmit = async(
+	const onFormSubmit = async (
 		valuesSubmitted: {
 			[key: string]: { name: string; permissions: IControllerAction | {} };
 		},

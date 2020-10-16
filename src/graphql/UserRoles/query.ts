@@ -6,6 +6,7 @@ export const GET_ROLES_BY_ORG = gql`
 			id
 			name
 			type
+			is_project_level
 			organization {
 				id
 				name
@@ -24,10 +25,23 @@ export const GET_INVITED_USER_LIST = gql`
 			role {
 				id
 				name
+				type
+				is_project_level
 			}
 			organization {
 				id
 				name
+			}
+			user_projects {
+				id
+				project {
+					id
+					name
+					workspace {
+						id
+						name
+					}
+				}
 			}
 		}
 	}
@@ -42,5 +56,21 @@ export const GET_INVITED_USER_LIST_COUNT = gql`
 export const ORGANIZATION_ROLES_COUNT = gql`
 	query {
 		organizationRolesCount
+	}
+`;
+
+export const GET_ORG_USER_PROJECT = gql`
+	query orgUserProject($filter: JSON) {
+		orgUserProject(where: $filter) {
+			id
+			project {
+				id
+				name
+				workspace {
+					id
+					name
+				}
+			}
+		}
 	}
 `;

@@ -50,7 +50,6 @@ const validate = (values: IAddRole) => {
 	if (!values.name) {
 		errors.name = "Role is required";
 	}
-
 	return errors;
 };
 
@@ -148,6 +147,7 @@ const onFormSubmit = async ({
 				createOrganizationUserRole,
 				organizationId,
 				permissions,
+				is_project_level: valuesSubmitted.is_project_level,
 			}));
 
 		notificationDispatch(
