@@ -242,8 +242,8 @@ function AddRoleFormContainer({
 				description: `This text will be show when user want to add role`,
 			})}
 			subtitle=""
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				initialValues={getInitialValues("", controllerActionHash)}
