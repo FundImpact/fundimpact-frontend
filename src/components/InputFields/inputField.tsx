@@ -254,6 +254,7 @@ const InputFields = ({
 					/>
 				}
 				label={label}
+				data-testid={dataTestId}
 			/>
 		);
 	}

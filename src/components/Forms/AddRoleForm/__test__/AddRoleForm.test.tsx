@@ -23,7 +23,24 @@ const intialFormValue: { name: string } = {
 	name: "admin",
 };
 
-const mocks = [
+let mockInputData = {
+	name: intialFormValue.name,
+	permissions: {
+		application: {
+			controllers: {
+				"budget-tracking-lineitem": {
+					find: {
+						enabled: false,
+						policy: "",
+					},
+				},
+			},
+		},
+	},
+	is_project_level: true,
+};
+
+const mocks = [	
 	{
 		request: {
 			query: GET_USER_ROLES,
@@ -60,22 +77,7 @@ const mocks = [
 			query: CREATE_ORGANIZATION_USER_ROLE,
 			variables: {
 				id: organizationDetails.id,
-				input: {
-					name: intialFormValue.name,
-					permissions: {
-						application: {
-							controllers: {
-								"budget-tracking-lineitem": {
-									find: {
-										enabled: false,
-										policy: "",
-									},
-								},
-							},
-						},
-					},
-					is_project_level: false,
-				},
+				input: mockInputData,
 			},
 		},
 		result: () => {
@@ -113,6 +115,7 @@ beforeEach(() => {
 });
 
 const inputIds = [...addRoleForm];
+inputIds.pop();
 
 const {
 	checkElementHaveCorrectValue,
@@ -151,7 +154,17 @@ describe("Add Role Form tests", () => {
 		});
 	}
 
+	test("check if addRoleIsProjectLevelForm  is in the document", async () => {
+		let switchButtoon = await dialog.findByTestId("addRoleIsProjectLevelForm");
+		expect(switchButtoon).toBeInTheDOM();
+	});
+
 	test("Mock response", async () => {
+		let switchButtoon = await dialog.findByTestId("addRoleIsProjectLevelForm");
+		expect(switchButtoon).toBeInTheDOM();
+		await act(async () => {
+			fireEvent.click(switchButtoon);
+		});
 		await triggerMutation<{ name: string }>({
 			inputFields: inputIds,
 			reactElement: dialog,
