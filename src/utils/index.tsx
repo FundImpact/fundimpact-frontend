@@ -130,5 +130,10 @@ export function readableBytes(bytes: any) {
 		sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
 	let sizeInBytes: any = (bytes / Math.pow(1024, i)).toFixed(2);
-	return sizeInBytes * 1 + " " + sizes[i];
+	return sizeInBytes * 1 + sizes[i];
 }
+
+export const isValidImage = (extension: string) => {
+	const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+	return imageExtensions.includes(extension);
+};

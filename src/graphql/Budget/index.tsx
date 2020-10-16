@@ -54,6 +54,8 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				size
 				caption
 				url
+				ext
+				created_at
 			}
 		}
 	}

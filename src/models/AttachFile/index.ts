@@ -8,6 +8,8 @@ export interface AttachFile {
 	size?: string;
 	url?: string;
 	caption?: string;
+	ext?: string;
+	created_at?: string;
 }
 
 export interface Attachments {

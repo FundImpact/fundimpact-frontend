@@ -329,6 +329,8 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 				size
 				caption
 				url
+				ext
+				created_at
 			}
 		}
 	}

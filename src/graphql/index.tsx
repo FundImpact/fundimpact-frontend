@@ -75,6 +75,8 @@ export const GET_PROJECTS_BY_WORKSPACE = gql`
 				size
 				caption
 				url
+				ext
+				created_at
 			}
 		}
 	}

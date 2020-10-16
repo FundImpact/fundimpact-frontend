@@ -13,7 +13,7 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 
-import { getTodaysDate } from "../../../utils";
+import { getTodaysDate, isValidImage } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 
 import FITable from "../FITable";
@@ -27,10 +27,10 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
 import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import { Attachments } from "../../../models/AttachFile";
 import { documentsHeadings } from "../constants";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 export default function DocumentsTable() {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
@@ -109,11 +109,6 @@ export default function DocumentsTable() {
 	);
 
 	const { data } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
-	const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
-	const isValidImage = (extension: string) => {
-		return imageExtensions.includes(extension);
-	};
-
 	useEffect(() => {
 		let arr: any = [];
 		data?.organizationList?.map(
@@ -135,25 +130,14 @@ export default function DocumentsTable() {
 							{getTodaysDate(new Date(document.created_at))}
 						</TableCell>,
 						<TableCell key={`${index}-4`}>
-							{isValidImage(document.ext) ? (
-								<IconButton
-									onClick={() => {
-										var win = window.open(document.url, "_blank");
-										win?.focus();
-									}}
-								>
-									<VisibilityIcon />
-								</IconButton>
-							) : (
-								<IconButton
-									onClick={() => {
-										var win = window.open(document.url, "_blank");
-										win?.focus();
-									}}
-								>
-									<GetAppIcon />
-								</IconButton>
-							)}
+							<IconButton
+								onClick={() => {
+									var win = window.open(document.url, "_blank");
+									win?.focus();
+								}}
+							>
+								{isValidImage(document.ext) ? <VisibilityIcon /> : <GetAppIcon />}
+							</IconButton>
 						</TableCell>,
 						<TableCell key={`${index}-5`}>
 							<IconButton disabled>

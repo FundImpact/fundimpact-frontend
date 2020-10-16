@@ -13,7 +13,7 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 
-import { getTodaysDate } from "../../../utils";
+import { getTodaysDate, isValidImage } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 
 import FITable from "../FITable";
@@ -63,10 +63,6 @@ export default function ProjectDocumentsTable() {
 	);
 
 	const { data, loading } = useQuery(GET_PROJECT_DOCUMENTS);
-	const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
-	const isValidImage = (extension: string) => {
-		return imageExtensions.includes(extension);
-	};
 
 	useEffect(() => {
 		let arr: any = [];
@@ -84,25 +80,18 @@ export default function ProjectDocumentsTable() {
 							{getTodaysDate(new Date(projectDocument.created_at))}
 						</TableCell>,
 						<TableCell key={`${index}-4`}>
-							{isValidImage(projectDocument.ext) ? (
-								<IconButton
-									onClick={() => {
-										var win = window.open(projectDocument.url, "_blank");
-										win?.focus();
-									}}
-								>
+							<IconButton
+								onClick={() => {
+									var win = window.open(projectDocument.url, "_blank");
+									win?.focus();
+								}}
+							>
+								{isValidImage(projectDocument.ext) ? (
 									<VisibilityIcon />
-								</IconButton>
-							) : (
-								<IconButton
-									onClick={() => {
-										var win = window.open(projectDocument.url, "_blank");
-										win?.focus();
-									}}
-								>
+								) : (
 									<GetAppIcon />
-								</IconButton>
-							)}
+								)}
+							</IconButton>
 						</TableCell>,
 						<TableCell key={`${index}-5`}>
 							<IconButton disabled>

@@ -240,6 +240,8 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 				size
 				caption
 				url
+				ext
+				created_at
 			}
 		}
 	}

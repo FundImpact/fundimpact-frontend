@@ -8,6 +8,7 @@ import {
 	Box,
 	Button,
 	Card,
+	CardActionArea,
 	CardContent,
 	CardMedia,
 	Dialog,
@@ -25,12 +26,14 @@ import {
 	TextField,
 	Typography,
 } from "@material-ui/core";
-import { readableBytes } from "../../../utils";
+import { isValidImage, readableBytes } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		height: 290,
+		height: 270,
 		position: "relative",
 	},
 	buttonAddFiles: {
@@ -65,19 +68,26 @@ const useStyles = makeStyles((theme) => ({
 		right: "0px",
 		top: "0px",
 	},
+	viewOrDownload: {
+		color: theme.palette.background.paper,
+		position: "absolute",
+		bottom: "0px",
+		left: "0px",
+	},
 	button: {
 		color: theme.palette.background.paper,
 		marginRight: theme.spacing(2),
 	},
 	myCancelButton: {
 		"&:hover": {
-			color: "#d32f2f !important",
+			color: `${theme.palette.error.main} !important`,
 		},
 		padding: theme.spacing(1),
 		marginRight: theme.spacing(2),
 	},
 }));
 
+const noImagePreview = "https://i.stack.imgur.com/yGa0X.png";
 function AttachFileForm(props: {
 	open: boolean;
 	handleClose: () => void;
@@ -163,7 +173,9 @@ function AttachFileForm(props: {
 										Array.from(e.target?.files).map((file: any) => {
 											fileArr.push({
 												file: file,
-												preview: URL.createObjectURL(file),
+												preview: isValidImage(file.name.split(".").pop())
+													? URL.createObjectURL(file)
+													: noImagePreview,
 												uploadingStatus: false,
 											});
 										});
@@ -243,7 +255,7 @@ function AttachFileForm(props: {
 }
 
 const AttachedFileList = (props: {
-	file: any;
+	file: AttachFile;
 	addRemark: (text: string) => void;
 	removeFile: () => void;
 }) => {
@@ -258,31 +270,56 @@ const AttachedFileList = (props: {
 	React.useEffect(() => {
 		setText(file.remark);
 	}, []);
-
+	const fetchedFilePreview = file.ext && !isValidImage(file.ext) ? noImagePreview : file.url;
 	return (
 		<Grid item key={file?.preview} xs={3}>
 			<Card className={classes.root}>
-				{/*if not uploaded*/}
-				{!file.id && (
-					<IconButton
-						className={classes.close}
-						onClick={() => {
-							removeFile();
-						}}
-					>
-						<Close />
-					</IconButton>
-				)}
-				<CardMedia
-					className={classes.media}
-					image={file?.preview ? file?.preview : file.url}
-				/>
+				<CardActionArea>
+					{/*if not uploaded*/}
+					{!file.id && (
+						<IconButton
+							className={classes.close}
+							onClick={() => {
+								removeFile();
+							}}
+						>
+							<Close />
+						</IconButton>
+					)}
+					{file.id && file.ext && (
+						<IconButton
+							className={classes.viewOrDownload}
+							onClick={() => {
+								var win = window.open(file.url, "_blank");
+								win?.focus();
+							}}
+						>
+							{isValidImage(file.ext) ? (
+								<VisibilityIcon fontSize="small" />
+							) : (
+								<GetAppIcon fontSize="small" />
+							)}
+						</IconButton>
+					)}
+					<CardMedia
+						className={classes.media}
+						image={file?.preview ? file?.preview : fetchedFilePreview}
+					/>
+				</CardActionArea>
+
 				<CardContent>
-					<Box ml={1}>
-						<Typography gutterBottom variant="subtitle2" noWrap>
-							{`File-${file?.file?.name ? file?.file?.name : file.name}`}
-						</Typography>
-						<Typography gutterBottom variant="body2" noWrap>
+					<Box>
+						<Box>
+							<Typography gutterBottom variant="caption" noWrap>
+								{`File-${
+									file?.file?.name
+										? file?.file?.name
+										: `${file.name}${file.ext ? file.ext : ""}`
+								}`}
+							</Typography>
+						</Box>
+
+						<Typography gutterBottom variant="caption" noWrap>
 							{`Size-${readableBytes(
 								file?.file?.size ? file?.file?.size : file.size
 							)}`}
@@ -334,8 +371,8 @@ const AttachedFileList = (props: {
 											</Button>
 										</Box>
 									) : (
-										<Box ml={1} mb={1} display="flex">
-											<Typography variant="body2" gutterBottom>
+										<Box mb={1} display="flex">
+											<Typography variant="caption" gutterBottom>
 												{`Remark-${
 													file.remark ? file.remark : file.caption
 												}`}
@@ -355,9 +392,9 @@ const AttachedFileList = (props: {
 							)}
 						</>
 					) : (
-						<Box ml={1}>
-							{file.caption?.length > 0 && (
-								<Typography variant="body2" gutterBottom>
+						<Box>
+							{file.caption && file.caption.length > 0 && (
+								<Typography variant="caption" gutterBottom>
 									{`Remark-${file.caption}`}
 								</Typography>
 							)}
