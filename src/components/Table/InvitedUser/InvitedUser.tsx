@@ -8,6 +8,7 @@ import {
 	TablePagination,
 	Menu,
 	MenuItem,
+	Button,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -31,6 +32,8 @@ import { useIntl, FormattedMessage } from "react-intl";
 import { IUserRoleUpdate } from "../../../models/UserRole/UserRole";
 import UserRole from "../../Forms/UserRole";
 import { FORM_ACTIONS } from "../../../models/constants";
+import ProjectDialog from "./ProjectDialog";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 let roleHash: { [key: string]: string } = {};
 const chipArray = ({
@@ -103,6 +106,26 @@ const mapIdToName = (
 			return accumulator;
 		},
 		initialObject
+	);
+};
+
+const UserProjects = ({
+	projects,
+}: {
+	projects: { project: { id: string; name: string; workspace: { id: string; name: string } } }[];
+}) => {
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
+	return (
+		<>
+			<ProjectDialog
+				projects={projects}
+				open={openDialog}
+				handleClose={() => setOpenDialog(false)}
+			/>
+			<IconButton size="small" onClick={() => setOpenDialog(true)}>
+				<VisibilityIcon />
+			</IconButton>
+		</>
 	);
 };
 
@@ -255,8 +278,9 @@ export default function InvitedUserTable() {
 	useEffect(() => {
 		let row: any = [];
 		invitedUserList?.userList?.forEach((user: any, index: number) => {
+			console.log("user :>> ", user);
 			let col = [
-				<TableCell>{index + 1}</TableCell>,
+				<TableCell>{invitedUserPage * 10 + index + 1}</TableCell>,
 				<TableCell>{user?.email}</TableCell>,
 				<TableCell>
 					<Box mr={1}>
@@ -265,6 +289,11 @@ export default function InvitedUserTable() {
 				</TableCell>,
 				<TableCell>
 					{user?.confirmed ? <CheckIcon color="action" /> : <CloseIcon color="error" />}
+				</TableCell>,
+				<TableCell>
+					{user?.role?.is_project_level && (
+						<UserProjects projects={user?.user_projects || []} />
+					)}
 				</TableCell>,
 			];
 			col.push(<EditUserIcon key={Math.random()} userData={user} />);
