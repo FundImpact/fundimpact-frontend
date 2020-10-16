@@ -37,6 +37,9 @@ import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
 import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
+import AttachFileForm from "../../Forms/AttachFiles";
+import { AttachFile } from "../../../models/AttachFile";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
 
 enum tableHeaders {
 	date = 1,
@@ -143,6 +146,19 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.UPDATE_IMPACT_TRACKING_LINE_ITEM
 	);
+	const dashBoardData = useDashBoardData();
+	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
+	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
+	let { multiplefileUpload } = useMultipleFileUpload();
+	const attachImpactFileOnSave = () => {
+		multiplefileUpload({
+			ref: "impact-tracking-lineitem",
+			refId: impactTargetLine.id,
+			field: "attachments",
+			path: `org-${dashBoardData?.organization?.id}/impact-tracking-lineitem`,
+			filesArray: impactTracklineFileArray,
+		});
+	};
 
 	return (
 		<>
@@ -187,6 +203,21 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 						/>
 					</MenuItem>
 				)}
+				{impactTracklineEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTracklineFileArray(impactTargetLine?.attachments);
+							setImpactOpenAttachFiles(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="viewDocumentsMenu"
+							defaultMessage="View Documents"
+							description="This text will be show on deliverable or impact target table for view documents menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{impactTargetLineData && (
 				<ImpactTrackLine
@@ -196,6 +227,17 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 					data={impactTargetLineData}
 					impactTarget={impactTargetLine.impact_target_project.id}
 					alreadyMappedDonorsIds={impactTracklineDonors?.map((donor) => donor.id)}
+				/>
+			)}
+			{impactOpenAttachFiles && impactTracklineFileArray && (
+				<AttachFileForm
+					{...{
+						open: impactOpenAttachFiles,
+						handleClose: () => setImpactOpenAttachFiles(false),
+						filesArray: impactTracklineFileArray,
+						setFilesArray: setImpactTracklineFileArray,
+						parentOnSave: attachImpactFileOnSave,
+					}}
 				/>
 			)}
 		</>

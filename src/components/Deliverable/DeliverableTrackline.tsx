@@ -37,7 +37,18 @@ import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMess
 import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
-
+import {
+	Box,
+	CircularProgress,
+	createStyles,
+	Fab,
+	makeStyles,
+	Theme,
+	Typography,
+} from "@material-ui/core";
+import classes from "*.module.css";
+import CheckIcon from "@material-ui/icons/Check";
+import SaveIcon from "@material-ui/icons/Save";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -99,6 +110,33 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const handleReset = () => {
 		setActiveStep(0);
 	};
+
+	const useStyles = makeStyles((theme: Theme) =>
+		createStyles({
+			wrapper: {
+				marginTop: theme.spacing(5),
+				marginLeft: theme.spacing(3),
+				margin: theme.spacing(1),
+				position: "relative",
+			},
+			buttonSuccess: {
+				backgroundColor: theme.palette.primary.main,
+				"&:hover": {
+					backgroundColor: theme.palette.primary.main,
+				},
+			},
+			fabProgress: {
+				color: theme.palette.secondary.main,
+				position: "absolute",
+				top: -6,
+				left: -6,
+				zIndex: 1,
+			},
+			new: {
+				margin: theme.spacing(1),
+			},
+		})
+	);
 
 	const formAction = props.type;
 	const formIsOpen = props.open;
@@ -431,7 +469,20 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			}}
 		/>
 	);
-
+	const classes = useStyles();
+	let leftFormDialogComponent = (
+		<>
+			<div className={classes.wrapper}>
+				<Fab aria-label="save" color="primary">
+					{false ? <CheckIcon /> : <SaveIcon />}
+				</Fab>
+				{true && <CircularProgress size={68} className={classes.fabProgress} />}
+				<Box mt={1}>
+					<Typography variant="subtitle2">{"Uploading"}</Typography>
+				</Box>
+			</div>
+		</>
+	);
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -441,6 +492,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
+				leftComponent={leftFormDialogComponent}
 			>
 				<DeliverableStepper
 					stepperHelpers={{

@@ -37,6 +37,9 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
 import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { AttachFile } from "../../../models/AttachFile";
+import AttachFileForm from "../../Forms/AttachFiles";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload";
 
 enum tableHeaders {
 	date = 1,
@@ -92,6 +95,8 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
 	});
 
+	const dashBoardData = useDashBoardData();
+
 	useEffect(() => {
 		let deliverableTracklineMapValueObj: any = {};
 		let donors: any = [];
@@ -130,6 +135,21 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.UPDATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
 
+	const [deliverableTracklineFileArray, setDeliverableTracklineFileArray] = useState<
+		AttachFile[]
+	>([]);
+	const [openAttachFiles, setOpenAttachFiles] = useState(false);
+	let { multiplefileUpload } = useMultipleFileUpload();
+
+	const attachFileOnSave = () => {
+		multiplefileUpload({
+			ref: "deliverable-tracking-lineitem",
+			refId: deliverableTrackline?.id,
+			field: "attachments",
+			path: `org-${dashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
+			filesArray: deliverableTracklineFileArray,
+		});
+	};
 	return (
 		<>
 			<TableCell>
@@ -175,6 +195,21 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 						/>
 					</MenuItem>
 				)}
+				{deliverableTracklineEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setDeliverableTracklineFileArray(deliverableTrackline?.attachments);
+							setOpenAttachFiles(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="viewDocumentsMenu"
+							defaultMessage="View Documents"
+							description="This text will be show on deliverable or impact target table for view documents menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{deliverableTracklineData && (
 				<DeliverableTrackline
@@ -184,6 +219,17 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 					data={deliverableTracklineData}
 					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
+				/>
+			)}
+			{openAttachFiles && deliverableTracklineFileArray && (
+				<AttachFileForm
+					{...{
+						open: openAttachFiles,
+						handleClose: () => setOpenAttachFiles(false),
+						filesArray: deliverableTracklineFileArray,
+						setFilesArray: setDeliverableTracklineFileArray,
+						parentOnSave: attachFileOnSave,
+					}}
 				/>
 			)}
 		</>

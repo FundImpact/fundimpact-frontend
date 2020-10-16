@@ -16,6 +16,8 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../../utils/access/modules/annualYear
 import { FINANCIAL_YEAR_ORG_ACTIONS } from "../../../../utils/access/modules/financialYearOrg/actions";
 import { FINANCIAL_YEAR_DONOR_ACTIONS } from "../../../../utils/access/modules/financialYearDonor/actions";
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
+import { AttachFile } from "../../../../models/AttachFile";
+import AttachFileForm from "../../../Forms/AttachFiles";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -238,6 +240,7 @@ function BudgetLineItemTableView({
 	financialYearDonorHash,
 	financialYearOrgHash,
 	currency,
+	attachFileOnSave,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -266,6 +269,10 @@ function BudgetLineItemTableView({
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
+	attachFileOnSave: (
+		initialValues: IBudgetTrackingLineitem,
+		budgetTracklineFileArray: AttachFile[]
+	) => void;
 }) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
@@ -277,7 +284,7 @@ function BudgetLineItemTableView({
 
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
-			budgetLineItemTableEditMenu = ["Edit Budget Line Item"];
+			budgetLineItemTableEditMenu = ["Edit Budget Line Item", "View Documents"];
 		}
 	}, [budgetLineItemEditAccess]);
 
@@ -334,6 +341,14 @@ function BudgetLineItemTableView({
 		/>
 	);
 
+	const [budgetTracklineFileArray, setBudgetTracklineFileArray] = React.useState<AttachFile[]>(
+		[]
+	);
+
+	useEffect(() => {
+		setBudgetTracklineFileArray(initialValues.attachments || []);
+	}, [initialValues.attachments]);
+	const [openAttachFiles, setOpenAttachFiles] = React.useState(false);
 	return (
 		<>
 			<Grid container>
@@ -367,13 +382,25 @@ function BudgetLineItemTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				setOpenAttachFiles={setOpenAttachFiles}
 			>
-				<BudgetLineitem
-					open={openDialogs[0]}
-					handleClose={() => toggleDialogs(0, false)}
-					formAction={FORM_ACTIONS.UPDATE}
-					initialValues={initialValues}
-				/>
+				<>
+					<BudgetLineitem
+						open={openDialogs[0]}
+						handleClose={() => toggleDialogs(0, false)}
+						formAction={FORM_ACTIONS.UPDATE}
+						initialValues={initialValues}
+					/>
+					<AttachFileForm
+						{...{
+							open: openAttachFiles,
+							handleClose: () => setOpenAttachFiles(false),
+							filesArray: budgetTracklineFileArray,
+							setFilesArray: setBudgetTracklineFileArray,
+							parentOnSave: attachFileOnSave(initialValues, budgetTracklineFileArray),
+						}}
+					/>
+				</>
 			</CommonTable>
 		</>
 	);

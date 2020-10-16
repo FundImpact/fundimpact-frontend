@@ -40,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
 		height: 160,
 	},
 	mediaListBox: {
-		maxHeight: "400px",
-		minHeight: "400px",
+		maxHeight: "500px",
+		minHeight: "500px",
 		overflow: "scroll",
 		border: `3px solid ${theme.palette.text.primary}`,
 		margin: theme.spacing(2),
@@ -83,6 +83,7 @@ function AttachFileForm(props: {
 	handleClose: () => void;
 	filesArray: AttachFile[];
 	setFilesArray: React.Dispatch<React.SetStateAction<AttachFile[]>>;
+	parentOnSave?: any;
 }) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
@@ -90,6 +91,7 @@ function AttachFileForm(props: {
 	const intl = useIntl();
 	const [multiple, setMultiple] = useState(false);
 	const classes = useStyles();
+	const { parentOnSave } = props;
 
 	let nofilesSelected = intl.formatMessage({
 		id: "noFilesSelectedForAttachFileForm",
@@ -125,6 +127,7 @@ function AttachFileForm(props: {
 	// }, [filesArray, onSaveCall]);
 
 	const onSave = async () => {
+		if (parentOnSave) parentOnSave();
 		onCancel();
 	};
 

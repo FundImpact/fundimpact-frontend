@@ -177,6 +177,7 @@ export interface ICommonTable<T> {
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+	setOpenAttachFiles?: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export interface ITableHeadings {

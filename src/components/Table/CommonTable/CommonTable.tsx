@@ -139,6 +139,7 @@ function CommonTable<T extends { id: string }>({
 	setOrder,
 	orderBy,
 	setOrderBy,
+	setOpenAttachFiles,
 }: ICommonTable<T>) {
 	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
@@ -164,6 +165,8 @@ function CommonTable<T extends { id: string }>({
 					<MenuItem
 						onClick={() => {
 							toggleDialogs(index, true);
+							if (setOpenAttachFiles && element === "View Documents")
+								setOpenAttachFiles(true);
 							handleClose();
 						}}
 					>
