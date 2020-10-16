@@ -43,6 +43,7 @@ import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 import FundReceivedTable from "../../Table/FundReceivedTable";
 import DocumentsTable from "../../Table/DocumentsTable";
+import ProjectDocumentsTable from "../../Table/ProjectDocument";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -497,7 +498,7 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Documents",
 				description: `This text will be show on tab for documents`,
 			}),
-			table: <DocumentsTable />,
+			table: <ProjectDocumentsTable />,
 			createButtons: [],
 			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
 			tableVisibility: grantPeriodFindAccess,

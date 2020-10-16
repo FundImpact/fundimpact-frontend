@@ -15,5 +15,7 @@ export interface Attachments {
 	name: string;
 	size: string;
 	url: string;
-	caption?: string;
+	caption: string;
+	ext: string;
+	created_at: string;
 }

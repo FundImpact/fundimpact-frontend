@@ -11,6 +11,12 @@ export const sidebarList: {
 				title: "Organization Info",
 				userAccess: true,
 			},
+			{
+				to: "org-documents",
+				dataTestId: "organization-Documents",
+				title: "Organization Documents",
+				userAccess: true,
+			},
 		],
 	},
 	{

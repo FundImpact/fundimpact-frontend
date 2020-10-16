@@ -26,6 +26,7 @@ import { UserRoleContainer } from "./UserRole/container";
 import { RolesContainer } from "./Roles/container";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
+import OrganizationDocumentContainer from "./Organization/Documents";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -204,6 +205,11 @@ export default function SettingContainer() {
 							path="organization"
 							userAccess={organizationEditAccess}
 							element={<Organization />}
+						/>
+						<PrivateRoute
+							path="org-documents"
+							userAccess={organizationEditAccess}
+							element={<OrganizationDocumentContainer />}
 						/>
 						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}
 						{/* <PrivateRoute path="">

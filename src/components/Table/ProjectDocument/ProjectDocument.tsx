@@ -18,7 +18,7 @@ import FullScreenLoader from "../../commons/GlobalLoader";
 
 import FITable from "../FITable";
 import { useIntl } from "react-intl";
-import { GET_ORGANISATIONS_DOCUMENTS } from "../../../graphql";
+import { GET_ORGANISATIONS_DOCUMENTS, GET_PROJECT_DOCUMENTS } from "../../../graphql";
 import FilterList from "../../FilterList";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
@@ -32,7 +32,7 @@ import { Attachments } from "../../../models/AttachFile";
 import { documentsHeadings } from "../constants";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
-export default function DocumentsTable() {
+export default function ProjectDocumentsTable() {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
@@ -48,52 +48,6 @@ export default function DocumentsTable() {
 	const [queryFilter, setQueryFilter] = useState({});
 
 	const dashBoardData = useDashBoardData();
-	// const {data} = useQuery()
-	// const removeFilterListElements = (key: string, index?: number) =>
-	// 	setFilterList((filterListObject) =>
-	// 		removeFilterListObjectElements({ filterListObject, key, index })
-	// 	);
-
-	// useEffect(() => {
-	// 	if (filterList) {
-	// 		let newFilterListObject: { [key: string]: string | string[] } = {};
-	// 		for (let key in filterList) {
-	// 			if (filterList[key] && filterList[key].length) {
-	// 				newFilterListObject[key] = filterList[key];
-	// 			}
-	// 		}
-	// 		setQueryFilter({
-	// 			deliverable_target_project: deliverableTargetId,
-	// 			...newFilterListObject,
-	// 		});
-	// 	}
-	// }, [filterList, deliverableTargetId]);
-
-	// const handleDeliverableLineChangePage = (
-	// 	event: React.MouseEvent<HTMLButtonElement> | null,
-	// 	newPage: number
-	// ) => {
-	// 	if (newPage > TracklinePage) {
-	// 		changePage();
-	// 	} else {
-	// 		changePage(true);
-	// 	}
-	// 	setTracklinePage(newPage);
-	// };
-
-	// let {
-	// 	count,
-	// 	queryData: deliverableTracklineData,
-	// 	changePage,
-	// 	countQueryLoading,
-	// 	queryLoading: loading,
-	// } = pagination({
-	// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-	// 	countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
-	// 	countFilter: queryFilter,
-	// 	queryFilter,
-	// 	sort: `${orderBy}:${order.toUpperCase()}`,
-	// });
 
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
@@ -108,7 +62,7 @@ export default function DocumentsTable() {
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
-	const { data } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
+	const { data, loading } = useQuery(GET_PROJECT_DOCUMENTS);
 	const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 	const isValidImage = (extension: string) => {
 		return imageExtensions.includes(extension);
@@ -116,29 +70,24 @@ export default function DocumentsTable() {
 
 	useEffect(() => {
 		let arr: any = [];
-		data?.organizationList?.map(
-			(organization: {
-				id: string;
-				name: string;
-				short_name: string;
-				attachments: Attachments[];
-			}) => {
-				organization.attachments?.map((document: Attachments, index: number) => {
+		data?.orgProject?.map(
+			(project: { id: string; name: string; attachments: Attachments[] }) => {
+				project.attachments?.map((projectDocument: Attachments, index: number) => {
 					let row = [
 						<TableCell component="td" scope="row" key={index}>
 							{TracklinePage * limit + index + 1}
 						</TableCell>,
-						<TableCell key={index}>{document.name}</TableCell>,
-						<TableCell key={`${index}-1`}>{`${document.size}Kb`}</TableCell>,
-						<TableCell key={`${index}-2`}>{document.ext}</TableCell>,
+						<TableCell key={index}>{projectDocument.name}</TableCell>,
+						<TableCell key={`${index}-1`}>{`${projectDocument.size}Kb`}</TableCell>,
+						<TableCell key={`${index}-2`}>{projectDocument.ext}</TableCell>,
 						<TableCell key={`${index}-3`}>
-							{getTodaysDate(new Date(document.created_at))}
+							{getTodaysDate(new Date(projectDocument.created_at))}
 						</TableCell>,
 						<TableCell key={`${index}-4`}>
-							{isValidImage(document.ext) ? (
+							{isValidImage(projectDocument.ext) ? (
 								<IconButton
 									onClick={() => {
-										var win = window.open(document.url, "_blank");
+										var win = window.open(projectDocument.url, "_blank");
 										win?.focus();
 									}}
 								>
@@ -147,7 +96,7 @@ export default function DocumentsTable() {
 							) : (
 								<IconButton
 									onClick={() => {
-										var win = window.open(document.url, "_blank");
+										var win = window.open(projectDocument.url, "_blank");
 										win?.focus();
 									}}
 								>
@@ -169,52 +118,12 @@ export default function DocumentsTable() {
 		);
 	}, [data]);
 
-	// let deliverableTracklineTablePagination = (
-	// 	<TablePagination
-	// 		rowsPerPageOptions={[]}
-	// 		colSpan={9}
-	// 		count={count}
-	// 		rowsPerPage={count > limit ? limit : count}
-	// 		page={TracklinePage}
-	// 		onChangePage={handleDeliverableLineChangePage}
-	// 		onChangeRowsPerPage={() => {}}
-	// 		style={{ paddingRight: "40px" }}
-	// 	/>
-	// );
 	const intl = useIntl();
-
-	// filteredDeliverableTracklineTableHeadings[
-	// 	filteredDeliverableTracklineTableHeadings.length - 1
-	// ].renderComponent = () => (
-	// 	<FilterList
-	// 		initialValues={{
-	// 			reporting_date: "",
-	// 			note: "",
-	// 			value: "",
-	// 			annual_year: [],
-	// 			financial_year: [],
-	// 		}}
-	// 		setFilterList={setFilterList}
-	// 		inputFields={deliverableTracklineInputFields}
-	// 	/>
-	// );
 
 	return (
 		<>
-			{/* {countQueryLoading ? <FullScreenLoader /> : null}
-			{loading ? <FullScreenLoader /> : null} */}
-			{/* <Grid container>
-				<Grid item xs={12}>
-					<Box display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
-							createChipArray({
-								filterListObjectKeyValuePair,
-								removeFilterListElements,
-							})
-						)}
-					</Box>
-				</Grid>
-			</Grid> */}
+			{/* {countQueryLoading ? <FullScreenLoader /> : null} */}
+			{loading ? <FullScreenLoader /> : null}
 			<FITable
 				tableHeading={documentsHeadings}
 				rows={rows}
