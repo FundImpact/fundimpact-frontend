@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { IUserSignUp } from "../../models";
+import { IUserSignUp } from "../models";
 
 export const usePostFetch = <T>({ body = null, url }: { body: any; url: string }) => {
 	const [loading, setLoading] = useState(false);

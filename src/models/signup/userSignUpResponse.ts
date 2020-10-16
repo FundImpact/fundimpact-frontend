@@ -8,14 +8,14 @@ export interface IUserSignupResponse {
 		created_at: string;
 		email: string;
 		id: number;
-		organization: {
+		organisation: {
 			account: IUserAccount;
 			created_at: string;
 			description: string;
 			id: string;
 			legal_name: string;
 			name: string;
-			organization_registration_type: any;
+			organisation_registration_type: any;
 			short_name: string;
 			updated_at: string;
 		};

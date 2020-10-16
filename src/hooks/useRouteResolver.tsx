@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
-
-import { useAuth } from "../../contexts/userContext";
+import { useAuth } from "../contexts/userContext";
 
 export default function useRouteResolver() {
 	const { pathname } = useLocation();

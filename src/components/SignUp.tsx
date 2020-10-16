@@ -2,8 +2,9 @@ import { Box } from "@material-ui/core";
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { Persistent } from "../../components/Forms/BasicDetailsForm/BasicDetailsForm";
-import useSignUpStep from "../../hooks/signup/useSignupStep";
+import useSignUpStep from "../hooks/useSignupStep";
+import { Persistent } from "./BasicDetailsForm";
+import OrganisationForm from "./OrganisationForm";
 
 // const useStyles = makeStyles((theme: Theme) =>
 // 	createStyles({
@@ -43,11 +44,9 @@ import useSignUpStep from "../../hooks/signup/useSignupStep";
 
 function SignUpForms({ step }: { step: number }) {
 	if (step === 0) return <Persistent />;
-
-	// NOTE: Before using Organization component, confirm it has been implemented.
-	// if (step === 1) return <OrganisationForm />;
-	// if (step === 2) return <OrganisationForm />;
-	// if (step === 3) return <OrganisationForm />;
+	if (step === 1) return <OrganisationForm />;
+	if (step === 2) return <OrganisationForm />;
+	if (step === 3) return <OrganisationForm />;
 
 	return null;
 }
