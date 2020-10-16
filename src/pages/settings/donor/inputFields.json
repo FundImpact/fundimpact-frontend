@@ -1,0 +1,41 @@
+{
+	"donorInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactCategoryName",
+			"testId": "createImpactCategoryNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "legal_name",
+			"id": "name",
+			"dataTestId": "createImpactCategoryName",
+			"testId": "createImpactCategoryNameInput",
+			"label": "Legal Name",
+			"size": 6
+		},
+		{
+			"name": "short_name",
+			"id": "name",
+			"dataTestId": "createImpactCategoryName",
+			"testId": "createImpactCategoryNameInput",
+			"label": "Short Name",
+			"size": 6
+		},
+		{
+			"name": "country",
+			"label": "Choose Country",
+			"size": 12,
+			"testId": "createCountryOption",
+			"dataTestId": "createCountry",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	]
+}

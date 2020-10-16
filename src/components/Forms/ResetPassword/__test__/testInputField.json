@@ -1,0 +1,15 @@
+{
+	"newPasswordForm": [
+		{
+			"name": "password",
+			"dataTestId": "newPassword",
+			"testId": "newPasswordInput",
+			"value": "newpass"
+		},
+		{
+			"dataTestId": "confirmPassword",
+			"testId": "confirmPasswordInput",
+			"value": "newpass"
+		}
+	]
+}

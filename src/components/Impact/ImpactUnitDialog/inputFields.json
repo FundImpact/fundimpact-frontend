@@ -1,0 +1,45 @@
+{
+	"impactUnitForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactUnitName",
+			"testId": "createInpactUnitNameInput",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "code",
+			"id": "impact-code",
+			"dataTestId": "createImpactUnitCode",
+			"testId": "createImpactUnitCodeInput",
+			"label": "Impact Code ",
+			"size": 6
+		},
+		{
+			"name": "impactCategory",
+			"label": "Choose Impact Category",
+			"size": 12,
+			"testId": "createImpactUnitImpactCategory",
+			"dataTestId": "createImpactUnitImpactCategoryInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"inputType": "select",
+			"hidden": false,
+			"multiple": true
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactUnitDescription",
+			"testId": "createImpactUnitDescriptionInput",
+			"label": "Description",
+			"size": 12,
+			"rows": 2,
+			"multiline": true
+		}
+	]
+}

@@ -1,3 +1,6 @@
+import React from "react";
+import { FormattedMessage } from "react-intl";
+
 import { IBasicInformation, ISignUpStep } from "../models";
 
 export enum SignUpSteps {
@@ -10,10 +13,22 @@ export enum SignUpSteps {
 export function getSteps(): ISignUpStep[] {
 	return [
 		{
-			label: "Sign Up",
+			label: (
+				<FormattedMessage
+					id="signupLabel"
+					defaultMessage="Singup"
+					description="This text will be show on signup page on left side over blue cover"
+				/>
+			),
 			step: 0,
 			id: SignUpSteps.SET_BASIC_INFO,
-			description: "Get started in minutes",
+			description: (
+				<FormattedMessage
+					id="signupDescription"
+					defaultMessage="Get started in minutes"
+					description="This text will be show on signup page on left side over blue cover"
+				/>
+			),
 		},
 		{
 			label: "Setup Organisation",
@@ -28,19 +43,16 @@ export function getSteps(): ISignUpStep[] {
 
 export const getDefaultBasicInformation = (): IBasicInformation => {
 	return {
-		username: "",
-		confirmPassword: "",
 		email: "",
-		firstName: "",
-		lastName: "",
 		password: "",
 		provider: "local",
-		organisation: {
+		organization: {
 			name: "",
 			legal_name: "",
 			short_name: "",
 			description: "",
 			type: "",
+			country: "",
 		},
 	};
 };

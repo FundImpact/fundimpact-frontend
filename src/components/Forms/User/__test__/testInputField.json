@@ -1,0 +1,16 @@
+{
+	"updateUserForm": [
+		{
+			"name": "email",
+			"dataTestId": "userFormEmail",
+			"testId": "userFormEmailInput",
+			"value": "my@my.com"
+		},
+		{
+			"name": "name",
+			"dataTestId": "userFormName",
+			"testId": "userFormNameInput",
+			"value": "name"
+		}
+	]
+}

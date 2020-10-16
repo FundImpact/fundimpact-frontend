@@ -1,0 +1,33 @@
+import { MODULE_CODES } from "../../moduleCodes";
+import { BUDGET_TARGET_ACTIONS } from "./actions";
+
+export const BUDGET_TARGET_MODULE = {
+	name: "Budget Target",
+	code: MODULE_CODES.BUDGET_TARGET,
+	actionsAvailable: {
+		[BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET]: {
+			name: "Create Budget Target",
+			code: BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET,
+		},
+		[BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET]: {
+			name: "Update Budget Target",
+			code: BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET,
+		},
+		[BUDGET_TARGET_ACTIONS.DELETE_BUDGET_TARGET]: {
+			name: "Delete Budget Target",
+			code: BUDGET_TARGET_ACTIONS.DELETE_BUDGET_TARGET,
+		},
+		[BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET]: {
+			name: "Find Budget Target",
+			code: BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET,
+		},
+		[BUDGET_TARGET_ACTIONS.PROJECT_EXPENDITURE_VALUE]: {
+			name: "Budget Target Project Expenditure Value",
+			code: BUDGET_TARGET_ACTIONS.PROJECT_EXPENDITURE_VALUE,
+		},
+		[BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE]: {
+			name: "Budget Target Project Allocation Value",
+			code: BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE,
+		},
+	},
+};

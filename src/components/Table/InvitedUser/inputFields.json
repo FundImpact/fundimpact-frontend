@@ -1,0 +1,26 @@
+{
+	"invitedUserFilter": [
+		{
+			"name": "email",
+			"id": "email",
+			"dataTestId": "invitedUserEmail",
+			"testId": "invitedUserEmailInput",
+			"label": "Email",
+			"size": 6
+		},
+		{
+			"name": "role",
+			"id": "role",
+			"dataTestId": "invitedUserRole",
+			"testId": "invitedUserRoleInput",
+			"label": "Role",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"multiple": true,
+			"size": 6
+		}
+	]
+}

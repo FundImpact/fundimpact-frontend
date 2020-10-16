@@ -1,0 +1,57 @@
+{
+	"projectForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createProjectName",
+			"testId": "createProjectNameInput",
+			"label": "Name",
+			"size": 12
+		},
+		{
+			"name": "workspace",
+			"id": "workspace",
+			"dataTestId": "createProjectWorkspace",
+			"testId": "createProjectWorkspaceInput",
+			"label": "Choose Workspace",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"disabled": false,
+			"size": 12
+		},
+		{
+			"name": "short_name",
+			"id": "short-name",
+			"dataTestId": "createProjectShortName",
+			"testId": "createProjectShortNameInput",
+			"label": "Code",
+			"size": 12
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createProjectDescription",
+			"testId": "createProjectDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"size": 12
+		},
+		{
+			"name": "donor",
+			"label": "Choose Donor",
+			"size": 12,
+			"testId": "createDonorOption",
+			"dataTestId": "createDonor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	]
+}

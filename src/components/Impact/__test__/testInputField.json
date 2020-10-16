@@ -1,0 +1,79 @@
+{
+	"impactTracklineTestFields": [
+		{
+			"name": "impact_target_project",
+			"dataTestId": "impactTracklineTarget",
+			"testId": "impactTracklineTargetInput"
+		},
+		{
+			"name": "value",
+			"dataTestId": "impactTracklineValue",
+			"testId": "impactTracklineValueInput",
+			"value": "5000"
+		},
+
+		{
+			"name": "reporting_date",
+			"dataTestId": "impactTracklineDate",
+			"testId": "impactTracklineDateInput"
+		},
+		{
+			"name": "donors",
+			"dataTestId": "impactTracklineDonor",
+			"testId": "impactTracklineDateInput"
+		},
+		{
+			"name": "annual_year",
+			"dataTestId": "impactTracklineAnnualYear",
+			"testId": "impactTracklineAnnualYearInput",
+			"value": "1"
+		},
+		{
+			"name": "financial_year",
+			"dataTestId": "ImpactTracklineFinancialYear",
+			"testId": "ImpactTracklineFinancialYearInput",
+			"value": "1"
+		},
+		{
+			"name": "note",
+			"dataTestId": "impactTracklineNote",
+			"testId": "impactTracklineNoteInput"
+		}
+	],
+	"impactTargetTestField": [
+		{
+			"name": "name",
+			"dataTestId": "impactTargetName",
+			"testId": "impactTargetNameInput",
+			"value": "IMPACTTARGET"
+		},
+		{
+			"name": "impactCategory",
+			"dataTestId": "impactTargetCategory",
+			"testId": "impactTargetCategoryInput",
+			"value": "1"
+		},
+		{
+			"name": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"value": "5000"
+		},
+		{
+			"name": "sustainable_development_goal",
+			"dataTestId": "impactTargetSDG",
+			"testId": "impactTargetSDGInput"
+		},
+		{
+			"name": "description",
+			"dataTestId": "impactTargetDescription",
+			"testId": "impactTargetDescriptionInput"
+		},
+		{
+			"name": "impactUnit",
+			"dataTestId": "impactTargetUnit",
+			"testId": "impactTargetUnitInput",
+			"value": "1"
+		}
+	]
+}

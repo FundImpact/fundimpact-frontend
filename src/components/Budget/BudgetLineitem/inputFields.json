@@ -1,0 +1,104 @@
+{
+	"budgetLineitemFormSelectFields": [
+		{
+			"name": "budget_targets_project",
+			"label": "Choose Budget Target",
+			"size": 6,
+			"testId": "createBudgetLineitemBudgetTargetsOption",
+			"dataTestId": "createBudgetLineitemBudgetTargets",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"type": "select",
+			"displayName": "budget target",
+			"required": true
+		},
+		{
+			"name": "annual_year",
+			"label": "Choose Annual Year",
+			"size": 6,
+			"testId": "createBudgetLineitemAnnualYearOption",
+			"dataTestId": "createBudgetLineitemAnnualYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"type": "select",
+			"displayName": "annual year"
+		},
+		{
+			"name": "fy_donor",
+			"label": "Choose Donor Financial year",
+			"size": 6,
+			"testId": "createBudgetLineitemFinancialYearDonorOption",
+			"dataTestId": "createBudgetLineitemFinancialYearDonor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"type": "select",
+			"hidden": false,
+			"displayName": "donor financial year"
+		},
+		{
+			"name": "fy_org",
+			"label": "Choose Organization Financial Year",
+			"size": 6,
+			"testId": "createBudgetLineitemFinancialYearOrgOption",
+			"dataTestId": "createBudgetLineitemFinancialYearOrg",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"type": "select",
+			"displayName": "organization financial year"
+		},
+		{
+			"name": "grant_periods_project",
+			"label": "Choose Grant Period",
+			"size": 6,
+			"testId": "createBudgetLineitemGrantPeriodProjectOption",
+			"dataTestId": "createBudgetLineitemGrantPeriodProject",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"type": "select",
+			"displayName": "grant period"
+		}
+	],
+	"budgetLineitemFormInputFields": [
+		{
+			"name": "reporting_date",
+			"id": "reporting-date",
+			"dataTestId": "createBudgetLineitemReportingDate",
+			"testId": "createBudgetLineitemReportingDateInput",
+			"label": "Reporting date",
+			"size": 6,
+			"type": "date",
+			"required": true
+		},
+		{
+			"name": "amount",
+			"id": "amount",
+			"dataTestId": "createBudgetLineitemAmount",
+			"testId": "createBudgetLineitemAmountInput",
+			"label": "Amount",
+			"size": 6,
+			"type": "number",
+			"endAdornment": "",
+			"required": true
+		},
+		{
+			"name": "note",
+			"id": "note",
+			"dataTestId": "createBudgetLineitemNote",
+			"testId": "createBudgetLineitemNoteInput",
+			"label": "Note",
+			"size": 12,
+			"rows": 2,
+			"multiline": true
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"budgetCategoryFormInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetName",
+			"testId": "createBudgetNameInput",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "code",
+			"id": "budgetCode",
+			"dataTestId": "createBudgetCode",
+			"testId": "createBudgetCodeInput",
+			"label": "Budget Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetDescription",
+			"testId": "createBudgetDescriptionInput",
+			"label": "Description",
+			"size": 12,
+			"multiline": true,
+			"rows": 3
+		}
+	]
+}

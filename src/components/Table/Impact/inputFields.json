@@ -1,0 +1,99 @@
+{
+	"impactTargetInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactTargetName",
+			"testId": "createImpactTargetNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "impactTotalTargetAmount",
+			"dataTestId": "createImpactTotalTargetAmount",
+			"testId": "createImpactTotalTargetAmountInput",
+			"label": "Target",
+			"size": 6
+		},
+		{
+			"name": "impact_category_org",
+			"label": "Choose Impact category",
+			"size": 12,
+			"testId": "createImpactCategoryOption",
+			"dataTestId": "createImpactCategory",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "sustainable_development_goal",
+			"label": "Sustainable Development",
+			"size": 12,
+			"testId": "createSustainableDevelopmentOption",
+			"dataTestId": "createSustainableDevelopment",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	],
+	"impactTracklineInputFields": [
+		{
+			"name": "reporting_date",
+			"id": "Date",
+			"dataTestId": "createImpactTargetDate",
+			"testId": "createImpactTargetDateInput",
+			"label": "Date",
+			"size": 6,
+			"type": "date"
+		},
+		{
+			"name": "note",
+			"id": "impactNote",
+			"dataTestId": "createImpactNote",
+			"testId": "createImpactNoteInput",
+			"label": "Note",
+			"size": 6
+		},
+		{
+			"name": "value",
+			"id": "impactTotalValue",
+			"dataTestId": "createImpactTotalValue",
+			"testId": "createImpactTotalValueInput",
+			"label": "Achieved",
+			"size": 6
+		},
+		{
+			"name": "annual_year",
+			"label": "Choose Annual Year",
+			"size": 12,
+			"testId": "createAnnualYearOption",
+			"dataTestId": "createAnnualYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "financial_year",
+			"label": "Choose Financial Year",
+			"size": 12,
+			"testId": "createFinancialYearOption",
+			"dataTestId": "createFinancialYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	]
+}

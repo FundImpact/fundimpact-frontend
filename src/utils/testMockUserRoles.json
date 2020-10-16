@@ -1,0 +1,2334 @@
+{
+	"mockUserRoles": {
+		"getRolePemissions": [
+			{
+				"id": "46572",
+				"controller": "budget-tracking-lineitem",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46640",
+				"controller": "deliverable-unit",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46724",
+				"controller": "impact-tracking-lineitem",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46588",
+				"controller": "category",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46636",
+				"controller": "deliverable-tracking-lineitem",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46550",
+				"controller": "budget-category-organization",
+				"action": "project_count_budget_cat",
+				"enabled": true
+			},
+			{
+				"id": "46847",
+				"controller": "contact",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46781",
+				"controller": "upload",
+				"action": "upload",
+				"enabled": true
+			},
+			{
+				"id": "46826",
+				"controller": "userspermissions",
+				"action": "createorganizationrole",
+				"enabled": true
+			},
+			{
+				"id": "46645",
+				"controller": "deliverable-units-org",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46628",
+				"controller": "deliverable-target-project",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46549",
+				"controller": "budget-category-organization",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46759",
+				"controller": "public-donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46661",
+				"controller": "financial-years-donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46827",
+				"controller": "userspermissions",
+				"action": "getorganizationroles",
+				"enabled": true
+			},
+			{
+				"id": "46870",
+				"controller": "state",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46877",
+				"controller": "tag",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46838",
+				"controller": "activityassignee",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46688",
+				"controller": "impact-category-org",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46811",
+				"controller": "userspermissions",
+				"action": "getpermissions",
+				"enabled": true
+			},
+			{
+				"id": "46820",
+				"controller": "userspermissions",
+				"action": "getemailtemplate",
+				"enabled": true
+			},
+			{
+				"id": "46773",
+				"controller": "unit",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46611",
+				"controller": "deliverable-category-org",
+				"action": "deliverable_category_achieved_target",
+				"enabled": true
+			},
+			{
+				"id": "46832",
+				"controller": "activity",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "48821",
+				"controller": "componentcategories",
+				"action": "editcategory",
+				"enabled": false
+			},
+			{
+				"id": "46561",
+				"controller": "budget-targets-project",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46690",
+				"controller": "impact-category-org",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46844",
+				"controller": "activitytype",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46731",
+				"controller": "impact-units-org",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46681",
+				"controller": "grant-periods-project",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46657",
+				"controller": "financial-year",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46675",
+				"controller": "fund-receipt-project",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46672",
+				"controller": "financial-years-org",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46865",
+				"controller": "district",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46543",
+				"controller": "annual-year",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46682",
+				"controller": "grant-periods-project",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46818",
+				"controller": "userspermissions",
+				"action": "searchusers",
+				"enabled": true
+			},
+			{
+				"id": "46574",
+				"controller": "budget-tracking-lineitem",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46720",
+				"controller": "impact-tracking-lineitem",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46795",
+				"controller": "auth",
+				"action": "sendemailconfirmation",
+				"enabled": true
+			},
+			{
+				"id": "46747",
+				"controller": "project-donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46691",
+				"controller": "impact-category-org",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46769",
+				"controller": "unit",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46687",
+				"controller": "impact-category-org",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46875",
+				"controller": "state",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46555",
+				"controller": "budget-targets-donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46558",
+				"controller": "budget-targets-donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46653",
+				"controller": "donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46819",
+				"controller": "userspermissions",
+				"action": "updaterole",
+				"enabled": true
+			},
+			{
+				"id": "46777",
+				"controller": "workspace",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46859",
+				"controller": "country",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46683",
+				"controller": "grant-periods-project",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46750",
+				"controller": "project",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46703",
+				"controller": "impact-category-unit",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46655",
+				"controller": "financial-year",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46813",
+				"controller": "userspermissions",
+				"action": "getrole",
+				"enabled": true
+			},
+			{
+				"id": "46736",
+				"controller": "organization-currency",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "48839",
+				"controller": "components",
+				"action": "createcomponent",
+				"enabled": false
+			},
+			{
+				"id": "46884",
+				"controller": "village",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46751",
+				"controller": "project",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46637",
+				"controller": "deliverable-unit",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46780",
+				"controller": "proxy",
+				"action": "uploadproxy",
+				"enabled": true
+			},
+			{
+				"id": "48767",
+				"controller": "contenttypes",
+				"action": "updatecontenttype",
+				"enabled": false
+			},
+			{
+				"id": "46668",
+				"controller": "financial-years-org",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46701",
+				"controller": "impact-category-unit",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46597",
+				"controller": "currency",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46533",
+				"controller": "account",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46754",
+				"controller": "project",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46858",
+				"controller": "country",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46854",
+				"controller": "contacttag",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46698",
+				"controller": "impact-category-org",
+				"action": "impact_category_project_count",
+				"enabled": true
+			},
+			{
+				"id": "46798",
+				"controller": "auth",
+				"action": "list",
+				"enabled": true
+			},
+			{
+				"id": "46671",
+				"controller": "financial-years-org",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46734",
+				"controller": "organization-currency",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46738",
+				"controller": "organization-registration-type",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46829",
+				"controller": "activity",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46680",
+				"controller": "grant-periods-project",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46850",
+				"controller": "contact",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46696",
+				"controller": "impact-category-org",
+				"action": "avgachivementimpactbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46824",
+				"controller": "userspermissions",
+				"action": "getproviders",
+				"enabled": true
+			},
+			{
+				"id": "46697",
+				"controller": "impact-category-org",
+				"action": "achiveimpactvstargetbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46843",
+				"controller": "activitytype",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46702",
+				"controller": "impact-category-unit",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46878",
+				"controller": "tag",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46762",
+				"controller": "sustainable-development-goals",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46596",
+				"controller": "currency",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46830",
+				"controller": "activity",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46864",
+				"controller": "district",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46784",
+				"controller": "upload",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46881",
+				"controller": "village",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46836",
+				"controller": "activityassignee",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46564",
+				"controller": "budget-targets-project",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46709",
+				"controller": "impact-linitem-fy-donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48515",
+				"controller": "components",
+				"action": "findcomponent",
+				"enabled": false
+			},
+			{
+				"id": "46557",
+				"controller": "budget-targets-donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "48713",
+				"controller": "contentmanager",
+				"action": "update",
+				"enabled": false
+			},
+			{
+				"id": "46692",
+				"controller": "impact-category-org",
+				"action": "projectcountimpcatbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46882",
+				"controller": "village",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46674",
+				"controller": "fund-receipt-project",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46835",
+				"controller": "activityassignee",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46625",
+				"controller": "deliverable-target-project",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46662",
+				"controller": "financial-years-donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46599",
+				"controller": "deliverable-category-org",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46568",
+				"controller": "budget-targets-project",
+				"action": "project_allocation_value",
+				"enabled": true
+			},
+			{
+				"id": "46563",
+				"controller": "budget-targets-project",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46679",
+				"controller": "fund-receipt-project",
+				"action": "fund_recipet_values",
+				"enabled": true
+			},
+			{
+				"id": "46746",
+				"controller": "project-donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46775",
+				"controller": "workspace",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46740",
+				"controller": "organization-registration-type",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46632",
+				"controller": "deliverable-tracking-lineitem",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46705",
+				"controller": "impact-category-unit",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46800",
+				"controller": "user",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46855",
+				"controller": "contacttag",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46592",
+				"controller": "currency",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46728",
+				"controller": "impact-units-org",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46889",
+				"controller": "organization",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46590",
+				"controller": "configuration",
+				"action": "permissions",
+				"enabled": true
+			},
+			{
+				"id": "46684",
+				"controller": "grant-periods-project",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46646",
+				"controller": "deliverable-units-org",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46626",
+				"controller": "deliverable-target-project",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46586",
+				"controller": "category",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46804",
+				"controller": "user",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48983",
+				"controller": "contenttypes",
+				"action": "getcontenttype",
+				"enabled": false
+			},
+			{
+				"id": "46577",
+				"controller": "budget-tracking-lineitem",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46642",
+				"controller": "deliverable-unit",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46845",
+				"controller": "activitytype",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46866",
+				"controller": "district",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46589",
+				"controller": "category",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46812",
+				"controller": "userspermissions",
+				"action": "getpolicies",
+				"enabled": true
+			},
+			{
+				"id": "46788",
+				"controller": "upload",
+				"action": "search",
+				"enabled": true
+			},
+			{
+				"id": "46704",
+				"controller": "impact-category-unit",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46766",
+				"controller": "sustainable-development-goals",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46547",
+				"controller": "budget-category-organization",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48785",
+				"controller": "builder",
+				"action": "getreservednames",
+				"enabled": false
+			},
+			{
+				"id": "46660",
+				"controller": "financial-year",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46776",
+				"controller": "workspace",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46559",
+				"controller": "budget-targets-donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "48947",
+				"controller": "contenttypes",
+				"action": "createcontenttype",
+				"enabled": false
+			},
+			{
+				"id": "46604",
+				"controller": "deliverable-category-org",
+				"action": "projectcountdelcatbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46871",
+				"controller": "state",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46537",
+				"controller": "account",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "49952",
+				"controller": "email",
+				"action": "send",
+				"enabled": false
+			},
+			{
+				"id": "46538",
+				"controller": "annual-year",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46863",
+				"controller": "crmplugin",
+				"action": "generateroutes",
+				"enabled": true
+			},
+			{
+				"id": "46851",
+				"controller": "contacttag",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46876",
+				"controller": "tag",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46600",
+				"controller": "deliverable-category-org",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46713",
+				"controller": "impact-target-project",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46718",
+				"controller": "impact-target-project",
+				"action": "impact_achieved",
+				"enabled": true
+			},
+			{
+				"id": "46651",
+				"controller": "donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46856",
+				"controller": "contacttag",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46730",
+				"controller": "impact-units-org",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46714",
+				"controller": "impact-target-project",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46727",
+				"controller": "impact-units-org",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46761",
+				"controller": "public-donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46869",
+				"controller": "district",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46663",
+				"controller": "financial-years-donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46715",
+				"controller": "impact-target-project",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46752",
+				"controller": "project",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46615",
+				"controller": "deliverable-category-unit",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46872",
+				"controller": "state",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46582",
+				"controller": "category-unit",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46602",
+				"controller": "deliverable-category-org",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46581",
+				"controller": "category-unit",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46723",
+				"controller": "impact-tracking-lineitem",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46609",
+				"controller": "deliverable-category-org",
+				"action": "achivedeliverablevstargetbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46821",
+				"controller": "userspermissions",
+				"action": "updateemailtemplate",
+				"enabled": true
+			},
+			{
+				"id": "46578",
+				"controller": "category-unit",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46618",
+				"controller": "deliverable-linitem-fy-donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46545",
+				"controller": "budget-category-organization",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46765",
+				"controller": "sustainable-development-goals",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46677",
+				"controller": "fund-receipt-project",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46587",
+				"controller": "category",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48605",
+				"controller": "contentmanager",
+				"action": "create",
+				"enabled": false
+			},
+			{
+				"id": "48893",
+				"controller": "components",
+				"action": "getcomponents",
+				"enabled": false
+			},
+			{
+				"id": "46879",
+				"controller": "tag",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46749",
+				"controller": "project-donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46554",
+				"controller": "budget-category-organization",
+				"action": "budget_category_expenditure",
+				"enabled": true
+			},
+			{
+				"id": "46725",
+				"controller": "impact-tracking-lineitem",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46716",
+				"controller": "impact-target-project",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46562",
+				"controller": "budget-targets-project",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46732",
+				"controller": "organization-currency",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46790",
+				"controller": "auth",
+				"action": "resetpassword",
+				"enabled": true
+			},
+			{
+				"id": "48803",
+				"controller": "componentcategories",
+				"action": "deletecategory",
+				"enabled": false
+			},
+			{
+				"id": "46721",
+				"controller": "impact-tracking-lineitem",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46806",
+				"controller": "user",
+				"action": "destroy",
+				"enabled": true
+			},
+			{
+				"id": "46741",
+				"controller": "organization-registration-type",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46610",
+				"controller": "deliverable-category-org",
+				"action": "deliverable_category_project_count",
+				"enabled": true
+			},
+			{
+				"id": "46565",
+				"controller": "budget-targets-project",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46594",
+				"controller": "currency",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "48749",
+				"controller": "contenttypes",
+				"action": "listcontenttypes",
+				"enabled": false
+			},
+			{
+				"id": "46573",
+				"controller": "budget-tracking-lineitem",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46885",
+				"controller": "village",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46667",
+				"controller": "financial-years-org",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46666",
+				"controller": "financial-years-donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46808",
+				"controller": "userspermissions",
+				"action": "createrole",
+				"enabled": true
+			},
+			{
+				"id": "46764",
+				"controller": "sustainable-development-goals",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46617",
+				"controller": "deliverable-category-unit",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "48731",
+				"controller": "contenttypes",
+				"action": "findcontenttype",
+				"enabled": false
+			},
+			{
+				"id": "46861",
+				"controller": "country",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46807",
+				"controller": "user",
+				"action": "destroyall",
+				"enabled": true
+			},
+			{
+				"id": "46621",
+				"controller": "deliverable-linitem-fy-donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46711",
+				"controller": "impact-linitem-fy-donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46644",
+				"controller": "deliverable-units-org",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46631",
+				"controller": "deliverable-tracking-lineitem",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46613",
+				"controller": "deliverable-category-unit",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46735",
+				"controller": "organization-currency",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46607",
+				"controller": "deliverable-category-org",
+				"action": "totalachivedprojectbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46868",
+				"controller": "district",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46535",
+				"controller": "account",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48695",
+				"controller": "contentmanager",
+				"action": "generateuid",
+				"enabled": false
+			},
+			{
+				"id": "46862",
+				"controller": "country",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46689",
+				"controller": "impact-category-org",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46619",
+				"controller": "deliverable-linitem-fy-donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46796",
+				"controller": "auth",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46706",
+				"controller": "impact-linitem-fy-donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46585",
+				"controller": "category",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46583",
+				"controller": "category-unit",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46760",
+				"controller": "public-donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46842",
+				"controller": "activitytype",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46710",
+				"controller": "impact-linitem-fy-donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "48677",
+				"controller": "contentmanager",
+				"action": "findone",
+				"enabled": false
+			},
+			{
+				"id": "46758",
+				"controller": "public-donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46707",
+				"controller": "impact-linitem-fy-donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46673",
+				"controller": "fund-receipt-project",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46552",
+				"controller": "budget-category-organization",
+				"action": "budget_spent_value",
+				"enabled": true
+			},
+			{
+				"id": "46664",
+				"controller": "financial-years-donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46833",
+				"controller": "activity",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46634",
+				"controller": "deliverable-tracking-lineitem",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48875",
+				"controller": "components",
+				"action": "getcomponent",
+				"enabled": false
+			},
+			{
+				"id": "46794",
+				"controller": "auth",
+				"action": "emailconfirmation",
+				"enabled": true
+			},
+			{
+				"id": "46745",
+				"controller": "project-donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46570",
+				"controller": "budget-targets-project",
+				"action": "donors_allocation_value",
+				"enabled": true
+			},
+			{
+				"id": "46695",
+				"controller": "impact-category-org",
+				"action": "totalachivedimpactprojectbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46652",
+				"controller": "donor",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46753",
+				"controller": "project",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46556",
+				"controller": "budget-targets-donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46616",
+				"controller": "deliverable-category-unit",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46763",
+				"controller": "sustainable-development-goals",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46719",
+				"controller": "impact-target-project",
+				"action": "sdg_target_count",
+				"enabled": true
+			},
+			{
+				"id": "46648",
+				"controller": "deliverable-units-org",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46656",
+				"controller": "financial-year",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46575",
+				"controller": "budget-tracking-lineitem",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46669",
+				"controller": "financial-years-org",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46593",
+				"controller": "currency",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "48965",
+				"controller": "contenttypes",
+				"action": "deletecontenttype",
+				"enabled": false
+			},
+			{
+				"id": "46803",
+				"controller": "user",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46860",
+				"controller": "country",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46639",
+				"controller": "deliverable-unit",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46729",
+				"controller": "impact-units-org",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46693",
+				"controller": "impact-category-org",
+				"action": "projectcountimpunit",
+				"enabled": true
+			},
+			{
+				"id": "46630",
+				"controller": "deliverable-target-project",
+				"action": "deliverable_achieved",
+				"enabled": true
+			},
+			{
+				"id": "46546",
+				"controller": "budget-category-organization",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46770",
+				"controller": "unit",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46779",
+				"controller": "workspace",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46712",
+				"controller": "impact-target-project",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46548",
+				"controller": "budget-category-organization",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46670",
+				"controller": "financial-years-org",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46768",
+				"controller": "unit",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46676",
+				"controller": "fund-receipt-project",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "48659",
+				"controller": "contentmanager",
+				"action": "find",
+				"enabled": false
+			},
+			{
+				"id": "46606",
+				"controller": "deliverable-category-org",
+				"action": "totaldeliverablebyorg",
+				"enabled": true
+			},
+			{
+				"id": "46622",
+				"controller": "deliverable-linitem-fy-donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46757",
+				"controller": "public-donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46576",
+				"controller": "budget-tracking-lineitem",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46772",
+				"controller": "unit",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46840",
+				"controller": "activitytype",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46627",
+				"controller": "deliverable-target-project",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "49019",
+				"controller": "contenttypes",
+				"action": "updatecontenttype",
+				"enabled": false
+			},
+			{
+				"id": "46540",
+				"controller": "annual-year",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46874",
+				"controller": "state",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46567",
+				"controller": "budget-targets-project",
+				"action": "project_expenditure_value",
+				"enabled": true
+			},
+			{
+				"id": "48551",
+				"controller": "components",
+				"action": "updatecomponent",
+				"enabled": false
+			},
+			{
+				"id": "46665",
+				"controller": "financial-years-donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46828",
+				"controller": "userspermissions",
+				"action": "getrolepemissions",
+				"enabled": true
+			},
+			{
+				"id": "46686",
+				"controller": "impact-category-org",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46650",
+				"controller": "donor",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46647",
+				"controller": "deliverable-units-org",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46802",
+				"controller": "user",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46873",
+				"controller": "state",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46744",
+				"controller": "project-donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "48641",
+				"controller": "contentmanager",
+				"action": "deletemany",
+				"enabled": false
+			},
+			{
+				"id": "46789",
+				"controller": "auth",
+				"action": "callback",
+				"enabled": true
+			},
+			{
+				"id": "46791",
+				"controller": "auth",
+				"action": "connect",
+				"enabled": true
+			},
+			{
+				"id": "46767",
+				"controller": "sustainable-development-goals",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46638",
+				"controller": "deliverable-unit",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46737",
+				"controller": "organization-currency",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46726",
+				"controller": "impact-units-org",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46595",
+				"controller": "currency",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46793",
+				"controller": "auth",
+				"action": "register",
+				"enabled": true
+			},
+			{
+				"id": "46852",
+				"controller": "contacttag",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46534",
+				"controller": "account",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46853",
+				"controller": "contacttag",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46579",
+				"controller": "category-unit",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46560",
+				"controller": "budget-targets-donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "48911",
+				"controller": "components",
+				"action": "updatecomponent",
+				"enabled": false
+			},
+			{
+				"id": "46771",
+				"controller": "unit",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46635",
+				"controller": "deliverable-tracking-lineitem",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46739",
+				"controller": "organization-registration-type",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "48857",
+				"controller": "components",
+				"action": "deletecomponent",
+				"enabled": false
+			},
+			{
+				"id": "46831",
+				"controller": "activity",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46541",
+				"controller": "annual-year",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46580",
+				"controller": "category-unit",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46624",
+				"controller": "deliverable-target-project",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46584",
+				"controller": "category",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46887",
+				"controller": "organization",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46886",
+				"controller": "village",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46816",
+				"controller": "userspermissions",
+				"action": "index",
+				"enabled": true
+			},
+			{
+				"id": "46569",
+				"controller": "budget-targets-project",
+				"action": "completed_project_count",
+				"enabled": true
+			},
+			{
+				"id": "46823",
+				"controller": "userspermissions",
+				"action": "updateadvancedsettings",
+				"enabled": true
+			},
+			{
+				"id": "46783",
+				"controller": "upload",
+				"action": "updatesettings",
+				"enabled": true
+			},
+			{
+				"id": "46708",
+				"controller": "impact-linitem-fy-donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46654",
+				"controller": "donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "48929",
+				"controller": "connections",
+				"action": "getconnections",
+				"enabled": false
+			},
+			{
+				"id": "46778",
+				"controller": "workspace",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46801",
+				"controller": "user",
+				"action": "me",
+				"enabled": true
+			},
+			{
+				"id": "46785",
+				"controller": "upload",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46786",
+				"controller": "upload",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46883",
+				"controller": "village",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "49001",
+				"controller": "contenttypes",
+				"action": "getcontenttypes",
+				"enabled": false
+			},
+			{
+				"id": "46629",
+				"controller": "deliverable-target-project",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46643",
+				"controller": "deliverable-units-org",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "48533",
+				"controller": "components",
+				"action": "listcomponents",
+				"enabled": false
+			},
+			{
+				"id": "46542",
+				"controller": "annual-year",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46685",
+				"controller": "grant-periods-project",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "48569",
+				"controller": "contentmanager",
+				"action": "checkuidavailability",
+				"enabled": false
+			},
+			{
+				"id": "46849",
+				"controller": "contact",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46678",
+				"controller": "fund-receipt-project",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46814",
+				"controller": "userspermissions",
+				"action": "getroles",
+				"enabled": true
+			},
+			{
+				"id": "46815",
+				"controller": "userspermissions",
+				"action": "getroutes",
+				"enabled": true
+			},
+			{
+				"id": "48623",
+				"controller": "contentmanager",
+				"action": "delete",
+				"enabled": false
+			},
+			{
+				"id": "46603",
+				"controller": "deliverable-category-org",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46620",
+				"controller": "deliverable-linitem-fy-donor",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46799",
+				"controller": "auth",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46699",
+				"controller": "impact-category-org",
+				"action": "impact_category_achieved_value",
+				"enabled": true
+			},
+			{
+				"id": "46857",
+				"controller": "country",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46532",
+				"controller": "account",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46717",
+				"controller": "impact-target-project",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46880",
+				"controller": "tag",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46566",
+				"controller": "budget-targets-project",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46834",
+				"controller": "activityassignee",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46742",
+				"controller": "organization-registration-type",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46810",
+				"controller": "userspermissions",
+				"action": "deleterole",
+				"enabled": true
+			},
+			{
+				"id": "46614",
+				"controller": "deliverable-category-unit",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46837",
+				"controller": "activityassignee",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46839",
+				"controller": "activityassignee",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46756",
+				"controller": "public-donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "48587",
+				"controller": "contentmanager",
+				"action": "count",
+				"enabled": false
+			},
+			{
+				"id": "46633",
+				"controller": "deliverable-tracking-lineitem",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46822",
+				"controller": "userspermissions",
+				"action": "getadvancedsettings",
+				"enabled": true
+			},
+			{
+				"id": "46774",
+				"controller": "workspace",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46787",
+				"controller": "upload",
+				"action": "destroy",
+				"enabled": true
+			},
+			{
+				"id": "46805",
+				"controller": "user",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46641",
+				"controller": "deliverable-unit",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46605",
+				"controller": "deliverable-category-org",
+				"action": "projectcountdelunit",
+				"enabled": true
+			},
+			{
+				"id": "46571",
+				"controller": "budget-targets-project",
+				"action": "donors_recieved_value",
+				"enabled": true
+			},
+			{
+				"id": "46722",
+				"controller": "impact-tracking-lineitem",
+				"action": "count",
+				"enabled": true
+			},
+			{
+				"id": "46694",
+				"controller": "impact-category-org",
+				"action": "totalimpactprojectbyorg",
+				"enabled": true
+			},
+			{
+				"id": "46792",
+				"controller": "auth",
+				"action": "forgotpassword",
+				"enabled": true
+			},
+			{
+				"id": "46867",
+				"controller": "district",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46888",
+				"controller": "organization",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46700",
+				"controller": "impact-category-unit",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46755",
+				"controller": "project",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46782",
+				"controller": "upload",
+				"action": "getsettings",
+				"enabled": true
+			},
+			{
+				"id": "46743",
+				"controller": "organization-registration-type",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46748",
+				"controller": "project-donor",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46841",
+				"controller": "activitytype",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46601",
+				"controller": "deliverable-category-org",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46539",
+				"controller": "annual-year",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46598",
+				"controller": "deliverable-category-org",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46612",
+				"controller": "deliverable-category-unit",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46649",
+				"controller": "donor",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46659",
+				"controller": "financial-year",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46817",
+				"controller": "userspermissions",
+				"action": "init",
+				"enabled": true
+			},
+			{
+				"id": "46536",
+				"controller": "account",
+				"action": "update",
+				"enabled": true
+			},
+			{
+				"id": "46848",
+				"controller": "contact",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46608",
+				"controller": "deliverable-category-org",
+				"action": "avgachivementdeliverablebyorg",
+				"enabled": true
+			},
+			{
+				"id": "46825",
+				"controller": "userspermissions",
+				"action": "updateproviders",
+				"enabled": true
+			},
+			{
+				"id": "46797",
+				"controller": "auth",
+				"action": "inviteuser",
+				"enabled": true
+			},
+			{
+				"id": "46658",
+				"controller": "financial-year",
+				"action": "create",
+				"enabled": true
+			},
+			{
+				"id": "46733",
+				"controller": "organization-currency",
+				"action": "findone",
+				"enabled": true
+			},
+			{
+				"id": "46623",
+				"controller": "deliverable-linitem-fy-donor",
+				"action": "delete",
+				"enabled": true
+			},
+			{
+				"id": "46809",
+				"controller": "userspermissions",
+				"action": "deleteprovider",
+				"enabled": true
+			},
+			{
+				"id": "46846",
+				"controller": "contact",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46553",
+				"controller": "budget-category-organization",
+				"action": "budget_category_target",
+				"enabled": true
+			},
+			{
+				"id": "46551",
+				"controller": "budget-category-organization",
+				"action": "budget_target_sum",
+				"enabled": true
+			},
+			{
+				"id": "46544",
+				"controller": "budget-category-organization",
+				"action": "find",
+				"enabled": true
+			},
+			{
+				"id": "46591",
+				"controller": "country",
+				"action": "find",
+				"enabled": true
+			}
+		]
+	}
+}

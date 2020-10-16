@@ -1,0 +1,238 @@
+{
+	"impactCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createImpactName",
+			"testId": "createImpactNameInput",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "shortname",
+			"id": "shortname",
+			"dataTestId": "createImpactShortName",
+			"testId": "createImpactShortNameInput",
+			"label": "Short Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "createImpactCode",
+			"testId": "createImpactCodeInput",
+			"label": "Impact Code",
+			"size": 12
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createImpactCategoryDescription",
+			"testId": "createImpactCategoryDescriptionInput",
+			"label": "Description",
+			"size": 12,
+			"multiline": true,
+			"rows": 3
+		}
+	],
+	"impactTargetForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "impactTargetName",
+			"testId": "impactTargetNameInput",
+			"label": "Name",
+			"required": true,
+			"inputType": "textarea",
+			"size": 12
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"label": "Target Value",
+			"required": true,
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "impactCategory",
+			"id": "impactCategory",
+			"dataTestId": "impactTargetCategory",
+			"testId": "impactTargetCategoryInput",
+			"label": "Impact Category",
+			"required": true,
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"getInputValue": {},
+			"size": 6
+		},
+
+		{
+			"name": "impactUnit",
+			"id": "impactUnit",
+			"dataTestId": "impactTargetUnit",
+			"testId": "impactTargetUnitInput",
+			"label": "Impact Unit",
+			"required": true,
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "sustainable_development_goal",
+			"id": "sustainable_development_goal",
+			"dataTestId": "impactTargetSDG",
+			"testId": "impactTargetSDGInput",
+			"label": "Sustainable Development",
+			"required": true,
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "impactTargetDescription",
+			"testId": "impactTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+	"impactTargetUpdateForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "impactTargetName",
+			"testId": "impactTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "impactTargetTargetValue",
+			"testId": "impactTargetTargetValueInput",
+			"label": "Target Value",
+			"required": true,
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "impactTargetDescription",
+			"testId": "impactTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+	"impactTragetLineForm": [
+		{
+			"name": "impact_target_project",
+			"id": "impact_target_project",
+			"label": "Impact Target",
+			"size": 6,
+			"required": true,
+			"dataTestId": "impactTracklineTarget",
+			"testId": "impactTracklineTargetInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "value",
+			"id": "value",
+			"required": true,
+			"dataTestId": "impactTracklineValue",
+			"testId": "impactTracklineValueInput",
+			"label": "Value",
+			"type": "number",
+			"size": 6
+		},
+
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"required": true,
+			"dataTestId": "impactTracklineDate",
+			"testId": "impactTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "donors",
+			"id": "donors",
+			"label": "Select Donors",
+			"required": true,
+			"size": 6,
+			"dataTestId": "impactTracklineDonor",
+			"testId": "impactTracklineDateInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-mutiple-name-label",
+			"selectLabelId": "demo-mutiple-name-label",
+			"selectId": "demo-mutiple-name",
+			"inputType": "multiSelect"
+		},
+		{
+			"name": "annual_year",
+			"id": "annual_year",
+			"label": "Annual Year",
+			"required": true,
+			"size": 6,
+			"dataTestId": "impactTracklineAnnualYear",
+			"testId": "impactTracklineAnnualYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_year",
+			"id": "financial_year",
+			"required": true,
+			"label": "Financial Year",
+			"size": 6,
+			"dataTestId": "ImpactTracklineFinancialYear",
+			"testId": "ImpactTracklineFinancialYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "note",
+			"id": "note",
+			"dataTestId": "impactTracklineNote",
+			"testId": "impactTracklineNoteInput",
+			"label": "Note",
+			"multiline": true,
+			"rows": 2,
+			"size": 12
+		}
+	]
+}

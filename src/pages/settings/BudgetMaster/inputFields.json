@@ -1,0 +1,28 @@
+{
+	"budgetCategoryInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetCategoryName",
+			"testId": "createBudgetCategoryNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "budgetCode",
+			"dataTestId": "createBudgetCategoryCode",
+			"testId": "createBudgetCategoryCodeInput",
+			"label": "Budget Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetCategoryDescription",
+			"testId": "createBudgetCategoryDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	]
+}

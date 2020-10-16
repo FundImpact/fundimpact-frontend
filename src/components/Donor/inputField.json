@@ -1,0 +1,45 @@
+{
+	"addDonorForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "donorName",
+			"testId": "donorNameInput",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "legal_name",
+			"id": "legal-name",
+			"dataTestId": "donorLegalName",
+			"testId": "donorLegalNameInput",
+			"label": "Legal Name",
+			"size": 6
+		},
+		{
+			"name": "short_name",
+			"id": "short-name",
+			"dataTestId": "donorShortName",
+			"testId": "donorShortNameInput",
+			"label": "Short Name",
+			"size": 6
+		}
+	],
+	"addDonorFormSelectFields": [
+		{
+			"name": "country",
+			"label": "Choose Country",
+			"size": 6,
+			"testId": "donorCountryOption",
+			"dataTestId": "donorCountry",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"type": "select",
+			"displayName": "country",
+			"required": true
+		}
+	]
+}

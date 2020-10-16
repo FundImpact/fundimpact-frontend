@@ -1,0 +1,43 @@
+{
+	"grantPeriodInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createDeliverableTargetName",
+			"testId": "createDeliverableTargetNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "start_date",
+			"id": "start-date",
+			"dataTestId": "createDeliverableTargetName",
+			"testId": "createDeliverableTargetNameInput",
+			"label": "Start date",
+			"size": 6,
+			"type": "date"
+		},
+		{
+			"name": "end_date",
+			"id": "end-date",
+			"dataTestId": "createDeliverableTargetName",
+			"testId": "createDeliverableTargetNameInput",
+			"label": "End date",
+			"size": 6,
+			"type": "date"
+		},
+		{
+			"name": "donor",
+			"label": "Choose Donors",
+			"size": 12,
+			"testId": "createFinancialYearOption",
+			"dataTestId": "createFinancialYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	]
+}
