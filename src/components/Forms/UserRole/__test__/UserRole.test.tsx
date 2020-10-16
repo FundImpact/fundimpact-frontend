@@ -15,6 +15,8 @@ import {
 import { rolesMock, userListMock } from "./testHelp";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { organizationDetail } from "../../../../utils/testMock.json";
+import { GET_PROJECTS } from "../../../../graphql";
+import { mockProjects } from "../../../../utils/testMock.json";
 
 let sendUserInvitationMutation = false;
 const mocks = [
@@ -64,12 +66,18 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECTS,
+		},
+		result: { data: mockProjects },
+	},
+	{
+		request: {
 			query: GET_ROLES_BY_ORG,
 			variables: {
-				filter: { organization: "13" },
+				organization: "13",
 			},
 		},
-		result: { data: { organizationRoles: rolesMock } },
+		result: { data: rolesMock },
 	},
 ];
 
