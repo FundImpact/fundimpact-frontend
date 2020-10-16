@@ -9,6 +9,15 @@
 			"type": "text",
 			"required": true,
 			"size": 12
+		},
+		{
+			"name": "is_project_level",
+			"id": "project-level",
+			"dataTestId": "addRoleIsProjectLevelForm",
+			"testId": "addRoleIsProjectLevelFormInput",
+			"label": "Project Level Role",
+			"inputType": "switch",
+			"size": 12
 		}
 	]
 }

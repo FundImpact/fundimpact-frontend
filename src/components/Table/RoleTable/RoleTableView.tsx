@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import CommonTable from "../CommonTable";
+import React, { useState, useRef, useEffect, useReducer } from "react";
 import {
 	makeStyles,
 	Theme,
@@ -9,24 +8,15 @@ import {
 	TableHead,
 	Paper,
 	TableCell,
-	TableSortLabel,
 	TableRow,
 	TableBody,
 	Button,
-	Grid,
-	TableFooter,
-	TablePagination,
 	Typography,
-	FormControlLabel,
 	Checkbox,
 	Box,
 	CircularProgress,
 } from "@material-ui/core";
-import { getValueFromObject } from "../../../utils";
-import { Link } from "react-router-dom";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGetUserRole } from "../../../models/access/query";
 import { IControllerAction } from "../../../models/AddRole";
 import { MODULE_CODES } from "../../../utils/access";
 import { Formik, Form, FormikProps } from "formik";
@@ -81,13 +71,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 	tableRow: {
 		background: theme.palette.action.hover,
 	},
+	actionName: {
+		position: "sticky",
+		top: "0px",
+		left: "0px",
+		paddingLeft: theme.spacing(4),
+	},
 }));
 
-const keyNames = ["name"];
 
 function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] }) {
 	const tableStyles = styledTable();
-	const classes = useStyles();
 
 	return (
 		<TableHead>
@@ -105,7 +99,10 @@ function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] 
 	);
 }
 
-const compareProps = (prevProps: ITableCellCheckBoxProps, currentProps: ITableCellCheckBoxProps) =>
+const compareTableCellCheckboxProps = (
+	prevProps: ITableCellCheckBoxProps,
+	currentProps: ITableCellCheckBoxProps
+) =>
 	(prevProps.formik.values[prevProps.roleId].permissions as IControllerAction)[
 		prevProps.controllerName
 	][prevProps.actionName].enabled ==
@@ -142,12 +139,161 @@ const TableCellCheckBox = React.memo(
 			</TableCell>
 		);
 	},
-	compareProps
+	compareTableCellCheckboxProps
 );
 
+const checkUncheckAllActionsInController = ({
+	roleId,
+	controllerName,
+	formik,
+	actionObject,
+	value,
+}: {
+	roleId: string;
+	controllerName: string;
+	formik: FormikProps<{
+		[key: string]: {
+			name: string;
+			permissions: {} | IControllerAction;
+		};
+	}>;
+	actionObject: {
+		[key: string]: {
+			enabled: boolean;
+			policy: "";
+		};
+	};
+	value: boolean;
+}) => {
+	Object.keys(actionObject).map((actionName) => {
+		formik.setFieldValue(
+			`${roleId}.permissions.${controllerName}.${actionName}.enabled`,
+			value
+		);
+		if (!(roleId in numeberOfTimesRolesChanged)) {
+			numeberOfTimesRolesChanged[roleId] = 0;
+		}
+		value ? numeberOfTimesRolesChanged[roleId]++ : numeberOfTimesRolesChanged[roleId]--;
+	});
+};
+
+const checkIfAllTheActionsAreChecked = ({
+	roleId,
+	controllerName,
+	formik,
+	actionObject,
+}: {
+	roleId: string;
+	controllerName: string;
+	formik: FormikProps<{
+		[key: string]: {
+			name: string;
+			permissions: {} | IControllerAction;
+		};
+	}>;
+	actionObject: {
+		[key: string]: {
+			enabled: boolean;
+			policy: "";
+		};
+	};
+}) =>
+	Object.keys(actionObject).reduce(
+		(checkedValue: boolean, actionName) =>
+			(formik.values[roleId].permissions as IControllerAction)[
+				controllerName as MODULE_CODES
+			][actionName].enabled && checkedValue,
+		true
+	);
+
+const compareControllerNameRowProps = (
+	prevProps: { controllerName: string; roleIdArr: string[] },
+	currentProps: { controllerName: string; roleIdArr: string[] }
+) =>
+	prevProps.controllerName == currentProps.controllerName &&
+	prevProps.roleIdArr.length == currentProps.roleIdArr.length;
+
+const roleIdCheckedHashReducer = (
+	state: { [key: string]: boolean },
+	action: { type: "check" | "uncheck"; payload: { roleId: string } }
+) => {
+	switch (action.type) {
+		case "check":
+			return { ...state, [action.payload.roleId]: true };
+		case "uncheck":
+			return { ...state, [action.payload.roleId]: false };
+		default:
+			return { ...state };
+	}
+};
+
+const getInitialRoleIdHashValue = ({
+	roleIdArr,
+	controllerName,
+	formik,
+	actionObject,
+}: {
+	roleIdArr: string[];
+	controllerName: string;
+	formik: FormikProps<{
+		[key: string]: {
+			name: string;
+			permissions: {} | IControllerAction;
+		};
+	}>;
+	actionObject: {
+		[key: string]: {
+			enabled: boolean;
+			policy: "";
+		};
+	};
+}) => {
+	let roleIdCheckedHash: { [key: string]: boolean } = {};
+	roleIdArr.forEach((roleId) => {
+		formik.values[roleId] &&
+			(roleIdCheckedHash[roleId] = checkIfAllTheActionsAreChecked({
+				roleId,
+				controllerName,
+				formik,
+				actionObject,
+			}));
+	});
+	return roleIdCheckedHash;
+};
+
 const ControllerNameRow = React.memo(
-	({ controllerName, colSpan }: { controllerName: string; colSpan: number }) => {
+	({
+		controllerName,
+		formik,
+		actionObject,
+		roleIdArr,
+	}: {
+		controllerName: string;
+		formik: FormikProps<{
+			[key: string]: {
+				name: string;
+				permissions: {} | IControllerAction;
+			};
+		}>;
+		actionObject: {
+			[key: string]: {
+				enabled: boolean;
+				policy: "";
+			};
+		};
+		roleIdArr: string[];
+	}) => {
 		const classes = useStyles();
+
+		const [roleIdCheckedHash, roleIdCheckedHashDispatch] = useReducer(
+			roleIdCheckedHashReducer,
+			getInitialRoleIdHashValue({
+				roleIdArr,
+				controllerName,
+				formik,
+				actionObject,
+			})
+		);
 
 		return (
 			<TableRow style={{ position: "relative" }}>
@@ -161,9 +307,33 @@ const ControllerNameRow = React.memo(
 				>
 					{controllerName}
 				</TableCell>
+				{roleIdArr.map((roleId) => (
+					<TableCell key={roleId} className={classes.tableCellCheckBox}>
+						{
+							<Checkbox
+								color="primary"
+								checked={roleIdCheckedHash[roleId]}
+								onChange={(e) => {
+									roleIdCheckedHashDispatch({
+										type: e.target.checked ? "check" : "uncheck",
+										payload: { roleId },
+									});
+									checkUncheckAllActionsInController({
+										roleId,
+										controllerName,
+										formik,
+										actionObject,
+										value: e.target.checked,
+									});
+								}}
+							/>
+						}
+					</TableCell>
+				))}
 			</TableRow>
 		);
-	}
+	},
+	compareControllerNameRowProps
 );
 
 const initializeNoOfTimesRolesUpdated = (
@@ -222,9 +392,7 @@ function RoleTableView({
 	};
 	updatingRole: boolean;
 }) {
-	const dashboardData = useDashBoardData();
 	const classes = useStyles();
-	const tableStyles = styledTable();
 
 	const formikInstanceRef = useRef<FormikProps<{
 		[key: string]: {
@@ -250,13 +418,11 @@ function RoleTableView({
 			</Typography>
 		);
 	}
-	// console.log("initialValues :>> ", initialValues);
 	//creating controllerActionHashArr takes a lot of time and it show only
 	//display loading when roles are there
 	if (controllerActionHashArr.length == 0) {
 		return <TableSkeleton />;
 	}
-	console.log("numeberOfTimesRolesChanged :>> ", numeberOfTimesRolesChanged);
 	return (
 		<>
 			<TableContainer component={Paper} className={classes.tableContainer}>
@@ -276,7 +442,6 @@ function RoleTableView({
 						>
 							{(formik) => {
 								formikInstanceRef.current = formik;
-								// console.log("formik :>> ", formik);
 								return (
 									<Form style={{ display: "contents" }}>
 										{Object.entries(
@@ -290,7 +455,16 @@ function RoleTableView({
 																.controllerName
 														]
 													}
-													colSpan={controllerActionHashArr.length + 1}
+													formik={formik}
+													actionObject={
+														controllerActionHash[
+															controllerActionHashObjKeyValuePair
+																.actionObject
+														]
+													}
+													roleIdArr={controllerActionHashArr.map(
+														({ roleId }) => roleId
+													)}
 												/>
 												{Object.entries(
 													controllerActionHash[
@@ -305,11 +479,7 @@ function RoleTableView({
 													>
 														<TableCell
 															align="left"
-															style={{
-																position: "sticky",
-																top: "0px",
-																left: "0px",
-															}}
+															className={classes.actionName}
 														>
 															{
 																actionObjectOfController[

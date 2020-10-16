@@ -124,3 +124,17 @@ export const removeArrayElementsAtVariousIndex = <T,>(
 	arrayToFilter: T[],
 	checks: { [key: number]: boolean }
 ) => arrayToFilter.filter((element, index) => !checks[index]);
+
+export const debounce = (functionToDebounce: any, time: number) => {
+	let timeOut: NodeJS.Timeout;
+	return function (this: any) {
+		if (timeOut) {
+			clearTimeout(timeOut);
+		}
+		let args = arguments;
+		let context = this;
+		timeOut = setTimeout(() => {
+			functionToDebounce.apply(context, args);
+		}, time);
+	};
+};
