@@ -1,4 +1,0 @@
-export enum WORKSPACE_ACTIONS {
-	CREATE = "CREATE",
-	UPDATE = "UPDATE",
-}
