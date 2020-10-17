@@ -1,34 +1,35 @@
-import React, { useCallback, useEffect } from "react";
-import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import {
-	Grid,
-	Paper,
-	Typography,
 	Box,
-	makeStyles,
-	Theme,
-	TextField,
-	FormControl,
-	RadioGroup,
-	FormControlLabel,
-	Radio,
-	InputLabel,
-	Select,
-	MenuItem,
-	FormHelperText,
 	Button,
-	Divider,
 	CircularProgress,
+	Divider,
+	FormControl,
+	FormControlLabel,
+	FormHelperText,
+	Grid,
+	InputLabel,
+	makeStyles,
+	MenuItem,
+	Paper,
+	Radio,
+	RadioGroup,
+	Select,
 	SimplePaletteColorOptions,
+	TextField,
+	Theme,
+	Typography,
 } from "@material-ui/core";
-import { IDashboardDataContext } from "../../../models";
-import UploadFile from "../../../components/UploadFile";
-import { Form, Formik, FormikProps } from "formik";
-import { FormattedMessage, useIntl } from "react-intl";
-import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
-import { setOrganisation } from "../../../reducers/dashboardReducer";
-import { secondaryColor, primaryColor } from "../../../models/constants";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import { Form, Formik, FormikProps } from "formik";
+import React, { useCallback, useEffect } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+
+import UploadFile from "../../../components/UploadFile";
+import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { IDashboardDataContext } from "../../../models";
+import { primaryColor, secondaryColor } from "../../../models/constants";
+import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
+import { setOrganisation } from "../../../reducers/dashboardReducer";
 
 enum colorType {
 	primary = "primary",
@@ -249,9 +250,10 @@ function OrganizationView({
 																onBlur={formik.handleBlur}
 																fullWidth
 																label={intl.formatMessage({
-																	id: `colorPicker${"Choose Primary Color"}`,
-																	defaultMessage: `${"Choose Primary Color"}`,
-																	description: `This text will be show on color picker as ${"Choose Primary Color"}`,
+																	id: `colorPicker`,
+																	defaultMessage:
+																		"Choose Primary Color",
+																	description: `This text will be show on color picker as Choose Primary Color`,
 																})}
 																required={
 																	!!(initialValues.theme?.palette
@@ -542,9 +544,16 @@ function OrganizationView({
 																					>
 																						{intl.formatMessage(
 																							{
-																								id: `selectField${element.label}`,
-																								defaultMessage: `${element.label}`,
-																								description: `This text will be show on input field as ${element.label}`,
+																								id:
+																									"selectField{label}",
+																								defaultMessage:
+																									"{label}",
+																								description:
+																									"This text will be show on input field as {label}",
+																							},
+																							{
+																								label:
+																									element.label,
 																							}
 																						)}
 																					</InputLabel>

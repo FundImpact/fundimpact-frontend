@@ -1,8 +1,140 @@
 {
+	"AchievementsHeading": [
+		{
+			"type": 0,
+			"value": "Achievements"
+		}
+	],
+	"BudgetOrgCardFirstBarHeading": [
+		{
+			"type": 0,
+			"value": "Spend"
+		}
+	],
+	"BudgetOrgCardSecondBarHeading": [
+		{
+			"type": 0,
+			"value": "Fund Received"
+		}
+	],
+	"BudgetOrgCardTitle": [
+		{
+			"type": 0,
+			"value": "Budget Target"
+		}
+	],
+	"DeliverableOrgCardFirstBarHeading": [
+		{
+			"type": 0,
+			"value": "Avg. progress"
+		}
+	],
+	"DeliverableOrgCardSecondBarHeading": [
+		{
+			"type": 0,
+			"value": "Deliverable Achieved"
+		}
+	],
+	"DeliverableOrgCardTitle": [
+		{
+			"type": 0,
+			"value": "Deliverables"
+		}
+	],
+	"FundStatusBulletTitle": [
+		{
+			"type": 0,
+			"value": "Fund Status"
+		}
+	],
+	"GrantCategoryFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Manage Budget Category"
+		}
+	],
+	"ImpactOrgCardFirstBarHeading": [
+		{
+			"type": 0,
+			"value": "Avg. progress"
+		}
+	],
+	"ImpactOrgCardSecondBarHeading": [
+		{
+			"type": 0,
+			"value": "Impacts Achieved"
+		}
+	],
+	"ImpactOrgCardTitle": [
+		{
+			"type": 0,
+			"value": "Impact Target"
+		}
+	],
 	"SubmitLabel": [
 		{
 			"type": 0,
 			"value": "Submit"
+		}
+	],
+	"UpdateUserRoleButton": [
+		{
+			"type": 0,
+			"value": "Update Role"
+		}
+	],
+	"achievedButtonCards": [
+		{
+			"type": 0,
+			"value": "Achieved"
+		}
+	],
+	"achievementCardTitle": [
+		{
+			"type": 0,
+			"value": "ACHIEVEMENT"
+		}
+	],
+	"addRole": [
+		{
+			"type": 0,
+			"value": "Add Role"
+		}
+	],
+	"addRoleButton": [
+		{
+			"type": 0,
+			"value": "Update"
+		}
+	],
+	"addUserRoleButton": [
+		{
+			"type": 0,
+			"value": "Add Role"
+		}
+	],
+	"addUserRoleFormSubTitleTitle": [
+		{
+			"type": 0,
+			"value": "give user a role"
+		}
+	],
+	"addUserRoleFormTitle": [
+		{
+			"type": 0,
+			"value": "Add Role to a User"
+		}
+	],
+	"allocatedButtonCards": [
+		{
+			"type": 0,
+			"value": "Allocated"
+		}
+	],
+	"allocationButtonCards": [
+		{
+			"type": 0,
+			"value": "Allocation"
 		}
 	],
 	"alreadyHaveAccount": [
@@ -11,13 +143,205 @@
 			"value": "Already have account?"
 		}
 	],
+	"approvedFundStatusCard": [
+		{
+			"type": 0,
+			"value": "Approved"
+		}
+	],
 	"budgetCategoriesHeading": [
 		{
 			"type": 0,
 			"value": "Budget Categories"
 		}
 	],
-	"donorSettingLink": [
+	"budgetCategoryCardTitle": [
+		{
+			"type": 0,
+			"value": "Budget Category"
+		}
+	],
+	"budgetCategoryFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Manage Budget Category"
+		}
+	],
+	"budgetCategoryFormTitle": [
+		{
+			"type": 0,
+			"value": "Budget Category"
+		}
+	],
+	"budgetExpenditureFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organisation like headquarter branch etc"
+		}
+	],
+	"budgetExpenditureFormTitle": [
+		{
+			"type": 0,
+			"value": "Budget Expenditure"
+		}
+	],
+	"budgetProjectCardTitle": [
+		{
+			"type": 0,
+			"value": "Budget Project"
+		}
+	],
+	"budgetTabHeading": [
+		{
+			"type": 0,
+			"value": "Budget"
+		}
+	],
+	"budgetTargetFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organisation like headquarter branch etc"
+		}
+	],
+	"budgetTargetFormTitle": [
+		{
+			"type": 0,
+			"value": "Budget Target"
+		}
+	],
+	"cancelButton": [
+		{
+			"type": 0,
+			"value": "Cancel"
+		}
+	],
+	"createBudgetCategory": [
+		{
+			"type": 0,
+			"value": "Create Budget Category"
+		}
+	],
+	"createBudgetTarget": [
+		{
+			"type": 0,
+			"value": "Create Budget Target"
+		}
+	],
+	"createDeliverableCategory": [
+		{
+			"type": 0,
+			"value": "Create Deliverable Category"
+		}
+	],
+	"createDeliverableTarget": [
+		{
+			"type": 0,
+			"value": "Create Deliverable Target"
+		}
+	],
+	"createDeliverableUnit": [
+		{
+			"type": 0,
+			"value": "Create Deliverable Unit"
+		}
+	],
+	"createGrantPeriod": [
+		{
+			"type": 0,
+			"value": "Create Grant Period"
+		}
+	],
+	"createImpactCategory": [
+		{
+			"type": 0,
+			"value": "Create Impact Category"
+		}
+	],
+	"createImpactTarget": [
+		{
+			"type": 0,
+			"value": "Create Impact Target"
+		}
+	],
+	"createImpactUnit": [
+		{
+			"type": 0,
+			"value": "Create Impact Unit"
+		}
+	],
+	"deliverableAchievedCardTitle": [
+		{
+			"type": 0,
+			"value": "Deliverable Achieved"
+		}
+	],
+	"deliverableAchievementCard": [
+		{
+			"type": 0,
+			"value": "Deliverable"
+		}
+	],
+	"deliverableAchievementFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organisation like headquarter branch etc"
+		}
+	],
+	"deliverableAchievementFormTitle": [
+		{
+			"type": 0,
+			"value": "Deliverable Achievement"
+		}
+	],
+	"deliverableCategoryCardTitle": [
+		{
+			"type": 0,
+			"value": "Deliverable Category"
+		}
+	],
+	"deliverableCategoryFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Manage Deliverable Category"
+		}
+	],
+	"deliverableCategoryFormTitle": [
+		{
+			"type": 0,
+			"value": "Deliverable Category"
+		}
+	],
+	"deliverableTabHeading": [
+		{
+			"type": 0,
+			"value": "Deliverable"
+		}
+	],
+	"deliverableTargetFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organisation like headquarter branch etc"
+		}
+	],
+	"deliverableTargetFormTitle": [
+		{
+			"type": 0,
+			"value": "Deliverable Target"
+		}
+	],
+	"deliverableUnitFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organisation like headquarter branch etc"
+		}
+	],
+	"deliverableUnitFormTitle": [
+		{
+			"type": 0,
+			"value": "Deliverable Unit"
+		}
+	],
+	"donortableHeading": [
 		{
 			"type": 0,
 			"value": "Donors"
@@ -29,10 +353,154 @@
 			"value": "Don't have account?"
 		}
 	],
+	"editAchievementMenu": [
+		{
+			"type": 0,
+			"value": "Edit Achievement"
+		}
+	],
+	"editFormHeading": [
+		{
+			"type": 0,
+			"value": "Edit"
+		}
+	],
+	"editMenu": [
+		{
+			"type": 0,
+			"value": "Edit"
+		}
+	],
+	"editTargetMenu": [
+		{
+			"type": 0,
+			"value": "Edit Target"
+		}
+	],
 	"emailPlaceholder": [
 		{
 			"type": 0,
 			"value": "Email"
+		}
+	],
+	"expenditureButtonCards": [
+		{
+			"type": 0,
+			"value": "Expenditure"
+		}
+	],
+	"fundReceivedFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Manage Fund Received"
+		}
+	],
+	"fundReceivedFormTitle": [
+		{
+			"type": 0,
+			"value": "Report Fund Received"
+		}
+	],
+	"fundReceivedTabHeading": [
+		{
+			"type": 0,
+			"value": "Fund Received"
+		}
+	],
+	"fundStatusCardTitle": [
+		{
+			"type": 0,
+			"value": "FUND STATUS"
+		}
+	],
+	"grantPeriodFormTitle": [
+		{
+			"type": 0,
+			"value": "Grant Period"
+		}
+	],
+	"grantPeriodTabHeading": [
+		{
+			"type": 0,
+			"value": "Grant Periods"
+		}
+	],
+	"impactAchievedCardTitle": [
+		{
+			"type": 0,
+			"value": "Impact Achieved"
+		}
+	],
+	"impactAchievementCard": [
+		{
+			"type": 0,
+			"value": "Impact"
+		}
+	],
+	"impactAchievementFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organisation like headquarter branch etc"
+		}
+	],
+	"impactAchievementFormTitle": [
+		{
+			"type": 0,
+			"value": "Impact Achievement"
+		}
+	],
+	"impactCardTitle": [
+		{
+			"type": 0,
+			"value": "IMPACT"
+		}
+	],
+	"impactCategoryCardTitle": [
+		{
+			"type": 0,
+			"value": "Impact Category"
+		}
+	],
+	"impactCategoryFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organizatin like headquater, branch etc."
+		}
+	],
+	"impactCategoryFormTitle": [
+		{
+			"type": 0,
+			"value": "Impact Category"
+		}
+	],
+	"impactTabHeading": [
+		{
+			"type": 0,
+			"value": "Impact"
+		}
+	],
+	"impactTargetFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organizatin like headquater, branch etc."
+		}
+	],
+	"impactTargetFormTitle": [
+		{
+			"type": 0,
+			"value": "Impact Target"
+		}
+	],
+	"impactUnitFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Physical addresses of your organizatin like headquater, branch etc."
+		}
+	],
+	"impactUnitFormTitle": [
+		{
+			"type": 0,
+			"value": "Impact Unit"
 		}
 	],
 	"loginBtnText": [
@@ -51,6 +519,42 @@
 		{
 			"type": 0,
 			"value": "Login"
+		}
+	],
+	"moreHeadingCards": [
+		{
+			"type": 0,
+			"value": "more"
+		}
+	],
+	"newFormHeading": [
+		{
+			"type": 0,
+			"value": "New"
+		}
+	],
+	"noAchievementsReported": [
+		{
+			"type": 0,
+			"value": "No Achievements Reported"
+		}
+	],
+	"noUserFoundHeading": [
+		{
+			"type": 0,
+			"value": "No users found"
+		}
+	],
+	"orgDashboardOverviewHeading": [
+		{
+			"type": 0,
+			"value": "Overview"
+		}
+	],
+	"orgDashboardTopProjectsHeading": [
+		{
+			"type": 0,
+			"value": "Top Projects"
 		}
 	],
 	"organiztionHomeCountrySetting": [
@@ -89,6 +593,66 @@
 			"value": "Profile"
 		}
 	],
+	"projectsButtonCards": [
+		{
+			"type": 0,
+			"value": "Projects"
+		}
+	],
+	"receivedButtonCards": [
+		{
+			"type": 0,
+			"value": "Received"
+		}
+	],
+	"receivedFundStatusCard": [
+		{
+			"type": 0,
+			"value": "Received"
+		}
+	],
+	"reportAchievement": [
+		{
+			"type": 0,
+			"value": "Report Achievement"
+		}
+	],
+	"reportAchievementMenu": [
+		{
+			"type": 0,
+			"value": "Report Achievement"
+		}
+	],
+	"reportBudgetSpend": [
+		{
+			"type": 0,
+			"value": "Report Budget Spend"
+		}
+	],
+	"reportFundReceived": [
+		{
+			"type": 0,
+			"value": "Report Fund Received"
+		}
+	],
+	"reserPasswordFormSubtitle": [
+		{
+			"type": 0,
+			"value": "Update your password"
+		}
+	],
+	"reserPasswordFormTitle": [
+		{
+			"type": 0,
+			"value": "Password"
+		}
+	],
+	"showMoreLabel": [
+		{
+			"type": 0,
+			"value": "Show More"
+		}
+	],
 	"signupDescription": [
 		{
 			"type": 0,
@@ -113,178 +677,34 @@
 			"value": "Signup"
 		}
 	],
+	"spentFundStatusCard": [
+		{
+			"type": 0,
+			"value": "Spent"
+		}
+	],
 	"updateOrganizationBasicDetails": [
 		{
 			"type": 0,
 			"value": "Update the organization information"
 		}
 	],
-	"BudgetTableHeading1": [
+	"updateUserFormSubtitle": [
 		{
 			"type": 0,
-			"value": ""
+			"value": "Your personal details"
 		}
 	],
-	"BudgetTableHeading2": [
+	"updateUserFormTitle": [
 		{
 			"type": 0,
-			"value": "S.no"
+			"value": "Update Profile"
 		}
 	],
-	"BudgetTableHeading3": [
+	"uploadInput title": [
 		{
-			"type": 0,
-			"value": "Target Name"
-		}
-	],
-	"BudgetTableHeading4": [
-		{
-			"type": 0,
-			"value": "Budget Category"
-		}
-	],
-	"BudgetTableHeading5": [
-		{
-			"type": 0,
-			"value": "Donor"
-		}
-	],
-	"BudgetTableHeading6": [
-		{
-			"type": 0,
-			"value": "Total Amount(INR)"
-		}
-	],
-	"BudgetTableHeading7": [
-		{
-			"type": 0,
-			"value": "Spent"
-		}
-	],
-	"BudgetTableHeading8": [
-		{
-			"type": 0,
-			"value": "Progress %"
-		}
-	],
-	"BudgetTableHeading9": [
-		{
-			"type": 0,
-			"value": ""
-		}
-	],
-	"BudgetLineitemTableHeading1": [
-		{
-			"type": 0,
-			"value": "S.no"
-		}
-	],
-	"BudgetLineitemTableHeading2": [
-		{
-			"type": 0,
-			"value": "Date"
-		}
-	],
-	"BudgetLineitemTableHeading3": [
-		{
-			"type": 0,
-			"value": "Note"
-		}
-	],
-	"BudgetLineitemTableHeading4": [
-		{
-			"type": 0,
-			"value": "Amount(INR)"
-		}
-	],
-	"BudgetLineitemTableHeading5": [
-		{
-			"type": 0,
-			"value": "Grant Period"
-		}
-	],
-	"BudgetLineitemTableHeading6": [
-		{
-			"type": 0,
-			"value": "Year"
-		}
-	],
-	"BudgetLineitemTableHeading7": [
-		{
-			"type": 0,
-			"value": ""
-		}
-	],
-	"tableHeading": [
-		{
-			"type": 0,
-			"value": ""
-		}
-	],
-	"tableHeadingS.no": [
-		{
-			"type": 0,
-			"value": "S.no"
-		}
-	],
-	"tableHeadingName": [
-		{
-			"type": 0,
-			"value": "Name"
-		}
-	],
-	"tableHeadingCategory": [
-		{
-			"type": 0,
-			"value": "Category"
-		}
-	],
-	"tableHeadingTarget": [
-		{
-			"type": 0,
-			"value": "Target"
-		}
-	],
-	"tableHeadingAchieved": [
-		{
-			"type": 0,
-			"value": "Achieved"
-		}
-	],
-	"tableHeadingProgess": [
-		{
-			"type": 0,
-			"value": "Progess"
-		}
-	],
-	"tableHeadingSDG": [
-		{
-			"type": 0,
-			"value": "SDG"
-		}
-	],
-	"tableHeadingNote": [
-		{
-			"type": 0,
-			"value": "Note"
-		}
-	],
-	"tableHeadingYear": [
-		{
-			"type": 0,
-			"value": "Year"
-		}
-	],
-	"tableHeadingDate": [
-		{
-			"type": 0,
-			"value": "Date"
-		}
-	],
-	"profileResetPassword": [
-		{
-			"type": 0,
-			"value": "Reset Password"
+			"type": 1,
+			"value": "title"
 		}
 	]
 }

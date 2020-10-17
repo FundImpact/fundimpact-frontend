@@ -1,36 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
-import CommonTable from "../CommonTable";
 import {
-	makeStyles,
-	Theme,
-	createStyles,
-	TableContainer,
-	Table,
-	TableHead,
-	Paper,
-	TableCell,
-	TableSortLabel,
-	TableRow,
-	TableBody,
-	Button,
-	Grid,
-	TableFooter,
-	TablePagination,
-	Typography,
-	FormControlLabel,
-	Checkbox,
 	Box,
+	Button,
+	Checkbox,
 	CircularProgress,
+	createStyles,
+	makeStyles,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Theme,
+	Typography,
 } from "@material-ui/core";
-import { getValueFromObject } from "../../../utils";
-import { Link } from "react-router-dom";
-import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { Form, Formik, FormikProps } from "formik";
+import React, { useEffect, useRef, useState } from "react";
+import { FormattedMessage } from "react-intl";
+
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGetUserRole } from "../../../models/access/query";
 import { IControllerAction } from "../../../models/AddRole";
 import { MODULE_CODES } from "../../../utils/access";
-import { Formik, Form, FormikProps } from "formik";
-import { FormattedMessage } from "react-intl";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 interface ITableCellCheckBoxProps {
 	formik: FormikProps<{
@@ -377,7 +369,7 @@ function RoleTableView({
 				>
 					<FormattedMessage
 						id="addRoleButton"
-						defaultMessage={`Update`}
+						defaultMessage="Update"
 						description="This text will tell user to create role"
 					/>
 				</Button>

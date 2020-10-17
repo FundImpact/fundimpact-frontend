@@ -1,24 +1,26 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { FORM_ACTIONS } from "../constant";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import CommonForm from "../../CommonForm/commonForm";
-import { userRoleForm } from "./inputField.json";
-import { UserRoleProps, IUserRole } from "../../../models/UserRole/UserRole";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { INVITE_USER } from "../../../graphql/UserRoles/mutation";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
 	GET_ROLES_BY_ORG,
 } from "../../../graphql/UserRoles/query";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { INVITE_USER } from "../../../graphql/UserRoles/mutation";
+import { IUserRole, UserRoleProps } from "../../../models/UserRole/UserRole";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
+import CommonForm from "../../CommonForm/commonForm";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import FormDialog from "../../FormDialog";
+import { FORM_ACTIONS } from "../constant";
+import { userRoleForm } from "./inputField.json";
+
 function getInitialValues(props: UserRoleProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		return { ...props.data };
@@ -75,7 +77,7 @@ function UserRoleForm(props: UserRoleProps) {
 		description: "This text will be show on user update form for title",
 	});
 	let subtitle = intl.formatMessage({
-		id: "addUserRoleFormTitle",
+		id: "addUserRoleFormSubTitleTitle",
 		defaultMessage: "give user a role",
 		description: "This text will be show on user update form for subtitle",
 	});

@@ -156,7 +156,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 					})
 				}
 				subtitle={intl.formatMessage({
-					id: "deliverableCategoryFormSubtitle",
+					id: "GrantCategoryFormSubtitle",
 					defaultMessage: "Manage Budget Category",
 					description: `This text will be show on Grant Period form for subtitle`,
 				})}
