@@ -364,7 +364,7 @@ function UserRoleForm(props: UserRoleProps) {
 		description: "This text will be show on user update form for title",
 	});
 	let subtitle = intl.formatMessage({
-		id: "addUserRoleFormTitle",
+		id: "addUserRoleFormSubTitleTitle",
 		defaultMessage: "give user a role",
 		description: "This text will be show on user update form for subtitle",
 	});
