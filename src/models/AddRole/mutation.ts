@@ -26,6 +26,7 @@ export interface ICreateOrganizationUserRoleVariables {
 				controllers: IControllerAction | {};
 			};
 		};
+		is_project_level: boolean;
 	};
 }
 

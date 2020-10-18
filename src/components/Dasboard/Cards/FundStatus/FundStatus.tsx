@@ -135,10 +135,9 @@ export default function FundStatus() {
 
 	// console.log("fund card render");
 
-	let [
-		GetProjectTotalBudget,
-		{ data: ProjectTotalBudgetApproved, loading: ProjectTotalBudgetApprovedLoading },
-	] = useLazyQuery(GET_PROJECT_BUDGET_AMOUNT);
+	let [GetProjectTotalBudget, { data: ProjectTotalBudgetApproved }] = useLazyQuery(
+		GET_PROJECT_BUDGET_AMOUNT
+	);
 
 	let [GetProjectTotalSpend, { data: ProjectTotalSpendAmount }] = useLazyQuery(
 		GET_PROJECT_AMOUNT_SPEND

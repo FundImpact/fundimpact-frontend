@@ -9,6 +9,7 @@ export type IAddRolePermissions = {
 export interface IAddRole {
 	name: string;
 	permissions: IAddRolePermissions | {};
+	is_project_level: boolean;
 }
 
 export type IControllerAction = {

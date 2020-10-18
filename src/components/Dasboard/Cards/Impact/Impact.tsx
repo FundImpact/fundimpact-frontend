@@ -10,7 +10,7 @@ export default function Impact() {
 	const dashboardData = useDashBoardData();
 	const { data, loading } = useQuery(GET_IMPACT_TARGET_SDG_COUNT, {
 		variables: {
-			filter: { organization: dashboardData?.organization?.id },
+			filter: { organization: dashboardData?.project?.id },
 		},
 	});
 	if (loading) {
