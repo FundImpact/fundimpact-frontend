@@ -470,19 +470,19 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		/>
 	);
 	const classes = useStyles();
-	let leftFormDialogComponent = (
-		<>
-			<div className={classes.wrapper}>
-				<Fab aria-label="save" color="primary">
-					{false ? <CheckIcon /> : <SaveIcon />}
-				</Fab>
-				{true && <CircularProgress size={68} className={classes.fabProgress} />}
-				<Box mt={1}>
-					<Typography variant="subtitle2">{"Uploading"}</Typography>
-				</Box>
-			</div>
-		</>
-	);
+	// let leftFormDialogComponent = (
+	// 	<>
+	// 		<div className={classes.wrapper}>
+	// 			<Fab aria-label="save" color="primary">
+	// 				{false ? <CheckIcon /> : <SaveIcon />}
+	// 			</Fab>
+	// 			{true && <CircularProgress size={68} className={classes.fabProgress} />}
+	// 			<Box mt={1}>
+	// 				<Typography variant="subtitle2">{"Uploading"}</Typography>
+	// 			</Box>
+	// 		</div>
+	// 	</>
+	// );
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -492,7 +492,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
-				leftComponent={leftFormDialogComponent}
+				// leftComponent={leftFormDialogComponent}
 			>
 				<DeliverableStepper
 					stepperHelpers={{
