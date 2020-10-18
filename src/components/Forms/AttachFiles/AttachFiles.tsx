@@ -173,7 +173,9 @@ function AttachFileForm(props: {
 										Array.from(e.target?.files).map((file: any) => {
 											fileArr.push({
 												file: file,
-												preview: isValidImage(file.name.split(".").pop())
+												preview: isValidImage(
+													`.${file.name.split(".").pop()}`
+												)
 													? URL.createObjectURL(file)
 													: noImagePreview,
 												uploadingStatus: false,

@@ -39,7 +39,7 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/ac
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
-import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
 
 enum tableHeaders {
 	date = 1,

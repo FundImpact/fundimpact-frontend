@@ -1,2 +1,2 @@
-import useMultipleFileUpload from "./multipleFileUpload";
+import useMultipleFileUpload from "./multipleFileUpload.";
 export default useMultipleFileUpload;

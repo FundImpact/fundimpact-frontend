@@ -57,7 +57,7 @@ function Project(props: ProjectProps) {
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
 			multiplefileUpload({
-				ref: "projects",
+				ref: "project",
 				refId: data.createOrgProject.id,
 				field: "attachments",
 				path: `org-${DashBoardData?.organization?.id}/projects`,
@@ -159,7 +159,7 @@ function Project(props: ProjectProps) {
 		{
 			onCompleted(data) {
 				multiplefileUpload({
-					ref: "projects",
+					ref: "project",
 					refId: data.updateOrgProject.id,
 					field: "attachments",
 					path: `org-${DashBoardData?.organization?.id}/projects`,
@@ -184,6 +184,7 @@ function Project(props: ProjectProps) {
 			});
 			delete formData.id;
 			delete formData.donor;
+			delete formData.attachments;
 			const updatedResponse = await updateProject({
 				variables: { id: projectId, input: formData },
 				refetchQueries: [
