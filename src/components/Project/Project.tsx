@@ -62,6 +62,7 @@ function Project(props: ProjectProps) {
 				field: "attachments",
 				path: `org-${DashBoardData?.organization?.id}/projects`,
 				filesArray: projectFilesArray,
+				setFilesArray: setProjectFilesArray,
 			});
 
 			setProjectFilesArray([]);
@@ -164,6 +165,7 @@ function Project(props: ProjectProps) {
 					field: "attachments",
 					path: `org-${DashBoardData?.organization?.id}/projects`,
 					filesArray: projectFilesArray,
+					setFilesArray: setProjectFilesArray,
 				});
 
 				setProjectFilesArray([]);

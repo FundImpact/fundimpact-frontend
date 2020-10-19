@@ -28,6 +28,7 @@ export const OrganizationDocumentContainer = () => {
 			field: "attachments",
 			path: `org-${orgId}/organizations`,
 			filesArray: filesArray,
+			setFilesArray: setFilesArray,
 		});
 	};
 

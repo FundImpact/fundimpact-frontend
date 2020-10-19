@@ -271,7 +271,8 @@ function BudgetLineItemTableView({
 	currency: string;
 	attachFileOnSave: (
 		initialValues: IBudgetTrackingLineitem,
-		budgetTracklineFileArray: AttachFile[]
+		budgetTracklineFileArray: AttachFile[],
+		setBudgetTracklineFileArray: React.Dispatch<React.SetStateAction<AttachFile[]>>
 	) => void;
 }) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
@@ -397,7 +398,11 @@ function BudgetLineItemTableView({
 							handleClose: () => setOpenAttachFiles(false),
 							filesArray: budgetTracklineFileArray,
 							setFilesArray: setBudgetTracklineFileArray,
-							parentOnSave: attachFileOnSave(initialValues, budgetTracklineFileArray),
+							parentOnSave: attachFileOnSave(
+								initialValues,
+								budgetTracklineFileArray,
+								setBudgetTracklineFileArray
+							),
 						}}
 					/>
 				</>

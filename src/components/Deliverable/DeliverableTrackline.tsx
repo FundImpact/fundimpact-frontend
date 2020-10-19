@@ -49,6 +49,7 @@ import {
 import classes from "*.module.css";
 import CheckIcon from "@material-ui/icons/Check";
 import SaveIcon from "@material-ui/icons/Save";
+import { CircularPercentage } from "../commons";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -159,13 +160,18 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
-	let {
-		percentage,
-		error: fileUploadError,
-		success: fileUploadSuccess,
-		multiplefileUpload,
-	} = useMultipleFileUpload();
-	console.log("checkcheck", percentage, fileUploadError, fileUploadSuccess);
+	let { multiplefileUpload } = useMultipleFileUpload();
+
+	const [loadingPercentage, setLoadingPercentage] = React.useState(50);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainToUpload = filesArray.filter((elem) => !elem.id).length;
+		let percentage = ((totalFilesToUpload - remainToUpload) / totalFilesToUpload) * 100;
+		if (!percentage || isNaN(percentage) || percentage === 100) percentage = 0;
+
+		setLoadingPercentage(percentage);
+	}, [filesArray, totalFilesToUpload, setLoadingPercentage]);
 
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
@@ -178,20 +184,24 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					type={FORM_ACTIONS.CREATE}
 				/>
 			);
+
+			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
+
 			multiplefileUpload({
 				ref: "deliverable-tracking-lineitem",
 				refId: data.createDeliverableTrackingLineitemDetail.id,
 				field: "attachments",
 				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-item`,
 				filesArray: filesArray,
+				setFilesArray: setFilesArray,
 			});
 
 			// empty array after sending to upload function
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
-			setFilesArray([]);
 			handleNext();
+			setFilesArray([]);
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
@@ -222,20 +232,21 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					}
 				/>
 			);
-
+			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
 			multiplefileUpload({
 				ref: "deliverable-tracking-lineitem",
 				refId: data.updateDeliverableTrackingLineitemDetail.id,
 				field: "attachments",
 				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
 				filesArray: filesArray,
+				setFilesArray: setFilesArray,
 			});
 
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline Updated successfully!")
 			);
-			setFilesArray([]);
 			handleNext();
+			setFilesArray([]);
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
@@ -470,21 +481,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		/>
 	);
 	const classes = useStyles();
-	// let leftFormDialogComponent = (
-	// 	<>
-	// 		<div className={classes.wrapper}>
-	// 			<Fab aria-label="save" color="primary">
-	// 				{false ? <CheckIcon /> : <SaveIcon />}
-	// 			</Fab>
-	// 			{true && <CircularProgress size={68} className={classes.fabProgress} />}
-	// 			<Box mt={1}>
-	// 				<Typography variant="subtitle2">{"Uploading"}</Typography>
-	// 			</Box>
-	// 		</div>
-	// 	</>
-	// );
 	return (
 		<React.Fragment>
+			{/* {true ? <CircularPercentage progress={loadingPercentage} /> : null} */}
 			<FormDialog
 				title={newOrEdit + " " + formTitle}
 				subtitle={formSubtitle}
@@ -492,22 +491,30 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
-				// leftComponent={leftFormDialogComponent}
 			>
-				<DeliverableStepper
-					stepperHelpers={{
-						activeStep,
-						setActiveStep,
-						handleNext,
-						handleBack,
-						handleReset,
-					}}
-					basicForm={basicForm}
-					donorForm={donorForm}
-				/>
+				<>
+					<DeliverableStepper
+						stepperHelpers={{
+							activeStep,
+							setActiveStep,
+							handleNext,
+							handleBack,
+							handleReset,
+						}}
+						basicForm={basicForm}
+						donorForm={donorForm}
+					/>
+					{loadingPercentage > 0 ? (
+						<CircularPercentage
+							progress={loadingPercentage}
+							message={"Uploading Files"}
+						/>
+					) : null}
+				</>
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}
 			{updateDeliverableTrackLineLoading ? <FullScreenLoader /> : null}
+
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}

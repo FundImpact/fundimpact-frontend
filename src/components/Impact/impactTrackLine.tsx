@@ -128,6 +128,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				field: "attachments",
 				path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
 				filesArray: filesArray,
+				setFilesArray,
 			});
 
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
@@ -168,6 +169,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					field: "attachments",
 					path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
 					filesArray: filesArray,
+					setFilesArray,
 				});
 
 				notificationDispatch(

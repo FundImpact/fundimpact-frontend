@@ -92,6 +92,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					field: "attachments",
 					path: `org-${dashboardData?.organization?.id}/budget-tracking-item`,
 					filesArray: filesArray,
+					setFilesArray: setFilesArray,
 				});
 
 				setFilesArray([]);
@@ -108,6 +109,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					field: "attachments",
 					path: `org-${dashboardData?.organization?.id}/budget-tracking-item`,
 					filesArray: filesArray,
+					setFilesArray: setFilesArray,
 				});
 
 				setFilesArray([]);

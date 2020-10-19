@@ -148,6 +148,7 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 			field: "attachments",
 			path: `org-${dashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
 			filesArray: deliverableTracklineFileArray,
+			setFilesArray: setDeliverableTracklineFileArray,
 		});
 	};
 	return (

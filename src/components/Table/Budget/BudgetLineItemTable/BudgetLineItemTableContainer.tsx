@@ -82,7 +82,8 @@ function BudgetLineItemTableContainer({
 
 	const attachFileOnSave = (
 		initialValues: IBudgetTrackingLineitem,
-		budgetTracklineFileArray: AttachFile[]
+		budgetTracklineFileArray: AttachFile[],
+		setBudgetTracklineFileArray: React.Dispatch<React.SetStateAction<AttachFile[]>>
 	) => {
 		multiplefileUpload({
 			ref: "budget-tracking-lineitem",
@@ -90,6 +91,7 @@ function BudgetLineItemTableContainer({
 			field: "attachments",
 			path: `org-${dashBoardData?.organization?.id}/budget-tracking-lineitem`,
 			filesArray: budgetTracklineFileArray,
+			setFilesArray: setBudgetTracklineFileArray,
 		});
 	};
 

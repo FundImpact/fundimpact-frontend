@@ -157,6 +157,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			field: "attachments",
 			path: `org-${dashBoardData?.organization?.id}/impact-tracking-lineitem`,
 			filesArray: impactTracklineFileArray,
+			setFilesArray: setImpactTracklineFileArray,
 		});
 	};
 

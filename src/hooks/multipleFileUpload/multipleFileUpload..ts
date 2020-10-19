@@ -23,12 +23,14 @@ const useMultipleFileUpload = () => {
 		field,
 		path,
 		filesArray,
+		setFilesArray,
 	}: {
 		ref: string;
 		refId: string;
 		field: string;
 		path: string;
 		filesArray: AttachFile[];
+		setFilesArray: React.Dispatch<React.SetStateAction<AttachFile[]>>;
 	}) => {
 		setTotalFiles(filesArray.filter((elem) => !elem.id).length);
 		let filesUploaded = 0;
@@ -52,6 +54,10 @@ const useMultipleFileUpload = () => {
 					if (uploadResponse) {
 						console.log("checkcheck", uploadResponse);
 						filesUploaded++;
+						let arr = [...filesArray];
+						arr[i].uploadingStatus = true;
+						arr[i].id = uploadResponse[0].id;
+						setFilesArray(arr);
 					}
 				} catch (err) {
 					console.error(err);
