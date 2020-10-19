@@ -7,7 +7,7 @@ import {
 } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
 
-function getInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IBudgetTargetForm {
+function getBudgetTargetInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IBudgetTargetForm {
 	return {
 		name: budgetTarget?.name || "",
 		description: budgetTarget?.description || "",
@@ -86,7 +86,7 @@ function BudgetTargetTableContainer({
 			toggleDialogs={toggleDialogs}
 			openDialogs={openDialogs}
 			selectedBudgetTarget={selectedBudgetTarget}
-			initialValues={getInitialValues(selectedBudgetTarget.current)}
+			initialValues={getBudgetTargetInitialValues(selectedBudgetTarget.current)}
 			budgegtTargetList={budgetTargetList}
 			changePage={changePage}
 			loading={loading}

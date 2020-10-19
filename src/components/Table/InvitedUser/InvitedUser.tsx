@@ -122,7 +122,7 @@ const UserProjects = ({
 				open={openDialog}
 				handleClose={() => setOpenDialog(false)}
 			/>
-			<IconButton size="small" onClick={() => setOpenDialog(true)}>
+			<IconButton size="small" data-testid="show-user-projects" onClick={() => setOpenDialog(true)}>
 				<VisibilityIcon />
 			</IconButton>
 		</>
@@ -278,7 +278,7 @@ export default function InvitedUserTable() {
 	useEffect(() => {
 		let row: any = [];
 		invitedUserList?.userList?.forEach((user: any, index: number) => {
-			console.log("user :>> ", user);
+			// console.log("user :>> ", user);
 			let col = [
 				<TableCell>{invitedUserPage * 10 + index + 1}</TableCell>,
 				<TableCell>{user?.email}</TableCell>,

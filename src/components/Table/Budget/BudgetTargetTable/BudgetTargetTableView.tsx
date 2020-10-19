@@ -22,6 +22,35 @@ import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/bud
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 import { ITableHeadings } from "../../../../models";
 
+interface IBudgetTargetTableViewProps {
+	toggleDialogs: (index: number, val: boolean) => void;
+	openDialogs: boolean[];
+	selectedBudgetTarget: React.MutableRefObject<IBudgetTargetProjectResponse | null>;
+	initialValues: IBudgetTargetForm;
+	budgegtTargetList: IBudgetTargetProjectResponse[];
+	changePage: (prev?: boolean) => void;
+	count: number;
+	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	budgetLineItemInitialValues: IBudgetTrackingLineitemForm;
+	inputFields: any[];
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	donorHash: { [key: string]: string };
+	budgetCategoryHash: { [key: string]: string };
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	currency: string;
+}
+
 enum tableHeader {
 	targetName = 2,
 	budgetCategory = 3,
@@ -176,34 +205,7 @@ function BudgetTargetView({
 	budgetCategoryHash,
 	removeFilterListElements,
 	currency,
-}: {
-	toggleDialogs: (index: number, val: boolean) => void;
-	openDialogs: boolean[];
-	selectedBudgetTarget: React.MutableRefObject<IBudgetTargetProjectResponse | null>;
-	initialValues: IBudgetTargetForm;
-	budgegtTargetList: IBudgetTargetProjectResponse[];
-	changePage: (prev?: boolean) => void;
-	count: number;
-	loading: boolean;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	budgetLineItemInitialValues: IBudgetTrackingLineitemForm;
-	inputFields: any[];
-	filterList: {
-		[key: string]: string | string[];
-	};
-	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string | string[];
-		}>
-	>;
-	donorHash: { [key: string]: string };
-	budgetCategoryHash: { [key: string]: string };
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-	currency: string;
-}) {
+}: IBudgetTargetTableViewProps) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 
 	currencyFindAccess &&

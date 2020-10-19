@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent, wait } from "@testing-library/react";
+import { waitForElement, fireEvent, wait, RenderResult } from "@testing-library/react";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
 import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
@@ -46,7 +46,7 @@ import { GET_ORG_DONOR } from "../../../../../graphql/donor";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
 import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 
-let table: any;
+let table: RenderResult;
 
 let intialFormValue = {
 	name: "budget target name",
@@ -474,5 +474,11 @@ describe("Budget Target Table tests", () => {
 			});
 		});
 		await expect(targetAmountField.value).toBe(intialFormValue.total_target_amount);
+
+		let filterSubmitButton = await table.findByTestId("filterSubmitButton");
+		await act(async () => {
+			await filterSubmitButton.click();
+		});
+
 	});
 });
