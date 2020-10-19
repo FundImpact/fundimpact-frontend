@@ -165,7 +165,7 @@ const checkUncheckAllActionsInController = ({
 	};
 	value: boolean;
 }) => {
-	Object.keys(actionObject).map((actionName) => {
+	Object.keys(actionObject).forEach((actionName) => {
 		formik.setFieldValue(
 			`${roleId}.permissions.${controllerName}.${actionName}.enabled`,
 			value

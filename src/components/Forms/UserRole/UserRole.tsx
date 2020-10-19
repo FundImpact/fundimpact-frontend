@@ -161,9 +161,8 @@ const getInvitedUserCountCachedValue = (apolloClient: ApolloClient<object>) => {
 		count = cachedCount?.userListCount;
 	} catch (err) {
 		console.log("err :>> ", err);
-	} finally {
-		return count;
 	}
+	return count;
 };
 
 const submitForm = async ({
