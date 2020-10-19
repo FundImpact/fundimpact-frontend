@@ -11,7 +11,7 @@ import {
 	IUpdateOrganizationUserRole,
 } from "../../../models/AddRole/mutation";
 
-function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: string]: string } }) {
+function RoleTableGraphql() {
 	const dashboardData = useDashBoardData();
 	const [order, setOrder] = useState<"asc" | "desc">("asc");
 	const [rolesPermissions, setRolesPermissions] = useState<
@@ -57,7 +57,7 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 		if (getAsyncRolesAndPermissions && userRoles) {
 			Promise.all(
 				userRoles.organizationRoles
-					.filter((role) => role.type != adminRoletype)
+					.filter((role) => role.type !== adminRoletype)
 					.map((role) =>
 						getAsyncRolesAndPermissions({ filter: { role: role.id } }).then(
 							(response) => ({
@@ -79,7 +79,7 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 				);
 			});
 		}
-	}, [getAsyncRolesAndPermissions, userRoles, setRolesPermissions]);
+	}, [getAsyncRolesAndPermissions, userRoles, setRolesPermissions, adminRoletype]);
 
 	useEffect(() => {
 		if (dashboardData?.organization?.id) {
@@ -89,14 +89,14 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 				},
 			});
 		}
-	}, [dashboardData]);
+	}, [dashboardData, getUserRoles]);
 
 	return (
 		<RoleTableContainer
 			loading={fetchingUserRoles || fetchingRolePermissions}
 			userRoles={
 				userRoles?.organizationRoles.filter(
-					(role: { type: string }) => role.type != adminRoletype
+					(role: { type: string }) => role.type !== adminRoletype
 				) || []
 			}
 			count={100}

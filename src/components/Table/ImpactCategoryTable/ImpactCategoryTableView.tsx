@@ -9,8 +9,6 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Avatar, Chip } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -125,21 +123,19 @@ function ImpactCategoryTableView({
 		}
 	}, [impactCategoryEditAccess]);
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					setFilterList={setFilterList}
-					inputFields={impactCategoryInputFields}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	(!collapsableTable &&
+		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+			<FilterList
+				initialValues={{
+					name: "",
+					code: "",
+					description: "",
+				}}
+				setFilterList={setFilterList}
+				inputFields={impactCategoryInputFields}
+			/>
+		))) ||
+		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 
 	return (
 		<>

@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import CommonTable from "../CommonTable";
+import React, { useRef, useEffect } from "react";
 import {
 	makeStyles,
 	Theme,
@@ -9,24 +8,15 @@ import {
 	TableHead,
 	Paper,
 	TableCell,
-	TableSortLabel,
 	TableRow,
 	TableBody,
 	Button,
-	Grid,
-	TableFooter,
-	TablePagination,
 	Typography,
-	FormControlLabel,
 	Checkbox,
 	Box,
 	CircularProgress,
 } from "@material-ui/core";
-import { getValueFromObject } from "../../../utils";
-import { Link } from "react-router-dom";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGetUserRole } from "../../../models/access/query";
 import { IControllerAction } from "../../../models/AddRole";
 import { MODULE_CODES } from "../../../utils/access";
 import { Formik, Form, FormikProps } from "formik";
@@ -83,11 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-const keyNames = ["name"];
-
 function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] }) {
 	const tableStyles = styledTable();
-	const classes = useStyles();
 
 	return (
 		<TableHead>
@@ -108,7 +95,7 @@ function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] 
 const compareProps = (prevProps: ITableCellCheckBoxProps, currentProps: ITableCellCheckBoxProps) =>
 	(prevProps.formik.values[prevProps.roleId].permissions as IControllerAction)[
 		prevProps.controllerName
-	][prevProps.actionName].enabled ==
+	][prevProps.actionName].enabled ===
 	(currentProps.formik.values[currentProps.roleId].permissions as IControllerAction)[
 		currentProps.controllerName
 	][currentProps.actionName].enabled;
@@ -147,7 +134,6 @@ const TableCellCheckBox = React.memo(
 
 const ControllerNameRow = React.memo(
 	({ controllerName, colSpan }: { controllerName: string; colSpan: number }) => {
-		const classes = useStyles();
 
 		return (
 			<TableRow style={{ position: "relative" }}>
@@ -222,9 +208,7 @@ function RoleTableView({
 	};
 	updatingRole: boolean;
 }) {
-	const dashboardData = useDashBoardData();
 	const classes = useStyles();
-	const tableStyles = styledTable();
 
 	const formikInstanceRef = useRef<FormikProps<{
 		[key: string]: {
@@ -234,7 +218,7 @@ function RoleTableView({
 	}> | null>(null);
 
 	useEffect(() => {
-		if (userRoles.length && Object.keys(numeberOfTimesRolesChanged).length == 0) {
+		if (userRoles.length && Object.keys(numeberOfTimesRolesChanged).length === 0) {
 			initializeNoOfTimesRolesUpdated(userRoles);
 		}
 	}, [userRoles]);
@@ -253,7 +237,7 @@ function RoleTableView({
 	// console.log("initialValues :>> ", initialValues);
 	//creating controllerActionHashArr takes a lot of time and it show only
 	//display loading when roles are there
-	if (controllerActionHashArr.length == 0) {
+	if (controllerActionHashArr.length === 0) {
 		return <TableSkeleton />;
 	}
 	console.log("numeberOfTimesRolesChanged :>> ", numeberOfTimesRolesChanged);

@@ -6,12 +6,6 @@ import {
 	GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 } from "../../../graphql/FundRecevied";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	IGet_Fund_Receipt_List,
-	IGet_Fund_Receipt_List_Variables,
-} from "../../../models/fundReceived/query";
-import { setErrorNotification } from "../../../reducers/notificationReducer";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import pagination from "../../../hooks/pagination";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { fundReceiptInputFields } from "./inputFields.json";
@@ -77,7 +71,7 @@ function FundReceivedTableGraphql() {
 				},
 			});
 		}
-	}, [dashboardData]);
+	}, [dashboardData, getProjectDonors]);
 
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>

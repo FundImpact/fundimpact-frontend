@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { Box, Grid, Typography, Fab, Chip, Avatar } from "@material-ui/core";
+import { Box, Grid, Typography, Fab } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import RoleTable from "../../../components/Table/RoleTable";
 import AddIcon from "@material-ui/icons/Add";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../../contexts/userContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
-import FilterList from "../../../components/FilterList";
-import { roleInputFields } from "./inputFields.json";
 import AddRoleForm from "../../../components/Forms/AddRoleForm";
 
 // const chipArray = ({
@@ -54,18 +50,18 @@ import AddRoleForm from "../../../components/Forms/AddRoleForm";
 export const RolesContainer = () => {
 	const [open, setOpen] = useState<boolean>(false);
 
-	const [tableFilterList, setTableFilterList] = useState<{
-		[key: string]: string;
-	}>({
-		name: "",
-	});
+	// const [tableFilterList, setTableFilterList] = useState<{
+	// 	[key: string]: string;
+	// }>({
+	// 	name: "",
+	// });
 
-	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
-		setTableFilterList((filterListObject) => {
-			filterListObject[elementToDelete] = "";
-			return { ...filterListObject };
-		});
-	};
+	// const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
+	// 	setTableFilterList((filterListObject) => {
+	// 		filterListObject[elementToDelete] = "";
+	// 		return { ...filterListObject };
+	// 	});
+	// };
 
 	const userRoleFindAccess = userHasAccess(
 		MODULE_CODES.USER_PERMISSIONS,
@@ -94,7 +90,7 @@ export const RolesContainer = () => {
 							</Grid>
 
 							<Grid item xs={12}>
-								<RoleTable tableFilterList={tableFilterList} />
+								<RoleTable />
 							</Grid>
 						</>
 					)}

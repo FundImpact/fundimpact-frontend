@@ -18,7 +18,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { useGetFetch } from "../../../hooks/fetch/useFetch";

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import AddRoleFormView from "./AddRoleFormView";
 import { IAddRole, IControllerAction, IAddRolePermissions } from "../../../models/AddRole";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -14,7 +13,6 @@ import {
 	ICreateOrganizationUserRole,
 } from "../../../models/AddRole/mutation";
 import { IGetUserRole } from "../../../models/access/query";
-import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { MODULE_CODES } from "../../../utils/access";
 import { FORM_ACTIONS } from "../constant";
 import { useIntl } from "react-intl";
@@ -141,7 +139,7 @@ const onFormSubmit = async ({
 }) => {
 	const permissions = getSubmittedPermissions({ ...valuesSubmitted.permissions });
 	try {
-		formType == FORM_ACTIONS.CREATE &&
+		formType === FORM_ACTIONS.CREATE &&
 			(await createRole({
 				name: valuesSubmitted.name,
 				is_project_level: valuesSubmitted.is_project_level,
@@ -152,7 +150,7 @@ const onFormSubmit = async ({
 
 		notificationDispatch(
 			setSuccessNotification(
-				`Role ${formType == FORM_ACTIONS.CREATE ? "Created" : "Updated"} Successfully`
+				`Role ${formType === FORM_ACTIONS.CREATE ? "Created" : "Updated"} Successfully`
 			)
 		);
 	} catch (err) {
@@ -173,7 +171,7 @@ const getControllerActionHash = (
 				controllerActionHash[current.controller as MODULE_CODES] = {};
 			}
 			controllerActionHash[current.controller as MODULE_CODES][current.action] = {
-				enabled: formType == FORM_ACTIONS.CREATE ? false : current.enabled,
+				enabled: formType === FORM_ACTIONS.CREATE ? false : current.enabled,
 				policy: "",
 			};
 			return controllerActionHash;
@@ -216,7 +214,7 @@ function AddRoleFormContainer({
 				getControllerActionHash(userRoleData.getRolePemissions, formType)
 			);
 		}
-	}, [userRoleData]);
+	}, [userRoleData, formType]);
 	const onCreate = useCallback(
 		async (valuesSubmitted: IAddRole) => {
 			await onFormSubmit({

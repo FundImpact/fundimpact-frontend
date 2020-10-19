@@ -1,5 +1,5 @@
-import React, { ReactText } from "react";
-import { MenuItem, Box, CircularProgress, ThemeOptions } from "@material-ui/core";
+import React from "react";
+import { MenuItem, Box, CircularProgress } from "@material-ui/core";
 import { Brightness4, Brightness7 } from "@material-ui/icons";
 import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { useMutation, MutationFunctionOptions, FetchResult } from "@apollo/client";

@@ -10,8 +10,6 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import FilterList from "../../FilterList";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import { impactUnitInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 
 const rows = [
 	{
@@ -128,21 +126,19 @@ function ImpactUnitTableContainer({
 		}
 	}, [impactUnitEditAccess]);
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					inputFields={impactUnitInputFields}
-					setFilterList={setFilterList}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	(!collapsableTable &&
+		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+			<FilterList
+				initialValues={{
+					name: "",
+					code: "",
+					description: "",
+				}}
+				inputFields={impactUnitInputFields}
+				setFilterList={setFilterList}
+			/>
+		))) ||
+		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 
 	return (
 		<>

@@ -8,8 +8,7 @@ import { FORM_ACTIONS } from "../../../models/constants";
 import { IFundReceivedForm } from "../../../models/fundReceived";
 import FilterList from "../../FilterList";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
-import { FormattedMessage, useIntl } from "react-intl";
-import { IntlShape } from "@formatjs/intl";
+import { useIntl } from "react-intl";
 
 //add access
 const rows = [

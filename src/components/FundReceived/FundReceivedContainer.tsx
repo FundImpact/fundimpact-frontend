@@ -224,10 +224,10 @@ const onFormSubmit = async ({
 	initialFormValues: IFundReceivedForm;
 }) => {
 	try {
-		formAction == FORM_ACTIONS.CREATE &&
+		formAction === FORM_ACTIONS.CREATE &&
 			(await createProjectFundReceipt({ valuesSubmitted, createFundReceipt, project }));
 
-		formAction == FORM_ACTIONS.UPDATE &&
+		formAction === FORM_ACTIONS.UPDATE &&
 			(await updateProjectFundReceipt({
 				valuesSubmitted,
 				updateFundReceipt,

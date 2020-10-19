@@ -256,7 +256,6 @@ function BudgetTargetView({
 			}),
 		[
 			budgetCategoryFindAccess,
-			filterTableHeadingsAndRows,
 			budgetTargetDonorFindAccess,
 			budgetTargetProjectExpenditureValue,
 			budgetTargetProjectAllocationValue,
@@ -272,7 +271,6 @@ function BudgetTargetView({
 			}),
 		[
 			budgetCategoryFindAccess,
-			filterTableHeadingsAndRows,
 			budgetTargetDonorFindAccess,
 			budgetTargetProjectExpenditureValue,
 			budgetTargetProjectAllocationValue,

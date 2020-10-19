@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import RoleTableView from "./RoleTableView";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { USER_PERMISSIONS_ACTIONS } from "../../../utils/access/modules/userPermissions/actions";
-import { IControllerAction, IAddRolePermissions } from "../../../models/AddRole";
+import { IControllerAction } from "../../../models/AddRole";
 import { IGetUserRole } from "../../../models/access/query";
 import {
 	IUpdateOrganizationUserRole,
@@ -66,7 +66,7 @@ const onUpdate = async ({
 	};
 }) => {
 	for (let roleId in valuesSubmitted) {
-		if (roleId in numeberOfTimesRolesChanged && numeberOfTimesRolesChanged[roleId] == 0) {
+		if (roleId in numeberOfTimesRolesChanged && numeberOfTimesRolesChanged[roleId] === 0) {
 			continue;
 		}
 		try {

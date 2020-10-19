@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Typography, IconButton, CircularProgress } from "@material-ui/core";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { PROJECT_ACTIONS } from "../../Project/constants";
 import Project from "../../Project/Project";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { GET_WORKSPACES_BY_ORG, GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
 import { IGET_WORKSPACES_BY_ORG } from "../../../models/workspace/query";
-import { Navigate } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	contentBox: {
@@ -38,7 +37,7 @@ function NoProjectCreated({
 
 	useEffect(() => {
 		getProjects();
-	}, []);
+	}, [getProjects]);
 
 	useEffect(() => {
 		if (projects?.orgProject?.length) {
@@ -50,7 +49,7 @@ function NoProjectCreated({
 		if (dashboardData) {
 			getWorkSpaces();
 		}
-	}, [dashboardData]);
+	}, [dashboardData, getWorkSpaces]);
 
 	if (fetchingWorkspaces || !dashboardData) {
 		return (

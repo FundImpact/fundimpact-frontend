@@ -20,7 +20,6 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverable
 import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
 import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
-import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
 import { RolesContainer } from "./Roles/container";

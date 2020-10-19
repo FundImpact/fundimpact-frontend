@@ -13,10 +13,10 @@ import React, { useEffect, useState } from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
 import { FormattedMessage, useIntl } from "react-intl";
 import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
-import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
+import { useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { setProject } from "../../../reducers/dashboardReducer";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import NoProjectCreated from "./NoProjectCreated";
 import { Navigate } from "react-router";
 const useStyles = makeStyles((theme: Theme) => ({
@@ -66,7 +66,7 @@ export default function MainOrganizationDashboard() {
 	const dispatch = useDashboardDispatch();
 	useEffect(() => {
 		dispatch(setProject(undefined));
-	}, [dispatch, setProject]);
+	}, [dispatch]);
 
 	const [getProjects, { data: projectList, loading }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
 		fetchPolicy: "network-only",
@@ -77,10 +77,10 @@ export default function MainOrganizationDashboard() {
 
 	useEffect(() => {
 		getProjects();
-	}, []);
+	}, [getProjects]);
 
 	useEffect(() => {
-		if (projectList?.orgProject?.length == 0 && showOrgOverview == true) {
+		if (projectList?.orgProject?.length === 0 && showOrgOverview === true) {
 			setShowOrgOverview(false);
 		}
 	}, [projectList, setShowOrgOverview, showOrgOverview]);

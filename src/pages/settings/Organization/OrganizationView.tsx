@@ -84,7 +84,7 @@ const setDashboardColor = ({
 	color: string;
 }) => {
 	const newColor =
-		themeColorTypePrimaryOrSecondary == colorType.primary
+		themeColorTypePrimaryOrSecondary === colorType.primary
 			? {
 					primary: {
 						main: color,
@@ -115,43 +115,49 @@ const setDashboardColor = ({
 	);
 };
 
-const resetDashboardColor = ({
-	formikInstanceRef,
+const resetDashboardColorFactoryFunction = ({
 	dashboardDispatch,
-	dashboardData,
+	initialDashboadData,
 }: {
-	formikInstanceRef: React.MutableRefObject<FormikProps<IOrganisationForm> | undefined>;
 	dashboardDispatch: React.Dispatch<any>;
-	dashboardData: IDashboardDataContext | undefined;
+	initialDashboadData: IDashboardDataContext;
 }) => {
-	if (
-		(formikInstanceRef.current?.values?.theme?.palette?.primary as SimplePaletteColorOptions)
-			?.main !=
-		(dashboardData?.organization?.theme?.palette?.primary as SimplePaletteColorOptions)?.main
-	) {
-		setDashboardColor({
-			dashboardDispatch,
-			dashboardData,
-			themeColorTypePrimaryOrSecondary: colorType.primary,
-			color:
-				(dashboardData?.organization?.theme?.palette?.primary as SimplePaletteColorOptions)
-					?.main || primaryColor,
-		});
-	}
-	if (
-		(formikInstanceRef.current?.values?.theme?.palette?.secondary as SimplePaletteColorOptions)
-			?.main !=
-		(dashboardData?.organization?.theme?.palette?.secondary as SimplePaletteColorOptions)?.main
-	) {
-		setDashboardColor({
-			dashboardDispatch,
-			dashboardData,
-			themeColorTypePrimaryOrSecondary: colorType.secondary,
-			color:
-				(dashboardData?.organization?.theme?.palette
-					?.secondary as SimplePaletteColorOptions)?.main || secondaryColor,
-		});
-	}
+	return ({
+		formikInstanceRef,
+	}: {
+		formikInstanceRef: React.MutableRefObject<FormikProps<IOrganisationForm> | undefined>;
+	}) => {
+		if (
+			(formikInstanceRef.current?.values?.theme?.palette
+				?.primary as SimplePaletteColorOptions)?.main !==
+			(initialDashboadData?.organization?.theme?.palette
+				?.primary as SimplePaletteColorOptions)?.main
+		) {
+			setDashboardColor({
+				dashboardDispatch,
+				dashboardData: initialDashboadData,
+				themeColorTypePrimaryOrSecondary: colorType.primary,
+				color:
+					(initialDashboadData?.organization?.theme?.palette
+						?.primary as SimplePaletteColorOptions)?.main || primaryColor,
+			});
+		}
+		if (
+			(formikInstanceRef.current?.values?.theme?.palette
+				?.secondary as SimplePaletteColorOptions)?.main !==
+			(initialDashboadData?.organization?.theme?.palette
+				?.secondary as SimplePaletteColorOptions)?.main
+		) {
+			setDashboardColor({
+				dashboardDispatch,
+				dashboardData: initialDashboadData,
+				themeColorTypePrimaryOrSecondary: colorType.secondary,
+				color:
+					(initialDashboadData?.organization?.theme?.palette
+						?.secondary as SimplePaletteColorOptions)?.main || secondaryColor,
+			});
+		}
+	};
 };
 
 //check required
@@ -184,10 +190,28 @@ function OrganizationView({
 	const formikInstanceRef = React.useRef<FormikProps<IOrganisationForm>>();
 	const dashboardDispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
+	const resetDashboardColorRef = React.useRef<
+		({
+			formikInstanceRef,
+		}: {
+			formikInstanceRef: React.MutableRefObject<FormikProps<IOrganisationForm> | undefined>;
+		}) => void | null
+	>();
+
+	useEffect(() => {
+		if (dashboardData && !resetDashboardColorRef.current) {
+			resetDashboardColorRef.current = resetDashboardColorFactoryFunction({
+				dashboardDispatch,
+				initialDashboadData: dashboardData,
+			});
+		}
+	}, [dashboardData, dashboardDispatch]);
+
 	useEffect(() => {
 		return () => {
-			if (formikInstanceRef.current?.submitCount == 0) {
-				resetDashboardColor({ formikInstanceRef, dashboardDispatch, dashboardData });
+			if (formikInstanceRef.current?.submitCount === 0) {
+				resetDashboardColorRef.current &&
+					resetDashboardColorRef.current({ formikInstanceRef });
 			}
 		};
 	}, []);

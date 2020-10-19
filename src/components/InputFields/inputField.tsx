@@ -75,7 +75,7 @@ const InputFields = ({
 	const [elemName, setElemName] = React.useState<string[]>([]);
 
 	useEffect(() => {
-		if (inputType == "multiSelect") {
+		if (inputType === "multiSelect") {
 			setElemName((formik.values[name]?.map((elem: any) => elem.id) as string[]) || []);
 		}
 	}, [formik, setElemName, name, inputType]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useLazyQuery, useApolloClient } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { getValueFromObject } from "../../utils";
 
 function getStartValue(startingValue: number, limit: number, prev: boolean): number {
@@ -44,7 +44,6 @@ function Pagination({
 }) {
 	const startingValue = React.useRef<number>(start);
 	const count = React.useRef<number>(0);
-	const apolloClient = useApolloClient();
 
 	const [error, setError] = useState<null | string>(null);
 
@@ -105,7 +104,7 @@ function Pagination({
 					? count.current
 					: correctStartingValue + currentLimit;
 		},
-		[apolloClient, countQueryLoading, getQueryData, limit, query, queryFilter, sort]
+		[countQueryLoading, getQueryData, limit, queryFilter, sort]
 	);
 
 	useEffect(() => {
@@ -117,7 +116,7 @@ function Pagination({
 				(Object.values(countData)[0] as number);
 			changePage();
 		}
-	}, [countData, sort, start, changePage]);
+	}, [countData, sort, start, changePage, retrieveContFromCountQueryResponse]);
 
 	return {
 		count: count.current,

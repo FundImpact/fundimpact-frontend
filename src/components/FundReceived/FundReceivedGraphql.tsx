@@ -7,7 +7,12 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { CREATE_FUND_RECEIPT, UPDATE_FUND_RECEIPT } from "../../graphql/FundRecevied/mutation";
 import { IFundReceivedForm, IFundReceivedProps } from "../../models/fundReceived";
 import { getTodaysDate } from "../../utils";
-import { ICreateFundReceipt, ICreateFundReceiptVariables, IUpdateFundReceiptVariables, IUpdateFundReceipt } from "../../models/fundReceived/query";
+import {
+	ICreateFundReceipt,
+	ICreateFundReceiptVariables,
+	IUpdateFundReceiptVariables,
+	IUpdateFundReceipt,
+} from "../../models/fundReceived/query";
 
 const getDonors = (projectDonors: { id: string; donor: { id: string; name: string } }[]) =>
 	projectDonors.map((projectDonor) => ({
@@ -28,7 +33,7 @@ const getInitialFormValues = ({
 	formAction: FORM_ACTIONS;
 	initialValues?: IFundReceivedForm;
 }): IFundReceivedForm => {
-	if (formAction == FORM_ACTIONS.UPDATE && initialValues) {
+	if (formAction === FORM_ACTIONS.UPDATE && initialValues) {
 		return initialValues;
 	}
 	return defaultFormValues;
@@ -57,7 +62,7 @@ function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: I
 				},
 			});
 		}
-	}, [dashboardData]);
+	}, [dashboardData, getProjectDonors]);
 	return (
 		<FundReceivedContainer
 			donorList={(donorList?.projDonors && getDonors(donorList?.projDonors)) || []}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import OrganizationView from "./OrganizationView";
 import { IOrganisationForm, IOrganisation } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -148,7 +148,7 @@ function OrganizationContainer({
 				notificationDispatch(setErrorNotification(err.message));
 			}
 		},
-		[updateOrganization, initialValues, uploadFile, notificationDispatch]
+		[updateOrganization, uploadFile, notificationDispatch, dashboardData]
 	);
 
 	if (!dashboardData || !countryList?.length) {

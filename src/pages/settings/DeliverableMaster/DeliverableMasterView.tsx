@@ -11,10 +11,7 @@ import { makeStyles } from "@material-ui/styles";
 import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
-import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
-import { MODULE_CODES, userHasAccess } from "../../../utils/access";
-import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
-import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {

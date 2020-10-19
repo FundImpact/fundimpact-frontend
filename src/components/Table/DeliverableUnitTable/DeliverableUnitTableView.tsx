@@ -13,8 +13,6 @@ import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -132,21 +130,19 @@ function DeliverableUnitTableView({
 		}
 	}, [deliverableUnitEditAccess]);
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					setFilterList={setFilterList}
-					inputFields={deliverableUnitInputFields}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	(!collapsableTable &&
+		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+			<FilterList
+				initialValues={{
+					name: "",
+					code: "",
+					description: "",
+				}}
+				setFilterList={setFilterList}
+				inputFields={deliverableUnitInputFields}
+			/>
+		))) ||
+		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 
 	return (
 		<>
