@@ -62,7 +62,11 @@ export default function ProjectDocumentsTable() {
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
-	const { data, loading } = useQuery(GET_PROJECT_DOCUMENTS);
+	const { data, loading } = useQuery(GET_PROJECT_DOCUMENTS, {
+		variables: {
+			filter: { id: dashBoardData?.project?.id },
+		},
+	});
 
 	useEffect(() => {
 		let arr: any = [];

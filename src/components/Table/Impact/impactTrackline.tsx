@@ -19,7 +19,7 @@ import {
 	GET_IMPACT_TRACKLINE_COUNT,
 } from "../../../graphql/Impact/trackline";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
-import { getTodaysDate } from "../../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
@@ -40,6 +40,8 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/ac
 import AttachFileForm from "../../Forms/AttachFiles";
 import { AttachFile } from "../../../models/AttachFile";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
+import { CircularPercentage } from "../../commons";
+import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
 
 enum tableHeaders {
 	date = 1,
@@ -149,8 +151,19 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	const dashBoardData = useDashBoardData();
 	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
 	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
+
+	const [impactTracklineUploadLoading, setImpactTracklineUploadLoading] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = impactTracklineFileArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setImpactTracklineUploadLoading(percentage);
+	}, [impactTracklineFileArray, totalFilesToUpload, setImpactTracklineUploadLoading]);
+
 	let { multiplefileUpload } = useMultipleFileUpload();
 	const attachImpactFileOnSave = () => {
+		setTotalFilesToUpload(impactTracklineFileArray.filter((elem) => !elem.id).length);
 		multiplefileUpload({
 			ref: "impact-tracking-lineitem",
 			refId: impactTargetLine.id,
@@ -160,7 +173,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			setFilesArray: setImpactTracklineFileArray,
 		});
 	};
-
+	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<>
 			<TableCell>
@@ -241,6 +254,12 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 					}}
 				/>
 			)}
+			{impactTracklineUploadLoading > 0 ? (
+				<CircularPercentage
+					progress={impactTracklineUploadLoading}
+					message={uploadingFileMessage}
+				/>
+			) : null}
 		</>
 	);
 }

@@ -38,7 +38,7 @@ export default function CircularPercentage({
 	return (
 		<Backdrop className={classes.backdrop} open={true}>
 			<Box>
-				<Typography variant="subtitle1" color="textSecondary">{`${message}`}</Typography>
+				<Typography variant="subtitle1" color="textSecondary">{`${message}  `}</Typography>
 			</Box>
 			<CircularProgressWithLabel size={60} color="inherit" value={progress} />
 		</Backdrop>

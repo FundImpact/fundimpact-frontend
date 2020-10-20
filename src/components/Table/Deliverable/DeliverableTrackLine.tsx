@@ -20,7 +20,7 @@ import {
 } from "../../../graphql/Deliverable/trackline";
 import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
-import { getTodaysDate } from "../../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
@@ -40,6 +40,8 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
+import { CircularPercentage } from "../../commons";
+import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
 
 enum tableHeaders {
 	date = 1,
@@ -140,8 +142,21 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
 	let { multiplefileUpload } = useMultipleFileUpload();
+	let uploadingFileMessage = CommonUploadingFilesMessage();
+	const [
+		deliverableTracklineUploadLoading,
+		setDeliverableTracklineUploadLoading,
+	] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = deliverableTracklineFileArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setDeliverableTracklineUploadLoading(percentage);
+	}, [deliverableTracklineFileArray, totalFilesToUpload, setDeliverableTracklineUploadLoading]);
 
 	const attachFileOnSave = () => {
+		setTotalFilesToUpload(deliverableTracklineFileArray.filter((elem) => !elem.id).length);
 		multiplefileUpload({
 			ref: "deliverable-tracking-lineitem",
 			refId: deliverableTrackline?.id,
@@ -233,6 +248,12 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 					}}
 				/>
 			)}
+			{deliverableTracklineUploadLoading > 0 ? (
+				<CircularPercentage
+					progress={deliverableTracklineUploadLoading}
+					message={uploadingFileMessage}
+				/>
+			) : null}
 		</>
 	);
 }

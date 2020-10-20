@@ -19,7 +19,7 @@ import {
 	IDeliverableTargetLine,
 } from "../../models/deliverable/deliverableTrackline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { getTodaysDate } from "../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
@@ -33,7 +33,10 @@ import {
 	IGET_DELIVERABLE_TRACKLINE_BY_TARGET,
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
-import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import {
+	CommonFormTitleFormattedMessage,
+	CommonUploadingFilesMessage,
+} from "../../utils/commonFormattedMessage";
 import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
@@ -162,14 +165,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	});
 	let { multiplefileUpload } = useMultipleFileUpload();
 
-	const [loadingPercentage, setLoadingPercentage] = React.useState(50);
+	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
 
 	React.useEffect(() => {
 		let remainToUpload = filesArray.filter((elem) => !elem.id).length;
-		let percentage = ((totalFilesToUpload - remainToUpload) / totalFilesToUpload) * 100;
-		if (!percentage || isNaN(percentage) || percentage === 100) percentage = 0;
-
+		let percentage = uploadPercentageCalculator(remainToUpload, totalFilesToUpload);
 		setLoadingPercentage(percentage);
 	}, [filesArray, totalFilesToUpload, setLoadingPercentage]);
 
@@ -481,6 +482,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		/>
 	);
 	const classes = useStyles();
+	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<React.Fragment>
 			{/* {true ? <CircularPercentage progress={loadingPercentage} /> : null} */}
@@ -507,7 +509,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					{loadingPercentage > 0 ? (
 						<CircularPercentage
 							progress={loadingPercentage}
-							message={"Uploading Files"}
+							message={uploadingFileMessage}
 						/>
 					) : null}
 				</>

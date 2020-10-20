@@ -126,15 +126,6 @@ function AttachFileForm(props: {
 		defaultMessage: "Close",
 		description: "This text will be show on attach file form for close button",
 	});
-	// React.useEffect(() => {
-	// 	let percentage =
-	// 		(filesArray.filter((elem) => elem.uploadingStatus === true).length /
-	// 			filesArray.length) *
-	// 		100;
-	// 	if (percentage === 100 || !percentage) percentage = 0;
-
-	// 	setLoadingPercentage(percentage);
-	// }, [filesArray, onSaveCall]);
 
 	const onSave = async () => {
 		if (parentOnSave) parentOnSave();

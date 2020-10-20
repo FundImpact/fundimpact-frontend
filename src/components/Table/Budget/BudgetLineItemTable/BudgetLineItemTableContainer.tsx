@@ -3,9 +3,6 @@ import BudgetLineItemTableView from "./BudgetLineItemTableView";
 import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { getTodaysDate } from "../../../../utils";
-import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
-import { AttachFile } from "../../../../models/AttachFile";
-import { useDashBoardData } from "../../../../contexts/dashboardContext";
 
 const getInitialValues = (
 	budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE | null
@@ -76,25 +73,6 @@ function BudgetLineItemTableContainer({
 		);
 	};
 
-	const dashBoardData = useDashBoardData();
-
-	let { multiplefileUpload } = useMultipleFileUpload();
-
-	const attachFileOnSave = (
-		initialValues: IBudgetTrackingLineitem,
-		budgetTracklineFileArray: AttachFile[],
-		setBudgetTracklineFileArray: React.Dispatch<React.SetStateAction<AttachFile[]>>
-	) => {
-		multiplefileUpload({
-			ref: "budget-tracking-lineitem",
-			refId: initialValues?.id || "",
-			field: "attachments",
-			path: `org-${dashBoardData?.organization?.id}/budget-tracking-lineitem`,
-			filesArray: budgetTracklineFileArray,
-			setFilesArray: setBudgetTracklineFileArray,
-		});
-	};
-
 	return (
 		<BudgetLineItemTableView
 			toggleDialogs={toggleDialogs}
@@ -118,7 +96,6 @@ function BudgetLineItemTableContainer({
 			financialYearDonorHash={financialYearDonorHash}
 			financialYearOrgHash={financialYearOrgHash}
 			currency={currency}
-			attachFileOnSave={attachFileOnSave}
 		/>
 	);
 }

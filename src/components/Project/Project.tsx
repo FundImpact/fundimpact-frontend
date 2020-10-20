@@ -19,6 +19,9 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
 import { Box, CircularProgress } from "@material-ui/core";
+import { uploadPercentageCalculator } from "../../utils";
+import { CommonUploadingFilesMessage } from "../../utils/commonFormattedMessage";
+import { CircularPercentage } from "../commons";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -54,8 +57,21 @@ function Project(props: ProjectProps) {
 
 	let { multiplefileUpload } = useMultipleFileUpload();
 
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = projectFilesArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setLoadingPercentage(percentage);
+	}, [projectFilesArray, totalFilesToUpload]);
+
+	if (uploadSuccess) props.handleClose();
+
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
+			setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
 			multiplefileUpload({
 				ref: "project",
 				refId: data.createOrgProject.id,
@@ -63,6 +79,7 @@ function Project(props: ProjectProps) {
 				path: `org-${DashBoardData?.organization?.id}/projects`,
 				filesArray: projectFilesArray,
 				setFilesArray: setProjectFilesArray,
+				setUploadSuccess: setUploadSuccess,
 			});
 
 			setProjectFilesArray([]);
@@ -151,7 +168,7 @@ function Project(props: ProjectProps) {
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Project creation Failed !"));
 		} finally {
-			props.handleClose();
+			// props.handleClose();
 		}
 	};
 
@@ -159,6 +176,7 @@ function Project(props: ProjectProps) {
 		UPDATE_PROJECT,
 		{
 			onCompleted(data) {
+				setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
 				multiplefileUpload({
 					ref: "project",
 					refId: data.updateOrgProject.id,
@@ -166,6 +184,7 @@ function Project(props: ProjectProps) {
 					path: `org-${DashBoardData?.organization?.id}/projects`,
 					filesArray: projectFilesArray,
 					setFilesArray: setProjectFilesArray,
+					setUploadSuccess: setUploadSuccess,
 				});
 
 				setProjectFilesArray([]);
@@ -205,7 +224,7 @@ function Project(props: ProjectProps) {
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Project creation Failed !"));
 		} finally {
-			props.handleClose();
+			// props.handleClose();
 		}
 	};
 
@@ -227,7 +246,7 @@ function Project(props: ProjectProps) {
 	const onCancel = props.handleClose;
 	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
-
+	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<>
 			<FormDialog
@@ -238,17 +257,25 @@ function Project(props: ProjectProps) {
 				handleClose={onCancel}
 				loading={createLoading || updateLoading || creatingProjectDonors}
 			>
-				<CommonForm
-					{...{
-						initialValues,
-						validate,
-						onCreate,
-						onCancel,
-						formAction,
-						onUpdate,
-						inputFields: projectForm,
-					}}
-				/>
+				<>
+					<CommonForm
+						{...{
+							initialValues,
+							validate,
+							onCreate,
+							onCancel,
+							formAction,
+							onUpdate,
+							inputFields: projectForm,
+						}}
+					/>
+					{loadingPercentage > 0 ? (
+						<CircularPercentage
+							progress={loadingPercentage}
+							message={uploadingFileMessage}
+						/>
+					) : null}
+				</>
 			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}

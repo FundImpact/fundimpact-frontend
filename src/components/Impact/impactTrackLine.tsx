@@ -16,7 +16,7 @@ import {
 } from "../../graphql/Impact/trackline";
 import { IImpactTargetLine, ImpactTargetLineProps } from "../../models/impact/impactTargetline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { getTodaysDate } from "../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
@@ -30,10 +30,14 @@ import {
 	IImpactTracklineByTargetResponse,
 } from "../../models/impact/query";
 import { useIntl } from "react-intl";
-import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import {
+	CommonFormTitleFormattedMessage,
+	CommonUploadingFilesMessage,
+} from "../../utils/commonFormattedMessage";
 import { AttachFile } from "../../models/AttachFile";
 import AttachFileForm from "../Forms/AttachFiles";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
+import { CircularPercentage } from "../commons";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -99,6 +103,15 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				: []
 			: []
 	);
+	let uploadingFileMessage = CommonUploadingFilesMessage();
+	const [impactUploadLoading, setImpactUploadLoading] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setImpactUploadLoading(percentage);
+	}, [filesArray, totalFilesToUpload, setImpactUploadLoading]);
 
 	/* Open Attach File Form*/
 	impactTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -122,6 +135,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				/>
 			);
 
+			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
 			multiplefileUpload({
 				ref: "impact-tracking-lineitem",
 				refId: data.createImpactTrackingLineitemInput.id,
@@ -163,9 +177,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					/>
 				);
 
+				setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
 				multiplefileUpload({
 					ref: "impact-tracking-lineitem",
-					refId: data.createImpactTrackingLineitemInput.id,
+					refId: data.updateImpactTrackingLineitemInput.id,
 					field: "attachments",
 					path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
 					filesArray: filesArray,
@@ -179,7 +194,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 				handleNext();
 			},
-			onError(data) {
+			onError(err) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
 			},
 		}
@@ -442,6 +457,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					basicForm={basicForm}
 					donorForm={impactDonorForm}
 				/>
+				{impactUploadLoading > 0 ? (
+					<CircularPercentage
+						progress={impactUploadLoading}
+						message={uploadingFileMessage}
+					/>
+				) : null}
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}
 			{updateImpactTrackLineLoading ? <FullScreenLoader /> : null}

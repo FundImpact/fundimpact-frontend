@@ -5,7 +5,7 @@ import { FORM_ACTIONS } from "../../../Forms/constant";
 import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { budgetLineItemTableHeading as tableHeadings } from "../../constants";
-import { getTodaysDate } from "../../../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../../../utils";
 import { Box, Chip, Avatar, Grid } from "@material-ui/core";
 import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
@@ -18,6 +18,10 @@ import { FINANCIAL_YEAR_DONOR_ACTIONS } from "../../../../utils/access/modules/f
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 import { AttachFile } from "../../../../models/AttachFile";
 import AttachFileForm from "../../../Forms/AttachFiles";
+import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
+import { CircularPercentage } from "../../../commons";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -240,7 +244,6 @@ function BudgetLineItemTableView({
 	financialYearDonorHash,
 	financialYearOrgHash,
 	currency,
-	attachFileOnSave,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -269,11 +272,6 @@ function BudgetLineItemTableView({
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
-	attachFileOnSave: (
-		initialValues: IBudgetTrackingLineitem,
-		budgetTracklineFileArray: AttachFile[],
-		setBudgetTracklineFileArray: React.Dispatch<React.SetStateAction<AttachFile[]>>
-	) => void;
 }) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
@@ -349,6 +347,35 @@ function BudgetLineItemTableView({
 	useEffect(() => {
 		setBudgetTracklineFileArray(initialValues.attachments || []);
 	}, [initialValues.attachments]);
+
+	const dashBoardData = useDashBoardData();
+
+	let { multiplefileUpload } = useMultipleFileUpload();
+	let uploadingFileMessage = CommonUploadingFilesMessage();
+	const [budgetUploadLoading, setbudgetUploadLoading] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+	const attachFileOnSave = (
+		initialValues: IBudgetTrackingLineitem,
+		budgetTracklineFileArray: AttachFile[],
+		setBudgetTracklineFileArray: React.Dispatch<React.SetStateAction<AttachFile[]>>
+	) => {
+		setTotalFilesToUpload(budgetTracklineFileArray.filter((elem) => !elem.id).length);
+		multiplefileUpload({
+			ref: "budget-tracking-lineitem",
+			refId: initialValues?.id || "",
+			field: "attachments",
+			path: `org-${dashBoardData?.organization?.id}/budget-tracking-lineitem`,
+			filesArray: budgetTracklineFileArray,
+			setFilesArray: setBudgetTracklineFileArray,
+		});
+	};
+
+	React.useEffect(() => {
+		let remainFilestoUpload = budgetTracklineFileArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setbudgetUploadLoading(percentage);
+	}, [budgetTracklineFileArray, totalFilesToUpload, setbudgetUploadLoading]);
+
 	const [openAttachFiles, setOpenAttachFiles] = React.useState(false);
 	return (
 		<>
@@ -398,13 +425,20 @@ function BudgetLineItemTableView({
 							handleClose: () => setOpenAttachFiles(false),
 							filesArray: budgetTracklineFileArray,
 							setFilesArray: setBudgetTracklineFileArray,
-							parentOnSave: attachFileOnSave(
-								initialValues,
-								budgetTracklineFileArray,
-								setBudgetTracklineFileArray
-							),
+							parentOnSave: () =>
+								attachFileOnSave(
+									initialValues,
+									budgetTracklineFileArray,
+									setBudgetTracklineFileArray
+								),
 						}}
 					/>
+					{budgetUploadLoading > 0 ? (
+						<CircularPercentage
+							progress={budgetUploadLoading}
+							message={uploadingFileMessage}
+						/>
+					) : null}
 				</>
 			</CommonTable>
 		</>

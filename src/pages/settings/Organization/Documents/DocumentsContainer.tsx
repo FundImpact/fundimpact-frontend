@@ -9,6 +9,9 @@ import { AttachFile } from "../../../../models/AttachFile";
 import AttachFileForm from "../../../../components/Forms/AttachFiles";
 import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { uploadPercentageCalculator } from "../../../../utils";
+import { CircularPercentage } from "../../../../components/commons";
+import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
 
 export const OrganizationDocumentContainer = () => {
 	const organizationEditAccess = userHasAccess(
@@ -17,6 +20,15 @@ export const OrganizationDocumentContainer = () => {
 	);
 
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+
+	const [documentsUploadLoading, setDocumentsUploadLoading] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setDocumentsUploadLoading(percentage);
+	}, [filesArray, totalFilesToUpload, setDocumentsUploadLoading]);
 
 	let { multiplefileUpload } = useMultipleFileUpload();
 	const dashBoardData = useDashBoardData();
@@ -31,7 +43,7 @@ export const OrganizationDocumentContainer = () => {
 			setFilesArray: setFilesArray,
 		});
 	};
-
+	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<Box>
 			<Grid md={12}>
@@ -71,6 +83,12 @@ export const OrganizationDocumentContainer = () => {
 						}}
 					/>
 				)}
+				{documentsUploadLoading > 0 ? (
+					<CircularPercentage
+						progress={documentsUploadLoading}
+						message={uploadingFileMessage}
+					/>
+				) : null}
 			</Grid>
 		</Box>
 	);

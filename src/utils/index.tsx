@@ -137,3 +137,9 @@ export const isValidImage = (extension: string) => {
 	const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 	return imageExtensions.includes(extension);
 };
+
+export const uploadPercentageCalculator = (remainingFiles: number, totalFiles: number) => {
+	let percentage = ((totalFiles - remainingFiles) / totalFiles) * 100;
+	if (!percentage || isNaN(percentage) || percentage === 100) percentage = 0;
+	return percentage;
+};
