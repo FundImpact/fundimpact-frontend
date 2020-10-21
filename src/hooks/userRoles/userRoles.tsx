@@ -1,6 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { GET_USER_ROLES } from "../../graphql/User/query";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/userContext";
 import { IGetUserRole } from "../../models/access/query";
 

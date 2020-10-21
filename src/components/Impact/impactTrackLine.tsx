@@ -232,7 +232,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			);
 			impactTragetLineForm[3].optionsArray = donorsArray;
 		}
-	}, [impactProjectDonors]);
+	}, [impactProjectDonors, props]);
 
 	// updating financial year field with fetched financial year list
 	useEffect(() => {

@@ -24,7 +24,6 @@ import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
-import { FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
@@ -154,7 +153,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	useEffect(() => {
 		if (props?.initialValues?.attachments) setFilesArray(props?.initialValues?.attachments);
-	}, [props?.initialValues?.attachments]);
+	}, [props]);
 
 	/* Open Attach File Form*/
 	budgetLineitemFormButtons[0].onClick = () => setOpenAttachFiles(true);

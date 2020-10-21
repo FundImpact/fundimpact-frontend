@@ -42,7 +42,6 @@ import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/
 import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 import FundReceivedTable from "../../Table/FundReceivedTable";
-import DocumentsTable from "../../Table/DocumentsTable";
 import ProjectDocumentsTable from "../../Table/ProjectDocument";
 
 interface TabPanelProps {

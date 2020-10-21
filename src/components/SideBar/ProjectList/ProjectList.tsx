@@ -71,7 +71,7 @@ function ProjectEditButton({
 				attachments: project.attachments,
 			});
 		}
-	}, [projDonors]);
+	}, [projDonors, project]);
 	return (
 		<>
 			<IconButton

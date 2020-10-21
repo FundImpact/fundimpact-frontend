@@ -1,32 +1,16 @@
 import { useQuery } from "@apollo/client";
-import {
-	Avatar,
-	Box,
-	Chip,
-	IconButton,
-	Menu,
-	MenuItem,
-	TableCell,
-	TablePagination,
-	Grid,
-} from "@material-ui/core";
+import { IconButton, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 
 import { getTodaysDate, isValidImage } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 
 import FITable from "../FITable";
 import { useIntl } from "react-intl";
-import { GET_ORGANISATIONS_DOCUMENTS, GET_PROJECT_DOCUMENTS } from "../../../graphql";
-import FilterList from "../../FilterList";
+import { GET_PROJECT_DOCUMENTS } from "../../../graphql";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { removeFilterListObjectElements } from "../../../utils/filterList";
-import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
-import { MODULE_CODES, userHasAccess } from "../../../utils/access";
-import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
-import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
-import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { Attachments } from "../../../models/AttachFile";
 import { documentsHeadings } from "../constants";
@@ -36,31 +20,21 @@ export default function ProjectDocumentsTable() {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
-	const [filterList, setFilterList] = useState<{
-		[key: string]: string | string[];
-	}>({
-		reporting_date: "",
-		note: "",
-		value: "",
-		annual_year: [],
-		financial_year: [],
-	});
-	const [queryFilter, setQueryFilter] = useState({});
+	// const [filterList, setFilterList] = useState<{
+	// 	[key: string]: string | string[];
+	// }>({
+	// 	reporting_date: "",
+	// 	note: "",
+	// 	value: "",
+	// 	annual_year: [],
+	// 	financial_year: [],
+	// });
+	// const [queryFilter, setQueryFilter] = useState({});
 
 	const dashBoardData = useDashBoardData();
 
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
-
-	const financialYearFindAccess = userHasAccess(
-		MODULE_CODES.FINANCIAL_YEAR,
-		FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
-	);
-
-	const annualYearFindAccess = userHasAccess(
-		MODULE_CODES.ANNUAL_YEAR,
-		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
-	);
 
 	const { data, loading } = useQuery(GET_PROJECT_DOCUMENTS, {
 		variables: {
@@ -109,7 +83,7 @@ export default function ProjectDocumentsTable() {
 			},
 			[]
 		);
-	}, [data]);
+	}, [data, TracklinePage]);
 
 	const intl = useIntl();
 

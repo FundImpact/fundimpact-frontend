@@ -102,12 +102,6 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 			enableReinitialize={true}
 			validate={validate}
 			onSubmit={(values: any) => {
-				const mapingFound = donorList.projDonors.find(
-					(mapping: any) => mapping.project.id === values.project
-				);
-
-				console.log(`values from form`, { ...values });
-
 				values = { ...values, project: dashboardData?.project?.id };
 				props.onSubmit(values);
 			}}

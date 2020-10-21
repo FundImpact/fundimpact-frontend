@@ -1,6 +1,6 @@
 import { Box, Grid, Table, Typography, TableSortLabel } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -54,7 +54,6 @@ export default function FITable({
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
-	const theme = useTheme();
 
 	return (
 		<>

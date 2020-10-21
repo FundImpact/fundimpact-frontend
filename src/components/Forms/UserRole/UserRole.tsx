@@ -89,7 +89,7 @@ function UserRoleForm(props: UserRoleProps) {
 				userRoles?.organizationRoles || [],
 				dashboardData?.organization?.id || ""
 			),
-		[filterOrganizationRoles, userRoles, dashboardData]
+		[userRoles, dashboardData]
 	);
 
 	useEffect(() => {
@@ -121,7 +121,7 @@ function UserRoleForm(props: UserRoleProps) {
 				],
 			});
 		}
-	}, [count, formValues]);
+	}, [count, formValues, sendInvitationToUser]);
 
 	const onCreate = (value: IUserRole) => {
 		setFormValues(value);

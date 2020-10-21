@@ -45,9 +45,7 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 			else setError("Internal server error");
 		}
 		if (logoutMsg) setError(logoutMsg);
-
-		console.log("apiError", apiError);
-	}, [apiError]);
+	}, [apiError, logoutMsg]);
 
 	useEffect(() => {
 		if (data)

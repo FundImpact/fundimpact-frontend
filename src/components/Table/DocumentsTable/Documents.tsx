@@ -1,32 +1,12 @@
 import { useQuery } from "@apollo/client";
-import {
-	Avatar,
-	Box,
-	Chip,
-	IconButton,
-	Menu,
-	MenuItem,
-	TableCell,
-	TablePagination,
-	Grid,
-} from "@material-ui/core";
+import { IconButton, TableCell } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
-
+import React, { useEffect, useState } from "react";
 import { getTodaysDate, isValidImage } from "../../../utils";
-import FullScreenLoader from "../../commons/GlobalLoader";
-
 import FITable from "../FITable";
 import { useIntl } from "react-intl";
 import { GET_ORGANISATIONS_DOCUMENTS } from "../../../graphql";
-import FilterList from "../../FilterList";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { removeFilterListObjectElements } from "../../../utils/filterList";
-import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
-import { MODULE_CODES, userHasAccess } from "../../../utils/access";
-import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
-import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
-import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { Attachments } from "../../../models/AttachFile";
 import { documentsHeadings } from "../constants";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -98,15 +78,15 @@ export default function DocumentsTable() {
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
-	const financialYearFindAccess = userHasAccess(
-		MODULE_CODES.FINANCIAL_YEAR,
-		FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
-	);
+	// const financialYearFindAccess = userHasAccess(
+	// 	MODULE_CODES.FINANCIAL_YEAR,
+	// 	FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
+	// );
 
-	const annualYearFindAccess = userHasAccess(
-		MODULE_CODES.ANNUAL_YEAR,
-		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
-	);
+	// const annualYearFindAccess = userHasAccess(
+	// 	MODULE_CODES.ANNUAL_YEAR,
+	// 	ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
+	// );
 
 	const { data } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	useEffect(() => {

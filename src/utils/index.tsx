@@ -103,7 +103,7 @@ export function abbreviateNumber(number: number | string) {
 	var tier = (Math.log10(number) / 3) | 0;
 
 	// if zero, we don't need a suffix
-	if (tier == 0) return number;
+	if (tier === 0) return number;
 
 	// get suffix and determine scale
 	var suffix = SI_SYMBOL[tier];

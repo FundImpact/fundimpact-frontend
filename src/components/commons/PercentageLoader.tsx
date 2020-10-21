@@ -3,7 +3,6 @@ import CircularProgress, { CircularProgressProps } from "@material-ui/core/Circu
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { Backdrop } from "@material-ui/core";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useStyles } from "./GlobalLoader";
 function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
 	return (

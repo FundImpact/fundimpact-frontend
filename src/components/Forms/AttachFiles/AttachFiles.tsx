@@ -262,7 +262,8 @@ const AttachedFileList = (props: {
 
 	React.useEffect(() => {
 		setText(file.remark || "");
-	}, []);
+	}, [file]);
+
 	const fetchedFilePreview = file.ext && !isValidImage(file.ext) ? noImagePreview : file.url;
 	return (
 		<Grid item key={file?.preview} xs={3}>
