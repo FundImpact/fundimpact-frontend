@@ -1,0 +1,20 @@
+{
+	"individualFormFields": [
+		{
+			"name": "first_name",
+			"id": "first_name",
+			"dataTestId": "createFirstname",
+			"testId": "createFirstnameInput",
+			"label": "First Name",
+			"size": 6
+		},
+		{
+			"name": "last_name",
+			"id": "last_name",
+			"dataTestId": "createLastName",
+			"testId": "createAddressLine2Input",
+			"label": "Last Name",
+			"size": 6
+		}
+	]
+}
