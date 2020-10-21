@@ -1,5 +1,5 @@
 import React from "react";
-import { contactFormFields } from "./inputField.json";
+import { contactFormFields } from "./inputField.json.js";
 import { FORM_ACTIONS } from "../../constant.js";
 
 (contactFormFields[5].optionsArray as { id: string; name: string }[]) = [
@@ -7,8 +7,8 @@ import { FORM_ACTIONS } from "../../constant.js";
 	{ id: "2", name: "OFFICE" },
 ];
 
-function ContactContainer() {
+function ContactFormContainer() {
 	return <div></div>;
 }
 
-export default ContactContainer;
+export default ContactFormContainer;
