@@ -59,6 +59,7 @@ const useMultipleFileUpload = () => {
 		} catch (err) {
 			console.error(err);
 		} finally {
+			console.log("finally");
 			if (setUploadSuccess) setUploadSuccess(true);
 		}
 	};

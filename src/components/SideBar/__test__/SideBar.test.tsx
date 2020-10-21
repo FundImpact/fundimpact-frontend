@@ -54,6 +54,7 @@ const ProjectMockOne = [
 		name: "ARTISTAAN",
 		short_name: "",
 		description: "",
+		attachments: [],
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
 	},
 ];
@@ -63,6 +64,7 @@ const ProjectMockTwo = [
 		name: "KALAMKAAR",
 		short_name: "",
 		description: "",
+		attachments: [],
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
 	},
 ];

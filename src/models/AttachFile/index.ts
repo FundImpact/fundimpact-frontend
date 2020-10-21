@@ -1,9 +1,9 @@
 export interface AttachFile {
 	id?: string;
-	file: any;
-	preview: string;
-	remark: string;
-	uploadingStatus: boolean;
+	file?: any;
+	preview?: string;
+	remark?: string;
+	uploadingStatus?: boolean;
 	name?: string;
 	size?: string;
 	url?: string;

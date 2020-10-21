@@ -161,7 +161,7 @@ function AttachFileForm(props: {
 										e.preventDefault();
 
 										let fileArr: any = [];
-										Array.from(e.target?.files).map((file: any) => {
+										Array.from(e.target?.files).forEach((file: any) => {
 											fileArr.push({
 												file: file,
 												preview: isValidImage(
@@ -261,7 +261,7 @@ const AttachedFileList = (props: {
 	const classes = useStyles();
 
 	React.useEffect(() => {
-		setText(file.remark);
+		setText(file.remark || "");
 	}, []);
 	const fetchedFilePreview = file.ext && !isValidImage(file.ext) ? noImagePreview : file.url;
 	return (

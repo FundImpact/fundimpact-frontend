@@ -209,7 +209,7 @@ describe("Budget Line Item Table tests", () => {
 
 	test("renders correctly", async () => {
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
+			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
 		);
 
 		await waitForElement(() =>

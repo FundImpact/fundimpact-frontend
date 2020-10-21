@@ -160,7 +160,7 @@ export default function ProjectList({
 									},
 									index: number
 								) => (
-									<Box className={classes.project}>
+									<Box className={classes.project} key={index}>
 										<ListItem
 											className={
 												dashboardData?.project?.id === project.id

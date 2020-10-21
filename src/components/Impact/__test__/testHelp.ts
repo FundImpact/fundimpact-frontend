@@ -109,6 +109,7 @@ export const impactTracklineByTargetMock = [
 			},
 		},
 		grant_periods_project: null,
+		attachments: [],
 	},
 ];
 

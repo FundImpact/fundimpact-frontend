@@ -140,7 +140,8 @@
 			"fy_donor": {
 				"id": "1",
 				"name": "financial year 1"
-			}
+			},
+			"attachments": []
 		}
 	],
 	"mockBudgetTargetAmountSum": {

@@ -89,6 +89,7 @@ export const DeliverableTracklineByTargetMock = [
 			},
 		},
 		grant_periods_project: null,
+		attachments: [],
 	},
 ];
 export const DeliverableTracklineMock = {
@@ -98,6 +99,7 @@ export const DeliverableTracklineMock = {
 	note: "this is a note",
 	annual_year: "1",
 	reporting_date: "2020-08-25T00:00:00.000Z",
+	attachments: [],
 };
 
 export const deliverableCategoryMock = [
