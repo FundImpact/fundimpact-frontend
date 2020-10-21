@@ -1,0 +1,57 @@
+{
+	"contactFormFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createName",
+			"testId": "createNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "phone",
+			"id": "phone",
+			"dataTestId": "createPhone",
+			"testId": "createPhoneInput",
+			"label": "Phone",
+			"size": 6
+		},
+		{
+			"name": "phone_other",
+			"id": "phone_other",
+			"dataTestId": "createPhoneOther",
+			"testId": "createPhoneOtherInput",
+			"label": "Phone Other",
+			"size": 6
+		},
+		{
+			"name": "email",
+			"id": "email",
+			"dataTestId": "craeteEmail",
+			"testId": "craeteEmailInput",
+			"label": "Email",
+			"size": 6
+		},
+		{
+			"name": "email_other",
+			"id": "email_other",
+			"dataTestId": "createEmailOther",
+			"testId": "createEmailOtherInput",
+			"label": "Email Other",
+			"size": 6
+		},
+		{
+			"name": "contact_type",
+			"id": "contact_type",
+			"dataTestId": "createContactType",
+			"testId": "createContactTypeInput",
+			"label": "Contact Type",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		}
+	]
+}
