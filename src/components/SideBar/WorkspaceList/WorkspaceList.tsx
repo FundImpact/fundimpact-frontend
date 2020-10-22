@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useQuery } from "@apollo/client";
 import { Box, Divider, MenuItem } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
@@ -9,7 +9,7 @@ import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React, { useState } from "react";
 
 import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
-import { GET_WORKSPACES_BY_ORG } from "../../../graphql";
+import { GET_PROJECTS_BY_WORKSPACE, GET_WORKSPACES_BY_ORG } from "../../../graphql";
 import { IOrganisation } from "../../../models/organisation/types";
 import { IGET_WORKSPACES_BY_ORG, IOrganisationWorkspaces } from "../../../models/workspace/query";
 import { IWorkspace } from "../../../models/workspace/workspace";
@@ -60,7 +60,9 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 	const dispatch = useDashboardDispatch();
 	// const [selectedWorkspace, setSelectedWorkspace] = useState<string>();
 	const dashboardData = useDashBoardData();
-
+	const { refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, {
+		variables: { filter: { workspace: dashboardData?.workspace?.id } },
+	});
 	useQuery(GET_WORKSPACES_BY_ORG, filter);
 
 	/**
@@ -205,6 +207,7 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 					open={projectDialogOpen}
 					workspace={dashboardData?.workspace?.id}
 					handleClose={() => setProjectDialogOpen(false)}
+					reftechOnSuccess={refetch}
 				/>
 			) : null}
 			{editWorkspace ? (

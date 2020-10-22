@@ -18,7 +18,6 @@ import AttachFileForm from "../Forms/AttachFiles";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
-import { Box, CircularProgress } from "@material-ui/core";
 import { uploadPercentageCalculator } from "../../utils";
 import { CommonUploadingFilesMessage } from "../../utils/commonFormattedMessage";
 import { CircularPercentage } from "../commons";
@@ -58,7 +57,7 @@ function Project(props: ProjectProps) {
 	let { multiplefileUpload } = useMultipleFileUpload();
 
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const [deliverableUploadSuccess, setDeliverableUploadSuccess] = React.useState<boolean>(false);
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 
 	React.useEffect(() => {
@@ -67,7 +66,19 @@ function Project(props: ProjectProps) {
 		setLoadingPercentage(percentage);
 	}, [projectFilesArray, totalFilesToUpload]);
 
-	if (uploadSuccess) props.handleClose();
+	React.useEffect(() => {
+		if (deliverableUploadSuccess) {
+			props.handleClose();
+			if (props.reftechOnSuccess) {
+				props.reftechOnSuccess();
+			}
+			setDeliverableUploadSuccess(false);
+		}
+	}, [deliverableUploadSuccess]);
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+	};
+	if (deliverableUploadSuccess) successMessage();
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
@@ -79,7 +90,7 @@ function Project(props: ProjectProps) {
 				path: `org-${DashBoardData?.organization?.id}/projects`,
 				filesArray: projectFilesArray,
 				setFilesArray: setProjectFilesArray,
-				setUploadSuccess: setUploadSuccess,
+				setUploadSuccess: setDeliverableUploadSuccess,
 			});
 
 			setProjectFilesArray([]);
@@ -132,12 +143,6 @@ function Project(props: ProjectProps) {
 						donor: donorId,
 					},
 				},
-				refetchQueries: [
-					{
-						query: GET_PROJ_DONORS,
-						variables: { filter: { project: projectId } },
-					},
-				],
 			});
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Donor creation Failed !"));
@@ -151,12 +156,6 @@ function Project(props: ProjectProps) {
 		try {
 			const createdProject = await createNewproject({
 				variables: { input: formData },
-				refetchQueries: [
-					{
-						query: GET_PROJECTS_BY_WORKSPACE,
-						variables: { filter: { workspace: value.workspace } },
-					},
-				],
 			});
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
 			selectDonors.forEach(async (donorId) => {
@@ -184,7 +183,7 @@ function Project(props: ProjectProps) {
 					path: `org-${DashBoardData?.organization?.id}/projects`,
 					filesArray: projectFilesArray,
 					setFilesArray: setProjectFilesArray,
-					setUploadSuccess: setUploadSuccess,
+					setUploadSuccess: setDeliverableUploadSuccess,
 				});
 
 				setProjectFilesArray([]);
@@ -208,12 +207,6 @@ function Project(props: ProjectProps) {
 			delete formData.attachments;
 			const updatedResponse = await updateProject({
 				variables: { id: projectId, input: formData },
-				refetchQueries: [
-					{
-						query: GET_PROJECTS_BY_WORKSPACE,
-						variables: { filter: { workspace: value.workspace } },
-					},
-				],
 			});
 			newDonors.forEach(async (donorId: string) => {
 				await createDonors({

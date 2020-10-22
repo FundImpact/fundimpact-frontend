@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import { List, ListItem, ListItemText, Button, IconButton, Box } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function ProjectEditButton({
 	project,
 	workspaces,
+	refetch,
 }: {
 	project: {
 		id: number;
@@ -49,6 +50,11 @@ function ProjectEditButton({
 		attachments: AttachFile[];
 	};
 	workspaces: IOrganisationWorkspaces[];
+	refetch:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const classes = useStyles();
 	const { data: projDonors } = useQuery(GET_PROJ_DONORS, {
@@ -90,6 +96,7 @@ function ProjectEditButton({
 					workspaces={workspaces}
 					workspace={project.workspace.id}
 					type={PROJECT_ACTIONS.UPDATE}
+					reftechOnSuccess={refetch}
 				/>
 			)}
 		</>
@@ -110,7 +117,7 @@ export default function ProjectList({
 	const dashboardData = useDashBoardData();
 	const filter: any = { variables: { filter: { workspace: workspaceId } } };
 	const [openFormDialog, setOpenFormDialog] = React.useState<boolean>();
-	const { data, loading } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
+	const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
 	let { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [isAnyActiveProject, setIsAnyActiveProject] = useState<boolean>(false);
@@ -179,6 +186,7 @@ export default function ProjectList({
 											<ProjectEditButton
 												project={project}
 												workspaces={workspaces}
+												refetch={refetch}
 											/>
 										</ListItem>
 									</Box>
@@ -192,6 +200,7 @@ export default function ProjectList({
 							open={openFormDialog}
 							handleClose={() => setOpenFormDialog(false)}
 							type={PROJECT_ACTIONS.CREATE}
+							reftechOnSuccess={refetch}
 						/>
 					)}
 				</>

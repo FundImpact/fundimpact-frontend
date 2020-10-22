@@ -87,9 +87,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			: []
 	);
 
-	/* Open Attach File Form*/
-	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
-
 	if (filesArray.length) deliverableTragetLineForm[7].label = "View Files";
 	else deliverableTragetLineForm[7].label = "Attach Files";
 
@@ -125,10 +122,39 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 	let { multiplefileUpload } = useMultipleFileUpload();
-
+	const [selectedDeliverableTarget, setSelectedDeliverableTarget] = React.useState<
+		string | number | undefined
+	>("");
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
 
+	const { refetch: deliverableTracklineRefetch } = useQuery(
+		GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+		{
+			variables: { filter: { deliverable_target_project: selectedDeliverableTarget } },
+		}
+	);
+
+	/* Open Attach File Form*/
+	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
+
+	React.useEffect(() => {
+		if (uploadSuccess) {
+			if (props.type === DELIVERABLE_ACTIONS.CREATE) {
+				deliverableTracklineRefetch();
+			} else if (props.type === DELIVERABLE_ACTIONS.UPDATE && props.reftechOnSuccess) {
+				props.reftechOnSuccess();
+			}
+			setUploadSuccess(false);
+			handleNext();
+		}
+	}, [uploadSuccess, deliverableTracklineRefetch, props, setUploadSuccess]);
+
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+	};
+	if (uploadSuccess) successMessage();
 	React.useEffect(() => {
 		let remainToUpload = filesArray.filter((elem) => !elem.id).length;
 		let percentage = uploadPercentageCalculator(remainToUpload, totalFilesToUpload);
@@ -156,13 +182,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-item`,
 				filesArray: filesArray,
 				setFilesArray: setFilesArray,
+				setUploadSuccess: setUploadSuccess,
 			});
 
 			// empty array after sending to upload function
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
-			handleNext();
+
 			setFilesArray([]);
 		},
 		onError(data) {
@@ -202,12 +229,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
 				filesArray: filesArray,
 				setFilesArray: setFilesArray,
+				setUploadSuccess: setUploadSuccess,
 			});
 
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline Updated successfully!")
 			);
-			handleNext();
+
 			setFilesArray([]);
 		},
 		onError(data) {
@@ -260,6 +288,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		console.log(`on Created is called with: `, value);
+		setSelectedDeliverableTarget(value.deliverable_target_project);
 		setDonors(value.donors);
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
@@ -335,14 +364,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				}
 			},
 			refetchQueries: [
-				{
-					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-					variables: {
-						filter: {
-							deliverable_target_project: value.deliverable_target_project,
-						},
-					},
-				},
+				// {
+				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+				// 	variables: {
+				// 		filter: {
+				// 			deliverable_target_project: value.deliverable_target_project,
+				// 		},
+				// 	},
+				// },
 				{
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {
@@ -373,36 +402,36 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				input,
 			},
 			refetchQueries: [
-				{
-					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-					variables: {
-						filter: {
-							deliverable_target_project: value.deliverable_target_project,
-						},
-					},
-				},
-				{
-					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-					variables: {
-						limit: 10,
-						start: 0,
-						sort: "created_at:DESC",
-						filter: {
-							deliverable_target_project: value.deliverable_target_project,
-						},
-					},
-				},
-				{
-					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-					variables: {
-						limit: 10,
-						start: 0,
-						sort: "created_at:DESC",
-						filter: {
-							deliverable_target_project: value.deliverable_target_project,
-						},
-					},
-				},
+				// {
+				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+				// 	variables: {
+				// 		filter: {
+				// 			deliverable_target_project: value.deliverable_target_project,
+				// 		},
+				// 	},
+				// },
+				// {
+				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+				// 	variables: {
+				// 		limit: 10,
+				// 		start: 0,
+				// 		sort: "created_at:DESC",
+				// 		filter: {
+				// 			deliverable_target_project: value.deliverable_target_project,
+				// 		},
+				// 	},
+				// },
+				// {
+				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+				// 	variables: {
+				// 		limit: 10,
+				// 		start: 0,
+				// 		sort: "created_at:DESC",
+				// 		filter: {
+				// 			deliverable_target_project: value.deliverable_target_project,
+				// 		},
+				// 	},
+				// },
 				{
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {

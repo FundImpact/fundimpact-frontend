@@ -1,3 +1,4 @@
+import { ApolloQueryResult } from "@apollo/client";
 import { IMPACT_ACTIONS } from "../../components/Impact/constants";
 import { AttachFile } from "../AttachFile";
 
@@ -24,6 +25,11 @@ export type ImpactTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
 	impactTarget?: number | string | undefined;
+	reftechOnSuccess?:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 } & (
 	| {
 			type: IMPACT_ACTIONS.CREATE;

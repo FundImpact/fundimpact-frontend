@@ -81,6 +81,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const [impactDonorForm, setImpactDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [impactDonorFormData, setImpactDonorFormData] = React.useState<any>();
 	const handleNext = () => {
+		console.log("hey");
 		setStepperActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 	const handleBack = () => {
@@ -122,6 +123,33 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	let { multiplefileUpload } = useMultipleFileUpload();
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+
+	const [selectedImpactTarget, setSelectedImpactTarget] = React.useState<
+		string | number | undefined
+	>("");
+
+	const { refetch: impactTracklineRefetch } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
+		variables: { filter: { impact_target_project: selectedImpactTarget } },
+	});
+
+	React.useEffect(() => {
+		if (uploadSuccess) {
+			if (props.type === IMPACT_ACTIONS.CREATE) {
+				impactTracklineRefetch();
+			} else if (props.type === IMPACT_ACTIONS.UPDATE && props.reftechOnSuccess) {
+				props.reftechOnSuccess();
+			}
+			setUploadSuccess(false);
+			handleNext();
+			console.log("uploadSuccess", uploadSuccess);
+		}
+	}, [uploadSuccess]);
+
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+	};
+	if (uploadSuccess) successMessage();
 
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
@@ -142,13 +170,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				field: "attachments",
 				path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
 				filesArray: filesArray,
-				setFilesArray,
+				setFilesArray: setFilesArray,
+				setUploadSuccess: setUploadSuccess,
 			});
 
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
 			setFilesArray([]);
-
-			handleNext();
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
@@ -184,15 +211,14 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					field: "attachments",
 					path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
 					filesArray: filesArray,
-					setFilesArray,
+					setFilesArray: setFilesArray,
+					setUploadSuccess: setUploadSuccess,
 				});
 
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
 				setFilesArray([]);
-
-				handleNext();
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
@@ -244,6 +270,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const onCreate = (value: IImpactTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		setDonors(value.donors);
+		setSelectedImpactTarget(value.impact_target_project);
 		let input = { ...value };
 		if (!input.financial_year) delete (input as any).financial_year;
 		if (!input.annual_year) delete (input as any).annual_year;
@@ -335,12 +362,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				}
 			},
 			refetchQueries: [
-				{
-					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-					variables: {
-						filter: { impact_target_project: value.impact_target_project },
-					},
-				},
+				// {
+				// 	query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+				// 	variables: {
+				// 		filter: { impact_target_project: value.impact_target_project },
+				// 	},
+				// },
 				{
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {
@@ -371,21 +398,21 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				input,
 			},
 			refetchQueries: [
-				{
-					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-					variables: {
-						limit: 10,
-						start: 0,
-						sort: "created_at:DESC",
-						filter: { impact_target_project: value.impact_target_project },
-					},
-				},
-				{
-					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
-					variables: {
-						filter: { impact_target_project: value.impact_target_project },
-					},
-				},
+				// 	{
+				// 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+				// 		variables: {
+				// 			limit: 10,
+				// 			start: 0,
+				// 			sort: "created_at:DESC",
+				// 			filter: { impact_target_project: value.impact_target_project },
+				// 		},
+				// 	},
+				// 	{
+				// 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+				// 		variables: {
+				// 			filter: { impact_target_project: value.impact_target_project },
+				// 		},
+				// 	},
 				{
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {

@@ -1,3 +1,4 @@
+import { ApolloQueryResult } from "@apollo/client";
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
 import { AttachFile } from "../AttachFile";
 
@@ -24,6 +25,11 @@ export type DeliverableTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
 	deliverableTarget?: number | string | undefined;
+	reftechOnSuccess?:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 } & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;

@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import {
 	IconButton,
 	Menu,
@@ -42,6 +42,8 @@ import { AttachFile } from "../../../models/AttachFile";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
 import { CircularPercentage } from "../../commons";
 import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+import { setSuccessNotification } from "../../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 
 enum tableHeaders {
 	date = 1,
@@ -79,7 +81,17 @@ const chipArray = ({
 	));
 };
 
-function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
+function EditImpactTargetLineIcon({
+	impactTargetLine,
+	refetch,
+}: {
+	impactTargetLine: any;
+	refetch:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+}) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
 	const [impactTracklineDonors, setImpactTracklineDonors] = useState<
 		{
@@ -88,6 +100,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			donor: { id: string; name: string; country: { id: string; name: string } };
 		}[]
 	>([]);
+	const notificationDispatch = useNotificationDispatch();
 
 	const { data } = useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
 		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
@@ -162,6 +175,14 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 	}, [impactTracklineFileArray, totalFilesToUpload, setImpactTracklineUploadLoading]);
 
 	let { multiplefileUpload } = useMultipleFileUpload();
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		if (refetch) refetch();
+		setUploadSuccess(false);
+	};
+	if (uploadSuccess) successMessage();
+
 	const attachImpactFileOnSave = () => {
 		setTotalFilesToUpload(impactTracklineFileArray.filter((elem) => !elem.id).length);
 		multiplefileUpload({
@@ -171,6 +192,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			path: `org-${dashBoardData?.organization?.id}/impact-tracking-lineitem`,
 			filesArray: impactTracklineFileArray,
 			setFilesArray: setImpactTracklineFileArray,
+			setUploadSuccess: setUploadSuccess,
 		});
 	};
 	let uploadingFileMessage = CommonUploadingFilesMessage();
@@ -241,6 +263,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 					data={impactTargetLineData}
 					impactTarget={impactTargetLine.impact_target_project.id}
 					alreadyMappedDonorsIds={impactTracklineDonors?.map((donor) => donor.id)}
+					reftechOnSuccess={refetch}
 				/>
 			)}
 			{impactOpenAttachFiles && impactTracklineFileArray && (
@@ -402,6 +425,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		changePage,
 		countQueryLoading: countLoading,
 		queryLoading: loading,
+		queryRefetch,
 	} = pagination({
 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 		countQuery: GET_IMPACT_TRACKLINE_COUNT,
@@ -501,6 +525,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						<EditImpactTargetLineIcon
 							key={Math.random()}
 							impactTargetLine={impactTrackingLineitemList[i]}
+							refetch={queryRefetch}
 						/>
 					);
 					arr.push(row);
