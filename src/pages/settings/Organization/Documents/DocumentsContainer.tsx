@@ -34,12 +34,14 @@ export const OrganizationDocumentContainer = () => {
 	const dashBoardData = useDashBoardData();
 	const attachFileOnSave = () => {
 		let orgId: any = dashBoardData?.organization?.id;
+		setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
 		multiplefileUpload({
-			ref: "organizations",
+			ref: "organization",
 			refId: orgId,
 			field: "attachments",
 			path: `org-${orgId}/organizations`,
 			filesArray: filesArray,
+			source: "crm-plugin",
 			setFilesArray: setFilesArray,
 		});
 	};

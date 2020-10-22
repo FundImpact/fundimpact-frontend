@@ -5,12 +5,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import Close from "@material-ui/icons/Close";
 import {
+	Avatar,
 	Box,
 	Button,
 	Card,
 	CardActionArea,
 	CardContent,
 	CardMedia,
+	Chip,
 	Dialog,
 	DialogActions,
 	DialogContent,
@@ -23,6 +25,7 @@ import {
 	InputLabel,
 	makeStyles,
 	Switch,
+	TablePagination,
 	TextField,
 	Typography,
 } from "@material-ui/core";
@@ -30,7 +33,10 @@ import { isValidImage, readableBytes } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-
+import { removeFilterListObjectElements } from "../../../utils/filterList";
+import FilterListContainer from "../../FilterList";
+import { attachFileFilter } from "./inputField.json";
+import { createChipArray } from "../../commons";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		height: 270,
@@ -99,14 +105,26 @@ function AttachFileForm(props: {
 	const onCancel = props.handleClose;
 	const { filesArray, setFilesArray } = props;
 	const intl = useIntl();
-	const [multiple, setMultiple] = useState(false);
 	const classes = useStyles();
 	const { parentOnSave } = props;
 
-	let nofilesSelected = intl.formatMessage({
-		id: "noFilesSelectedForAttachFileForm",
-		defaultMessage: "No Files Selected",
-		description: "This text will be show on attach file form if no files are selected",
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>({
+		name: "",
+		ext: "",
+		created_at: "",
+	});
+
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
+
+	let nofilesFound = intl.formatMessage({
+		id: "noFilesFoundForAttachFileForm",
+		defaultMessage: "No Files Found",
+		description: "This text will be show on attach file form if no files are found",
 	});
 
 	let uploadAssests = intl.formatMessage({
@@ -131,7 +149,25 @@ function AttachFileForm(props: {
 		if (parentOnSave) parentOnSave();
 		onCancel();
 	};
+	const [attachFilePage, setAttachFilePage] = React.useState(0);
+	const handleAttachFileChangePage = (event: unknown, newPage: number) => {
+		setAttachFilePage(newPage);
+	};
+	const limit = 8;
 
+	let filesArrayToShow: any = filesArray;
+	if (
+		Object.values(filterList).filter((elem) => {
+			if (elem) return elem;
+		}).length
+	)
+		filesArrayToShow = filesArrayToShow.filter((obj: any) => {
+			return (
+				(obj.name || obj?.file?.name.split(".").shift()) === filterList?.name ||
+				(obj.ext || obj?.file?.name.split(".").pop()) === filterList?.ext
+			);
+		});
+	const filesExist = filesArrayToShow.length > 0;
 	return (
 		<React.Fragment>
 			<Dialog
@@ -145,102 +181,135 @@ function AttachFileForm(props: {
 				<DialogContent dividers>
 					<Grid container>
 						<Grid item xs={12} container justify="space-between">
-							<FormControl>
-								<InputLabel
-									shrink={false}
-									htmlFor={"attachFileId"}
-									style={{ width: "100%", position: "static" }}
-								>
-									<Button component="span" className={classes.buttonAddFiles}>
-										{filesArray?.length > 0 ? "Add more files" : "Add files"}
-									</Button>
-								</InputLabel>
-								<Input
-									onChange={(e: any): void => {
-										e.persist();
-										e.preventDefault();
+							<Box>
+								<FormControl>
+									<InputLabel
+										shrink={false}
+										htmlFor={"attachFileId"}
+										style={{ width: "100%", position: "static" }}
+									>
+										<Button component="span" className={classes.buttonAddFiles}>
+											{filesArray?.length > 0
+												? "Add more files"
+												: "Add files"}
+										</Button>
+									</InputLabel>
+									<Input
+										onChange={(e: any): void => {
+											e.persist();
+											e.preventDefault();
 
-										let fileArr: any = [];
-										Array.from(e.target?.files).forEach((file: any) => {
-											fileArr.push({
-												file: file,
-												preview: isValidImage(
-													`.${file.name.split(".").pop()}`
-												)
-													? URL.createObjectURL(file)
-													: noImagePreview,
-												uploadingStatus: false,
+											let fileArr: any = [];
+											Array.from(e.target?.files).forEach((file: any) => {
+												console.log("file", file);
+												fileArr.push({
+													file: file,
+													preview: isValidImage(
+														`.${file.name.split(".").pop()}`
+													)
+														? URL.createObjectURL(file)
+														: noImagePreview,
+													uploadingStatus: false,
+												});
 											});
-										});
 
-										setFilesArray([...filesArray, ...fileArr]);
-									}}
-									id={"attachFileId"}
-									data-testid={"dataTestId"}
-									inputProps={{
-										"data-testid": "testId",
-										multiple: multiple,
-									}}
-									type={"file"}
-									style={{
-										visibility: "hidden",
-									}}
-								/>
-							</FormControl>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={multiple}
-										onChange={() => setMultiple(!multiple)}
-										name="multiple"
-										color="primary"
+											setFilesArray([...fileArr, ...filesArray]);
+										}}
+										id={"attachFileId"}
+										data-testid={"dataTestId"}
+										inputProps={{
+											"data-testid": "testId",
+											multiple: true,
+										}}
+										type={"file"}
+										style={{
+											visibility: "hidden",
+										}}
 									/>
-								}
-								label="Select multiple files"
-							/>
+								</FormControl>
+							</Box>
+							<Box mt={2}>
+								<FilterListContainer
+									initialValues={{
+										name: "",
+										ext: "",
+									}}
+									setFilterList={setFilterList}
+									inputFields={attachFileFilter}
+								/>
+							</Box>
 						</Grid>
+						<Grid item xs={12}>
+							<Box display="flex" flexWrap="wrap">
+								{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
+									createChipArray({
+										filterListObjectKeyValuePair,
+										removeFilterListElements,
+									})
+								)}
+							</Box>
+						</Grid>
+
 						<Grid item xs={12} className={classes.mediaListBox} container spacing={1}>
-							{filesArray?.length === 0 && (
+							{!filesExist && (
 								<Grid item xs={12} container justify="center" alignItems="center">
 									<Typography gutterBottom variant="h6" noWrap>
-										{nofilesSelected}
+										{nofilesFound}
 									</Typography>
 								</Grid>
 							)}
-							{filesArray.map((file: any, index: number) => (
-								<AttachedFileList
-									{...{
-										file,
-										addRemark: (remark: string) => {
-											let fileArr = [...filesArray];
-											fileArr[index].remark = remark;
-											setFilesArray(fileArr);
-										},
-										removeFile: () => {
-											let fileArr = [...filesArray];
-											fileArr.splice(index, 1);
-											setFilesArray(fileArr);
-										},
-									}}
-								/>
-							))}
+							{filesArrayToShow
+								.slice(attachFilePage * limit, attachFilePage * limit + limit)
+								.map((file: any, index: number) => (
+									<AttachedFileList
+										{...{
+											file,
+											addRemark: (remark: string) => {
+												let fileArr = [...filesArray];
+												fileArr[index].remark = remark;
+												setFilesArray(fileArr);
+											},
+											removeFile: () => {
+												let fileArr = [...filesArray];
+												fileArr.splice(index, 1);
+												setFilesArray(fileArr);
+											},
+										}}
+									/>
+								))}
 						</Grid>
 					</Grid>
 				</DialogContent>
 
 				<DialogActions>
-					<Button
-						autoFocus
-						className={classes.button}
-						variant="contained"
-						color="secondary"
-						onClick={onSave}
-					>
-						{saveButton}
-					</Button>
-					<Button className={classes.myCancelButton} onClick={onCancel}>
-						{closeButton}
-					</Button>
+					<Grid container justify={filesExist ? "space-between" : "flex-end"}>
+						{filesExist && (
+							<TablePagination
+								colSpan={9}
+								count={filesArrayToShow.length}
+								rowsPerPage={limit}
+								page={attachFilePage}
+								onChangePage={handleAttachFileChangePage}
+								style={{ paddingRight: "20px" }}
+								rowsPerPageOptions={[]}
+								onChangeRowsPerPage={() => {}}
+							/>
+						)}
+						<Box mt={filesExist ? 3 : 2}>
+							<Button
+								autoFocus
+								className={classes.button}
+								variant="contained"
+								color="secondary"
+								onClick={onSave}
+							>
+								{saveButton}
+							</Button>
+							<Button className={classes.myCancelButton} onClick={onCancel}>
+								{closeButton}
+							</Button>
+						</Box>
+					</Grid>
 				</DialogActions>
 			</Dialog>
 		</React.Fragment>
@@ -314,9 +383,11 @@ const AttachedFileList = (props: {
 						</Box>
 
 						<Typography gutterBottom variant="caption" noWrap>
-							{`Size-${readableBytes(
-								file?.file?.size ? file?.file?.size : file.size
-							)}`}
+							{`Size-${
+								file?.file?.size
+									? readableBytes(file?.file?.size)
+									: `${file.size}Kb`
+							}`}
 						</Typography>
 					</Box>
 					{!file.id ? (

@@ -1,3 +1,4 @@
 import GlobalLoader from "./GlobalLoader";
 import CircularPercentage from "./PercentageLoader";
-export { GlobalLoader, CircularPercentage };
+import { createChipArray } from "./createChipArray";
+export { GlobalLoader, CircularPercentage, createChipArray };

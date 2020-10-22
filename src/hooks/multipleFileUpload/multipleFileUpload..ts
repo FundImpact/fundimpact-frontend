@@ -19,6 +19,7 @@ const useMultipleFileUpload = () => {
 		field,
 		path,
 		filesArray,
+		source,
 		setFilesArray,
 		setUploadSuccess,
 	}: {
@@ -26,6 +27,7 @@ const useMultipleFileUpload = () => {
 		refId: string;
 		field: string;
 		path: string;
+		source?: string;
 		filesArray: AttachFile[];
 		setFilesArray: React.Dispatch<React.SetStateAction<AttachFile[]>>;
 		setUploadSuccess?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,7 +48,9 @@ const useMultipleFileUpload = () => {
 					});
 					formData.append("fileInfo", fileInfo);
 					formData.append("path", path);
-
+					if (source) {
+						formData.append("source", source);
+					}
 					let uploadResponse = await uploadFile(formData);
 					if (uploadResponse) {
 						let arr = [...filesArray];

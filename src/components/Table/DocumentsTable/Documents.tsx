@@ -1,94 +1,46 @@
 import { useQuery } from "@apollo/client";
-import { IconButton, TableCell } from "@material-ui/core";
+import { Avatar, Box, Chip, Grid, IconButton, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 import { getTodaysDate, isValidImage } from "../../../utils";
 import FITable from "../FITable";
 import { useIntl } from "react-intl";
 import { GET_ORGANISATIONS_DOCUMENTS } from "../../../graphql";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { Attachments } from "../../../models/AttachFile";
 import { documentsHeadings } from "../constants";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { FullScreenLoader } from "../../Loader/Loader";
+import FilterListContainer from "../../FilterList";
+import { projectDocumentsFilter } from "../ProjectDocument/inputFields.json";
+import { createChipArray } from "../../commons";
 
 export default function DocumentsTable() {
-	const [TracklinePage, setTracklinePage] = React.useState(0);
+	const [documentPage, setDocumentPage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
 	}>({
-		reporting_date: "",
-		note: "",
-		value: "",
-		annual_year: [],
-		financial_year: [],
+		name: "",
+		ext: "",
+		created_at: "",
 	});
-	const [queryFilter, setQueryFilter] = useState({});
 
-	const dashBoardData = useDashBoardData();
-	// const {data} = useQuery()
-	// const removeFilterListElements = (key: string, index?: number) =>
-	// 	setFilterList((filterListObject) =>
-	// 		removeFilterListObjectElements({ filterListObject, key, index })
-	// 	);
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
-	// useEffect(() => {
-	// 	if (filterList) {
-	// 		let newFilterListObject: { [key: string]: string | string[] } = {};
-	// 		for (let key in filterList) {
-	// 			if (filterList[key] && filterList[key].length) {
-	// 				newFilterListObject[key] = filterList[key];
-	// 			}
-	// 		}
-	// 		setQueryFilter({
-	// 			deliverable_target_project: deliverableTargetId,
-	// 			...newFilterListObject,
-	// 		});
-	// 	}
-	// }, [filterList, deliverableTargetId]);
-
-	// const handleDeliverableLineChangePage = (
-	// 	event: React.MouseEvent<HTMLButtonElement> | null,
-	// 	newPage: number
-	// ) => {
-	// 	if (newPage > TracklinePage) {
-	// 		changePage();
-	// 	} else {
-	// 		changePage(true);
-	// 	}
-	// 	setTracklinePage(newPage);
-	// };
-
-	// let {
-	// 	count,
-	// 	queryData: deliverableTracklineData,
-	// 	changePage,
-	// 	countQueryLoading,
-	// 	queryLoading: loading,
-	// } = pagination({
-	// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-	// 	countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
-	// 	countFilter: queryFilter,
-	// 	queryFilter,
-	// 	sort: `${orderBy}:${order.toUpperCase()}`,
-	// });
+	const handleDocumentChangePage = (event: unknown, newPage: number) => {
+		setDocumentPage(newPage);
+	};
 
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
-	// const financialYearFindAccess = userHasAccess(
-	// 	MODULE_CODES.FINANCIAL_YEAR,
-	// 	FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
-	// );
-
-	// const annualYearFindAccess = userHasAccess(
-	// 	MODULE_CODES.ANNUAL_YEAR,
-	// 	ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
-	// );
-
-	const { data } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
+	const { data, loading } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	useEffect(() => {
 		let arr: any = [];
 		data?.organizationList?.map(
@@ -98,13 +50,25 @@ export default function DocumentsTable() {
 				short_name: string;
 				attachments: Attachments[];
 			}) => {
-				organization.attachments?.map((document: Attachments, index: number) => {
+				let organizationAttachments = organization.attachments;
+				if (
+					Object.values(filterList).filter((elem) => {
+						if (elem) return elem;
+					}).length
+				)
+					organizationAttachments = organizationAttachments.filter((obj: any) => {
+						console.log(obj.ext, filterList?.ext);
+						return obj.name == filterList?.name || obj.ext == filterList?.ext;
+					});
+
+				organizationAttachments?.map((document: Attachments, index: number) => {
 					let row = [
 						<TableCell component="td" scope="row" key={index}>
-							{TracklinePage * limit + index + 1}
+							{documentPage * limit + index + 1}
 						</TableCell>,
-						<TableCell key={index}>{document.name}</TableCell>,
+						<TableCell key={`${index}-name`}>{document.name}</TableCell>,
 						<TableCell key={`${index}-1`}>{`${document.size}Kb`}</TableCell>,
+						<TableCell key={`${index}-caption`}>{document.caption || "-"}</TableCell>,
 						<TableCell key={`${index}-2`}>{document.ext}</TableCell>,
 						<TableCell key={`${index}-3`}>
 							{getTodaysDate(new Date(document.created_at))}
@@ -131,43 +95,38 @@ export default function DocumentsTable() {
 			},
 			[]
 		);
-	}, [data]);
+	}, [data, filterList]);
 
-	// let deliverableTracklineTablePagination = (
-	// 	<TablePagination
-	// 		rowsPerPageOptions={[]}
-	// 		colSpan={9}
-	// 		count={count}
-	// 		rowsPerPage={count > limit ? limit : count}
-	// 		page={TracklinePage}
-	// 		onChangePage={handleDeliverableLineChangePage}
-	// 		onChangeRowsPerPage={() => {}}
-	// 		style={{ paddingRight: "40px" }}
-	// 	/>
-	// );
 	const intl = useIntl();
 
-	// filteredDeliverableTracklineTableHeadings[
-	// 	filteredDeliverableTracklineTableHeadings.length - 1
-	// ].renderComponent = () => (
-	// 	<FilterList
-	// 		initialValues={{
-	// 			reporting_date: "",
-	// 			note: "",
-	// 			value: "",
-	// 			annual_year: [],
-	// 			financial_year: [],
-	// 		}}
-	// 		setFilterList={setFilterList}
-	// 		inputFields={deliverableTracklineInputFields}
-	// 	/>
-	// );
+	let documentPagination = (
+		<TablePagination
+			colSpan={9}
+			count={rows.length}
+			rowsPerPage={limit}
+			page={documentPage}
+			onChangePage={handleDocumentChangePage}
+			style={{ paddingRight: "40px" }}
+			rowsPerPageOptions={[]}
+			onChangeRowsPerPage={() => {}}
+		/>
+	);
+
+	documentsHeadings[documentsHeadings.length - 1].renderComponent = () => (
+		<FilterListContainer
+			initialValues={{
+				name: "",
+				ext: "",
+			}}
+			setFilterList={setFilterList}
+			inputFields={projectDocumentsFilter}
+		/>
+	);
 
 	return (
 		<>
-			{/* {countQueryLoading ? <FullScreenLoader /> : null}
-			{loading ? <FullScreenLoader /> : null} */}
-			{/* <Grid container>
+			{loading ? <FullScreenLoader /> : null}
+			<Grid container>
 				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
 						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
@@ -178,11 +137,11 @@ export default function DocumentsTable() {
 						)}
 					</Box>
 				</Grid>
-			</Grid> */}
+			</Grid>
 			<FITable
 				tableHeading={documentsHeadings}
 				rows={rows}
-				// pagination={deliverableTracklineTablePagination}
+				pagination={documentPagination}
 				order={order}
 				orderBy={orderBy}
 				setOrder={setOrder}
