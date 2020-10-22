@@ -18,6 +18,7 @@ import {
 	TextField,
 	Theme,
 	Typography,
+	ButtonGroup,
 } from "@material-ui/core";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { Form, Formik, FormikProps } from "formik";
@@ -30,6 +31,10 @@ import { IDashboardDataContext, ICountry } from "../../../models";
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
+import { secondaryColor, primaryColor } from "../../../models/constants";
+import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import AddContactDialog from "../../../components/AddContactDialog";
+import AddAddressDialog from "../../../components/AddAddressDialog";
 
 enum colorType {
 	primary = "primary",
@@ -165,6 +170,10 @@ function OrganizationView({
 	loading,
 	logo,
 	countryList,
+	contactDialogOpenStatus,
+	setContactDialogOpenStatus,
+	addressDialogOpenStatus,
+	setAddressDialogOpenStatus
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -174,6 +183,10 @@ function OrganizationView({
 	onSubmit: (value: IOrganisationForm) => Promise<void>;
 	logo: string;
 	countryList: ICountry[];
+	contactDialogOpenStatus: boolean;
+	setContactDialogOpenStatus: React.Dispatch<React.SetStateAction<boolean>>;
+	addressDialogOpenStatus: boolean;
+	setAddressDialogOpenStatus: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -233,6 +246,14 @@ function OrganizationView({
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
+					<AddContactDialog
+						open={contactDialogOpenStatus}
+						handleClose={() => setContactDialogOpenStatus(false)}
+					/>
+					<AddAddressDialog
+						open={addressDialogOpenStatus}
+						handleClose={() => setAddressDialogOpenStatus(false)}
+					/>
 					<Paper>
 						<Box p={2}>
 							<Formik
@@ -387,6 +408,42 @@ function OrganizationView({
 																		?.main
 																}
 															/>
+														</Grid>
+														<Grid item xs={12}>
+															<ButtonGroup
+																fullWidth
+																variant="contained"
+																color="secondary"
+															>
+																<Button
+																	fullWidth
+																	onClick={() =>
+																		setContactDialogOpenStatus(
+																			true
+																		)
+																	}
+																>
+																	<FormattedMessage
+																		id={`addContactButton`}
+																		defaultMessage={`Add Contact`}
+																		description={`This text will be shown on add contact button`}
+																	/>
+																</Button>
+																<Button
+																	onClick={() =>
+																		setAddressDialogOpenStatus(
+																			true
+																		)
+																	}
+																	color="secondary"
+																>
+																	<FormattedMessage
+																		id={`addAddressButton`}
+																		defaultMessage={`Add Address`}
+																		description={`This text will be shown on add address button`}
+																	/>
+																</Button>
+															</ButtonGroup>
 														</Grid>
 													</Grid>
 												</Grid>

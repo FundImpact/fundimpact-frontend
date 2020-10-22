@@ -6,7 +6,8 @@
 			"dataTestId": "createFirstname",
 			"testId": "createFirstnameInput",
 			"label": "First Name",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "last_name",

@@ -6,7 +6,8 @@
 			"dataTestId": "createAddressLine1",
 			"testId": "createAddressLine1Input",
 			"label": "Address Line 1",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "address_line_2",
@@ -22,7 +23,9 @@
 			"dataTestId": "createPincode",
 			"testId": "createPincodeInput",
 			"label": "Pincode",
-			"size": 6
+			"size": 6,
+			"required": true,
+			"type": "number"
 		},
 		{
 			"name": "city",
@@ -30,7 +33,8 @@
 			"dataTestId": "createCity",
 			"testId": "createCityInput",
 			"label": "City",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "country",
@@ -43,7 +47,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "state",
@@ -56,7 +61,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "district",
@@ -69,7 +75,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "village",
@@ -82,7 +89,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "address_type",
@@ -95,7 +103,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 12,
+			"required": true
 		}
 	]
 }

@@ -266,6 +266,14 @@ export const GET_ORGANISATIONS_DOCUMENTS = gql`
 	}
 `;
 
+export const GET_STATE_LIST = gql`
+	query states($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		states(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+		}
+	}
+`;
+
 export const GET_PROJECT_DOCUMENTS = gql`
 	query getProjectDocuments($filter: JSON) {
 		orgProject(where: $filter) {
@@ -280,6 +288,15 @@ export const GET_PROJECT_DOCUMENTS = gql`
 				ext
 				created_at
 			}
+		}
+	}
+`;
+
+export const GET_DISTRICT_LIST = gql`
+	query districts($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		districts(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			name
 		}
 	}
 `;

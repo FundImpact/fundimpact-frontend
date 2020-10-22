@@ -6,7 +6,8 @@
 			"dataTestId": "createName",
 			"testId": "createNameInput",
 			"label": "Name",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "phone",
@@ -14,7 +15,9 @@
 			"dataTestId": "createPhone",
 			"testId": "createPhoneInput",
 			"label": "Phone",
-			"size": 6
+			"size": 6,
+			"required": true,
+			"type": "number"
 		},
 		{
 			"name": "phone_other",
@@ -22,7 +25,8 @@
 			"dataTestId": "createPhoneOther",
 			"testId": "createPhoneOtherInput",
 			"label": "Phone Other",
-			"size": 6
+			"size": 6,
+			"type": "number"
 		},
 		{
 			"name": "email",
@@ -30,7 +34,9 @@
 			"dataTestId": "craeteEmail",
 			"testId": "craeteEmailInput",
 			"label": "Email",
-			"size": 6
+			"size": 6,
+			"required": true,
+			"type": "email"
 		},
 		{
 			"name": "email_other",
@@ -38,7 +44,8 @@
 			"dataTestId": "createEmailOther",
 			"testId": "createEmailOtherInput",
 			"label": "Email Other",
-			"size": 6
+			"size": 6,
+			"type": "email"
 		},
 		{
 			"name": "contact_type",
@@ -51,7 +58,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6
+			"size": 6,
+			"required": true
 		}
 	]
 }

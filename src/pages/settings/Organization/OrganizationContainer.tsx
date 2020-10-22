@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import OrganizationView from "./OrganizationView";
 import { IOrganisationForm, IOrganisation } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -38,6 +38,8 @@ function OrganizationContainer({
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
 	let { uploadFile, loading: fileUploading } = useFileUpload();
+	const [contactDialogOpenStatus, setContactDialogOpenStatus] = useState<boolean>(false);
+	const [addressDialogOpenStatus, setAddressDialogOpenStatus] = useState<boolean>(false);
 
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -173,6 +175,10 @@ function OrganizationContainer({
 			onSubmit={onSubmit}
 			logo={dashboardData?.organization?.logo?.url || ""}
 			countryList={countryList}
+			contactDialogOpenStatus={contactDialogOpenStatus}
+			setContactDialogOpenStatus={setContactDialogOpenStatus}
+			addressDialogOpenStatus={addressDialogOpenStatus}
+			setAddressDialogOpenStatus={setAddressDialogOpenStatus}
 		/>
 	);
 }
