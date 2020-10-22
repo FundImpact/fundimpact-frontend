@@ -171,7 +171,7 @@ function OrganizationView({
 	contactDialogOpenStatus,
 	setContactDialogOpenStatus,
 	addressDialogOpenStatus,
-	setAddressDialogOpenStatus
+	setAddressDialogOpenStatus,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -410,7 +410,7 @@ function OrganizationView({
 														<Grid item xs={12}>
 															<ButtonGroup
 																fullWidth
-																variant="contained"
+																variant="outlined"
 																color="secondary"
 															>
 																<Button
