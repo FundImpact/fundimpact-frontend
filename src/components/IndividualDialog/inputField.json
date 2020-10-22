@@ -1,0 +1,28 @@
+{
+	"individualFormFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createName",
+			"testId": "createNameInput",
+			"label": "Name",
+			"size": 12,
+			"required": true
+		},
+		{
+			"name": "project",
+			"id": "project",
+			"dataTestId": "individualFormProject",
+			"testId": "individualFormProjectInput",
+			"label": "Project",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "autocomplete",
+			"size": 12,
+			"multiple": true,
+			"autoCompleteGroupBy": null
+		}
+	]
+}
