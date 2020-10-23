@@ -73,6 +73,13 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECTS,
+			variables: {},
+		},
+		result: { data: { orgProject: mockProjects[0] } },
+	},
+	{
+		request: {
 			query: GET_ROLES_BY_ORG,
 			variables: {
 				organization: "13",
