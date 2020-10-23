@@ -101,7 +101,10 @@ export function GetCardTypeAndValues(props: CardProps) {
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
 				chartConfig: {
 					primarySegmentedMeasureData: [{ name: "Spend", y: budgetSpentValue }],
-					qualitativeRangeData: [{ name: "Received", y: fundRecipetValuesByOrg }],
+					qualitativeRangeData: [
+						{ name: "", y: 0 },
+						{ name: "Received", y: fundRecipetValuesByOrg },
+					],
 					comparativeErrorMeasureData: [{ name: "Target", y: budgetTargetSum }],
 				},
 			};

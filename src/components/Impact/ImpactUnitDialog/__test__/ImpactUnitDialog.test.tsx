@@ -40,7 +40,6 @@ const initialValues: any = {
 	name: "impc name",
 	description: "desc",
 	code: "impc code",
-	target_unit: "123",
 };
 
 let creationOccured = false;
@@ -50,7 +49,7 @@ const mocks = [
 		request: {
 			query: CREATE_IMPACT_UNITS_ORG_INPUT,
 			variables: {
-				input: { ...initialValues, target_unit: 123, organization: "3" },
+				input: { ...initialValues, organization: "3" },
 			},
 		},
 		result: () => {

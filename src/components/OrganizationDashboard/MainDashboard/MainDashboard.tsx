@@ -7,13 +7,18 @@ import {
 	Switch,
 	Theme,
 	Typography,
+	CircularProgress,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardCard from "../../Dasboard/Cards/DasboardCards";
 import { FormattedMessage, useIntl } from "react-intl";
 import { CARD_TYPES, CARD_OF } from "../../Dasboard/Cards/constants";
-import { useDashboardDispatch } from "../../../contexts/dashboardContext";
+import { useDashboardDispatch, useDashBoardData } from "../../../contexts/dashboardContext";
 import { setProject } from "../../../reducers/dashboardReducer";
+import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
+import { useQuery, useLazyQuery } from "@apollo/client";
+import NoProjectCreated from "./NoProjectCreated";
+import { Navigate } from "react-router";
 const useStyles = makeStyles((theme: Theme) => ({
 	bottonContainer: {
 		marginTop: theme.spacing(2),
@@ -62,6 +67,45 @@ export default function MainOrganizationDashboard() {
 	useEffect(() => {
 		dispatch(setProject(undefined));
 	}, [dispatch, setProject]);
+
+	const [getProjects, { data: projectList, loading }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
+		fetchPolicy: "network-only",
+	});
+
+	const [redirectToDashboard, setRedirectToDashboard] = useState<boolean>(false);
+	const [showOrgOverview, setShowOrgOverview] = useState<boolean>(true);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	useEffect(() => {
+		if (projectList?.orgProject?.length == 0 && showOrgOverview == true) {
+			setShowOrgOverview(false);
+		}
+	}, [projectList, setShowOrgOverview, showOrgOverview]);
+
+	if (loading) {
+		return (
+			<Box
+				position="fixed"
+				left="50%"
+				top="50%"
+				style={{ transform: "translate(-50%, -50%)" }}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
+
+	if (redirectToDashboard) {
+		return <Navigate to="/dashboard" />;
+	}
+
+	if (!showOrgOverview) {
+		return <NoProjectCreated setRedirectToDashboard={setRedirectToDashboard} />;
+	}
+
 	return (
 		<>
 			<Grid item container style={{ flex: 1.5 }}>

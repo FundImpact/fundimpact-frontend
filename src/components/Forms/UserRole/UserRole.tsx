@@ -32,7 +32,7 @@ function getInitialValues(props: UserRoleProps) {
 const filterOrganizationRoles = (
 	roles: { type: string; id: string; name: string }[],
 	organizationId: string
-) => roles.filter((role) => role.type !== `admin-org-${organizationId}`);
+) => roles.filter((role) => role.type !== `owner-org-${organizationId}`);
 
 function UserRoleForm(props: UserRoleProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -62,7 +62,7 @@ function UserRoleForm(props: UserRoleProps) {
 	});
 
 	const { data: userRoles } = useQuery(GET_ROLES_BY_ORG, {
-		variables: { filter: { organization: dashboardData?.organization?.id } },
+		variables: { organization: dashboardData?.organization?.id },
 		onError(err) {
 			console.log("role", err);
 		},

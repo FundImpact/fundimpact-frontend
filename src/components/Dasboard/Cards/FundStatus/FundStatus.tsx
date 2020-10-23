@@ -90,11 +90,11 @@ export default function FundStatus() {
 		// 	],
 		// };
 		let BulletChartConfig = {
-			comparativeErrorMeasureData: [{ name: receivedLabel, y: amountReceived }],
+			comparativeErrorMeasureData: [{ name: approvedLabel, y: amountApproved }],
 			primarySegmentedMeasureData: [{ name: spendLabel, y: amountSpend }],
 			qualitativeRangeData: [
-				{ name: approvedLabel, y: amountApproved },
-				{ name: approvedLabel, y: amountApproved },
+				{ name: "", y: 0 },
+				{ name: receivedLabel, y: amountReceived },
 			],
 		};
 		let details = [
@@ -135,10 +135,9 @@ export default function FundStatus() {
 
 	// console.log("fund card render");
 
-	let [
-		GetProjectTotalBudget,
-		{ data: ProjectTotalBudgetApproved, loading: ProjectTotalBudgetApprovedLoading },
-	] = useLazyQuery(GET_PROJECT_BUDGET_AMOUNT);
+	let [GetProjectTotalBudget, { data: ProjectTotalBudgetApproved }] = useLazyQuery(
+		GET_PROJECT_BUDGET_AMOUNT
+	);
 
 	let [GetProjectTotalSpend, { data: ProjectTotalSpendAmount }] = useLazyQuery(
 		GET_PROJECT_AMOUNT_SPEND

@@ -32,16 +32,6 @@
 			"multiple": true
 		},
 		{
-			"name": "target_unit",
-			"id": "target-unit",
-			"dataTestId": "createImpactUnitTargetUnit",
-			"testId": "createImpactUnitTargetUnitInput",
-			"label": "Target Unit",
-			"size": 12,
-			"type": "number",
-			"required": true
-		},
-		{
 			"name": "description",
 			"id": "description",
 			"dataTestId": "createImpactUnitDescription",

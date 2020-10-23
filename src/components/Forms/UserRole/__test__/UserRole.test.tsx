@@ -66,7 +66,7 @@ const mocks = [
 		request: {
 			query: GET_ROLES_BY_ORG,
 			variables: {
-				filter: { organization: "13" },
+				organization: "13",
 			},
 		},
 		result: { data: { organizationRoles: rolesMock } },
