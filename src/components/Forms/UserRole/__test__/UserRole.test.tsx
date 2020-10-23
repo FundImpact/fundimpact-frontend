@@ -119,7 +119,6 @@ describe("Update User Role Form", () => {
 			expect(sendUserInvitationField).toBeInTheDocument();
 		});
 	}
-
 	// test(`Submit Button enabels if all required field is have values and send invitation mutaion call`, async () => {
 	// 	for (let i = 0; i < sendUserInvitation.length; i++) {
 	// 		let formField = sendUserInvitation[i];
