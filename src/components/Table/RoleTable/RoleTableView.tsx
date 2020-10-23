@@ -88,7 +88,11 @@ function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] 
 		<TableHead>
 			<TableRow color="primary">
 				<TableCell className={tableStyles.th} align="left">
-					Permissions
+					<FormattedMessage
+						id="roleTableViewPermissionsHeading"
+						defaultMessage="Permissions"
+						description="This text will tell user about list of permissions"
+					/>
 				</TableCell>
 				{tableHeadings.map((tableHeading, index) => (
 					<TableCell className={tableStyles.th} key={index} align="left">
