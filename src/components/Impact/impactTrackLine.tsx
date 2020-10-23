@@ -130,7 +130,9 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	>("");
 
 	const { refetch: impactTracklineRefetch } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
-		variables: { filter: { impact_target_project: selectedImpactTarget } },
+		variables: {
+			filter: { impact_target_project: selectedImpactTarget ? selectedImpactTarget : "" },
+		},
 	});
 
 	React.useEffect(() => {

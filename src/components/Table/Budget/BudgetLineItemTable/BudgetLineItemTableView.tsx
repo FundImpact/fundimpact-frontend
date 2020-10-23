@@ -22,6 +22,9 @@ import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
 import { CircularPercentage } from "../../../commons";
+import { ApolloQueryResult } from "@apollo/client";
+import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+import { setSuccessNotification } from "../../../../reducers/notificationReducer";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -244,6 +247,7 @@ function BudgetLineItemTableView({
 	financialYearDonorHash,
 	financialYearOrgHash,
 	currency,
+	refetchOnSuccess,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -272,6 +276,11 @@ function BudgetLineItemTableView({
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
+	refetchOnSuccess:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
@@ -349,11 +358,20 @@ function BudgetLineItemTableView({
 	}, [initialValues.attachments]);
 
 	const dashBoardData = useDashBoardData();
-
+	const notificationDispatch = useNotificationDispatch();
 	let { multiplefileUpload } = useMultipleFileUpload();
 	let uploadingFileMessage = CommonUploadingFilesMessage();
 	const [budgetUploadLoading, setbudgetUploadLoading] = React.useState(0);
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		if (refetchOnSuccess) refetchOnSuccess();
+		setUploadSuccess(false);
+	};
+	if (uploadSuccess) successMessage();
+
 	const attachFileOnSave = (
 		initialValues: IBudgetTrackingLineitem,
 		budgetTracklineFileArray: AttachFile[],
@@ -367,6 +385,7 @@ function BudgetLineItemTableView({
 			path: `org-${dashBoardData?.organization?.id}/budget-tracking-lineitem`,
 			filesArray: budgetTracklineFileArray,
 			setFilesArray: setBudgetTracklineFileArray,
+			setUploadSuccess: setUploadSuccess,
 		});
 	};
 
@@ -418,6 +437,7 @@ function BudgetLineItemTableView({
 						handleClose={() => toggleDialogs(0, false)}
 						formAction={FORM_ACTIONS.UPDATE}
 						initialValues={initialValues}
+						refetchOnSuccess={refetchOnSuccess}
 					/>
 					<AttachFileForm
 						{...{

@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -24,6 +24,7 @@ import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
+import { FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
@@ -89,11 +90,39 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [selectedBudgetTarget, setSelectedDeliverableTarget] = React.useState<
+		string | number | undefined
+	>("");
+
+	const { refetch: budgetTrackingRefetch } = useQuery(GET_PROJECT_BUDGET_TARCKING, {
+		variables: {
+			filter: { budget_targets_project: selectedBudgetTarget ? selectedBudgetTarget : "" },
+		},
+	});
+
+	const { handleClose } = props;
+
+	const closeDialog = useCallback(() => {
+		budgetLineitemFormSelectFields[2].hidden = false;
+		handleClose();
+	}, [handleClose]);
+
+	React.useEffect(() => {
+		if (uploadSuccess) {
+			if (props.formAction === FORM_ACTIONS.CREATE) {
+				budgetTrackingRefetch();
+			} else if (props.formAction === FORM_ACTIONS.UPDATE && props.refetchOnSuccess) {
+				props.refetchOnSuccess();
+			}
+			setUploadSuccess(false);
+			closeDialog();
+		}
+	}, [uploadSuccess, budgetTrackingRefetch, props, setUploadSuccess]);
 
 	React.useEffect(() => {
 		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
 		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		console.log("percentage", percentage);
+
 		setLoadingPercentage(percentage);
 	}, [filesArray, totalFilesToUpload, setLoadingPercentage]);
 
@@ -172,13 +201,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			});
 		}
 	}, [currentProject, getBudgetTargetProject]);
-
-	const { handleClose } = props;
-
-	const closeDialog = useCallback(() => {
-		budgetLineitemFormSelectFields[2].hidden = false;
-		handleClose();
-	}, [handleClose]);
 
 	useEffect(() => {
 		if (uploadSuccess) {
@@ -286,9 +308,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
+		setSelectedDeliverableTarget(valuesSubmitted.id);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
 			objectToCheck: valuesSubmitted,
 		});
+
 		try {
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
@@ -404,6 +428,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					note: 1,
 				},
 			});
+			values = { ...values, attachments: filesArray };
 			if (compareObjectKeys(values, initialValues)) {
 				closeDialog();
 				return;

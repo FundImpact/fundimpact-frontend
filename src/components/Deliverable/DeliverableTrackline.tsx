@@ -132,7 +132,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const { refetch: deliverableTracklineRefetch } = useQuery(
 		GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		{
-			variables: { filter: { deliverable_target_project: selectedDeliverableTarget } },
+			variables: {
+				filter: {
+					deliverable_target_project: selectedDeliverableTarget
+						? selectedDeliverableTarget
+						: "",
+				},
+			},
 		}
 	);
 

@@ -134,7 +134,9 @@ const mocks = [
 beforeEach(() => {
 	act(() => {
 		sidebar = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetail }}>
+			<DashboardProvider
+				defaultState={{ organization: organizationDetail, workspace: { id: "13" } }}
+			>
 				<BrowserRouter>
 					<NotificationProvider>
 						<SideBar />

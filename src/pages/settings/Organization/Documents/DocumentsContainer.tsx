@@ -12,15 +12,19 @@ import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { uploadPercentageCalculator } from "../../../../utils";
 import { CircularPercentage } from "../../../../components/commons";
 import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
+import { GET_ORGANISATIONS_DOCUMENTS } from "../../../../graphql";
+import { useQuery } from "@apollo/client";
+import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+import { setSuccessNotification } from "../../../../reducers/notificationReducer";
 
 export const OrganizationDocumentContainer = () => {
 	const organizationEditAccess = userHasAccess(
 		MODULE_CODES.ORGANIZATION,
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
-
+	const { data, loading, refetch } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
-
+	const notificationDispatch = useNotificationDispatch();
 	const [documentsUploadLoading, setDocumentsUploadLoading] = React.useState(0);
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
 
@@ -29,6 +33,15 @@ export const OrganizationDocumentContainer = () => {
 		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
 		setDocumentsUploadLoading(percentage);
 	}, [filesArray, totalFilesToUpload, setDocumentsUploadLoading]);
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		refetch();
+		setUploadSuccess(false);
+		setFilesArray([]);
+	};
+	if (uploadSuccess) successMessage();
 
 	let { multiplefileUpload } = useMultipleFileUpload();
 	const dashBoardData = useDashBoardData();
@@ -43,6 +56,7 @@ export const OrganizationDocumentContainer = () => {
 			filesArray: filesArray,
 			source: "crm-plugin",
 			setFilesArray: setFilesArray,
+			setUploadSuccess: setUploadSuccess,
 		});
 	};
 	let uploadingFileMessage = CommonUploadingFilesMessage();
@@ -58,7 +72,9 @@ export const OrganizationDocumentContainer = () => {
 						/>
 					</Typography>
 				</Box>
-				<Box>{organizationEditAccess && <DocumentsTable />}</Box>
+				<Box>
+					{organizationEditAccess && <DocumentsTable data={data} loading={loading} />}
+				</Box>
 				{organizationEditAccess && (
 					<AddButton
 						createButtons={[]}

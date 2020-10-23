@@ -6,6 +6,7 @@ import { CREATE_PROJECT_BUDGET_TRACKING } from "../../../../graphql/Budget/mutat
 import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_GRANT_PERIODS_PROJECT_LIST,
+	GET_PROJECT_BUDGET_TARCKING,
 } from "../../../../graphql/Budget";
 import {
 	GET_ANNUAL_YEAR_LIST,
@@ -34,7 +35,7 @@ import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { fireEvent, wait } from "@testing-library/dom";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
-
+import { mockBudgetLineItem } from "../../../../utils/testMock.json";
 const handleClose = jest.fn();
 
 let dialog: any;
@@ -103,6 +104,22 @@ const mocks = [
 			data: {
 				orgCurrencies: mockOrgHomeCurrency,
 			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARCKING,
+			variables: {
+				filter: {
+					budget_targets_project: "",
+				},
+			},
+		},
+		result: {
+			data: {
+				projBudgetTrackings: mockBudgetLineItem,
+			},
+			refetch: () => {},
 		},
 	},
 	{

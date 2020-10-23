@@ -16,7 +16,20 @@ import FilterListContainer from "../../FilterList";
 import { projectDocumentsFilter } from "../ProjectDocument/inputFields.json";
 import { createChipArray } from "../../commons";
 
-export default function DocumentsTable() {
+export default function DocumentsTable({
+	data,
+	loading,
+}: {
+	data: {
+		organizationList: {
+			id: string;
+			name: string;
+			short_name: string;
+			attachments: Attachments[];
+		}[];
+	};
+	loading: boolean;
+}) {
 	const [documentPage, setDocumentPage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
@@ -40,7 +53,7 @@ export default function DocumentsTable() {
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
-	const { data, loading } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
+	// const { data, loading } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	useEffect(() => {
 		let arr: any = [];
 		data?.organizationList?.map(
@@ -140,7 +153,7 @@ export default function DocumentsTable() {
 			</Grid>
 			<FITable
 				tableHeading={documentsHeadings}
-				rows={rows}
+				rows={rows.slice(documentPage * limit, documentPage * limit + limit)}
 				pagination={documentPagination}
 				order={order}
 				orderBy={orderBy}

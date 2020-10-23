@@ -116,10 +116,16 @@ export default function SettingContainer() {
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
-
+	const organizationUploadAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
+	);
 	const getDefaultRoute = () => {
 		if (organizationEditAccess) {
 			return <Navigate to="organization" />;
+		}
+		if (organizationUploadAccess) {
+			return <Navigate to="documents" />;
 		}
 		if (donorFindAccess || donorCreateAccess) {
 			return <Navigate to="donors" />;
@@ -207,8 +213,8 @@ export default function SettingContainer() {
 							element={<Organization />}
 						/>
 						<PrivateRoute
-							path="org-documents"
-							userAccess={organizationEditAccess}
+							path="documents"
+							userAccess={organizationUploadAccess}
 							element={<OrganizationDocumentContainer />}
 						/>
 						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}

@@ -12,13 +12,14 @@ export const sidebarList: {
 				userAccess: true,
 			},
 			{
-				to: "org-documents",
+				to: "documents",
 				dataTestId: "organization-Documents",
 				title: "Organization Documents",
 				userAccess: true,
 			},
 		],
 	},
+
 	{
 		mainHeading: "Manage Portal",
 		subHeadings: [

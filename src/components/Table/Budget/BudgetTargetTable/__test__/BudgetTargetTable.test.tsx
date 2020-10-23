@@ -117,6 +117,22 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECT_BUDGET_TARCKING,
+			variables: {
+				filter: {
+					budget_targets_project: "",
+				},
+			},
+		},
+		result: {
+			data: {
+				projBudgetTrackings: mockBudgetLineItem,
+			},
+			refetch: () => {},
+		},
+	},
+	{
+		request: {
 			query: GET_PROJ_DONORS,
 			variables: {
 				filter: {
