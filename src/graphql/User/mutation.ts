@@ -28,6 +28,7 @@ export const UPDATE_USER_DETAILS = gql`
 				id
 				name
 			}
+			language
 		}
 	}
 `;

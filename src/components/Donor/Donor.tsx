@@ -16,6 +16,7 @@ import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
 import CommonForm from "../Forms/CommonForm";
 import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
+import { useIntl } from "react-intl";
 
 let inputFields: IInputField[] = addDonorForm;
 
@@ -142,7 +143,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.log('err :>> ', err);
+						console.log("err :>> ", err);
 					}
 				},
 			});
@@ -191,14 +192,28 @@ function Donor(props: IDonorProps) {
 		getCountryList();
 	}, [getCountryList]);
 
+	const intl = useIntl();
+
+	const title = intl.formatMessage({
+		id: `donorFormTitle`,
+		defaultMessage: "Add Dono",
+		description: `This text will be show as title of donor form`,
+	});
+
+	const subtitle = intl.formatMessage({
+		id: `donorFormSubtitle`,
+		defaultMessage: "Physical addresses of your organizatin like headquater, branch etc.",
+		description: `This text will be show as subtitle of donor form`,
+	});
+
 	return (
 		<>
 			<FormDialog
 				handleClose={props.handleClose}
 				open={props.open}
 				loading={creatingDonor || updatingDonor}
-				title="Add Donor"
-				subtitle="Physical addresses of your organizatin like headquater, branch etc."
+				title={title}
+				subtitle={subtitle}
 				workspace={""}
 				project={""}
 			>

@@ -20,6 +20,7 @@ const mocks = [
 					email: "my@my.com",
 					name: "name",
 					profile_photo: "1",
+					language: "en",
 				},
 			},
 		},
@@ -37,6 +38,7 @@ let data = {
 	email: "email.com",
 	profile_photo: "1",
 	uploadPhoto: "",
+	language: "en",
 };
 beforeEach(() => {
 	act(() => {

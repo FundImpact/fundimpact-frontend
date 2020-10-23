@@ -129,14 +129,16 @@ export default function CollapsibleTable({
 											heading.renderComponent()
 										) : (
 											<>
-												<FormattedMessage
-													id={
-														"tableHeading" +
-														heading.label.replace(/ /g, "")
-													}
-													defaultMessage={`${heading.label}`}
-													description={`This text will be shown on table for ${heading.label} heading`}
-												/>
+												{heading.label && (
+													<FormattedMessage
+														id={
+															"tableHeading" +
+															heading.label.replace(/ /g, "")
+														}
+														defaultMessage={`${heading.label}`}
+														description={`This text will be shown on table for ${heading.label} heading`}
+													/>
+												)}
 												{order && heading.keyMapping && (
 													<TableSortLabel
 														active={orderBy === heading.keyMapping}
