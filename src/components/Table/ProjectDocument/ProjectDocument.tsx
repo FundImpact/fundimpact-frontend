@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Avatar, Box, Chip, Grid, IconButton, TableCell, TablePagination } from "@material-ui/core";
+import { Box, Grid, IconButton, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 import { projectDocumentsFilter } from "./inputFields.json";

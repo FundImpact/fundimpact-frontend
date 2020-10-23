@@ -355,7 +355,7 @@ function BudgetLineItemTableView({
 
 	useEffect(() => {
 		setBudgetTracklineFileArray(initialValues.attachments || []);
-	}, [initialValues.attachments]);
+	}, [initialValues]);
 
 	const dashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -372,11 +372,7 @@ function BudgetLineItemTableView({
 	};
 	if (uploadSuccess) successMessage();
 
-	const attachFileOnSave = (
-		initialValues: IBudgetTrackingLineitem,
-		budgetTracklineFileArray: AttachFile[],
-		setBudgetTracklineFileArray: React.Dispatch<React.SetStateAction<AttachFile[]>>
-	) => {
+	const attachFileOnSave = () => {
 		setTotalFilesToUpload(budgetTracklineFileArray.filter((elem) => !elem.id).length);
 		multiplefileUpload({
 			ref: "budget-tracking-lineitem",
@@ -445,12 +441,7 @@ function BudgetLineItemTableView({
 							handleClose: () => setOpenAttachFiles(false),
 							filesArray: budgetTracklineFileArray,
 							setFilesArray: setBudgetTracklineFileArray,
-							parentOnSave: () =>
-								attachFileOnSave(
-									initialValues,
-									budgetTracklineFileArray,
-									setBudgetTracklineFileArray
-								),
+							parentOnSave: () => attachFileOnSave(),
 						}}
 					/>
 					{budgetUploadLoading > 0 ? (

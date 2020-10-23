@@ -25,7 +25,7 @@ export type ImpactTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
 	impactTarget?: number | string | undefined;
-	reftechOnSuccess?:
+	reftechOnSuccess:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)

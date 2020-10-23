@@ -1,4 +1,4 @@
-import { useApolloClient, useLazyQuery, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { Box, Divider, MenuItem } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";

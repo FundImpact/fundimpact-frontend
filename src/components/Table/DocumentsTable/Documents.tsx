@@ -1,11 +1,9 @@
-import { useQuery } from "@apollo/client";
-import { Avatar, Box, Chip, Grid, IconButton, TableCell, TablePagination } from "@material-ui/core";
+import { Box, Grid, IconButton, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
 import { getTodaysDate, isValidImage } from "../../../utils";
 import FITable from "../FITable";
 import { useIntl } from "react-intl";
-import { GET_ORGANISATIONS_DOCUMENTS } from "../../../graphql";
 import { Attachments } from "../../../models/AttachFile";
 import { documentsHeadings } from "../constants";
 import GetAppIcon from "@material-ui/icons/GetApp";

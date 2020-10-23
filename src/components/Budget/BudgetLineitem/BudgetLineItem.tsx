@@ -102,6 +102,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const { handleClose } = props;
 
+	useEffect(() => {
+		setFilesArray(initialValues.attachments || []);
+	}, [initialValues]);
+
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormSelectFields[2].hidden = false;
 		handleClose();
@@ -308,7 +312,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
-		setSelectedDeliverableTarget(valuesSubmitted.id);
+		setSelectedDeliverableTarget(valuesSubmitted.budget_targets_project);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
 			objectToCheck: valuesSubmitted,
 		});
@@ -540,8 +544,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
 					{...{
-						filesArray,
-						setFilesArray,
+						filesArray: filesArray,
+						setFilesArray: setFilesArray,
 					}}
 				/>
 			)}

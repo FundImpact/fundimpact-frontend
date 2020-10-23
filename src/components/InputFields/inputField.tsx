@@ -11,7 +11,6 @@ import {
 	Select,
 	TextField,
 } from "@material-ui/core";
-import { BluetoothDisabled } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 
 import { IInputFields } from "../../models";
