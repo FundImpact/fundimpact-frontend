@@ -104,12 +104,14 @@ beforeEach(() => {
 });
 
 describe("Update User Role Form", () => {
-	sendUserInvitation.forEach((formField) => {
-		test(`should have ${formField.name} field`, () => {
-			let sendUserInvitationField = sendUserInvitationForm.getByTestId(formField.dataTestId);
+	for (let i = 0; i < sendUserInvitation.length; i++) {
+		test(`should have ${sendUserInvitation[i].name} field`, () => {
+			let sendUserInvitationField = sendUserInvitationForm.getByTestId(
+				sendUserInvitation[i].dataTestId
+			);
 			expect(sendUserInvitationField).toBeInTheDocument();
 		});
-	});
+	}
 
 	// test(`Submit Button enabels if all required field is have values and send invitation mutaion call`, async () => {
 	// 	for (let i = 0; i < sendUserInvitation.length; i++) {
