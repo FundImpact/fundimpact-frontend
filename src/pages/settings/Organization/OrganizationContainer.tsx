@@ -37,7 +37,6 @@ function OrganizationContainer({
 			| undefined
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
-	
 	let { uploadFile, loading: fileUploading } = useFileUpload();
 
 	const dashboardData = useDashBoardData();
@@ -86,7 +85,7 @@ function OrganizationContainer({
 				},
 			});
 		} catch (err) {
-			console.log("err ", err);
+			console.error(err);
 		}
 	};
 
