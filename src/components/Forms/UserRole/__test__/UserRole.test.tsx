@@ -67,6 +67,7 @@ const mocks = [
 	{
 		request: {
 			query: GET_PROJECTS,
+			variables: {},
 		},
 		result: { data: mockProjects },
 	},
