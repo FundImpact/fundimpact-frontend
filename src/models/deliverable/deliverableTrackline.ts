@@ -25,11 +25,9 @@ export type DeliverableTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
 	deliverableTarget?: number | string | undefined;
-	reftechOnSuccess:
-		| ((
-				variables?: Partial<Record<string, any>> | undefined
-		  ) => Promise<ApolloQueryResult<any>>)
-		| undefined;
+	reftechOnSuccess?: (
+		variables?: Partial<Record<string, any>> | undefined
+	) => Promise<ApolloQueryResult<any>>;
 } & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;

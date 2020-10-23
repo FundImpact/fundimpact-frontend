@@ -119,6 +119,21 @@ const mocks = [
 			data: {
 				projBudgetTrackings: mockBudgetLineItem,
 			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARCKING,
+			variables: {
+				filter: {
+					budget_targets_project: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				projBudgetTrackings: mockBudgetLineItem,
+			},
 			refetch: () => {},
 		},
 	},
