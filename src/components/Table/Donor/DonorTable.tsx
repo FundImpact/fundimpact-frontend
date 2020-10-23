@@ -30,6 +30,7 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { FormattedMessage } from "react-intl";
 
 enum tableHeader {
 	name = 1,
@@ -149,7 +150,11 @@ function DonorTable({
 						handleClose();
 					}}
 				>
-					Edit Donor
+					<FormattedMessage
+						id="editDonorMenuItem"
+						defaultMessage="Edit Donor"
+						description="This text will be shown on menu item to edit donor"
+					/>
 				</MenuItem>
 			),
 		},

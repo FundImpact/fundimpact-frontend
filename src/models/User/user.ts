@@ -10,6 +10,7 @@ export interface IUser {
 	uploadPhoto: string;
 	logo?: string;
 	theme: any;
+	language: string;
 }
 
 export type UserProps =

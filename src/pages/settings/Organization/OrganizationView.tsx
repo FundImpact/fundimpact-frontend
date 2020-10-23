@@ -22,11 +22,11 @@ import {
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { Form, Formik, FormikProps } from "formik";
 import React, { useCallback, useEffect } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, useIntl, IntlShape } from "react-intl";
 
 import UploadFile from "../../../components/UploadFile";
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
-import { IDashboardDataContext } from "../../../models";
+import { IDashboardDataContext, ICountry } from "../../../models";
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
@@ -164,6 +164,7 @@ function OrganizationView({
 	onSubmit,
 	loading,
 	logo,
+	countryList,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -172,6 +173,7 @@ function OrganizationView({
 	initialValues: IOrganisationForm;
 	onSubmit: (value: IOrganisationForm) => Promise<void>;
 	logo: string;
+	countryList: ICountry[];
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -194,11 +196,41 @@ function OrganizationView({
 	}, []);
 
 	const intl = useIntl();
+
+	const textFieldsLabelFormattedMessageObj: { [key: string]: any } = {
+		Name: intl.formatMessage({
+			id: `organizationNameInput`,
+			defaultMessage: "Name",
+			description: `This text will be show as name label on text field`,
+		}),
+		"Legal Name": intl.formatMessage({
+			id: `organizationLegalNameInput`,
+			defaultMessage: "Legal Name",
+			description: `This text will be show as legal name label on text field `,
+		}),
+		"Short Name": intl.formatMessage({
+			id: `organizationShortNameInput`,
+			defaultMessage: "Short Name",
+			description: `This text will be show as short name label on text field`,
+		}),
+		"Choose country": intl.formatMessage({
+			id: `organizationChooseCountryInput`,
+			defaultMessage: "Choose country",
+			description: `This text will be show as Choose country label on select field`,
+		}),
+	};
+
 	return (
 		<Box p={2}>
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
-					<Typography variant="h5">Organization Info</Typography>
+					<Typography variant="h5">
+						<FormattedMessage
+							id="organizationSettingPageHeading"
+							defaultMessage="Organization Info"
+							description="This text will be heading of organization setting page"
+						/>
+					</Typography>
 				</Grid>
 				<Grid item xs={12}>
 					<Paper>
@@ -250,7 +282,7 @@ function OrganizationView({
 																onBlur={formik.handleBlur}
 																fullWidth
 																label={intl.formatMessage({
-																	id: `colorPicker`,
+																	id: `colorPickerPrimaryColor`,
 																	defaultMessage:
 																		"Choose Primary Color",
 																	description: `This text will be show on color picker as Choose Primary Color`,
@@ -323,9 +355,10 @@ function OrganizationView({
 																onBlur={formik.handleBlur}
 																fullWidth
 																label={intl.formatMessage({
-																	id: `colorPicker${"Choose Secondary Color"}`,
-																	defaultMessage: `${"Choose Secondary Color"}`,
-																	description: `This text will be show on color picker as ${"Choose Secondary Color"}`,
+																	id: `colorPickerSecondaryColor`,
+																	defaultMessage:
+																		"Choose Secondary Color",
+																	description: `This text will be show on color picker as Choose Secondary Color`,
 																})}
 																required={
 																	!!(initialValues.theme?.palette
@@ -412,13 +445,12 @@ function OrganizationView({
 																					formik.handleBlur
 																				}
 																				fullWidth
-																				label={intl.formatMessage(
-																					{
-																						id: `textFiled${element.label}`,
-																						defaultMessage: `${element.label}`,
-																						description: `This text will be show on input field as ${element.label}`,
-																					}
-																				)}
+																				label={
+																					textFieldsLabelFormattedMessageObj[
+																						element
+																							.label
+																					]
+																				}
 																				required={
 																					!!initialValues[
 																						element.name as keyof IOrganisationForm
@@ -485,13 +517,9 @@ function OrganizationView({
 																					control={
 																						<Radio color="primary" />
 																					}
-																					label={intl.formatMessage(
-																						{
-																							id: `radioElement${element.reg_type}`,
-																							defaultMessage: `${element.reg_type}`,
-																							description: `This text will be show on input field as ${element.reg_type}`,
-																						}
-																					)}
+																					label={
+																						element.reg_type
+																					}
 																					value={
 																						element.id
 																					}
@@ -515,155 +543,122 @@ function OrganizationView({
 																	description="This text will tell user to update home contry"
 																/>
 															</Typography>
-															{inputFields
-																.slice(4)
-																.map((element, index) => (
-																	<Box mt={2} pl={1} key={index}>
-																		<Grid container>
-																			<Grid item xs={7}>
-																				<Typography>
-																					{
-																						element.helperText
-																					}
-																				</Typography>
-																			</Grid>
-																			<Grid item xs={5}>
-																				<FormControl
-																					variant="outlined"
-																					className={
-																						classes.formControl
-																					}
-																				>
-																					<InputLabel
-																						id={
-																							element.inputLabelId
-																						}
-																						required={
-																							true
-																						}
+
+															<Box mt={2} pl={1}>
+																<Grid container>
+																	<Grid item xs={7}>
+																		<Typography>
+																			<FormattedMessage
+																				id="mainLabelForOrganizationCountryInput"
+																				defaultMessage="Select home country of
+																				the organization"
+																				description="This text will be shown as main label for select country input"
+																			/>
+																		</Typography>
+																	</Grid>
+																	<Grid item xs={5}>
+																		<FormControl
+																			variant="outlined"
+																			className={
+																				classes.formControl
+																			}
+																		>
+																			<InputLabel
+																				id="demo-simple-select-outlined-label"
+																				required={true}
+																			>
+																				<FormattedMessage
+																					id="labelForOrganizationCountryInput"
+																					defaultMessage="Choose country"
+																					description="This text will be shown as label for select country input"
+																				/>
+																			</InputLabel>
+
+																			<Select
+																				labelId={
+																					"demo-simple-select-outlined-label"
+																				}
+																				id={
+																					"demo-simple-select-outlined"
+																				}
+																				error={
+																					!!formik.errors
+																						.country &&
+																					!!formik.touched
+																						.country
+																				}
+																				value={
+																					formik.values
+																						.country
+																				}
+																				onChange={
+																					formik.handleChange
+																				}
+																				onBlur={
+																					formik.handleBlur
+																				}
+																				label={
+																					"Choose country"
+																				}
+																				name="country"
+																				inputProps={{
+																					"data-testid":
+																						"createOrganizationCountryOption",
+																				}}
+																				data-testid={
+																					"createOrganizationCountry"
+																				}
+																				required={true}
+																			>
+																				{!countryList?.length ? (
+																					<MenuItem
+																						disabled
 																					>
-																						{intl.formatMessage(
-																							{
-																								id:
-																									"selectField{label}",
-																								defaultMessage:
-																									"{label}",
-																								description:
-																									"This text will be show on input field as {label}",
-																							},
-																							{
-																								label:
-																									element.label,
+																						<em>
+																							<FormattedMessage
+																								id="noCountryAvailableMessage"
+																								defaultMessage="No
+																								country
+																								available"
+																								description="This text will be shown when no country is available"
+																							/>
+																						</em>
+																					</MenuItem>
+																				) : null}
+
+																				{countryList?.map(
+																					(
+																						elem: {
+																							name: string;
+																							id: string;
+																						},
+																						index: number
+																					) => (
+																						<MenuItem
+																							key={
+																								index
 																							}
-																						)}
-																					</InputLabel>
-
-																					<Select
-																						labelId={
-																							element.selectLabelId
-																						}
-																						id={
-																							element.selectId
-																						}
-																						error={
-																							!!formik
-																								.errors[
-																								element.name as keyof IOrganisationForm
-																							] &&
-																							!!formik
-																								.touched[
-																								element.name as keyof IOrganisationForm
-																							]
-																						}
-																						value={
-																							formik
-																								.values[
-																								element.name as keyof IOrganisationForm
-																							]
-																						}
-																						onChange={
-																							formik.handleChange
-																						}
-																						onBlur={
-																							formik.handleBlur
-																						}
-																						label={
-																							element.label
-																						}
-																						name={
-																							element.name
-																						}
-																						inputProps={{
-																							"data-testid":
-																								element.testId,
-																						}}
-																						data-testid={
-																							element.dataTestId
-																						}
-																						required={
-																							true
-																						}
-																					>
-																						{!element
-																							.optionsArray
-																							?.length ? (
-																							<MenuItem
-																								disabled
-																							>
-																								<em>
-																									{intl.formatMessage(
-																										{
-																											id: `textFiled${element.displayName}`,
-																											defaultMessage: `No ${element.displayName} available`,
-																											description: `This text will be show on input field as ${element.displayName}`,
-																										}
-																									)}
-																								</em>
-																							</MenuItem>
-																						) : null}
-
-																						{element.optionsArray?.map(
-																							(
-																								elem: {
-																									name: string;
-																									id: string;
-																								},
-																								index: number
-																							) => (
-																								<MenuItem
-																									key={
-																										index
-																									}
-																									value={
-																										elem.id
-																									}
-																								>
-																									{intl.formatMessage(
-																										{
-																											id: `menuItem${elem.name}`,
-																											defaultMessage: `${elem.name}`,
-																											description: `This text will be show on menu item as ${elem.name}`,
-																										}
-																									)}
-																								</MenuItem>
-																							)
-																						)}
-																					</Select>
-																					<FormHelperText>
-																						{formik
-																							.touched[
-																							element.name as keyof IOrganisationForm
-																						] &&
-																							formik
-																								.errors[
-																								element.name as keyof IOrganisationForm
-																							]}
-																					</FormHelperText>
-																				</FormControl>
-																			</Grid>
-																		</Grid>
-																	</Box>
-																))}
+																							value={
+																								elem.id
+																							}
+																						>
+																							{
+																								elem.name
+																							}
+																						</MenuItem>
+																					)
+																				)}
+																			</Select>
+																			<FormHelperText>
+																				{formik.touched
+																					.country &&
+																					formik.errors
+																						.country}
+																			</FormHelperText>
+																		</FormControl>
+																	</Grid>
+																</Grid>
+															</Box>
 														</Grid>
 
 														<Grid item xs={12}>
