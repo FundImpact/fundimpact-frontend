@@ -25,7 +25,7 @@ export default function PositionedSnackbar({ severity = "error", msg }: IAlertMs
 		<Snackbar
 			anchorOrigin={{ vertical, horizontal }}
 			open={open}
-			autoHideDuration={6000}
+			autoHideDuration={3000}
 			onClose={() => {
 				dispatch(clearNotification());
 				handleClose();
