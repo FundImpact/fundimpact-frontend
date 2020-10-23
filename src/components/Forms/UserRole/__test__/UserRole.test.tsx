@@ -85,6 +85,8 @@ const mocks = [
 let sendUserInvitationForm: RenderResult<typeof queries>;
 let open = true;
 let close = jest.fn();
+
+jest.setTimeout(8000);
 beforeEach(() => {
 	act(() => {
 		sendUserInvitationForm = renderApollo(
