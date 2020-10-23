@@ -77,7 +77,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 			});
 			// console.log("garntPeriodList :>> ", garntPeriodList);
 		} catch (err) {
-			console.log("err :>> ", err);
+			console.error(err)
 		}
 
 		setTimeout(() => {

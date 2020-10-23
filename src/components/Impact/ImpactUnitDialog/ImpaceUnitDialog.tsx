@@ -198,7 +198,7 @@ function ImpactUnitDialog({
 				});
 			}
 		} catch (err) {
-			console.log("err :>> ", err);
+			console.error(err)
 		}
 	};
 

@@ -248,7 +248,6 @@ function RoleTableView({
 	if (controllerActionHashArr.length == 0) {
 		return <TableSkeleton />;
 	}
-	console.log("numeberOfTimesRolesChanged :>> ", numeberOfTimesRolesChanged);
 	return (
 		<>
 			<TableContainer component={Paper} className={classes.tableContainer}>
