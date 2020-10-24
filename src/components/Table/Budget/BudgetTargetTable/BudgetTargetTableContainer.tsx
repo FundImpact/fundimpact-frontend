@@ -7,7 +7,9 @@ import {
 } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
 
-function getBudgetTargetInitialValues(budgetTarget: IBudgetTargetProjectResponse | null): IBudgetTargetForm {
+function getBudgetTargetInitialValues(
+	budgetTarget: IBudgetTargetProjectResponse | null
+): IBudgetTargetForm {
 	return {
 		name: budgetTarget?.name || "",
 		description: budgetTarget?.description || "",

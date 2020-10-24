@@ -122,7 +122,11 @@ const UserProjects = ({
 				open={openDialog}
 				handleClose={() => setOpenDialog(false)}
 			/>
-			<IconButton size="small" data-testid="show-user-projects" onClick={() => setOpenDialog(true)}>
+			<IconButton
+				size="small"
+				data-testid="show-user-projects"
+				onClick={() => setOpenDialog(true)}
+			>
 				<VisibilityIcon />
 			</IconButton>
 		</>

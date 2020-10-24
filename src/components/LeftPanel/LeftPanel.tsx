@@ -60,7 +60,7 @@ export default function LeftPanel() {
 		if (data) {
 			leftPannelList[0].onClick = () => dispatch(setProject(data.orgProject[0]));
 		}
-	}, [data]);
+	}, [data, leftPannelList, dispatch]);
 
 	const settingButtonAccess = userHasAccess(
 		MODULE_CODES.SETTING,

@@ -82,10 +82,11 @@ function ImpactTarget(props: ImpactTargetProps) {
 	});
 
 	useEffect(() => {
-		if (props.type === IMPACT_ACTIONS.UPDATE) {
-			setCurrentCategoryId(props.data?.impactCategory);
+		let impactTargetprops = props;
+		if (impactTargetprops.type === IMPACT_ACTIONS.UPDATE) {
+			setCurrentCategoryId(impactTargetprops.data?.impactCategory);
 		}
-	}, [props.type]);
+	}, [props]);
 
 	const updateImpactTargetHelper = async (impactCategoryUnitId: string) => {
 		let createInputTarget: any = {

@@ -378,7 +378,7 @@ function UserRoleForm(props: UserRoleProps) {
 				userRoles?.organizationRoles || [],
 				dashboardData?.organization?.id || ""
 			),
-		[filterOrganizationRoles, userRoles, dashboardData]
+		[userRoles, dashboardData]
 	);
 
 	useEffect(() => {

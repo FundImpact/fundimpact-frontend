@@ -18,7 +18,10 @@ let annualYearHash = {};
 let financialYearDonorHash = {};
 let financialYearOrgHash = {};
 
-const mapIdToName = (arr: { id: string; name: string }[], initialObject: { [key: string]: string }) => {
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
 	return arr.reduce(
 		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
 			accumulator[current.id] = current.name;
@@ -98,6 +101,7 @@ function BudgetLineItemTableGraphql({
 		changePage,
 		countQueryLoading,
 		queryLoading,
+		queryRefetch,
 	} = pagination({
 		query: GET_PROJECT_BUDGET_TARCKING,
 		countQuery: GET_PROJ_BUDGET_TRACINGS_COUNT,
@@ -216,6 +220,7 @@ function BudgetLineItemTableGraphql({
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
 			currency={currency?.currencyList[0]?.code || ""}
+			refetchOnSuccess={queryRefetch}
 		/>
 	);
 }

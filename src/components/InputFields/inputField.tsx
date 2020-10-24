@@ -1,4 +1,5 @@
 import {
+	Button,
 	Checkbox,
 	createStyles,
 	FormControl,
@@ -56,6 +57,7 @@ const InputFields = ({
 	multiple = false,
 	logo,
 	disabled,
+	onClick,
 	autoCompleteGroupBy,
 }: IInputFields) => {
 	const classes = useStyles();
@@ -272,6 +274,21 @@ const InputFields = ({
 				id={name}
 				logo={logo}
 			/>
+		);
+	}
+	if (inputType === "button") {
+		return (
+			<Button
+				className={classes.button}
+				disableRipple
+				variant="contained"
+				color="primary"
+				data-testid={`commonFormButton${label}`}
+				disabled={disabled}
+				onClick={onClick ? onClick : () => {}}
+			>
+				{label}
+			</Button>
 		);
 	}
 	return (

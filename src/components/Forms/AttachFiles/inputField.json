@@ -1,0 +1,20 @@
+{
+	"attachFileFilter": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "attachFileName",
+			"testId": "attachFileNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "ext",
+			"id": "deliverableTotalTargetAmount",
+			"dataTestId": "attachFileExtInput",
+			"testId": "attachFileExtInput",
+			"label": "Type",
+			"size": 6
+		}
+	]
+}

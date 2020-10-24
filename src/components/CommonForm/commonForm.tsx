@@ -102,6 +102,7 @@ function CommonInputForm({
 												autoCompleteGroupBy={
 													element.autoCompleteGroupBy || undefined
 												}
+												onClick={element.onClick ? element.onClick : null}
 											/>
 										</Grid>
 									)

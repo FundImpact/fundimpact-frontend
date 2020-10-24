@@ -54,6 +54,7 @@ const ProjectMockOne = [
 		name: "ARTISTAAN",
 		short_name: "",
 		description: "",
+		attachments: [],
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
 	},
 ];
@@ -63,6 +64,7 @@ const ProjectMockTwo = [
 		name: "KALAMKAAR",
 		short_name: "",
 		description: "",
+		attachments: [],
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
 	},
 ];
@@ -132,7 +134,9 @@ const mocks = [
 beforeEach(() => {
 	act(() => {
 		sidebar = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetail }}>
+			<DashboardProvider
+				defaultState={{ organization: organizationDetail, workspace: { id: "13" } }}
+			>
 				<BrowserRouter>
 					<NotificationProvider>
 						<SideBar />

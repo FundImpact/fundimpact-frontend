@@ -48,6 +48,15 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				id
 				name
 			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
 		}
 	}
 `;

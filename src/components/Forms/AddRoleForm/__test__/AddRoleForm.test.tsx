@@ -40,7 +40,7 @@ let mockInputData = {
 	is_project_level: true,
 };
 
-const mocks = [	
+const mocks = [
 	{
 		request: {
 			query: GET_USER_ROLES,

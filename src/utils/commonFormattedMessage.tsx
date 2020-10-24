@@ -2,7 +2,6 @@ import { useIntl } from "react-intl";
 import { DELIVERABLE_ACTIONS } from "../components/Deliverable/constants";
 import { IMPACT_ACTIONS } from "../components/Impact/constants";
 import { FORM_ACTIONS } from "../models/constants";
-import React, { useState } from "react";
 
 function CommonFormTitleFormattedMessage(formAction: any) {
 	const intl = useIntl();
@@ -27,5 +26,14 @@ function CommonFormTitleFormattedMessage(formAction: any) {
 		newOrEdit,
 	};
 }
+function CommonUploadingFilesMessage() {
+	const intl = useIntl();
+	let uploadingFilesMessage = intl.formatMessage({
+		id: "uploadingFilesMessage",
+		defaultMessage: "Uploading Files..",
+		description: `This text will be show on loading for uploadng files`,
+	});
+	return uploadingFilesMessage;
+}
 
-export { CommonFormTitleFormattedMessage };
+export { CommonFormTitleFormattedMessage, CommonUploadingFilesMessage };

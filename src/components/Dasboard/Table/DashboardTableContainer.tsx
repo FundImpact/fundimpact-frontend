@@ -42,6 +42,7 @@ import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/
 import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 import FundReceivedTable from "../../Table/FundReceivedTable";
+import ProjectDocumentsTable from "../../Table/ProjectDocument";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -487,6 +488,17 @@ export default function DashboardTableContainer() {
 					createButtonAccess: grantPeriodCreateAccess,
 				},
 			],
+			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
+			tableVisibility: grantPeriodFindAccess,
+		},
+		{
+			label: intl.formatMessage({
+				id: "documentsTabHeading",
+				defaultMessage: "Documents",
+				description: `This text will be show on tab for documents`,
+			}),
+			table: <ProjectDocumentsTable />,
+			createButtons: [],
 			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
 			tableVisibility: grantPeriodFindAccess,
 		},

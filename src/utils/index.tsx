@@ -103,7 +103,7 @@ export function abbreviateNumber(number: number | string) {
 	var tier = (Math.log10(number) / 3) | 0;
 
 	// if zero, we don't need a suffix
-	if (tier == 0) return number;
+	if (tier === 0) return number;
 
 	// get suffix and determine scale
 	var suffix = SI_SYMBOL[tier];
@@ -125,6 +125,24 @@ export const removeArrayElementsAtVariousIndex = <T,>(
 	checks: { [key: number]: boolean }
 ) => arrayToFilter.filter((element, index) => !checks[index]);
 
+export function readableBytes(bytes: any) {
+	var i = Math.floor(Math.log(bytes) / Math.log(1024)),
+		sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+	let sizeInBytes: any = (bytes / Math.pow(1024, i)).toFixed(2);
+	return sizeInBytes * 1 + sizes[i];
+}
+
+export const isValidImage = (extension: string) => {
+	const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+	return imageExtensions.includes(extension);
+};
+
+export const uploadPercentageCalculator = (remainingFiles: number, totalFiles: number) => {
+	let percentage = ((totalFiles - remainingFiles) / totalFiles) * 100;
+	if (!percentage || isNaN(percentage) || percentage === 100) percentage = 0;
+	return percentage;
+};
 export const debounce = (functionToDebounce: any, time: number) => {
 	let timeOut: NodeJS.Timeout;
 	return function (this: any) {

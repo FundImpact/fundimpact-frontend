@@ -62,6 +62,15 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+			variables: {
+				filter: { impact_target_project: "" },
+			},
+		},
+		result: { data: { impactTrackingLineitemList: impactTracklineByTargetMock } },
+	},
+	{
+		request: {
 			query: GET_IMPACT_TRACKLINE_COUNT,
 			variables: { filter: { impact_target_project: "14" } },
 		},

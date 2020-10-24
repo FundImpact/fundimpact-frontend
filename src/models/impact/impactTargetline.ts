@@ -1,4 +1,6 @@
+import { ApolloQueryResult } from "@apollo/client";
 import { IMPACT_ACTIONS } from "../../components/Impact/constants";
+import { AttachFile } from "../AttachFile";
 
 export interface IImpactTargetLine {
 	id?: number;
@@ -16,12 +18,16 @@ export interface IImpactTargetLine {
 		  }[]
 		| [];
 	note?: string;
+	attachments?: AttachFile[];
 }
 
 export type ImpactTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
 	impactTarget?: number | string | undefined;
+	reftechOnSuccess?: (
+		variables?: Partial<Record<string, any>> | undefined
+	) => Promise<ApolloQueryResult<any>>;
 } & (
 	| {
 			type: IMPACT_ACTIONS.CREATE;

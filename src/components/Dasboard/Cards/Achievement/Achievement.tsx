@@ -3,7 +3,6 @@ import { Box, Grid, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
-import BorderLinearProgress from "../../../BorderLinearProgress";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import {
 	GET_ALL_IMPACT_TARGET_AMOUNT,

@@ -107,6 +107,7 @@ export interface IInputFields {
 	hidden?: boolean;
 	logo?: string;
 	disabled?: boolean;
+	onClick?: any;
 	autoCompleteGroupBy?: <T>(option: T) => string;
 }
 
@@ -147,6 +148,7 @@ export interface ICommonForm {
 	selectFields?: ISelectField[];
 	initialValues: any;
 	formAction?: FORM_ACTIONS;
+	buttons?: any;
 }
 
 export interface ICountry {
@@ -176,6 +178,7 @@ export interface ICommonTable<T> {
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+	setOpenAttachFiles?: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export interface ITableHeadings {

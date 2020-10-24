@@ -32,7 +32,7 @@ function NoProjectCreated({
 		IGET_WORKSPACES_BY_ORG
 	>(GET_WORKSPACES_BY_ORG);
 
-	const [getProjects, { data: projects }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
+	const [getProjects, { data: projects, refetch }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
 		fetchPolicy: "network-only",
 	});
 
@@ -74,8 +74,8 @@ function NoProjectCreated({
 				workspace={workSpaces?.orgWorkspaces[0]?.id || ""}
 				handleClose={() => {
 					setProjectDialogOpen(false);
-					getProjects();
 				}}
+				reftechOnSuccess={refetch}
 			/>
 			<Grid container spacing={2}>
 				<Grid item xs={12}>

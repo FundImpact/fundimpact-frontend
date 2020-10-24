@@ -59,7 +59,7 @@ function Pagination({
 
 	let [
 		getQueryData,
-		{ data: queryData, loading: queryLoading, error: queryError },
+		{ data: queryData, loading: queryLoading, error: queryError, refetch: queryRefetch },
 	] = useLazyQuery(query);
 
 	useEffect(() => {
@@ -129,6 +129,7 @@ function Pagination({
 		countQueryError,
 		queryError,
 		end: !countQueryLoading && startingValue.current >= count.current ? true : false,
+		queryRefetch,
 	};
 }
 

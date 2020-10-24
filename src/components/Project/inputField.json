@@ -52,6 +52,16 @@
 			"selectId": "demo-simple-select-outlined-2",
 			"inputType": "select",
 			"multiple": true
+		},
+		{
+			"name": "attachfiles",
+			"id": "attachfiles",
+			"dataTestId": "projectAttachFile",
+			"testId": "projectTracklineAttachFileInput",
+			"label": "Attach files",
+			"inputType": "button",
+			"onClick": {},
+			"size": 12
 		}
 	]
 }

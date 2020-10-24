@@ -45,7 +45,7 @@ function UserForm(props: UserProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const userDispatch = React.useContext(UserDispatchContext);
 	let initialValues: IUser = getInitialValues(props);
-	let { uploadFile: uploadFile, loading: fileUploading } = useFileUpload();
+	let { uploadFile } = useFileUpload();
 	const formAction = props.type;
 	const navigate = useNavigate();
 	let verifyAndUpdateUserForm: boolean | undefined = false;
@@ -60,6 +60,7 @@ function UserForm(props: UserProps) {
 			if (verifyAndUpdateUserForm) {
 				navigate("/account/profile");
 			}
+			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
 		},
 		onError() {
 			notificationDispatch(setErrorNotification("Profile updation Failed !"));
@@ -86,9 +87,8 @@ function UserForm(props: UserProps) {
 					setUser({ user: { ...userResponse.updateUserCustomerInput, theme: userTheme } })
 				);
 			}
-			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
 		}
-	}, [userResponse, userDispatch]);
+	}, [userResponse, userDispatch, userTheme]);
 
 	const onCreate = (value: IUser) => {};
 

@@ -69,6 +69,15 @@ export const GET_PROJECTS_BY_WORKSPACE = gql`
 				id
 				name
 			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
 		}
 	}
 `;
@@ -238,6 +247,43 @@ export const GET_CURRENCY_LIST = gql`
 	query getCurrencyList($filter: JSON) {
 		currencyList(where: $filter) {
 			code
+		}
+	}
+`;
+
+export const GET_ORGANISATIONS_DOCUMENTS = gql`
+	query {
+		organizationList {
+			id
+			name
+			short_name
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
+		}
+	}
+`;
+
+export const GET_PROJECT_DOCUMENTS = gql`
+	query getProjectDocuments($filter: JSON) {
+		orgProject(where: $filter) {
+			id
+			name
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
 		}
 	}
 `;

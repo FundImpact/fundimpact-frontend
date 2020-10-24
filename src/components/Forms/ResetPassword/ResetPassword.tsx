@@ -31,7 +31,7 @@ function PasswordReset(props: ResetPasswordProps) {
 		},
 	});
 	const onUpdate = (value: IPassword) => {
-		if (value.password != value.passwordConfirmation) {
+		if (value.password !== value.passwordConfirmation) {
 			notificationDispatch(setErrorNotification("Password does not match !"));
 			return;
 		}

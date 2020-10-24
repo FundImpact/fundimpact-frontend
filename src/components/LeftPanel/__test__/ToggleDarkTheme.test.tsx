@@ -6,7 +6,7 @@ import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { mockUser, mockUserDetails } from "../../../utils/testMock.json";
 import { fireEvent } from "@testing-library/dom";
-import {  GET_USER_DETAILS } from "../../../graphql/User/query";
+import { GET_USER_DETAILS } from "../../../graphql/User/query";
 import ToggleDarkTheme from "../ToggleDarkTheme";
 import { RenderResult } from "@testing-library/react";
 import { UPDATE_USER_DETAILS } from "../../../graphql/User/mutation";

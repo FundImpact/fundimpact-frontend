@@ -57,7 +57,7 @@
 		{
 			"name": "grant_periods_project",
 			"label": "Choose Grant Period",
-			"size": 6,
+			"size": 12,
 			"testId": "createBudgetLineitemGrantPeriodProjectOption",
 			"dataTestId": "createBudgetLineitemGrantPeriodProject",
 			"optionsArray": [],
@@ -96,9 +96,21 @@
 			"dataTestId": "createBudgetLineitemNote",
 			"testId": "createBudgetLineitemNoteInput",
 			"label": "Note",
-			"size": 12,
+			"size": 6,
 			"rows": 2,
 			"multiline": true
+		}
+	],
+	"budgetLineitemFormButtons": [
+		{
+			"name": "attachfiles",
+			"id": "attachfiles",
+			"dataTestId": "createBudgetTracklineAttachFile",
+			"testId": "createBudgetTracklineAttachFileInput",
+			"label": "Attach files",
+			"inputType": "button",
+			"onClick": {},
+			"size": 12
 		}
 	]
 }

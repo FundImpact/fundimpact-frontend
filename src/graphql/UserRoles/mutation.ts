@@ -14,10 +14,10 @@ export const ASSIGN_PROJECT_TO_USER = gql`
 	mutation createOrgUserProject($input: UserProjectInput!) {
 		createOrgUserProject(input: $input) {
 			id
-			project{
+			project {
 				id
 				name
-				workspace{
+				workspace {
 					id
 					name
 				}
@@ -30,10 +30,10 @@ export const UNASSIGN_PROJECTS_ASSIGNED_TO_USER = gql`
 	mutation deleteOrgUserProject($id: ID!, $input: UserProjectInput!) {
 		deleteOrgUserProject(input: $input, id: $id) {
 			id
-			project{
+			project {
 				id
 				name
-				workspace{
+				workspace {
 					id
 					name
 				}

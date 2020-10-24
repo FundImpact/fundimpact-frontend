@@ -20,9 +20,7 @@ const useStyles = makeStyles({
 	table: {
 		width: "100%",
 	},
-	tableContainer: {
-		height: "47vh",
-	},
+	tableContainer: {},
 });
 
 const styledTable = makeStyles((theme: Theme) =>
@@ -103,9 +101,9 @@ export default function CollapsibleTable({
 	return (
 		<TableContainer component={Paper} className={classes.tableContainer}>
 			{!rows.length ? (
-				<Box mt={5} display="flex" justifyContent="center">
+				<Box m={2} display="flex" justifyContent="center">
 					{" "}
-					<Typography variant="h5" gutterBottom color="textSecondary">
+					<Typography variant="subtitle1" gutterBottom color="textSecondary">
 						<FormattedMessage
 							id={`noTargetFound`}
 							defaultMessage={`No Target Found`}
