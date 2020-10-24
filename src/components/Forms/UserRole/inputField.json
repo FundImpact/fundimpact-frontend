@@ -22,7 +22,25 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"required": true,
-			"size": 4
+			"size": 4,
+			"getInputValue": {}
+		},
+		{
+			"name": "project",
+			"id": "project",
+			"dataTestId": "userRoleFormProject",
+			"testId": "userRoleFormProjectInput",
+			"label": "Project",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "autocomplete",
+			"required": true,
+			"size": 12,
+			"multiple": true,
+			"autoCompleteGroupBy": null,
+			"hidden": true
 		}
 	]
 }

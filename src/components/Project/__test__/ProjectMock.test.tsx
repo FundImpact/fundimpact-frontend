@@ -3,11 +3,12 @@ import { renderApollo } from "../../../utils/test.util";
 import { fireEvent } from "@testing-library/react";
 import Project from "../Project";
 import { CREATE_PROJECT } from "../../../graphql/project";
-import { GET_ORGANISATIONS, GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
+import { GET_ORGANISATIONS, GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../../graphql/index";
 import { act } from "react-dom/test-utils";
 import { PROJECT_ACTIONS } from "../constants";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
+import { mockProjects } from "../../../utils/testMock.json";
 
 let ProjectMutation = false;
 const OrgMock = [
@@ -56,6 +57,12 @@ const mocks = [
 			variables: { filter: { workspace: "1" } },
 		},
 		result: { data: { orgProject: ProjectMockData } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS,
+		},
+		result: { data: mockProjects },
 	},
 ];
 

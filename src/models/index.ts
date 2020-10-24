@@ -107,6 +107,7 @@ export interface IInputFields {
 	hidden?: boolean;
 	logo?: string;
 	disabled?: boolean;
+	autoCompleteGroupBy?: <T>(option: T) => string;
 }
 
 export interface ISelectField {

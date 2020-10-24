@@ -29,6 +29,7 @@ export const invitedUserTableHeadings = [
 	{ label: "Email", keyMapping: "email" },
 	{ label: "Role", keyMapping: "role" },
 	{ label: "Confirmed" },
+	{ label: "Projects" },
 	{ label: "" }, //edit icon
 ];
 export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [

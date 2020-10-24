@@ -55,7 +55,6 @@ function FilterListView<T extends { [key: string]: string | string[] }>({
 	};
 
 	const onSubmit = (values: T) => {
-		console.log("invitedTable", values);
 		setFilterList(values);
 		setAnchorEl(null);
 	};
@@ -141,7 +140,7 @@ function FilterListView<T extends { [key: string]: string | string[] }>({
 											variant="contained"
 											color="secondary"
 											type="submit"
-											data-testid="createSaveButton"
+											data-testid="filterSubmitButton"
 										>
 											Filter
 										</Button>

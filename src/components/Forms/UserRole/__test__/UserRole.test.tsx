@@ -15,6 +15,8 @@ import {
 import { rolesMock, userListMock } from "./testHelp";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { organizationDetail } from "../../../../utils/testMock.json";
+import { GET_PROJECTS } from "../../../../graphql";
+import { mockProjects } from "../../../../utils/testMock.json";
 
 let sendUserInvitationMutation = false;
 const mocks = [
@@ -64,18 +66,34 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECTS,
+			variables: {},
+		},
+		result: { data: mockProjects },
+	},
+	{
+		request: {
+			query: GET_PROJECTS,
+			variables: {},
+		},
+		result: { data: { orgProject: mockProjects[0] } },
+	},
+	{
+		request: {
 			query: GET_ROLES_BY_ORG,
 			variables: {
 				organization: "13",
 			},
 		},
-		result: { data: { organizationRoles: rolesMock } },
+		result: { data: rolesMock },
 	},
 ];
 
 let sendUserInvitationForm: RenderResult<typeof queries>;
 let open = true;
 let close = jest.fn();
+
+jest.setTimeout(8000);
 beforeEach(() => {
 	act(() => {
 		sendUserInvitationForm = renderApollo(
@@ -93,12 +111,14 @@ beforeEach(() => {
 });
 
 describe("Update User Role Form", () => {
-	sendUserInvitation.forEach((formField) => {
-		test(`should have ${formField.name} field`, () => {
-			let sendUserInvitationField = sendUserInvitationForm.getByTestId(formField.dataTestId);
+	for (let i = 0; i < sendUserInvitation.length; i++) {
+		test(`should have ${sendUserInvitation[i].name} field`, () => {
+			let sendUserInvitationField = sendUserInvitationForm.getByTestId(
+				sendUserInvitation[i].dataTestId
+			);
 			expect(sendUserInvitationField).toBeInTheDocument();
 		});
-	});
+	}
 
 	// test(`Submit Button enabels if all required field is have values and send invitation mutaion call`, async () => {
 	// 	for (let i = 0; i < sendUserInvitation.length; i++) {
