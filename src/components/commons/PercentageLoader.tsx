@@ -18,7 +18,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 				alignItems="center"
 				justifyContent="center"
 			>
-				<Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+				<Typography variant="subtitle2" component="div">{`${Math.round(
 					props.value
 				)}%`}</Typography>
 			</Box>
@@ -37,9 +37,9 @@ export default function CircularPercentage({
 	return (
 		<Backdrop className={classes.backdrop} open={true}>
 			<Box>
-				<Typography variant="subtitle1" color="textSecondary">{`${message}  `}</Typography>
+				<Typography variant="h6">{`${message}`}</Typography>
 			</Box>
-			<CircularProgressWithLabel size={60} color="inherit" value={progress} />
+			<CircularProgressWithLabel size={55} color="inherit" value={progress} />
 		</Backdrop>
 	);
 }
