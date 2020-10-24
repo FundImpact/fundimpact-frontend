@@ -11,23 +11,33 @@ import {
 	setErrorNotification,
 } from "../../../reducers/notificationReducer";
 import { setUser } from "../../../reducers/userReducer";
-import { UserDispatchContext } from "../../../contexts/userContext";
+import { UserDispatchContext, useAuth } from "../../../contexts/userContext";
 import { IUser, UserProps } from "../../../models/User/user";
 import useFileUpload from "../../../hooks/fileUpload";
 import { FormattedMessage } from "react-intl";
 import { useNavigate } from "react-router";
+import { languages } from "../../../utils/languages.json";
+
+(updateUserForm[3].optionsArray as { id: string; name: string; code: string }[]) = languages;
+
+let getLanguageFronId = (id: string) => languages.find((language) => language.id == id);
+
+let getLanguageFromCode = (languageCode: string) =>
+	languages.find((language) => language.code == languageCode);
+
 function getInitialValues(props: UserProps) {
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		updateUserForm[0].logo = props.data?.logo;
 		props.data.uploadPhoto = "";
 
-		return { ...props.data };
+		return { ...props.data, language: getLanguageFromCode(props.data.language)?.id || "1" };
 	}
 	return {
 		name: "",
 		email: "",
 		uploadPhoto: "",
 		theme: {},
+		language: "1",
 	};
 }
 
@@ -44,6 +54,7 @@ function UserForm(props: UserProps) {
 		verifyAndUpdateUserForm = props.updateWithToken;
 		userTheme = props.data?.theme;
 	}
+
 	const [updateUser, { data: userResponse }] = useMutation(UPDATE_USER_DETAILS, {
 		onCompleted() {
 			if (verifyAndUpdateUserForm) {
@@ -82,6 +93,8 @@ function UserForm(props: UserProps) {
 	const onCreate = (value: IUser) => {};
 
 	const onUpdate = async (value: IUser) => {
+		let languageSelected = getLanguageFronId(value.language);
+		let languageCode = (languageSelected && languageSelected.code) || "en";
 		/*if user uploads file*/
 		if (value.uploadPhoto) {
 			let formData = new FormData();
@@ -100,6 +113,7 @@ function UserForm(props: UserProps) {
 							password: value.password,
 							profile_photo:
 								value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
+							language: languageCode,
 						},
 					},
 				});
@@ -112,6 +126,7 @@ function UserForm(props: UserProps) {
 							email: value.email,
 							profile_photo:
 								value.uploadPhoto === "removed" ? null : uploadResponse?.[0]?.id,
+							language: languageCode,
 						},
 					},
 				});
@@ -124,6 +139,7 @@ function UserForm(props: UserProps) {
 						input: {
 							name: value.name,
 							password: value.password,
+							language: languageCode,
 						},
 					},
 				});
@@ -135,6 +151,7 @@ function UserForm(props: UserProps) {
 							name: value.name,
 							email: value.email,
 							profile_photo: value.profile_photo,
+							language: languageCode,
 						},
 					},
 				});

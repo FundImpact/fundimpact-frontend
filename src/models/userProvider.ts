@@ -8,6 +8,7 @@ export interface IUserDataContext {
 		role?: {
 			id: string;
 		};
+		language: string;
 	};
 	logoutMsg?: string;
 }

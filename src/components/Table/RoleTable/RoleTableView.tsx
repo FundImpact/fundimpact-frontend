@@ -1,26 +1,28 @@
 import React, { useState, useRef, useEffect, useReducer } from "react";
 import {
-	makeStyles,
-	Theme,
-	createStyles,
-	TableContainer,
-	Table,
-	TableHead,
-	Paper,
-	TableCell,
-	TableRow,
-	TableBody,
-	Button,
-	Typography,
-	Checkbox,
 	Box,
+	Button,
+	Checkbox,
 	CircularProgress,
+	createStyles,
+	makeStyles,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Theme,
+	Typography,
 } from "@material-ui/core";
-import TableSkeleton from "../../Skeletons/TableSkeleton";
+import { Form, Formik, FormikProps } from "formik";
+import { FormattedMessage } from "react-intl";
+
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { IControllerAction } from "../../../models/AddRole";
 import { MODULE_CODES } from "../../../utils/access";
-import { Formik, Form, FormikProps } from "formik";
-import { FormattedMessage } from "react-intl";
+import TableSkeleton from "../../Skeletons/TableSkeleton";
 
 interface ITableCellCheckBoxProps {
 	formik: FormikProps<{
@@ -79,7 +81,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-
 function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] }) {
 	const tableStyles = styledTable();
 
@@ -87,7 +88,11 @@ function TableHeader({ tableHeadings }: { tableHeadings: { roleName: string }[] 
 		<TableHead>
 			<TableRow color="primary">
 				<TableCell className={tableStyles.th} align="left">
-					Permissions
+					<FormattedMessage
+						id="roleTableViewPermissionsHeading"
+						defaultMessage="Permissions"
+						description="This text will tell user about list of permissions"
+					/>
 				</TableCell>
 				{tableHeadings.map((tableHeading, index) => (
 					<TableCell className={tableStyles.th} key={index} align="left">
@@ -547,7 +552,7 @@ function RoleTableView({
 				>
 					<FormattedMessage
 						id="addRoleButton"
-						defaultMessage={`Update`}
+						defaultMessage="Update"
 						description="This text will tell user to create role"
 					/>
 				</Button>

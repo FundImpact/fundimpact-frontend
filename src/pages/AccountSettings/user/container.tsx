@@ -22,6 +22,7 @@ export const ProfileContainer = () => {
 		profile_photo: user?.profile_photo?.id,
 		logo: user?.profile_photo?.url,
 		uploadPhoto: "",
+		language: user?.language,
 	};
 	const [openResetPassForm, setOpenResetPassForm] = useState<boolean>(false);
 	const userDispatch = React.useContext(UserDispatchContext);
@@ -62,7 +63,7 @@ export const ProfileContainer = () => {
 					description={`This text will be shown on Setting page for profile heading`}
 				/>
 			</h1>
-			<Paper style={{ height: "400px" }}>
+			<Paper>
 				<Box m={3} p={2}>
 					<UserForm
 						data={data}

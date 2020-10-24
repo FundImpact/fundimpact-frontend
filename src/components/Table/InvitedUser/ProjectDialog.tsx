@@ -12,6 +12,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import { DefaultTheme } from "@material-ui/styles";
+import { FormattedMessage } from "react-intl";
 
 function ProjectDialog({
 	open,
@@ -36,12 +37,20 @@ function ProjectDialog({
 			<Box p={2}>
 				{!projects.length ? (
 					<Typography variant="h5" align="center">
-						No Project Assigned
+						<FormattedMessage
+							id="projectDialogNoProjectAssignedMessage"
+							defaultMessage="No Project Assigned"
+							description="This text will be shown in project assigned dialog when no project is assigned"
+						/>
 					</Typography>
 				) : (
 					<>
 						<Typography variant="h5" gutterBottom>
-							Project Assigned
+							<FormattedMessage
+								id="projectDialogProjectAssignedMessage"
+								defaultMessage="Project Assigned"
+								description="Project assigned dialog heading"
+							/>
 						</Typography>
 						<List>
 							{projects.map(({ project }, index) => (
