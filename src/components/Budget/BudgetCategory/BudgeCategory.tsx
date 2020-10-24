@@ -1,11 +1,12 @@
 import { useMutation } from "@apollo/client";
 import React from "react";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
-	GET_ORGANIZATION_BUDGET_CATEGORY,
 	GET_ORG_BUDGET_CATEGORY_COUNT,
+	GET_ORGANIZATION_BUDGET_CATEGORY,
 } from "../../../graphql/Budget";
 import {
 	CREATE_ORG_BUDGET_CATEGORY,
@@ -14,17 +15,16 @@ import {
 import { IInputField } from "../../../models";
 import { IBudgetCategory, IBudgetCategoryProps } from "../../../models/budget";
 import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
+import { FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
+import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
-import { removeEmptyKeys, compareObjectKeys } from "../../../utils";
-import { FORM_ACTIONS } from "../../../models/constants";
-import { useIntl } from "react-intl";
-import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -126,7 +126,7 @@ function BudgetCategory({
 							},
 						});
 					} catch (err) {
-						console.log("err :>> ", err);
+						console.error(err)
 					}
 
 					try {
@@ -153,7 +153,7 @@ function BudgetCategory({
 							},
 						});
 					} catch (err) {
-						console.log("err :>> ", err);
+						console.error(err)
 					}
 				},
 			});
@@ -214,7 +214,7 @@ function BudgetCategory({
 					})
 				}
 				subtitle={intl.formatMessage({
-					id: "deliverableCategoryFormSubtitle",
+					id: "budgetCategoryFormSubtitle",
 					defaultMessage: "Manage Budget Category",
 					description: `This text will be show on Budget category form for subtitle`,
 				})}

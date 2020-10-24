@@ -124,7 +124,7 @@ function BudgetLineItemTableGraphql({
 			annualYearHash = mapIdToName(data.annualYearList, annualYearHash);
 		},
 		onError: (err) => {
-			console.log(err);
+			console.error(err);
 		},
 	});
 	if (annualYears && Object.keys(annualYearHash).length === 0) {

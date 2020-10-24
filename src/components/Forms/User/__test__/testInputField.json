@@ -11,6 +11,12 @@
 			"dataTestId": "userFormName",
 			"testId": "userFormNameInput",
 			"value": "name"
+		},
+		{
+			"name": "language",
+			"dataTestId": "createUserFormLanguage",
+			"testId": "createUserFormLanguageInput",
+			"value": "1"
 		}
 	]
 }

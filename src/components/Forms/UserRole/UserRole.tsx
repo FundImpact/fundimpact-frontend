@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { FORM_ACTIONS } from "../constant";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import CommonForm from "../../CommonForm/commonForm";
 import { userRoleForm } from "./inputField.json";
 import { UserRoleProps, IUserRole, IUserRoleUpdate } from "../../../models/UserRole/UserRole";
 import { useIntl } from "react-intl";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
@@ -364,7 +364,7 @@ function UserRoleForm(props: UserRoleProps) {
 		description: "This text will be show on user update form for title",
 	});
 	let subtitle = intl.formatMessage({
-		id: "addUserRoleFormTitle",
+		id: "addUserRoleFormSubTitleTitle",
 		defaultMessage: "give user a role",
 		description: "This text will be show on user update form for subtitle",
 	});

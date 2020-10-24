@@ -150,17 +150,20 @@ const DeliverableMasterView = ({
 								{(deliverableCategoryFindAccess ||
 									deliverableUnitFindAccess ||
 									deliverableUnitCreateAccess ||
-									deliverableCategoryCreateAccess) && (
-									<FormattedMessage
-										description={`This text is the heding of deliverable ${
-											value === 0 ? "Categories" : "Unit"
-										} table`}
-										defaultMessage={`Deliverable ${
-											value === 0 ? "Categories" : "Unit"
-										} `}
-										id={`deliverableMasterPageHeading-${value}`}
-									/>
-								)}
+									deliverableCategoryCreateAccess) &&
+									(value == 0 ? (
+										<FormattedMessage
+											description={`This text is the heding of deliverable Categories table`}
+											defaultMessage={`Deliverable Categories`}
+											id={`deliverableMasterPageHeading-category`}
+										/>
+									) : (
+										<FormattedMessage
+											description={`This text is the heding of deliverable Unit table`}
+											defaultMessage={`Deliverable Unit`}
+											id={`deliverableMasterPageHeading-unit`}
+										/>
+									))}
 							</Box>
 						</Typography>
 					</Grid>

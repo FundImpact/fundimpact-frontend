@@ -204,14 +204,16 @@ function CommonTable<T extends { id: string }>({
 										) : (
 											<Grid container>
 												<Grid item xs={12} style={{ display: "flex" }}>
-													<FormattedMessage
-														id={
-															"tableHeading" +
-															heading.label.replace(/ /g, "")
-														}
-														description={`This text will be shown on table for ${heading.label} heading`}
-														defaultMessage={`${heading.label}`}
-													/>
+													{heading.label && (
+														<FormattedMessage
+															id={
+																"tableHeading" +
+																heading.label.replace(/ /g, "")
+															}
+															description={`This text will be shown on table for ${heading.label} heading`}
+															defaultMessage={`${heading.label}`}
+														/>
+													)}
 													{order && heading.keyMapping && (
 														<TableSortLabel
 															direction={order}

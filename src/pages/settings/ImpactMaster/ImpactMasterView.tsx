@@ -150,17 +150,20 @@ const ImpactMasterView = ({
 								{(impactCategoryFindAccess ||
 									impactUnitFindAccess ||
 									impactUnitCreateAccess ||
-									impactCategoryCreateAccess) && (
-									<FormattedMessage
-										description={`This text is the heding of impact ${
-											showImpactUnitTable === 0 ? "Categories" : "Unit"
-										} table`}
-										defaultMessage={`Impact ${
-											showImpactUnitTable === 0 ? "Categories" : "Unit"
-										} `}
-										id={`impactMasterPageHeading-${showImpactUnitTable}`}
-									/>
-								)}
+									impactCategoryCreateAccess) &&
+									(showImpactUnitTable == 0 ? (
+										<FormattedMessage
+											description={`This text is the heding of impact Categories table`}
+											defaultMessage={`Impact Categories`}
+											id={`impactMasterPageHeading-category`}
+										/>
+									) : (
+										<FormattedMessage
+											description={`This text is the heding of impact Unit table`}
+											defaultMessage={`Impact Unit`}
+											id={`impactMasterPageHeading-unit`}
+										/>
+									))}
 							</Box>
 						</Typography>
 					</Grid>
