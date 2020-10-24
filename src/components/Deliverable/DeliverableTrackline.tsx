@@ -293,7 +293,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
-		console.log(`on Created is called with: `, value);
 		setSelectedDeliverableTarget(value.deliverable_target_project);
 		setDonors(value.donors);
 		// setCreateDeliverableTracklineFyId(value.financial_year);
