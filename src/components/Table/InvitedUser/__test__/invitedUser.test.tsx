@@ -1,6 +1,6 @@
 import React from "react";
 import { renderApollo } from "../../../../utils/test.util";
-import { waitForElement, act, fireEvent } from "@testing-library/react";
+import { waitForElement, act, fireEvent, RenderResult } from "@testing-library/react";
 import InvitedUserTable from "../";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
@@ -52,7 +52,7 @@ const mocks = [
 	},
 ];
 
-let invitedUserTable: any;
+let invitedUserTable: RenderResult;
 
 beforeEach(() => {
 	act(() => {
@@ -86,6 +86,17 @@ describe("Invited User TableGraphql Calls and data listing", () => {
 		const { getByText } = invitedUserTable;
 		await waitForElement(() => getByText(new RegExp("" + userListMock[0].email, "i")));
 		await waitForElement(() => getByText(new RegExp("" + userListMock[0].role.name, "i")));
+	});
+
+	test("user peoject dialog test", async () => {
+		let showProjectButton = await invitedUserTable.findAllByTestId("show-user-projects");
+		await act(async () => {
+			await fireEvent.click(showProjectButton[0]);
+		});
+		let projectDialog = await invitedUserTable.findByTestId("project-dialog");
+		expect(projectDialog).toBeInTheDocument();
+		const { getByText } = invitedUserTable;
+		await waitForElement(() => getByText(new RegExp("build school", "i")));
 	});
 
 	test("Filter List test", async () => {

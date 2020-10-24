@@ -1,4 +1,15 @@
-import { Chip, TableCell, IconButton, Box, Avatar, Grid, TablePagination } from "@material-ui/core";
+import {
+	Chip,
+	TableCell,
+	IconButton,
+	Box,
+	Avatar,
+	Grid,
+	TablePagination,
+	Menu,
+	MenuItem,
+	Button,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { invitedUserTableHeadings } from "../constants";
@@ -17,7 +28,12 @@ import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import pagination from "../../../hooks/pagination";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-import { useIntl } from "react-intl";
+import { useIntl, FormattedMessage } from "react-intl";
+import { IUserRoleUpdate } from "../../../models/UserRole/UserRole";
+import UserRole from "../../Forms/UserRole";
+import { FORM_ACTIONS } from "../../../models/constants";
+import ProjectDialog from "./ProjectDialog";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 let roleHash: { [key: string]: string } = {};
 const chipArray = ({
@@ -92,6 +108,106 @@ const mapIdToName = (
 		initialObject
 	);
 };
+
+const UserProjects = ({
+	projects,
+}: {
+	projects: { project: { id: string; name: string; workspace: { id: string; name: string } } }[];
+}) => {
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
+	return (
+		<>
+			<ProjectDialog
+				projects={projects}
+				open={openDialog}
+				handleClose={() => setOpenDialog(false)}
+			/>
+			<IconButton
+				size="small"
+				data-testid="show-user-projects"
+				onClick={() => setOpenDialog(true)}
+			>
+				<VisibilityIcon />
+			</IconButton>
+		</>
+	);
+};
+
+function EditUserIcon({
+	userData,
+}: {
+	userData: {
+		id: string;
+		email: string;
+		role: { id: string; type: string; is_project_level: boolean };
+		user_projects: {
+			id: string;
+			project: { id: string; name: string; workspace: { id: string; name: string } };
+		}[];
+	};
+}) {
+	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+	const [targetData, setTargetData] = useState<IUserRoleUpdate | null>();
+	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setMenuAnchor(event.currentTarget);
+	};
+	const handleMenuClose = () => {
+		setMenuAnchor(null);
+	};
+	const dashboardData = useDashBoardData();
+	return (
+		<>
+			<TableCell>
+				<IconButton
+					onClick={handleMenuClick}
+					disabled={
+						userData.role.type == `owner-org-${dashboardData?.organization?.id}` ||
+						!userData.role.is_project_level
+					}
+				>
+					<MoreVertIcon />
+				</IconButton>
+			</TableCell>
+			<Menu
+				id="deliverable-target-simple-menu"
+				anchorEl={menuAnchor}
+				keepMounted
+				open={Boolean(menuAnchor)}
+				onClose={handleMenuClose}
+			>
+				<MenuItem
+					onClick={() => {
+						setTargetData({
+							id: userData.id,
+							email: userData.email,
+							role: userData.role.id,
+							project: userData.user_projects.map((user_project) => ({
+								...user_project.project,
+								user_project_id: user_project.id,
+							})),
+						});
+						handleMenuClose();
+					}}
+				>
+					<FormattedMessage
+						id="editUserMenu"
+						defaultMessage="Edit User"
+						description="This text will be show to edit the user"
+					/>
+				</MenuItem>
+			</Menu>
+			{targetData && (
+				<UserRole
+					open={targetData !== null}
+					handleClose={() => setTargetData(null)}
+					type={FORM_ACTIONS.UPDATE}
+					data={targetData}
+				/>
+			)}
+		</>
+	);
+}
+
 export default function InvitedUserTable() {
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const dashBoardData = useDashBoardData();
@@ -166,8 +282,9 @@ export default function InvitedUserTable() {
 	useEffect(() => {
 		let row: any = [];
 		invitedUserList?.userList?.forEach((user: any, index: number) => {
+			// console.log("user :>> ", user);
 			let col = [
-				<TableCell>{index + 1}</TableCell>,
+				<TableCell>{invitedUserPage * 10 + index + 1}</TableCell>,
 				<TableCell>{user?.email}</TableCell>,
 				<TableCell>
 					<Box mr={1}>
@@ -178,11 +295,12 @@ export default function InvitedUserTable() {
 					{user?.confirmed ? <CheckIcon color="action" /> : <CloseIcon color="error" />}
 				</TableCell>,
 				<TableCell>
-					<IconButton disabled>
-						<MoreVertIcon />
-					</IconButton>
+					{user?.role?.is_project_level && (
+						<UserProjects projects={user?.user_projects || []} />
+					)}
 				</TableCell>,
 			];
+			col.push(<EditUserIcon key={Math.random()} userData={user} />);
 			row.push(col);
 		});
 		setRows(row);

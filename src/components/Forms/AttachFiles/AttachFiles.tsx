@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 		top: "0px",
 	},
 	viewOrDownload: {
-		color: theme.palette.background.paper,
+		color: "rgb(144,144,144)", // works on both dark and light theme
 		position: "absolute",
 		bottom: "0px",
 		left: "0px",
