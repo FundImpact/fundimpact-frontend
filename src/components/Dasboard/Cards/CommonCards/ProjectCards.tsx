@@ -8,7 +8,7 @@ import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 	const { chartConfig } = projectCardConfig;
-	if (!projectCardConfig.mainHeading) {
+	if (projectCardConfig.loading) {
 		return (
 			<>
 				<Grid item md={5}>
@@ -55,7 +55,7 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 					</Box>
 				</Box>
 				{/* <BorderLinearProgress variant="determinate" value={60} /> */}
-				{projectCardConfig.firstBarValue && (
+				{projectCardConfig.firstBarValue ? (
 					<>
 						<Box ml={1} mt={2}>
 							{projectCardConfig.firstBarHeading && (
@@ -71,7 +71,7 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 							color={"primary"}
 						/>
 					</>
-				)}
+				) : null}
 			</Grid>
 
 			<Grid item md={12}>

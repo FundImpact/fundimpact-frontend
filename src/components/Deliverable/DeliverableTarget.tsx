@@ -155,6 +155,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				],
 			});
 			deliverableTargetForm[3].optionsArray = []; // set empty units after creation
+			setcurrentCategory("");
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target created successfully !")
 			);
@@ -203,6 +204,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target updated successfully !")
 			);
+			setcurrentCategory("");
 			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
@@ -349,10 +351,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					{...{
 						initialValues,
 						validate,
-						onCreate,
+						onCreate: onCreate,
 						onCancel,
 						formAction,
-						onUpdate,
+						onUpdate: onUpdate,
 						inputFields: deliverableTargetForm,
 					}}
 				/>
