@@ -4,6 +4,45 @@ import CommonForm from "../../../CommonForm";
 import { addressFormFields } from "./inputFields.json";
 import { FORM_ACTIONS } from "../../../../models/constants";
 import { validatePincode } from "../../../../utils";
+import { ICreateAddress, ICreateAddressVariables } from "../../../../models/address/query";
+import { MutationFunctionOptions, FetchResult } from "@apollo/client";
+import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+import {
+	setSuccessNotification,
+	setErrorNotification,
+} from "../../../../reducers/notificationReducer";
+
+interface IAddressFormContainer {
+	countryList: { id: string; name: string }[];
+	contact_id: string;
+	entity_id: string;
+	entity_name: string;
+	loading: boolean;
+	createAddress: (
+		options?: MutationFunctionOptions<ICreateAddress, ICreateAddressVariables> | undefined
+	) => Promise<FetchResult<ICreateAddress, Record<string, any>, Record<string, any>>>;
+}
+
+interface ISubmitForm {
+	createAddress: (
+		options?: MutationFunctionOptions<ICreateAddress, ICreateAddressVariables> | undefined
+	) => Promise<FetchResult<ICreateAddress, Record<string, any>, Record<string, any>>>;
+	valuesSubmitted: {
+		entity_name: string;
+		entity_id: string;
+		contact_id: string;
+		address_line_1: string;
+		address_line_2?: string;
+		pincode: string;
+		city: string;
+		country: string;
+		state: string;
+		district: string;
+		village: string;
+		address_type: string;
+	};
+	notificationDispatch: React.Dispatch<any>;
+}
 
 const getInitialFormValues = (): IAddressForm => {
 	return {
@@ -19,7 +58,18 @@ const getInitialFormValues = (): IAddressForm => {
 	};
 };
 
-const submitForm = (valuesSubmitted: IAddressForm) => {};
+const submitForm = async ({
+	createAddress,
+	notificationDispatch,
+	valuesSubmitted,
+}: ISubmitForm) => {
+	try {
+		await createAddress({ variables: { input: { data: { ...valuesSubmitted } } } });
+		notificationDispatch(setSuccessNotification("Fund Received Reported"));
+	} catch (err) {
+		notificationDispatch(setErrorNotification(err.message));
+	}
+};
 
 const onCancel = () => {};
 
@@ -54,9 +104,29 @@ const validate = (values: IAddressForm) => {
 	return errors;
 };
 
-function AddressFormContainer({ countryList }: { countryList: { id: string; name: string }[] }) {
+function AddressFormContainer({
+	countryList,
+	contact_id,
+	entity_id,
+	entity_name,
+	createAddress,
+	loading,
+}: IAddressFormContainer) {
 	const initialValues = getInitialFormValues();
 	(addressFormFields[4].optionsArray as { id: string; name: string }[]) = countryList;
+	const notificationDispatch = useNotificationDispatch();
+
+	const onFormSubmit = async (valuesSubmitted: IAddressForm) => {
+		try {
+			await submitForm({
+				valuesSubmitted: { ...valuesSubmitted, entity_id, entity_name, contact_id },
+				createAddress,
+				notificationDispatch,
+			});
+		} catch (err) {
+			console.error(err.message);
+		}
+	};
 
 	return (
 		<CommonForm

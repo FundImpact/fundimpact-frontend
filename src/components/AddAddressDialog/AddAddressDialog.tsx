@@ -47,7 +47,7 @@ function AddContactDialog({ open, handleClose }: { open: boolean; handleClose: (
 						</Box>
 					</Grid>
 					<Grid item xs={8}>
-						<AddressFormGraphql />
+						{/* <AddressFormGraphql /> */}
 					</Grid>
 				</Grid>
 			</Box>

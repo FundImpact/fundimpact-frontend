@@ -111,10 +111,10 @@ export const ProfileContainer = () => {
 					type={FORM_ACTIONS.UPDATE}
 				/>
 			)}
-			<AddContactDialog
+			{/* <AddContactDialog
 				open={contactAddressDialogOpen}
 				handleClose={() => setContactAddressDialogOpen(false)}
-			/>
+			/> */}
 		</Box>
 	);
 };

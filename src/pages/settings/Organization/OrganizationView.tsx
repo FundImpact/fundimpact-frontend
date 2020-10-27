@@ -201,7 +201,6 @@ function OrganizationView({
 			}
 		};
 	}, []);
-
 	const intl = useIntl();
 
 	const textFieldsLabelFormattedMessageObj: { [key: string]: any } = {
@@ -243,6 +242,8 @@ function OrganizationView({
 					<AddContactDialog
 						open={contactAddressDialogOpen}
 						handleClose={() => setContactAddressDialogOpen(false)}
+						entity_name={"organization"}
+						entity_id={dashboardData?.organization?.id || ""}
 					/>
 					<Paper>
 						<Box p={2}>

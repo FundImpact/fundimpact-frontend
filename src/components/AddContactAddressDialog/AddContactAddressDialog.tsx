@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, Typography, Box, useTheme, Grid, StepLabel } from "@material-ui/core";
 import ContactForm from "../Forms/ContactDetails/ContactForm";
 import { FormattedMessage } from "react-intl";
@@ -15,9 +15,20 @@ function getFormSteps() {
 	return ["Create Contact", "Add Address"];
 }
 
-function AddContactDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+function AddContactDialog({
+	open,
+	handleClose,
+	entity_name,
+	entity_id,
+}: {
+	open: boolean;
+	handleClose: () => void;
+	entity_name: string;
+	entity_id: string;
+}) {
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = React.useState(FormType.contact);
+	const [activeForm, setActiveForm] = useState(FormType.contact);
+	const [contact_id, setContact_id] = useState<string>("");
 	const formSteps = getFormSteps();
 
 	return (
@@ -81,9 +92,13 @@ function AddContactDialog({ open, handleClose }: { open: boolean; handleClose: (
 							})}
 						</Stepper>
 						{activeForm == FormType.contact ? (
-							<ContactForm />
+							<ContactForm entity_id={entity_id} entity_name={entity_name} />
 						) : (
-							<AddressForm />
+							<AddressForm
+								contact_id={contact_id}
+								entity_id={entity_id}
+								entity_name={entity_name}
+							/>
 						)}
 					</Grid>
 				</Grid>

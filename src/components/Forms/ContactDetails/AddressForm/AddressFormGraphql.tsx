@@ -1,9 +1,24 @@
 import React, { useEffect } from "react";
 import AddressFormContainer from "./AddressFormContainer";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_COUNTRY_LIST, GET_STATE_LIST, GET_DISTRICT_LIST } from "../../../../graphql";
+import { CREATE_ADDRESS } from "../../../../graphql/Address/mutation";
+import { ICreateAddress, ICreateAddressVariables } from "../../../../models/address/query";
 
-function AddressFormGraphql() {
+function AddressFormGraphql({
+	contact_id,
+	entity_id,
+	entity_name,
+}: {
+	contact_id: string;
+	entity_id: string;
+	entity_name: string;
+}) {
+	const [createAddress, { loading: creatingAddress }] = useMutation<
+		ICreateAddress,
+		ICreateAddressVariables
+	>(CREATE_ADDRESS);
+
 	const { data: countryList } = useQuery<{ countryList: { id: string; name: string }[] }>(
 		GET_COUNTRY_LIST
 	);
@@ -23,7 +38,16 @@ function AddressFormGraphql() {
 			},
 		});
 	}, []);
-	return <AddressFormContainer countryList={countryList?.countryList || []} />;
+	return (
+		<AddressFormContainer
+			countryList={countryList?.countryList || []}
+			contact_id={contact_id}
+			entity_id={entity_id}
+			entity_name={entity_name}
+			createAddress={createAddress}
+			loading={creatingAddress}
+		/>
+	);
 }
 
 export default AddressFormGraphql;
