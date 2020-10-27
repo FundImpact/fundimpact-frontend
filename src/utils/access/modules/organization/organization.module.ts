@@ -9,5 +9,9 @@ export const ORGANIZATION_MODULE = {
 			name: "Update Organization",
 			code: ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION,
 		},
+		[ORGANIZATION_ACTIONS.FIND_ORGANIZATION]: {
+			name: "Find Organization",
+			code: ORGANIZATION_ACTIONS.FIND_ORGANIZATION,
+		},
 	},
 };
