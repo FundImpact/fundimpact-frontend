@@ -1,23 +1,24 @@
-import React, { useCallback } from "react";
 import {
-	Grid,
 	Box,
-	CircularProgress,
-	TextField,
 	Button,
-	makeStyles,
-	Theme,
-	Typography,
+	Checkbox,
+	CircularProgress,
 	FormControl,
 	FormControlLabel,
 	FormGroup,
-	Checkbox,
+	Grid,
+	makeStyles,
+	TextField,
+	Theme,
+	Typography,
 } from "@material-ui/core";
-import { IAddRole, IControllerAction, IAddRolePermissions } from "../../../models/AddRole";
-import { FormikState, Formik, Form, FormikProps } from "formik";
+import { Form, Formik, FormikProps, FormikState } from "formik";
+import React, { useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { MODULE_CODES } from "../../../utils/access";
+
+import { IAddRole, IAddRolePermissions, IControllerAction } from "../../../models/AddRole";
 import { compareObjectKeys } from "../../../utils";
+import { MODULE_CODES } from "../../../utils/access";
 import { FORM_ACTIONS } from "../constant";
 
 interface IControllerActionsFormProps {
@@ -215,7 +216,20 @@ function AddRoleView({
 											data-testid="createSaveButton"
 											disabled={!formik.isValid}
 										>
-											<FormattedMessage
+											{formType == FORM_ACTIONS.CREATE ? (
+												<FormattedMessage
+													id="addUserRoleButton"
+													defaultMessage="Add Role"
+													description="This text will tell user to create role"
+												/>
+											) : (
+												<FormattedMessage
+													id="UpdateUserRoleButton"
+													defaultMessage="Update Role"
+													description="This text will tell user to create role"
+												/>
+											)}
+											{/* <FormattedMessage
 												id="addRoleButton"
 												defaultMessage={`${
 													formType == FORM_ACTIONS.CREATE
@@ -223,7 +237,7 @@ function AddRoleView({
 														: "Update"
 												} Role`}
 												description="This text will tell user to create role"
-											/>
+											/> */}
 										</Button>
 										<Button className={classes.cancelButton} onClick={onCancel}>
 											<FormattedMessage

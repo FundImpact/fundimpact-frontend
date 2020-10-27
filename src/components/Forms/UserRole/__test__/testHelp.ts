@@ -7,11 +7,26 @@ export const userListMock = [
 		role: {
 			id: "39",
 			name: "Admin",
+			is_project_level: true,
+			type: "admin",
 		},
 		organization: {
 			id: "58",
 			name: "HISAAB KITAAB",
 		},
+		user_projects: [
+			{
+				id: "1",
+				project: {
+					id: "1",
+					name: "build school",
+					workspace: {
+						id: "1",
+						name: "education",
+					},
+				},
+			},
+		],
 	},
 ];
 
@@ -20,6 +35,7 @@ export const rolesMock = [
 		id: "40",
 		name: "Accountant",
 		type: "accountant-org-58",
+		is_project_level: false,
 		organization: {
 			id: "58",
 			name: "HISAAB KITAAB",

@@ -9,45 +9,19 @@ import { UIProvider } from "./contexts/uiContext";
 import { UserProvider } from "./contexts/userContext";
 import * as serviceWorker from "./serviceWorker";
 import { DashboardProvider } from "./contexts/dashboardContext";
-
-function loadLocaleData(locale: string) {
-	const defaultLocal = import(`../src/compiled-lang/en.json`);
-	if (!locale) return defaultLocal;
-	switch (locale) {
-		case "hi":
-			return import(`../src/compiled-lang/hi.json`);
-		default:
-			return defaultLocal;
-	}
-
-	/**
-	 * @description The code below seems smaller than the one above for loading different
-	 * the language's file, but we are still not using it because, in the apporach mention below,
-	 * we cannot get types on the compiled lang.
-	 */
-	// try {
-	// 	return import(`../src/compiled-lang/${locale}.json`);
-	// } catch (error) {
-	// 	console.error(
-	// 		`Failed to fetch lang data for locale: ${locale}. Switching to default locale`
-	// 	);
-	// 	return defaultLocal;
-	// }
-}
+import { MultilingualProvider } from "./contexts/multilingualContext";
 
 (async function () {
-	const locale = navigator.languages[0] || navigator.language;
-	const messages = await loadLocaleData(locale);
 	ReactDOM.render(
-		<IntlProvider messages={messages.default} locale={locale} defaultLocale="en">
-			<UserProvider>
+		<UserProvider>
+			<MultilingualProvider>
 				<DashboardProvider>
 					<UIProvider>
 						<App />
 					</UIProvider>
 				</DashboardProvider>
-			</UserProvider>
-		</IntlProvider>,
+			</MultilingualProvider>
+		</UserProvider>,
 		document.getElementById("root")
 	);
 })();

@@ -92,7 +92,6 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 		}
 	}
 
-	console.log(`forms initial value`, initialValues);
 	return (
 		<Formik
 			validateOnBlur

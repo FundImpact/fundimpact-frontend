@@ -30,3 +30,7 @@ export type ProjectProps = {
 			data: IPROJECT_FORM;
 	  }
 );
+
+export interface IGetProject {
+	orgProject: { id: string; name: string; workspace: { id: string; name: string } }[];
+}

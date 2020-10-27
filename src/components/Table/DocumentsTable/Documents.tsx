@@ -68,7 +68,6 @@ export default function DocumentsTable({
 					}).length
 				)
 					organizationAttachments = organizationAttachments.filter((obj: any) => {
-						console.log(obj.ext, filterList?.ext);
 						return obj.name == filterList?.name || obj.ext == filterList?.ext;
 					});
 

@@ -8,7 +8,6 @@ const useMultipleFileUpload = () => {
 
 	useEffect(() => {
 		if (uploadingError) {
-			console.log("checkcheckError", uploadingError);
 			setError("Uploading Error");
 		}
 	}, [uploadingError]);
@@ -63,7 +62,6 @@ const useMultipleFileUpload = () => {
 		} catch (err) {
 			console.error(err);
 		} finally {
-			console.log("finally");
 			if (setUploadSuccess) setUploadSuccess(true);
 		}
 	};

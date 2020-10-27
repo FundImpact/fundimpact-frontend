@@ -27,6 +27,20 @@
 			"type": "email",
 			"disabled": true,
 			"size": 12
+		},
+		{
+			"name": "language",
+			"id": "language",
+			"dataTestId": "createUserFormLanguage",
+			"testId": "createUserFormLanguageInput",
+			"label": "Choose Language",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"disabled": false,
+			"size": 12
 		}
 	],
 	"updateUserWithTokenForm": [

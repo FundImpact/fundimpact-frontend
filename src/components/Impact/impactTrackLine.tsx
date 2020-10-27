@@ -144,7 +144,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			}
 			setUploadSuccess(false);
 			handleNext();
-			console.log("uploadSuccess", uploadSuccess);
 		}
 	}, [uploadSuccess]);
 

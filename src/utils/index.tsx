@@ -143,3 +143,16 @@ export const uploadPercentageCalculator = (remainingFiles: number, totalFiles: n
 	if (!percentage || isNaN(percentage) || percentage === 100) percentage = 0;
 	return percentage;
 };
+export const debounce = (functionToDebounce: any, time: number) => {
+	let timeOut: NodeJS.Timeout;
+	return function (this: any) {
+		if (timeOut) {
+			clearTimeout(timeOut);
+		}
+		let args = arguments;
+		let context = this;
+		timeOut = setTimeout(() => {
+			functionToDebounce.apply(context, args);
+		}, time);
+	};
+};

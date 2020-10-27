@@ -37,7 +37,7 @@ function CommonUploadingFilesMessage() {
 	const intl = useIntl();
 	let uploadingFilesMessage = intl.formatMessage({
 		id: "uploadingFilesMessage",
-		defaultMessage: "Uploading Files",
+		defaultMessage: "Uploading Files..",
 		description: `This text will be show on loading for uploadng files`,
 	});
 	return uploadingFilesMessage;

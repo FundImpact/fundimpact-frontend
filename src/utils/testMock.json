@@ -229,6 +229,28 @@
 			"short_name": "vikram short 100"
 		}
 	],
+	"mockProjects": [
+		{
+			"orgProject": {
+				"id": "1",
+				"name": "Health care",
+				"workspace": {
+					"id": "1",
+					"name": "safety"
+				}
+			}
+		},
+		{
+			"orgProject": {
+				"id": "2",
+				"name": "School construction",
+				"workspace": {
+					"id": "2",
+					"name": "education"
+				}
+			}
+		}
+	],
 	"mockCurrencyList": [
 		{
 			"code": "INR"

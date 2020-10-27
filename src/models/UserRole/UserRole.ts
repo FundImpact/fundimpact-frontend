@@ -4,6 +4,16 @@ export interface IUserRole {
 	id?: string | number;
 	email: string;
 	role: string;
+	project?: { id: string; name: string; workspace: { id: string; name: string } }[];
+}
+
+export interface IUserRoleUpdate extends Omit<IUserRole, "project"> {
+	project: {
+		user_project_id: string;
+		id: string;
+		name: string;
+		workspace: { id: string; name: string };
+	}[];
 }
 
 export type UserRoleProps = {
@@ -15,6 +25,6 @@ export type UserRoleProps = {
 	  }
 	| {
 			type: FORM_ACTIONS.UPDATE;
-			data: IUserRole;
+			data: IUserRoleUpdate;
 	  }
 );

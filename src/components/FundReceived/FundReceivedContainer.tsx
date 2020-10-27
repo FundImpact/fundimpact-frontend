@@ -96,7 +96,7 @@ const updateFundReceiptListCount = (
 			},
 		});
 	} catch (err) {
-		console.log("err :>> ", err);
+		console.error(err);
 	}
 };
 
@@ -130,7 +130,7 @@ const createProjectFundReceipt = async ({
 				});
 				updateFundReceiptListCount(store, project);
 			} catch (err) {
-				console.log("err :>> ", err);
+				console.error(err);
 			}
 		},
 		refetchQueries: [
@@ -192,7 +192,7 @@ const updateProjectFundReceipt = async ({
 					fundReceipt: updatedFundReceipt,
 				});
 			} catch (err) {
-				console.log("err :>> ", err);
+				console.error(err);
 			}
 		},
 	});

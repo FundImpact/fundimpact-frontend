@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
+import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
