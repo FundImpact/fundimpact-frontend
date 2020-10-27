@@ -31,8 +31,6 @@ import { IDashboardDataContext, ICountry } from "../../../models";
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
-import { secondaryColor, primaryColor } from "../../../models/constants";
-import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import AddContactDialog from "../../../components/AddContactDialog";
 import AddAddressDialog from "../../../components/AddAddressDialog";
 
