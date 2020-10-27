@@ -10,12 +10,11 @@ import { useQuery } from "@apollo/client";
 import { GET_USER_DETAILS } from "../../../graphql/User/query";
 import { setUser } from "../../../reducers/userReducer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AddContactDialog from "../../../components/AddContactDialog";
+import AddContactDialog from "../../../components/AddContactAddressDialog";
 import AddAddressDialog from "../../../components/AddAddressDialog";
 
 export const ProfileContainer = () => {
-	const [contactDialogOpenStatus, setContactDialogOpenStatus] = useState<boolean>(false);
-	const [addressDialogOpenStatus, setAddressDialogOpenStatus] = useState<boolean>(false);
+	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
 	const auth = useAuth();
 	const user: any = auth.user;
 	const data = {
@@ -93,19 +92,12 @@ export const ProfileContainer = () => {
 						</Button>
 						<Button
 							startIcon={<PersonAddIcon />}
-							onClick={() => setContactDialogOpenStatus(true)}
+							onClick={() => setContactAddressDialogOpen(true)}
 						>
 							<FormattedMessage
 								id={`addContactButton`}
 								defaultMessage={`Add Contact`}
 								description={`This text will be shown on add contact button`}
-							/>
-						</Button>
-						<Button onClick={() => setAddressDialogOpenStatus(true)}>
-							<FormattedMessage
-								id={`addAddressButton`}
-								defaultMessage={`Add Address`}
-								description={`This text will be shown on add address button`}
 							/>
 						</Button>
 					</ButtonGroup>
@@ -120,12 +112,8 @@ export const ProfileContainer = () => {
 				/>
 			)}
 			<AddContactDialog
-				open={contactDialogOpenStatus}
-				handleClose={() => setContactDialogOpenStatus(false)}
-			/>
-			<AddAddressDialog
-				open={addressDialogOpenStatus}
-				handleClose={() => setAddressDialogOpenStatus(false)}
+				open={contactAddressDialogOpen}
+				handleClose={() => setContactAddressDialogOpen(false)}
 			/>
 		</Box>
 	);

@@ -38,8 +38,7 @@ function OrganizationContainer({
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
 	let { uploadFile, loading: fileUploading } = useFileUpload();
-	const [contactDialogOpenStatus, setContactDialogOpenStatus] = useState<boolean>(false);
-	const [addressDialogOpenStatus, setAddressDialogOpenStatus] = useState<boolean>(false);
+	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
 
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -175,10 +174,8 @@ function OrganizationContainer({
 			onSubmit={onSubmit}
 			logo={dashboardData?.organization?.logo?.url || ""}
 			countryList={countryList}
-			contactDialogOpenStatus={contactDialogOpenStatus}
-			setContactDialogOpenStatus={setContactDialogOpenStatus}
-			addressDialogOpenStatus={addressDialogOpenStatus}
-			setAddressDialogOpenStatus={setAddressDialogOpenStatus}
+			contactAddressDialogOpen={contactAddressDialogOpen}
+			setContactAddressDialogOpen={setContactAddressDialogOpen}
 		/>
 	);
 }

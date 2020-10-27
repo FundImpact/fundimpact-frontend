@@ -83,7 +83,7 @@ function IndividualDialogContainer({
 				initialValues={initialValues}
 				validate={validate}
 				onCreate={submitForm}
-				onCancel={onCancel}
+				onCancel={handleClose}
 				inputFields={individualFormFields}
 				formAction={FORM_ACTIONS.CREATE}
 				onUpdate={submitForm}

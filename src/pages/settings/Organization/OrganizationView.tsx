@@ -31,8 +31,8 @@ import { IDashboardDataContext, ICountry } from "../../../models";
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
-import AddContactDialog from "../../../components/AddContactDialog";
-import AddAddressDialog from "../../../components/AddAddressDialog";
+import AddContactDialog from "../../../components/AddContactAddressDialog";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 enum colorType {
 	primary = "primary",
@@ -168,10 +168,8 @@ function OrganizationView({
 	loading,
 	logo,
 	countryList,
-	contactDialogOpenStatus,
-	setContactDialogOpenStatus,
-	addressDialogOpenStatus,
-	setAddressDialogOpenStatus,
+	contactAddressDialogOpen,
+	setContactAddressDialogOpen,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -181,10 +179,8 @@ function OrganizationView({
 	onSubmit: (value: IOrganisationForm) => Promise<void>;
 	logo: string;
 	countryList: ICountry[];
-	contactDialogOpenStatus: boolean;
-	setContactDialogOpenStatus: React.Dispatch<React.SetStateAction<boolean>>;
-	addressDialogOpenStatus: boolean;
-	setAddressDialogOpenStatus: React.Dispatch<React.SetStateAction<boolean>>;
+	contactAddressDialogOpen: boolean;
+	setContactAddressDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -245,12 +241,8 @@ function OrganizationView({
 				</Grid>
 				<Grid item xs={12}>
 					<AddContactDialog
-						open={contactDialogOpenStatus}
-						handleClose={() => setContactDialogOpenStatus(false)}
-					/>
-					<AddAddressDialog
-						open={addressDialogOpenStatus}
-						handleClose={() => setAddressDialogOpenStatus(false)}
+						open={contactAddressDialogOpen}
+						handleClose={() => setContactAddressDialogOpen(false)}
 					/>
 					<Paper>
 						<Box p={2}>
@@ -408,40 +400,23 @@ function OrganizationView({
 															/>
 														</Grid>
 														<Grid item xs={12}>
-															<ButtonGroup
-																fullWidth
-																variant="outlined"
+															<Button
+																startIcon={<PersonAddIcon />}
+																variant="contained"
 																color="secondary"
+																fullWidth
+																onClick={() =>
+																	setContactAddressDialogOpen(
+																		true
+																	)
+																}
 															>
-																<Button
-																	fullWidth
-																	onClick={() =>
-																		setContactDialogOpenStatus(
-																			true
-																		)
-																	}
-																>
-																	<FormattedMessage
-																		id={`addContactButton`}
-																		defaultMessage={`Add Contact`}
-																		description={`This text will be shown on add contact button`}
-																	/>
-																</Button>
-																<Button
-																	onClick={() =>
-																		setAddressDialogOpenStatus(
-																			true
-																		)
-																	}
-																	color="secondary"
-																>
-																	<FormattedMessage
-																		id={`addAddressButton`}
-																		defaultMessage={`Add Address`}
-																		description={`This text will be shown on add address button`}
-																	/>
-																</Button>
-															</ButtonGroup>
+																<FormattedMessage
+																	id={`addContactButton`}
+																	defaultMessage={`Add Contact`}
+																	description={`This text will be shown on add contact button`}
+																/>
+															</Button>
 														</Grid>
 													</Grid>
 												</Grid>
