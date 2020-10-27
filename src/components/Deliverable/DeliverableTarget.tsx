@@ -224,6 +224,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		onError(err) {
 			notificationDispatch(setErrorNotification("Unit not match with category !"));
 		},
+		fetchPolicy: "network-only",
 	});
 
 	useEffect(() => {
@@ -274,7 +275,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			project: value.project,
 			deliverable_category_unit: -1,
 		});
-		let unitValue = value.deliverableUnit;
 		// fetching deliverable_category_unit before creating deliverable Target
 		getCategoryUnit({
 			variables: {

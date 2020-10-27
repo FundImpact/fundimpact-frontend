@@ -1,6 +1,8 @@
 import { useIntl } from "react-intl";
 import { DELIVERABLE_ACTIONS } from "../components/Deliverable/constants";
 import { IMPACT_ACTIONS } from "../components/Impact/constants";
+import { PROJECT_ACTIONS } from "../components/Project/constants";
+import { WORKSPACE_ACTIONS } from "../components/workspace/constants";
 import { FORM_ACTIONS } from "../models/constants";
 
 function CommonFormTitleFormattedMessage(formAction: any) {
@@ -8,7 +10,12 @@ function CommonFormTitleFormattedMessage(formAction: any) {
 	// const [newOrEdit, setNewOrEdit] = useState<React.ReactNode>();
 	let newOrEdit;
 	if (
-		formAction === (FORM_ACTIONS.UPDATE || DELIVERABLE_ACTIONS.UPDATE || IMPACT_ACTIONS.UPDATE)
+		formAction ===
+		(FORM_ACTIONS.UPDATE ||
+			DELIVERABLE_ACTIONS.UPDATE ||
+			IMPACT_ACTIONS.UPDATE ||
+			PROJECT_ACTIONS.UPDATE ||
+			WORKSPACE_ACTIONS.UPDATE)
 	) {
 		newOrEdit = intl.formatMessage({
 			id: "editFormHeading",

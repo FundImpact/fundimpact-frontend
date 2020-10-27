@@ -19,8 +19,12 @@ import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
 import { uploadPercentageCalculator } from "../../utils";
-import { CommonUploadingFilesMessage } from "../../utils/commonFormattedMessage";
+import {
+	CommonFormTitleFormattedMessage,
+	CommonUploadingFilesMessage,
+} from "../../utils/commonFormattedMessage";
 import { CircularPercentage } from "../commons";
+import { useIntl } from "react-intl";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -240,11 +244,26 @@ function Project(props: ProjectProps) {
 	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
 	let uploadingFileMessage = CommonUploadingFilesMessage();
+	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(props.type);
 	return (
 		<>
 			<FormDialog
-				title={(formAction === PROJECT_ACTIONS.CREATE ? "New" : "Edit") + " Project"}
-				subtitle={"Project"}
+				title={
+					newOrEdit +
+					" " +
+					intl.formatMessage({
+						id: "projectTargetFormTitle",
+						defaultMessage: "Project",
+						description: `This text will be show on Project form for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "projectFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on Project form for subtitle`,
+				})}
 				workspace={DashBoardData?.workspace?.name}
 				open={formIsOpen}
 				handleClose={onCancel}

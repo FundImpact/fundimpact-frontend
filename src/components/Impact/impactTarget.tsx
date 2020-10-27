@@ -79,6 +79,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 		onError() {
 			notificationDispatch(setErrorNotification("No units found for category!"));
 		},
+		fetchPolicy: "network-only",
 	});
 
 	useEffect(() => {
