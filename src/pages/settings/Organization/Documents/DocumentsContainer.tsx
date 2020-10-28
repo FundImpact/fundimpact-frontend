@@ -22,6 +22,10 @@ export const OrganizationDocumentContainer = () => {
 		MODULE_CODES.ORGANIZATION,
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
+	const organizationFindAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.FIND_ORGANIZATION
+	);
 	const { data, loading, refetch } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
 	const notificationDispatch = useNotificationDispatch();
@@ -73,7 +77,7 @@ export const OrganizationDocumentContainer = () => {
 					</Typography>
 				</Box>
 				<Box>
-					{organizationEditAccess && <DocumentsTable data={data} loading={loading} />}
+					{organizationFindAccess && <DocumentsTable data={data} loading={loading} />}
 				</Box>
 				{organizationEditAccess && (
 					<AddButton

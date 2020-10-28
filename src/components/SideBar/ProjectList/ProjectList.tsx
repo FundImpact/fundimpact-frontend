@@ -127,12 +127,16 @@ export default function ProjectList({
 			dispatch(setProject(data.orgProject[0]));
 			setIsAnyActiveProject(true);
 		}
-		console.log("datadata", data);
 	}, [data, dispatch, projectIndex, pathname]);
 
 	const projectCreateAccess = userHasAccess(
 		MODULE_CODES.PEOJECT,
 		PROJECT_USER_ACCESS_ACTIONS.CREATE_PROJECT
+	);
+
+	const projectEditAccess = userHasAccess(
+		MODULE_CODES.PEOJECT,
+		PROJECT_USER_ACCESS_ACTIONS.UPDATE_PROJECT
 	);
 
 	return (
@@ -183,11 +187,13 @@ export default function ProjectList({
 											}}
 										>
 											<ListItemText primary={project.name} />
-											<ProjectEditButton
-												project={project}
-												workspaces={workspaces}
-												refetch={refetch}
-											/>
+											{projectEditAccess && (
+												<ProjectEditButton
+													project={project}
+													workspaces={workspaces}
+													refetch={refetch}
+												/>
+											)}
 										</ListItem>
 									</Box>
 								)

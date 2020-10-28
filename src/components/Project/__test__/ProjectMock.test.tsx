@@ -13,7 +13,7 @@ import { mockProjects } from "../../../utils/testMock.json";
 let ProjectMutation = false;
 const OrgMock = [
 	{
-		__typename: "OrganizationList",
+		__typename: "organizations",
 		id: "13",
 		name: "TSERIES",
 		short_name: "TS",
@@ -49,7 +49,7 @@ const mocks = [
 	},
 	{
 		request: { query: GET_ORGANISATIONS },
-		result: { data: { organizationList: OrgMock } },
+		result: { data: { organizations: OrgMock } },
 	},
 	{
 		request: {

@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_ORGANISATIONS = gql`
 	query {
-		organizationList {
+		organizations {
 			id
 			name
 			short_name
@@ -11,16 +11,13 @@ export const GET_ORGANISATIONS = gql`
 				id
 				reg_type
 			}
-			country {
+			currency {
 				id
 				name
 			}
 			account {
 				id
 				name
-			}
-			country {
-				id
 			}
 			logo {
 				id
@@ -253,7 +250,7 @@ export const GET_CURRENCY_LIST = gql`
 
 export const GET_ORGANISATIONS_DOCUMENTS = gql`
 	query {
-		organizationList {
+		organizations {
 			id
 			name
 			short_name

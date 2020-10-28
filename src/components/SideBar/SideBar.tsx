@@ -28,9 +28,9 @@ export default function SideBar({ children }: { children?: Function }) {
 
 	React.useEffect(() => {
 		if (data) {
-			const { organizationList } = data;
-			if (organizationList) {
-				dispatch(setOrganisation(organizationList[0]));
+			const { organizations } = data;
+			if (organizations) {
+				dispatch(setOrganisation(organizations[0]));
 			}
 		}
 	}, [data, dispatch]);
@@ -118,7 +118,7 @@ export default function SideBar({ children }: { children?: Function }) {
 					<List></List>
 					{shouldCreateWorkspace && data ? (
 						<Workspace
-							organizationId={data.organizationList[0].id}
+							organizationId={data.organizations[0].id}
 							type={WORKSPACE_ACTIONS.CREATE}
 							close={() => setViewWorkspace(false)}
 						></Workspace>
