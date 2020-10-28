@@ -21,7 +21,6 @@ import {
 } from "../../../graphql/UserRoles/query";
 import { useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { invitedUserFilter } from "./inputFields.json";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import FilterListContainer from "../../FilterList";
 import CheckIcon from "@material-ui/icons/Check";
@@ -34,6 +33,7 @@ import UserRole from "../../Forms/UserRole";
 import { FORM_ACTIONS } from "../../../models/constants";
 import ProjectDialog from "./ProjectDialog";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import { IInputField, IInputFields } from "../../../models";
 
 let roleHash: { [key: string]: string } = {};
 const chipArray = ({
@@ -208,17 +208,26 @@ function EditUserIcon({
 	);
 }
 
-export default function InvitedUserTable() {
+export default function InvitedUserTable({
+	filterList,
+	setFilterList,
+	invitedUserFilter,
+}: {
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	invitedUserFilter: any;
+}) {
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const dashBoardData = useDashBoardData();
 	const [queryFilter, setQueryFilter] = useState({});
 	const [invitedUserPage, setInvitedUserPage] = React.useState(0);
-	const [filterList, setFilterList] = useState<{
-		[key: string]: string | string[];
-	}>({
-		email: "",
-		role: [],
-	});
+
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 
@@ -231,7 +240,7 @@ export default function InvitedUserTable() {
 			}
 		},
 		onError(err) {
-			console.log("role", err);
+			console.error("role", err);
 		},
 	});
 
@@ -342,20 +351,6 @@ export default function InvitedUserTable() {
 								)}
 							</Box>
 						</Grid>
-						{rows?.length > 0 && (
-							<Grid item xs={1}>
-								<Box mt={2}>
-									<FilterListContainer
-										initialValues={{
-											email: "",
-											role: [],
-										}}
-										setFilterList={setFilterList}
-										inputFields={invitedUserFilter}
-									/>
-								</Box>
-							</Grid>
-						)}
 					</Grid>
 					<FITable
 						tableHeading={invitedUserTableHeadings}

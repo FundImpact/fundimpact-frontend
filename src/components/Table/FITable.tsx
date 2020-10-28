@@ -61,14 +61,8 @@ export default function FITable({
 				<Grid container>
 					{noRowHeading && (
 						<Grid item xs={12}>
-							<Box>
-								<Typography
-									align="center"
-									variant="subtitle1"
-									variantMapping={{
-										subtitle1: "h1",
-									}}
-								>
+							<Box m={2} display="flex" justifyContent="center">
+								<Typography variant="subtitle1" gutterBottom color="textSecondary">
 									{noRowHeading}
 								</Typography>
 							</Box>

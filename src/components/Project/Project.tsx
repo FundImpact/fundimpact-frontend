@@ -61,7 +61,7 @@ function Project(props: ProjectProps) {
 	let { multiplefileUpload } = useMultipleFileUpload();
 
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-	const [deliverableUploadSuccess, setDeliverableUploadSuccess] = React.useState<boolean>(false);
+	const [projectUploadSuccess, setProjectUploadSuccess] = React.useState<boolean>(false);
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 
 	React.useEffect(() => {
@@ -71,18 +71,18 @@ function Project(props: ProjectProps) {
 	}, [projectFilesArray, totalFilesToUpload]);
 
 	React.useEffect(() => {
-		if (deliverableUploadSuccess) {
+		if (projectUploadSuccess) {
 			props.handleClose();
 			if (props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
-			setDeliverableUploadSuccess(false);
+			setProjectUploadSuccess(false);
 		}
-	}, [deliverableUploadSuccess]);
+	}, [projectUploadSuccess]);
 	const successMessage = () => {
 		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
 	};
-	if (deliverableUploadSuccess) successMessage();
+	if (projectUploadSuccess) successMessage();
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
@@ -94,7 +94,7 @@ function Project(props: ProjectProps) {
 				path: `org-${DashBoardData?.organization?.id}/projects`,
 				filesArray: projectFilesArray,
 				setFilesArray: setProjectFilesArray,
-				setUploadSuccess: setDeliverableUploadSuccess,
+				setUploadSuccess: setProjectUploadSuccess,
 			});
 
 			setProjectFilesArray([]);
@@ -187,7 +187,7 @@ function Project(props: ProjectProps) {
 					path: `org-${DashBoardData?.organization?.id}/projects`,
 					filesArray: projectFilesArray,
 					setFilesArray: setProjectFilesArray,
-					setUploadSuccess: setDeliverableUploadSuccess,
+					setUploadSuccess: setProjectUploadSuccess,
 				});
 
 				setProjectFilesArray([]);

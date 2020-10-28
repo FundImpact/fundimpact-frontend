@@ -98,20 +98,23 @@ export default function CollapsibleTable({
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
+	if (!rows.length) {
+		return (
+			<Box m={2} display="flex" justifyContent="center">
+				{" "}
+				<Typography variant="subtitle1" gutterBottom color="textSecondary">
+					<FormattedMessage
+						id={`nodataFound`}
+						defaultMessage={`No Data Found`}
+						description={`This text will be shown if no data found for table`}
+					/>
+				</Typography>
+			</Box>
+		);
+	}
 	return (
 		<TableContainer component={Paper} className={classes.tableContainer}>
-			{!rows.length ? (
-				<Box m={2} display="flex" justifyContent="center">
-					{" "}
-					<Typography variant="subtitle1" gutterBottom color="textSecondary">
-						<FormattedMessage
-							id={`noTargetFound`}
-							defaultMessage={`No Target Found`}
-							description={`This text will be shown if no target found for table`}
-						/>
-					</Typography>
-				</Box>
-			) : (
+			{rows.length && (
 				<Table aria-label="collapsible table">
 					<TableHead>
 						<TableRow key={1} color="primary">
