@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
-import { useDashBoardData } from "../../contexts/dashboardContext";
+import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import { GET_ORG_DONOR } from "../../graphql/donor";
@@ -25,6 +25,7 @@ import {
 } from "../../utils/commonFormattedMessage";
 import { CircularPercentage } from "../commons";
 import { useIntl } from "react-intl";
+import { setProject } from "../../reducers/dashboardReducer";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -42,7 +43,7 @@ function Project(props: ProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IPROJECT_FORM = getInitialValues(props);
-
+	const dashboardDispatch = useDashboardDispatch();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>(
 		props.type === PROJECT_ACTIONS.UPDATE
@@ -86,6 +87,7 @@ function Project(props: ProjectProps) {
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
+			dashboardDispatch(setProject(data.createOrgProject));
 			setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
 			multiplefileUpload({
 				ref: "project",

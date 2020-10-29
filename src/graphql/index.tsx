@@ -197,7 +197,6 @@ export const GET_GRANT_PERIOD = gql`
 				organization {
 					id
 					name
-					address
 					account {
 						id
 						name

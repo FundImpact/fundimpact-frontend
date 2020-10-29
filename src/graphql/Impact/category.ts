@@ -11,7 +11,6 @@ export const GET_IMPACT_CATEGORY = gql`
 			organization {
 				id
 				name
-				address
 				account {
 					id
 					name

@@ -13,7 +13,6 @@ export const CREATE_DELIVERABLE_UNIT = gql`
 			organization {
 				id
 				name
-				address
 				account {
 					id
 					name

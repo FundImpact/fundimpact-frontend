@@ -58,7 +58,6 @@ export const OrganizationDocumentContainer = () => {
 			field: "attachments",
 			path: `org-${orgId}/organizations`,
 			filesArray: filesArray,
-			source: "crm-plugin",
 			setFilesArray: setFilesArray,
 			setUploadSuccess: setUploadSuccess,
 		});
