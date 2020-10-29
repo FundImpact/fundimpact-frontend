@@ -2,25 +2,62 @@ import React from "react";
 import { contactFormFields } from "./inputField.json";
 import { FORM_ACTIONS } from "../../constant";
 import CommonForm from "../../../CommonForm";
-import { IContactForm } from "../../../../models/contact/index.js";
+import { IContactForm, IContact } from "../../../../models/contact/index.js";
 import { validateEmail } from "../../../../utils";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
-import { ICreateContact, ICreateContactVariables } from "../../../../models/contact/query.js";
+import {
+	ICreateContact,
+	ICreateContactVariables,
+	IUpdateContactVariables,
+	IUpdateContact,
+} from "../../../../models/contact/query.js";
 import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import {
 	setSuccessNotification,
 	setErrorNotification,
 } from "../../../../reducers/notificationReducer";
 
-interface ICreateContactContainer {
-	createContact: (
-		options?: MutationFunctionOptions<ICreateContact, ICreateContactVariables> | undefined
-	) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
-	loading: boolean;
-	entity_name: string;
-	entity_id: string;
-	getContactCreated?: (contact: ICreateContact) => void;
-}
+type ICreateContactContainer =
+	| {
+			createContact: (
+				options?:
+					| MutationFunctionOptions<ICreateContact, ICreateContactVariables>
+					| undefined
+			) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
+			loading: boolean;
+			entity_name: string;
+			entity_id: string;
+			getCreatedOrUpdatedContact?: (
+				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
+			) => void;
+			formAction: FORM_ACTIONS.CREATE;
+			updateContact: (
+				options?:
+					| MutationFunctionOptions<IUpdateContact, IUpdateContactVariables>
+					| undefined
+			) => Promise<FetchResult<IUpdateContact, Record<string, any>, Record<string, any>>>;
+	  }
+	| {
+			createContact: (
+				options?:
+					| MutationFunctionOptions<ICreateContact, ICreateContactVariables>
+					| undefined
+			) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
+			loading: boolean;
+			entity_name: string;
+			entity_id: string;
+			getCreatedOrUpdatedContact?: (
+				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
+			) => void;
+			formAction: FORM_ACTIONS.UPDATE;
+			initialValues: IContact;
+			updateContact: (
+				options?:
+					| MutationFunctionOptions<IUpdateContact, IUpdateContactVariables>
+					| undefined
+			) => Promise<FetchResult<IUpdateContact, Record<string, any>, Record<string, any>>>;
+	  };
+
 interface ISubmitForm {
 	createContact: (
 		options?: MutationFunctionOptions<ICreateContact, ICreateContactVariables> | undefined
@@ -35,6 +72,11 @@ interface ISubmitForm {
 		contact_type: string;
 	};
 	notificationDispatch: React.Dispatch<any>;
+	updateContact: (
+		options?: MutationFunctionOptions<IUpdateContact, IUpdateContactVariables> | undefined
+	) => Promise<FetchResult<IUpdateContact, Record<string, any>, Record<string, any>>>;
+	contactId: string;
+	formAction: FORM_ACTIONS;
 }
 
 (contactFormFields[4].optionsArray as { id: string; name: string }[]) = [
@@ -42,7 +84,16 @@ interface ISubmitForm {
 	{ id: "OFFICE", name: "OFFICE" },
 ];
 
-const getInitialFormValues = (): IContactForm => {
+const getInitialFormValues = (contact?: IContact): IContactForm => {
+	if (contact) {
+		return {
+			contact_type: contact.contact_type,
+			email: contact.email,
+			email_other: contact.email_other,
+			phone: contact.phone,
+			phone_other: contact.phone_other,
+		};
+	}
 	return {
 		contact_type: "",
 		email: "",
@@ -56,23 +107,51 @@ const submitForm = async ({
 	valuesSubmitted,
 	createContact,
 	notificationDispatch,
+	contactId,
+	formAction,
+	updateContact,
 }: ISubmitForm) => {
 	try {
-		console.log("valuesSubmitted :>> ", valuesSubmitted);
-		let contactCreated = await createContact({
-			variables: {
-				input: {
-					data: {
-						...valuesSubmitted,
+		let createdContact, updatedContact;
+		if (formAction == FORM_ACTIONS.CREATE) {
+			createdContact = await createContact({
+				variables: {
+					input: {
+						data: {
+							...valuesSubmitted,
+						},
 					},
 				},
-			},
-		});
-		notificationDispatch(setSuccessNotification("Contact created successfully"));
-		return contactCreated;
+			});
+		} else {
+			updatedContact = await updateContact({
+				variables: {
+					input: {
+						where: {
+							id: contactId,
+						},
+						data: {
+							...valuesSubmitted,
+						},
+					},
+				},
+			});
+		}
+		notificationDispatch(
+			setSuccessNotification(
+				`Contact ${formAction == FORM_ACTIONS.CREATE ? "created" : "updated"} successfully`
+			)
+		);
+		if (formAction == FORM_ACTIONS.CREATE && createdContact && createdContact.data) {
+			return createdContact.data.createT4DContact.t4DContact;
+		}
+		if (formAction == FORM_ACTIONS.UPDATE && updatedContact && updatedContact.data) {
+			return updatedContact.data.updateT4DContact.t4DContact;
+		}
 	} catch (err) {
 		notificationDispatch(setErrorNotification(err.message));
 	}
+	return null;
 };
 
 const onCancel = () => {};
@@ -92,7 +171,7 @@ const validate = (values: IContactForm) => {
 	//add phone validation
 	if (!values.phone) {
 		errors.phone = "Phone is required";
-	} 
+	}
 
 	if (!values.contact_type) {
 		errors.contact_type = "Contact type is required";
@@ -100,14 +179,20 @@ const validate = (values: IContactForm) => {
 	return errors;
 };
 
-function ContactFormContainer({
-	loading,
-	createContact,
-	entity_id,
-	entity_name,
-	getContactCreated,
-}: ICreateContactContainer) {
-	const initialValues = getInitialFormValues();
+function ContactFormContainer(props: ICreateContactContainer) {
+	const {
+		loading,
+		createContact,
+		entity_id,
+		entity_name,
+		getCreatedOrUpdatedContact,
+		updateContact,
+	} = props;
+	const initialValues =
+		props.formAction == FORM_ACTIONS.CREATE
+			? getInitialFormValues()
+			: getInitialFormValues(props.initialValues);
+
 	const notificationDispatch = useNotificationDispatch();
 
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
@@ -119,12 +204,12 @@ function ContactFormContainer({
 				valuesSubmitted: { ...valuesSubmitted, entity_id, entity_name },
 				createContact,
 				notificationDispatch,
+				updateContact,
+				formAction: props.formAction,
+				contactId: props.formAction == FORM_ACTIONS.UPDATE ? props.initialValues.id : "",
 			});
 
-			contactCreated &&
-				contactCreated.data &&
-				getContactCreated &&
-				getContactCreated(contactCreated.data);
+			getCreatedOrUpdatedContact && getCreatedOrUpdatedContact(contactCreated);
 		} catch (err) {
 			console.error(err.message);
 		}
@@ -137,7 +222,7 @@ function ContactFormContainer({
 			onCreate={onFormSubmit}
 			onCancel={onCancel}
 			inputFields={contactFormFields}
-			formAction={FORM_ACTIONS.CREATE}
+			formAction={props.formAction}
 			onUpdate={onFormSubmit}
 		/>
 	);

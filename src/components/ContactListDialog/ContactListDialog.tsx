@@ -7,7 +7,7 @@ function ContactListDialog({ open, handleClose }: { open: boolean; handleClose: 
 	return (
 		<Dialog
 			fullWidth
-			maxWidth="md"
+			maxWidth="xl"
 			open={open}
 			onClose={handleClose}
 			data-testid="addContact-dialog"
