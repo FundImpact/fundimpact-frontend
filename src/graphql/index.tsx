@@ -312,24 +312,11 @@ export const GET_DISTRICT_LIST = gql`
 `;
 
 export const GET_VILLAGE_LIST = gql`
-	query getVillages($where: JSON) {
-		villages(where: $where) {
+	query getDistricts($where: JSON) {
+		districts(where: $where) {
 			id
 			name
-			block {
-				id
-				name
-			}
-		}
-	}
-`;
-
-export const GET_BLOCK_LIST = gql`
-	query getBlocks($where: JSON) {
-		blocks(where: $where) {
-			id
-			name
-			district {
+			state {
 				id
 				name
 			}
