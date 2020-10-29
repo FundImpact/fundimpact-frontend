@@ -19,3 +19,20 @@ export interface ICreateAddress {
 		pincode: string;
 	};
 }
+
+export interface IGetAddress {
+	t4DAddresses: {
+		id: string;
+		address_line_1: string;
+		address_line_2: string;
+		pincode: string;
+		city: string;
+		address_type: string;
+	}[];
+}
+
+export interface IGetAddressVariables {
+	where: {
+		t_4_d_contact: string;
+	};
+}

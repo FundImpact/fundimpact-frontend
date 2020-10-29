@@ -4,8 +4,8 @@ export enum FORM_ACTIONS {
 }
 
 export enum AddContactAddressDialogType {
-	address = 0,
-	contact = 1,
+	contact = 0,
+	address = 1,
 }
 
 export enum Enitity {

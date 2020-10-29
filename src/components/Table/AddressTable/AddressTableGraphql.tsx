@@ -1,38 +1,40 @@
 import React, { useEffect, useState } from "react";
-import ContactTableContainer from "./ContactTableContainer";
+import AddressTableContainer from "./AddressTableContainer";
 import { useLazyQuery } from "@apollo/client";
 import { IGetContact } from "../../../models/contact/query";
 import { GET_CONTACT_LIST } from "../../../graphql/Contact";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { IGetAddress, IGetAddressVariables } from "../../../models/address/query";
+import { GET_ADDRESS_LIST } from "../../../graphql/Address";
 
-function ContactTableGraphql() {
+function AddressTableGraphql({ contactId }: { contactId: string }) {
 	const dashboardData = useDashBoardData();
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
-	const [getContactList, { data: contactList, loading: fetchingContactList }] = useLazyQuery<
-		IGetContact
-	>(GET_CONTACT_LIST);
+	const [getAddressList, { data: addressList, loading: fetchingAddressList }] = useLazyQuery<
+		IGetAddress,
+		IGetAddressVariables
+	>(GET_ADDRESS_LIST);
 
 	useEffect(() => {
 		if (dashboardData) {
-			getContactList({
+			getAddressList({
 				variables: {
 					where: {
-						entity_name: "organization",
-						entity_id: dashboardData?.organization?.id,
+						t_4_d_contact: contactId,
 					},
 				},
 			});
 		}
-	}, [getContactList, dashboardData]);
+	}, [getAddressList, dashboardData]);
 
 	return (
-		<ContactTableContainer
-			contactList={contactList?.t4DContacts || []}
+		<AddressTableContainer
+			addressList={addressList?.t4DAddresses || []}
 			count={10}
 			changePage={(prev: boolean | undefined) => {}}
-			loading={fetchingContactList}
+			loading={fetchingAddressList}
 			order={order}
 			orderBy={orderBy}
 			setOrder={setOrder}
@@ -41,4 +43,4 @@ function ContactTableGraphql() {
 	);
 }
 
-export default ContactTableGraphql;
+export default AddressTableGraphql;

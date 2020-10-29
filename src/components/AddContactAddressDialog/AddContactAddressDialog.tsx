@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, Typography, Box, useTheme, Grid, StepLabel } from "@material-ui/core";
 import ContactForm from "../Forms/ContactDetails/ContactForm";
 import { FormattedMessage } from "react-intl";
@@ -40,8 +40,15 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	const theme = useTheme();
 	const [activeForm, setActiveForm] = useState(AddContactAddressDialogType.contact);
 	const [contact_id, setContact_id] = useState<string>("");
+
+	const closeDialog = () => {
+		setActiveForm(AddContactAddressDialogType.contact);
+		handleClose();
+	};
+
 	const formSteps = getFormSteps();
 
+	console.log("activeForm :>> ", activeForm);
 	const getCreatedOrUpdatedContact = (
 		contact: ICreateContact["createT4DContact"]["t4DContact"] | null
 	) => {
@@ -50,7 +57,7 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 			props.formActions == FORM_ACTIONS.UPDATE ||
 			dialogType == AddContactAddressDialogType.contact
 		) {
-			handleClose();
+			closeDialog();
 		} else {
 			setContact_id(contact.id);
 			setActiveForm(AddContactAddressDialogType.address);
@@ -58,15 +65,78 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	};
 
 	const getAddressCreated = (address: ICreateAddress) => {
-		handleClose();
+		closeDialog();
 	};
+
+	const addContactMessage = (
+		<FormattedMessage
+			id="addContactDialogTitle"
+			defaultMessage="Add Contact"
+			description="This text will be displayed as title of add contact dialog"
+		/>
+	);
+
+	const updateContactMessage = (
+		<FormattedMessage
+			id="updateContactDialogTitle"
+			defaultMessage="Update Contact"
+			description="This text will be displayed as title of update contact dialog"
+		/>
+	);
+
+	const addAddressMessage = (
+		<FormattedMessage
+			id="addContactDialogTitle"
+			defaultMessage="Add Address"
+			description="This text will be displayed as title of add address dialog"
+		/>
+	);
+
+	const updateAddressMessage = (
+		<FormattedMessage
+			id="updateContactDialogTitle"
+			defaultMessage="Update Address"
+			description="This text will be displayed as title of update address dialog"
+		/>
+	);
+	const addContactSubtitle = (
+		<FormattedMessage
+			id="addContactDialogSubtitle"
+			defaultMessage="Add Contact Details"
+			description="This text will be displayed as subtitle of add contact dialog"
+		/>
+	);
+
+	const updateContactSubtitle = (
+		<FormattedMessage
+			id="updateContactDialogSubtitle"
+			defaultMessage="Update Contact Details"
+			description="This text will be displayed as subtitle of update contact dialog"
+		/>
+	);
+
+	const addAddressSubtitle = (
+		<FormattedMessage
+			id="addContactDialogSubtitle"
+			defaultMessage="Add Address Details"
+			description="This text will be displayed as subtitle of add address dialog"
+		/>
+	);
+
+	const updateAddressSubtitle = (
+		<FormattedMessage
+			id="updateContactDialogSubtitle"
+			defaultMessage="Update Address Details"
+			description="This text will be displayed as subtitle of update address dialog"
+		/>
+	);
 
 	return (
 		<Dialog
 			fullWidth
 			maxWidth="md"
 			open={open}
-			onClose={handleClose}
+			onClose={closeDialog}
 			data-testid="addContact-dialog"
 			aria-labelledby="form-dialog-title"
 		>
@@ -74,19 +144,13 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 				<Grid container spacing={2}>
 					<Grid item xs={4}>
 						<Typography data-testid="dialog-header" variant="h6" gutterBottom>
-							{activeForm == AddContactAddressDialogType.contact ? (
-								<FormattedMessage
-									id="addContactDialogTitle"
-									defaultMessage="Add Contact"
-									description="This text will be displayed as title of add contact dialog"
-								/>
-							) : (
-								<FormattedMessage
-									id="addAddressDialogTitle"
-									defaultMessage="Add Address"
-									description="This text will be displayed as title of add address dialog"
-								/>
-							)}
+							{activeForm == AddContactAddressDialogType.contact
+								? props.formActions === FORM_ACTIONS.UPDATE
+									? updateContactMessage
+									: addContactMessage
+								: props.formActions === FORM_ACTIONS.UPDATE
+								? updateAddressMessage
+								: addAddressMessage}
 						</Typography>
 						<Box
 							px={2}
@@ -95,19 +159,13 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 							style={{ backgroundColor: theme.palette.action.hover }}
 						>
 							<Typography color="primary" gutterBottom>
-								{activeForm == AddContactAddressDialogType.contact ? (
-									<FormattedMessage
-										id="addContactDialogInfo"
-										defaultMessage="Add Contact Details"
-										description="This text will be displayed as info of contact dialog"
-									/>
-								) : (
-									<FormattedMessage
-										id="addAddressDialogInfo"
-										defaultMessage="Add Address"
-										description="This text will be displayed as info of address dialog"
-									/>
-								)}
+								{activeForm == AddContactAddressDialogType.contact
+									? props.formActions === FORM_ACTIONS.UPDATE
+										? updateContactSubtitle
+										: addContactSubtitle
+									: props.formActions === FORM_ACTIONS.UPDATE
+									? updateAddressSubtitle
+									: addAddressSubtitle}
 							</Typography>
 						</Box>
 					</Grid>

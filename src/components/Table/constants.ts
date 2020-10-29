@@ -150,14 +150,28 @@ export const individualTableHeadings: ITableHeadings[] = [
 	{ label: "Name", keyMapping: "name" },
 	{ label: "Projects" },
 	{ label: "" },
+	{ label: "" },
 ];
 
 export const contactTableHeadings: ITableHeadings[] = [
+	{ label: "" },
 	{ label: "#" },
 	{ label: "Email" },
 	{ label: "Email Other" },
 	{ label: "Phone" },
 	{ label: "Phone Other" },
 	{ label: "Contact Type" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const addressTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Address Line 1" },
+	{ label: "Address Line 2" },
+	{ label: "Pincode" },
+	{ label: "City" },
+	{ label: "Address Type" },
+	{ label: "" },
 	{ label: "" },
 ];

@@ -1,15 +1,16 @@
 import React, { useState, useRef } from "react";
 import { IGetContact } from "../../../models/contact/query";
 import CommonTable from "../CommonTable";
-import { contactTableHeadings } from "../constants";
+import { addressTableHeadings } from "../constants";
 import { IContact } from "../../../models/contact";
 import AddContactAddressDialog from "../../AddContactAddressDialog";
 import { AddContactAddressDialogType, Enitity, FORM_ACTIONS } from "../../../models/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import AddressTable from "../AddressTable";
+import { IGetAddress } from "../../../models/address/query";
+import { IAddress } from "../../../models/address";
 
-interface IContactTableView {
-	contactList: IGetContact["t4DContacts"];
+interface IAddressTableView {
+	addressList: IGetAddress["t4DAddresses"];
 	changePage: (prev?: boolean | undefined) => void;
 	loading: boolean;
 	count: number;
@@ -17,23 +18,23 @@ interface IContactTableView {
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	selectedContact: React.MutableRefObject<IContact | null>;
+	selectedAddress: React.MutableRefObject<IAddress | null>;
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
-	initialValues: IContact;
+	initialValues: IAddress;
 }
 
 const rows = [
-	{ valueAccessKey: "email" },
-	{ valueAccessKey: "email_other" },
-	{ valueAccessKey: "phone" },
-	{ valueAccessKey: "phone_other" },
-	{ valueAccessKey: "contact_type" },
+	{ valueAccessKey: "address_line_1" },
+	{ valueAccessKey: "address_line_2" },
+	{ valueAccessKey: "pincode" },
+	{ valueAccessKey: "city" },
+	{ valueAccessKey: "address_type" },
 	{ valueAccessKey: "" },
 ];
 
-function ContactTableView({
-	contactList,
+function AddressTableView({
+	addressList,
 	setOrderBy,
 	setOrder,
 	orderBy,
@@ -44,20 +45,20 @@ function ContactTableView({
 	openDialogs,
 	toggleDialogs,
 	initialValues,
-	selectedContact,
-}: IContactTableView) {
+	selectedAddress,
+}: IAddressTableView) {
 	const dashboardData = useDashBoardData();
-	const conatctEditMenu = ["Edit Contact"];
+	const conatctEditMenu = ["Edit Address"];
 
 	return (
 		<CommonTable
-			tableHeadings={contactTableHeadings}
-			valuesList={contactList}
+			tableHeadings={addressTableHeadings}
+			valuesList={addressList}
 			rows={rows}
-			selectedRow={selectedContact}
+			selectedRow={selectedAddress}
 			toggleDialogs={toggleDialogs}
 			editMenuName={conatctEditMenu}
-			collapsableTable={true}
+			collapsableTable={false}
 			changePage={(prev?: boolean) => {}}
 			loading={loading}
 			count={count}
@@ -66,7 +67,7 @@ function ContactTableView({
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
 		>
-			<AddContactAddressDialog
+			{/* <AddContactAddressDialog
 				dialogType={AddContactAddressDialogType.contact}
 				entity_id={dashboardData?.organization?.id || ""}
 				entity_name={Enitity.organization}
@@ -74,17 +75,9 @@ function ContactTableView({
 				handleClose={() => toggleDialogs(0, false)}
 				formActions={FORM_ACTIONS.UPDATE}
 				contactFormInitialValues={initialValues}
-			/>
-			{(rowData: { id: string }) => (
-				<>
-					<AddressTable
-						// tableFilterList={filterList}
-						contactId={rowData.id}
-					/>
-				</>
-			)}
+			/> */}
 		</CommonTable>
 	);
 }
 
-export default ContactTableView;
+export default AddressTableView;

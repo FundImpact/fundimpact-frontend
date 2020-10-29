@@ -16,6 +16,7 @@ import {
 	setSuccessNotification,
 	setErrorNotification,
 } from "../../../../reducers/notificationReducer";
+import { GET_CONTACT_LIST } from "../../../../graphql/Contact";
 
 type ICreateContactContainer =
 	| {
@@ -122,6 +123,17 @@ const submitForm = async ({
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_CONTACT_LIST,
+						variables: {
+							where: {
+								entity_name: valuesSubmitted.entity_name,
+								entity_id: valuesSubmitted.entity_id,
+							},
+						},
+					},
+				],
 			});
 		} else {
 			updatedContact = await updateContact({
