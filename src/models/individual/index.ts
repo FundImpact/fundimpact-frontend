@@ -1,4 +1,4 @@
 export interface IIndividualForm {
 	name: string;
-	project: string[];
+	project?: { id: string; name: string; workspace: { id: string; name: string } }[];
 }

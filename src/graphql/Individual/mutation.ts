@@ -10,3 +10,21 @@ export const CREATE_INDIVIDUAL = gql`
 		}
 	}
 `;
+
+export const CREATE_INDIVIDUAL_PROJECT = gql`
+	mutation createT4DProjectIndividual($input: createT4DProjectIndividualInput) {
+		createT4DProjectIndividual(input: $input) {
+			t4DProjectIndividual {
+				id
+				t4d_individual {
+					id
+					name
+				}
+				project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;

@@ -14,3 +14,27 @@ export interface ICreateIndividual {
 		};
 	};
 }
+export interface ICreateIndividualProjectVariables {
+	input: {
+		data: {
+			project: string;
+			t4d_individual: string;
+		};
+	};
+}
+
+export interface ICreateIndividualProject {
+	createT4DProjectIndividual: {
+		t4DProjectIndividual: {
+			id: string;
+		};
+	};
+}
+
+export interface IGET_INDIVIDUAL_LIST {
+	t4DIndividuals: {
+		id: string;
+		name: string;
+		t4d_project_individuals: { project: { id: string; name: string } }[];
+	}[];
+}

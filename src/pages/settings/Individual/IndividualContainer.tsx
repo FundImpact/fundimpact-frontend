@@ -3,11 +3,12 @@ import { Box, Grid, Typography } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import AddButton from "../../../components/Dasboard/AddButton";
 import IndividualDialog from "../../../components/IndividualDialog";
+import IndividualTable from "../../../components/Table/IndividualTable";
 
 function IndividualContainer() {
 	return (
 		<Box p={2}>
-			<Grid container>
+			<Grid container spacing={2}>
 				<Grid item xs={12}>
 					<Typography variant="h4">
 						<Box mt={2} fontWeight="fontWeightBold">
@@ -18,6 +19,9 @@ function IndividualContainer() {
 							/>
 						</Box>
 					</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<IndividualTable />
 				</Grid>
 			</Grid>
 			<AddButton

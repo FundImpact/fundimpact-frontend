@@ -144,3 +144,10 @@ export const fundReceivedTableHeadings: ITableHeadings[] = [
 	{ label: "Donor" },
 	{ label: "" },
 ];
+
+export const individualTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Projects" },
+	{ label: "" },
+];
