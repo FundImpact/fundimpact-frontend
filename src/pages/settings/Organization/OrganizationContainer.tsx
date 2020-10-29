@@ -40,6 +40,7 @@ function OrganizationContainer({
 }) {
 	let { uploadFile, loading: fileUploading } = useFileUpload();
 	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
+	const [contactListDialogOpen, setContactListDialogOpen] = useState<boolean>(false);
 	const user = useAuth();
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -180,6 +181,8 @@ function OrganizationContainer({
 			countryList={countryList}
 			contactAddressDialogOpen={contactAddressDialogOpen}
 			setContactAddressDialogOpen={setContactAddressDialogOpen}
+			contactListDialogOpen={contactListDialogOpen}
+			setContactListDialogOpen={setContactListDialogOpen}
 		/>
 	);
 }

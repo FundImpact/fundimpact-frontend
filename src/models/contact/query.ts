@@ -24,3 +24,15 @@ export interface ICreateContact {
 		};
 	};
 }
+
+//remove name
+export interface IGetContact {
+	t4DContacts: {
+		id: string;
+		email: string;
+		email_other: string;
+		phone: string;
+		phone_other: string;
+		name: string
+	}[];
+}

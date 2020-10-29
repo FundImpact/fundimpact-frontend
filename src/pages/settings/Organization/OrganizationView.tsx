@@ -33,6 +33,7 @@ import { IOrganisationForm, IOrganizationInputFields } from "../../../models/org
 import { setOrganisation } from "../../../reducers/dashboardReducer";
 import AddContactDialog from "../../../components/AddContactAddressDialog";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import ContactListDialog from "../../../components/ContactListDialog";
 
 enum colorType {
 	primary = "primary",
@@ -170,6 +171,8 @@ function OrganizationView({
 	countryList,
 	contactAddressDialogOpen,
 	setContactAddressDialogOpen,
+	setContactListDialogOpen,
+	contactListDialogOpen,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -181,6 +184,8 @@ function OrganizationView({
 	countryList: ICountry[];
 	contactAddressDialogOpen: boolean;
 	setContactAddressDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	contactListDialogOpen: boolean;
+	setContactListDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -244,6 +249,10 @@ function OrganizationView({
 						handleClose={() => setContactAddressDialogOpen(false)}
 						entity_name={"organization"}
 						entity_id={dashboardData?.organization?.id || ""}
+					/>
+					<ContactListDialog
+						open={contactListDialogOpen}
+						handleClose={() => setContactListDialogOpen(false)}
 					/>
 					<Paper>
 						<Box p={2}>
@@ -401,21 +410,37 @@ function OrganizationView({
 															/>
 														</Grid>
 														<Grid item xs={12}>
+															<Box mb={1}>
+																<Button
+																	startIcon={<PersonAddIcon />}
+																	variant="contained"
+																	color="secondary"
+																	fullWidth
+																	onClick={() =>
+																		setContactAddressDialogOpen(
+																			true
+																		)
+																	}
+																>
+																	<FormattedMessage
+																		id={`addContactButton`}
+																		defaultMessage={`Add Contact`}
+																		description={`This text will be shown on add contact button`}
+																	/>
+																</Button>
+															</Box>
 															<Button
-																startIcon={<PersonAddIcon />}
 																variant="contained"
 																color="secondary"
 																fullWidth
 																onClick={() =>
-																	setContactAddressDialogOpen(
-																		true
-																	)
+																	setContactListDialogOpen(true)
 																}
 															>
 																<FormattedMessage
-																	id={`addContactButton`}
-																	defaultMessage={`Add Contact`}
-																	description={`This text will be shown on add contact button`}
+																	id={`showContactList`}
+																	defaultMessage={`Contacts Details`}
+																	description={`This text will be shown on show contact button`}
 																/>
 															</Button>
 														</Grid>

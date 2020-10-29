@@ -151,3 +151,13 @@ export const individualTableHeadings: ITableHeadings[] = [
 	{ label: "Projects" },
 	{ label: "" },
 ];
+
+export const contactTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Email" },
+	{ label: "Email Other" },
+	{ label: "Phone" },
+	{ label: "Phone Other" },
+	{ label: "Contact Type" },
+	{ label: "" },
+];
