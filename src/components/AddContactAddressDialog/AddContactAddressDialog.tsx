@@ -29,7 +29,7 @@ function AddContactDialog({
 	entity_id: string;
 }) {
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = useState(FormType.contact);
+	const [activeForm, setActiveForm] = useState(FormType.address);
 	const [contact_id, setContact_id] = useState<string>("");
 	const formSteps = getFormSteps();
 
@@ -104,6 +104,13 @@ function AddContactDialog({
 						</Stepper>
 						{activeForm == FormType.contact ? (
 							<ContactForm
+								entity_id={entity_id}
+								entity_name={entity_name}
+								getContactCreated={getContactCreated}
+							/>
+						) : (
+							<AddressForm
+								contact_id={contact_id}
 								entity_id={entity_id}
 								entity_name={entity_name}
 								getContactCreated={getContactCreated}
