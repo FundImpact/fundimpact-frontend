@@ -61,6 +61,10 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 		handleClose();
 	};
 
+	const getAddressCreated = (address: ICreateAddress) => {
+		handleClose();
+	};
+
 	return (
 		<Dialog
 			fullWidth
