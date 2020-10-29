@@ -1,17 +1,11 @@
 export interface ICreateAddressVariables {
 	input: {
 		data: {
-			entity_name: string;
-			entity_id: string;
-			contact_id: string;
+			t_4_d_contact: string;
 			address_line_1: string;
 			address_line_2?: string;
 			pincode: string;
 			city: string;
-			country: string;
-			state: string;
-			district: string;
-			village: string;
 			address_type: string;
 		};
 	};

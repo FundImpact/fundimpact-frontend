@@ -28,24 +28,22 @@ interface ISubmitForm {
 	valuesSubmitted: {
 		entity_name: string;
 		entity_id: string;
-		// name: string;
 		phone: string;
 		phone_other: string;
 		email: string;
 		email_other: string;
-		// contact_type: string;
+		contact_type: string;
 	};
 	notificationDispatch: React.Dispatch<any>;
 }
 
-(contactFormFields[5].optionsArray as { id: string; name: string }[]) = [
+(contactFormFields[4].optionsArray as { id: string; name: string }[]) = [
 	{ id: "PERSONAL", name: "PERSONAL" },
 	{ id: "OFFICE", name: "OFFICE" },
 ];
 
 const getInitialFormValues = (): IContactForm => {
 	return {
-		name: "",
 		contact_type: "",
 		email: "",
 		email_other: "",
@@ -81,9 +79,6 @@ const onCancel = () => {};
 
 const validate = (values: IContactForm) => {
 	let errors: Partial<IContactForm> = {};
-	// if (!values.name) {
-	// 	errors.name = "Name is required";
-	// }
 	if (!values.email) {
 		errors.email = "Email is required";
 	} else if (!validateEmail(values.email)) {
@@ -118,8 +113,6 @@ function ContactFormContainer({
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
 		try {
 			//remove this
-			// delete valuesSubmitted?.name;
-			// delete valuesSubmitted?.contact_type;
 			valuesSubmitted.phone = `${valuesSubmitted.phone}`;
 			valuesSubmitted.phone_other = `${valuesSubmitted.phone_other}`;
 			const contactCreated = await submitForm({

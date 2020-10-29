@@ -1,15 +1,6 @@
 {
 	"contactFormFields": [
 		{
-			"name": "name",
-			"id": "name",
-			"dataTestId": "createName",
-			"testId": "createNameInput",
-			"label": "Name",
-			"size": 6,
-			"required": true
-		},
-		{
 			"name": "phone",
 			"id": "phone",
 			"dataTestId": "createPhone",
@@ -58,7 +49,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"size": 6,
+			"size": 12,
 			"required": true
 		}
 	]

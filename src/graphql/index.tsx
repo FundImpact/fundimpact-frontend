@@ -241,7 +241,7 @@ export const GET_ORGANIZATION_REGISTRATION_TYPES = gql`
 export const GET_CURRENCY_LIST = gql`
 	query getCurrencyList($filter: JSON) {
 		currencyList(where: $filter) {
-			id 
+			id
 			name
 			code
 		}
@@ -312,11 +312,24 @@ export const GET_DISTRICT_LIST = gql`
 `;
 
 export const GET_VILLAGE_LIST = gql`
-	query getDistricts($where: JSON) {
-		districts(where: $where) {
+	query getVillages($where: JSON) {
+		villages(where: $where) {
 			id
 			name
-			state {
+			block {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_BLOCK_LIST = gql`
+	query getBlocks($where: JSON) {
+		blocks(where: $where) {
+			id
+			name
+			district {
 				id
 				name
 			}

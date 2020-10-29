@@ -6,6 +6,7 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import AddressForm from "../Forms/ContactDetails/AddressForm";
 import { ICreateContactVariables, ICreateContact } from "../../models/contact/query";
+import { ICreateAddress } from "../../models/address/query";
 
 enum FormType {
 	contact = 0,
@@ -28,13 +29,17 @@ function AddContactDialog({
 	entity_id: string;
 }) {
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = useState(FormType.address);
+	const [activeForm, setActiveForm] = useState(FormType.contact);
 	const [contact_id, setContact_id] = useState<string>("");
 	const formSteps = getFormSteps();
 
 	const getContactCreated = (contact: ICreateContact) => {
 		setContact_id(contact.createT4DContact.t4DContact.id);
 		setActiveForm(FormType.address);
+	};
+
+	const getAddressCreated = (address: ICreateAddress) => {
+		handleClose();
 	};
 
 	return (
@@ -105,9 +110,8 @@ function AddContactDialog({
 							/>
 						) : (
 							<AddressForm
-								contact_id={contact_id}
-								entity_id={entity_id}
-								entity_name={entity_name}
+								t_4_d_contact={contact_id}
+								getAddressCreated={getAddressCreated}
 							/>
 						)}
 					</Grid>

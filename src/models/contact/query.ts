@@ -4,12 +4,11 @@ export interface ICreateContactVariables {
 		data: {
 			entity_name: string;
 			entity_id: string;
-			// name: string;
 			phone: string;
 			phone_other?: string;
 			email: string;
 			email_other?: string;
-			// contact_type: string;
+			contact_type: string;
 		};
 	};
 }

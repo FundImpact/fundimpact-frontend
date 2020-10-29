@@ -13,14 +13,12 @@ import {
 } from "../../../../reducers/notificationReducer";
 
 interface IAddressFormContainer {
-	countryList: { id: string; name: string }[];
-	contact_id: string;
-	entity_id: string;
-	entity_name: string;
+	t_4_d_contact: string;
 	loading: boolean;
 	createAddress: (
 		options?: MutationFunctionOptions<ICreateAddress, ICreateAddressVariables> | undefined
 	) => Promise<FetchResult<ICreateAddress, Record<string, any>, Record<string, any>>>;
+	getAddressCreated?: (address: ICreateAddress) => void;
 }
 
 interface ISubmitForm {
@@ -28,23 +26,17 @@ interface ISubmitForm {
 		options?: MutationFunctionOptions<ICreateAddress, ICreateAddressVariables> | undefined
 	) => Promise<FetchResult<ICreateAddress, Record<string, any>, Record<string, any>>>;
 	valuesSubmitted: {
-		entity_name: string;
-		entity_id: string;
-		contact_id: string;
+		t_4_d_contact: string;
 		address_line_1: string;
 		address_line_2?: string;
 		pincode: string;
 		city: string;
-		country: string;
-		state: string;
-		district: string;
-		village: string;
 		address_type: string;
 	};
 	notificationDispatch: React.Dispatch<any>;
 }
 
-(addressFormFields[8].optionsArray as { id: string; name: string }[]) = [
+(addressFormFields[4].optionsArray as { id: string; name: string }[]) = [
 	{ id: "PERMANENT", name: "PERMANENT" },
 	{ id: "TEMPORARY", name: "TEMPORARY" },
 	{ id: "BILLING", name: "BILLING" },
@@ -56,11 +48,7 @@ const getInitialFormValues = (): IAddressForm => {
 		address_line_2: "",
 		address_type: "",
 		city: "",
-		country: "",
-		district: "",
 		pincode: "",
-		state: "",
-		village: "",
 	};
 };
 
@@ -70,8 +58,11 @@ const submitForm = async ({
 	valuesSubmitted,
 }: ISubmitForm) => {
 	try {
-		await createAddress({ variables: { input: { data: { ...valuesSubmitted } } } });
-		notificationDispatch(setSuccessNotification("Fund Received Reported"));
+		const addressCreated = await createAddress({
+			variables: { input: { data: { ...valuesSubmitted } } },
+		});
+		notificationDispatch(setSuccessNotification("Address Created"));
+		return addressCreated;
 	} catch (err) {
 		notificationDispatch(setErrorNotification(err.message));
 	}
@@ -90,45 +81,34 @@ const validate = (values: IAddressForm) => {
 	if (!values.city) {
 		errors.city = "City is required";
 	}
-	if (!values.country) {
-		errors.country = "Country type is required";
-	}
-	if (!values.state) {
-		errors.state = "State is required";
-	}
 	if (!values.pincode) {
 		errors.pincode = "Pincode is required";
 	} else if (!validatePincode(values.pincode)) {
 		errors.pincode = "Pincode not valid";
 	}
-	if (!values.village) {
-		errors.village = "Village is required";
-	}
-	if (!values.district) {
-		errors.district = "District is required";
-	}
 	return errors;
 };
 
 function AddressFormContainer({
-	countryList,
-	contact_id,
-	entity_id,
-	entity_name,
+	t_4_d_contact,
 	createAddress,
 	loading,
+	getAddressCreated,
 }: IAddressFormContainer) {
 	const initialValues = getInitialFormValues();
-	(addressFormFields[4].optionsArray as { id: string; name: string }[]) = countryList;
 	const notificationDispatch = useNotificationDispatch();
 
 	const onFormSubmit = async (valuesSubmitted: IAddressForm) => {
 		try {
-			await submitForm({
-				valuesSubmitted: { ...valuesSubmitted, entity_id, entity_name, contact_id },
+			const addressCreated = await submitForm({
+				valuesSubmitted: { ...valuesSubmitted, t_4_d_contact },
 				createAddress,
 				notificationDispatch,
 			});
+			getAddressCreated &&
+				addressCreated &&
+				addressCreated.data &&
+				getAddressCreated(addressCreated.data);
 		} catch (err) {
 			console.error(err.message);
 		}

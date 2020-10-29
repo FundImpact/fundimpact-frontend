@@ -25,7 +25,7 @@
 			"label": "Pincode",
 			"size": 6,
 			"required": true,
-			"type": "number"
+			"type": "text"
 		},
 		{
 			"name": "city",
@@ -33,62 +33,6 @@
 			"dataTestId": "createCity",
 			"testId": "createCityInput",
 			"label": "City",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "country",
-			"id": "country",
-			"dataTestId": "createCountry",
-			"testId": "createCountryInput",
-			"label": "Country",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "state",
-			"id": "state",
-			"dataTestId": "createState",
-			"testId": "createStateInput",
-			"label": "State",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "district",
-			"id": "district",
-			"dataTestId": "createDistrict",
-			"testId": "createDistrictInput",
-			"label": "District",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "village",
-			"id": "village",
-			"dataTestId": "createVillage",
-			"testId": "createVillageInput",
-			"label": "Village",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
 			"size": 6,
 			"required": true
 		},
