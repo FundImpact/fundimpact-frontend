@@ -16,3 +16,4 @@ export enum Enitity {
 
 export const primaryColor = "#5567FF";
 export const secondaryColor = "#14BB4C";
+	

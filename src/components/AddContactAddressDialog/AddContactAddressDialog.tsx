@@ -48,7 +48,6 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 
 	const formSteps = getFormSteps();
 
-	console.log("activeForm :>> ", activeForm);
 	const getCreatedOrUpdatedContact = (
 		contact: ICreateContact["createT4DContact"]["t4DContact"] | null
 	) => {
