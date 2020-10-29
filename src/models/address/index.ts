@@ -13,4 +13,7 @@ export interface IAddress {
 	city: string;
 	address_type: string;
 	id: string;
+	t_4_d_contact: {
+		id: string;
+	};
 }

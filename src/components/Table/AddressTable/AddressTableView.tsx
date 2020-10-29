@@ -67,15 +67,15 @@ function AddressTableView({
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
 		>
-			{/* <AddContactAddressDialog
-				dialogType={AddContactAddressDialogType.contact}
+			<AddContactAddressDialog
+				dialogType={AddContactAddressDialogType.address}
 				entity_id={dashboardData?.organization?.id || ""}
 				entity_name={Enitity.organization}
 				open={openDialogs[0]}
 				handleClose={() => toggleDialogs(0, false)}
 				formActions={FORM_ACTIONS.UPDATE}
-				contactFormInitialValues={initialValues}
-			/> */}
+				addressFormInitialValues={initialValues}
+			/>
 		</CommonTable>
 	);
 }

@@ -10,6 +10,7 @@ import { ICreateAddress } from "../../models/address/query";
 import { AddContactAddressDialogType } from "../../models/constants";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IContactForm, IContact } from "../../models/contact";
+import { IAddress } from "../../models/address";
 
 function getFormSteps() {
 	return ["Create Contact", "Add Address"];
@@ -29,20 +30,30 @@ type IAddContactAddressDialog =
 			handleClose: () => void;
 			entity_name: string;
 			entity_id: string;
-			dialogType?: AddContactAddressDialogType;
+			dialogType?: AddContactAddressDialogType.contact;
 			formActions: FORM_ACTIONS.UPDATE;
 			contactFormInitialValues: IContact;
+	  }
+	| {
+			open: boolean;
+			handleClose: () => void;
+			entity_name: string;
+			entity_id: string;
+			dialogType?: AddContactAddressDialogType.address;
+			formActions: FORM_ACTIONS.UPDATE;
+			addressFormInitialValues: IAddress;
 	  };
 
 function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	const { open, handleClose, entity_name, entity_id, dialogType } = props;
-
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = useState(AddContactAddressDialogType.contact);
+	const [activeForm, setActiveForm] = useState(
+		dialogType !== undefined ? dialogType : AddContactAddressDialogType.contact
+	);
 	const [contact_id, setContact_id] = useState<string>("");
 
 	const closeDialog = () => {
-		setActiveForm(AddContactAddressDialogType.contact);
+		setActiveForm(dialogType !== undefined ? dialogType : AddContactAddressDialogType.contact);
 		handleClose();
 	};
 
@@ -63,7 +74,9 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 		}
 	};
 
-	const getAddressCreated = (address: ICreateAddress) => {
+	const getCreatedOrUpdatedAddress = (
+		address: ICreateAddress["createT4DAddress"]["t4DAddress"] | null
+	) => {
 		closeDialog();
 	};
 
@@ -185,7 +198,8 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 								entity_id={entity_id}
 								entity_name={entity_name}
 								getCreatedOrUpdatedContact={getCreatedOrUpdatedContact}
-								{...(props.formActions == FORM_ACTIONS.UPDATE
+								{...(props.formActions == FORM_ACTIONS.UPDATE &&
+								props.dialogType == AddContactAddressDialogType.contact
 									? {
 											initialValues: props.contactFormInitialValues,
 											formAction: FORM_ACTIONS.UPDATE,
@@ -195,8 +209,14 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 						) : (
 							<AddressForm
 								t_4_d_contact={contact_id}
-								getAddressCreated={getAddressCreated}
-								// formActions={formActions}
+								getCreatedOrUpdatedAddress={getCreatedOrUpdatedAddress}
+								{...(props.formActions == FORM_ACTIONS.UPDATE &&
+								props.dialogType == AddContactAddressDialogType.address
+									? {
+											initialValues: props.addressFormInitialValues,
+											formAction: FORM_ACTIONS.UPDATE,
+									  }
+									: { formAction: FORM_ACTIONS.CREATE })}
 							/>
 						)}
 					</Grid>

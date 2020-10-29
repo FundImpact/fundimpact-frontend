@@ -9,6 +9,9 @@ export const GET_ADDRESS_LIST = gql`
 			pincode
 			city
 			address_type
+			t_4_d_contact {
+				id
+			}
 		}
 	}
 `;
