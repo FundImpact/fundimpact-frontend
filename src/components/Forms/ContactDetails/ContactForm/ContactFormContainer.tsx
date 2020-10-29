@@ -171,7 +171,7 @@ const validate = (values: IContactForm) => {
 	//add phone validation
 	if (!values.phone) {
 		errors.phone = "Phone is required";
-	}
+	} 
 
 	if (!values.contact_type) {
 		errors.contact_type = "Contact type is required";

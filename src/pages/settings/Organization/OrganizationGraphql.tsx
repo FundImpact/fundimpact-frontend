@@ -34,6 +34,8 @@ function OrganizationGraphql() {
 		getCountryList();
 	}, [getCountryList]);
 
+	console.log('countryList :>> ', countryList);
+
 	return (
 		<OrganizationContainer
 			loading={loading}
