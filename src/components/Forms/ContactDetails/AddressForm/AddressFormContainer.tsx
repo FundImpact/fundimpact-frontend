@@ -44,6 +44,12 @@ interface ISubmitForm {
 	notificationDispatch: React.Dispatch<any>;
 }
 
+(addressFormFields[8].optionsArray as { id: string; name: string }[]) = [
+	{ id: "PERMANENT", name: "PERMANENT" },
+	{ id: "TEMPORARY", name: "TEMPORARY" },
+	{ id: "BILLING", name: "BILLING" },
+];
+
 const getInitialFormValues = (): IAddressForm => {
 	return {
 		address_line_1: "",
@@ -132,7 +138,7 @@ function AddressFormContainer({
 		<CommonForm
 			initialValues={initialValues}
 			validate={validate}
-			onCreate={submitForm}
+			onCreate={onFormSubmit}
 			onCancel={onCancel}
 			inputFields={addressFormFields}
 			formAction={FORM_ACTIONS.CREATE}

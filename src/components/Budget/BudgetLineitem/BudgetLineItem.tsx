@@ -59,7 +59,7 @@ const defaultFormValues: IBudgetTrackingLineitemForm = {
 let budgetTargetHash: {
 	[key: string]: {
 		id: string;
-		country: { id: string };
+		currency: { id: string };
 	};
 } = {};
 
@@ -79,7 +79,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	});
 	const [selectedDonor, setSelectedDonor] = useState<{
 		id: string;
-		country: { id: string };
+		currency: { id: string };
 	} | null>(null);
 
 	const currentProject = dashboardData?.project;
@@ -219,7 +219,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			if (values.budget_targets_project) {
 				setSelectedDonor(budgetTargetHash[values.budget_targets_project]);
 				if (
-					budgetTargetHash[values.budget_targets_project]?.country?.id ===
+					budgetTargetHash[values.budget_targets_project]?.currency?.id ===
 					dashboardData?.organization?.country?.id
 				) {
 					budgetLineitemFormSelectFields[2].hidden = true;
@@ -279,7 +279,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			getFinancialYearDonor({
 				variables: {
 					filter: {
-						country: selectedDonor.country.id,
+						country: selectedDonor.currency.id,
 					},
 				},
 			});

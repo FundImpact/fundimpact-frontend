@@ -9,6 +9,9 @@ export interface IUserDataContext {
 			id: string;
 		};
 		language: string;
+		organization: {
+			id: string;
+		};
 	};
 	logoutMsg?: string;
 }

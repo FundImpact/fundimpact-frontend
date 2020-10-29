@@ -8,6 +8,8 @@ import { useIntl } from "react-intl";
 import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import { ICreateIndividualVariables, ICreateIndividual } from "../../models/individual/query.js";
 import { IGetProject } from "../../models/project/project.js";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setSuccessNotification } from "../../reducers/notificationReducer";
 
 interface IIndividualDialogContainerProps {
 	open: boolean;
@@ -19,6 +21,14 @@ interface IIndividualDialogContainerProps {
 	projects: IGetProject["orgProject"];
 }
 
+interface ISubmitForm {
+	valuesSubmitted: IIndividualForm;
+	createIndividual: (
+		options?: MutationFunctionOptions<ICreateIndividual, ICreateIndividualVariables> | undefined
+	) => Promise<FetchResult<ICreateIndividual, Record<string, any>, Record<string, any>>>;
+	notificationDispatch: React.Dispatch<any>;
+}
+
 const getInitialFormValues = (): IIndividualForm => {
 	return {
 		name: "",
@@ -26,7 +36,26 @@ const getInitialFormValues = (): IIndividualForm => {
 	};
 };
 
-const submitForm = (valuesSubmitted: IIndividualForm) => {};
+const submitForm = async ({
+	createIndividual,
+	notificationDispatch,
+	valuesSubmitted,
+}: ISubmitForm) => {
+	try {
+		await createIndividual({
+			variables: {
+				input: {
+					data: {
+						name: valuesSubmitted.name,
+					},
+				},
+			},
+		});
+		notificationDispatch(setSuccessNotification("Individual Created"));
+	} catch (err) {
+		notificationDispatch(setSuccessNotification(err.message));
+	}
+};
 
 const onCancel = () => {};
 
@@ -60,8 +89,21 @@ function IndividualDialogContainer({
 		() => sortProjectsToGroupProject(projects.slice() || []),
 		[projects]
 	);
+	const notificationDispatch = useNotificationDispatch();
 
 	(individualFormFields[1].autoCompleteGroupBy as unknown) = getProjectGroupHeading;
+
+	const onFormSubmit = async (valuesSubmitted: IIndividualForm) => {
+		try {
+			await submitForm({
+				valuesSubmitted,
+				createIndividual,
+				notificationDispatch,
+			});
+		} catch (err) {
+			console.error(err.message);
+		}
+	};
 
 	const title = intl.formatMessage({
 		id: "individualFormTitle",
@@ -82,7 +124,7 @@ function IndividualDialogContainer({
 			<CommonForm
 				initialValues={initialValues}
 				validate={validate}
-				onCreate={submitForm}
+				onCreate={onFormSubmit}
 				onCancel={handleClose}
 				inputFields={individualFormFields}
 				formAction={FORM_ACTIONS.CREATE}

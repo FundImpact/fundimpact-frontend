@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import AddressForm from "../Forms/ContactDetails/AddressForm";
+import { ICreateContactVariables, ICreateContact } from "../../models/contact/query";
 
 enum FormType {
 	contact = 0,
@@ -27,9 +28,14 @@ function AddContactDialog({
 	entity_id: string;
 }) {
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = useState(FormType.contact);
+	const [activeForm, setActiveForm] = useState(FormType.address);
 	const [contact_id, setContact_id] = useState<string>("");
 	const formSteps = getFormSteps();
+
+	const getContactCreated = (contact: ICreateContact) => {
+		setContact_id(contact.createT4DContact.t4DContact.id);
+		setActiveForm(FormType.address);
+	};
 
 	return (
 		<Dialog
@@ -92,7 +98,11 @@ function AddContactDialog({
 							})}
 						</Stepper>
 						{activeForm == FormType.contact ? (
-							<ContactForm entity_id={entity_id} entity_name={entity_name} />
+							<ContactForm
+								entity_id={entity_id}
+								entity_name={entity_name}
+								getContactCreated={getContactCreated}
+							/>
 						) : (
 							<AddressForm
 								contact_id={contact_id}

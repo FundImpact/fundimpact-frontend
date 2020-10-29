@@ -4,7 +4,15 @@ import { useMutation } from "@apollo/client";
 import { CREATE_CONTACT } from "../../../../graphql/Contact/mutation";
 import { ICreateContact, ICreateContactVariables } from "../../../../models/contact/query";
 
-function ContactFormGraphql({ entity_name, entity_id }: { entity_name: string; entity_id: string }) {
+function ContactFormGraphql({
+	entity_name,
+	entity_id,
+	getContactCreated
+}: {
+	entity_name: string;
+	entity_id: string;
+	getContactCreated?: (contact: ICreateContact) => void;
+}) {
 	const [createContact, { loading: creatingContact }] = useMutation<
 		ICreateContact,
 		ICreateContactVariables
@@ -16,6 +24,7 @@ function ContactFormGraphql({ entity_name, entity_id }: { entity_name: string; e
 			loading={creatingContact}
 			entity_name={entity_name}
 			entity_id={entity_id}
+			getContactCreated={getContactCreated}
 		/>
 	);
 }

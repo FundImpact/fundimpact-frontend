@@ -28,11 +28,13 @@ function OrganizationGraphql() {
 		getCountryList();
 	}, [getCountryList]);
 
+	console.log('countryList :>> ', countryList);
+
 	return (
 		<OrganizationContainer
 			loading={loading}
 			registrationTypes={registrationTypes?.organizationRegistrationTypes || []}
-			countryList={countryList?.countryList || []}
+			countryList={countryList?.countries || []}
 			updateOrganization={updateOrganization}
 		/>
 	);

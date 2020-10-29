@@ -1,12 +1,16 @@
 export interface ICreateIndividualVariables {
 	input: {
-		name: string;
+		data: {
+			name: string;
+		};
 	};
 }
 
 export interface ICreateIndividual {
-	t4DIndividual: {
-		id: string;
-		name: string;
+	createT4DIndividual: {
+		t4DIndividual: {
+			id: string;
+			name: string;
+		};
 	};
 }

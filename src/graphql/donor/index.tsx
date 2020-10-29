@@ -5,7 +5,7 @@ export const GET_ORG_DONOR = gql`
 		orgDonors(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
-			country {
+			currency {
 				id
 				name
 			}

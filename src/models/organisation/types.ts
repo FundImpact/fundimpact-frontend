@@ -24,12 +24,13 @@ export interface IOrganisation {
 		url: string;
 	};
 	theme: ThemeOptions;
+	currency: { id: string };
 }
 
 export interface IOrganisationForm
 	extends Omit<
 		IOrganisation,
-		"__typename" | "organization_registration_type" | "country" | "logo" | "id"
+		"__typename" | "organization_registration_type" | "country" | "logo" | "id" | "currency"
 	> {
 	organization_registration_type?: string;
 	country: string;

@@ -85,7 +85,7 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 			donor {
 				name
 				id
-				country {
+				currency {
 					id
 				}
 			}

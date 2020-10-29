@@ -19,7 +19,7 @@ function AddressFormGraphql({
 		ICreateAddressVariables
 	>(CREATE_ADDRESS);
 
-	const { data: countryList } = useQuery<{ countryList: { id: string; name: string }[] }>(
+	const { data: countryList } = useQuery<{ countries: { id: string; name: string }[] }>(
 		GET_COUNTRY_LIST
 	);
 
@@ -40,7 +40,7 @@ function AddressFormGraphql({
 	}, []);
 	return (
 		<AddressFormContainer
-			countryList={countryList?.countryList || []}
+			countryList={countryList?.countries || []}
 			contact_id={contact_id}
 			entity_id={entity_id}
 			entity_name={entity_name}

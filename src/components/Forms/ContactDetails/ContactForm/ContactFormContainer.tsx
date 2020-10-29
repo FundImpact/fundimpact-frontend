@@ -19,6 +19,7 @@ interface ICreateContactContainer {
 	loading: boolean;
 	entity_name: string;
 	entity_id: string;
+	getContactCreated?: (contact: ICreateContact) => void;
 }
 interface ISubmitForm {
 	createContact: (
@@ -60,7 +61,7 @@ const submitForm = async ({
 }: ISubmitForm) => {
 	try {
 		console.log("valuesSubmitted :>> ", valuesSubmitted);
-		await createContact({
+		let contactCreated = await createContact({
 			variables: {
 				input: {
 					data: {
@@ -70,6 +71,7 @@ const submitForm = async ({
 			},
 		});
 		notificationDispatch(setSuccessNotification("Contact created successfully"));
+		return contactCreated;
 	} catch (err) {
 		notificationDispatch(setErrorNotification(err.message));
 	}
@@ -92,9 +94,10 @@ const validate = (values: IContactForm) => {
 		errors.email_other = "Email not correct";
 	}
 
+	//add phone validation
 	if (!values.phone) {
 		errors.phone = "Phone is required";
-	}
+	} 
 
 	if (!values.contact_type) {
 		errors.contact_type = "Contact type is required";
@@ -107,6 +110,7 @@ function ContactFormContainer({
 	createContact,
 	entity_id,
 	entity_name,
+	getContactCreated,
 }: ICreateContactContainer) {
 	const initialValues = getInitialFormValues();
 	const notificationDispatch = useNotificationDispatch();
@@ -118,11 +122,16 @@ function ContactFormContainer({
 			delete valuesSubmitted?.contact_type;
 			valuesSubmitted.phone = `${valuesSubmitted.phone}`;
 			valuesSubmitted.phone_other = `${valuesSubmitted.phone_other}`;
-			await submitForm({
+			const contactCreated = await submitForm({
 				valuesSubmitted: { ...valuesSubmitted, entity_id, entity_name },
 				createContact,
 				notificationDispatch,
 			});
+
+			contactCreated &&
+				contactCreated.data &&
+				getContactCreated &&
+				getContactCreated(contactCreated.data);
 		} catch (err) {
 			console.error(err.message);
 		}

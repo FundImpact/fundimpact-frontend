@@ -15,11 +15,13 @@ export interface ICreateContactVariables {
 }
 
 export interface ICreateContact {
-	t4DContact: {
-		id: string;
-		email: string;
-		email_other: string;
-		phone: string;
-		phone_other: string;
+	createT4DContact: {
+		t4DContact: {
+			id: string;
+			email: string;
+			email_other: string;
+			phone: string;
+			phone_other: string;
+		};
 	};
 }

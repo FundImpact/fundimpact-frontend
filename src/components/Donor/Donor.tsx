@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_COUNTRY_LIST } from "../../graphql/";
+import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../graphql/";
 import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_ORG_DONOR, UPDATE_ORG_DONOR } from "../../graphql/donor/mutation";
 import { IInputField } from "../../models";
@@ -21,7 +21,7 @@ import { useIntl } from "react-intl";
 let inputFields: IInputField[] = addDonorForm;
 
 const defaultFormValues: IDONOR = {
-	country: "",
+	currency: "",
 	legal_name: "",
 	name: "",
 	short_name: "",
@@ -32,8 +32,8 @@ const validate = (values: IDONOR) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.country) {
-		errors.country = "Country is required";
+	if (!values.currency) {
+		errors.currency = "Currency is required";
 	}
 	return errors;
 };
@@ -41,10 +41,9 @@ const validate = (values: IDONOR) => {
 function Donor(props: IDonorProps) {
 	const [createDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
 	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
-	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
+	const [getCourrencyList, { data: currencyList }] = useLazyQuery(GET_CURRENCY_LIST);
 
-	addDonorFormSelectFields[0].optionsArray = countries?.countryList || [];
-
+	addDonorFormSelectFields[0].optionsArray = currencyList?.currencyList || [];
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
@@ -189,14 +188,14 @@ function Donor(props: IDonorProps) {
 	};
 
 	useEffect(() => {
-		getCountryList();
-	}, [getCountryList]);
+		getCourrencyList();
+	}, [getCourrencyList]);
 
 	const intl = useIntl();
 
 	const title = intl.formatMessage({
 		id: `donorFormTitle`,
-		defaultMessage: "Add Dono",
+		defaultMessage: "Add Donor",
 		description: `This text will be show as title of donor form`,
 	});
 
