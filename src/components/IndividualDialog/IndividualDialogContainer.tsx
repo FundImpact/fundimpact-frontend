@@ -67,6 +67,14 @@ interface ISubmitForm {
 	notificationDispatch: React.Dispatch<any>;
 }
 
+interface ISubmitForm {
+	valuesSubmitted: IIndividualForm;
+	createIndividual: (
+		options?: MutationFunctionOptions<ICreateIndividual, ICreateIndividualVariables> | undefined
+	) => Promise<FetchResult<ICreateIndividual, Record<string, any>, Record<string, any>>>;
+	notificationDispatch: React.Dispatch<any>;
+}
+
 const getInitialFormValues = (): IIndividualForm => {
 	return {
 		name: "",
