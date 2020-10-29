@@ -29,7 +29,7 @@ function AddContactDialog({
 	entity_id: string;
 }) {
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = useState(FormType.address);
+	const [activeForm, setActiveForm] = useState(FormType.contact);
 	const [contact_id, setContact_id] = useState<string>("");
 	const formSteps = getFormSteps();
 
