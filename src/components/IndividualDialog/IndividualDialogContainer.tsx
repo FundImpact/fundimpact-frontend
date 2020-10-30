@@ -24,7 +24,7 @@ import {
 import { IGetProject } from "../../models/project/project.js";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setSuccessNotification, setErrorNotification } from "../../reducers/notificationReducer";
-import { GET_INDIVIDUALS } from "../../graphql/Individual";
+import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../graphql/Individual";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 
 type IIndividualDialogContainerProps =
@@ -115,6 +115,7 @@ interface ISubmitForm {
 	notificationDispatch: React.Dispatch<any>;
 	individualId: string;
 	formAction: FORM_ACTIONS;
+	organizationId: string;
 }
 
 interface IAssociateIndividualWithProject {
@@ -142,6 +143,50 @@ const getInitialFormValues = (individual?: IIndividual): IIndividualForm => {
 	};
 };
 
+const getIndividualCountCachedValue = (
+	apolloClient: ApolloClient<object>,
+	organizationId: string
+) => {
+	let count = 0;
+	try {
+		let cachedCount = apolloClient.readQuery({
+			query: GET_INDIVIDUALS_COUNT,
+			variables: {
+				filter: {
+					organization: organizationId,
+				},
+			},
+		});
+		count = cachedCount?.t4DIndividualsConnection?.aggregate?.count;
+	} catch (err) {
+		console.log("err :>> ", err);
+	}
+	return count;
+};
+
+const increaseIndividualsCount = (apolloClient: ApolloClient<object>, organizationId: string) => {
+	try {
+		const limit = getIndividualCountCachedValue(apolloClient, organizationId);
+		apolloClient.writeQuery({
+			query: GET_INDIVIDUALS_COUNT,
+			variables: {
+				filter: {
+					organization: organizationId,
+				},
+			},
+			data: {
+				t4DIndividualsConnection: {
+					aggregate: {
+						count: limit + 1,
+					},
+				},
+			},
+		});
+	} catch (err) {
+		console.log("err.message :>> ", err.message);
+	}
+};
+
 const refetchIndividuals = async ({
 	apolloClient,
 	organizationId,
@@ -150,22 +195,16 @@ const refetchIndividuals = async ({
 	organizationId: string;
 }) => {
 	try {
-		// const limit = getInvitedUserCountCachedValue(apolloClient);
-
-		// await apolloClient.query({
-		// 	query: GET_INVITED_USER_LIST,
-		// 	variables: {
-		// 		filter: {},
-		// 		limit: limit > 10 ? 10 : limit,
-		// 		start: 0,
-		// 		sort: "created_at:DESC",
-		// 	},
-		// 	fetchPolicy: "network-only",
-		// });
+		const count = getIndividualCountCachedValue(apolloClient, organizationId);
 		await apolloClient.query({
 			query: GET_INDIVIDUALS,
 			variables: {
-				organization: organizationId,
+				filter: {
+					organization: organizationId,
+				},
+				limit: count > 10 ? 10 : count,
+				start: 0,
+				sort: "created_at:DESC",
 			},
 			fetchPolicy: "network-only",
 		});
@@ -201,6 +240,7 @@ const submitForm = async ({
 	individualId,
 	updateIndividual,
 	formAction,
+	organizationId,
 }: ISubmitForm) => {
 	try {
 		let individualCreated, individualUpdated;
@@ -210,6 +250,7 @@ const submitForm = async ({
 					input: {
 						data: {
 							name: valuesSubmitted.name,
+							organization: organizationId,
 						},
 					},
 				},
@@ -351,6 +392,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				updateIndividual,
 				individualId: "",
 				formAction: props.formAction,
+				organizationId: dashboardData?.organization?.id || "",
 			});
 			if (individual) {
 				await associateIndividualWithProject({
@@ -364,7 +406,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				apolloClient,
 				organizationId: dashboardData?.organization?.id || "",
 			});
-
+			increaseIndividualsCount(apolloClient, dashboardData?.organization?.id || "");
 			handleClose();
 		} catch (err) {
 			console.error(err.message);
@@ -382,6 +424,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 						updateIndividual,
 						individualId: props.initialValues.id,
 						formAction: props.formAction,
+						organizationId: dashboardData?.organization?.id || "",
 					}));
 
 				let newAssignedProjectsToIndividual = getNewAssignedProjectToIndividual({

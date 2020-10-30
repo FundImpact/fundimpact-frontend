@@ -4,7 +4,12 @@ import { FORM_ACTIONS } from "../../constant";
 import CommonForm from "../../../CommonForm";
 import { IContactForm, IContact } from "../../../../models/contact/index.js";
 import { validateEmail } from "../../../../utils";
-import { MutationFunctionOptions, FetchResult } from "@apollo/client";
+import {
+	MutationFunctionOptions,
+	FetchResult,
+	ApolloClient,
+	useApolloClient,
+} from "@apollo/client";
 import {
 	ICreateContact,
 	ICreateContactVariables,
@@ -16,7 +21,7 @@ import {
 	setSuccessNotification,
 	setErrorNotification,
 } from "../../../../reducers/notificationReducer";
-import { GET_CONTACT_LIST } from "../../../../graphql/Contact";
+import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../../../graphql/Contact";
 
 type ICreateContactContainer =
 	| {
@@ -78,12 +83,68 @@ interface ISubmitForm {
 	) => Promise<FetchResult<IUpdateContact, Record<string, any>, Record<string, any>>>;
 	contactId: string;
 	formAction: FORM_ACTIONS;
+	apolloClient: ApolloClient<object>;
 }
 
 (contactFormFields[4].optionsArray as { id: string; name: string }[]) = [
 	{ id: "PERSONAL", name: "PERSONAL" },
 	{ id: "OFFICE", name: "OFFICE" },
 ];
+
+const getContactCountCachedValue = (
+	apolloClient: ApolloClient<object>,
+	entity_id: string,
+	entity_name: string
+) => {
+	let count = 0;
+	try {
+		let cachedCount = apolloClient.readQuery({
+			query: GET_CONTACT_LIST_COUNT,
+			variables: {
+				filter: {
+					entity_id,
+					entity_name,
+				},
+			},
+		});
+		count = cachedCount?.t4DContactsConnection?.aggregate?.count;
+	} catch (err) {
+		console.log("err :>> ", err);
+	}
+	return count;
+};
+
+const increaseContactListCount = ({
+	apolloClient,
+	entity_id,
+	entity_name,
+}: {
+	apolloClient: ApolloClient<object>;
+	entity_id: string;
+	entity_name: string;
+}) => {
+	try {
+		const count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
+		apolloClient.writeQuery({
+			query: GET_CONTACT_LIST_COUNT,
+			variables: {
+				filter: {
+					entity_id,
+					entity_name,
+				},
+			},
+			data: {
+				t4DContactsConnection: {
+					aggregate: {
+						count: count + 1,
+					},
+				},
+			},
+		});
+	} catch (err) {
+		console.log("err.message :>> ", err.message);
+	}
+};
 
 const getInitialFormValues = (contact?: IContact): IContactForm => {
 	if (contact) {
@@ -104,6 +165,99 @@ const getInitialFormValues = (contact?: IContact): IContactForm => {
 	};
 };
 
+// const getCachedContactList = ({
+// 	apolloClient,
+// 	entity_id,
+// 	entity_name,
+// }: {
+// 	apolloClient: ApolloClient<object>;
+// 	entity_id: string;
+// 	entity_name: string;
+// }) => {
+// 	let contactList = [];
+// 	try {
+// 		const count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
+
+// 		let cachedCount = apolloClient.readQuery({
+// 			query: GET_CONTACT_LIST,
+// 			variables: {
+// 				filter: {
+// 					entity_name,
+// 					entity_id,
+// 				},
+// 				limit: count > 10 ? 10 : count,
+// 				start: 0,
+// 				sort: "created_at:DESC",
+// 			},
+// 		});
+// 		contactList = cachedCount?.t4DContacts || [];
+// 	} catch (err) {
+// 		console.log("err.message :>> ", err.message);
+// 	}
+// 	console.log("contactList :>> ", contactList);
+// 	return contactList;
+// };
+
+const fetchContactListCount = async ({
+	apolloClient,
+	entity_id,
+	entity_name,
+}: {
+	apolloClient: ApolloClient<object>;
+	entity_id: string;
+	entity_name: string;
+}) => {
+	let count = 0;
+	try {
+		let cachedCount = await apolloClient.query({
+			query: GET_CONTACT_LIST_COUNT,
+			variables: {
+				filter: {
+					entity_id,
+					entity_name,
+				},
+			},
+			fetchPolicy: "network-only",
+		});
+		count = cachedCount?.data?.t4DContactsConnection?.aggregate?.count;
+	} catch (err) {
+		console.log("err :>> ", err);
+	}
+	return count;
+};
+
+const refetchContactList = async ({
+	apolloClient,
+	entity_id,
+	entity_name,
+}: {
+	apolloClient: ApolloClient<object>;
+	entity_id: string;
+	entity_name: string;
+}) => {
+	try {
+		let count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
+		if (count == 0) {
+			count = await fetchContactListCount({ apolloClient, entity_id, entity_name });
+		}
+		await apolloClient.query({
+			query: GET_CONTACT_LIST,
+			variables: {
+				filter: {
+					entity_name,
+					entity_id,
+				},
+				limit: count > 10 ? 10 : count,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+			fetchPolicy: "network-only",
+		});
+	} catch (err) {
+		console.log("err :>> ", err);
+	}
+};
+
 const submitForm = async ({
 	valuesSubmitted,
 	createContact,
@@ -111,6 +265,7 @@ const submitForm = async ({
 	contactId,
 	formAction,
 	updateContact,
+	apolloClient,
 }: ISubmitForm) => {
 	try {
 		let createdContact, updatedContact;
@@ -123,17 +278,16 @@ const submitForm = async ({
 						},
 					},
 				},
-				refetchQueries: [
-					{
-						query: GET_CONTACT_LIST,
-						variables: {
-							where: {
-								entity_name: valuesSubmitted.entity_name,
-								entity_id: valuesSubmitted.entity_id,
-							},
-						},
-					},
-				],
+			});
+			await refetchContactList({
+				apolloClient,
+				entity_id: valuesSubmitted.entity_id,
+				entity_name: valuesSubmitted.entity_name,
+			});
+			increaseContactListCount({
+				apolloClient,
+				entity_id: valuesSubmitted.entity_id,
+				entity_name: valuesSubmitted.entity_name,
 			});
 		} else {
 			updatedContact = await updateContact({
@@ -206,6 +360,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 			: getInitialFormValues(props.initialValues);
 
 	const notificationDispatch = useNotificationDispatch();
+	const apolloClient = useApolloClient();
 
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
 		try {
@@ -219,6 +374,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 				updateContact,
 				formAction: props.formAction,
 				contactId: props.formAction == FORM_ACTIONS.UPDATE ? props.initialValues.id : "",
+				apolloClient,
 			});
 
 			getCreatedOrUpdatedContact && getCreatedOrUpdatedContact(contactCreated);

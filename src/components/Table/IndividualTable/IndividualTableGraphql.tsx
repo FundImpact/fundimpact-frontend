@@ -7,11 +7,16 @@ import {
 } from "../../../graphql/Budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import IndividualTableGraphql from ".";
-import { GET_INDIVIDUALS } from "../../../graphql/Individual";
+import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../../graphql/Individual";
 import { useLazyQuery } from "@apollo/client";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
+import { removeFilterListObjectElements } from "../../../utils/filterList";
 
-function BudgetCategoryTableGraphql({
+const getDefaultFilterList = () => ({
+	name: "",
+});
+
+function IndividualCategoryTableGraphql({
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -20,80 +25,69 @@ function BudgetCategoryTableGraphql({
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
+	const [filterList, setFilterList] = useState<{
+		[key: string]: string | string[];
+	}>(getDefaultFilterList());
 
-	// useEffect(() => {
-	// 	setQueryFilter({
-	// 		organization: dashboardData?.organization?.id,
-	// 	});
-	// }, [dashboardData]);
-
-	// useEffect(() => {
-	// 	let newFilterListObject: { [key: string]: string } = {};
-	// 	for (let key in tableFilterList) {
-	// 		if (tableFilterList[key] && tableFilterList[key].length) {
-	// 			newFilterListObject[key] = tableFilterList[key];
-	// 		}
-	// 	}
-	// 	setQueryFilter({
-	// 		organization: dashboardData?.organization?.id,
-	// 		...newFilterListObject,
-	// 	});
-	// }, [tableFilterList, dashboardData]);
-
-	// let {
-	// 	changePage,
-	// 	count,
-	// 	queryData: budgetCategoryList,
-	// 	queryLoading,
-	// 	countQueryLoading,
-	// } = pagination({
-	// 	countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
-	// 	countFilter: queryFilter,
-	// 	query: GET_INDIVIDUALS,
-	// 	queryFilter,
-	// 	sort: `${orderBy}:${order.toUpperCase()}`,
-	// });
-
-	// return (
-	// <IndividualTableContainer
-	// 	budgetCategoryList={budgetCategoryList?.orgBudgetCategory || []}
-	// 	collapsableTable={false}
-	// 	changePage={changePage}
-	// 	loading={queryLoading || countQueryLoading}
-	// 	count={count}
-	// 	order={order}
-	// 	setOrder={setOrder}
-	// 	orderBy={orderBy}
-	// 	setOrderBy={setOrderBy}
-	// />
-	// );
-
-	const [getIndividuals, { data: individualList, loading: fetchingIndividuals }] = useLazyQuery<IGET_INDIVIDUAL_LIST>(
-		GET_INDIVIDUALS
-	);
-	console.log("individualList :>> ", individualList);
 	useEffect(() => {
 		if (dashboardData) {
-			getIndividuals({
-				variables: {
-					organization: dashboardData?.organization?.id,
-				},
+			setQueryFilter({
+				organization: dashboardData?.organization?.id,
 			});
 		}
-	}, [getIndividuals, dashboardData]);
+	}, [setQueryFilter, dashboardData]);
+
+	useEffect(() => {
+		if (filterList && dashboardData) {
+			let newFilterListObject: { [key: string]: string | string[] } = {};
+			for (let key in filterList) {
+				if (filterList[key] && filterList[key].length) {
+					newFilterListObject[key] = filterList[key];
+				}
+			}
+			setQueryFilter({
+				organization: dashboardData?.organization?.id,
+				...newFilterListObject,
+			});
+		}
+	}, [filterList, dashboardData]);
+
+	const removeFilterListElements = (key: string, index?: number) =>
+		setFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
+
+	let {
+		changePage,
+		count,
+		queryData: individualList,
+		queryLoading,
+		countQueryLoading,
+	} = pagination({
+		countQuery: GET_INDIVIDUALS_COUNT,
+		countFilter: queryFilter,
+		query: GET_INDIVIDUALS,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
+		retrieveContFromCountQueryResponse: "t4DIndividualsConnection,aggregate,count",
+		fireRequest: Boolean(dashboardData),
+	});
 
 	return (
 		<IndividualTableContainer
 			individualList={individualList?.t4DIndividuals || []}
-			count={10}
-			changePage={(prev: boolean | undefined) => {}}
-			loading={fetchingIndividuals}
+			count={count}
+			changePage={changePage}
+			loading={queryLoading || countQueryLoading}
 			order={order}
 			orderBy={orderBy}
 			setOrder={setOrder}
 			setOrderBy={setOrderBy}
+			filterList={filterList}
+			setFilterList={setFilterList}
+			removeFilterListElements={removeFilterListElements}
 		/>
 	);
 }
 
-export default BudgetCategoryTableGraphql;
+export default IndividualCategoryTableGraphql;

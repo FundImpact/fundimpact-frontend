@@ -12,6 +12,15 @@ interface IIndividualTableContainer {
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }
 
 const getInitialValues = (individual: IIndividual | null): IIndividual => {
@@ -31,6 +40,9 @@ function IndividualTableContainer({
 	orderBy,
 	setOrder,
 	setOrderBy,
+	filterList,
+	removeFilterListElements,
+	setFilterList,
 }: IIndividualTableContainer) {
 	const selectedIndividual = useRef<IIndividual | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false]);
@@ -55,6 +67,9 @@ function IndividualTableContainer({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
+			filterList={filterList}
+			setFilterList={setFilterList}
+			removeFilterListElements={removeFilterListElements}
 		/>
 	);
 }

@@ -2,6 +2,7 @@ export interface ICreateIndividualVariables {
 	input: {
 		data: {
 			name: string;
+			organization: string;
 		};
 	};
 }

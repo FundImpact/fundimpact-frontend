@@ -19,3 +19,12 @@ export const GET_INDIVIDUALS = gql`
 		}
 	}
 `;
+export const GET_INDIVIDUALS_COUNT = gql`
+	query t4DIndividualsConnection($filter: JSON) {
+		t4DIndividualsConnection(where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
