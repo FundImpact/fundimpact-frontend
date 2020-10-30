@@ -68,7 +68,7 @@ function BudgetCategoryTableGraphql({
 	// />
 	// );
 
-	const [getIndividuals, { data: individualList }] = useLazyQuery<IGET_INDIVIDUAL_LIST>(
+	const [getIndividuals, { data: individualList, loading: fetchingIndividuals }] = useLazyQuery<IGET_INDIVIDUAL_LIST>(
 		GET_INDIVIDUALS
 	);
 	console.log("individualList :>> ", individualList);
@@ -87,7 +87,7 @@ function BudgetCategoryTableGraphql({
 			individualList={individualList?.t4DIndividuals || []}
 			count={10}
 			changePage={(prev: boolean | undefined) => {}}
-			loading={false}
+			loading={fetchingIndividuals}
 			order={order}
 			orderBy={orderBy}
 			setOrder={setOrder}

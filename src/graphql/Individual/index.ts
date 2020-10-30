@@ -6,8 +6,14 @@ export const GET_INDIVIDUALS = gql`
 			id
 			name
 			t4d_project_individuals {
+				id
 				project {
+					id
 					name
+					workspace {
+						id
+						name
+					}
 				}
 			}
 		}

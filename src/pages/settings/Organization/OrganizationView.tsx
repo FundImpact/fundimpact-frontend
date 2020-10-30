@@ -28,10 +28,10 @@ import { FormattedMessage, useIntl, IntlShape } from "react-intl";
 import UploadFile from "../../../components/UploadFile";
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { IDashboardDataContext, ICountry } from "../../../models";
-import { primaryColor, secondaryColor } from "../../../models/constants";
+import { primaryColor, secondaryColor, Enitity } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
-import AddContactDialog from "../../../components/AddContactAddressDialog";
+import AddContactAddressDialog from "../../../components/AddContactAddressDialog";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import ContactListDialog from "../../../components/ContactListDialog";
 
@@ -244,15 +244,17 @@ function OrganizationView({
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<AddContactDialog
+					<AddContactAddressDialog
 						open={contactAddressDialogOpen}
 						handleClose={() => setContactAddressDialogOpen(false)}
-						entity_name={"organization"}
+						entity_name={Enitity.organization}
 						entity_id={dashboardData?.organization?.id || ""}
 					/>
 					<ContactListDialog
 						open={contactListDialogOpen}
 						handleClose={() => setContactListDialogOpen(false)}
+						entity_id={dashboardData?.organization?.id || ""}
+						entity_name={Enitity.organization}
 					/>
 					<Paper>
 						<Box p={2}>

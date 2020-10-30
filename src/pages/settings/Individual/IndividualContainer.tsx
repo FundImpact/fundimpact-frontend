@@ -4,6 +4,7 @@ import { FormattedMessage } from "react-intl";
 import AddButton from "../../../components/Dasboard/AddButton";
 import IndividualDialog from "../../../components/IndividualDialog";
 import IndividualTable from "../../../components/Table/IndividualTable";
+import { FORM_ACTIONS } from "../../../models/constants";
 
 function IndividualContainer() {
 	return (
@@ -28,7 +29,11 @@ function IndividualContainer() {
 				createButtons={[]}
 				buttonAction={{
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<IndividualDialog open={open} handleClose={handleClose} />
+						<IndividualDialog
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
 					),
 				}}
 			/>

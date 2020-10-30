@@ -3,18 +3,19 @@ import UserForm from "../../../components/Forms/User";
 import PasswordReset from "../../../components/Forms/ResetPassword";
 import { Box, Button, Paper, ButtonGroup } from "@material-ui/core";
 import { useAuth, UserDispatchContext } from "../../../contexts/userContext";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { FORM_ACTIONS, Enitity } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
 import { useLocation } from "react-router";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAILS } from "../../../graphql/User/query";
 import { setUser } from "../../../reducers/userReducer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AddContactDialog from "../../../components/AddContactAddressDialog";
-import AddAddressDialog from "../../../components/AddAddressDialog";
+import AddContactAddressDialog from "../../../components/AddContactAddressDialog";
+import ContactListDialog from "../../../components/ContactListDialog";
 
 export const ProfileContainer = () => {
 	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
+	const [contactListDialogOpen, setContactListDialogOpen] = useState<boolean>(false);
 	const auth = useAuth();
 	const user: any = auth.user;
 	const data = {
@@ -100,6 +101,13 @@ export const ProfileContainer = () => {
 								description={`This text will be shown on add contact button`}
 							/>
 						</Button>
+						<Button fullWidth onClick={() => setContactListDialogOpen(true)}>
+							<FormattedMessage
+								id={`showContactList`}
+								defaultMessage={`Contacts Details`}
+								description={`This text will be shown on show contact button`}
+							/>
+						</Button>
 					</ButtonGroup>
 				</Box>
 			)}
@@ -111,10 +119,18 @@ export const ProfileContainer = () => {
 					type={FORM_ACTIONS.UPDATE}
 				/>
 			)}
-			{/* <AddContactDialog
+			<AddContactAddressDialog
 				open={contactAddressDialogOpen}
 				handleClose={() => setContactAddressDialogOpen(false)}
-			/> */}
+				entity_id={data?.id || ""}
+				entity_name={Enitity.user}
+			/>
+			<ContactListDialog
+				open={contactListDialogOpen}
+				handleClose={() => setContactListDialogOpen(false)}
+				entity_name={Enitity.user}
+				entity_id={data?.id || ""}
+			/>
 		</Box>
 	);
 };

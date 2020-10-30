@@ -156,11 +156,11 @@ export const individualTableHeadings: ITableHeadings[] = [
 export const contactTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
-	{ label: "Email" },
-	{ label: "Email Other" },
-	{ label: "Phone" },
-	{ label: "Phone Other" },
-	{ label: "Contact Type" },
+	{ label: "Email", keyMapping: "email" },
+	{ label: "Email Other", keyMapping: "email_other" },
+	{ label: "Phone", keyMapping: "phone" },
+	{ label: "Phone Other", keyMapping: "phone_other" },
+	{ label: "Contact Type", keyMapping: "contact_type" },
 	{ label: "" },
 	{ label: "" },
 ];

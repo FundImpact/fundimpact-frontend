@@ -13,6 +13,15 @@ interface IContactTableContainer {
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }
 
 const getInitialValues = (contact: IContact | null): IContact => {
@@ -35,6 +44,9 @@ function ContactTableContainer({
 	orderBy,
 	setOrder,
 	setOrderBy,
+	filterList,
+	removeFilterListElements,
+	setFilterList,
 }: IContactTableContainer) {
 	const selectedContact = useRef<IContact | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
@@ -59,6 +71,9 @@ function ContactTableContainer({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
+			filterList={filterList}
+			setFilterList={setFilterList}
+			removeFilterListElements={removeFilterListElements}
 		/>
 	);
 }

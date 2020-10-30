@@ -1,40 +1,38 @@
 import React, { useEffect, useState } from "react";
 import AddressTableContainer from "./AddressTableContainer";
-import { useLazyQuery } from "@apollo/client";
-import { IGetContact } from "../../../models/contact/query";
-import { GET_CONTACT_LIST } from "../../../graphql/Contact";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { IGetAddress, IGetAddressVariables } from "../../../models/address/query";
-import { GET_ADDRESS_LIST } from "../../../graphql/Address";
+import { GET_ADDRESS_LIST, GET_ADDRESS_LIST_COUNT } from "../../../graphql/Address";
+import pagination from "../../../hooks/pagination";
 
 function AddressTableGraphql({ contactId }: { contactId: string }) {
-	const dashboardData = useDashBoardData();
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
-	const [getAddressList, { data: addressList, loading: fetchingAddressList }] = useLazyQuery<
-		IGetAddress,
-		IGetAddressVariables
-	>(GET_ADDRESS_LIST);
 
 	useEffect(() => {
-		if (dashboardData) {
-			getAddressList({
-				variables: {
-					where: {
-						t_4_d_contact: contactId,
-					},
-				},
+		if (contactId) {
+			setQueryFilter({
+				t_4_d_contact: contactId,
 			});
 		}
-	}, [getAddressList, dashboardData]);
+	}, [setQueryFilter]);
+
+	let { changePage, count, queryData: addressList, queryLoading, countQueryLoading } = pagination(
+		{
+			countQuery: GET_ADDRESS_LIST_COUNT,
+			countFilter: queryFilter,
+			query: GET_ADDRESS_LIST,
+			queryFilter,
+			sort: `${orderBy}:${order.toUpperCase()}`,
+			retrieveContFromCountQueryResponse: "t4DAddressesConnection,aggregate,count",
+		}
+	);
 
 	return (
 		<AddressTableContainer
 			addressList={addressList?.t4DAddresses || []}
-			count={10}
-			changePage={(prev: boolean | undefined) => {}}
-			loading={fetchingAddressList}
+			count={count}
+			changePage={changePage}
+			loading={queryLoading || countQueryLoading}
 			order={order}
 			orderBy={orderBy}
 			setOrder={setOrder}

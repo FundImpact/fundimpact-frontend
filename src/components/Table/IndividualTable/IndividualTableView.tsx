@@ -1,9 +1,19 @@
 import React from "react";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import CommonTable from "../CommonTable";
-import { IIndividualForm } from "../../../models/individual";
+import { IIndividualForm, IIndividual } from "../../../models/individual";
 import { individualTableHeadings } from "../constants";
 import { Grid, Box } from "@material-ui/core";
+import IndividualDialog from "../../IndividualDialog";
+import { FORM_ACTIONS, Enitity } from "../../../models/constants";
+import AddContactAddressDialog from "../../AddContactAddressDialog";
+import ContactListDialog from "../../ContactListDialog";
+
+enum dialogType {
+	individual = 0,
+	contact = 1,
+	contactList = 2,
+}
 
 interface IIndividualTableView {
 	individualList: IGET_INDIVIDUAL_LIST["t4DIndividuals"];
@@ -14,10 +24,10 @@ interface IIndividualTableView {
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	selectedIndividual: React.MutableRefObject<{ id: string; name: string } | null>;
+	selectedIndividual: React.MutableRefObject<IIndividual | null>;
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
-	initialValues: { id: string; name: string };
+	initialValues: IIndividual;
 }
 
 const rows = [
@@ -51,7 +61,7 @@ function IndividualTableView({
 	openDialogs,
 	initialValues,
 }: IIndividualTableView) {
-	const individualEditMenu = ["Edit Individual"];
+	const individualEditMenu = ["Edit Individual", "Add Contact", "Show Contacts"];
 
 	return (
 		<CommonTable
@@ -70,12 +80,26 @@ function IndividualTableView({
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
 		>
-			{/* <BudgetCategory
-				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => toggleDialogs(0, false)}
-				open={openDialogs[0]}
-				initialValues={initialValues}
-			/> */}
+			<>
+				<IndividualDialog
+					formAction={FORM_ACTIONS.UPDATE}
+					initialValues={initialValues}
+					handleClose={() => toggleDialogs(dialogType.individual, false)}
+					open={openDialogs[dialogType.individual]}
+				/>
+				<AddContactAddressDialog
+					open={openDialogs[dialogType.contact]}
+					handleClose={() => toggleDialogs(dialogType.contact, false)}
+					entity_name={Enitity.individual}
+					entity_id={initialValues.id}
+				/>
+				<ContactListDialog
+					open={openDialogs[dialogType.contactList]}
+					handleClose={() => toggleDialogs(dialogType.contactList, false)}
+					entity_name={Enitity.individual}
+					entity_id={initialValues.id}
+				/>
+			</>
 		</CommonTable>
 	);
 }

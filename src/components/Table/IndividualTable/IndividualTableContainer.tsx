@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import IndividualTableView from "./IndividualTableView";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
-import { IIndividualForm } from "../../../models/individual";
+import { IIndividualForm, IIndividual } from "../../../models/individual";
 
 interface IIndividualTableContainer {
 	individualList: IGET_INDIVIDUAL_LIST["t4DIndividuals"];
@@ -14,12 +14,11 @@ interface IIndividualTableContainer {
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const getInitialValues = (
-	indiviual: { id: string; name: string } | null
-): { id: string; name: string } => {
+const getInitialValues = (individual: IIndividual | null): IIndividual => {
 	return {
-		name: indiviual?.name || "",
-		id: indiviual?.id || "",
+		id: individual?.id || "",
+		name: individual?.name || "",
+		t4d_project_individuals: individual?.t4d_project_individuals || [],
 	};
 };
 
@@ -33,8 +32,8 @@ function IndividualTableContainer({
 	setOrder,
 	setOrderBy,
 }: IIndividualTableContainer) {
-	const selectedIndividual = useRef<{ id: string; name: string } | null>(null);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const selectedIndividual = useRef<IIndividual | null>(null);
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false]);
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>

@@ -2,8 +2,19 @@ import React from "react";
 import { Dialog, Box, Grid, Typography } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import ContactTable from "../Table/ContactTable";
+import { Enitity } from "../../models/constants";
 
-function ContactListDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+function ContactListDialog({
+	open,
+	handleClose,
+	entity_name,
+	entity_id,
+}: {
+	open: boolean;
+	handleClose: () => void;
+	entity_name: Enitity;
+	entity_id: string;
+}) {
 	return (
 		<Dialog
 			fullWidth
@@ -25,7 +36,7 @@ function ContactListDialog({ open, handleClose }: { open: boolean; handleClose: 
 						</Typography>
 					</Grid>
 					<Grid item xs={12}>
-						<ContactTable />
+						<ContactTable entity_name={entity_name} entity_id={entity_id} />
 					</Grid>
 				</Grid>
 			</Box>
