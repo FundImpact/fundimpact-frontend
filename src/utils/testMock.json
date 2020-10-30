@@ -60,7 +60,7 @@
 			"donor": {
 				"name": "donor 1",
 				"id": "1",
-				"country": {
+				"currency": {
 					"id": "2"
 				}
 			}
@@ -221,7 +221,7 @@
 		{
 			"id": "1",
 			"name": "vikram pathak",
-			"country": {
+			"currency": {
 				"id": "1",
 				"name": "India"
 			},
@@ -253,10 +253,14 @@
 	],
 	"mockCurrencyList": [
 		{
-			"code": "INR"
+			"code": "INR",
+			"id": "1",
+			"name": "Rupee"
 		},
 		{
-			"code": "Dollor"
+			"code": "Dollor",
+			"id": "2",
+			"name": "Dollor"
 		}
 	],
 	"mockOrganizationRegistrationTypes": [

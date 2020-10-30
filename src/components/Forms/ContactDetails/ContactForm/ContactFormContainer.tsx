@@ -118,8 +118,8 @@ function ContactFormContainer({
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
 		try {
 			//remove this
-			delete valuesSubmitted?.name;
-			delete valuesSubmitted?.contact_type;
+			// delete valuesSubmitted?.name;
+			// delete valuesSubmitted?.contact_type;
 			valuesSubmitted.phone = `${valuesSubmitted.phone}`;
 			valuesSubmitted.phone_other = `${valuesSubmitted.phone_other}`;
 			const contactCreated = await submitForm({
