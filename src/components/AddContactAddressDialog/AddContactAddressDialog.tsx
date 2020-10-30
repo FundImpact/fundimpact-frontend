@@ -110,13 +110,6 @@ function AddContactDialog({
 							/>
 						) : (
 							<AddressForm
-								contact_id={contact_id}
-								entity_id={entity_id}
-								entity_name={entity_name}
-								getContactCreated={getContactCreated}
-							/>
-						) : (
-							<AddressForm
 								t_4_d_contact={contact_id}
 								getAddressCreated={getAddressCreated}
 							/>
