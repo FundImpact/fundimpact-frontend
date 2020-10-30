@@ -41,9 +41,9 @@ interface IContactTableView {
 ];
 
 const chipArray = ({
-	elementList,
 	name,
 	removeChip,
+	elementList,
 }: {
 	removeChip: (index: number) => void;
 	elementList: string[];
@@ -52,17 +52,17 @@ const chipArray = ({
 	return elementList.map((element, index) => (
 		<Box key={index} m={1}>
 			<Chip
-				label={element}
 				avatar={
 					<Avatar
-						style={{
-							width: "30px",
-							height: "30px",
-						}}
+					style={{
+						height: "30px",
+						width: "30px",
+					}}
 					>
 						<span>{name}</span>
 					</Avatar>
 				}
+				label={element}
 				onDelete={() => removeChip(index)}
 			/>
 		</Box>
