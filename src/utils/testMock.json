@@ -1,6 +1,6 @@
 {
 	"organizationDetails": {
-		"__typename": "OrganizationList",
+		"__typename": "organizations",
 		"id": "3",
 		"name": "sherlock",
 		"short_name": "sh homes",
@@ -25,7 +25,7 @@
 		}
 	},
 	"organizationDetail": {
-		"__typename": "OrganizationList",
+		"__typename": "organizations",
 		"id": "13",
 		"name": "TSERIES",
 		"short_name": "TS",

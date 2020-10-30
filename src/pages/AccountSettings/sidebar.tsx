@@ -31,16 +31,16 @@ export default function AccountSettingsSidebar({ children }: { children?: Functi
 	const intl = useIntl();
 	React.useEffect(() => {
 		if (orgData) {
-			const { organizationList } = orgData;
-			if (organizationList) {
-				dispatch(setOrganisation(organizationList[0]));
+			const { organizations } = orgData;
+			if (organizations) {
+				dispatch(setOrganisation(organizations[0]));
 			}
 		}
 	}, [orgData, dispatch]);
 
 	const accountEditAccess = userHasAccess(MODULE_CODES.ACCOUNT, ACCOUNT_ACTIONS.UPDATE_ACCOUNT);
 
-	if (!orgData?.organizationList) return <SidebarSkeleton />;
+	if (!orgData?.organizations) return <SidebarSkeleton />;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>

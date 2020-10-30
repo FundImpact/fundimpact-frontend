@@ -19,7 +19,7 @@ export default function DocumentsTable({
 	loading,
 }: {
 	data: {
-		organizationList: {
+		organizations: {
 			id: string;
 			name: string;
 			short_name: string;
@@ -54,7 +54,7 @@ export default function DocumentsTable({
 	// const { data, loading } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	useEffect(() => {
 		let arr: any = [];
-		data?.organizationList?.map(
+		data?.organizations?.map(
 			(organization: {
 				id: string;
 				name: string;

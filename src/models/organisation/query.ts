@@ -1,7 +1,7 @@
 import { IOrganisation, IOrganizationRegistrationType, IOrganisationForm } from "./types";
 
 export interface IOrganisationFetchResponse {
-	organizationList: IOrganisation[];
+	organizations: IOrganisation[];
 }
 
 export interface IUpdateOrganization {

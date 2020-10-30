@@ -77,11 +77,11 @@ function OrganizationContainer({
 			let { organizationUpdate } = response.data;
 
 			store.writeQuery<{
-				organizationList: IOrganisation[];
+				organizations: IOrganisation[];
 			}>({
 				query: GET_ORGANISATIONS,
 				data: {
-					organizationList: [organizationUpdate],
+					organizations: [organizationUpdate],
 				},
 			});
 		} catch (err) {

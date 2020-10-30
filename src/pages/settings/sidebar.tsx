@@ -55,9 +55,9 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 	const intl = useIntl();
 	React.useEffect(() => {
 		if (data) {
-			const { organizationList } = data;
-			if (organizationList) {
-				dispatch(setOrganisation(organizationList[0]));
+			const { organizations } = data;
+			if (organizations) {
+				dispatch(setOrganisation(organizations[0]));
 			}
 		}
 	}, [data, dispatch]);
@@ -178,7 +178,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		authInviteUser || authFindUser
 	);
 
-	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
+	if (!data?.organizations) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>

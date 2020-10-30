@@ -38,6 +38,7 @@ import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deli
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
+import { PROJECT_ACTIONS as PROJECT_USER_ACCESS_ACTIONS } from "../../../utils/access/modules/project/actions";
 import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
 import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
@@ -102,6 +103,7 @@ enum tabType {
 	impactTab = 2,
 	grantPeriodTab = 3,
 	fundReceiptTab = 3,
+	documentsTab = 4,
 }
 
 const getTabToShow = (
@@ -109,7 +111,8 @@ const getTabToShow = (
 	impactTabVisibility: boolean,
 	deliverableTabVisibility: boolean,
 	grantPeriodTabVisibility: boolean,
-	fundReceiptTabVisibility: boolean
+	fundReceiptTabVisibility: boolean,
+	documentsTabVisibility: boolean
 ) => {
 	if (budgetTabVisibility) {
 		return tabType.budgetTab;
@@ -126,6 +129,8 @@ const getTabToShow = (
 	if (fundReceiptTabVisibility) {
 		return tabType.fundReceiptTab;
 	}
+	if (documentsTabVisibility) return tabType.documentsTab;
+
 	return tabType.budgetTab;
 };
 
@@ -141,6 +146,16 @@ export default function DashboardTableContainer() {
 	const budgetTargetFindAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
 		BUDGET_TARGET_ACTIONS.FIND_BUDGET_TARGET
+	);
+
+	const projectFindAccess = userHasAccess(
+		MODULE_CODES.PEOJECT,
+		PROJECT_USER_ACCESS_ACTIONS.FIND_PROJECT
+	);
+
+	const projectEditAccess = userHasAccess(
+		MODULE_CODES.PEOJECT,
+		PROJECT_USER_ACCESS_ACTIONS.UPDATE_PROJECT
 	);
 
 	const budgetCategoryCreateAccess = userHasAccess(
@@ -499,8 +514,8 @@ export default function DashboardTableContainer() {
 			}),
 			table: <ProjectDocumentsTable />,
 			createButtons: [],
-			tabVisibility: grantPeriodFindAccess || grantPeriodCreateAccess,
-			tableVisibility: grantPeriodFindAccess,
+			tabVisibility: projectFindAccess || projectEditAccess,
+			tableVisibility: projectFindAccess,
 		},
 	];
 	const classes = useStyles();
@@ -525,7 +540,9 @@ export default function DashboardTableContainer() {
 			deliverableCategoryCreateAccess ||
 			deliverableTracklineCreateAccess ||
 			grantPeriodFindAccess ||
-			grantPeriodCreateAccess
+			grantPeriodCreateAccess ||
+			projectFindAccess ||
+			projectEditAccess
 		) {
 			setValue(
 				getTabToShow(
@@ -544,7 +561,8 @@ export default function DashboardTableContainer() {
 						deliverableCategoryCreateAccess ||
 						deliverableTracklineCreateAccess,
 					grantPeriodFindAccess || grantPeriodCreateAccess,
-					fundReceiptCreateAccess || fundReceiptFindAccess
+					fundReceiptCreateAccess || fundReceiptFindAccess,
+					projectFindAccess || projectEditAccess
 				)
 			);
 		}
@@ -567,6 +585,8 @@ export default function DashboardTableContainer() {
 		grantPeriodCreateAccess,
 		fundReceiptFindAccess,
 		fundReceiptCreateAccess,
+		projectEditAccess,
+		projectFindAccess,
 	]);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
