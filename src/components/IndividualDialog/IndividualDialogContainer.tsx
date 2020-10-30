@@ -128,15 +128,15 @@ interface IAssociateIndividualWithProject {
 	individualId: string;
 }
 
-interface ISubmitForm {
-	valuesSubmitted: IIndividualForm;
-	createIndividual: (
-		options?: MutationFunctionOptions<ICreateIndividual, ICreateIndividualVariables> | undefined
-	) => Promise<FetchResult<ICreateIndividual, Record<string, any>, Record<string, any>>>;
-	notificationDispatch: React.Dispatch<any>;
-}
-
 const getInitialFormValues = (individual?: IIndividual): IIndividualForm => {
+	if (individual) {
+		return {
+			name: individual.name,
+			project: individual.t4d_project_individuals.map(
+				(t4d_project_individual) => t4d_project_individual.project
+			),
+		};
+	}
 	return {
 		name: "",
 		project: [],
