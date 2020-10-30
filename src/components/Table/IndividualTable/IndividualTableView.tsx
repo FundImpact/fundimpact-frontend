@@ -60,17 +60,18 @@ const rows = [
 
 const chipArray = ({
 	elementList,
-	name,
 	removeChip,
+	name,
 }: {
 	removeChip: (index: number) => void;
 	elementList: string[];
 	name: string;
 }) => {
 	return elementList.map((element, index) => (
-		<Box key={index} m={1}>
+		<Box m={1} key={index}>
 			<Chip
 				label={element}
+				onDelete={() => removeChip(index)}
 				avatar={
 					<Avatar
 						style={{
@@ -81,7 +82,6 @@ const chipArray = ({
 						<span>{name}</span>
 					</Avatar>
 				}
-				onDelete={() => removeChip(index)}
 			/>
 		</Box>
 	));

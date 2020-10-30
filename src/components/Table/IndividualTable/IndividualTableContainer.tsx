@@ -4,17 +4,17 @@ import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import { IIndividualForm, IIndividual } from "../../../models/individual";
 
 interface IIndividualTableContainer {
-	individualList: IGET_INDIVIDUAL_LIST["t4DIndividuals"];
+	count: number;
 	changePage: (prev?: boolean | undefined) => void;
 	loading: boolean;
-	count: number;
-	order: "asc" | "desc";
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	individualList: IGET_INDIVIDUAL_LIST["t4DIndividuals"];
 	filterList: {
 		[key: string]: string | string[];
 	};
+	order: "asc" | "desc";
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string | string[];
