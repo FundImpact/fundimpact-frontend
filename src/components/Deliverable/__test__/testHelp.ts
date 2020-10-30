@@ -20,7 +20,7 @@ export const DeliverableTargetMock = [
 				organization: {
 					id: "2",
 					name: "TSERIES",
-					address: null,
+
 					account: {
 						id: "2",
 						name: "rahul@gmail.com",
@@ -111,7 +111,7 @@ export const deliverableCategoryMock = [
 		organization: {
 			id: "2",
 			name: "TSERIES",
-			address: null,
+
 			account: {
 				id: "2",
 				name: "rahul@gmail.com",
@@ -135,7 +135,7 @@ export const deliverableCategoryMock = [
 		organization: {
 			id: "2",
 			name: "TSERIES",
-			address: null,
+
 			account: {
 				id: "2",
 				name: "rahul@gmail.com",
@@ -164,7 +164,7 @@ export const deliverableCategoryUnitListMock = [
 			organization: {
 				id: "2",
 				name: "TSERIES",
-				address: null,
+
 				account: {
 					id: "2",
 					name: "rahul@gmail.com",
@@ -191,7 +191,7 @@ export const deliverableCategoryUnitListMock = [
 			organization: {
 				id: "2",
 				name: "TSERIES",
-				address: null,
+
 				account: {
 					id: "2",
 					name: "rahul@gmail.com",

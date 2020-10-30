@@ -17,7 +17,6 @@ export const GET_DELIVERABLE_TARGETS = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -69,7 +68,6 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -128,7 +126,6 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -180,7 +177,6 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name

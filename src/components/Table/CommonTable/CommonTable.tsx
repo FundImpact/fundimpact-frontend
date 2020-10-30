@@ -184,7 +184,17 @@ function CommonTable<T extends { id: string }>({
 	}
 
 	if (!valuesList.length) {
-		return <Typography align="center">No Data</Typography>;
+		return (
+			<Box m={2} display="flex" justifyContent="center">
+				<Typography variant="subtitle1" gutterBottom color="textSecondary">
+					<FormattedMessage
+						id={`nodataFound`}
+						defaultMessage={`No Data Found`}
+						description={`This text will be shown if no data found for table`}
+					/>
+				</Typography>
+			</Box>
+		);
 	}
 
 	let childrenArray = React.Children.toArray(children);

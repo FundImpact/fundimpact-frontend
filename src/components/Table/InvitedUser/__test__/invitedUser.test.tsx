@@ -13,6 +13,7 @@ import {
 	GET_ROLES_BY_ORG,
 } from "../../../../graphql/UserRoles/query";
 import { rolesMock, userListMock } from "../../../Forms/UserRole/__test__/testHelp";
+import { invitedUserFilter } from "../../../../pages/settings/UserRole/inputFields.json";
 
 let intialFormValue = {
 	email: "my@my.com",
@@ -53,6 +54,11 @@ const mocks = [
 ];
 
 let invitedUserTable: RenderResult;
+let filterList = {
+	email: "",
+	role: [],
+};
+let setFilterList = jest.fn();
 
 beforeEach(() => {
 	act(() => {
@@ -61,7 +67,13 @@ beforeEach(() => {
 				defaultState={{ project: projectsMock, organization: organizationDetail }}
 			>
 				<NotificationProvider>
-					<InvitedUserTable />
+					<InvitedUserTable
+						{...{
+							filterList,
+							setFilterList,
+							invitedUserFilter,
+						}}
+					/>
 				</NotificationProvider>
 			</DashboardProvider>,
 			{
@@ -97,36 +109,5 @@ describe("Invited User TableGraphql Calls and data listing", () => {
 		expect(projectDialog).toBeInTheDocument();
 		const { getByText } = invitedUserTable;
 		await waitForElement(() => getByText(new RegExp("build school", "i")));
-	});
-
-	test("Filter List test", async () => {
-		let filterButton = await invitedUserTable.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
-	});
-
-	test("Filter List Input Elements test", async () => {
-		let filterButton = await invitedUserTable.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(filterButton);
-		});
-
-		let nameField = (await invitedUserTable.findByTestId(
-			"invitedUserEmailInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(nameField, { target: { value: intialFormValue.email } });
-		});
-		await expect(nameField.value).toBe(intialFormValue.email);
-
-		// let roleField = (await invitedUserTable.findByTestId(
-		// 	"invitedUserRoleInput"
-		// )) as HTMLInputElement;
-		// await act(async () => {
-		// 	await fireEvent.change(roleField, {
-		// 		target: { value: intialFormValue.role },
-		// 	});
-		// });
-		// await expect(roleField.value).toBe(intialFormValue.role);
 	});
 });

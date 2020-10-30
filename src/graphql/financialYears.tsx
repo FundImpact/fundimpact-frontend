@@ -11,7 +11,6 @@ export const GET_FINANCIAL_YEARS_ORG = gql`
 			organization {
 				id
 				name
-				address
 				account {
 					id
 					name

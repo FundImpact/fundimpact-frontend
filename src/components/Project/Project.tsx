@@ -1,9 +1,8 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
 
-import { useDashBoardData } from "../../contexts/dashboardContext";
+import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
@@ -25,6 +24,7 @@ import {
 } from "../../utils/commonFormattedMessage";
 import { CircularPercentage } from "../commons";
 import { useIntl } from "react-intl";
+import { setProject } from "../../reducers/dashboardReducer";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -42,7 +42,7 @@ function Project(props: ProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IPROJECT_FORM = getInitialValues(props);
-
+	const dashboardDispatch = useDashboardDispatch();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>(
 		props.type === PROJECT_ACTIONS.UPDATE
@@ -61,7 +61,7 @@ function Project(props: ProjectProps) {
 	let { multiplefileUpload } = useMultipleFileUpload();
 
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-	const [deliverableUploadSuccess, setDeliverableUploadSuccess] = React.useState<boolean>(false);
+	const [projectUploadSuccess, setProjectUploadSuccess] = React.useState<boolean>(false);
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 
 	React.useEffect(() => {
@@ -71,21 +71,22 @@ function Project(props: ProjectProps) {
 	}, [projectFilesArray, totalFilesToUpload]);
 
 	React.useEffect(() => {
-		if (deliverableUploadSuccess) {
+		if (projectUploadSuccess) {
 			props.handleClose();
 			if (props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
-			setDeliverableUploadSuccess(false);
+			setProjectUploadSuccess(false);
 		}
-	}, [deliverableUploadSuccess]);
+	}, [projectUploadSuccess]);
 	const successMessage = () => {
 		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
 	};
-	if (deliverableUploadSuccess) successMessage();
+	if (projectUploadSuccess) successMessage();
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
+			dashboardDispatch(setProject(data.createOrgProject));
 			setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
 			multiplefileUpload({
 				ref: "project",
@@ -94,7 +95,7 @@ function Project(props: ProjectProps) {
 				path: `org-${DashBoardData?.organization?.id}/projects`,
 				filesArray: projectFilesArray,
 				setFilesArray: setProjectFilesArray,
-				setUploadSuccess: setDeliverableUploadSuccess,
+				setUploadSuccess: setProjectUploadSuccess,
 			});
 
 			setProjectFilesArray([]);
@@ -187,7 +188,7 @@ function Project(props: ProjectProps) {
 					path: `org-${DashBoardData?.organization?.id}/projects`,
 					filesArray: projectFilesArray,
 					setFilesArray: setProjectFilesArray,
-					setUploadSuccess: setDeliverableUploadSuccess,
+					setUploadSuccess: setProjectUploadSuccess,
 				});
 
 				setProjectFilesArray([]);
