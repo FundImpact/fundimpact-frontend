@@ -81,7 +81,41 @@ const projDonorsMock = [
 const mocks = [
 	{
 		request: { query: GET_ORGANISATIONS },
-		result: { data: { organizations: OrgMock } },
+		result: {
+			data: {
+				organization: {
+					id: "13",
+					name: "TSERIES",
+					short_name: "sh TS",
+					legal_name: "sh legal detective",
+					organization_registration_type: {
+						id: "1",
+						reg_type: "Trusts",
+					},
+					currency: {
+						id: "1",
+					},
+					account: {
+						id: "2",
+						name: "rahul@gmail.com",
+					},
+					logo: {
+						id: "1",
+						url: "",
+					},
+					theme: {
+						palette: {
+							primary: {
+								main: "#5567ff",
+							},
+							secondary: {
+								main: "#14bb4c",
+							},
+						},
+					},
+				},
+			},
+		},
 	},
 	{
 		request: {
