@@ -117,6 +117,11 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
 
+	const organizationFindAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.FIND_ORGANIZATION
+	);
+
 	const userRoleFindAccess = userHasAccess(
 		MODULE_CODES.USER_PERMISSIONS,
 		USER_PERMISSIONS_ACTIONS.FIND_USER_PERMISSIONS
@@ -155,6 +160,8 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 	);
 
 	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[0], organizationEditAccess);
+
+	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[1], organizationFindAccess);
 
 	setSidebarTabUserAccess(
 		sidebarList[sidebar.managePortal].subHeadings[0],

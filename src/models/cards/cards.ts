@@ -45,6 +45,7 @@ export type ProjectCardConfig = {
 		qualitativeRangeData: { name: string; y: number }[];
 		comparativeErrorMeasureData: { name: string; y: number }[];
 	};
+	loading?: boolean;
 };
 
 export type PieCardConfig = {

@@ -79,6 +79,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 		onError() {
 			notificationDispatch(setErrorNotification("No units found for category!"));
 		},
+		fetchPolicy: "network-only",
 	});
 
 	useEffect(() => {
@@ -136,6 +137,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target updated successfully !")
 			);
+			setCurrentCategoryId("");
 			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
@@ -249,6 +251,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			});
 			impactTargetForm[3].optionsArray = []; // set empty units after creation
 			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
+			setCurrentCategoryId("");
 			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));

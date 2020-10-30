@@ -7,6 +7,7 @@ import { ProgressCardConfig, ProgressCardResponse } from "../../../../models/car
 import { Skeleton } from "@material-ui/lab";
 import { FormattedMessage } from "react-intl";
 import { abbreviateNumber } from "../../../../utils";
+
 export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 	const {
 		dataToDisplay,
@@ -31,8 +32,19 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 	}
 	return (
 		<>
+			{noBarDisplayTitle &&
+				noBarDisplayTitle?.length > 0 &&
+				noBarDisplayTitle?.map((label, index) => (
+					<Grid item xs={4} key={index}>
+						<Box mt={1} mb={1} mr={1}>
+							<Typography color="primary" gutterBottom noWrap>
+								{label}
+							</Typography>
+						</Box>
+					</Grid>
+				))}
 			{!dataToDisplay?.length && (
-				<Grid item md={12}>
+				<Grid item md={12} container justify="center">
 					<Box mt={2} color="text.disabled">
 						<Typography variant="subtitle2" noWrap>
 							<FormattedMessage
@@ -45,17 +57,6 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 				</Grid>
 			)}
 
-			{noBarDisplayTitle &&
-				noBarDisplayTitle?.length > 0 &&
-				noBarDisplayTitle?.map((label, index) => (
-					<Grid item xs={4} key={index}>
-						<Box mt={1} mb={1} mr={1}>
-							<Typography color="primary" gutterBottom noWrap>
-								{label}
-							</Typography>
-						</Box>
-					</Grid>
-				))}
 			<Grid style={{ height: noBarDisplay ? "130px" : "180px" }}>
 				{dataToDisplay?.length > 0 && (
 					<Grid item md={12} container>

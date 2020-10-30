@@ -36,12 +36,18 @@ export function GetImpactOrgStatus(queryFilter: { variables: { filter: object } 
 		GET_AVG_ACHIVEMENT_IMPACT,
 		queryFilter
 	);
-	let { data: totalAchivedImpactProjectByOrg } = useQuery(
-		GET_TOTAL_ACHIEVED_IMPACT_PROJECT,
+	let {
+		data: totalAchivedImpactProjectByOrg,
+		loading: totalAchivedImpactProjectByOrgLoading,
+	} = useQuery(GET_TOTAL_ACHIEVED_IMPACT_PROJECT, queryFilter);
+
+	let { data: totalImpactProjectByOrg, loading: totalImpactProjectByOrgLoading } = useQuery(
+		GET_TOTAL_IMPACT_PROJECT,
 		queryFilter
 	);
-	let { data: totalImpactProjectByOrg } = useQuery(GET_TOTAL_IMPACT_PROJECT, queryFilter);
-	let { data: orgProjectCount } = useQuery(GET_PROJECT_COUNT);
+
+	let { data: orgProjectCount, loading: orgProjectCountLoading } = useQuery(GET_PROJECT_COUNT);
+
 	return {
 		achiveImpactVsTargetByOrg: achiveImpactVsTargetByOrg
 			? achiveImpactVsTargetByOrg.achiveImpactVsTargetByOrg
@@ -56,24 +62,38 @@ export function GetImpactOrgStatus(queryFilter: { variables: { filter: object } 
 			? totalImpactProjectByOrg.totalImpactProjectByOrg
 			: 0,
 		orgProjectCount: orgProjectCount ? orgProjectCount.orgProjectCount : 0,
+		loading:
+			orgProjectCountLoading ||
+			totalImpactProjectByOrgLoading ||
+			totalImpactProjectByOrgLoading ||
+			achiveImpactVsTargetByOrgLoading ||
+			avgAchivementImpactByOrgLoading,
 	};
 }
 
 export function GetDeliverableOrgStatus(queryFilter: { variables: { filter: object } }) {
-	let { data: achiveDeliverableVsTargetByOrg } = useQuery(
-		GET_ACHIEVED_DELIVERABLE_VS_TARGET,
-		queryFilter
-	);
-	let { data: avgAchivementDeliverableByOrg } = useQuery(
-		GET_AVG_ACHIEVEMENT_DELIVERABLE,
-		queryFilter
-	);
-	let { data: totalAchivedProjectByOrg } = useQuery(
+	let {
+		data: achiveDeliverableVsTargetByOrg,
+		loading: achiveDeliverableVsTargetByOrgLoading,
+	} = useQuery(GET_ACHIEVED_DELIVERABLE_VS_TARGET, queryFilter);
+
+	let {
+		data: avgAchivementDeliverableByOrg,
+		loading: avgAchivementDeliverableByOrgLoading,
+	} = useQuery(GET_AVG_ACHIEVEMENT_DELIVERABLE, queryFilter);
+
+	let { data: totalAchivedProjectByOrg, loading: totalAchivedProjectByOrgLoading } = useQuery(
 		GET_TOTAL_ACHIEVED_DELIVERABLE_PROJECT,
 		queryFilter
 	);
-	let { data: totalDeliverableByOrg } = useQuery(GET_TOTAL_DELIVERABLE, queryFilter);
-	let { data: orgProjectCount } = useQuery(GET_PROJECT_COUNT);
+
+	let { data: totalDeliverableByOrg, loading: totalDeliverableByOrgLoading } = useQuery(
+		GET_TOTAL_DELIVERABLE,
+		queryFilter
+	);
+
+	let { data: orgProjectCount, loading: orgProjectCountLoading } = useQuery(GET_PROJECT_COUNT);
+
 	return {
 		achiveDeliverableVsTargetByOrg: achiveDeliverableVsTargetByOrg
 			? achiveDeliverableVsTargetByOrg.achiveDeliverableVsTargetByOrg
@@ -89,15 +109,37 @@ export function GetDeliverableOrgStatus(queryFilter: { variables: { filter: obje
 			? totalDeliverableByOrg.totalDeliverableByOrg
 			: 0,
 		orgProjectCount: orgProjectCount ? orgProjectCount.orgProjectCount : 0,
+		loading:
+			orgProjectCountLoading ||
+			totalDeliverableByOrgLoading ||
+			totalAchivedProjectByOrgLoading ||
+			avgAchivementDeliverableByOrgLoading ||
+			achiveDeliverableVsTargetByOrgLoading,
 	};
 }
 
 export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } }) {
-	let { data: budgetSpentValue } = useQuery(GET_BUDGET_SPEND_VALUE, queryFilter);
-	let { data: budgetTargetSum } = useQuery(GET_BUDGET_TARGET_SUM, queryFilter);
-	let { data: fundRecipetValuesByOrg } = useQuery(GET_FUND_RECEIVED_VALUE, queryFilter);
-	let { data: completedProjectCount } = useQuery(GET_COMPLETED_BUDGET_COUNT, queryFilter);
-	let { data: orgProjectCount } = useQuery(GET_PROJECT_COUNT);
+	let { data: budgetSpentValue, loading: budgetSpentValueLoading } = useQuery(
+		GET_BUDGET_SPEND_VALUE,
+		queryFilter
+	);
+
+	let { data: budgetTargetSum, loading: budgetTargetSumLoading } = useQuery(
+		GET_BUDGET_TARGET_SUM,
+		queryFilter
+	);
+
+	let { data: fundRecipetValuesByOrg, loading: fundRecipetValuesByOrgLoading } = useQuery(
+		GET_FUND_RECEIVED_VALUE,
+		queryFilter
+	);
+
+	let { data: completedProjectCount, loading: completedProjectCountLoading } = useQuery(
+		GET_COMPLETED_BUDGET_COUNT,
+		queryFilter
+	);
+
+	let { data: orgProjectCount, loading: orgProjectCountLoading } = useQuery(GET_PROJECT_COUNT);
 	return {
 		budgetTargetSum: budgetTargetSum ? budgetTargetSum.budgetTargetSum : 0,
 		budgetSpentValue: budgetSpentValue ? budgetSpentValue.budgetSpentValue : 0,
@@ -108,6 +150,12 @@ export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } 
 			? completedProjectCount.completedProjectCount
 			: 0,
 		orgProjectCount: orgProjectCount ? orgProjectCount.orgProjectCount : 0,
+		loading:
+			budgetSpentValueLoading ||
+			fundRecipetValuesByOrgLoading ||
+			budgetTargetSumLoading ||
+			orgProjectCountLoading ||
+			completedProjectCountLoading,
 	};
 }
 

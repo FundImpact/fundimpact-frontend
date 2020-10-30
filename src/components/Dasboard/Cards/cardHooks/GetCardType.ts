@@ -66,6 +66,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				totalAchivedImpactProjectByOrg,
 				totalImpactProjectByOrg,
 				orgProjectCount,
+				loading,
 			} = GetImpactOrgStatus({ variables: { filter: { organization: organization } } });
 
 			projectCardConfig = {
@@ -82,6 +83,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					qualitativeRangeData: [],
 					comparativeErrorMeasureData: [{ name: "Target", y: totalImpactProjectByOrg }],
 				},
+				loading: loading,
 			};
 		}
 		if (props.cardOf === CARD_OF.BUDGET) {
@@ -91,6 +93,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				fundRecipetValuesByOrg,
 				completedProjectCount,
 				orgProjectCount,
+				loading,
 			} = GetBudgetOrgStatus({
 				variables: { filter: { organization: organization } },
 			});
@@ -107,6 +110,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					],
 					comparativeErrorMeasureData: [{ name: "Target", y: budgetTargetSum }],
 				},
+				loading: loading,
 			};
 		}
 
@@ -117,6 +121,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				totalAchivedProjectByOrg,
 				totalDeliverableByOrg,
 				orgProjectCount,
+				loading,
 			} = GetDeliverableOrgStatus({ variables: { filter: { organization: organization } } });
 
 			projectCardConfig = {
@@ -133,6 +138,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					qualitativeRangeData: [],
 					comparativeErrorMeasureData: [{ name: "Target", y: totalDeliverableByOrg }],
 				},
+				loading: loading,
 			};
 		}
 	}
