@@ -18,6 +18,7 @@ import {
 	TextField,
 	Theme,
 	Typography,
+	ButtonGroup,
 } from "@material-ui/core";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { Form, Formik, FormikProps } from "formik";
@@ -27,9 +28,12 @@ import { FormattedMessage, useIntl, IntlShape } from "react-intl";
 import UploadFile from "../../../components/UploadFile";
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { IDashboardDataContext, ICountry } from "../../../models";
-import { primaryColor, secondaryColor } from "../../../models/constants";
+import { primaryColor, secondaryColor, Enitity } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
+import AddContactAddressDialog from "../../../components/AddContactAddressDialog";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import ContactListDialog from "../../../components/ContactListDialog";
 
 enum colorType {
 	primary = "primary",
@@ -165,6 +169,10 @@ function OrganizationView({
 	loading,
 	logo,
 	countryList,
+	contactAddressDialogOpen,
+	setContactAddressDialogOpen,
+	setContactListDialogOpen,
+	contactListDialogOpen,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -174,6 +182,10 @@ function OrganizationView({
 	onSubmit: (value: IOrganisationForm) => Promise<void>;
 	logo: string;
 	countryList: ICountry[];
+	contactAddressDialogOpen: boolean;
+	setContactAddressDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	contactListDialogOpen: boolean;
+	setContactListDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -194,7 +206,6 @@ function OrganizationView({
 			}
 		};
 	}, []);
-
 	const intl = useIntl();
 
 	const textFieldsLabelFormattedMessageObj: { [key: string]: any } = {
@@ -233,6 +244,18 @@ function OrganizationView({
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
+					<AddContactAddressDialog
+						open={contactAddressDialogOpen}
+						handleClose={() => setContactAddressDialogOpen(false)}
+						entity_name={Enitity.organization}
+						entity_id={dashboardData?.organization?.id || ""}
+					/>
+					<ContactListDialog
+						open={contactListDialogOpen}
+						handleClose={() => setContactListDialogOpen(false)}
+						entity_id={dashboardData?.organization?.id || ""}
+						entity_name={Enitity.organization}
+					/>
 					<Paper>
 						<Box p={2}>
 							<Formik
@@ -387,6 +410,41 @@ function OrganizationView({
 																		?.main
 																}
 															/>
+														</Grid>
+														<Grid item xs={12}>
+															<Box mb={1}>
+																<Button
+																	startIcon={<PersonAddIcon />}
+																	variant="contained"
+																	color="secondary"
+																	fullWidth
+																	onClick={() =>
+																		setContactAddressDialogOpen(
+																			true
+																		)
+																	}
+																>
+																	<FormattedMessage
+																		id={`addContactButton`}
+																		defaultMessage={`Add Contact`}
+																		description={`This text will be shown on add contact button`}
+																	/>
+																</Button>
+															</Box>
+															<Button
+																variant="contained"
+																color="secondary"
+																fullWidth
+																onClick={() =>
+																	setContactListDialogOpen(true)
+																}
+															>
+																<FormattedMessage
+																	id={`showContactList`}
+																	defaultMessage={`Contacts Details`}
+																	description={`This text will be shown on show contact button`}
+																/>
+															</Button>
 														</Grid>
 													</Grid>
 												</Grid>

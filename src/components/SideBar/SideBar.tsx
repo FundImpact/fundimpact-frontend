@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { Box, Divider, List, MenuItem, Typography, Avatar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -17,20 +17,34 @@ import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 import { userHasAccess, MODULE_CODES } from "../../utils/access";
 import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../utils/access/modules/workspaces/actions";
+import { useAuth } from "../../contexts/userContext";
 
 let menuList: { children: JSX.Element }[] = [];
 
 export default function SideBar({ children }: { children?: Function }) {
+	const user = useAuth();
 	const classes = sidePanelStyles();
-	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
+	const [getOrganization, { data }] = useLazyQuery<IOrganisationFetchResponse>(
+		GET_ORGANISATIONS
+	);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
 
+	useEffect(() => {
+		if (user) {
+			getOrganization({
+				variables: {
+					id: user.user?.organization?.id || "",
+				},
+			});
+		}
+	}, [user, getOrganization]);
+
 	React.useEffect(() => {
 		if (data) {
-			const { organizations } = data;
-			if (organizations) {
-				dispatch(setOrganisation(organizations[0]));
+			const { organization } = data;
+			if (organization) {
+				dispatch(setOrganisation(organization));
 			}
 		}
 	}, [data, dispatch]);
@@ -118,7 +132,7 @@ export default function SideBar({ children }: { children?: Function }) {
 					<List></List>
 					{shouldCreateWorkspace && data ? (
 						<Workspace
-							organizationId={data.organizations[0].id}
+							organizationId={data.organization.id}
 							type={WORKSPACE_ACTIONS.CREATE}
 							close={() => setViewWorkspace(false)}
 						></Workspace>

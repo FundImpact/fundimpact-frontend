@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import OrganizationView from "./OrganizationView";
 import { IOrganisationForm, IOrganisation } from "../../../models/organisation/types";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -18,6 +18,7 @@ import useFileUpload from "../../../hooks/fileUpload";
 import { SimplePaletteColorOptions, CircularProgress, Box } from "@material-ui/core";
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { GET_ORGANISATIONS } from "../../../graphql";
+import { useAuth } from "../../../contexts/userContext";
 
 //change this
 let inputFields: any[] = organizationFormInputFields;
@@ -38,7 +39,9 @@ function OrganizationContainer({
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
 	let { uploadFile, loading: fileUploading } = useFileUpload();
-
+	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
+	const [contactListDialogOpen, setContactListDialogOpen] = useState<boolean>(false);
+	const user = useAuth();
 	const dashboardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 
@@ -77,11 +80,14 @@ function OrganizationContainer({
 			let { organizationUpdate } = response.data;
 
 			store.writeQuery<{
-				organizations: IOrganisation[];
+				organization: IOrganisation;
 			}>({
 				query: GET_ORGANISATIONS,
 				data: {
-					organizations: [organizationUpdate],
+					organization: organizationUpdate,
+				},
+				variables: {
+					id: user?.user?.organization?.id,
 				},
 			});
 		} catch (err) {
@@ -173,6 +179,10 @@ function OrganizationContainer({
 			onSubmit={onSubmit}
 			logo={dashboardData?.organization?.logo?.url || ""}
 			countryList={countryList}
+			contactAddressDialogOpen={contactAddressDialogOpen}
+			setContactAddressDialogOpen={setContactAddressDialogOpen}
+			contactListDialogOpen={contactListDialogOpen}
+			setContactListDialogOpen={setContactListDialogOpen}
 		/>
 	);
 }

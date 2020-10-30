@@ -79,7 +79,7 @@ export const donorTableHeading = [
 	{ label: "Name", keyMapping: "name" },
 	{ label: "Legal Name", keyMapping: "legal_name" },
 	{ label: "Short Name", keyMapping: "short_name" },
-	{ label: "Country" },
+	{ label: "Currency" },
 	{ label: "" },
 ];
 
@@ -142,5 +142,36 @@ export const fundReceivedTableHeadings: ITableHeadings[] = [
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Amount", keyMapping: "amount" },
 	{ label: "Donor" },
+	{ label: "" },
+];
+
+export const individualTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const contactTableHeadings: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Email", keyMapping: "email" },
+	{ label: "Email Other", keyMapping: "email_other" },
+	{ label: "Phone", keyMapping: "phone" },
+	{ label: "Phone Other", keyMapping: "phone_other" },
+	{ label: "Contact Type", keyMapping: "contact_type" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const addressTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Address Line 1" },
+	{ label: "Address Line 2" },
+	{ label: "Pincode" },
+	{ label: "City" },
+	{ label: "Address Type" },
+	{ label: "" },
 	{ label: "" },
 ];

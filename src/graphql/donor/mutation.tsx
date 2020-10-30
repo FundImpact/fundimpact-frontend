@@ -13,7 +13,7 @@ export const UPDATE_ORG_DONOR = gql`
 		updateOrgDonor(id: $id, input: $input) {
 			id
 			name
-			country {
+			currency {
 				id
 				name
 			}

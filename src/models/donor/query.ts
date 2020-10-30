@@ -1,7 +1,7 @@
 export interface IDONOR_RESPONSE {
 	id: string;
 	name: string;
-	country: {
+	currency: {
 		name: string;
 		id: string;
 	};

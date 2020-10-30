@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { Box, Divider, Typography } from "@material-ui/core";
 import React from "react";
 import { sidePanelStyles } from "../../components/Dasboard/styles";
@@ -11,6 +11,7 @@ import { useIntl } from "react-intl";
 import ListItemLink from "../../components/ListItemLink";
 import { userHasAccess, MODULE_CODES } from "../../utils/access";
 import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
+import { useAuth } from "../../contexts/userContext";
 /**
  *
  * @description The to url must be relative to the /account.
@@ -25,22 +26,36 @@ import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
 
 export default function AccountSettingsSidebar({ children }: { children?: Function }) {
 	const classes = sidePanelStyles();
-	const { data: orgData } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
+	const user = useAuth();
+	const [getOrganization, { data: orgData }] = useLazyQuery<IOrganisationFetchResponse>(
+		GET_ORGANISATIONS
+	);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
 	const intl = useIntl();
+
+	React.useEffect(() => {
+		if (user) {
+			getOrganization({
+				variables: {
+					id: user.user?.organization.id,
+				},
+			});
+		}
+	}, [user, getOrganization]);
+
 	React.useEffect(() => {
 		if (orgData) {
-			const { organizations } = orgData;
-			if (organizations) {
-				dispatch(setOrganisation(organizations[0]));
+			const { organization } = orgData;
+			if (organization) {
+				dispatch(setOrganisation(organization));
 			}
 		}
 	}, [orgData, dispatch]);
 
 	const accountEditAccess = userHasAccess(MODULE_CODES.ACCOUNT, ACCOUNT_ACTIONS.UPDATE_ACCOUNT);
 
-	if (!orgData?.organizations) return <SidebarSkeleton />;
+	if (!orgData?.organization) return <SidebarSkeleton />;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>
