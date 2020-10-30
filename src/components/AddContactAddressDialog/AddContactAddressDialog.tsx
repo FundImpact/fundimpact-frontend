@@ -47,7 +47,7 @@ type IAddContactAddressDialog =
 function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	const { open, handleClose, entity_name, entity_id, dialogType } = props;
 	const theme = useTheme();
-	const [activeForm, setActiveForm] = useState(FormType.contact);
+	const [activeForm, setActiveForm] = useState(AddContactAddressDialogType.contact);
 	const [contact_id, setContact_id] = useState<string>("");
 
 	const closeDialog = () => {
