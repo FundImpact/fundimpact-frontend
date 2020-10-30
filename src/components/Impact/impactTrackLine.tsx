@@ -81,7 +81,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const [impactDonorForm, setImpactDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [impactDonorFormData, setImpactDonorFormData] = React.useState<any>();
 	const handleNext = () => {
-		console.log("hey");
 		setStepperActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 	const handleBack = () => {
