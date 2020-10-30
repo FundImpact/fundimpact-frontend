@@ -8,20 +8,20 @@ interface IContactTableContainer {
 	contactList: IGetContact["t4DContacts"];
 	changePage: (prev?: boolean | undefined) => void;
 	loading: boolean;
-	count: number;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	filterList: {
 		[key: string]: string | string[];
 	};
 	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string | string[];
-		}>
+	React.SetStateAction<{
+		[key: string]: string | string[];
+	}>
 	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	count: number;
 }
 
 const getInitialValues = (contact: IContact | null): IContact => {
