@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	Dialog,
-	Typography,
-	Box,
-	useTheme,
-	Grid,
-} from "@material-ui/core";
+import { Dialog, Typography, Box, useTheme, Grid } from "@material-ui/core";
 import ContactFormGraphql from "../Forms/ContactDetails/ContactForm";
 import { FormattedMessage } from "react-intl";
 
@@ -14,21 +8,21 @@ function AddContactDialog({ open, handleClose }: { open: boolean; handleClose: (
 
 	return (
 		<Dialog
-			fullWidth
-			maxWidth="md"
+			aria-labelledby="form-dialog-title"
 			open={open}
+			maxWidth="md"
 			onClose={handleClose}
 			data-testid="addContact-dialog"
-			aria-labelledby="form-dialog-title"
+			fullWidth
 		>
 			<Box px={3} py={4}>
 				<Grid container spacing={2}>
 					<Grid item xs={4}>
 						<Typography data-testid="dialog-header" variant="h6" gutterBottom>
 							<FormattedMessage
-								id="addContactDialogTitle"
-								defaultMessage="Add Contact"
 								description="This text will be displayed as title of add contact dialog"
+								defaultMessage="Add Contact"
+								id="addContactDialogTitle"
 							/>
 						</Typography>
 						<Box
@@ -39,8 +33,8 @@ function AddContactDialog({ open, handleClose }: { open: boolean; handleClose: (
 						>
 							<Typography color="primary" gutterBottom>
 								<FormattedMessage
-									id="addContactDialogInfo"
 									defaultMessage="Add Contact Details"
+									id="addContactDialogInfo"
 									description="This text will be displayed as info of contact dialog"
 								/>
 							</Typography>
