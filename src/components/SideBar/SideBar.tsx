@@ -34,7 +34,7 @@ export default function SideBar({ children }: { children?: Function }) {
 		if (user) {
 			getOrganization({
 				variables: {
-					id: user.user?.organization?.id,
+					id: user.user?.organization?.id || "",
 				},
 			});
 		}

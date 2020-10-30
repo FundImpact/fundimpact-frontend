@@ -80,13 +80,13 @@ const projDonorsMock = [
 ];
 const mocks = [
 	{
-		request: { query: GET_ORGANISATIONS },
+		request: { query: GET_ORGANISATIONS, variables: { id: "13" } },
 		result: {
 			data: {
 				organization: {
 					id: "13",
 					name: "TSERIES",
-					short_name: "sh TS",
+					short_name: "TS",
 					legal_name: "sh legal detective",
 					organization_registration_type: {
 						id: "1",
@@ -103,16 +103,7 @@ const mocks = [
 						id: "1",
 						url: "",
 					},
-					theme: {
-						palette: {
-							primary: {
-								main: "#5567ff",
-							},
-							secondary: {
-								main: "#14bb4c",
-							},
-						},
-					},
+					theme: {},
 				},
 			},
 		},
@@ -187,10 +178,10 @@ beforeEach(() => {
 
 describe("SideBar Component Graphql Calls and data listing", () => {
 	test("renders correctly", async () => {
-		// await waitForElement(() => sidebar.getByText(/TSERIES/i));
-		// await waitForElement(() => sidebar.getByText(/INSTAGRAM/i));
-		// await waitForElement(() => sidebar.getByText(/FACEBOOK/i));
-		// await waitForElement(() => sidebar.getByText(/ARTISTAAN/i));
-		// await waitForElement(() => sidebar.getByText(/KALAMKAAR/i));
+		await waitForElement(() => sidebar.getByText(/TSERIES/i));
+		await waitForElement(() => sidebar.getByText(/INSTAGRAM/i));
+		await waitForElement(() => sidebar.getByText(/FACEBOOK/i));
+		await waitForElement(() => sidebar.getByText(/ARTISTAAN/i));
+		await waitForElement(() => sidebar.getByText(/KALAMKAAR/i));
 	});
 });
