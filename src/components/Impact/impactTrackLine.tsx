@@ -38,6 +38,7 @@ import { AttachFile } from "../../models/AttachFile";
 import AttachFileForm from "../Forms/AttachFiles";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { CircularPercentage } from "../commons";
+import { GET_ALL_IMPACT_AMOUNT_SPEND } from "../../graphql/Impact/query";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -81,7 +82,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const [impactDonorForm, setImpactDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [impactDonorFormData, setImpactDonorFormData] = React.useState<any>();
 	const handleNext = () => {
-		console.log("hey");
 		setStepperActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 	const handleBack = () => {
@@ -375,6 +375,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						filter: { impactTargetProject: value.impact_target_project },
 					},
 				},
+				{
+					query: GET_ALL_IMPACT_AMOUNT_SPEND,
+					variables: {
+						filter: { project: DashBoardData?.project?.id },
+					},
+				},
 			],
 		});
 	};
@@ -418,6 +424,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {
 						filter: { impactTargetProject: value.impact_target_project },
+					},
+				},
+				{
+					query: GET_ALL_IMPACT_AMOUNT_SPEND,
+					variables: {
+						filter: { project: DashBoardData?.project?.id },
 					},
 				},
 			],

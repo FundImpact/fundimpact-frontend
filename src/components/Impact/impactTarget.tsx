@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../graphql/Impact/query";
+import {
+	GET_ALL_IMPACT_TARGET_AMOUNT,
+	GET_IMPACT_CATEGORY_BY_ORG,
+} from "../../graphql/Impact/query";
 import {
 	CREATE_IMPACT_TARGET,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
@@ -131,6 +134,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 							filter: { organization: dashboardData?.organization?.id },
 						},
 					},
+					{
+						query: GET_ALL_IMPACT_TARGET_AMOUNT,
+						variables: {
+							filter: { project: props.project },
+						},
+					},
 				],
 			});
 			impactTargetForm[3].optionsArray = []; // set empty units after creation
@@ -245,6 +254,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 						query: GET_IMPACT_TARGET_SDG_COUNT,
 						variables: {
 							filter: { organization: dashboardData?.organization?.id },
+						},
+					},
+					{
+						query: GET_ALL_IMPACT_TARGET_AMOUNT,
+						variables: {
+							filter: { project: props.project },
 						},
 					},
 				],

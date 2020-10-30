@@ -17,6 +17,8 @@ import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 import { userHasAccess, MODULE_CODES } from "../../utils/access";
 import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../utils/access/modules/workspaces/actions";
+import { useIntl } from "react-intl";
+import { Link } from "react-router-dom";
 
 let menuList: { children: JSX.Element }[] = [];
 
@@ -25,6 +27,19 @@ export default function SideBar({ children }: { children?: Function }) {
 	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
+	const intl = useIntl();
+
+	const addWorkspace = intl.formatMessage({
+		id: "addWorkspaceOrganizationMenu",
+		defaultMessage: "Add workspace",
+		description: `This text will be show on organization menu for add workspace`,
+	});
+
+	const editOrganization = intl.formatMessage({
+		id: "editOrganizationOrganizationMenu",
+		defaultMessage: "Edit Organization",
+		description: `This text will be show on organization menu for edit organization`,
+	});
 
 	React.useEffect(() => {
 		if (data) {
@@ -59,7 +74,16 @@ export default function SideBar({ children }: { children?: Function }) {
 	useEffect(() => {
 		if (workspaceCreateAccess) {
 			menuList = [
-				{ children: <MenuItem onClick={openWorkspaceComponent}>Add Workspace</MenuItem> },
+				{
+					children: (
+						<MenuItem component={Link} to="/settings/organization">
+							{editOrganization}
+						</MenuItem>
+					),
+				},
+				{
+					children: <MenuItem onClick={openWorkspaceComponent}>{addWorkspace}</MenuItem>,
+				},
 			];
 		}
 	}, [workspaceCreateAccess]);

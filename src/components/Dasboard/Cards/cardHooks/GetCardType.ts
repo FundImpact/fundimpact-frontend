@@ -1,4 +1,5 @@
 import { useTheme } from "@material-ui/core/styles";
+import { useIntl } from "react-intl";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import {
 	CardProps,
@@ -28,6 +29,56 @@ export function GetCardTypeAndValues(props: CardProps) {
 	const dashboardData = useDashBoardData();
 	const organization = dashboardData?.organization?.id;
 	const theme = useTheme();
+	const intl = useIntl();
+
+	const receievedLabel = intl.formatMessage({
+		id: "receievedLabel",
+		defaultMessage: "Receieved",
+		description: `This text will be show on organization dashboard for received Label`,
+	});
+
+	const expenditureLabel = intl.formatMessage({
+		id: "expenditureLabel",
+		defaultMessage: "Expenditure",
+		description: `This text will be show on organization dashboard for expenditure Label`,
+	});
+
+	const spendLabel = intl.formatMessage({
+		id: "spendLabel",
+		defaultMessage: "Spend",
+		description: `This text will be show on organization dashboard for spend Label`,
+	});
+
+	const projectLabel = intl.formatMessage({
+		id: "projectLabel",
+		defaultMessage: "Project",
+		description: `This text will be show on organization dashboard for project Label`,
+	});
+
+	const targetLabel = intl.formatMessage({
+		id: "targetLabel",
+		defaultMessage: "Target",
+		description: `This text will be show on organization dashboard for target Label`,
+	});
+
+	const acheievdLabel = intl.formatMessage({
+		id: "acheievdLabel",
+		defaultMessage: "Acheievd",
+		description: `This text will be show on organization dashboard for acheievd Label`,
+	});
+
+	const donorsLabel = intl.formatMessage({
+		id: "donorsLabel",
+		defaultMessage: "Donors",
+		description: `This text will be show on organization dashboard for donors Label`,
+	});
+
+	const allocatedLabel = intl.formatMessage({
+		id: "allocatedLabel",
+		defaultMessage: "Allocated",
+		description: `This text will be show on organization dashboard for allocated Label`,
+	});
+
 	let projectCardConfig: ProjectCardConfig = {
 		mainHeading: "",
 		title: "",
@@ -72,16 +123,18 @@ export function GetCardTypeAndValues(props: CardProps) {
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: totalImpactProjectByOrg,
-				rightUpperTitle: `${totalAchivedImpactProjectByOrg} / ${orgProjectCount} Project`,
+				rightUpperTitle: `${totalAchivedImpactProjectByOrg} / ${orgProjectCount} ${projectLabel}`,
 				firstBarHeading: `${avgAchivementImpactByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementImpactByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
 				chartConfig: {
 					primarySegmentedMeasureData: [
-						{ name: "Achieved", y: achiveImpactVsTargetByOrg },
+						{ name: acheievdLabel, y: achiveImpactVsTargetByOrg },
 					],
 					qualitativeRangeData: [],
-					comparativeErrorMeasureData: [{ name: "Target", y: totalImpactProjectByOrg }],
+					comparativeErrorMeasureData: [
+						{ name: targetLabel, y: totalImpactProjectByOrg },
+					],
 				},
 				loading: loading,
 			};
@@ -100,15 +153,15 @@ export function GetCardTypeAndValues(props: CardProps) {
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: abbreviateNumber(budgetTargetSum),
-				rightUpperTitle: `${completedProjectCount} / ${orgProjectCount} Project`,
+				rightUpperTitle: `${completedProjectCount} / ${orgProjectCount} ${projectLabel}`,
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
 				chartConfig: {
-					primarySegmentedMeasureData: [{ name: "Spend", y: budgetSpentValue }],
+					primarySegmentedMeasureData: [{ name: spendLabel, y: budgetSpentValue }],
 					qualitativeRangeData: [
 						{ name: "", y: 0 },
-						{ name: "Received", y: fundRecipetValuesByOrg },
+						{ name: receievedLabel, y: fundRecipetValuesByOrg },
 					],
-					comparativeErrorMeasureData: [{ name: "Target", y: budgetTargetSum }],
+					comparativeErrorMeasureData: [{ name: targetLabel, y: budgetTargetSum }],
 				},
 				loading: loading,
 			};
@@ -127,16 +180,16 @@ export function GetCardTypeAndValues(props: CardProps) {
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
 				mainHeading: totalDeliverableByOrg,
-				rightUpperTitle: `${totalAchivedProjectByOrg} / ${orgProjectCount} Project`,
+				rightUpperTitle: `${totalAchivedProjectByOrg} / ${orgProjectCount} ${projectLabel}`,
 				firstBarHeading: `${avgAchivementDeliverableByOrg}% ${props.projectCardConfig.firstBarHeading}`,
 				firstBarValue: Number(avgAchivementDeliverableByOrg),
 				secondBarHeading: props.projectCardConfig.secondBarHeading,
 				chartConfig: {
 					primarySegmentedMeasureData: [
-						{ name: "Achieved", y: achiveDeliverableVsTargetByOrg },
+						{ name: acheievdLabel, y: achiveDeliverableVsTargetByOrg },
 					],
 					qualitativeRangeData: [],
-					comparativeErrorMeasureData: [{ name: "Target", y: totalDeliverableByOrg }],
+					comparativeErrorMeasureData: [{ name: targetLabel, y: totalDeliverableByOrg }],
 				},
 				loading: loading,
 			};
@@ -179,7 +232,6 @@ export function GetCardTypeAndValues(props: CardProps) {
 			pieCardConfig.loading = loading;
 			fetchedData = data;
 		}
-		console.log("fetched", fetchedData);
 		if (fetchedData === 0) {
 			fetchedData = [];
 		}
@@ -208,8 +260,8 @@ export function GetCardTypeAndValues(props: CardProps) {
 						progressCardConfig.dataToDisplay.push({
 							...expData,
 							avg_value_two: allData.avg_value,
-							label: "Expenditure",
-							labelTwo: "Received",
+							label: expenditureLabel,
+							labelTwo: receievedLabel,
 						});
 					}
 				});
@@ -233,18 +285,28 @@ export function GetCardTypeAndValues(props: CardProps) {
 				variables: { filter: { organization: organization } },
 			});
 
-			donors.received?.forEach((recData: ProgressCardResponse) => {
-				donors.allocation?.forEach((allData: ProgressCardResponse) => {
-					if (recData.id === allData.id) {
-						progressCardConfig.dataToDisplay.push({
-							...recData,
-							sum_two: allData.sum,
-						});
-					}
+			donors.allocation?.forEach((allData: ProgressCardResponse) => {
+				progressCardConfig.dataToDisplay.push({
+					...allData,
+					sum: 0,
+					sum_two: allData.sum,
 				});
 			});
 
-			progressCardConfig.noBarDisplayTitle = ["Donors", "Received", "Allocated"];
+			progressCardConfig.dataToDisplay.forEach(
+				(displayData: ProgressCardResponse, index: number) => {
+					donors.received?.forEach((recData: ProgressCardResponse) => {
+						if (recData.id === displayData.id) {
+							progressCardConfig.dataToDisplay[index] = {
+								...displayData,
+								sum: recData.sum,
+							};
+						}
+					});
+				}
+			);
+
+			progressCardConfig.noBarDisplayTitle = [donorsLabel, receievedLabel, allocatedLabel];
 			progressCardConfig.noBarDisplay = true;
 		}
 	}
