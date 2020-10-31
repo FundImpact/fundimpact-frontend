@@ -188,10 +188,9 @@ function AddressFormContainer(props: IAddressFormContainer) {
 				formAction: props.formAction,
 				addressId: props.formAction == FORM_ACTIONS.UPDATE ? props.initialValues.id : "",
 			});
-			console.log("address :>> ", address);
 			getCreatedOrUpdatedAddress && address && getCreatedOrUpdatedAddress(address);
 		} catch (err) {
-			console.error(err.message);
+			console.error(err);
 		}
 	};
 

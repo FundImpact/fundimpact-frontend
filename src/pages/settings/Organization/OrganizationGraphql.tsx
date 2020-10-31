@@ -9,9 +9,6 @@ import {
 	IUpdateOrganizationVariables,
 } from "../../../models/organisation/query";
 import { IGetCountryList } from "../../../models/query";
-import { GET_CONTACT_LIST } from "../../../graphql/Contact";
-import { IGetContact } from "../../../models/contact/query";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 function OrganizationGraphql() {
 	;
@@ -32,7 +29,6 @@ function OrganizationGraphql() {
 		getCountryList();
 	}, [getCountryList]);
 
-	console.log('countryList :>> ', countryList);
 
 	return (
 		<OrganizationContainer

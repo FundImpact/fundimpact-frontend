@@ -108,6 +108,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormSelectFields[2].hidden = false;
+		budgetLineitemFormSelectFields[4].size = 12;
 		handleClose();
 	}, [handleClose]);
 
@@ -218,14 +219,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			let errors: Partial<IBudgetTrackingLineitemForm> = {};
 			if (values.budget_targets_project) {
 				setSelectedDonor(budgetTargetHash[values.budget_targets_project]);
-				if (
-					budgetTargetHash[values.budget_targets_project]?.country?.id ===
+			}
+			if (
+				values.budget_targets_project &&
+				budgetTargetHash[values.budget_targets_project]?.country?.id ===
 					dashboardData?.organization?.country?.id
-				) {
-					budgetLineitemFormSelectFields[2].hidden = true;
-				} else {
-					budgetLineitemFormSelectFields[2].hidden = false;
-				}
+			) {
+				budgetLineitemFormSelectFields[2].hidden = true;
+				budgetLineitemFormSelectFields[4].size = 6;
+			} else {
+				budgetLineitemFormSelectFields[2].hidden = false;
+				budgetLineitemFormSelectFields[4].size = 12;
 			}
 
 			if (!values.amount) {
@@ -509,11 +513,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	if (budgetTargets) {
 		budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
 	}
-
 	if (financialYearDonor) {
-		budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYearList
-			? financialYearDonor?.financialYearList
-			: [];
+		budgetLineitemFormSelectFields[2].optionsArray =
+			financialYearDonor?.financialYearList || [];
 	}
 
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
@@ -532,7 +534,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				initialValues={initialValues}
 				validate={validate}
 				onSubmit={onCreate}
-				onCancel={props.handleClose}
+				onCancel={closeDialog}
 				inputFields={budgetLineitemFormInputFields}
 				selectFields={budgetLineitemFormSelectFields}
 				formAction={props.formAction}
