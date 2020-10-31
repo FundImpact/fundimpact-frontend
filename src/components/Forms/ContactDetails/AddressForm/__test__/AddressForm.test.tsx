@@ -109,16 +109,6 @@ describe("Address tests", () => {
 			intialFormValue,
 		});
 	});
-	
-	for (let i = 0; i < inputIds.length; i++) {
-		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
-			await checkElementHaveCorrectValue({
-				inputElement: inputIds[i],
-				reactElement: contactForm,
-				value: intialFormValue[inputIds[i].name],
-			});
-		});
-	}
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`Required Field test for ${inputIds[i].name}`, async () => {
@@ -127,6 +117,15 @@ describe("Address tests", () => {
 				reactElement: contactForm,
 				intialFormValue,
 				inputElement: inputIds[i],
+			});
+		});
+	}
+	for (let i = 0; i < inputIds.length; i++) {
+		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+			await checkElementHaveCorrectValue({
+				inputElement: inputIds[i],
+				reactElement: contactForm,
+				value: intialFormValue[inputIds[i].name],
 			});
 		});
 	}
