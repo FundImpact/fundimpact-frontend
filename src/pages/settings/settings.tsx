@@ -27,6 +27,7 @@ import { RolesContainer } from "./Roles/container";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
+import IndividualContainer from "./Individual";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -237,6 +238,7 @@ export default function SettingContainer() {
 							path="user_roles"
 							element={<RolesContainer />}
 						/>
+						<Route element={<IndividualContainer />} path="individual" />
 					</Routes>
 				</Grid>
 			</Grid>

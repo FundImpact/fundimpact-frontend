@@ -113,10 +113,10 @@ export const DonorContainer = () => {
 			removeFilterListObjectElements({ filterListObject, key, index })
 		);
 
-	donorInputFields[3].optionsArray = countries?.countryList || [];
+	donorInputFields[3].optionsArray = countries?.countries || [];
 
-	if (!Object.keys(countryHash).length && countries?.countryList) {
-		countryHash = mapIdToName(countries?.countryList, countryHash);
+	if (!Object.keys(countryHash).length && countries?.countries) {
+		countryHash = mapIdToName(countries?.countries, countryHash);
 	}
 
 	useEffect(() => {

@@ -156,3 +156,9 @@ export const debounce = (functionToDebounce: any, time: number) => {
 		}, time);
 	};
 };
+export const validatePincode = (pincode: string) => /^(\d{4}|\d{6})$/.test(pincode);
+
+export const validateEmail = (email: string) =>
+	/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+		email
+	);

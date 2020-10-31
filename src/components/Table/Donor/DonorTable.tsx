@@ -59,11 +59,11 @@ const styledTable = makeStyles((theme: Theme) =>
 	})
 );
 
-const keyNames = ["name", "legal_name", "short_name", "country,name"];
+const keyNames = ["name", "legal_name", "short_name", "currency,name"];
 
 const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 	return {
-		country: donor?.country?.id || "",
+		currency: donor?.currency?.id || "",
 		legal_name: donor?.legal_name || "",
 		name: donor?.name || "",
 		short_name: donor?.short_name || "",

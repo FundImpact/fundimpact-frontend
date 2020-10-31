@@ -36,7 +36,7 @@ function BudgetLineItemTableGraphql({
 	donor,
 }: {
 	budgetTargetId: string;
-	donor: { id: string; country: { id: string } };
+	donor: { id: string; currency: { id: string } };
 }) {
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
@@ -173,7 +173,7 @@ function BudgetLineItemTableGraphql({
 			getFinancialYearDonor({
 				variables: {
 					filter: {
-						country: donor.country.id,
+						country: donor.currency.id,
 					},
 				},
 			});

@@ -1,0 +1,12 @@
+{
+	"individualInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createName",
+			"testId": "createNameInput",
+			"label": "Name",
+			"size": 6
+		}
+	]
+}
