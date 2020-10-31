@@ -104,6 +104,14 @@ const {
 } = commonFormTestUtil(fireEvent, wait, act);
 
 describe("Individual Dialog tests", () => {
+	test("Submit button enabled", async () => {
+		await checkSubmitButtonIsEnabled<IIndividualForm>({
+			inputFields: inputIds,
+			reactElement: contactForm,
+			intialFormValue,
+		});
+	});
+
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
 			await checkElementHaveCorrectValue({
@@ -113,14 +121,6 @@ describe("Individual Dialog tests", () => {
 			});
 		});
 	}
-
-	test("Submit button enabled", async () => {
-		await checkSubmitButtonIsEnabled<IIndividualForm>({
-			inputFields: inputIds,
-			reactElement: contactForm,
-			intialFormValue,
-		});
-	});
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`Required Field test for ${inputIds[i].name}`, async () => {
