@@ -14,14 +14,12 @@ import { IGetContact } from "../../../models/contact/query";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 function OrganizationGraphql() {
-	const dashboardData = useDashBoardData();
 	;
 	const [getOrganizationRegistrationTypes, { data: registrationTypes }] = useLazyQuery<
 		IGetOrganizationRegistrationType
 	>(GET_ORGANIZATION_REGISTRATION_TYPES);
 
 	const [getCountryList, { data: countryList }] = useLazyQuery<IGetCountryList>(GET_COUNTRY_LIST);
-	const [getContactList, { data: contactList }] = useLazyQuery<IGetContact>(GET_CONTACT_LIST);
 	const [updateOrganization, { loading }] = useMutation<
 		IUpdateOrganization,
 		IUpdateOrganizationVariables

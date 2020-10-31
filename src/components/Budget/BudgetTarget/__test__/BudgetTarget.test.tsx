@@ -8,6 +8,7 @@ import {
 	organizationDetails,
 	projectDetails,
 	mockOrgBudgetCategory,
+	mockProjectDonors
 } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -36,11 +37,6 @@ const intialFormValue: IBudgetTargetForm = {
 };
 
 const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
-
-const mockDonors = [
-	{ id: "1", donor: { id: "1", name: "donor 1" } },
-	{ id: "2", donor: { id: "2", name: "donor 2" } },
-];
 
 const mocks = [
 	{
@@ -95,7 +91,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				projectDonors: mockDonors,
+				projectDonors: mockProjectDonors,
 			},
 		},
 	},

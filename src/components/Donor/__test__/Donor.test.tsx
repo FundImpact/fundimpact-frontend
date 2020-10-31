@@ -22,7 +22,7 @@ let dialog: any;
 let creationOccured = false;
 
 const intialFormValue: IDONOR = {
-	currency: "1",
+	country: "1",
 	legal_name: "legal name",
 	name: "donor name",
 	short_name: "donor short name",
@@ -65,7 +65,7 @@ const mocks = [
 			query: CREATE_ORG_DONOR,
 			variables: {
 				input: {
-					currency: "1",
+					country: "1",
 					legal_name: "legal name",
 					name: "donor name",
 					short_name: "donor short name",

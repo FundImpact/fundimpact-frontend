@@ -91,12 +91,6 @@ export const UPDATE_PROJECT_BUDGET_TARGET = gql`
 			id
 			name
 			total_target_amount
-			conversion_factor
-			organization_currency {
-				currency {
-					name
-				}
-			}
 			project {
 				name
 			}

@@ -41,6 +41,10 @@ export const GET_PROJ_DONORS = gql`
 	query getProjectDonorsByDonor($sort: String, $limit: Int, $start: Int, $filter: JSON) {
 		projectDonors(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
+			project {
+				id
+				name
+			}
 			donor {
 				id
 				name
