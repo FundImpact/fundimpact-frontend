@@ -19,6 +19,8 @@ import { SimplePaletteColorOptions, CircularProgress, Box } from "@material-ui/c
 import { primaryColor, secondaryColor } from "../../../models/constants";
 import { GET_ORGANISATIONS } from "../../../graphql";
 import { useAuth } from "../../../contexts/userContext";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
 
 //change this
 let inputFields: any[] = organizationFormInputFields;
@@ -68,6 +70,16 @@ function OrganizationContainer({
 			},
 		},
 	};
+
+	const contactCreateAccess = userHasAccess(
+		MODULE_CODES.CONTACT,
+		CONTACT_ACTION.CREATE_CONTACT
+	);
+
+	const contactFindAccess = userHasAccess(
+		MODULE_CODES.CONTACT,
+		CONTACT_ACTION.FIND_CONTACT
+	);
 
 	const updateOrganizationCache = (
 		store: ApolloCache<IUpdateOrganization>,
@@ -187,6 +199,8 @@ function OrganizationContainer({
 			setContactAddressDialogOpen={setContactAddressDialogOpen}
 			contactListDialogOpen={contactListDialogOpen}
 			setContactListDialogOpen={setContactListDialogOpen}
+			contactCreateAccess={contactCreateAccess}
+			contactFindAccess={contactFindAccess}
 		/>
 	);
 }

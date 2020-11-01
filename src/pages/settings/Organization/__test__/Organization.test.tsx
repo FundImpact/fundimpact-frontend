@@ -15,6 +15,8 @@ import Organization from "../index";
 import { UPDATE_ORGANIZATION } from "../../../../graphql/mutation";
 import { organizationUpdateForm as organizationFormInputFields } from "../../../../utils/inputTestFields.json";
 import { IOrganisationForm } from "../../../../models/organisation/types";
+import { GET_USER_ROLES } from "../../../../graphql/User/query";
+import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 
 let organizationUpdateForm: any;
 let creationOccured = false;
@@ -49,6 +51,17 @@ const formValues = {
 };
 
 const mocks = [
+	{
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				filter: {
+					role: "1",
+				},
+			},
+		},
+		result: { data: mockUserRoles },
+	},
 	{
 		request: {
 			query: GET_COUNTRY_LIST,

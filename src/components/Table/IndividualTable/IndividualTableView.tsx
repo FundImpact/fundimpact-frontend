@@ -39,6 +39,9 @@ interface IIndividualTableView {
 			[key: string]: string | string[];
 		}>
 	>;
+	contactCreateAccess: boolean;
+	contactFindAccess: boolean;
+	individualEditAccess: boolean;
 }
 
 const rows = [
@@ -106,6 +109,7 @@ const createChipArray = ({
 
 	return null;
 };
+const individualEditMenu = ["", "", ""];
 
 function IndividualTableView({
 	individualList,
@@ -123,8 +127,10 @@ function IndividualTableView({
 	filterList,
 	removeFilterListElements,
 	setFilterList,
+	contactCreateAccess,
+	contactFindAccess,
+	individualEditAccess,
 }: IIndividualTableView) {
-	const individualEditMenu = ["Edit Individual", "Add Contact", "Show Contacts"];
 	individualTableHeadings[individualTableHeadings.length - 1].renderComponent = () => (
 		<FilterList
 			initialValues={{
@@ -134,6 +140,21 @@ function IndividualTableView({
 			inputFields={individualInputFields}
 		/>
 	);
+	if (contactFindAccess) {
+		individualEditMenu[2] = "Show Contacts";
+	} else {
+		individualEditMenu[2] = "";
+	}
+	if (contactCreateAccess) {
+		individualEditMenu[1] = "Add Contact";
+	} else {
+		individualEditMenu[1] = "";
+	}
+	if (individualEditAccess) {
+		individualEditMenu[0] = "Edit Individual";
+	} else {
+		individualEditMenu[0] = "";
+	}
 	return (
 		<>
 			<Grid container>
