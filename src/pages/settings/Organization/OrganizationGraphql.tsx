@@ -9,18 +9,13 @@ import {
 	IUpdateOrganizationVariables,
 } from "../../../models/organisation/query";
 import { IGetCountryList } from "../../../models/query";
-import { GET_CONTACT_LIST } from "../../../graphql/Contact";
-import { IGetContact } from "../../../models/contact/query";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 function OrganizationGraphql() {
-	const dashboardData = useDashBoardData();
 	const [getOrganizationRegistrationTypes, { data: registrationTypes }] = useLazyQuery<
 		IGetOrganizationRegistrationType
 	>(GET_ORGANIZATION_REGISTRATION_TYPES);
 
 	const [getCountryList, { data: countryList }] = useLazyQuery<IGetCountryList>(GET_COUNTRY_LIST);
-	const [getContactList, { data: contactList }] = useLazyQuery<IGetContact>(GET_CONTACT_LIST);
 	const [updateOrganization, { loading }] = useMutation<
 		IUpdateOrganization,
 		IUpdateOrganizationVariables
@@ -32,8 +27,6 @@ function OrganizationGraphql() {
 	useEffect(() => {
 		getCountryList();
 	}, [getCountryList]);
-
-	console.log("countryList :>> ", countryList);
 
 	return (
 		<OrganizationContainer

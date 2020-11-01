@@ -41,24 +41,24 @@ const filterYearTagsAccordingToUserAccess = () => {
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
-	const financialYearOrgFindAccess = userHasAccess(
-		MODULE_CODES.FINANCIAL_YEAR_ORG,
-		FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG
-	);
+	// const financialYearOrgFindAccess = userHasAccess(
+	// 	MODULE_CODES.FINANCIAL_YEAR_ORG,
+	// 	FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG
+	// );
 
-	const financialYearDonorFindAccess = userHasAccess(
-		MODULE_CODES.FINANCIAL_YEAR_DONOR,
-		FINANCIAL_YEAR_DONOR_ACTIONS.FIND_FINANCIAL_YEAR_DONOR
-	);
+	// const financialYearDonorFindAccess = userHasAccess(
+	// 	MODULE_CODES.FINANCIAL_YEAR_DONOR,
+	// 	FINANCIAL_YEAR_DONOR_ACTIONS.FIND_FINANCIAL_YEAR_DONOR
+	// );
 	if (!annualYearFindAccess) {
 		delete tags.AY;
 	}
-	if (!financialYearOrgFindAccess) {
-		delete tags.FYO;
-	}
-	if (!financialYearDonorFindAccess) {
-		delete tags.FYD;
-	}
+	// if (!financialYearOrgFindAccess) {
+	// 	delete tags.FYO;
+	// }
+	// if (!financialYearDonorFindAccess) {
+	// 	delete tags.FYD;
+	// }
 	return tags;
 };
 

@@ -28,8 +28,8 @@
 	],
 	"addDonorFormSelectFields": [
 		{
-			"name": "currency",
-			"label": "Choose Currency",
+			"name": "country",
+			"label": "Choose Country",
 			"size": 6,
 			"testId": "donorCountryOption",
 			"dataTestId": "donorCountry",

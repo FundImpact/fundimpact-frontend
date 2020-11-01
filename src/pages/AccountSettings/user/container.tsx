@@ -54,6 +54,7 @@ export const ProfileContainer = () => {
 			}
 			if (userDetails?.userCustomer) {
 				if (userDispatch) {
+					console.log("heree", userDetails?.userCustomer);
 					userDispatch(setUser({ user: userDetails?.userCustomer }));
 				}
 			}

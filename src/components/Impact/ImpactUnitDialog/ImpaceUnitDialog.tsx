@@ -208,7 +208,6 @@ function ImpactUnitDialog({
 			async onCompleted(data) {
 				try {
 					if (impactCategory) {
-						console.log("data :>> ", data);
 						await impactCategoryUnitHelper(data.createImpactUnitsOrgInput?.id);
 					}
 					notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));

@@ -22,32 +22,34 @@ export const UPDATE_ORG_CURRENCY = gql`
 `;
 
 export const UPDATE_ORGANIZATION = gql`
-	mutation organizationUpdate($id: ID!, $input: OrgInput!) {
-		organizationUpdate(id: $id, input: $input) {
-			id
-			name
-			short_name
-			legal_name
-			organization_registration_type {
-				id
-				reg_type
-			}
-			country {
+	mutation updateOrganization($input: updateOrganizationInput!) {
+		updateOrganization(input: $input) {
+			organization {
 				id
 				name
+				short_name
+				legal_name
+				organization_registration_type {
+					id
+					reg_type
+				}
+				country {
+					id
+					name
+				}
+				account {
+					id
+					name
+				}
+				logo {
+					id
+					url
+				}
+				currency {
+					id
+				}
+				theme
 			}
-			account {
-				id
-				name
-			}
-			country {
-				id
-			}
-			logo {
-				id
-				url
-			}
-			theme
 		}
 	}
 `;

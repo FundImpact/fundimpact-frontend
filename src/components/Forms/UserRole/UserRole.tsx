@@ -160,7 +160,7 @@ const getInvitedUserCountCachedValue = (apolloClient: ApolloClient<object>) => {
 		});
 		count = cachedCount?.userListCount;
 	} catch (err) {
-		console.log("err :>> ", err);
+		console.error(err);
 	}
 	return count;
 };
@@ -208,7 +208,7 @@ const refetchUsers = async ({ apolloClient }: { apolloClient: ApolloClient<objec
 			fetchPolicy: "network-only",
 		});
 	} catch (err) {
-		console.log("err.message :>> ", err.message);
+		console.error(err);
 	}
 };
 
@@ -228,7 +228,7 @@ const assignSelectedProjectToUser = async ({
 				},
 			});
 		} catch (err) {
-			console.log("err :>> ", err.message);
+			console.error(err);
 		}
 	}
 };
@@ -250,7 +250,7 @@ const unassignSelectedProjectToUser = async ({
 				},
 			});
 		} catch (err) {
-			console.log("err :>> ", err.message);
+			console.error(err);
 		}
 	}
 };
@@ -424,7 +424,7 @@ function UserRoleForm(props: UserRoleProps) {
 			});
 			await refetchUsers({ apolloClient });
 		} catch (err) {
-			console.log("err :>> ", err);
+			console.error(err);
 		}
 	};
 

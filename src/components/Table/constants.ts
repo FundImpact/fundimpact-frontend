@@ -79,7 +79,7 @@ export const donorTableHeading = [
 	{ label: "Name", keyMapping: "name" },
 	{ label: "Legal Name", keyMapping: "legal_name" },
 	{ label: "Short Name", keyMapping: "short_name" },
-	{ label: "Currency" },
+	{ label: "Country" },
 	{ label: "" },
 ];
 

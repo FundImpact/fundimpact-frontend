@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useApolloClient, ApolloClient } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
@@ -8,7 +8,13 @@ import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { AttachFile } from "../../models/AttachFile";
-import { IProject, ProjectProps } from "../../models/project/project";
+import {
+	IProject,
+	ProjectProps,
+	ICreateProjectDonor,
+	ICreateProjectDonorVariables,
+	IGetProjectDonor,
+} from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import CommonForm from "../CommonForm/commonForm";
@@ -37,6 +43,35 @@ function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	};
 }
 
+const updateProjectDonorCache = ({
+	apolloClient,
+	projecttDonorCreated,
+}: {
+	apolloClient: ApolloClient<object>;
+	projecttDonorCreated: ICreateProjectDonor;
+}) => {
+	try {
+		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
+			query: GET_PROJ_DONORS,
+			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+		});
+		if (cachedProjectDonors) {
+			apolloClient.writeQuery<IGetProjectDonor>({
+				query: GET_PROJ_DONORS,
+				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+				data: {
+					projectDonors: [
+						projecttDonorCreated.createProjDonor,
+						...cachedProjectDonors.projectDonors,
+					],
+				},
+			});
+		}
+	} catch (err) {
+		console.error(err);
+	}
+};
+
 function Project(props: ProjectProps) {
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -51,6 +86,8 @@ function Project(props: ProjectProps) {
 				: []
 			: []
 	);
+
+	const apolloClient = useApolloClient();
 
 	/* Open Attach File Form*/
 	projectForm[5].onClick = () => setOpenAttachFiles(true);
@@ -101,9 +138,14 @@ function Project(props: ProjectProps) {
 			setProjectFilesArray([]);
 		},
 	});
-	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
-		CREATE_PROJECT_DONOR
-	);
+	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation<
+		ICreateProjectDonor,
+		ICreateProjectDonorVariables
+	>(CREATE_PROJECT_DONOR, {
+		onCompleted: (data) => {
+			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+		},
+	});
 
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onError: (err) =>

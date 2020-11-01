@@ -9,8 +9,12 @@ export interface IUpdateOrganization {
 }
 
 export interface IUpdateOrganizationVariables {
-	id: string;
-	input: IOrganisationForm;
+	input: {
+		where: {
+			id: string;
+		};
+		data: IOrganisationForm;
+	};
 }
 
 export interface IGetOrganizationRegistrationType {

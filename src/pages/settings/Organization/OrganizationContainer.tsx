@@ -143,8 +143,12 @@ function OrganizationContainer({
 
 				await updateOrganization({
 					variables: {
-						id: dashboardData?.organization?.id || "",
-						input: values,
+						input: {
+							where: {
+								id: dashboardData?.organization?.id || "",
+							},
+							data: values,
+						},
 					},
 					update: updateOrganizationCache,
 				});

@@ -159,7 +159,7 @@ const getIndividualCountCachedValue = (
 		});
 		count = cachedCount?.t4DIndividualsConnection?.aggregate?.count;
 	} catch (err) {
-		console.log("err :>> ", err);
+		console.error(err);
 	}
 	return count;
 };
@@ -183,7 +183,7 @@ const increaseIndividualsCount = (apolloClient: ApolloClient<object>, organizati
 			},
 		});
 	} catch (err) {
-		console.log("err.message :>> ", err.message);
+		console.error(err);
 	}
 };
 
@@ -209,7 +209,7 @@ const refetchIndividuals = async ({
 			fetchPolicy: "network-only",
 		});
 	} catch (err) {
-		console.log("err.message :>> ", err.message);
+		console.error(err);
 	}
 };
 
@@ -298,7 +298,6 @@ const sortProjectsToGroupProject = (projects: IGetProject["orgProject"]) =>
 	projects.sort((project1, project2) => +project1.workspace.id - +project2.workspace.id);
 
 const getProjectGroupHeading = (project: IGetProject["orgProject"][0]) => {
-	console.log("project :>> ", project);
 	return project.workspace.name;
 };
 
@@ -372,7 +371,6 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 			? getInitialFormValues()
 			: getInitialFormValues(props.initialValues);
 	const intl = useIntl();
-	console.log("projects :>> ", projects);
 	(individualFormFields[1].optionsArray as IGetProject["orgProject"]) = useMemo(
 		() => sortProjectsToGroupProject(projects.slice() || []),
 		[projects]
@@ -409,7 +407,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 			increaseIndividualsCount(apolloClient, dashboardData?.organization?.id || "");
 			handleClose();
 		} catch (err) {
-			console.error(err.message);
+			console.error(err);
 		}
 	};
 
@@ -473,7 +471,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				handleClose();
 			}
 		} catch (err) {
-			console.log(err.message);
+			console.error(err);
 		}
 	};
 

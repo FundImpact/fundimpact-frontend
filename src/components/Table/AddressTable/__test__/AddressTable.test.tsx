@@ -1,56 +1,55 @@
 import React from "react";
 import { waitForElement } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
-import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../../../graphql/donor";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import {
 	projectDetails,
 	organizationDetails,
-	mockOrgDonor,
-	mockCountryList,
-	mockCurrencyList,
+	mockAddressListCount,
+	mockAddressList,
 } from "../../../../utils/testMock.json";
-import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../../../graphql";
-import DonorTable from "../DonorTable";
-import { donorTableHeading } from "../../constants";
+import { addressTableHeadings } from "../../constants";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
+import AddressTable from "../AddressTableGraphql";
+import { Enitity } from "../../../../models/constants";
+import { GET_ADDRESS_LIST_COUNT, GET_ADDRESS_LIST } from "../../../../graphql/Address";
 
 let table: any;
+
+const t_4_d_contact = "1";
 
 const mocks = [
 	{
 		request: {
-			query: GET_DONOR_COUNT,
+			query: GET_ADDRESS_LIST_COUNT,
 			variables: {
 				filter: {
-					organization: "3",
+					t_4_d_contact,
 				},
 			},
 		},
 		result: {
-			data: {
-				orgDonorsCount: 10,
-			},
+			data: mockAddressListCount,
 		},
 	},
 	{
 		request: {
-			query: GET_ORG_DONOR,
+			query: GET_ADDRESS_LIST,
 			variables: {
 				filter: {
-					organization: "3",
+					t_4_d_contact,
 				},
-				limit: 10,
+				limit: mockAddressListCount.t4DAddressesConnection.aggregate.count,
 				start: 0,
 				sort: "created_at:DESC",
 			},
 		},
 		result: {
 			data: {
-				orgDonors: mockOrgDonor,
+				t4DAddresses: mockAddressList,
 			},
 		},
 	},
@@ -65,26 +64,6 @@ const mocks = [
 		},
 		result: { data: mockUserRoles },
 	},
-	{
-		request: {
-			query: GET_CURRENCY_LIST,
-		},
-		result: {
-			data: {
-				currencyList: mockCurrencyList,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_COUNTRY_LIST,
-		},
-		result: {
-			data: {
-				countryList: mockCountryList,
-			},
-		},
-	},
 ];
 
 beforeEach(() => {
@@ -94,7 +73,7 @@ beforeEach(() => {
 				defaultState={{ project: projectDetails, organization: organizationDetails }}
 			>
 				<NotificationProvider>
-					<DonorTable />
+					<AddressTable contactId={t_4_d_contact} />
 				</NotificationProvider>
 			</DashboardProvider>,
 			{
@@ -105,24 +84,29 @@ beforeEach(() => {
 	});
 });
 
-describe("Donor Table tests", () => {
-	for (let i = 0; i < donorTableHeading.length; i++) {
-		test(`Table Headings ${donorTableHeading[i].label} for Budget Target Table`, async () => {
-			await waitForElement(() => table.getAllByText(donorTableHeading[i].label));
+describe("Address Table tests", () => {
+	for (let i = 0; i < addressTableHeadings.length; i++) {
+		test(`Table Headings ${addressTableHeadings[i].label} for Address Target Table`, async () => {
+			await waitForElement(() => table.getAllByText(addressTableHeadings[i].label));
 		});
 	}
 
 	test("renders correctly", async () => {
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockOrgDonor[0].country.name, "i"))
+			table.getByText(new RegExp("" + mockAddressList[0].address_type, "i"))
 		);
 
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockOrgDonor[0].legal_name, "i"))
+			table.getByText(new RegExp("" + mockAddressList[0].address_line_1, "i"))
 		);
 		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockOrgDonor[0].short_name, "i"))
+			table.getAllByText(new RegExp("" + mockAddressList[0].address_line_2, "i"))
 		);
-		await waitForElement(() => table.getAllByText(new RegExp("" + mockOrgDonor[0].name, "i")));
+		await waitForElement(() =>
+			table.getAllByText(new RegExp("" + mockAddressList[0].city, "i"))
+		);
+		await waitForElement(() =>
+			table.getAllByText(new RegExp("" + mockAddressList[0].pincode, "i"))
+		);
 	});
 });

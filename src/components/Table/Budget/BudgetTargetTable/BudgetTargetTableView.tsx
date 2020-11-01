@@ -355,7 +355,7 @@ function BudgetTargetView({
 				{(rowData: {
 					id: string;
 					description: string;
-					donor: { id: string; currency: { id: string } };
+					donor: { id: string; country: { id: string } };
 				}) => (
 					<>
 						<Grid container>

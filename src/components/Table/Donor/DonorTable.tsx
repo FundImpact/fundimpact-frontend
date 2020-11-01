@@ -11,6 +11,8 @@ import {
 	TableFooter,
 	TablePagination,
 	TableSortLabel,
+	Typography,
+	Box,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -59,11 +61,11 @@ const styledTable = makeStyles((theme: Theme) =>
 	})
 );
 
-const keyNames = ["name", "legal_name", "short_name", "currency,name"];
+const keyNames = ["name", "legal_name", "short_name", "country,name"];
 
 const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 	return {
-		currency: donor?.currency?.id || "",
+		country: donor?.country?.id || "",
 		legal_name: donor?.legal_name || "",
 		name: donor?.name || "",
 		short_name: donor?.short_name || "",
@@ -162,6 +164,20 @@ function DonorTable({
 
 	if (countQueryLoading || queryLoading) {
 		return <TableSkeleton />;
+	}
+
+	if (!donorList?.orgDonors?.length) {
+		return (
+			<Box m={2} display="flex" justifyContent="center">
+				<Typography variant="subtitle1" gutterBottom color="textSecondary">
+					<FormattedMessage
+						id={`nodataFound`}
+						defaultMessage={`No Data Found`}
+						description={`This text will be shown if no data found for table`}
+					/>
+				</Typography>
+			</Box>
+		);
 	}
 
 	return (

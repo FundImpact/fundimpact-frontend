@@ -124,7 +124,7 @@ export const DonorContainer = () => {
 	}, [getCountryList]);
 
 	return (
-		<>
+		<Box p={2}>
 			<Grid container>
 				<Grid item xs={11}>
 					<Typography variant="h4">
@@ -186,6 +186,6 @@ export const DonorContainer = () => {
 					}}
 				/>
 			)}
-		</>
+		</Box>
 	);
 };
