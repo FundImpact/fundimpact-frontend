@@ -31,17 +31,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function ProjectEditButton({
-	project,
-	workspaces,
 	refetch,
+	workspaces,
+	project,
 }: {
 	project: {
-		id: number;
-		name: string;
-		short_name: string;
-		description: string;
-		workspace: IOrganisationWorkspaces;
 		attachments: AttachFile[];
+		workspace: IOrganisationWorkspaces;
+		description: string;
+		short_name: string;
+		name: string;
+		id: number;
 	};
 	workspaces: IOrganisationWorkspaces[];
 	refetch:
@@ -50,13 +50,13 @@ function ProjectEditButton({
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 }) {
-	const classes = useStyles();
 	const { data: projDonors } = useQuery(GET_PROJ_DONORS, {
 		variables: { filter: { project: project.id } },
 	});
-	const [projectDetails, setProjectDetails] = useState<any>();
+	const classes = useStyles();
 
 	const [openUpdateForm, setOpenUpdateForm] = useState<boolean>(false);
+	const [projectDetails, setProjectDetails] = useState<any>();
 	useEffect(() => {
 		if (projDonors) {
 			let donorIds = projDonors?.projectDonors?.map((donors: any) => donors?.donor?.id);
@@ -75,22 +75,22 @@ function ProjectEditButton({
 	return (
 		<>
 			<IconButton
-				className={classes.EditIcon}
-				aria-controls={`projectMenu${project.id}`}
-				aria-haspopup="true"
 				onClick={() => setOpenUpdateForm(true)}
+				aria-haspopup="true"
+				aria-controls={`projectMenu${project.id}`}
+				className={classes.EditIcon}
 			>
 				<EditOutlinedIcon fontSize="small" />
 			</IconButton>
 			{openUpdateForm && projectDetails && (
 				<Project
-					open={projectDetails !== null}
-					handleClose={() => setOpenUpdateForm(false)}
+					reftechOnSuccess={refetch}
 					data={projectDetails}
+					handleClose={() => setOpenUpdateForm(false)}
 					workspaces={workspaces}
 					workspace={project.workspace.id}
 					type={PROJECT_ACTIONS.UPDATE}
-					reftechOnSuccess={refetch}
+					open={projectDetails !== null}
 				/>
 			)}
 		</>

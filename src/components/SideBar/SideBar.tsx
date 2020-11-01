@@ -20,7 +20,6 @@ import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../utils/
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/userContext";
-import { Link } from "react-router-dom";
 
 let menuList: { children: JSX.Element }[] = [];
 
