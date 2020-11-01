@@ -68,7 +68,6 @@
 			"dataTestId": "userFormPassword",
 			"testId": "userFormPasswordInput",
 			"label": "Password",
-			"hidden": true,
 			"type": "password",
 			"size": 12
 		}
