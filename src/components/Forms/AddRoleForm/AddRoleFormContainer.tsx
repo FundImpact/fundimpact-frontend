@@ -55,7 +55,6 @@ const validate = (values: IAddRole) => {
 
 const getSubmittedPermissions = (permissions: {} | IAddRolePermissions): IControllerAction | {} => {
 	const currentPermissions: IControllerAction | {} = {};
-
 	for (let controller in permissions) {
 		for (let action in (permissions as IAddRolePermissions)[controller as MODULE_CODES]) {
 			if (!(controller in currentPermissions)) {
@@ -69,7 +68,7 @@ const getSubmittedPermissions = (permissions: {} | IAddRolePermissions): IContro
 	}
 	return currentPermissions;
 };
-
+//remove any
 const createRole = async ({
 	name,
 	organizationId,
@@ -79,19 +78,32 @@ const createRole = async ({
 }: {
 	name: string;
 	organizationId: string;
-	permissions: {} | IControllerAction;
+	permissions: any;
 	createOrganizationUserRole: (
-		options?:
-			| MutationFunctionOptions<
-					ICreateOrganizationUserRole,
-					ICreateOrganizationUserRoleVariables
-			  >
-			| undefined
+		options?: MutationFunctionOptions<ICreateOrganizationUserRole, any> | undefined
 	) => Promise<
 		FetchResult<ICreateOrganizationUserRole, Record<string, any>, Record<string, any>>
 	>;
 	is_project_level: boolean;
 }) => {
+	let uploadPermissions: any = { controllers: { upload: {} } };
+	let usersPermissions: any = { controllers: {} };
+	if ("upload" in permissions) {
+		uploadPermissions.controllers.upload = permissions["upload"];
+		delete permissions["upload"];
+	}
+	if ("userspermissions" in permissions) {
+		usersPermissions.controllers.userspermissions = permissions["userspermissions"];
+		delete permissions["userspermissions"];
+	}
+	if ("auth" in permissions) {
+		usersPermissions.controllers.auth = permissions["auth"];
+		delete permissions["auth"];
+	}
+	if ("user" in permissions) {
+		usersPermissions.controllers.user = permissions["user"];
+		delete permissions["user"];
+	}
 	await createOrganizationUserRole({
 		variables: {
 			id: organizationId,
@@ -101,6 +113,8 @@ const createRole = async ({
 					application: {
 						controllers: permissions,
 					},
+					upload: uploadPermissions,
+					"users-permissions": usersPermissions,
 				},
 				is_project_level,
 			},

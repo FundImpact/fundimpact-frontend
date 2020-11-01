@@ -25,6 +25,12 @@ export interface ICreateOrganizationUserRoleVariables {
 			application: {
 				controllers: IControllerAction | {};
 			};
+			upload: {
+				controllers: IControllerAction | {};
+			};
+			userspermissions: {
+				controllers: IControllerAction | {};
+			};
 		};
 		is_project_level: boolean;
 	};

@@ -36,6 +36,8 @@ let mockInputData = {
 				},
 			},
 		},
+		upload: { controllers: { upload: {} } },
+		"users-permissions": { controllers: {} },
 	},
 	is_project_level: true,
 };
