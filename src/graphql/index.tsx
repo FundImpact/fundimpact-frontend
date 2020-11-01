@@ -11,10 +11,6 @@ export const GET_ORGANISATIONS = gql`
 				id
 				reg_type
 			}
-			currency {
-				id
-				name
-			}
 			account {
 				id
 				name

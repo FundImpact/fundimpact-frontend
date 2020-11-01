@@ -27,6 +27,7 @@ import {
 } from "../../../utils/testMock.json";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
+import { GET_ALL_DELIVERABLES_SPEND_AMOUNT } from "../../../graphql/project";
 let createDeliverableTracklineMutation = false;
 const mocks = [
 	{
@@ -139,6 +140,15 @@ const mocks = [
 		request: {
 			query: GET_ACHIEVED_VALLUE_BY_TARGET,
 			variables: { filter: { deliverableTargetProject: "1" } },
+		},
+		result: {},
+	},
+	{
+		request: {
+			query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+			variables: {
+				filter: { project: 2 },
+			},
 		},
 		result: {},
 	},

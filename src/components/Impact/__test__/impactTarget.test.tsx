@@ -2,7 +2,10 @@ import React from "react";
 import ImpactTarget from "../impactTarget";
 import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
 import { IMPACT_ACTIONS } from "../constants";
-import { GET_IMPACT_CATEGORY_BY_ORG } from "../../../graphql/Impact/query";
+import {
+	GET_ALL_IMPACT_TARGET_AMOUNT,
+	GET_IMPACT_CATEGORY_BY_ORG,
+} from "../../../graphql/Impact/query";
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
@@ -84,6 +87,15 @@ const mocks = [
 			},
 		},
 		result: { data: { impactTargetSdgCount: impactTargetSdgCountMock } },
+	},
+	{
+		request: {
+			query: GET_ALL_IMPACT_TARGET_AMOUNT,
+			variables: {
+				filter: { project: 1 },
+			},
+		},
+		result: {},
 	},
 ];
 
