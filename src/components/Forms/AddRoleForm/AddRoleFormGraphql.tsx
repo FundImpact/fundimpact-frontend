@@ -25,7 +25,7 @@ function AddRoleFormGraphql({ open, handleClose }: { open: boolean; handleClose:
 	const user = useAuth();
 
 	const [getUserRoles, { data: userRoleData }] = useLazyQuery<IGetUserRole>(GET_USER_ROLES);
-
+	
 	useEffect(() => {
 		if (user) {
 			getUserRoles({

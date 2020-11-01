@@ -192,7 +192,7 @@ function RoleTableContainer({
 	useEffect(() => {
 		setControllerActionHashArr(getControllerActionHashArr(rolesPermissions));
 	}, [rolesPermissions]);
-
+	
 	const userRoleEditAccess = userHasAccess(
 		MODULE_CODES.USER_PERMISSIONS,
 		USER_PERMISSIONS_ACTIONS.UPDATE_USER_PERMISSIONS
