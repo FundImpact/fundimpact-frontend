@@ -17,9 +17,9 @@ interface IContactTableContainer {
 		[key: string]: string | string[];
 	};
 	setFilterList: React.Dispatch<
-	React.SetStateAction<{
-		[key: string]: string | string[];
-	}>
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
 	>;
 	count: number;
 }

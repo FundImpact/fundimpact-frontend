@@ -41,6 +41,7 @@ import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { CircularPercentage } from "../commons";
+import { GET_ALL_DELIVERABLES_SPEND_AMOUNT } from "../../graphql/project";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -383,6 +384,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						filter: { deliverableTargetProject: value.deliverable_target_project },
 					},
 				},
+				{
+					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+					variables: {
+						filter: { project: DashBoardData?.project?.id },
+					},
+				},
 			],
 		});
 	};
@@ -441,6 +448,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					query: GET_ACHIEVED_VALLUE_BY_TARGET,
 					variables: {
 						filter: { deliverableTargetProject: value.deliverable_target_project },
+					},
+				},
+				{
+					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+					variables: {
+						filter: { project: DashBoardData?.project?.id },
 					},
 				},
 			],

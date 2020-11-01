@@ -28,6 +28,7 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import { GET_ALL_DELIVERABLES_TARGET_AMOUNT } from "../../graphql/project";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -152,6 +153,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: { filter: { project: props.project } },
 					},
+					{
+						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
+						variables: { filter: { project: props.project } },
+					},
 				],
 			});
 			deliverableTargetForm[3].optionsArray = []; // set empty units after creation
@@ -197,6 +202,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						variables: {
 							filter: { deliverableTargetProject: deliverableId },
 						},
+					},
+					{
+						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
+						variables: { filter: { project: props.project } },
 					},
 				],
 			});

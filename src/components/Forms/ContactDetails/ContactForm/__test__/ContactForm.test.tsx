@@ -14,7 +14,6 @@ import { IContactForm } from "../../../../../models/contact";
 import ContactForm from "..";
 import { CREATE_CONTACT } from "../../../../../graphql/Contact/mutation";
 
-
 let contactForm: RenderResult;
 let creationOccured = false;
 

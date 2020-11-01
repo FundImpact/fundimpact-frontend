@@ -11,7 +11,6 @@ import {
 import { IGetCountryList } from "../../../models/query";
 
 function OrganizationGraphql() {
-	;
 	const [getOrganizationRegistrationTypes, { data: registrationTypes }] = useLazyQuery<
 		IGetOrganizationRegistrationType
 	>(GET_ORGANIZATION_REGISTRATION_TYPES);
@@ -28,7 +27,6 @@ function OrganizationGraphql() {
 	useEffect(() => {
 		getCountryList();
 	}, [getCountryList]);
-
 
 	return (
 		<OrganizationContainer
