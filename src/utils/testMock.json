@@ -373,21 +373,21 @@
 	"mockContactListCount": {
 		"t4DContactsConnection": {
 			"aggregate": {
-				"count": 2
+				"count": 1
 			}
 		}
 	},
 	"mockAddressListCount": {
 		"t4DAddressesConnection": {
 			"aggregate": {
-				"count": 2
+				"count": 1
 			}
 		}
 	},
 	"mockIndividualListCount": {
 		"t4DIndividualsConnection": {
 			"aggregate": {
-				"count": 2
+				"count": 1
 			}
 		}
 	},
