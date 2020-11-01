@@ -10,7 +10,7 @@ import {
 	organizationDetails,
 	mockOrgDonor,
 	mockCountryList,
-	mockCurrencyList
+	mockCurrencyList,
 } from "../../../../utils/testMock.json";
 import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../../../graphql";
 import DonorTable from "../DonorTable";

@@ -14,7 +14,7 @@ import {
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import SettingsIcon from "@material-ui/icons/Settings";
 import React, { useEffect, useState } from "react";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { sidePanelStyles } from "../Dasboard/styles";
@@ -56,10 +56,10 @@ export default function LeftPanel() {
 		},
 	]);
 	const dispatch = useDashboardDispatch();
-
+	let { pathname } = useLocation();
 	useEffect(() => {
 		if (data) {
-			if (!data.orgProject.length) {
+			if (!data.orgProject.length && pathname === "/dashboard") {
 				navigate("/organization/dashboard");
 			}
 			leftPannelList[0].onClick = () => dispatch(setProject(data.orgProject[0]));

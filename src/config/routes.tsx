@@ -6,6 +6,7 @@ import MainDashboard from "../components/Dasboard/MainDashboard";
 import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
 import { SetTokenAndRedirect } from "../hooks/userDetailsWithToken";
+import Error404Container from "../pages/Error404/Error404Container";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
 
@@ -59,6 +60,7 @@ function AppRoutes() {
 							<Route path="signup/:id" element={<SignUp />} />
 							<Route path="signup" element={<SignUp />} />
 						</Route>
+						<Route path="/*" element={<Error404Container />} />
 					</Routes>
 				</NotificationProvider>
 			</ApolloProvider>
