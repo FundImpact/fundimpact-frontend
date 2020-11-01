@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		opacity: 0,
 	},
 	root: {
-		marginLeft: theme.spacing(1),
-		margin: theme.spacing(2),
-		marginBottom: theme.spacing(1),
+		// marginLeft: theme.spacing(1),
+		// margin: theme.spacing(2),
+		// marginBottom: theme.spacing(1),
 		"& :hover": {
 			"& $EditIcon": {
 				opacity: 1,
@@ -144,7 +144,7 @@ export default function ProjectName() {
 		PROJECT_USER_ACCESS_ACTIONS.UPDATE_PROJECT
 	);
 	return (
-		<Box display="flex" className={classes.root}>
+		<Box display="flex" className={classes.root} m={2} ml={1} mb={1}>
 			{loading ? (
 				<Box m={2} mr={0}>
 					<CircularProgress size={40} />
