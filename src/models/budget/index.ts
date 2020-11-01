@@ -1,5 +1,7 @@
 import { FORM_ACTIONS } from "./constants";
 import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
+import { AttachFile } from "../AttachFile";
+import { ApolloQueryResult } from "@apollo/client";
 
 export interface IBudgetCategory {
 	id?: string;
@@ -18,6 +20,7 @@ export interface IBudgetTrackingLineitem {
 	fy_donor: string;
 	fy_org: string;
 	grant_periods_project: string;
+	attachments?: AttachFile[];
 }
 
 export interface IBudgetTarget {
@@ -48,6 +51,11 @@ export type IBudgetLineitemProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetTrackingLineitem;
+			refetchOnSuccess:
+				| ((
+						variables?: Partial<Record<string, any>> | undefined
+				  ) => Promise<ApolloQueryResult<any>>)
+				| undefined;
 	  }
 	| {
 			open: boolean;

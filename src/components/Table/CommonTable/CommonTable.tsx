@@ -139,6 +139,7 @@ function CommonTable<T extends { id: string }>({
 	setOrder,
 	orderBy,
 	setOrderBy,
+	setOpenAttachFiles,
 }: ICommonTable<T>) {
 	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
@@ -164,6 +165,8 @@ function CommonTable<T extends { id: string }>({
 					<MenuItem
 						onClick={() => {
 							toggleDialogs(index, true);
+							if (setOpenAttachFiles && element === "View Documents")
+								setOpenAttachFiles(true);
 							handleClose();
 						}}
 					>
@@ -181,7 +184,17 @@ function CommonTable<T extends { id: string }>({
 	}
 
 	if (!valuesList.length) {
-		return <Typography align="center">No Data</Typography>;
+		return (
+			<Box m={2} display="flex" justifyContent="center">
+				<Typography variant="subtitle1" gutterBottom color="textSecondary">
+					<FormattedMessage
+						id={`nodataFound`}
+						defaultMessage={`No Data Found`}
+						description={`This text will be shown if no data found for table`}
+					/>
+				</Typography>
+			</Box>
+		);
 	}
 
 	let childrenArray = React.Children.toArray(children);
@@ -201,14 +214,16 @@ function CommonTable<T extends { id: string }>({
 										) : (
 											<Grid container>
 												<Grid item xs={12} style={{ display: "flex" }}>
-													<FormattedMessage
-														id={
-															"tableHeading" +
-															heading.label.replace(/ /g, "")
-														}
-														description={`This text will be shown on table for ${heading.label} heading`}
-														defaultMessage={`${heading.label}`}
-													/>
+													{heading.label && (
+														<FormattedMessage
+															id={
+																"tableHeading" +
+																heading.label.replace(/ /g, "")
+															}
+															description={`This text will be shown on table for ${heading.label} heading`}
+															defaultMessage={`${heading.label}`}
+														/>
+													)}
 													{order && heading.keyMapping && (
 														<TableSortLabel
 															direction={order}

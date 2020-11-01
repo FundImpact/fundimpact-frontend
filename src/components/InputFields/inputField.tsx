@@ -1,4 +1,5 @@
 import {
+	Button,
 	Checkbox,
 	createStyles,
 	FormControl,
@@ -9,11 +10,14 @@ import {
 	MenuItem,
 	Select,
 	TextField,
+	FormControlLabel,
+	Switch,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
 import { IInputFields } from "../../models";
 import UploadFile from "../UploadFile";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -53,6 +57,8 @@ const InputFields = ({
 	multiple = false,
 	logo,
 	disabled,
+	onClick,
+	autoCompleteGroupBy,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -191,6 +197,70 @@ const InputFields = ({
 			</FormControl>
 		);
 	}
+	if (inputType == "autocomplete") {
+		return (
+			<Autocomplete
+				multiple={multiple}
+				options={
+					optionsArray as {
+						id: string;
+						name: string;
+					}[]
+				}
+				disableCloseOnSelect
+				{...(autoCompleteGroupBy ? { groupBy: autoCompleteGroupBy } : {})}
+				getOptionLabel={(option: { id: string; name: string }) => option.name}
+				renderOption={(option, { selected }) => (
+					<React.Fragment>
+						{multiple && <Checkbox color="primary" checked={selected} />}
+						{option.name}
+					</React.Fragment>
+				)}
+				onChange={(e, value) => {
+					formik.setFieldValue(name, value);
+				}}
+				// onBlur={() => formik.setFieldTouched(name, true)}
+				fullWidth
+				// value={formik.values[name]}
+				defaultValue={formik.values[name]}
+				getOptionSelected={(option, value) => option.id === value.id}
+				id={id}
+				renderInput={(params) => {
+					return (
+						<TextField
+							{...params}
+							// required={required}
+							variant="outlined"
+							label={label}
+							error={!!formik.errors[name] && !!formik.touched[name]}
+							helperText={formik.touched[name] && formik.errors[name]}
+							data-testid={dataTestId}
+							name={name}
+							placeholder={label}
+						/>
+					);
+				}}
+			/>
+		);
+	}
+
+	if (inputType == "switch") {
+		return (
+			<FormControlLabel
+				control={
+					<Switch
+						checked={formik.values[name]}
+						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
+						name={name}
+					/>
+				}
+				label={label}
+				data-testid={dataTestId}
+			/>
+		);
+	}
+
 	if (inputType === "upload") {
 		return (
 			<UploadFile
@@ -204,6 +274,21 @@ const InputFields = ({
 				id={name}
 				logo={logo}
 			/>
+		);
+	}
+	if (inputType === "button") {
+		return (
+			<Button
+				className={classes.button}
+				disableRipple
+				variant="contained"
+				color="primary"
+				data-testid={`commonFormButton${label}`}
+				disabled={disabled}
+				onClick={onClick ? onClick : () => {}}
+			>
+				{label}
+			</Button>
 		);
 	}
 	return (

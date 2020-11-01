@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_COUNTRY_LIST } from "../../graphql/";
+import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../graphql/";
 import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_ORG_DONOR, UPDATE_ORG_DONOR } from "../../graphql/donor/mutation";
 import { IInputField } from "../../models";
@@ -16,6 +16,7 @@ import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
 import CommonForm from "../Forms/CommonForm";
 import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
+import { useIntl } from "react-intl";
 
 let inputFields: IInputField[] = addDonorForm;
 
@@ -40,10 +41,9 @@ const validate = (values: IDONOR) => {
 function Donor(props: IDonorProps) {
 	const [createDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
 	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
-	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
+	const [getCountryList, { data: countryList }] = useLazyQuery(GET_COUNTRY_LIST);
 
-	addDonorFormSelectFields[0].optionsArray = countries?.countryList || [];
-
+	addDonorFormSelectFields[0].optionsArray = countryList?.countries || [];
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
@@ -116,7 +116,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.log("err :>> ", err);
+						console.error(err);
 					}
 					try {
 						const data = await store.readQuery<IGET_DONOR>({
@@ -142,7 +142,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.log('err :>> ', err);
+						console.error(err);
 					}
 				},
 			});
@@ -191,14 +191,28 @@ function Donor(props: IDonorProps) {
 		getCountryList();
 	}, [getCountryList]);
 
+	const intl = useIntl();
+
+	const title = intl.formatMessage({
+		id: `donorFormTitle`,
+		defaultMessage: "Add Donor",
+		description: `This text will be show as title of donor form`,
+	});
+
+	const subtitle = intl.formatMessage({
+		id: `donorFormSubtitle`,
+		defaultMessage: "Physical addresses of your organizatin like headquater, branch etc.",
+		description: `This text will be show as subtitle of donor form`,
+	});
+
 	return (
 		<>
 			<FormDialog
 				handleClose={props.handleClose}
 				open={props.open}
 				loading={creatingDonor || updatingDonor}
-				title="Add Donor"
-				subtitle="Physical addresses of your organizatin like headquater, branch etc."
+				title={title}
+				subtitle={subtitle}
 				workspace={""}
 				project={""}
 			>

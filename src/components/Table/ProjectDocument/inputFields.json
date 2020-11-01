@@ -1,0 +1,20 @@
+{
+	"projectDocumentsFilter": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "projectDocumentName",
+			"testId": "projectDocumentNameInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "ext",
+			"id": "deliverableTotalTargetAmount",
+			"dataTestId": "projectDocumentExtInput",
+			"testId": "projectDocumentExtInput",
+			"label": "Type",
+			"size": 6
+		}
+	]
+}

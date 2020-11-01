@@ -60,7 +60,7 @@ const updateUserTheme = async ({
 						userDispatch(setUser({ user: response.data.updateUserCustomerInput }));
 					}
 				} catch (err) {
-					console.log("err :>> ", err);
+					console.error(err);
 				}
 			},
 			refetchQueries: [{ query: GET_USER_DETAILS }],

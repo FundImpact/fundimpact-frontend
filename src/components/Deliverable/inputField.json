@@ -216,7 +216,8 @@
 			"inputLabelId": "demo-mutiple-name-label",
 			"selectLabelId": "demo-mutiple-name-label",
 			"selectId": "demo-mutiple-name",
-			"inputType": "multiSelect"
+			"inputType": "multiSelect",
+			"required": true
 		},
 		{
 			"name": "annual_year",
@@ -229,8 +230,7 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true
+			"inputType": "select"
 		},
 		{
 			"name": "financial_year",
@@ -243,8 +243,7 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true
+			"inputType": "select"
 		},
 		{
 			"name": "note",
@@ -254,6 +253,16 @@
 			"label": "Note",
 			"multiline": true,
 			"rows": 2,
+			"size": 12
+		},
+		{
+			"name": "attachfiles",
+			"id": "attachfiles",
+			"dataTestId": "deliverableTracklineAttachFile",
+			"testId": "deliverableTracklineAttachFileInput",
+			"label": "Attach files",
+			"inputType": "button",
+			"onClick": {},
 			"size": 12
 		}
 	]

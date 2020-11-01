@@ -36,7 +36,6 @@ export const CREATE_IMPACT_CATEGORY_UNIT = gql`
 				organization {
 					id
 					name
-					address
 					account {
 						id
 						name
@@ -63,7 +62,6 @@ export const CREATE_IMPACT_CATEGORY_UNIT = gql`
 				organization {
 					id
 					name
-					address
 					account {
 						id
 						name

@@ -79,13 +79,15 @@ function ImpactTarget(props: ImpactTargetProps) {
 		onError() {
 			notificationDispatch(setErrorNotification("No units found for category!"));
 		},
+		fetchPolicy: "network-only",
 	});
 
 	useEffect(() => {
-		if (props.type === IMPACT_ACTIONS.UPDATE) {
-			setCurrentCategoryId(props.data?.impactCategory);
+		let impactTargetprops = props;
+		if (impactTargetprops.type === IMPACT_ACTIONS.UPDATE) {
+			setCurrentCategoryId(impactTargetprops.data?.impactCategory);
 		}
-	}, [props.type]);
+	}, [props]);
 
 	const updateImpactTargetHelper = async (impactCategoryUnitId: string) => {
 		let createInputTarget: any = {
@@ -135,6 +137,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target updated successfully !")
 			);
+			setCurrentCategoryId("");
 			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
@@ -248,6 +251,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			});
 			impactTargetForm[3].optionsArray = []; // set empty units after creation
 			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
+			setCurrentCategoryId("");
 			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));

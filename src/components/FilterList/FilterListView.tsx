@@ -15,6 +15,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import InputFields from "../InputFields/inputField";
 import { IInputFields } from "../../models";
 import { Form, Formik } from "formik";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -55,7 +56,6 @@ function FilterListView<T extends { [key: string]: string | string[] }>({
 	};
 
 	const onSubmit = (values: T) => {
-		console.log("invitedTable", values);
 		setFilterList(values);
 		setAnchorEl(null);
 	};
@@ -90,7 +90,11 @@ function FilterListView<T extends { [key: string]: string | string[] }>({
 			>
 				<Box p={2}>
 					<Typography variant="h5" gutterBottom>
-						Filters
+						<FormattedMessage
+							id="filterFormHeading"
+							defaultMessage="Filters"
+							description="This text will be heading of filter form"
+						/>
 					</Typography>
 					<Formik initialValues={initialValues} onSubmit={onSubmit}>
 						{(formik) => {
@@ -141,15 +145,23 @@ function FilterListView<T extends { [key: string]: string | string[] }>({
 											variant="contained"
 											color="secondary"
 											type="submit"
-											data-testid="createSaveButton"
+											data-testid="filterSubmitButton"
 										>
-											Filter
+											<FormattedMessage
+												id="filterButtonSubmitMessage"
+												defaultMessage="Filter"
+												description="This text will be  shown on filter button"
+											/>
 										</Button>
 										<Button
 											className={classes.cancelButton}
 											onClick={handleClose}
 										>
-											Cancel
+											<FormattedMessage
+												id="filterButtonCancelMessage"
+												defaultMessage="Cancel"
+												description="This text will be  shown on filter cancel button"
+											/>
 										</Button>
 									</Box>
 								</Form>

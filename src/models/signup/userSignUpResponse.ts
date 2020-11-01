@@ -2,7 +2,7 @@ export interface IUserSignupResponse {
 	jwt: string;
 	user: {
 		account: IUserAccount;
-
+		language: string;
 		blocked: any;
 		confirmed: boolean;
 		created_at: string;

@@ -118,6 +118,21 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECT_BUDGET_TARCKING,
+			variables: {
+				filter: {
+					budget_targets_project: "",
+				},
+			},
+		},
+		result: {
+			data: {
+				projBudgetTrackings: mockBudgetLineItem,
+			},
+		},
+	},
+	{
+		request: {
 			query: GET_BUDGET_TARGET_PROJECT,
 			variables: {
 				filter: {
@@ -209,7 +224,7 @@ describe("Budget Line Item Table tests", () => {
 
 	test("renders correctly", async () => {
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
+			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
 		);
 
 		await waitForElement(() =>

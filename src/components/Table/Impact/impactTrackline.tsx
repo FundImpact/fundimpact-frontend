@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import {
 	IconButton,
 	Menu,
@@ -19,7 +19,7 @@ import {
 	GET_IMPACT_TRACKLINE_COUNT,
 } from "../../../graphql/Impact/trackline";
 import { IImpactTargetLine } from "../../../models/impact/impactTargetline";
-import { getTodaysDate } from "../../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { IMPACT_ACTIONS } from "../../Impact/constants";
 import ImpactTrackLine from "../../Impact/impactTrackLine";
@@ -37,6 +37,13 @@ import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
 import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
+import AttachFileForm from "../../Forms/AttachFiles";
+import { AttachFile } from "../../../models/AttachFile";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
+import { CircularPercentage } from "../../commons";
+import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+import { setSuccessNotification } from "../../../reducers/notificationReducer";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
 
 enum tableHeaders {
 	date = 1,
@@ -74,7 +81,17 @@ const chipArray = ({
 	));
 };
 
-function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any }) {
+function EditImpactTargetLineIcon({
+	impactTargetLine,
+	refetch,
+}: {
+	impactTargetLine: any;
+	refetch:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+}) {
 	const [impactTracklineDonorsMapValues, setImpactTracklineDonorsMapValues] = useState<any>({});
 	const [impactTracklineDonors, setImpactTracklineDonors] = useState<
 		{
@@ -83,6 +100,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 			donor: { id: string; name: string; country: { id: string; name: string } };
 		}[]
 	>([]);
+	const notificationDispatch = useNotificationDispatch();
 
 	const { data } = useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
 		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
@@ -143,7 +161,41 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.UPDATE_IMPACT_TRACKING_LINE_ITEM
 	);
+	const dashBoardData = useDashBoardData();
+	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
+	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
 
+	const [impactTracklineUploadLoading, setImpactTracklineUploadLoading] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = impactTracklineFileArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setImpactTracklineUploadLoading(percentage);
+	}, [impactTracklineFileArray, totalFilesToUpload, setImpactTracklineUploadLoading]);
+
+	let { multiplefileUpload } = useMultipleFileUpload();
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		if (refetch) refetch();
+		setUploadSuccess(false);
+	};
+	if (uploadSuccess) successMessage();
+
+	const attachImpactFileOnSave = () => {
+		setTotalFilesToUpload(impactTracklineFileArray.filter((elem) => !elem.id).length);
+		multiplefileUpload({
+			ref: "impact-tracking-lineitem",
+			refId: impactTargetLine.id,
+			field: "attachments",
+			path: `org-${dashBoardData?.organization?.id}/impact-tracking-lineitem`,
+			filesArray: impactTracklineFileArray,
+			setFilesArray: setImpactTracklineFileArray,
+			setUploadSuccess: setUploadSuccess,
+		});
+	};
+	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<>
 			<TableCell>
@@ -175,6 +227,7 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 								financial_year: impactTargetLine.financial_year?.id,
 								donors: impactTracklineDonors,
 								impactDonorMapValues: impactTracklineDonorsMapValues,
+								attachments: impactTargetLine.attachments,
 							});
 							handleMenuClose();
 						}}
@@ -183,6 +236,21 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 							id="editAchievementMenu"
 							defaultMessage="Edit Achievement"
 							description="This text will be show on deliverable or impact target table for edit achievement menu"
+						/>
+					</MenuItem>
+				)}
+				{impactTracklineEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTracklineFileArray(impactTargetLine?.attachments);
+							setImpactOpenAttachFiles(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="viewDocumentsMenu"
+							defaultMessage="View Documents"
+							description="This text will be show on deliverable or impact target table for view documents menu"
 						/>
 					</MenuItem>
 				)}
@@ -195,8 +263,26 @@ function EditImpactTargetLineIcon({ impactTargetLine }: { impactTargetLine: any 
 					data={impactTargetLineData}
 					impactTarget={impactTargetLine.impact_target_project.id}
 					alreadyMappedDonorsIds={impactTracklineDonors?.map((donor) => donor.id)}
+					reftechOnSuccess={refetch}
 				/>
 			)}
+			{impactOpenAttachFiles && impactTracklineFileArray && (
+				<AttachFileForm
+					{...{
+						open: impactOpenAttachFiles,
+						handleClose: () => setImpactOpenAttachFiles(false),
+						filesArray: impactTracklineFileArray,
+						setFilesArray: setImpactTracklineFileArray,
+						parentOnSave: attachImpactFileOnSave,
+					}}
+				/>
+			)}
+			{impactTracklineUploadLoading > 0 ? (
+				<CircularPercentage
+					progress={impactTracklineUploadLoading}
+					message={uploadingFileMessage}
+				/>
+			) : null}
 		</>
 	);
 }
@@ -339,6 +425,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		changePage,
 		countQueryLoading: countLoading,
 		queryLoading: loading,
+		queryRefetch,
 	} = pagination({
 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 		countQuery: GET_IMPACT_TRACKLINE_COUNT,
@@ -438,6 +525,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						<EditImpactTargetLineIcon
 							key={Math.random()}
 							impactTargetLine={impactTrackingLineitemList[i]}
+							refetch={queryRefetch}
 						/>
 					);
 					arr.push(row);

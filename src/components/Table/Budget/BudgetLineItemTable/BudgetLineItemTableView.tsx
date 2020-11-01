@@ -5,7 +5,7 @@ import { FORM_ACTIONS } from "../../../Forms/constant";
 import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { budgetLineItemTableHeading as tableHeadings } from "../../constants";
-import { getTodaysDate } from "../../../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../../../utils";
 import { Box, Chip, Avatar, Grid } from "@material-ui/core";
 import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
@@ -16,6 +16,15 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../../utils/access/modules/annualYear
 import { FINANCIAL_YEAR_ORG_ACTIONS } from "../../../../utils/access/modules/financialYearOrg/actions";
 import { FINANCIAL_YEAR_DONOR_ACTIONS } from "../../../../utils/access/modules/financialYearDonor/actions";
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
+import { AttachFile } from "../../../../models/AttachFile";
+import AttachFileForm from "../../../Forms/AttachFiles";
+import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
+import { CircularPercentage } from "../../../commons";
+import { ApolloQueryResult } from "@apollo/client";
+import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+import { setSuccessNotification } from "../../../../reducers/notificationReducer";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -32,24 +41,24 @@ const filterYearTagsAccordingToUserAccess = () => {
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
-	const financialYearOrgFindAccess = userHasAccess(
-		MODULE_CODES.FINANCIAL_YEAR_ORG,
-		FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG
-	);
+	// const financialYearOrgFindAccess = userHasAccess(
+	// 	MODULE_CODES.FINANCIAL_YEAR_ORG,
+	// 	FINANCIAL_YEAR_ORG_ACTIONS.FIND_FINANCIAL_YEAR_ORG
+	// );
 
-	const financialYearDonorFindAccess = userHasAccess(
-		MODULE_CODES.FINANCIAL_YEAR_DONOR,
-		FINANCIAL_YEAR_DONOR_ACTIONS.FIND_FINANCIAL_YEAR_DONOR
-	);
+	// const financialYearDonorFindAccess = userHasAccess(
+	// 	MODULE_CODES.FINANCIAL_YEAR_DONOR,
+	// 	FINANCIAL_YEAR_DONOR_ACTIONS.FIND_FINANCIAL_YEAR_DONOR
+	// );
 	if (!annualYearFindAccess) {
 		delete tags.AY;
 	}
-	if (!financialYearOrgFindAccess) {
-		delete tags.FYO;
-	}
-	if (!financialYearDonorFindAccess) {
-		delete tags.FYD;
-	}
+	// if (!financialYearOrgFindAccess) {
+	// 	delete tags.FYO;
+	// }
+	// if (!financialYearDonorFindAccess) {
+	// 	delete tags.FYD;
+	// }
 	return tags;
 };
 
@@ -238,6 +247,7 @@ function BudgetLineItemTableView({
 	financialYearDonorHash,
 	financialYearOrgHash,
 	currency,
+	refetchOnSuccess,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -266,6 +276,11 @@ function BudgetLineItemTableView({
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
+	refetchOnSuccess:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
@@ -277,7 +292,7 @@ function BudgetLineItemTableView({
 
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
-			budgetLineItemTableEditMenu = ["Edit Budget Line Item"];
+			budgetLineItemTableEditMenu = ["Edit Budget Line Item", "View Documents"];
 		}
 	}, [budgetLineItemEditAccess]);
 
@@ -334,6 +349,49 @@ function BudgetLineItemTableView({
 		/>
 	);
 
+	const [budgetTracklineFileArray, setBudgetTracklineFileArray] = React.useState<AttachFile[]>(
+		[]
+	);
+
+	useEffect(() => {
+		setBudgetTracklineFileArray(initialValues.attachments || []);
+	}, [initialValues]);
+
+	const dashBoardData = useDashBoardData();
+	const notificationDispatch = useNotificationDispatch();
+	let { multiplefileUpload } = useMultipleFileUpload();
+	let uploadingFileMessage = CommonUploadingFilesMessage();
+	const [budgetUploadLoading, setbudgetUploadLoading] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		if (refetchOnSuccess) refetchOnSuccess();
+		setUploadSuccess(false);
+	};
+	if (uploadSuccess) successMessage();
+
+	const attachFileOnSave = () => {
+		setTotalFilesToUpload(budgetTracklineFileArray.filter((elem) => !elem.id).length);
+		multiplefileUpload({
+			ref: "budget-tracking-lineitem",
+			refId: initialValues?.id || "",
+			field: "attachments",
+			path: `org-${dashBoardData?.organization?.id}/budget-tracking-lineitem`,
+			filesArray: budgetTracklineFileArray,
+			setFilesArray: setBudgetTracklineFileArray,
+			setUploadSuccess: setUploadSuccess,
+		});
+	};
+
+	React.useEffect(() => {
+		let remainFilestoUpload = budgetTracklineFileArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setbudgetUploadLoading(percentage);
+	}, [budgetTracklineFileArray, totalFilesToUpload, setbudgetUploadLoading]);
+
+	const [openAttachFiles, setOpenAttachFiles] = React.useState(false);
 	return (
 		<>
 			<Grid container>
@@ -367,13 +425,32 @@ function BudgetLineItemTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				setOpenAttachFiles={setOpenAttachFiles}
 			>
-				<BudgetLineitem
-					open={openDialogs[0]}
-					handleClose={() => toggleDialogs(0, false)}
-					formAction={FORM_ACTIONS.UPDATE}
-					initialValues={initialValues}
-				/>
+				<>
+					<BudgetLineitem
+						open={openDialogs[0]}
+						handleClose={() => toggleDialogs(0, false)}
+						formAction={FORM_ACTIONS.UPDATE}
+						initialValues={initialValues}
+						refetchOnSuccess={refetchOnSuccess}
+					/>
+					<AttachFileForm
+						{...{
+							open: openAttachFiles,
+							handleClose: () => setOpenAttachFiles(false),
+							filesArray: budgetTracklineFileArray,
+							setFilesArray: setBudgetTracklineFileArray,
+							parentOnSave: () => attachFileOnSave(),
+						}}
+					/>
+					{budgetUploadLoading > 0 ? (
+						<CircularPercentage
+							progress={budgetUploadLoading}
+							message={uploadingFileMessage}
+						/>
+					) : null}
+				</>
 			</CommonTable>
 		</>
 	);

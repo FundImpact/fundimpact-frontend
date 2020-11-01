@@ -20,7 +20,7 @@ export const DeliverableTargetMock = [
 				organization: {
 					id: "2",
 					name: "TSERIES",
-					address: null,
+
 					account: {
 						id: "2",
 						name: "rahul@gmail.com",
@@ -89,6 +89,7 @@ export const DeliverableTracklineByTargetMock = [
 			},
 		},
 		grant_periods_project: null,
+		attachments: [],
 	},
 ];
 export const DeliverableTracklineMock = {
@@ -98,6 +99,7 @@ export const DeliverableTracklineMock = {
 	note: "this is a note",
 	annual_year: "1",
 	reporting_date: "2020-08-25T00:00:00.000Z",
+	attachments: [],
 };
 
 export const deliverableCategoryMock = [
@@ -109,7 +111,7 @@ export const deliverableCategoryMock = [
 		organization: {
 			id: "2",
 			name: "TSERIES",
-			address: null,
+
 			account: {
 				id: "2",
 				name: "rahul@gmail.com",
@@ -133,7 +135,7 @@ export const deliverableCategoryMock = [
 		organization: {
 			id: "2",
 			name: "TSERIES",
-			address: null,
+
 			account: {
 				id: "2",
 				name: "rahul@gmail.com",
@@ -162,7 +164,7 @@ export const deliverableCategoryUnitListMock = [
 			organization: {
 				id: "2",
 				name: "TSERIES",
-				address: null,
+
 				account: {
 					id: "2",
 					name: "rahul@gmail.com",
@@ -189,7 +191,7 @@ export const deliverableCategoryUnitListMock = [
 			organization: {
 				id: "2",
 				name: "TSERIES",
-				address: null,
+
 				account: {
 					id: "2",
 					name: "rahul@gmail.com",

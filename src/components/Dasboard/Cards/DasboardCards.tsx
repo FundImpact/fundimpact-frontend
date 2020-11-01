@@ -42,7 +42,7 @@ export default function DashboardCard(props: CardProps) {
 		if (cardFilter?.length) {
 			setCurrentFilter(cardFilter[0]);
 		}
-	}, []);
+	}, [cardFilter]);
 
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

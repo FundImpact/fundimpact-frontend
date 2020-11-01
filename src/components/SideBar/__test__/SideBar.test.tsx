@@ -16,21 +16,32 @@ import { GET_PROJ_DONORS } from "../../../graphql/project";
 
 let sidebar: any;
 
-const OrgMock = [
-	{
-		__typename: "OrganizationList",
-		id: "13",
-		name: "TSERIES",
-		short_name: "TS",
-		organization_registration_type: {
-			__typename: "OrganizationRegistrationType",
-			id: "1",
-			reg_type: "Trusts",
-		},
-		account: { __typename: "Account", id: "2", name: "rahul@gmail.com" },
+const OrgMock = {
+	id: "13",
+	name: "TSERIES",
+	short_name: "TS",
+	legal_name: "sh legal detective",
+	organization_registration_type: {
+		id: "1",
+		reg_type: "Trusts",
 	},
-];
-
+	currency: {
+		id: "1",
+	},
+	country: {
+		id: "1",
+		name: "India",
+	},
+	account: {
+		id: "2",
+		name: "rahul@gmail.com",
+	},
+	logo: {
+		id: "1",
+		url: "",
+	},
+	theme: {},
+};
 const WSMock = [
 	{
 		id: "5",
@@ -54,6 +65,7 @@ const ProjectMockOne = [
 		name: "ARTISTAAN",
 		short_name: "",
 		description: "",
+		attachments: [],
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
 	},
 ];
@@ -63,6 +75,7 @@ const ProjectMockTwo = [
 		name: "KALAMKAAR",
 		short_name: "",
 		description: "",
+		attachments: [],
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
 	},
 ];
@@ -70,6 +83,10 @@ const ProjectMockTwo = [
 const projDonorsMock = [
 	{
 		id: "244",
+		project: {
+			id: "1",
+			name: "ARTISTAAN",
+		},
 		donor: {
 			id: "23",
 			name: "wer",
@@ -78,8 +95,12 @@ const projDonorsMock = [
 ];
 const mocks = [
 	{
-		request: { query: GET_ORGANISATIONS },
-		result: { data: { organizationList: OrgMock } },
+		request: { query: GET_ORGANISATIONS, variables: { id: "13" } },
+		result: {
+			data: {
+				organization: OrgMock,
+			},
+		},
 	},
 	{
 		request: {
@@ -132,7 +153,9 @@ const mocks = [
 beforeEach(() => {
 	act(() => {
 		sidebar = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetail }}>
+			<DashboardProvider
+				defaultState={{ organization: organizationDetail, workspace: { id: "13" } }}
+			>
 				<BrowserRouter>
 					<NotificationProvider>
 						<SideBar />

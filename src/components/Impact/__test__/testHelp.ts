@@ -34,7 +34,6 @@ export const impactTargetMock = [
 				organization: {
 					id: "2",
 					name: "TSERIES",
-					address: null,
 					account: {
 						id: "2",
 						name: "rahul@gmail.com",
@@ -61,7 +60,6 @@ export const impactTargetMock = [
 				organization: {
 					id: "2",
 					name: "TSERIES",
-					address: null,
 					account: {
 						id: "2",
 						name: "rahul@gmail.com",
@@ -109,6 +107,7 @@ export const impactTracklineByTargetMock = [
 			},
 		},
 		grant_periods_project: null,
+		attachments: [],
 	},
 ];
 

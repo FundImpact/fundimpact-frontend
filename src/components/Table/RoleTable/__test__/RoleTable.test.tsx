@@ -115,6 +115,8 @@ beforeEach(() => {
 	});
 });
 
+jest.setTimeout(7000);
+
 describe("Role table tests", () => {
 	test(`Table Headings Permissions for Role table`, async () => {
 		await waitForElement(() => table.getAllByText("Permissions"));

@@ -11,8 +11,15 @@ export const sidebarList: {
 				title: "Organization Info",
 				userAccess: true,
 			},
+			{
+				to: "documents",
+				dataTestId: "organization-Documents",
+				title: "Organization Documents",
+				userAccess: true,
+			},
 		],
 	},
+
 	{
 		mainHeading: "Manage Portal",
 		subHeadings: [
@@ -52,6 +59,7 @@ export const sidebarList: {
 		subHeadings: [
 			{ to: "user_roles", dataTestId: "user-role-link", title: "Roles", userAccess: true },
 			{ to: "users", dataTestId: "users-link", title: "Users", userAccess: true },
+			{ to: "individual", dataTestId: "individual-link", title: "Individual", userAccess: true },
 		],
 	},
 ];

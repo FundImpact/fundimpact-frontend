@@ -28,7 +28,6 @@ export const CREATE_IMPACT_TRACKLINE = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -55,7 +54,6 @@ export const CREATE_IMPACT_TRACKLINE = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -135,7 +133,6 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -162,7 +159,6 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -248,7 +244,6 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -275,7 +270,6 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -322,6 +316,15 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 					id
 					name
 				}
+			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
 			}
 		}
 	}

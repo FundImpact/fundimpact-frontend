@@ -10,6 +10,7 @@ function FormDialog({
 	project,
 	children,
 	loading,
+	leftComponent,
 }: {
 	open: boolean;
 	handleClose: () => void;
@@ -19,6 +20,7 @@ function FormDialog({
 	project?: string;
 	children: any;
 	loading?: boolean;
+	leftComponent?: React.ReactNode;
 }) {
 	const theme = useTheme();
 
@@ -54,6 +56,9 @@ function FormDialog({
 								</Box>
 							</Box>
 						)}
+						<Grid item container justify="center">
+							{leftComponent}
+						</Grid>
 					</Grid>
 					<Grid item xs={8}>
 						{children}

@@ -383,8 +383,14 @@ export default function GrantPeriodTable() {
 					/>
 				</>
 			) : (
-				<Box p={2}>
-					<Typography align="center">No Grant Period</Typography>
+				<Box m={2} display="flex" justifyContent="center">
+					<Typography variant="subtitle1" gutterBottom color="textSecondary">
+						<FormattedMessage
+							id={`nodataFound`}
+							defaultMessage={`No Data Found`}
+							description={`This text will be shown if no data found for table`}
+						/>
+					</Typography>
 				</Box>
 			)}
 		</>

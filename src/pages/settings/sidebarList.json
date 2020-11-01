@@ -6,6 +6,11 @@
 				"to": "organization",
 				"dataTestId": "organization-link",
 				"title": "Organization Info"
+			},
+			{
+				"to": "documents",
+				"dataTestId": "organization-documents",
+				"title": "Organization Documents"
 			}
 		]
 	},

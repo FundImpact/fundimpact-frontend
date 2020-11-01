@@ -1,6 +1,6 @@
 import { Box, Grid, Table, Typography, TableSortLabel } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -54,7 +54,6 @@ export default function FITable({
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
-	const theme = useTheme();
 
 	return (
 		<>
@@ -62,14 +61,8 @@ export default function FITable({
 				<Grid container>
 					{noRowHeading && (
 						<Grid item xs={12}>
-							<Box>
-								<Typography
-									align="center"
-									variant="subtitle1"
-									variantMapping={{
-										subtitle1: "h1",
-									}}
-								>
+							<Box m={2} display="flex" justifyContent="center">
+								<Typography variant="subtitle1" gutterBottom color="textSecondary">
 									{noRowHeading}
 								</Typography>
 							</Box>
@@ -99,14 +92,16 @@ export default function FITable({
 													heading.renderComponent()
 												) : (
 													<>
-														<FormattedMessage
-															id={
-																"tableHeading" +
-																heading.label.replace(/ /g, "")
-															}
-															defaultMessage={`${heading.label}`}
-															description={`This text will be shown on table for ${heading.label} heading`}
-														/>
+														{heading.label && (
+															<FormattedMessage
+																id={
+																	"tableHeading" +
+																	heading.label.replace(/ /g, "")
+																}
+																defaultMessage={`${heading.label}`}
+																description={`This text will be shown on table for ${heading.label} heading`}
+															/>
+														)}
 														{order && heading.keyMapping && (
 															<TableSortLabel
 																active={

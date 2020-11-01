@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ORGANISATIONS = gql`
-	query {
-		organizationList {
+	query organization($id: ID!) {
+		organization(id: $id) {
 			id
 			name
 			short_name
@@ -11,22 +11,22 @@ export const GET_ORGANISATIONS = gql`
 				id
 				reg_type
 			}
-			country {
-				id
-				name
-			}
 			account {
 				id
 				name
-			}
-			country {
-				id
 			}
 			logo {
 				id
 				url
 			}
 			theme
+			currency {
+				id
+			}
+			country {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -68,6 +68,15 @@ export const GET_PROJECTS_BY_WORKSPACE = gql`
 			workspace {
 				id
 				name
+			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
 			}
 		}
 	}
@@ -191,7 +200,6 @@ export const GET_GRANT_PERIOD = gql`
 				organization {
 					id
 					name
-					address
 					account {
 						id
 						name
@@ -218,7 +226,7 @@ export const GET_GRANT_PERIOD = gql`
 `;
 export const GET_COUNTRY_LIST = gql`
 	query {
-		countryList {
+		countries {
 			id
 			name
 		}
@@ -237,7 +245,98 @@ export const GET_ORGANIZATION_REGISTRATION_TYPES = gql`
 export const GET_CURRENCY_LIST = gql`
 	query getCurrencyList($filter: JSON) {
 		currencyList(where: $filter) {
+			id
+			name
 			code
+		}
+	}
+`;
+
+export const GET_ORGANISATIONS_DOCUMENTS = gql`
+	query {
+		organizations {
+			id
+			name
+			short_name
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
+		}
+	}
+`;
+
+export const GET_STATE_LIST = gql`
+	query getStates($where: JSON) {
+		states(where: $where) {
+			id
+			name
+			country {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_PROJECT_DOCUMENTS = gql`
+	query getProjectDocuments($filter: JSON) {
+		orgProject(where: $filter) {
+			id
+			name
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
+		}
+	}
+`;
+
+export const GET_DISTRICT_LIST = gql`
+	query getDistricts($where: JSON) {
+		districts(where: $where) {
+			id
+			name
+			state {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_VILLAGE_LIST = gql`
+	query getVillages($where: JSON) {
+		villages(where: $where) {
+			id
+			name
+			block {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_BLOCK_LIST = gql`
+	query getBlocks($where: JSON) {
+		blocks(where: $where) {
+			id
+			name
+			district {
+				id
+				name
+			}
 		}
 	}
 `;

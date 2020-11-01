@@ -22,7 +22,6 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -114,7 +113,6 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 						organization {
 							id
 							name
-							address
 							account {
 								id
 								name
@@ -233,6 +231,15 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 					id
 					name
 				}
+			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
 			}
 		}
 	}

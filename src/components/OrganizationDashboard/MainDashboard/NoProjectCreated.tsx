@@ -8,7 +8,6 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { GET_WORKSPACES_BY_ORG, GET_PROJECTS_BY_WORKSPACE } from "../../../graphql";
 import { IGET_WORKSPACES_BY_ORG } from "../../../models/workspace/query";
-import { Navigate } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	contentBox: {
@@ -32,8 +31,8 @@ function NoProjectCreated({
 		IGET_WORKSPACES_BY_ORG
 	>(GET_WORKSPACES_BY_ORG);
 
-	const [getProjects, { data: projects }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
-		fetchPolicy: "network-only",
+	const [getProjects, { data: projects, refetch }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
+		variables: { filter: { workspace: workSpaces?.orgWorkspaces[0]?.id } },
 	});
 
 	useEffect(() => {
@@ -74,8 +73,8 @@ function NoProjectCreated({
 				workspace={workSpaces?.orgWorkspaces[0]?.id || ""}
 				handleClose={() => {
 					setProjectDialogOpen(false);
-					getProjects();
 				}}
+				reftechOnSuccess={refetch}
 			/>
 			<Grid container spacing={2}>
 				<Grid item xs={12}>

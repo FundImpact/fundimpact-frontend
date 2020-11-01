@@ -1,5 +1,8 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
+import { useDashBoardData } from "../../contexts/dashboardContext";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
 
 import { GET_WORKSPACES_BY_ORG } from "../../graphql";
 import { CREATE_WORKSPACE, UPDATE_WORKSPACE } from "../../graphql/workspace";
@@ -10,7 +13,9 @@ import {
 	IUPDATE_WORKSPACE_Response,
 } from "../../models/workspace/query";
 import { IWorkspace, WorkspaceProps } from "../../models/workspace/workspace";
-import AlertMsg from "../AlertMessage/AlertMessage";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import FormDialog from "../FormDialog";
 import WorkspaceForm from "../Forms/workspace/workspaceForm";
 import { FullScreenLoader } from "../Loader/Loader";
 import { WORKSPACE_ACTIONS } from "./constants";
@@ -19,9 +24,9 @@ import { TWorkspaceUpdate } from "./models/worksapceUpdate";
 function getInitialValues(props: WorkspaceProps) {
 	if (props.type === WORKSPACE_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		name: "Workspace 1",
-		short_name: "short name",
-		description: "some description",
+		name: "",
+		short_name: "",
+		description: "",
 		organization: props.organizationId,
 	};
 }
@@ -86,7 +91,7 @@ function Workspace(props: WorkspaceProps) {
 	const [initialValues, setinitialValues] = useState(getInitialValues(props));
 	const [successMessage, setsuccessMessage] = useState<string>();
 	const [errorMessage, seterrorMessage] = useState<string>();
-
+	const notificationDispatch = useNotificationDispatch();
 	/*********************************
 	 *
 	 * 	WORKSPACE CREATE
@@ -97,7 +102,11 @@ function Workspace(props: WorkspaceProps) {
 		{ payload: { data: Omit<IWorkspace, "id"> | null } }
 	>(CREATE_WORKSPACE, {
 		onCompleted: (data) => {
-			return setsuccessMessage("Workspace Created.");
+			notificationDispatch(setSuccessNotification("Workspace created successfully !"));
+			setShowForm(false);
+		},
+		onError: () => {
+			notificationDispatch(setErrorNotification("Workspace creation Failed !"));
 		},
 		update: (cache, option) => {
 			updateOrganisationWorkspaceList({
@@ -133,7 +142,7 @@ function Workspace(props: WorkspaceProps) {
 	 * WROKSPACE UPDATE
 	 *
 	 ******************************/
-	let [UpdateWorkspace, { error: updateError }] = useMutation<
+	let [UpdateWorkspace, { loading: updateLoading, error: updateError }] = useMutation<
 		IUPDATE_WORKSPACE_Response,
 		{
 			payload: Omit<IWorkspace, "id"> | null;
@@ -141,7 +150,11 @@ function Workspace(props: WorkspaceProps) {
 		}
 	>(UPDATE_WORKSPACE, {
 		onCompleted: (data) => {
-			return setsuccessMessage("Workspace Updated.");
+			notificationDispatch(setSuccessNotification("Workspace updated successfully !"));
+			setShowForm(false);
+		},
+		onError: () => {
+			notificationDispatch(setErrorNotification("Workspace updation Failed !"));
 		},
 		update: (cache, option) => {
 			updateOrganisationWorkspaceList({
@@ -173,24 +186,44 @@ function Workspace(props: WorkspaceProps) {
 	};
 
 	const validate = () => {};
-
+	const [showForm, setShowForm] = useState(true);
 	const formState = props.type;
-
+	const DashBoardData = useDashBoardData();
+	const intl = useIntl();
+	let { newOrEdit } = CommonFormTitleFormattedMessage(props.type);
 	return (
 		<React.Fragment>
-			<WorkspaceForm
-				initialValues={initialValues}
-				formState={formState}
-				onCreate={onCreate}
-				onUpdate={onUpdate}
-				clearErrors={clearErrors}
-				validate={validate}
-				Close={props.close}
+			<FormDialog
+				title={
+					newOrEdit +
+					" " +
+					intl.formatMessage({
+						id: "workspaceTargetFormTitle",
+						defaultMessage: "Workspace",
+						description: `This text will be show on workspace form for title`,
+					})
+				}
+				subtitle={intl.formatMessage({
+					id: "workspaceFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on workspace form for subtitle`,
+				})}
+				workspace={DashBoardData?.organization?.name}
+				open={showForm}
+				handleClose={() => setShowForm(false)}
+				loading={loading || updateLoading}
 			>
-				{successMessage ? <AlertMsg severity={"success"} msg={successMessage} /> : null}
-				{errorMessage ? <AlertMsg severity={"error"} msg={errorMessage} /> : null}
-			</WorkspaceForm>
-			{loading ? <FullScreenLoader /> : null}
+				<WorkspaceForm
+					initialValues={initialValues}
+					formState={formState}
+					onCreate={onCreate}
+					onUpdate={onUpdate}
+					clearErrors={clearErrors}
+					validate={validate}
+					Close={props.close}
+				></WorkspaceForm>
+			</FormDialog>
 		</React.Fragment>
 	);
 }

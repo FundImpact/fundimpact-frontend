@@ -1,7 +1,7 @@
 import { IOrganisation, IOrganizationRegistrationType, IOrganisationForm } from "./types";
 
 export interface IOrganisationFetchResponse {
-	organizationList: IOrganisation[];
+	organization: IOrganisation;
 }
 
 export interface IUpdateOrganization {
@@ -9,8 +9,12 @@ export interface IUpdateOrganization {
 }
 
 export interface IUpdateOrganizationVariables {
-	id: string;
-	input: IOrganisationForm;
+	input: {
+		where: {
+			id: string;
+		};
+		data: IOrganisationForm;
+	};
 }
 
 export interface IGetOrganizationRegistrationType {

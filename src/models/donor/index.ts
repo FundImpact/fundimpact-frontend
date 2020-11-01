@@ -7,6 +7,7 @@ export interface IDONOR {
 	legal_name: string;
 	short_name: string;
 	country: string;
+	// currency: string
 }
 
 export type IDonorProps =

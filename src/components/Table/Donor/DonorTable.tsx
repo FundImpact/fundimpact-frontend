@@ -11,6 +11,8 @@ import {
 	TableFooter,
 	TablePagination,
 	TableSortLabel,
+	Typography,
+	Box,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -30,6 +32,7 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { FormattedMessage } from "react-intl";
 
 enum tableHeader {
 	name = 1,
@@ -149,7 +152,11 @@ function DonorTable({
 						handleClose();
 					}}
 				>
-					Edit Donor
+					<FormattedMessage
+						id="editDonorMenuItem"
+						defaultMessage="Edit Donor"
+						description="This text will be shown on menu item to edit donor"
+					/>
 				</MenuItem>
 			),
 		},
@@ -157,6 +164,20 @@ function DonorTable({
 
 	if (countQueryLoading || queryLoading) {
 		return <TableSkeleton />;
+	}
+
+	if (!donorList?.orgDonors?.length) {
+		return (
+			<Box m={2} display="flex" justifyContent="center">
+				<Typography variant="subtitle1" gutterBottom color="textSecondary">
+					<FormattedMessage
+						id={`nodataFound`}
+						defaultMessage={`No Data Found`}
+						description={`This text will be shown if no data found for table`}
+					/>
+				</Typography>
+			</Box>
+		);
 	}
 
 	return (

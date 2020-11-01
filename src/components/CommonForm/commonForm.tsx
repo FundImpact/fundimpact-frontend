@@ -59,39 +59,53 @@ function CommonInputForm({
 						<Grid container spacing={2}>
 							{inputFields.map((element: IInputFields, index: number) => {
 								return (
-									<Grid item xs={element.size} key={index}>
-										<InputFields
-											inputType={element.inputType}
-											formik={formik}
-											name={element.name}
-											id={element.id}
-											dataTestId={element.dataTestId}
-											testId={element.testId}
-											label={element.label}
-											multiline={
-												element.multiline ? element.multiline : false
-											}
-											rows={element.rows ? element.rows : 1}
-											type={element.type ? element.type : "text"}
-											optionsArray={
-												element.optionsArray ? element.optionsArray : []
-											}
-											inputLabelId={
-												element.inputLabelId ? element.inputLabelId : ""
-											}
-											selectLabelId={
-												element.selectLabelId ? element.selectLabelId : ""
-											}
-											selectId={element.selectId ? element.selectId : ""}
-											getInputValue={
-												element.getInputValue ? element.getInputValue : null
-											}
-											required={element.required ? true : false}
-											multiple={element.multiple ? element.multiple : false}
-											logo={element.logo ? element.logo : ""}
-											disabled={element.disabled ? element.disabled : false}
-										/>
-									</Grid>
+									!element.hidden && (
+										<Grid item xs={element.size} key={index}>
+											<InputFields
+												inputType={element.inputType}
+												formik={formik}
+												name={element.name}
+												id={element.id}
+												dataTestId={element.dataTestId}
+												testId={element.testId}
+												label={element.label}
+												multiline={
+													element.multiline ? element.multiline : false
+												}
+												rows={element.rows ? element.rows : 1}
+												type={element.type ? element.type : "text"}
+												optionsArray={
+													element.optionsArray ? element.optionsArray : []
+												}
+												inputLabelId={
+													element.inputLabelId ? element.inputLabelId : ""
+												}
+												selectLabelId={
+													element.selectLabelId
+														? element.selectLabelId
+														: ""
+												}
+												selectId={element.selectId ? element.selectId : ""}
+												getInputValue={
+													element.getInputValue
+														? element.getInputValue
+														: null
+												}
+												required={element.required ? true : false}
+												multiple={
+													element.multiple ? element.multiple : false
+												}
+												logo={element.logo ? element.logo : ""}
+												disabled={
+													element.disabled ? element.disabled : false
+												}
+												autoCompleteGroupBy={
+													element.autoCompleteGroupBy || undefined
+												}
+												onClick={element.onClick ? element.onClick : null}
+											/>
+										</Grid>
+									)
 								);
 							})}
 

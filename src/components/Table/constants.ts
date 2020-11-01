@@ -12,6 +12,17 @@ export const deliverableHeadings: ITableHeadings[] = [
 	{ label: "" }, //edit icon
 ];
 
+export const documentsHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "File" },
+	{ label: "Size" },
+	{ label: "Caption" },
+	{ label: "Type" },
+	{ label: "Date" },
+	{ label: "View" },
+	{ label: "" }, //edit icon
+];
+
 export const ImpactHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },
@@ -29,6 +40,7 @@ export const invitedUserTableHeadings = [
 	{ label: "Email", keyMapping: "email" },
 	{ label: "Role", keyMapping: "role" },
 	{ label: "Confirmed" },
+	{ label: "Projects" },
 	{ label: "" }, //edit icon
 ];
 export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [
@@ -130,5 +142,36 @@ export const fundReceivedTableHeadings: ITableHeadings[] = [
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Amount", keyMapping: "amount" },
 	{ label: "Donor" },
+	{ label: "" },
+];
+
+export const individualTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Projects" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const contactTableHeadings: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	{ label: "Email", keyMapping: "email" },
+	{ label: "Email Other", keyMapping: "email_other" },
+	{ label: "Phone", keyMapping: "phone" },
+	{ label: "Phone Other", keyMapping: "phone_other" },
+	{ label: "Contact Type", keyMapping: "contact_type" },
+	{ label: "" },
+	{ label: "" },
+];
+
+export const addressTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Address Line 1" },
+	{ label: "Address Line 2" },
+	{ label: "Pincode" },
+	{ label: "City" },
+	{ label: "Address Type" },
+	{ label: "" },
 	{ label: "" },
 ];

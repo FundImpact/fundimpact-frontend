@@ -77,7 +77,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 			});
 			// console.log("garntPeriodList :>> ", garntPeriodList);
 		} catch (err) {
-			console.log("err :>> ", err);
+			console.error(err);
 		}
 
 		setTimeout(() => {
@@ -156,7 +156,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 					})
 				}
 				subtitle={intl.formatMessage({
-					id: "deliverableCategoryFormSubtitle",
+					id: "GrantCategoryFormSubtitle",
 					defaultMessage: "Manage Budget Category",
 					description: `This text will be show on Grant Period form for subtitle`,
 				})}

@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
 import {
+	Button,
+	FormControl,
 	Grid,
+	IconButton,
+	Input,
+	InputLabel,
+	makeStyles,
 	Theme,
 	Typography,
-	makeStyles,
-	FormControl,
-	InputLabel,
-	Input,
-	Button,
-	IconButton,
 } from "@material-ui/core";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Close from "@material-ui/icons/Close";
 import { FormikProps } from "formik";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,6 +40,7 @@ function UploadFiles<T>({
 	dataTestId,
 	id,
 	logo,
+	accept = "image/jpeg,image/gif,image/png",
 	...props
 }: {
 	title: string;
@@ -51,6 +52,7 @@ function UploadFiles<T>({
 	dataTestId: string;
 	id: string;
 	logo?: string;
+	accept?: string;
 }) {
 	const classes = useStyles(props);
 	const [previewImage, setPreviewImage] = useState<string | null>(logo || null);
@@ -87,11 +89,15 @@ function UploadFiles<T>({
 								</IconButton>
 								<br />
 								<Button component="span">
-									{intl.formatMessage({
-										id: `uploadInput title`,
-										defaultMessage: `${title}`,
-										description: `This text will be show on upload button ${title}`,
-									})}
+									{intl.formatMessage(
+										{
+											id: `uploadInput title`,
+											defaultMessage: "{title}",
+											description:
+												"This text will be show on upload button {title}",
+										},
+										{ title }
+									)}
 								</Button>
 							</Typography>
 						</InputLabel>

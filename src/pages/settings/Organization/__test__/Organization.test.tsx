@@ -55,7 +55,7 @@ const mocks = [
 		},
 		result: {
 			data: {
-				countryList: mockCountryList,
+				countries: mockCountryList,
 			},
 		},
 	},

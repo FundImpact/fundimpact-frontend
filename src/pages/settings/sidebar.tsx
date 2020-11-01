@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { Box, Divider, ListItem, ListItemText, Typography, Avatar } from "@material-ui/core";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -22,6 +22,7 @@ import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/ac
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
+import { useAuth } from "../../contexts/userContext";
 
 const setSidebarTabUserAccess = (tab: { userAccess: boolean }, userAccess: boolean) =>
 	(tab.userAccess = userAccess);
@@ -49,15 +50,27 @@ enum sidebar {
 
 export default function SettingsSidebar({ children }: { children?: Function }) {
 	const classes = sidePanelStyles();
-	const { data } = useQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
+	const user = useAuth();
+	const [getOrganization, { data }] = useLazyQuery<IOrganisationFetchResponse>(GET_ORGANISATIONS);
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
 	const intl = useIntl();
+
+	React.useEffect(() => {
+		if (user) {
+			getOrganization({
+				variables: {
+					id: user.user?.organization.id,
+				},
+			});
+		}
+	}, [user, getOrganization]);
+
 	React.useEffect(() => {
 		if (data) {
-			const { organizationList } = data;
-			if (organizationList) {
-				dispatch(setOrganisation(organizationList[0]));
+			const { organization } = data;
+			if (organization) {
+				dispatch(setOrganisation(organization));
 			}
 		}
 	}, [data, dispatch]);
@@ -117,6 +130,11 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
 
+	const organizationFindAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.FIND_ORGANIZATION
+	);
+
 	const userRoleFindAccess = userHasAccess(
 		MODULE_CODES.USER_PERMISSIONS,
 		USER_PERMISSIONS_ACTIONS.FIND_USER_PERMISSIONS
@@ -156,6 +174,8 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 
 	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[0], organizationEditAccess);
 
+	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[1], organizationFindAccess);
+
 	setSidebarTabUserAccess(
 		sidebarList[sidebar.managePortal].subHeadings[0],
 		donorFindAccess || donorCreateAccess
@@ -171,7 +191,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		authInviteUser || authFindUser
 	);
 
-	if (!data?.organizationList) return <SidebarSkeleton></SidebarSkeleton>;
+	if (!data?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>

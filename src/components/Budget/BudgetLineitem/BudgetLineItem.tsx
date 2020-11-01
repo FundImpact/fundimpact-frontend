@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -16,22 +16,34 @@ import {
 	CREATE_PROJECT_BUDGET_TRACKING,
 	UPDATE_PROJECT_BUDGET_TRACKING,
 } from "../../../graphql/Budget/mutation";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
+import { AttachFile } from "../../../models/AttachFile";
 import { IBudgetLineitemProps } from "../../../models/budget/";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 } from "../../../models/budget/query";
+import { FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
+import { compareObjectKeys, removeEmptyKeys, uploadPercentageCalculator } from "../../../utils";
 import { getTodaysDate } from "../../../utils";
-import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import {
+	CommonFormTitleFormattedMessage,
+	CommonUploadingFilesMessage,
+} from "../../../utils/commonFormattedMessage";
+import { CircularPercentage } from "../../commons";
 import FormDialog from "../../FormDialog";
+import AttachFileForm from "../../Forms/AttachFiles";
 import CommonForm from "../../Forms/CommonForm";
-import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "./inputFields.json";
+import {
+	budgetLineitemFormInputFields,
+	budgetLineitemFormSelectFields,
+	budgetLineitemFormButtons,
+} from "./inputFields.json";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -72,12 +84,90 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const currentProject = dashboardData?.project;
 	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
+	let { multiplefileUpload } = useMultipleFileUpload();
+
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [selectedBudgetTarget, setSelectedDeliverableTarget] = React.useState<
+		string | number | undefined
+	>("");
+
+	const { refetch: budgetTrackingRefetch } = useQuery(GET_PROJECT_BUDGET_TARCKING, {
+		variables: {
+			filter: { budget_targets_project: selectedBudgetTarget ? selectedBudgetTarget : "" },
+		},
+	});
+
+	const { handleClose } = props;
+
+	useEffect(() => {
+		setFilesArray(initialValues.attachments || []);
+	}, [initialValues]);
+
+	const closeDialog = useCallback(() => {
+		budgetLineitemFormSelectFields[2].hidden = false;
+		budgetLineitemFormSelectFields[4].size = 12;
+		handleClose();
+	}, [handleClose]);
+
+	React.useEffect(() => {
+		if (uploadSuccess) {
+			if (props.formAction === FORM_ACTIONS.CREATE) {
+				budgetTrackingRefetch();
+			} else if (props.formAction === FORM_ACTIONS.UPDATE && props.refetchOnSuccess) {
+				props.refetchOnSuccess();
+			}
+			setUploadSuccess(false);
+			closeDialog();
+		}
+	}, [uploadSuccess, budgetTrackingRefetch, props, setUploadSuccess]);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+
+		setLoadingPercentage(percentage);
+	}, [filesArray, totalFilesToUpload, setLoadingPercentage]);
 
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
-		CREATE_PROJECT_BUDGET_TRACKING
+		CREATE_PROJECT_BUDGET_TRACKING,
+		{
+			onCompleted(data) {
+				setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
+				multiplefileUpload({
+					ref: "budget-tracking-lineitem",
+					refId: data.createProjBudgetTracking.id,
+					field: "attachments",
+					path: `org-${dashboardData?.organization?.id}/budget-tracking-item`,
+					filesArray: filesArray,
+					setFilesArray: setFilesArray,
+					setUploadSuccess,
+				});
+
+				setFilesArray([]);
+			},
+		}
 	);
 	const [updateProjectBudgetTracking, { loading: updatingLineItem }] = useMutation(
-		UPDATE_PROJECT_BUDGET_TRACKING
+		UPDATE_PROJECT_BUDGET_TRACKING,
+		{
+			onCompleted(data) {
+				setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
+				multiplefileUpload({
+					ref: "budget-tracking-lineitem",
+					refId: data.updateProjBudgetTracking.id,
+					field: "attachments",
+					path: `org-${dashboardData?.organization?.id}/budget-tracking-item`,
+					filesArray: filesArray,
+					setFilesArray: setFilesArray,
+					setUploadSuccess: setUploadSuccess,
+				});
+
+				setFilesArray([]);
+			},
+		}
 	);
 
 	let [getBudgetTargetProject, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
@@ -93,6 +183,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
+	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+
+	useEffect(() => {
+		if (props?.initialValues?.attachments) setFilesArray(props?.initialValues?.attachments);
+	}, [props]);
+
+	/* Open Attach File Form*/
+	budgetLineitemFormButtons[0].onClick = () => setOpenAttachFiles(true);
+
+	if (filesArray.length) budgetLineitemFormButtons[0].label = "View Files";
+	else budgetLineitemFormButtons[0].label = "Attach Files";
+
 	useEffect(() => {
 		if (currentProject) {
 			getBudgetTargetProject({
@@ -105,26 +207,29 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [currentProject, getBudgetTargetProject]);
 
-	const { handleClose } = props;
-
-	const closeDialog = useCallback(() => {
-		budgetLineitemFormSelectFields[2].hidden = false;
-		handleClose();
-	}, [handleClose]);
+	useEffect(() => {
+		if (uploadSuccess) {
+			setUploadSuccess(false);
+			closeDialog();
+		}
+	}, [uploadSuccess, closeDialog]);
 
 	const validate = useCallback(
 		(values: IBudgetTrackingLineitemForm) => {
 			let errors: Partial<IBudgetTrackingLineitemForm> = {};
 			if (values.budget_targets_project) {
 				setSelectedDonor(budgetTargetHash[values.budget_targets_project]);
-				if (
-					budgetTargetHash[values.budget_targets_project]?.country?.id ===
+			}
+			if (
+				values.budget_targets_project &&
+				budgetTargetHash[values.budget_targets_project]?.country?.id ===
 					dashboardData?.organization?.country?.id
-				) {
-					budgetLineitemFormSelectFields[2].hidden = true;
-				} else {
-					budgetLineitemFormSelectFields[2].hidden = false;
-				}
+			) {
+				budgetLineitemFormSelectFields[2].hidden = true;
+				budgetLineitemFormSelectFields[4].size = 6;
+			} else {
+				budgetLineitemFormSelectFields[2].hidden = false;
+				budgetLineitemFormSelectFields[4].size = 12;
 			}
 
 			if (!values.amount) {
@@ -211,9 +316,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
+		setSelectedDeliverableTarget(valuesSubmitted.budget_targets_project);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
 			objectToCheck: valuesSubmitted,
 		});
+
 		try {
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
@@ -316,7 +423,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Budget Line Item Creation Failure"));
 		} finally {
-			closeDialog();
+			// closeDialog();
 		}
 	};
 
@@ -329,11 +436,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					note: 1,
 				},
 			});
+			values = { ...values, attachments: filesArray };
 			if (compareObjectKeys(values, initialValues)) {
 				closeDialog();
 				return;
 			}
 			delete (values as any).id;
+			delete (values as any).attachments;
 			if (budgetLineitemFormSelectFields[2].hidden) {
 				values.fy_donor = values.fy_org;
 			}
@@ -379,7 +488,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Budget  Line Item Updation Failure"));
 		} finally {
-			closeDialog();
+			// closeDialog();
 		}
 	};
 
@@ -404,14 +513,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	if (budgetTargets) {
 		budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
 	}
-
 	if (financialYearDonor) {
-		budgetLineitemFormSelectFields[2].optionsArray = financialYearDonor?.financialYearList
-			? financialYearDonor?.financialYearList
-			: [];
+		budgetLineitemFormSelectFields[2].optionsArray =
+			financialYearDonor?.financialYearList || [];
 	}
 
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
+	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<FormDialog
 			handleClose={closeDialog}
@@ -426,12 +534,26 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				initialValues={initialValues}
 				validate={validate}
 				onSubmit={onCreate}
-				onCancel={props.handleClose}
+				onCancel={closeDialog}
 				inputFields={budgetLineitemFormInputFields}
 				selectFields={budgetLineitemFormSelectFields}
 				formAction={props.formAction}
 				onUpdate={onUpdate}
+				buttons={budgetLineitemFormButtons}
 			/>
+			{openAttachFiles && (
+				<AttachFileForm
+					open={openAttachFiles}
+					handleClose={() => setOpenAttachFiles(false)}
+					{...{
+						filesArray: filesArray,
+						setFilesArray: setFilesArray,
+					}}
+				/>
+			)}
+			{loadingPercentage > 0 ? (
+				<CircularPercentage progress={loadingPercentage} message={uploadingFileMessage} />
+			) : null}
 		</FormDialog>
 	);
 }

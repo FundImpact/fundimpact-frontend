@@ -50,7 +50,6 @@ const validate = (values: IAddRole) => {
 	if (!values.name) {
 		errors.name = "Role is required";
 	}
-
 	return errors;
 };
 

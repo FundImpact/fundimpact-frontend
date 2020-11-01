@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import {
 	Avatar,
 	Box,
@@ -20,7 +20,7 @@ import {
 } from "../../../graphql/Deliverable/trackline";
 import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
-import { getTodaysDate } from "../../../utils";
+import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
@@ -37,6 +37,13 @@ import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
 import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import { AttachFile } from "../../../models/AttachFile";
+import AttachFileForm from "../../Forms/AttachFiles";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
+import { CircularPercentage } from "../../commons";
+import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { setSuccessNotification } from "../../../reducers/notificationReducer";
 
 enum tableHeaders {
 	date = 1,
@@ -78,8 +85,19 @@ const chipArray = ({
 // 	GET_DELIVERABLE_LINEITEM_FYDONOR,
 // 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 // } from "../../../graphql/Deliverable/trackline";
-function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTrackline: any }) {
+function EditDeliverableTrackLineIcon({
+	deliverableTrackline,
+	refetch,
+}: {
+	deliverableTrackline: any;
+	refetch:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+}) {
 	const [tracklineDonorsMapValues, setTracklineDonorsMapValues] = useState<any>({});
+	const notificationDispatch = useNotificationDispatch();
 	const [tracklineDonors, setTracklineDonors] = useState<
 		{
 			id: string;
@@ -91,6 +109,8 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 	const { data } = useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
 	});
+
+	const dashBoardData = useDashBoardData();
 
 	useEffect(() => {
 		let deliverableTracklineMapValueObj: any = {};
@@ -130,6 +150,44 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.UPDATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
 
+	const [deliverableTracklineFileArray, setDeliverableTracklineFileArray] = useState<
+		AttachFile[]
+	>([]);
+	const [openAttachFiles, setOpenAttachFiles] = useState(false);
+	let { multiplefileUpload } = useMultipleFileUpload();
+	let uploadingFileMessage = CommonUploadingFilesMessage();
+	const [
+		deliverableTracklineUploadLoading,
+		setDeliverableTracklineUploadLoading,
+	] = React.useState(0);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+
+	React.useEffect(() => {
+		let remainFilestoUpload = deliverableTracklineFileArray.filter((elem) => !elem.id).length;
+		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+		setDeliverableTracklineUploadLoading(percentage);
+	}, [deliverableTracklineFileArray, totalFilesToUpload, setDeliverableTracklineUploadLoading]);
+
+	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		if (refetch) refetch();
+		setUploadSuccess(false);
+	};
+	if (uploadSuccess) successMessage();
+
+	const attachFileOnSave = () => {
+		setTotalFilesToUpload(deliverableTracklineFileArray.filter((elem) => !elem.id).length);
+		multiplefileUpload({
+			ref: "deliverable-tracking-lineitem",
+			refId: deliverableTrackline?.id,
+			field: "attachments",
+			path: `org-${dashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
+			filesArray: deliverableTracklineFileArray,
+			setFilesArray: setDeliverableTracklineFileArray,
+			setUploadSuccess: setUploadSuccess,
+		});
+	};
 	return (
 		<>
 			<TableCell>
@@ -162,6 +220,7 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 								financial_year: deliverableTrackline.financial_year?.id,
 								donors: tracklineDonors,
 								donorMapValues: tracklineDonorsMapValues,
+								attachments: deliverableTrackline.attachments,
 							});
 
 							handleMenuClose();
@@ -174,6 +233,21 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 						/>
 					</MenuItem>
 				)}
+				{deliverableTracklineEditAccess && (
+					<MenuItem
+						onClick={() => {
+							setDeliverableTracklineFileArray(deliverableTrackline?.attachments);
+							setOpenAttachFiles(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="viewDocumentsMenu"
+							defaultMessage="View Documents"
+							description="This text will be show on deliverable or impact target table for view documents menu"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{deliverableTracklineData && (
 				<DeliverableTrackline
@@ -183,8 +257,26 @@ function EditDeliverableTrackLineIcon({ deliverableTrackline }: { deliverableTra
 					data={deliverableTracklineData}
 					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
+					reftechOnSuccess={refetch}
 				/>
 			)}
+			{openAttachFiles && deliverableTracklineFileArray && (
+				<AttachFileForm
+					{...{
+						open: openAttachFiles,
+						handleClose: () => setOpenAttachFiles(false),
+						filesArray: deliverableTracklineFileArray,
+						setFilesArray: setDeliverableTracklineFileArray,
+						parentOnSave: attachFileOnSave,
+					}}
+				/>
+			)}
+			{deliverableTracklineUploadLoading > 0 ? (
+				<CircularPercentage
+					progress={deliverableTracklineUploadLoading}
+					message={uploadingFileMessage}
+				/>
+			) : null}
 		</>
 	);
 }
@@ -329,6 +421,7 @@ export default function DeliverablesTrackLineTable({
 		changePage,
 		countQueryLoading,
 		queryLoading: loading,
+		queryRefetch,
 	} = pagination({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
@@ -434,6 +527,7 @@ export default function DeliverablesTrackLineTable({
 						<EditDeliverableTrackLineIcon
 							key={deliverableTrackingLineitemList[i]}
 							deliverableTrackline={deliverableTrackingLineitemList[i]}
+							refetch={queryRefetch}
 						/>
 					);
 					arr.push(row);

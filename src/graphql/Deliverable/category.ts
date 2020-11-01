@@ -10,7 +10,6 @@ export const GET_DELIVERABLE_ORG_CATEGORY = gql`
 			organization {
 				id
 				name
-				address
 				account {
 					id
 					name
@@ -39,7 +38,6 @@ export const CREATE_DELIVERABLE_CATEGORY = gql`
 			organization {
 				id
 				name
-				address
 				account {
 					id
 					name

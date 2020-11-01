@@ -1,6 +1,6 @@
 {
 	"organizationDetails": {
-		"__typename": "OrganizationList",
+		"__typename": "organizations",
 		"id": "3",
 		"name": "sherlock",
 		"short_name": "sh homes",
@@ -25,7 +25,7 @@
 		}
 	},
 	"organizationDetail": {
-		"__typename": "OrganizationList",
+		"__typename": "organizations",
 		"id": "13",
 		"name": "TSERIES",
 		"short_name": "TS",
@@ -64,6 +64,18 @@
 					"id": "2"
 				}
 			}
+		}
+	],
+	"mockProjectDonors": [
+		{
+			"id": "1",
+			"donor": { "id": "1", "name": "donor 1" },
+			"project": { "id": "3", "name": "my project" }
+		},
+		{
+			"id": "2",
+			"donor": { "id": "2", "name": "donor 2" },
+			"project": { "id": "3", "name": "my project" }
 		}
 	],
 	"mockAnnualYearList": [
@@ -140,7 +152,8 @@
 			"fy_donor": {
 				"id": "1",
 				"name": "financial year 1"
-			}
+			},
+			"attachments": []
 		}
 	],
 	"mockBudgetTargetAmountSum": {
@@ -228,12 +241,38 @@
 			"short_name": "vikram short 100"
 		}
 	],
-	"mockCurrencyList": [
+	"mockProjects": [
 		{
-			"code": "INR"
+			"orgProject": {
+				"id": "1",
+				"name": "Health care",
+				"workspace": {
+					"id": "1",
+					"name": "safety"
+				}
+			}
 		},
 		{
-			"code": "Dollor"
+			"orgProject": {
+				"id": "2",
+				"name": "School construction",
+				"workspace": {
+					"id": "2",
+					"name": "education"
+				}
+			}
+		}
+	],
+	"mockCurrencyList": [
+		{
+			"code": "INR",
+			"id": "1",
+			"name": "Rupee"
+		},
+		{
+			"code": "Dollor",
+			"id": "2",
+			"name": "Dollor"
 		}
 	],
 	"mockOrganizationRegistrationTypes": [
@@ -260,6 +299,9 @@
 			},
 			"role": {
 				"id": "1"
+			},
+			"organization": {
+				"id": "13"
 			}
 		}
 	},
@@ -328,5 +370,68 @@
 			}
 		}
 	],
-	"fundReceiptProjectListCount": 2
+	"mockContactListCount": {
+		"t4DContactsConnection": {
+			"aggregate": {
+				"count": 1
+			}
+		}
+	},
+	"mockAddressListCount": {
+		"t4DAddressesConnection": {
+			"aggregate": {
+				"count": 1
+			}
+		}
+	},
+	"mockIndividualListCount": {
+		"t4DIndividualsConnection": {
+			"aggregate": {
+				"count": 1
+			}
+		}
+	},
+	"fundReceiptProjectListCount": 2,
+	"mockContactList": [
+		{
+			"id": "1",
+			"email": "sherLocked@gmai.com",
+			"email_other": "sherlock@gmail.com",
+			"phone": "9999999999",
+			"phone_other": "8888888888",
+			"contact_type": "PERSONAL"
+		}
+	],
+	"mockAddressList": [
+		{
+			"id": "1",
+			"address_line_1": "prashant vihar delhi",
+			"address_line_2": "pitampura delhi",
+			"address_type": "TEMPORARY",
+			"city": "Delhi",
+			"pincode": "118877",
+			"t_4_d_contact": {
+				"id": "1"
+			}
+		}
+	],
+	"mockIndividualList": [
+		{
+			"id": "1",
+			"name": "sherlock",
+			"t4d_project_individuals": [
+				{
+					"id": "2",
+					"project": {
+						"id": "2",
+						"name": "educationIndia",
+						"workspace": {
+							"id": "1",
+							"name": "education"
+						}
+					}
+				}
+			]
+		}
+	]
 }

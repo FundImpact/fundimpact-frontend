@@ -26,6 +26,8 @@ import { UserRoleContainer } from "./UserRole/container";
 import { RolesContainer } from "./Roles/container";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
+import OrganizationDocumentContainer from "./Organization/Documents";
+import IndividualContainer from "./Individual";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -115,10 +117,16 @@ export default function SettingContainer() {
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
-
+	const organizationFindAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
+	);
 	const getDefaultRoute = () => {
 		if (organizationEditAccess) {
 			return <Navigate to="organization" />;
+		}
+		if (organizationFindAccess) {
+			return <Navigate to="documents" />;
 		}
 		if (donorFindAccess || donorCreateAccess) {
 			return <Navigate to="donors" />;
@@ -205,6 +213,11 @@ export default function SettingContainer() {
 							userAccess={organizationEditAccess}
 							element={<Organization />}
 						/>
+						<PrivateRoute
+							path="documents"
+							userAccess={organizationFindAccess}
+							element={<OrganizationDocumentContainer />}
+						/>
 						{/* <Route path="settingsDefault" element={<DefaultSettingsView />} /> */}
 						{/* <PrivateRoute path="">
 							{organizationEditAccess ? (
@@ -225,6 +238,7 @@ export default function SettingContainer() {
 							path="user_roles"
 							element={<RolesContainer />}
 						/>
+						<Route element={<IndividualContainer />} path="individual" />
 					</Routes>
 				</Grid>
 			</Grid>

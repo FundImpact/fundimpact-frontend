@@ -3,6 +3,7 @@ import BudgetLineItemTableView from "./BudgetLineItemTableView";
 import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { getTodaysDate } from "../../../../utils";
+import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (
 	budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE | null
@@ -17,6 +18,7 @@ const getInitialValues = (
 		grant_periods_project: budgetLineItem?.grant_periods_project?.id || "",
 		fy_org: budgetLineItem?.fy_org?.id || "",
 		fy_donor: budgetLineItem?.fy_donor?.id || "",
+		attachments: budgetLineItem?.attachments || [],
 	};
 };
 
@@ -38,6 +40,7 @@ function BudgetLineItemTableContainer({
 	setFilterList,
 	removeFilterListElements,
 	currency,
+	refetchOnSuccess,
 }: {
 	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
 	changePage: (prev?: boolean) => void;
@@ -62,6 +65,11 @@ function BudgetLineItemTableContainer({
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
+	refetchOnSuccess:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 	const selectedBudgetLineItem = useRef<IBUDGET_LINE_ITEM_RESPONSE | null>(null);
@@ -95,6 +103,7 @@ function BudgetLineItemTableContainer({
 			financialYearDonorHash={financialYearDonorHash}
 			financialYearOrgHash={financialYearOrgHash}
 			currency={currency}
+			refetchOnSuccess={refetchOnSuccess}
 		/>
 	);
 }

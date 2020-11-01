@@ -14,7 +14,7 @@ import {
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
 import SettingsIcon from "@material-ui/icons/Settings";
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { sidePanelStyles } from "../Dasboard/styles";
@@ -45,6 +45,7 @@ export default function LeftPanel() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+	const navigate = useNavigate();
 	const [leftPannelList, setLeftPannelList] = useState([
 		{
 			name: "Dashboard",
@@ -58,9 +59,12 @@ export default function LeftPanel() {
 
 	useEffect(() => {
 		if (data) {
+			if (!data.orgProject.length) {
+				navigate("/organization/dashboard");
+			}
 			leftPannelList[0].onClick = () => dispatch(setProject(data.orgProject[0]));
 		}
-	}, [data]);
+	}, [data, leftPannelList, dispatch, navigate]);
 
 	const settingButtonAccess = userHasAccess(
 		MODULE_CODES.SETTING,

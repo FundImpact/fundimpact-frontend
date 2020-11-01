@@ -32,6 +32,13 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		button: {
 			color: theme.palette.common.white,
+			marginLeft: theme.spacing(1),
+		},
+		cancelButton: {
+			"&:hover": {
+				color: "#d32f2f !important",
+			},
+			marginLeft: theme.spacing(1),
 		},
 	})
 );
@@ -55,9 +62,7 @@ function WorkspaceForm({
 	}, [showForm, Close]);
 
 	return (
-		<Dialog fullWidth open={showForm} aria-labelledby="form-dialog-title">
-			<DialogTitle id="form-dialog-title">Workspace</DialogTitle>
-
+		<>
 			<DialogContent>
 				<Box
 					mx="auto"
@@ -129,7 +134,7 @@ function WorkspaceForm({
 				</Box>
 			</DialogContent>
 			{children ? children : null}
-			<DialogActions>
+			<Box ml={4}>
 				<Button
 					className={classes.button}
 					data-testid="submit"
@@ -140,16 +145,11 @@ function WorkspaceForm({
 				>
 					{formState === WORKSPACE_ACTIONS.CREATE ? "Create" : "Update"}
 				</Button>
-				<Button
-					color="primary"
-					className={classes.button}
-					onClick={() => setShowForm(false)}
-					variant="contained"
-				>
+				<Button className={classes.cancelButton} onClick={() => setShowForm(false)}>
 					Cancel
 				</Button>
-			</DialogActions>
-		</Dialog>
+			</Box>
+		</>
 	);
 }
 

@@ -30,7 +30,6 @@ export const CREATE_IMPACT_TARGET = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -57,7 +56,6 @@ export const CREATE_IMPACT_TARGET = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -102,7 +100,6 @@ export const UPDATE_IMAPACT_TARGET = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -129,7 +126,6 @@ export const UPDATE_IMAPACT_TARGET = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -185,7 +181,6 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name
@@ -212,7 +207,6 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 					organization {
 						id
 						name
-						address
 						account {
 							id
 							name

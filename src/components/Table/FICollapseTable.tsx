@@ -20,9 +20,7 @@ const useStyles = makeStyles({
 	table: {
 		width: "100%",
 	},
-	tableContainer: {
-		height: "47vh",
-	},
+	tableContainer: {},
 });
 
 const styledTable = makeStyles((theme: Theme) =>
@@ -100,20 +98,23 @@ export default function CollapsibleTable({
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
+	if (!rows.length) {
+		return (
+			<Box m={2} display="flex" justifyContent="center">
+				{" "}
+				<Typography variant="subtitle1" gutterBottom color="textSecondary">
+					<FormattedMessage
+						id={`nodataFound`}
+						defaultMessage={`No Data Found`}
+						description={`This text will be shown if no data found for table`}
+					/>
+				</Typography>
+			</Box>
+		);
+	}
 	return (
 		<TableContainer component={Paper} className={classes.tableContainer}>
-			{!rows.length ? (
-				<Box mt={5} display="flex" justifyContent="center">
-					{" "}
-					<Typography variant="h5" gutterBottom color="textSecondary">
-						<FormattedMessage
-							id={`noTargetFound`}
-							defaultMessage={`No Target Found`}
-							description={`This text will be shown if no target found for table`}
-						/>
-					</Typography>
-				</Box>
-			) : (
+			{rows.length && (
 				<Table aria-label="collapsible table">
 					<TableHead>
 						<TableRow key={1} color="primary">
@@ -129,14 +130,16 @@ export default function CollapsibleTable({
 											heading.renderComponent()
 										) : (
 											<>
-												<FormattedMessage
-													id={
-														"tableHeading" +
-														heading.label.replace(/ /g, "")
-													}
-													defaultMessage={`${heading.label}`}
-													description={`This text will be shown on table for ${heading.label} heading`}
-												/>
+												{heading.label && (
+													<FormattedMessage
+														id={
+															"tableHeading" +
+															heading.label.replace(/ /g, "")
+														}
+														defaultMessage={`${heading.label}`}
+														description={`This text will be shown on table for ${heading.label} heading`}
+													/>
+												)}
 												{order && heading.keyMapping && (
 													<TableSortLabel
 														active={orderBy === heading.keyMapping}

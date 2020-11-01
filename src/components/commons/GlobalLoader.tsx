@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress, createStyles, makeStyles, Theme } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles((theme: Theme) =>
+export const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		backdrop: {
 			zIndex: theme.zIndex.drawer + 1,

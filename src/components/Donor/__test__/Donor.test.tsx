@@ -1,5 +1,5 @@
 import React from "react";
-import { GET_COUNTRY_LIST } from "../../../graphql";
+import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../../graphql";
 import { organizationDetails, projectDetails } from "../../../utils/testMock.json";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -7,7 +7,7 @@ import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { FORM_ACTIONS } from "../../../models/constants";
 import Donor from "../Donor";
-import { mockCountryList } from "../../../utils/testMock.json";
+import { mockCountryList, mockCurrencyList } from "../../../utils/testMock.json";
 import { IDONOR } from "../../../models/donor/";
 import { CREATE_ORG_DONOR } from "../../../graphql/donor/mutation";
 import { addDonorForm, addDonorFormSelectFields } from "../inputField.json";
@@ -35,7 +35,17 @@ const mocks = [
 		},
 		result: {
 			data: {
-				countryList: mockCountryList,
+				countries: mockCountryList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_CURRENCY_LIST,
+		},
+		result: {
+			data: {
+				currencyList: mockCurrencyList,
 			},
 		},
 	},

@@ -95,6 +95,15 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+			variables: {
+				filter: { deliverable_target_project: "" },
+			},
+		},
+		result: { data: { deliverableTrackingLineitemList: DeliverableTracklineByTargetMock } },
+	},
+	{
+		request: {
 			query: GET_DELIVERABLE_TRACKLINE_COUNT,
 			variables: { filter: { deliverable_target_project: "1" } },
 		},

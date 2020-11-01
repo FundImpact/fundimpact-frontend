@@ -106,8 +106,6 @@ export const DonorContainer = () => {
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
 
-	console.log("donorCreateAccess :>> ", donorCreateAccess);
-	console.log("donorFindAccess :>> ", donorFindAccess);
 	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
 
 	const removeFilterListElements = (key: string, index?: number) =>
@@ -115,10 +113,10 @@ export const DonorContainer = () => {
 			removeFilterListObjectElements({ filterListObject, key, index })
 		);
 
-	donorInputFields[3].optionsArray = countries?.countryList || [];
+	donorInputFields[3].optionsArray = countries?.countries || [];
 
-	if (!Object.keys(countryHash).length && countries?.countryList) {
-		countryHash = mapIdToName(countries?.countryList, countryHash);
+	if (!Object.keys(countryHash).length && countries?.countries) {
+		countryHash = mapIdToName(countries?.countries, countryHash);
 	}
 
 	useEffect(() => {
@@ -126,7 +124,7 @@ export const DonorContainer = () => {
 	}, [getCountryList]);
 
 	return (
-		<>
+		<Box p={2}>
 			<Grid container>
 				<Grid item xs={11}>
 					<Typography variant="h4">
@@ -188,6 +186,6 @@ export const DonorContainer = () => {
 					}}
 				/>
 			)}
-		</>
+		</Box>
 	);
 };
