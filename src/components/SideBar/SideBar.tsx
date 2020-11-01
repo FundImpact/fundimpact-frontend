@@ -20,6 +20,7 @@ import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../utils/
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/userContext";
+import { Link } from "react-router-dom";
 
 let menuList: { children: JSX.Element }[] = [];
 
@@ -115,11 +116,18 @@ export default function SideBar({ children }: { children?: Function }) {
 							{dashboardData?.organization?.name && (
 								<>
 									<Box mr={1}>
-										<Avatar src={dashboardData?.organization?.logo?.url} />
+										<Link to="/organization/dashboard">
+											<Avatar src={dashboardData?.organization?.logo?.url} />
+										</Link>
 									</Box>
-									<Typography color="primary" gutterBottom variant="h6">
-										{dashboardData?.organization?.name}
-									</Typography>
+									<Link
+										to="/organization/dashboard"
+										style={{ textDecoration: "none" }}
+									>
+										<Typography color="primary" gutterBottom variant="h6">
+											{dashboardData?.organization?.name}
+										</Typography>
+									</Link>
 								</>
 							)}
 						</Box>

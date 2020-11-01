@@ -1,7 +1,7 @@
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { Box, Divider, ListItem, ListItemText, Typography, Avatar } from "@material-ui/core";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import SidebarSkeleton from "../../components/Skeletons/SidebarSkeleton";
@@ -197,11 +197,15 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 			<Box display="flex" m={2}>
 				<Box flexGrow={1} ml={1} display="flex">
 					<Box mr={1}>
-						<Avatar src={dashboardData?.organization?.logo?.url} />
+						<Link to="/organization/dashboard">
+							<Avatar src={dashboardData?.organization?.logo?.url} />
+						</Link>
 					</Box>
-					<Typography color="primary" gutterBottom variant="h6">
-						{dashboardData?.organization?.name || ""}
-					</Typography>
+					<Link to="/organization/dashboard" style={{ textDecoration: "none" }}>
+						<Typography color="primary" gutterBottom variant="h6">
+							{dashboardData?.organization?.name || ""}
+						</Typography>
+					</Link>
 				</Box>
 			</Box>
 			<Divider />

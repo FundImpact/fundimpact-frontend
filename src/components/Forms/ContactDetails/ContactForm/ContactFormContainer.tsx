@@ -388,7 +388,9 @@ function ContactFormContainer(props: ICreateContactContainer) {
 			initialValues={initialValues}
 			validate={validate}
 			onCreate={onFormSubmit}
-			onCancel={onCancel}
+			onCancel={() =>
+				props.getCreatedOrUpdatedContact && props.getCreatedOrUpdatedContact(null)
+			}
 			inputFields={contactFormFields}
 			formAction={props.formAction}
 			onUpdate={onFormSubmit}

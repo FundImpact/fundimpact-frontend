@@ -31,6 +31,7 @@ import {
 import { CircularPercentage } from "../commons";
 import { useIntl } from "react-intl";
 import { setProject } from "../../reducers/dashboardReducer";
+import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -134,7 +135,6 @@ function Project(props: ProjectProps) {
 				setFilesArray: setProjectFilesArray,
 				setUploadSuccess: setProjectUploadSuccess,
 			});
-
 			setProjectFilesArray([]);
 		},
 	});
@@ -196,6 +196,55 @@ function Project(props: ProjectProps) {
 		}
 	};
 
+	const fetchProjectCount = async ({ apolloClient }: { apolloClient: ApolloClient<object> }) => {
+		let projectCount = 0;
+		try {
+			let fetchedProjectCount = await apolloClient.query<{ orgProjectCount: number }>({
+				query: GET_PROJECT_COUNT,
+				fetchPolicy: "network-only",
+			});
+			if (fetchedProjectCount) {
+				projectCount = fetchedProjectCount.data.orgProjectCount;
+			}
+		} catch (err) {
+			console.error(err);
+		}
+		return projectCount;
+	};
+
+	const updateProjectCount = async ({ apolloClient }: { apolloClient: ApolloClient<object> }) => {
+		try {
+			let projectCount = getCachedProjectCount({ apolloClient });
+			if (!projectCount) {
+				await fetchProjectCount({ apolloClient });
+				return;
+			}
+			apolloClient.writeQuery<{ orgProjectCount: number }>({
+				query: GET_PROJECT_COUNT,
+				data: {
+					orgProjectCount: projectCount + 1,
+				},
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	const getCachedProjectCount = ({ apolloClient }: { apolloClient: ApolloClient<object> }) => {
+		let projectCount = 0;
+		try {
+			let cachedProjectCount = apolloClient.readQuery<{ orgProjectCount: number }>({
+				query: GET_PROJECT_COUNT,
+			});
+			if (cachedProjectCount) {
+				projectCount = cachedProjectCount.orgProjectCount;
+			}
+		} catch (err) {
+			console.error(err);
+		}
+		return projectCount;
+	};
+
 	const onCreate = async (value: IPROJECT_FORM) => {
 		const formData = { ...value };
 		let selectDonors = value.donor;
@@ -204,6 +253,7 @@ function Project(props: ProjectProps) {
 			const createdProject = await createNewproject({
 				variables: { input: formData },
 			});
+			await updateProjectCount({ apolloClient });
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
 			selectDonors.forEach(async (donorId) => {
 				await createDonors({

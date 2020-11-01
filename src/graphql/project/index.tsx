@@ -22,6 +22,17 @@ export const UPDATE_PROJECT = gql`
 				id
 				name
 			}
+			short_name
+			description
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
 		}
 	}
 `;
@@ -33,6 +44,19 @@ export const GET_PROJECT_BY_ID = gql`
 			name
 			short_name
 			description
+			workspace {
+				id
+				name
+			}
+			attachments {
+				id
+				name
+				size
+				caption
+				url
+				ext
+				created_at
+			}
 		}
 	}
 `;
