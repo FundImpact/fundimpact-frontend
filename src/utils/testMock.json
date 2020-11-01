@@ -60,10 +60,22 @@
 			"donor": {
 				"name": "donor 1",
 				"id": "1",
-				"currency": {
+				"country": {
 					"id": "2"
 				}
 			}
+		}
+	],
+	"mockProjectDonors": [
+		{
+			"id": "1",
+			"donor": { "id": "1", "name": "donor 1" },
+			"project": { "id": "3", "name": "my project" }
+		},
+		{
+			"id": "2",
+			"donor": { "id": "2", "name": "donor 2" },
+			"project": { "id": "3", "name": "my project" }
 		}
 	],
 	"mockAnnualYearList": [
@@ -221,7 +233,7 @@
 		{
 			"id": "1",
 			"name": "vikram pathak",
-			"currency": {
+			"country": {
 				"id": "1",
 				"name": "India"
 			},

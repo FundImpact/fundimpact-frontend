@@ -16,21 +16,32 @@ import { GET_PROJ_DONORS } from "../../../graphql/project";
 
 let sidebar: any;
 
-const OrgMock = [
-	{
-		__typename: "organizations",
-		id: "13",
-		name: "TSERIES",
-		short_name: "TS",
-		organization_registration_type: {
-			__typename: "OrganizationRegistrationType",
-			id: "1",
-			reg_type: "Trusts",
-		},
-		account: { __typename: "Account", id: "2", name: "rahul@gmail.com" },
+const OrgMock = {
+	id: "13",
+	name: "TSERIES",
+	short_name: "TS",
+	legal_name: "sh legal detective",
+	organization_registration_type: {
+		id: "1",
+		reg_type: "Trusts",
 	},
-];
-
+	currency: {
+		id: "1",
+	},
+	country: {
+		id: "1",
+		name: "India",
+	},
+	account: {
+		id: "2",
+		name: "rahul@gmail.com",
+	},
+	logo: {
+		id: "1",
+		url: "",
+	},
+	theme: {},
+};
 const WSMock = [
 	{
 		id: "5",
@@ -72,6 +83,10 @@ const ProjectMockTwo = [
 const projDonorsMock = [
 	{
 		id: "244",
+		project: {
+			id: "1",
+			name: "ARTISTAAN",
+		},
 		donor: {
 			id: "23",
 			name: "wer",
@@ -83,28 +98,7 @@ const mocks = [
 		request: { query: GET_ORGANISATIONS, variables: { id: "13" } },
 		result: {
 			data: {
-				organization: {
-					id: "13",
-					name: "TSERIES",
-					short_name: "TS",
-					legal_name: "sh legal detective",
-					organization_registration_type: {
-						id: "1",
-						reg_type: "Trusts",
-					},
-					currency: {
-						id: "1",
-					},
-					account: {
-						id: "2",
-						name: "rahul@gmail.com",
-					},
-					logo: {
-						id: "1",
-						url: "",
-					},
-					theme: {},
-				},
+				organization: OrgMock,
 			},
 		},
 	},

@@ -34,3 +34,38 @@ export type ProjectProps = {
 export interface IGetProject {
 	orgProject: { id: string; name: string; workspace: { id: string; name: string } }[];
 }
+
+export interface ICreateProjectDonor {
+	createProjDonor: {
+		id: string;
+		project: {
+			id: string;
+			name: string;
+		};
+		donor: {
+			id: string;
+			name: string;
+		};
+	};
+}
+
+export interface ICreateProjectDonorVariables {
+	input: {
+		project: string;
+		donor: string;
+	};
+}
+
+export interface IGetProjectDonor {
+	projectDonors: {
+		id: string;
+		project: {
+			id: string;
+			name: string;
+		};
+		donor: {
+			id: string;
+			name: string;
+		};
+	}[];
+}

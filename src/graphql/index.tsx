@@ -23,6 +23,10 @@ export const GET_ORGANISATIONS = gql`
 			currency {
 				id
 			}
+			country {
+				id
+				name
+			}
 		}
 	}
 `;

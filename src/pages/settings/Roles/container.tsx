@@ -84,12 +84,14 @@ export const RolesContainer = () => {
 					{userRoleFindAccess && (
 						<>
 							<Grid item xs={11}>
-								<Typography variant="h6">
-									<FormattedMessage
-										id={`rolesHeading`}
-										defaultMessage={`Roles`}
-										description={`This text will be shown on Setting page as heading og roles table`}
-									/>
+								<Typography variant="h4">
+									<Box mt={2} fontWeight="fontWeightBold">
+										<FormattedMessage
+											id={`rolesHeading`}
+											defaultMessage={`Roles`}
+											description={`This text will be shown on Setting page as heading og roles table`}
+										/>
+									</Box>
 								</Typography>
 							</Grid>
 

@@ -109,7 +109,7 @@ const getContactCountCachedValue = (
 		});
 		count = cachedCount?.t4DContactsConnection?.aggregate?.count;
 	} catch (err) {
-		console.log("err :>> ", err);
+		console.error(err);
 	}
 	return count;
 };
@@ -142,7 +142,7 @@ const increaseContactListCount = ({
 			},
 		});
 	} catch (err) {
-		console.log("err.message :>> ", err.message);
+		console.error(err);
 	}
 };
 
@@ -221,7 +221,7 @@ const fetchContactListCount = async ({
 		});
 		count = cachedCount?.data?.t4DContactsConnection?.aggregate?.count;
 	} catch (err) {
-		console.log("err :>> ", err);
+		console.error(err);
 	}
 	return count;
 };
@@ -254,7 +254,7 @@ const refetchContactList = async ({
 			fetchPolicy: "network-only",
 		});
 	} catch (err) {
-		console.log("err :>> ", err);
+		console.error(err);
 	}
 };
 
@@ -379,7 +379,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 
 			getCreatedOrUpdatedContact && getCreatedOrUpdatedContact(contactCreated);
 		} catch (err) {
-			console.error(err.message);
+			console.error(err);
 		}
 	};
 

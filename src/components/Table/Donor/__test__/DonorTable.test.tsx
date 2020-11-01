@@ -114,7 +114,7 @@ describe("Donor Table tests", () => {
 
 	test("renders correctly", async () => {
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockOrgDonor[0].currency.name, "i"))
+			table.getByText(new RegExp("" + mockOrgDonor[0].country.name, "i"))
 		);
 
 		await waitForElement(() =>

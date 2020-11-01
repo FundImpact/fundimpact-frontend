@@ -21,7 +21,7 @@ import { useIntl } from "react-intl";
 let inputFields: IInputField[] = addDonorForm;
 
 const defaultFormValues: IDONOR = {
-	currency: "",
+	country: "",
 	legal_name: "",
 	name: "",
 	short_name: "",
@@ -32,8 +32,8 @@ const validate = (values: IDONOR) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.currency) {
-		errors.currency = "Currency is required";
+	if (!values.country) {
+		errors.country = "Country is required";
 	}
 	return errors;
 };
@@ -41,9 +41,9 @@ const validate = (values: IDONOR) => {
 function Donor(props: IDonorProps) {
 	const [createDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
 	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
-	const [getCourrencyList, { data: currencyList }] = useLazyQuery(GET_CURRENCY_LIST);
+	const [getCountryList, { data: countryList }] = useLazyQuery(GET_COUNTRY_LIST);
 
-	addDonorFormSelectFields[0].optionsArray = currencyList?.currencyList || [];
+	addDonorFormSelectFields[0].optionsArray = countryList?.countries || [];
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
@@ -188,8 +188,8 @@ function Donor(props: IDonorProps) {
 	};
 
 	useEffect(() => {
-		getCourrencyList();
-	}, [getCourrencyList]);
+		getCountryList();
+	}, [getCountryList]);
 
 	const intl = useIntl();
 
