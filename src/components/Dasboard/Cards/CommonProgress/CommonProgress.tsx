@@ -4,9 +4,7 @@ import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 export default function CommonProgress({
 	title,
-	date,
 	noBarDisplay = false,
-	norBarDisplayConfig,
 	chartConfig,
 	size = "card",
 }: {
@@ -19,10 +17,10 @@ export default function CommonProgress({
 		qualitativeRangeData: { name: string; y: number }[];
 	};
 	size?: "card" | "dialog";
-	norBarDisplayConfig?: {
-		sum: number | ReactText;
-		sum_two: number | ReactText;
-	};
+	// norBarDisplayConfig?: {
+	// 	sum: number | ReactText;
+	// 	sum_two: number | ReactText;
+	// };
 }) {
 	return (
 		<Grid container style={{ width: "100%" }}>
@@ -55,7 +53,8 @@ export default function CommonProgress({
 					</Grid>
 				</>
 			)}
-			{noBarDisplay && (
+
+			{/* {noBarDisplay && (
 				<>
 					<Grid item xs={4}>
 						<Box>
@@ -75,7 +74,7 @@ export default function CommonProgress({
 						</Typography>
 					</Grid>
 				</>
-			)}
+			)} */}
 		</Grid>
 	);
 }

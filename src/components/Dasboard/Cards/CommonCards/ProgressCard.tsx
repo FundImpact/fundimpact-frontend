@@ -1,13 +1,74 @@
-import { Grid, Box, Typography } from "@material-ui/core";
+import {
+	Grid,
+	Box,
+	Typography,
+	TableRow,
+	TableCell,
+	TableBody,
+	TableContainer,
+	Table,
+	TableHead,
+} from "@material-ui/core";
 import React from "react";
 import MoreButton from "../MoreIconButton";
 import ProgressDialog from "../ProgressDialog";
 import CommonProgres from "../CommonProgress";
 import { ProgressCardConfig, ProgressCardResponse } from "../../../../models/cards/cards";
 import { Skeleton } from "@material-ui/lab";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { abbreviateNumber } from "../../../../utils";
 
+const ProgessCardTable = ({
+	labels,
+	rows,
+	useAbbreviateNumber = false,
+}: {
+	labels: string[];
+	rows: ProgressCardResponse[];
+	useAbbreviateNumber?: boolean;
+}) => {
+	return (
+		<TableContainer>
+			<Table aria-label="simple table" size="small" padding="none">
+				<TableHead>
+					<TableRow>
+						{labels?.map((label: any) => (
+							<TableCell align="center">
+								<Box mr={1}>
+									<Typography color="primary" gutterBottom noWrap>
+										{label}
+									</Typography>
+								</Box>
+							</TableCell>
+						))}
+					</TableRow>
+				</TableHead>
+
+				<TableBody>
+					{rows.map((row: any) => (
+						<TableRow key={row.id}>
+							<TableCell align="center">
+								<Typography variant="subtitle2">{row.name}</Typography>
+							</TableCell>
+							<TableCell align="center">
+								<Typography variant="subtitle2" color="secondary">
+									{useAbbreviateNumber ? abbreviateNumber(row.sum) : row.sum}
+								</Typography>
+							</TableCell>
+							<TableCell align="center">
+								<Typography variant="subtitle2" color="secondary">
+									{useAbbreviateNumber
+										? abbreviateNumber(row.sum_two)
+										: row.sum_two}
+								</Typography>
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
+	);
+};
 export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 	const {
 		dataToDisplay,
@@ -18,6 +79,18 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 		loading,
 	} = progressCardConfig;
 	const [progressDialogOpen, setProgressDialogOpen] = React.useState(false);
+	const intl = useIntl();
+
+	const acheievdLabel = intl.formatMessage({
+		id: "acheievdLabel",
+		defaultMessage: "Acheievd",
+		description: `This text will be show on organization dashboard for acheievd Label`,
+	});
+	const donorsLabel = intl.formatMessage({
+		id: "donorsLabel",
+		defaultMessage: "Donors",
+		description: `This text will be show on organization dashboard for donors Label`,
+	});
 	if (!dataToDisplay || loading) {
 		return (
 			<Grid item md={12}>
@@ -30,34 +103,44 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 			</Grid>
 		);
 	}
+
 	return (
 		<>
-			{noBarDisplayTitle &&
-				noBarDisplayTitle?.length > 0 &&
-				noBarDisplayTitle?.map((label, index) => (
-					<Grid item xs={4} key={index}>
+			{noBarDisplayTitle && noBarDisplayTitle?.length > 0 && dataToDisplay?.length > 0 && (
+				<ProgessCardTable
+					labels={noBarDisplayTitle}
+					rows={dataToDisplay.slice(
+						0,
+						dataToDisplay.length > 3 ? 3 : dataToDisplay.length
+					)}
+					useAbbreviateNumber={true}
+				/>
+			)}
+
+			{!dataToDisplay?.length && (
+				<>
+					{noBarDisplay && (
 						<Box mt={1} mb={1} mr={1}>
 							<Typography color="primary" gutterBottom noWrap>
-								{label}
+								{donorsLabel}
+							</Typography>
+						</Box>
+					)}
+					<Grid item md={12} container justify="center">
+						<Box mt={2} color="text.disabled">
+							<Typography variant="subtitle2" noWrap>
+								<FormattedMessage
+									id={`noProjectFound`}
+									defaultMessage={`No Project Found`}
+									description={`This text will be shown if no category found for organization dashboard project card`}
+								/>
 							</Typography>
 						</Box>
 					</Grid>
-				))}
-			{!dataToDisplay?.length && (
-				<Grid item md={12} container justify="center">
-					<Box mt={2} color="text.disabled">
-						<Typography variant="subtitle2" noWrap>
-							<FormattedMessage
-								id={`noProjectFound`}
-								defaultMessage={`No Project Found`}
-								description={`This text will be shown if no category found for organization dashboard project card`}
-							/>
-						</Typography>
-					</Box>
-				</Grid>
+				</>
 			)}
 
-			<Grid style={{ height: noBarDisplay ? "130px" : "180px" }}>
+			<Grid style={{ height: "180px" }}>
 				{dataToDisplay?.length > 0 && (
 					<Grid item md={12} container>
 						{dataToDisplay?.length > 0 &&
@@ -69,12 +152,12 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 											key={index}
 											title={data.name}
 											date={"2017-12-03T10:15:30.000Z"}
-											norBarDisplayConfig={{
-												sum: data.sum ? abbreviateNumber(data.sum) : 0,
-												sum_two: data.sum_two
-													? abbreviateNumber(data.sum_two)
-													: 0,
-											}}
+											// norBarDisplayConfig={{
+											// 	sum: data.sum ? abbreviateNumber(data.sum) : 0,
+											// 	sum_two: data.sum_two
+											// 		? abbreviateNumber(data.sum_two)
+											// 		: 0,
+											// }}
 											chartConfig={{
 												primarySegmentedMeasureData: data.label
 													? [
@@ -89,7 +172,7 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 													: [
 															/*Here Achieved is used for deliverable and impact */
 															{
-																name: "Achieved",
+																name: acheievdLabel,
 																y: data.avg_value
 																	? data.avg_value
 																	: 0,
@@ -127,20 +210,11 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 					filterTitle={dialogFilterTitle ? dialogFilterTitle : ""}
 				>
 					<>
-						<Grid container>
-							{noBarDisplayTitle &&
-								noBarDisplayTitle?.length > 0 &&
-								noBarDisplayTitle?.map((label, index) => (
-									<Grid item xs={4}>
-										<Box m={1} key={index}>
-											<Typography color="primary" gutterBottom noWrap>
-												{label}
-											</Typography>
-										</Box>
-									</Grid>
-								))}
-						</Grid>
-
+						{noBarDisplayTitle &&
+							noBarDisplayTitle?.length > 0 &&
+							dataToDisplay?.length > 0 && (
+								<ProgessCardTable labels={noBarDisplayTitle} rows={dataToDisplay} />
+							)}
 						{dataToDisplay &&
 							dataToDisplay.map((data: ProgressCardResponse, index) => {
 								return (
@@ -148,10 +222,10 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 										<CommonProgres
 											key={index}
 											title={data.name}
-											norBarDisplayConfig={{
-												sum: data.sum ? data.sum : 0,
-												sum_two: data.sum_two ? data.sum_two : 0,
-											}}
+											// norBarDisplayConfig={{
+											// 	sum: data.sum ? data.sum : 0,
+											// 	sum_two: data.sum_two ? data.sum_two : 0,
+											// }}
 											// date={"2017-12-03T10:15:30.000Z"}
 
 											chartConfig={{
@@ -183,7 +257,7 @@ export function ProgressCard(progressCardConfig: ProgressCardConfig) {
 													: [
 															/*Here Achieved is used for deliverable and impact */
 															{
-																name: "Achieved",
+																name: acheievdLabel,
 																y: data.avg_value
 																	? data.avg_value
 																	: 0,

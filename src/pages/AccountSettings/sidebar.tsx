@@ -1,5 +1,5 @@
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { Box, Divider, Typography } from "@material-ui/core";
+import { Avatar, Box, Divider, Typography } from "@material-ui/core";
 import React from "react";
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import SidebarSkeleton from "../../components/Skeletons/SidebarSkeleton";
@@ -12,6 +12,7 @@ import ListItemLink from "../../components/ListItemLink";
 import { userHasAccess, MODULE_CODES } from "../../utils/access";
 import { ACCOUNT_ACTIONS } from "../../utils/access/modules/account/actions";
 import { useAuth } from "../../contexts/userContext";
+import { Link } from "react-router-dom";
 /**
  *
  * @description The to url must be relative to the /account.
@@ -59,16 +60,20 @@ export default function AccountSettingsSidebar({ children }: { children?: Functi
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>
-				<Box flexGrow={1} ml={1}>
-					<Typography
-						color="primary"
-						gutterBottom
-						variant="h6"
-						data-testid="account-setting-sidebar-org"
-					>
-						{dashboardData?.organization?.name || "Organization name is not available"}
-					</Typography>
-				</Box>
+				<Link to="/organization/dashboard" style={{ textDecoration: "none" }}>
+					<Box flexGrow={1} ml={1} display="flex">
+						{dashboardData?.organization?.name && (
+							<>
+								<Box mr={1}>
+									<Avatar src={dashboardData?.organization?.logo?.url} />
+								</Box>
+								<Typography color="primary" gutterBottom variant="h6">
+									{dashboardData?.organization?.name}
+								</Typography>
+							</>
+						)}
+					</Box>
+				</Link>
 			</Box>
 			<Divider />
 			{accountEditAccess && (

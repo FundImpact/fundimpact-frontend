@@ -118,7 +118,7 @@ describe("Individual Table tests", () => {
 		}
 	});
 
-  test("Filter List test", async () => {
+	test("Filter List test", async () => {
 		let filterButton = await table.findByTestId(`filter-button`);
 		expect(filterButton).toBeInTheDocument();
 	});

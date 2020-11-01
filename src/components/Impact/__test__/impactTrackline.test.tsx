@@ -25,6 +25,7 @@ import {
 	projectDonorMock,
 	financialYearListMock,
 } from "../../../utils/testMock.json";
+import { GET_ALL_IMPACT_AMOUNT_SPEND } from "../../../graphql/Impact/query";
 let createimpactTracklineFormMutation = false;
 const mocks = [
 	{
@@ -128,6 +129,15 @@ const mocks = [
 			query: GET_ANNUAL_YEARS,
 		},
 		result: { data: { annualYears: annualYearListMock } },
+	},
+	{
+		request: {
+			query: GET_ALL_IMPACT_AMOUNT_SPEND,
+			variables: {
+				filter: { project: 2 },
+			},
+		},
+		result: {},
 	},
 ];
 let handleClose = jest.fn();
