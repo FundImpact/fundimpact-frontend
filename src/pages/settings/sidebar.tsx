@@ -1,7 +1,7 @@
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { Box, Divider, ListItem, ListItemText, Typography, Avatar } from "@material-ui/core";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import SidebarSkeleton from "../../components/Skeletons/SidebarSkeleton";
@@ -23,6 +23,7 @@ import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { useAuth } from "../../contexts/userContext";
+import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 
 const setSidebarTabUserAccess = (tab: { userAccess: boolean }, userAccess: boolean) =>
 	(tab.userAccess = userAccess);
@@ -145,6 +146,15 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		USER_PERMISSIONS_ACTIONS.CREATE_USER_PERMISSIONS
 	);
 
+	const individualCreateAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.CREATE_INDIVIDUAL
+	);
+	const individualFindAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.CREATE_INDIVIDUAL
+	);
+
 	const authFindUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.FIND);
 
 	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
@@ -191,17 +201,26 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		authInviteUser || authFindUser
 	);
 
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.manageUsers].subHeadings[2],
+		individualCreateAccess || individualFindAccess
+	);
+
 	if (!data?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>
 				<Box flexGrow={1} ml={1} display="flex">
 					<Box mr={1}>
-						<Avatar src={dashboardData?.organization?.logo?.url} />
+						<Link to="/organization/dashboard">
+							<Avatar src={dashboardData?.organization?.logo?.url} />
+						</Link>
 					</Box>
-					<Typography color="primary" gutterBottom variant="h6">
-						{dashboardData?.organization?.name || ""}
-					</Typography>
+					<Link to="/organization/dashboard" style={{ textDecoration: "none" }}>
+						<Typography color="primary" gutterBottom variant="h6">
+							{dashboardData?.organization?.name || ""}
+						</Typography>
+					</Link>
 				</Box>
 			</Box>
 			<Divider />

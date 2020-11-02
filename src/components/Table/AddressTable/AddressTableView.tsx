@@ -22,6 +22,7 @@ interface IAddressTableView {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
 	initialValues: IAddress;
+	addressEditAccess: boolean;
 }
 
 const rows = [
@@ -33,6 +34,7 @@ const rows = [
 	{ valueAccessKey: "" },
 ];
 
+let addressEditMenu = ["Edit Address"];
 function AddressTableView({
 	addressList,
 	setOrderBy,
@@ -46,10 +48,14 @@ function AddressTableView({
 	toggleDialogs,
 	initialValues,
 	selectedAddress,
+	addressEditAccess,
 }: IAddressTableView) {
 	const dashboardData = useDashBoardData();
-	const conatctEditMenu = ["Edit Address"];
-
+	if (addressEditAccess) {
+		addressEditMenu = ["Edit Address"];
+	} else {
+		addressEditMenu = [""];
+	}
 	return (
 		<CommonTable
 			tableHeadings={addressTableHeadings}
@@ -57,7 +63,7 @@ function AddressTableView({
 			rows={rows}
 			selectedRow={selectedAddress}
 			toggleDialogs={toggleDialogs}
-			editMenuName={conatctEditMenu}
+			editMenuName={addressEditMenu}
 			collapsableTable={false}
 			changePage={(prev?: boolean) => {}}
 			loading={loading}

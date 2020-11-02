@@ -39,4 +39,7 @@ export enum MODULE_CODES {
 	USER_PERMISSIONS = "userspermissions",
 	AUTH = "auth",
 	FUND_RECEIPT = "fund-receipt-project",
+	CONTACT = "t4d-contact",
+	ADDRESS = "t4d-address",
+	INDIVIDUAL = "t4d-individual",
 }

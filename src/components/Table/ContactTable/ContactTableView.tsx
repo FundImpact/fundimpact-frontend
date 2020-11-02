@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { IGetContact } from "../../../models/contact/query";
 import CommonTable from "../CommonTable";
 import { contactTableHeadings } from "../constants";
@@ -33,6 +33,8 @@ interface IContactTableView {
 			[key: string]: string | string[];
 		}>
 	>;
+	addressFindAccess: boolean;
+	contactEditAccess: boolean;
 }
 
 (contactInputFields[4].optionsArray as { id: string; name: string }[]) = [
@@ -107,6 +109,7 @@ const rows = [
 	{ valueAccessKey: "contact_type" },
 	{ valueAccessKey: "" },
 ];
+let conatctEditMenu = ["Edit Contact"];
 
 function ContactTableView({
 	contactList,
@@ -124,9 +127,16 @@ function ContactTableView({
 	filterList,
 	removeFilterListElements,
 	setFilterList,
+	addressFindAccess,
+	contactEditAccess,
 }: IContactTableView) {
 	const dashboardData = useDashBoardData();
-	const conatctEditMenu = ["Edit Contact"];
+
+	if (contactEditAccess) {
+		conatctEditMenu = ["Edit Contact"];
+	} else {
+		conatctEditMenu = [""];
+	}
 
 	contactTableHeadings[contactTableHeadings.length - 1].renderComponent = () => (
 		<FilterList
@@ -182,9 +192,7 @@ function ContactTableView({
 					contactFormInitialValues={initialValues}
 				/>
 				{(rowData: { id: string }) => (
-					<>
-						<AddressTable contactId={rowData.id} />
-					</>
+					<>{addressFindAccess && <AddressTable contactId={rowData.id} />}</>
 				)}
 			</CommonTable>
 		</>

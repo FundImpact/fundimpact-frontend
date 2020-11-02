@@ -173,6 +173,8 @@ function OrganizationView({
 	setContactAddressDialogOpen,
 	setContactListDialogOpen,
 	contactListDialogOpen,
+	contactCreateAccess,
+	contactFindAccess,
 }: {
 	loading: boolean;
 	validate: (values: IOrganisationForm) => Partial<IOrganisationForm>;
@@ -186,6 +188,8 @@ function OrganizationView({
 	setContactAddressDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	contactListDialogOpen: boolean;
 	setContactListDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	contactCreateAccess: boolean;
+	contactFindAccess: boolean;
 }) {
 	const classes = useStyles();
 	const validateInitialValue = useCallback(
@@ -412,39 +416,47 @@ function OrganizationView({
 															/>
 														</Grid>
 														<Grid item xs={12}>
-															<Box mb={1}>
+															{contactCreateAccess && (
+																<Box mb={1}>
+																	<Button
+																		startIcon={
+																			<PersonAddIcon />
+																		}
+																		variant="contained"
+																		color="secondary"
+																		fullWidth
+																		onClick={() =>
+																			setContactAddressDialogOpen(
+																				true
+																			)
+																		}
+																	>
+																		<FormattedMessage
+																			id={`addContactButton`}
+																			defaultMessage={`Add Contact`}
+																			description={`This text will be shown on add contact button`}
+																		/>
+																	</Button>
+																</Box>
+															)}
+															{contactFindAccess && (
 																<Button
-																	startIcon={<PersonAddIcon />}
 																	variant="contained"
 																	color="secondary"
 																	fullWidth
 																	onClick={() =>
-																		setContactAddressDialogOpen(
+																		setContactListDialogOpen(
 																			true
 																		)
 																	}
 																>
 																	<FormattedMessage
-																		id={`addContactButton`}
-																		defaultMessage={`Add Contact`}
-																		description={`This text will be shown on add contact button`}
+																		id={`showContactList`}
+																		defaultMessage={`Contacts Details`}
+																		description={`This text will be shown on show contact button`}
 																	/>
 																</Button>
-															</Box>
-															<Button
-																variant="contained"
-																color="secondary"
-																fullWidth
-																onClick={() =>
-																	setContactListDialogOpen(true)
-																}
-															>
-																<FormattedMessage
-																	id={`showContactList`}
-																	defaultMessage={`Contacts Details`}
-																	description={`This text will be shown on show contact button`}
-																/>
-															</Button>
+															)}
 														</Grid>
 													</Grid>
 												</Grid>
