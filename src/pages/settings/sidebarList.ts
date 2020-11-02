@@ -17,6 +17,12 @@ export const sidebarList: {
 				title: "Organization Documents",
 				userAccess: true,
 			},
+			{
+				to: "individual",
+				dataTestId: "individual-link",
+				title: "Individual",
+				userAccess: true,
+			},
 		],
 	},
 
@@ -59,12 +65,6 @@ export const sidebarList: {
 		subHeadings: [
 			{ to: "users", dataTestId: "users-link", title: "Users", userAccess: true },
 			{ to: "user_roles", dataTestId: "user-role-link", title: "Roles", userAccess: true },
-			{
-				to: "individual",
-				dataTestId: "individual-link",
-				title: "Individual",
-				userAccess: true,
-			},
 		],
 	},
 ];
