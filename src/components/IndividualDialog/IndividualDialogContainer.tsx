@@ -202,7 +202,6 @@ const refetchIndividuals = async ({
 	apolloClient,
 	organizationId,
 	projectId,
-	increaseCount = false,
 }: {
 	apolloClient: ApolloClient<object>;
 	organizationId: string | null;
@@ -210,13 +209,13 @@ const refetchIndividuals = async ({
 	increaseCount?: boolean;
 }) => {
 	try {
-		const count = getIndividualCountCachedValue(apolloClient, organizationId, projectId);
-		const countToSendInQuery = increaseCount ? count + 1 : count - 1;
+		let count = getIndividualCountCachedValue(apolloClient, organizationId, projectId);
+
 		await apolloClient.query({
 			query: GET_INDIVIDUALS,
 			variables: {
 				filter: getFilterObject(organizationId, projectId),
-				limit: countToSendInQuery > 10 ? 10 : countToSendInQuery,
+				limit: count > 10 ? 10 : count,
 				start: 0,
 				sort: "created_at:DESC",
 			},
@@ -384,7 +383,6 @@ const updateIndividualTableInProject = async ({
 					apolloClient,
 					organizationId: null,
 					projectId: project.id,
-					increaseCount,
 				})
 			)
 		);
