@@ -136,6 +136,13 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
 			query: GET_PROJ_DONORS,
 			variables: { filter: { project: "1" } },
 		},

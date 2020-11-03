@@ -17,12 +17,11 @@ export type ProjectProps = {
 	open: boolean;
 	handleClose: () => void;
 	workspace: string;
-	reftechOnSuccess:
+	reftechOnSuccess?:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| ((options?: QueryLazyOptions<{ filter: { workspace: any } }> | undefined) => void)
-		| undefined;
 } & (
 	| {
 			type: PROJECT_ACTIONS.CREATE;
@@ -81,4 +80,14 @@ export interface IGetProjectDonor {
 			name: string;
 		};
 	}[];
+}
+
+export interface ICreateProject {
+	createOrgProject: {
+		id: number;
+		name: string;
+		workspace: IOrganisationWorkspaces;
+		short_name: string;
+		description: string;
+	};
 }

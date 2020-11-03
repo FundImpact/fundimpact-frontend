@@ -202,7 +202,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 	);
 
 	setSidebarTabUserAccess(
-		sidebarList[sidebar.manageUsers].subHeadings[2],
+		sidebarList[sidebar.default].subHeadings[2],
 		individualCreateAccess || individualFindAccess
 	);
 

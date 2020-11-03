@@ -14,6 +14,7 @@ import {
 	ICreateProjectDonor,
 	ICreateProjectDonorVariables,
 	IGetProjectDonor,
+	ICreateProject,
 } from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -32,6 +33,7 @@ import { CircularPercentage } from "../commons";
 import { useIntl } from "react-intl";
 import { setProject } from "../../reducers/dashboardReducer";
 import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
+import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -69,6 +71,59 @@ const updateProjectDonorCache = ({
 			});
 		}
 	} catch (err) {
+		console.error(err);
+	}
+};
+
+const fetchProjectsInWorkspace = async ({
+	apolloClient,
+	workspaceId,
+}: {
+	apolloClient: ApolloClient<object>;
+	workspaceId: string;
+}) => {
+	try {
+		await apolloClient.query({
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { filter: { workspace: workspaceId } },
+			fetchPolicy: "network-only",
+		});
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+const fetchOrgProjects = async ({ apolloClient }: { apolloClient: ApolloClient<object> }) => {
+	try {
+		await apolloClient.query({ query: GET_PROJECTS, fetchPolicy: "network-only" });
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+const updateCachedProject = async ({
+	apolloClient,
+	createdProject,
+}: {
+	apolloClient: ApolloClient<object>;
+	createdProject: ICreateProject["createOrgProject"];
+}) => {
+	try {
+		let cachedProjects = apolloClient.readQuery<{
+			orgProject: ICreateProject["createOrgProject"][];
+		}>({ query: GET_PROJECTS });
+		if (cachedProjects) {
+			apolloClient.writeQuery<{
+				orgProject: ICreateProject["createOrgProject"][];
+			}>({
+				query: GET_PROJECTS,
+				data: { orgProject: [...cachedProjects.orgProject, createdProject] },
+			});
+		} else {
+			await fetchOrgProjects({ apolloClient });
+		}
+	} catch (err) {
+		await fetchOrgProjects({ apolloClient });
 		console.error(err);
 	}
 };
@@ -113,6 +168,11 @@ function Project(props: ProjectProps) {
 			props.handleClose();
 			if (props.reftechOnSuccess) {
 				props.reftechOnSuccess();
+			} else {
+				fetchProjectsInWorkspace({
+					apolloClient,
+					workspaceId: dashboardData?.project?.workspace?.id,
+				});
 			}
 			setProjectUploadSuccess(false);
 		}
@@ -254,6 +314,11 @@ function Project(props: ProjectProps) {
 				variables: { input: formData },
 			});
 			await updateProjectCount({ apolloClient });
+			createdProject &&
+				(await updateCachedProject({
+					apolloClient,
+					createdProject: createdProject.data.createOrgProject,
+				}));
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
 			selectDonors.forEach(async (donorId) => {
 				await createDonors({
@@ -357,7 +422,7 @@ function Project(props: ProjectProps) {
 						"Physical addresses of your organisation like headquarter branch etc",
 					description: `This text will be show on Project form for subtitle`,
 				})}
-				workspace={DashBoardData?.workspace?.name}
+				workspace={props.workspace ? DashBoardData?.workspace?.name : ""}
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createLoading || updateLoading || creatingProjectDonors}
