@@ -1,8 +1,8 @@
 import React from "react";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import CommonTable from "../CommonTable";
-import { IIndividualForm, IIndividual } from "../../../models/individual";
-import { individualTableHeadings } from "../constants";
+import {  IIndividual } from "../../../models/individual";
+import { individualTableOrganizationHeadings, individualTableProjectHeadings } from "../constants";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import IndividualDialog from "../../IndividualDialog";
 import { FORM_ACTIONS, Enitity } from "../../../models/constants";
@@ -10,6 +10,7 @@ import AddContactAddressDialog from "../../AddContactAddressDialog";
 import ContactListDialog from "../../ContactListDialog";
 import FilterList from "../../FilterList";
 import { individualInputFields } from "./inputFields.json";
+import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
 
 enum dialogType {
 	individual = 0,
@@ -39,9 +40,13 @@ interface IIndividualTableView {
 			[key: string]: string | string[];
 		}>
 	>;
+	contactCreateAccess: boolean;
+	contactFindAccess: boolean;
+	individualEditAccess: boolean;
+	individualTableType: IndividualTableType;
 }
 
-const rows = [
+let rows = [
 	{ valueAccessKey: "name" },
 	{
 		valueAccessKey: "",
@@ -49,7 +54,7 @@ const rows = [
 			<Grid container direction="row">
 				{individual.t4d_project_individuals.map(({ project }) => (
 					<Box mx={1} key={project.id}>
-						{project.name}
+						<Chip label={project.name} size="small" />
 					</Box>
 				))}
 			</Grid>
@@ -106,6 +111,10 @@ const createChipArray = ({
 
 	return null;
 };
+const individualEditMenu = ["", "", ""];
+
+const getTableRows = (tableType: IndividualTableType) =>
+	tableType === IndividualTableType.organization ? [...rows] : rows.slice(0, 1);
 
 function IndividualTableView({
 	individualList,
@@ -123,9 +132,17 @@ function IndividualTableView({
 	filterList,
 	removeFilterListElements,
 	setFilterList,
+	contactCreateAccess,
+	contactFindAccess,
+	individualEditAccess,
+	individualTableType,
 }: IIndividualTableView) {
-	const individualEditMenu = ["Edit Individual", "Add Contact", "Show Contacts"];
-	individualTableHeadings[individualTableHeadings.length - 1].renderComponent = () => (
+	let tableHeadings =
+		individualTableType == IndividualTableType.organization
+			? individualTableOrganizationHeadings
+			: individualTableProjectHeadings;
+
+	tableHeadings[tableHeadings.length - 1].renderComponent = () => (
 		<FilterList
 			initialValues={{
 				name: "",
@@ -134,6 +151,23 @@ function IndividualTableView({
 			inputFields={individualInputFields}
 		/>
 	);
+	if (contactFindAccess) {
+		individualEditMenu[2] = "Show Contacts";
+	} else {
+		individualEditMenu[2] = "";
+	}
+	if (contactCreateAccess) {
+		individualEditMenu[1] = "Add Contact";
+	} else {
+		individualEditMenu[1] = "";
+	}
+	if (individualEditAccess) {
+		individualEditMenu[0] = "Edit Individual";
+	} else {
+		individualEditMenu[0] = "";
+	}
+
+	let tableRows = getTableRows(individualTableType);
 	return (
 		<>
 			<Grid container>
@@ -149,9 +183,9 @@ function IndividualTableView({
 				</Grid>
 			</Grid>
 			<CommonTable
-				tableHeadings={individualTableHeadings}
+				tableHeadings={tableHeadings}
 				valuesList={individualList}
-				rows={rows}
+				rows={tableRows}
 				selectedRow={selectedIndividual}
 				toggleDialogs={toggleDialogs}
 				editMenuName={individualEditMenu}
@@ -170,6 +204,11 @@ function IndividualTableView({
 						initialValues={initialValues}
 						handleClose={() => toggleDialogs(dialogType.individual, false)}
 						open={openDialogs[dialogType.individual]}
+						dialogType={
+							individualTableType === IndividualTableType.organization
+								? IndividualDialogType.organization
+								: IndividualDialogType.project
+						}
 					/>
 					<AddContactAddressDialog
 						open={openDialogs[dialogType.contact]}

@@ -11,6 +11,8 @@ import { AddContactAddressDialogType } from "../../models/constants";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IContactForm, IContact } from "../../models/contact";
 import { IAddress } from "../../models/address";
+import { MODULE_CODES, userHasAccess } from "../../utils/access";
+import { ADDRESS_ACTIONS } from "../../utils/access/modules/address/actions";
 
 function getFormSteps() {
 	return ["Create Contact", "Add Address"];
@@ -58,7 +60,7 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	};
 
 	const formSteps = getFormSteps();
-
+	const addressCreateAccess = userHasAccess(MODULE_CODES.ADDRESS, ADDRESS_ACTIONS.CREATE_ADDRESS);
 	const getCreatedOrUpdatedContact = (
 		contact: ICreateContact["createT4DContact"]["t4DContact"] | null
 	) => {
@@ -70,7 +72,7 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 			closeDialog();
 		} else {
 			setContact_id(contact.id);
-			setActiveForm(AddContactAddressDialogType.address);
+			addressCreateAccess && setActiveForm(AddContactAddressDialogType.address);
 		}
 	};
 

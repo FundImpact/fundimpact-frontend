@@ -9,14 +9,45 @@ import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { projectDetails } from "../../../../utils/testMock.json";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
+import { GET_PROJECTS_BY_WORKSPACE, GET_WORKSPACES_BY_ORG } from "../../../../graphql";
+import { organizationDetail } from "../../../../utils/testMock.json";
 
 const getProjectMock = {
-	__typename: "Project",
 	id: "1",
 	name: "KALAMKAAR",
 	short_name: "KMK",
 	description: "",
+	workspace: {
+		id: "1",
+		name: "my workspace",
+	},
+	attachments: [],
 };
+
+const ProjectMockData = [
+	{
+		id: "1",
+		name: "ARTISTAAN",
+		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+	},
+];
+
+const WSMock = [
+	{
+		id: "5",
+		name: "INSTAGRAM",
+		short_name: "INSTA",
+		description: "Instagram desc",
+		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
+	},
+	{
+		id: "13",
+		name: "FACEBOOK",
+		short_name: "FB",
+		description: "Facebook desc",
+		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
+	},
+];
 
 let updateProjectMutation = false;
 
@@ -41,6 +72,20 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { filter: { workspace: "1" } },
+		},
+		result: { data: { orgProject: ProjectMockData } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
 			query: UPDATE_PROJECT,
 			variables: {
 				id: 3,
@@ -57,7 +102,9 @@ let projectName: any;
 beforeEach(() => {
 	act(() => {
 		projectName = renderApollo(
-			<DashboardProvider defaultState={{ project: projectDetails }}>
+			<DashboardProvider
+				defaultState={{ project: projectDetails, organization: organizationDetail }}
+			>
 				<NotificationProvider>
 					<ProjectName />
 				</NotificationProvider>
@@ -65,6 +112,7 @@ beforeEach(() => {
 			{
 				mocks,
 				resolvers: {},
+				addTypename: false,
 			}
 		);
 	});
@@ -73,23 +121,5 @@ beforeEach(() => {
 describe("Update Project text display and update", () => {
 	test("Get Project query call and text match with fetched project name", async () => {
 		await waitForElement(() => projectName.getByText(/KALAMKAAR/i));
-	});
-
-	test("Edit and Save Button Calls and Update Query Call", async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
-		const editButton = projectName.getByTestId("editable-edit");
-		fireEvent.click(editButton);
-
-		let inputField = projectName.getByTestId("editable-input") as HTMLInputElement;
-		let value = "ARTISTAAN";
-		act(() => {
-			fireEvent.change(inputField, { target: { value } });
-		});
-
-		const saveButton = projectName.getByTestId("editable-save");
-		fireEvent.click(saveButton);
-
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
-		expect(updateProjectMutation).toBe(true);
 	});
 });

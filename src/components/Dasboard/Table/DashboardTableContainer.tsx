@@ -44,6 +44,10 @@ import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 import FundReceivedTable from "../../Table/FundReceivedTable";
 import ProjectDocumentsTable from "../../Table/ProjectDocument";
+import IndividualTable from "../../Table/IndividualTable";
+import IndividualDialog from "../../IndividualDialog";
+import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
+import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -76,7 +80,7 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		//flexGrow: 1,
+		flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
 		height: "100%",
 		overflow: "scroll",
@@ -229,6 +233,21 @@ export default function DashboardTableContainer() {
 	const fundReceiptFindAccess = userHasAccess(
 		MODULE_CODES.FUND_RECEIPT,
 		FUND_RECEIPT_ACTIONS.FIND_FUND_RECEIPT
+	);
+
+	const individualFindAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.FIND_INDIVIDUAL
+	);
+
+	const individualCreateAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.CREATE_INDIVIDUAL
+	);
+
+	const individualEditAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.UPDATE_INDIVIDUAL
 	);
 
 	const tabs = [
@@ -516,6 +535,34 @@ export default function DashboardTableContainer() {
 			createButtons: [],
 			tabVisibility: projectFindAccess || projectEditAccess,
 			tableVisibility: projectFindAccess,
+		},
+		{
+			label: intl.formatMessage({
+				id: "individualTabHeading",
+				defaultMessage: "Individuals",
+				description: `This text will be show on tab for individuals`,
+			}),
+			table: <IndividualTable individualTableType={IndividualTableType.project} />,
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "createIndividual",
+						defaultMessage: "Create Individual",
+						description: `This text will be show on Add Button for Create Individual`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<IndividualDialog
+							open={open}
+							handleClose={handleClose}
+							formAction={FORM_ACTIONS.CREATE}
+							dialogType={IndividualDialogType.project}
+						/>
+					),
+					createButtonAccess: individualCreateAccess,
+				},
+			],
+			tabVisibility: individualFindAccess || individualCreateAccess,
+			tableVisibility: individualFindAccess,
 		},
 	];
 	const classes = useStyles();

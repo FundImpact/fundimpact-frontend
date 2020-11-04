@@ -86,24 +86,46 @@ const getControllerActionHashArr = (
 		),
 	}));
 
+//remove any
 const onUpdate = async ({
 	valuesSubmitted,
 	updateOrganizationUserRole,
 	notificationDispatch,
 	numeberOfTimesRolesChanged,
-}: IOnUpdateProps) => {
+}: any) => {
 	for (let roleId in valuesSubmitted) {
 		if (roleId in numeberOfTimesRolesChanged && numeberOfTimesRolesChanged[roleId] == 0) {
 			continue;
 		}
 		try {
+			let uploadPermissions: any = { controllers: { upload: {} } };
+			let usersPermissions: any = { controllers: {} };
+			if ("upload" in valuesSubmitted[roleId].permissions) {
+				uploadPermissions.controllers.upload =
+					valuesSubmitted[roleId].permissions["upload"];
+			}
+			if ("userspermissions" in valuesSubmitted[roleId].permissions) {
+				usersPermissions.controllers.userspermissions =
+					valuesSubmitted[roleId].permissions["userspermissions"];
+			}
+			if ("auth" in valuesSubmitted[roleId].permissions) {
+				usersPermissions.controllers.auth = valuesSubmitted[roleId].permissions["auth"];
+			}
+			if ("user" in valuesSubmitted[roleId].permissions) {
+				usersPermissions.controllers.user = valuesSubmitted[roleId].permissions["user"];
+			}
+			let { user, auth, userspermissions, upload, ...permissions } = valuesSubmitted[
+				roleId
+			].permissions;
 			await updateOrganizationUserRole({
 				variables: {
 					id: roleId,
 					input: {
 						name: valuesSubmitted[roleId].name,
 						permissions: {
-							application: { controllers: valuesSubmitted[roleId].permissions },
+							application: { controllers: permissions },
+							upload: uploadPermissions,
+							"users-permissions": usersPermissions,
 						},
 					},
 				},

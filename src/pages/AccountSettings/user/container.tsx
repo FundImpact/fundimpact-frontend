@@ -12,6 +12,8 @@ import { setUser } from "../../../reducers/userReducer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AddContactAddressDialog from "../../../components/AddContactAddressDialog";
 import ContactListDialog from "../../../components/ContactListDialog";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
 
 export const ProfileContainer = () => {
 	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
@@ -40,6 +42,10 @@ export const ProfileContainer = () => {
 	if (pathnameArr?.length > 3) {
 		if (pathnameArr[3] === "verify") verifyUrlJwt = true;
 	}
+
+	const contactCreateAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.CREATE_CONTACT);
+
+	const contactFindAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.FIND_CONTACT);
 
 	useEffect(() => {
 		if (verifyUrlJwt) {
@@ -92,23 +98,27 @@ export const ProfileContainer = () => {
 								description={`This text will be shown on Setting page for reset password button`}
 							/>
 						</Button>
-						<Button
-							startIcon={<PersonAddIcon />}
-							onClick={() => setContactAddressDialogOpen(true)}
-						>
-							<FormattedMessage
-								id={`addContactButton`}
-								defaultMessage={`Add Contact`}
-								description={`This text will be shown on add contact button`}
-							/>
-						</Button>
-						<Button fullWidth onClick={() => setContactListDialogOpen(true)}>
-							<FormattedMessage
-								id={`showContactList`}
-								defaultMessage={`Contacts Details`}
-								description={`This text will be shown on show contact button`}
-							/>
-						</Button>
+						{contactCreateAccess && (
+							<Button
+								startIcon={<PersonAddIcon />}
+								onClick={() => setContactAddressDialogOpen(true)}
+							>
+								<FormattedMessage
+									id={`addContactButton`}
+									defaultMessage={`Add Contact`}
+									description={`This text will be shown on add contact button`}
+								/>
+							</Button>
+						)}
+						{contactFindAccess && (
+							<Button fullWidth onClick={() => setContactListDialogOpen(true)}>
+								<FormattedMessage
+									id={`showContactList`}
+									defaultMessage={`Contacts Details`}
+									description={`This text will be shown on show contact button`}
+								/>
+							</Button>
+						)}
 					</ButtonGroup>
 				</Box>
 			)}
