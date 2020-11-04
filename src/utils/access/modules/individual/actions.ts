@@ -1,0 +1,6 @@
+export enum INDIVIDUAL_ACTIONS {
+	CREATE_INDIVIDUAL = "create",
+	UPDATE_INDIVIDUAL = "update",
+	DELETE_INDIVIDUAL = "delete",
+	FIND_INDIVIDUAL = "find",
+}

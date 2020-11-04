@@ -2,6 +2,10 @@ import React, { useRef, useState } from "react";
 import IndividualTableView from "./IndividualTableView";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import { IIndividualForm, IIndividual } from "../../../models/individual";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
+import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";
+import { IndividualTableType } from "../../../models/individual/constant";
 
 interface IIndividualTableContainer {
 	count: number;
@@ -21,6 +25,7 @@ interface IIndividualTableContainer {
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	individualTableType: IndividualTableType;
 }
 
 const getInitialValues = (individual: IIndividual | null): IIndividual => {
@@ -43,6 +48,7 @@ function IndividualTableContainer({
 	filterList,
 	removeFilterListElements,
 	setFilterList,
+	individualTableType,
 }: IIndividualTableContainer) {
 	const selectedIndividual = useRef<IIndividual | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false]);
@@ -52,6 +58,14 @@ function IndividualTableContainer({
 			openStatus.map((element: boolean, i) => (i === index ? val : element))
 		);
 	};
+	const contactCreateAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.CREATE_CONTACT);
+
+	const contactFindAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.FIND_CONTACT);
+
+	const individualEditAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.UPDATE_INDIVIDUAL
+	);
 
 	return (
 		<IndividualTableView
@@ -70,6 +84,10 @@ function IndividualTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			contactCreateAccess={contactCreateAccess}
+			contactFindAccess={contactFindAccess}
+			individualEditAccess={individualEditAccess}
+			individualTableType={individualTableType}
 		/>
 	);
 }

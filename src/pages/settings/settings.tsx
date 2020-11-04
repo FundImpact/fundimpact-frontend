@@ -28,6 +28,7 @@ import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermiss
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
+import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -110,6 +111,15 @@ export default function SettingContainer() {
 		USER_PERMISSIONS_ACTIONS.CREATE_USER_PERMISSIONS
 	);
 
+	const individualCreateAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.CREATE_INDIVIDUAL
+	);
+	const individualFindAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.CREATE_INDIVIDUAL
+	);
+
 	const authInviteUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.INVITE_USER);
 
 	const authFindUser = userHasAccess(MODULE_CODES.AUTH, AUTH_ACTIONS.FIND);
@@ -152,6 +162,9 @@ export default function SettingContainer() {
 		}
 		if (userRoleFindAccess || userRoleCreateAccess) {
 			return <Navigate to="user_roles" />;
+		}
+		if (individualCreateAccess || individualFindAccess) {
+			return <Navigate to="individual" />;
 		}
 	};
 
@@ -238,7 +251,11 @@ export default function SettingContainer() {
 							path="user_roles"
 							element={<RolesContainer />}
 						/>
-						<Route element={<IndividualContainer />} path="individual" />
+						<PrivateRoute
+							userAccess={individualCreateAccess || individualFindAccess}
+							element={<IndividualContainer />}
+							path="individual"
+						/>
 					</Routes>
 				</Grid>
 			</Grid>

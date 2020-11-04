@@ -6,6 +6,8 @@ import { contactTableHeadings } from "../constants";
 import { IAddress } from "../../../models/address";
 import { IGetAddress } from "../../../models/address/query";
 import { add } from "date-fns";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { ADDRESS_ACTIONS } from "../../../utils/access/modules/address/actions";
 
 interface IAddressTableContainer {
 	addressList: IGetAddress["t4DAddresses"];
@@ -51,6 +53,8 @@ function AddressTableContainer({
 		);
 	};
 
+	const addressEditAccess = userHasAccess(MODULE_CODES.ADDRESS, ADDRESS_ACTIONS.UPDATE_ADDRESS);
+
 	return (
 		<AddressTableView
 			addressList={addressList}
@@ -65,6 +69,7 @@ function AddressTableContainer({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
+			addressEditAccess={addressEditAccess}
 		/>
 	);
 }

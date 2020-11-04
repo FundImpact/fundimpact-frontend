@@ -26,6 +26,7 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setSuccessNotification, setErrorNotification } from "../../reducers/notificationReducer";
 import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../graphql/Individual";
 import { useDashBoardData } from "../../contexts/dashboardContext";
+import { IndividualDialogType } from "../../models/individual/constant";
 
 type IIndividualDialogContainerProps =
 	| {
@@ -64,6 +65,7 @@ type IIndividualDialogContainerProps =
 			) => Promise<
 				FetchResult<IDeleteIndividualProject, Record<string, any>, Record<any, any>>
 			>;
+			dialogType: IndividualDialogType;
 	  }
 	| {
 			open: boolean;
@@ -102,6 +104,7 @@ type IIndividualDialogContainerProps =
 			) => Promise<
 				FetchResult<IDeleteIndividualProject, Record<string, any>, Record<any, any>>
 			>;
+			dialogType: IndividualDialogType;
 	  };
 
 interface ISubmitForm {
@@ -143,18 +146,23 @@ const getInitialFormValues = (individual?: IIndividual): IIndividualForm => {
 	};
 };
 
+const getFilterObject = (organizationId: string | null, projectId: string | null) => {
+	return organizationId
+		? { organization: organizationId }
+		: { t4d_project_individuals: { project: projectId } };
+};
+
 const getIndividualCountCachedValue = (
 	apolloClient: ApolloClient<object>,
-	organizationId: string
+	organizationId: string | null,
+	projectId: string | null
 ) => {
 	let count = 0;
 	try {
 		let cachedCount = apolloClient.readQuery({
 			query: GET_INDIVIDUALS_COUNT,
 			variables: {
-				filter: {
-					organization: organizationId,
-				},
+				filter: getFilterObject(organizationId, projectId),
 			},
 		});
 		count = cachedCount?.t4DIndividualsConnection?.aggregate?.count;
@@ -164,20 +172,23 @@ const getIndividualCountCachedValue = (
 	return count;
 };
 
-const increaseIndividualsCount = (apolloClient: ApolloClient<object>, organizationId: string) => {
+const changeIndividualCount = (
+	apolloClient: ApolloClient<object>,
+	organizationId: string | null,
+	projectId: string | null,
+	increaseCount: boolean = true
+) => {
 	try {
-		const limit = getIndividualCountCachedValue(apolloClient, organizationId);
+		const limit = getIndividualCountCachedValue(apolloClient, organizationId, projectId);
 		apolloClient.writeQuery({
 			query: GET_INDIVIDUALS_COUNT,
 			variables: {
-				filter: {
-					organization: organizationId,
-				},
+				filter: getFilterObject(organizationId, projectId),
 			},
 			data: {
 				t4DIndividualsConnection: {
 					aggregate: {
-						count: limit + 1,
+						count: increaseCount ? limit + 1 : limit - 1,
 					},
 				},
 			},
@@ -190,18 +201,20 @@ const increaseIndividualsCount = (apolloClient: ApolloClient<object>, organizati
 const refetchIndividuals = async ({
 	apolloClient,
 	organizationId,
+	projectId,
 }: {
 	apolloClient: ApolloClient<object>;
-	organizationId: string;
+	organizationId: string | null;
+	projectId: string | null;
+	increaseCount?: boolean;
 }) => {
 	try {
-		const count = getIndividualCountCachedValue(apolloClient, organizationId);
+		let count = getIndividualCountCachedValue(apolloClient, organizationId, projectId);
+
 		await apolloClient.query({
 			query: GET_INDIVIDUALS,
 			variables: {
-				filter: {
-					organization: organizationId,
-				},
+				filter: getFilterObject(organizationId, projectId),
 				limit: count > 10 ? 10 : count,
 				start: 0,
 				sort: "created_at:DESC",
@@ -354,6 +367,33 @@ const disassociateIndividualWithProject = async ({
 		)
 	);
 
+const updateIndividualTableInProject = async ({
+	projectList,
+	apolloClient,
+	increaseCount = true,
+}: {
+	projectList: IIndividual["t4d_project_individuals"][0]["project"][];
+	apolloClient: ApolloClient<object>;
+	increaseCount?: boolean;
+}) => {
+	try {
+		await Promise.all(
+			projectList.map((project) =>
+				refetchIndividuals({
+					apolloClient,
+					organizationId: null,
+					projectId: project.id,
+				})
+			)
+		);
+		projectList.forEach((project) =>
+			changeIndividualCount(apolloClient, null, `${project.id}`, increaseCount)
+		);
+	} catch (err) {
+		console.error(err);
+	}
+};
+
 function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 	const {
 		open,
@@ -364,8 +404,16 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 		createIndividualProject,
 		updateIndividual,
 		deleteIndividualProject,
+		dialogType,
 	} = props;
 
+	if (dialogType === IndividualDialogType.project) {
+		individualFormFields[1].hidden = true;
+	} else {
+		individualFormFields[1].hidden = false;
+	}
+
+	const dashboardData = useDashBoardData();
 	const initialValues =
 		props.formAction == FORM_ACTIONS.CREATE
 			? getInitialFormValues()
@@ -377,7 +425,6 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 	);
 	const apolloClient = useApolloClient();
 	const notificationDispatch = useNotificationDispatch();
-	const dashboardData = useDashBoardData();
 
 	(individualFormFields[1].autoCompleteGroupBy as unknown) = getProjectGroupHeading;
 
@@ -392,19 +439,65 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				formAction: props.formAction,
 				organizationId: dashboardData?.organization?.id || "",
 			});
-			if (individual) {
+
+			if (individual && dialogType == IndividualDialogType.organization) {
+				//if the individual is created and has submitted various projects in form then
+				//associating individual with project
 				await associateIndividualWithProject({
 					createIndividualProject,
 					projects: valuesSubmitted.project.map((project) => project.id),
 					individualId: individual.id,
 				});
+
+				//refetch the user in individual table which is in the organization setting page
+				//that is why project is null
+				await refetchIndividuals({
+					apolloClient,
+					organizationId: dashboardData?.organization?.id || "",
+					projectId: null,
+				});
+
+				//increasing individual count on organization setting page
+				changeIndividualCount(apolloClient, dashboardData?.organization?.id || "", null);
+
+				//variouse project have been submitted in the form, now we have to update the
+				//individual table present in the project and increasing individual count in the individual
+				// table present in each project
+				await updateIndividualTableInProject({
+					apolloClient,
+					projectList: valuesSubmitted.project,
+				});
 			}
 
-			await refetchIndividuals({
-				apolloClient,
-				organizationId: dashboardData?.organization?.id || "",
-			});
-			increaseIndividualsCount(apolloClient, dashboardData?.organization?.id || "");
+			if (individual && dialogType == IndividualDialogType.project) {
+				//if the individual is created and the dialog was open from the project page
+				//then the project is already selected that is why picking project from dashboard
+				await associateIndividualWithProject({
+					createIndividualProject,
+					projects: [`${dashboardData?.project?.id}`],
+					individualId: individual.id,
+				});
+				//refetching the individuals present in individual table on dashboard page
+				await refetchIndividuals({
+					apolloClient,
+					organizationId: null,
+					projectId: `${dashboardData?.project?.id}` || "",
+				});
+				//increasing individual count in the individual table present in  project
+				changeIndividualCount(apolloClient, null, `${dashboardData?.project?.id}`);
+
+				//refetch the user in individual table which is in the organization setting page
+				//that is why project is null
+				await refetchIndividuals({
+					apolloClient,
+					organizationId: dashboardData?.organization?.id || "",
+					projectId: null,
+				});
+
+				//increasing individual count on organization setting page
+				changeIndividualCount(apolloClient, dashboardData?.organization?.id || "", null);
+			}
+
 			handleClose();
 		} catch (err) {
 			console.error(err);
@@ -442,6 +535,13 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 							individualId: props.initialValues.id,
 						});
 						notificationDispatch(setSuccessNotification("Project assigned"));
+						//while updating the individual new projects were assigned to user
+						//now we have to update the individual table in the project and
+						//we have to increase the individual count  in the project
+						await updateIndividualTableInProject({
+							apolloClient,
+							projectList: newAssignedProjectsToIndividual,
+						});
 					} catch (err) {
 						notificationDispatch(setErrorNotification(err.message));
 					}
@@ -456,16 +556,28 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 							),
 						});
 						notificationDispatch(setSuccessNotification("Project removed"));
+						//while updating the individual projects were unassigned to user
+						//now we have to update the individual table in the project
+						//and we have to decerease the individual count  in the project
+						await updateIndividualTableInProject({
+							apolloClient,
+							projectList: removedProjectIndividuals.map(
+								(projectIndividual) => projectIndividual.project
+							),
+							increaseCount: false,
+						});
 					} catch (err) {
 						notificationDispatch(setErrorNotification(err.message));
 					}
 				}
 
 				if (newAssignedProjectsToIndividual.length || removedProjectIndividuals.length) {
-					await refetchIndividuals({
-						apolloClient,
-						organizationId: dashboardData?.organization?.id || "",
-					});
+					dialogType === IndividualDialogType.organization &&
+						(await refetchIndividuals({
+							apolloClient,
+							organizationId: dashboardData?.organization?.id || "",
+							projectId: null,
+						}));
 				}
 
 				handleClose();

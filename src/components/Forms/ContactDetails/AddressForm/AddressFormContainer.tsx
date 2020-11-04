@@ -199,7 +199,9 @@ function AddressFormContainer(props: IAddressFormContainer) {
 			initialValues={initialValues}
 			validate={validate}
 			onCreate={onFormSubmit}
-			onCancel={onCancel}
+			onCancel={() =>
+				props.getCreatedOrUpdatedAddress && props.getCreatedOrUpdatedAddress(null)
+			}
 			inputFields={addressFormFields}
 			formAction={props.formAction}
 			onUpdate={onFormSubmit}

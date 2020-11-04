@@ -11,7 +11,7 @@ import {
 	mockIndividualList,
 	mockProjects,
 } from "../../../../utils/testMock.json";
-import { individualTableHeadings } from "../../constants";
+import { individualTableOrganizationHeadings } from "../../constants";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 import IndividualTable from "..";
@@ -91,10 +91,12 @@ beforeEach(() => {
 });
 
 describe("Individual Table tests", () => {
-	for (let i = 0; i < individualTableHeadings.length; i++) {
-		test(`Table Headings ${individualTableHeadings[i].label} for Individual Target Table`, async () => {
+	for (let i = 0; i < individualTableOrganizationHeadings.length; i++) {
+		test(`Table Headings ${individualTableOrganizationHeadings[i].label} for Individual Target Table`, async () => {
 			try {
-				await waitForElement(() => table.getAllByText(individualTableHeadings[i].label));
+				await waitForElement(() =>
+					table.getAllByText(individualTableOrganizationHeadings[i].label)
+				);
 			} catch (err) {
 				console.log("err :>> ", err);
 			}

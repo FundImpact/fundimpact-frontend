@@ -7,12 +7,13 @@ import { GET_WORKSPACES_BY_ORG } from "../../../graphql/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetail } from "../../../utils/testMock.json";
+import { organizationDetail, mockOrgDonor } from "../../../utils/testMock.json";
 import { act } from "react-dom/test-utils";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { BrowserRouter } from "react-router-dom";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 
 let sidebar: any;
 
@@ -136,6 +137,13 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
 			query: GET_PROJ_DONORS,
 			variables: { filter: { project: "1" } },
 		},
@@ -147,6 +155,21 @@ const mocks = [
 			variables: { filter: { project: "2" } },
 		},
 		result: { data: { projectDonors: projDonorsMock } },
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "13",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
 	},
 ];
 

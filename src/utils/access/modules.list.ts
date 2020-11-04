@@ -29,6 +29,9 @@ import { CURRENCY_MODULE } from "./modules/currency/currency.module";
 import { USER_PERMISSIONS_MODULE } from "./modules/userPermissions/userPermissions.module";
 import { AUTH_MODULE } from "./modules/auth/auth.module";
 import { FUND_RECEIPT_MODULE } from "./modules/fundReceipt/fundReceipt.module";
+import { CONTACT_MODULE } from "./modules/contact/contact.module";
+import { ADDRESS_MODULE } from "./modules/address/address.module";
+import { INDIVIDUAL_MODULE } from "./modules/individual/individual.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -96,4 +99,7 @@ export const MODULES = {
 	[MODULE_CODES.USER_PERMISSIONS]: USER_PERMISSIONS_MODULE,
 	[MODULE_CODES.AUTH]: AUTH_MODULE,
 	[MODULE_CODES.FUND_RECEIPT]: FUND_RECEIPT_MODULE,
+	[MODULE_CODES.CONTACT]: CONTACT_MODULE,
+	[MODULE_CODES.ADDRESS]: ADDRESS_MODULE,
+	[MODULE_CODES.INDIVIDUAL]: INDIVIDUAL_MODULE,
 } as const;

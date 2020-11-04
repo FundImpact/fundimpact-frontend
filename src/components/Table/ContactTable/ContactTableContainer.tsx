@@ -3,6 +3,9 @@ import ContactTableView from "./ContactTableView";
 import { IGetContact } from "../../../models/contact/query";
 import { IContact } from "../../../models/contact";
 import { contactTableHeadings } from "../constants";
+import { userHasAccess, MODULE_CODES } from "../../../utils/access";
+import { ADDRESS_ACTIONS } from "../../../utils/access/modules/address/actions";
+import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
 
 interface IContactTableContainer {
 	contactList: IGetContact["t4DContacts"];
@@ -57,6 +60,9 @@ function ContactTableContainer({
 		);
 	};
 
+	const addressFindAccess = userHasAccess(MODULE_CODES.ADDRESS, ADDRESS_ACTIONS.FIND_ADDRESS);
+	const contactEditAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.UPDATE_CONTACT);
+
 	return (
 		<ContactTableView
 			contactList={contactList}
@@ -74,6 +80,8 @@ function ContactTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			addressFindAccess={addressFindAccess}
+			contactEditAccess={contactEditAccess}
 		/>
 	);
 }

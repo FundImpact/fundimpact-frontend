@@ -73,7 +73,7 @@ export default function DashboardContainer({ left, main, top }: IDashboardContai
 					</Box>
 				</Grid>
 
-				<Grid item xs md={9} container direction="column">
+				<Grid item xs md={9}>
 					<Box ml={1}>{main}</Box>
 				</Grid>
 			</Grid>

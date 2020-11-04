@@ -22,6 +22,8 @@ export const sidePanelStyles = makeStyles((theme: Theme) =>
 			height: "100vh",
 			background: theme.palette.background.paper,
 			overflowY: "scroll",
+			display: "flex",
+			flexDirection: "column",
 		},
 		sidePanelActiveLink: {
 			background: theme.palette.action.selected,

@@ -21,22 +21,25 @@ import { IGetProject } from "../../models/project/project";
 import { GET_PROJECTS } from "../../graphql";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IIndividual } from "../../models/individual";
+import { IndividualDialogType } from "../../models/individual/constant";
 
 type IAddressFormGraphqlProps =
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
+			dialogType?: IndividualDialogType;
 	  }
 	| {
 			open: boolean;
+			dialogType?: IndividualDialogType;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IIndividual;
 	  };
 
 function IndividualDialogGraphql(props: IAddressFormGraphqlProps) {
-	const { handleClose, open } = props;
+	const { handleClose, open, dialogType = IndividualDialogType.organization } = props;
 	const [createIndividual, { loading: creatingIndividual }] = useMutation<
 		ICreateIndividual,
 		ICreateIndividualVariables
@@ -84,6 +87,7 @@ function IndividualDialogGraphql(props: IAddressFormGraphqlProps) {
 			createIndividualProject={createIndividualProject}
 			updateIndividual={updateIndividual}
 			deleteIndividualProject={deleteIndividualProject}
+			dialogType={dialogType}
 		/>
 	);
 }
