@@ -152,8 +152,14 @@ const InputFields = ({
 					disabled={disabled}
 				>
 					{!optionsArray?.length && (
-						<MenuItem value="aKDJBDKACAKD">
-							<em>No (context) available</em>
+						<MenuItem value="">
+							<em>
+								<FormattedMessage
+									id="noContextAvailable"
+									defaultMessage="No (context) available"
+									description="This text will be displayed as select field for no context available"
+								/>
+							</em>
 						</MenuItem>
 					)}
 					{multiSelect &&
@@ -206,7 +212,7 @@ const InputFields = ({
 										<FormattedMessage
 											id="addNewSelectField"
 											defaultMessage="Add new"
-											description="This text will be displayed as select field for select Field"
+											description="This text will be displayed as select field for add new"
 										/>
 									</Typography>
 								</Box>
