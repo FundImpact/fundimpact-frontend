@@ -12,7 +12,9 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"type": "select",
 			"displayName": "budget target",
-			"required": true
+			"required": true,
+			"addNewClick": {},
+			"addNew": true
 		},
 		{
 			"name": "annual_year",
@@ -65,7 +67,9 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-2",
 			"type": "select",
-			"displayName": "grant period"
+			"displayName": "grant period",
+			"addNewClick": {},
+			"addNew": true
 		}
 	],
 	"budgetLineitemFormInputFields": [
