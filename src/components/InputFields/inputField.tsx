@@ -12,9 +12,11 @@ import {
 	TextField,
 	FormControlLabel,
 	Switch,
+	Typography,
+	Box,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { IInputFields } from "../../models";
 import UploadFile from "../UploadFile";
 import { Autocomplete } from "@material-ui/lab";
@@ -59,6 +61,8 @@ const InputFields = ({
 	disabled,
 	onClick,
 	autoCompleteGroupBy,
+	addNew = false,
+	addNewClick,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -147,7 +151,7 @@ const InputFields = ({
 					disabled={disabled}
 				>
 					{!optionsArray?.length && (
-						<MenuItem value="">
+						<MenuItem value="aKDJBDKACAKD">
 							<em>No (context) available</em>
 						</MenuItem>
 					)}
@@ -192,6 +196,16 @@ const InputFields = ({
 								</MenuItem>
 							)
 						)}
+					{addNew && addNewClick && (
+						<MenuItem onClick={addNewClick}>
+							<Box display="flex">
+								<AddCircleIcon />
+								<Box ml={1}>
+									<Typography> Add new</Typography>
+								</Box>
+							</Box>
+						</MenuItem>
+					)}
 				</Select>
 				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 			</FormControl>
