@@ -8,6 +8,7 @@ import { CREATE_FUND_RECEIPT, UPDATE_FUND_RECEIPT } from "../../graphql/FundRece
 import { IFundReceivedForm, IFundReceivedProps } from "../../models/fundReceived";
 import { getTodaysDate } from "../../utils";
 import { ICreateFundReceipt, ICreateFundReceiptVariables, IUpdateFundReceiptVariables, IUpdateFundReceipt } from "../../models/fundReceived/query";
+import { GET_PROJ_DONORS } from "../../graphql/project";
 
 const getDonors = (projectDonors: { id: string; donor: { id: string; name: string } }[]) =>
 	projectDonors.map((projectDonor) => ({
@@ -35,7 +36,7 @@ const getInitialFormValues = ({
 };
 
 function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: IFundReceivedProps) {
-	const [getProjectDonors, { data: donorList }] = useLazyQuery(GET_PROJECT_DONORS);
+	const [getProjectDonors, { data: donorList }] = useLazyQuery(GET_PROJ_DONORS);
 	const [createFundReceipt, { loading: creatingFundReceipt }] = useMutation<
 		ICreateFundReceipt,
 		ICreateFundReceiptVariables
@@ -60,7 +61,7 @@ function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: I
 	}, [dashboardData]);
 	return (
 		<FundReceivedContainer
-			donorList={(donorList?.projDonors && getDonors(donorList?.projDonors)) || []}
+			donorList={(donorList?.projectDonors && getDonors(donorList?.projectDonors)) || []}
 			formAction={formAction}
 			open={open}
 			handleClose={handleClose}
