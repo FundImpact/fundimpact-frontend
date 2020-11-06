@@ -20,6 +20,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { IInputFields } from "../../models";
 import UploadFile from "../UploadFile";
 import { Autocomplete } from "@material-ui/lab";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -201,7 +202,13 @@ const InputFields = ({
 							<Box display="flex">
 								<AddCircleIcon />
 								<Box ml={1}>
-									<Typography> Add new</Typography>
+									<Typography>
+										<FormattedMessage
+											id="addNewSelectField"
+											defaultMessage="Add new"
+											description="This text will be displayed as select field for select Field"
+										/>
+									</Typography>
 								</Box>
 							</Box>
 						</MenuItem>
