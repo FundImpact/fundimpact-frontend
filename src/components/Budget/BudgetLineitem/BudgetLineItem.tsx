@@ -236,6 +236,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			} else {
 				budgetLineitemFormSelectFields[2].hidden = false;
 				budgetLineitemFormSelectFields[4].size = 12;
+				budgetLineitemFormSelectFields[4].optionsArray = [];
 			}
 
 			if (!values.budget_targets_project) {
