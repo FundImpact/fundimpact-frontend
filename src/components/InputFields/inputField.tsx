@@ -12,12 +12,15 @@ import {
 	TextField,
 	FormControlLabel,
 	Switch,
+	Typography,
+	Box,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { IInputFields } from "../../models";
 import UploadFile from "../UploadFile";
 import { Autocomplete } from "@material-ui/lab";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -59,6 +62,8 @@ const InputFields = ({
 	disabled,
 	onClick,
 	autoCompleteGroupBy,
+	addNew = false,
+	addNewClick,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -148,7 +153,13 @@ const InputFields = ({
 				>
 					{!optionsArray?.length && (
 						<MenuItem value="">
-							<em>No (context) available</em>
+							<em>
+								<FormattedMessage
+									id="noContextAvailable"
+									defaultMessage="No (context) available"
+									description="This text will be displayed as select field for no context available"
+								/>
+							</em>
 						</MenuItem>
 					)}
 					{multiSelect &&
@@ -192,6 +203,22 @@ const InputFields = ({
 								</MenuItem>
 							)
 						)}
+					{addNew && addNewClick && (
+						<MenuItem onClick={addNewClick}>
+							<Box display="flex">
+								<AddCircleIcon />
+								<Box ml={1}>
+									<Typography>
+										<FormattedMessage
+											id="addNewSelectField"
+											defaultMessage="Add new"
+											description="This text will be displayed as select field for add new"
+										/>
+									</Typography>
+								</Box>
+							</Box>
+						</MenuItem>
+					)}
 				</Select>
 				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 			</FormControl>

@@ -308,7 +308,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 				initialValues?.deliverableCategory || []
 			);
 			setDeliverableCategory(newDeliverableCategories);
-			
+
 			delete submittedValue.id;
 			delete submittedValue.deliverableCategory;
 			await updateDeliverableUnit({

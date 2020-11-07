@@ -29,6 +29,8 @@ import {
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import { GET_ALL_DELIVERABLES_TARGET_AMOUNT } from "../../graphql/project";
+import Deliverable from "./Deliverable";
+import DeliverableUnit from "./DeliverableUnit";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -66,6 +68,13 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const onCancel = props.handleClose;
 	const formAction = props.type;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+
+	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
+	deliverableTargetForm[2].addNewClick = () => setOpenDeliverableCategoryDialog(true);
+
+	const [openDeliverableUnitDialog, setOpenDeliverableUnitDialog] = useState<boolean>();
+	deliverableTargetForm[3].addNewClick = () => setOpenDeliverableUnitDialog(true);
+
 	const createDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
 		try {
 			let createInputTarget = {
@@ -367,6 +376,22 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						inputFields: deliverableTargetForm,
 					}}
 				/>
+				{openDeliverableCategoryDialog && (
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.CREATE}
+						open={openDeliverableCategoryDialog}
+						handleClose={() => setOpenDeliverableCategoryDialog(false)}
+						organization={dashboardData?.organization?.id}
+					/>
+				)}
+				{openDeliverableUnitDialog && (
+					<DeliverableUnit
+						type={DELIVERABLE_ACTIONS.CREATE}
+						open={openDeliverableUnitDialog}
+						handleClose={() => setOpenDeliverableUnitDialog(false)}
+						organization={dashboardData?.organization?.id}
+					/>
+				)}
 			</FormDialog>
 			{createDeliverableTargetLoading ? <FullScreenLoader /> : null}
 			{updateDeliverableTargetLoading ? <FullScreenLoader /> : null}

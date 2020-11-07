@@ -103,6 +103,10 @@ function CommonInputForm({
 													element.autoCompleteGroupBy || undefined
 												}
 												onClick={element.onClick ? element.onClick : null}
+												addNew={element.addNew ? element.addNew : false}
+												addNewClick={
+													element.addNewClick ? element.addNewClick : null
+												}
 											/>
 										</Grid>
 									)
