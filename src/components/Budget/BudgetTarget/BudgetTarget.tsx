@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -31,6 +31,9 @@ import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedM
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../Forms/CommonForm";
 import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "./inputFields.json";
+import BudgetCategory from "../BudgetCategory";
+import Donor from "../../Donor";
+import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 
 const defaultFormValues: IBudgetTargetForm = {
 	name: "",
@@ -63,6 +66,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 
+	const [openBudgetCategoryDialog, setOpenBudgetCategoryDialog] = useState<boolean>(false);
+	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
+
 	const [createProjectBudgetTarget, { loading: creatingProjectBudgetTarget }] = useMutation(
 		CREATE_PROJECT_BUDGET_TARGET
 	);
@@ -86,11 +92,11 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		defaultMessage: "Budget Target",
 		description: `This text will be show on Budget target form for title`,
 	});
-	let budgetTargetSubtitle = intl.formatMessage({
-		id: "budgetTargetFormSubtitle",
-		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
-		description: `This text will be show on Budget target form for subtitle`,
-	});
+	// let "" = intl.formatMessage({
+	// 	id: "budgetTargetFormSubtitle",
+	// 	defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+	// 	description: `This text will be show on Budget target form for subtitle`,
+	// });
 	useEffect(() => {
 		if (dashboardData) {
 			getCurrency({
@@ -269,28 +275,44 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	};
 
+	budgetTargetFormSelectFields[0].addNewClick = () => setOpenBudgetCategoryDialog(true);
+	budgetTargetFormSelectFields[1].addNewClick = () => setOpenDonorCreateDialog(true);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	return (
-		<FormDialog
-			handleClose={props.handleClose}
-			open={props.open}
-			loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
-			title={newOrEdit + " " + budgetTargetTitle}
-			subtitle={budgetTargetSubtitle}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
-		>
-			<CommonForm
-				initialValues={initialValues}
-				validate={validate}
-				onSubmit={onCreate}
-				onCancel={props.handleClose}
-				inputFields={budgetTargetFormInputFields}
-				selectFields={budgetTargetFormSelectFields}
-				formAction={props.formAction}
-				onUpdate={onUpdate}
+		<>
+			<BudgetCategory
+				open={openBudgetCategoryDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenBudgetCategoryDialog(false)}
 			/>
-		</FormDialog>
+			<Donor
+				open={openDonorCreateDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenDonorCreateDialog(false)}
+				dialogType={DONOR_DIALOG_TYPE.PROJECT}
+				projectId={`${dashboardData?.project?.id}`}
+			/>
+			<FormDialog
+				handleClose={props.handleClose}
+				open={props.open}
+				loading={creatingProjectBudgetTarget || updatingProjectBudgetTarget}
+				title={newOrEdit + " " + budgetTargetTitle}
+				subtitle={""}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			>
+				<CommonForm
+					initialValues={initialValues}
+					validate={validate}
+					onSubmit={onCreate}
+					onCancel={props.handleClose}
+					inputFields={budgetTargetFormInputFields}
+					selectFields={budgetTargetFormSelectFields}
+					formAction={props.formAction}
+					onUpdate={onUpdate}
+				/>
+			</FormDialog>
+		</>
 	);
 }
 
