@@ -187,6 +187,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
+			"addNew": true,
+			"addNewClick": {},
 			"required": true
 		},
 		{
@@ -221,7 +223,9 @@
 			"selectLabelId": "demo-mutiple-name-label",
 			"selectId": "demo-mutiple-name",
 			"inputType": "multiSelect",
-			"required": true
+			"required": true,
+			"addNew": true,
+			"addNewClick": {}
 		},
 		{
 			"name": "annual_year",

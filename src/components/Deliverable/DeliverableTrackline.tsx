@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -41,7 +41,9 @@ import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { CircularPercentage } from "../commons";
-import { GET_ALL_DELIVERABLES_SPEND_AMOUNT } from "../../graphql/project";
+import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../graphql/project";
+import DeliverableTarget from "./DeliverableTarget";
+import { IGetProjectDonor } from "../../models/project/project";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -56,6 +58,7 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 }
 
 function DeliverableTrackLine(props: DeliverableTargetLineProps) {
+	const apolloClient = useApolloClient();
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
@@ -65,9 +68,23 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		variables: { filter: { country: DashBoardData?.organization?.country?.id } },
 	});
 
-	const { data: projectDonors } = useQuery(GET_PROJECT_DONORS, {
+	useQuery(GET_PROJ_DONORS, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
+
+	let cachedProjectDonors: IGetProjectDonor | null = null;
+	try {
+		cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>(
+			{
+				query: GET_PROJ_DONORS,
+				variables: { filter: { project: DashBoardData?.project?.id } },
+			},
+			true
+		);
+	} catch (error) {
+		console.error(error);
+	}
+
 	const [activeStep, setActiveStep] = React.useState(0);
 	const [donors, setDonors] = React.useState<
 		{
@@ -129,6 +146,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
 	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+
+	const [openDeliverableTargetDialog, setOpenDeliverableTargetDialog] = React.useState<boolean>();
+	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
+
+	const [openProjectDialog, setOpenProjectDialog] = React.useState<boolean>();
+	deliverableTragetLineForm[3].addNewClick = () => setOpenProjectDialog(true);
 
 	const { refetch: deliverableTracklineRefetch } = useQuery(
 		GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
@@ -266,13 +289,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	// updating project_donor field with fetched project_donor  list
 	useEffect(() => {
-		if (projectDonors) {
+		if (cachedProjectDonors) {
 			let array: any = [];
-			projectDonors.projDonors.forEach(
-				(elem: {
-					id: string;
-					donor: { id: string; name: string; country: { id: string; name: string } };
-				}) => {
+			cachedProjectDonors.projectDonors.forEach(
+				(elem: { id: string; donor: { id: string; name: string } }) => {
 					if (
 						props.type === DELIVERABLE_ACTIONS.UPDATE &&
 						props.alreadyMappedDonorsIds?.includes(elem.id)
@@ -283,7 +303,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			);
 			deliverableTragetLineForm[3].optionsArray = array;
 		}
-	}, [projectDonors, props]);
+	}, [cachedProjectDonors, props]);
 
 	// updating financial year field with fetched financial year list
 	useEffect(() => {
@@ -295,7 +315,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		setSelectedDeliverableTarget(value.deliverable_target_project);
-		setDonors(value.donors);
+		setDonors(value.donors?.filter((item) => !!item));
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
 		delete (input as any).donors;
@@ -399,7 +419,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
 		console.log(`on update is called with: `, value);
-		setDonors(value.donors);
+		setDonors(value.donors?.filter((item) => !!item));
 		setDonorFormData(value.donorMapValues);
 		let input = { ...value };
 
@@ -520,6 +540,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							message={uploadingFileMessage}
 						/>
 					) : null}
+					{openDeliverableTargetDialog && (
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={openDeliverableTargetDialog}
+							handleClose={() => setOpenDeliverableTargetDialog(false)}
+							project={DashBoardData?.project?.id}
+						/>
+					)}
 				</>
 			</FormDialog>
 			{loading ? <FullScreenLoader /> : null}

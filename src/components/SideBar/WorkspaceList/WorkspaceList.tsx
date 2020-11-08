@@ -63,6 +63,7 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 	const { refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, {
 		variables: { filter: { workspace: dashboardData?.workspace?.id } },
 	});
+	const [isAnyActiveWorkspace, setIsAnyActiveWorkspace] = React.useState<boolean>(false);
 	useQuery(GET_WORKSPACES_BY_ORG, filter);
 
 	/**
@@ -79,6 +80,13 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 			true
 		);
 	} catch (error) {}
+
+	React.useEffect(() => {
+		if (cachedWorkspaces && !isAnyActiveWorkspace) {
+			dispatch(setActiveWorkSpace(cachedWorkspaces?.orgWorkspaces[0]));
+			setIsAnyActiveWorkspace(true);
+		}
+	}, [cachedWorkspaces, dispatch, setActiveWorkSpace]);
 
 	const workspaceEditAccess = userHasAccess(
 		MODULE_CODES.WORKSPACE,
