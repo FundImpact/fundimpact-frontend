@@ -1,11 +1,15 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, ApolloClient, useApolloClient } from "@apollo/client";
 import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../graphql/";
 import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../graphql/donor";
-import { CREATE_ORG_DONOR, UPDATE_ORG_DONOR } from "../../graphql/donor/mutation";
+import {
+	CREATE_ORG_DONOR,
+	UPDATE_ORG_DONOR,
+	CREATE_PROJECT_DONOR,
+} from "../../graphql/donor/mutation";
 import { IInputField } from "../../models";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IDONOR, IDonorProps } from "../../models/donor";
@@ -17,6 +21,13 @@ import FormDialog from "../FormDialog";
 import CommonForm from "../Forms/CommonForm";
 import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
 import { useIntl } from "react-intl";
+import { DONOR_DIALOG_TYPE } from "../../models/donor/constants";
+import {
+	ICreateProjectDonor,
+	IGetProjectDonor,
+	ICreateProjectDonorVariables,
+} from "../../models/project/project";
+import { GET_PROJ_DONORS } from "../../graphql/project";
 
 let inputFields: IInputField[] = addDonorForm;
 
@@ -38,10 +49,51 @@ const validate = (values: IDONOR) => {
 	return errors;
 };
 
+const updateProjectDonorCache = ({
+	apolloClient,
+	projecttDonorCreated,
+}: {
+	apolloClient: ApolloClient<object>;
+	projecttDonorCreated: ICreateProjectDonor;
+}) => {
+	try {
+		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
+			query: GET_PROJ_DONORS,
+			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+		});
+		if (cachedProjectDonors) {
+			apolloClient.writeQuery<IGetProjectDonor>({
+				query: GET_PROJ_DONORS,
+				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+				data: {
+					projectDonors: [
+						projecttDonorCreated.createProjDonor,
+						...cachedProjectDonors.projectDonors,
+					],
+				},
+			});
+		}
+	} catch (err) {
+		console.error(err);
+	}
+};
+
 function Donor(props: IDonorProps) {
 	const [createDonor, { loading: creatingDonor }] = useMutation(CREATE_ORG_DONOR);
 	const [updateDonor, { loading: updatingDonor }] = useMutation(UPDATE_ORG_DONOR);
 	const [getCountryList, { data: countryList }] = useLazyQuery(GET_COUNTRY_LIST);
+
+	const apolloClient = useApolloClient();
+
+	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation<
+		ICreateProjectDonor,
+		ICreateProjectDonorVariables
+	>(CREATE_PROJECT_DONOR, {
+		onCompleted: (data) => {
+			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+		},
+		onError: (error) => console.log("error >> ", error),
+	});
 
 	addDonorFormSelectFields[0].optionsArray = countryList?.countries || [];
 	const initialValues =
@@ -55,7 +107,7 @@ function Donor(props: IDonorProps) {
 		try {
 			let values = removeEmptyKeys<IDONOR>({ objectToCheck: valuesSubmitted });
 
-			await createDonor({
+			const donorCreated = await createDonor({
 				variables: {
 					input: { ...values, organization: dashboardData?.organization?.id },
 				},
@@ -146,6 +198,26 @@ function Donor(props: IDonorProps) {
 					}
 				},
 			});
+			console.log(donorCreated);
+			if (
+				props.formAction === FORM_ACTIONS.CREATE &&
+				props.dialogType === DONOR_DIALOG_TYPE.PROJECT &&
+				donorCreated.data
+			) {
+				console.log("props.projectId :>> ", props.projectId);
+				console.log(
+					"donorCreated.data?.createOrgDonor?.id :>> ",
+					donorCreated.data?.createOrgDonor?.id
+				);
+				await createProjectDonor({
+					variables: {
+						input: {
+							donor: donorCreated.data?.createOrgDonor?.id || "",
+							project: props.projectId,
+						},
+					},
+				});
+			}
 			notificationDispatch(setSuccessNotification("Donor Creation Success"));
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Donor Creation Failure"));
@@ -199,20 +271,20 @@ function Donor(props: IDonorProps) {
 		description: `This text will be show as title of donor form`,
 	});
 
-	const subtitle = intl.formatMessage({
-		id: `donorFormSubtitle`,
-		defaultMessage: "Physical addresses of your organizatin like headquater, branch etc.",
-		description: `This text will be show as subtitle of donor form`,
-	});
+	// const subtitle = intl.formatMessage({
+	// 	id: `donorFormSubtitle`,
+	// 	defaultMessage: "Physical addresses of your organizatin like headquater, branch etc.",
+	// 	description: `This text will be show as subtitle of donor form`,
+	// });
 
 	return (
 		<>
 			<FormDialog
 				handleClose={props.handleClose}
 				open={props.open}
-				loading={creatingDonor || updatingDonor}
+				loading={creatingDonor || updatingDonor || creatingProjectDonors}
 				title={title}
-				subtitle={subtitle}
+				subtitle={""}
 				workspace={""}
 				project={""}
 			>

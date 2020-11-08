@@ -110,7 +110,7 @@ export interface IInputFields {
 	onClick?: any;
 	autoCompleteGroupBy?: <T>(option: T) => string;
 	addNew?: boolean;
-	addNewClick?: any;
+	addNewClick?: (() => void) | null;
 }
 
 export interface ISelectField {
@@ -127,6 +127,8 @@ export interface ISelectField {
 	hidden?: boolean;
 	displayName?: string;
 	required?: boolean;
+	addNew?: boolean;
+	addNewClick?: any;
 }
 
 export interface IFormDialog {
