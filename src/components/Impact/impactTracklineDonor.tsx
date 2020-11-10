@@ -120,7 +120,7 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				<DonorYearTagForm
 					{...{
 						initialValues,
-						donors: props.donors,
+						projectDonors: props.donors,
 						TracklineFyId: props.TracklineFyId,
 						organizationCountry,
 						validate,

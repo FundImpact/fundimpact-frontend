@@ -428,6 +428,7 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
 						/>
 					),
 					createButtonAccess: impactUnitCreateAccess,
@@ -443,6 +444,7 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
 						/>
 					),
 					createButtonAccess: impactCategoryCreateAccess,
