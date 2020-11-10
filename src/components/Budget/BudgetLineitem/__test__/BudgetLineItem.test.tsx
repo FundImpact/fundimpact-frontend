@@ -7,12 +7,14 @@ import {
 	GET_BUDGET_TARGET_PROJECT,
 	GET_GRANT_PERIODS_PROJECT_LIST,
 	GET_PROJECT_BUDGET_TARCKING,
+	GET_ORGANIZATION_BUDGET_CATEGORY,
 } from "../../../../graphql/Budget";
 import {
 	GET_ANNUAL_YEAR_LIST,
 	GET_ORG_CURRENCIES_BY_ORG,
 	GET_FINANCIAL_YEARS,
 	GET_CURRENCY_LIST,
+	GET_COUNTRY_LIST,
 } from "../../../../graphql";
 import { renderApollo } from "../../../../utils/test.util";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
@@ -26,6 +28,9 @@ import {
 	mockFinancialYears,
 	mockGrantPeriodsProjectList,
 	mockCurrencyList,
+	mockCountryList,
+	mockOrgBudgetCategory,
+	mockProjectDonors
 } from "../../../../utils/testMock.json";
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
@@ -36,6 +41,7 @@ import { fireEvent, wait } from "@testing-library/dom";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 import { mockBudgetLineItem } from "../../../../utils/testMock.json";
+import { GET_PROJ_DONORS } from "../../../../graphql/project";
 const handleClose = jest.fn();
 
 let dialog: any;
@@ -87,6 +93,46 @@ const mocks = [
 		result: {
 			data: {
 				annualYearList: mockAnnualYearList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: mockProjectDonors,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ORGANIZATION_BUDGET_CATEGORY,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgBudgetCategory: mockOrgBudgetCategory,
 			},
 		},
 	},

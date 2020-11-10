@@ -2,7 +2,7 @@ import React from "react";
 import { renderApollo } from "../../../utils/test.util";
 import { waitForElement } from "@testing-library/react";
 import SideBar from "../SideBar";
-import { GET_ORGANISATIONS } from "../../../graphql";
+import { GET_ORGANISATIONS, GET_COUNTRY_LIST } from "../../../graphql";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
@@ -14,6 +14,7 @@ import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { BrowserRouter } from "react-router-dom";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { mockCountryList } from "../../../utils/testMock.json";
 
 let sidebar: any;
 
@@ -127,6 +128,16 @@ const mocks = [
 			variables: { filter: { workspace: "5" } },
 		},
 		result: { data: { orgProject: ProjectMockOne } },
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
+			},
+		},
 	},
 	{
 		request: {

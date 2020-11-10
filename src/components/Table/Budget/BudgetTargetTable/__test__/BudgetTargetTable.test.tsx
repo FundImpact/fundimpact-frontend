@@ -31,6 +31,8 @@ import {
 	mockBudgetLineItem,
 	mockCurrencyList,
 	mockOrgDonor,
+	mockProjectDonors,
+	mockCountryList
 } from "../../../../../utils/testMock.json";
 import { GET_PROJ_DONORS } from "../../../../../graphql/project";
 import {
@@ -38,6 +40,7 @@ import {
 	GET_ANNUAL_YEAR_LIST,
 	GET_FINANCIAL_YEARS,
 	GET_CURRENCY_LIST,
+	GET_COUNTRY_LIST,
 } from "../../../../../graphql";
 import BudgetTargetTable from "../BudgetTargetTableGraphql";
 import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../../constants";
@@ -66,6 +69,31 @@ const mocks = [
 		result: {
 			data: {
 				projBudgetTrackingsTotalAmount: 10,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: mockProjectDonors,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
 			},
 		},
 	},

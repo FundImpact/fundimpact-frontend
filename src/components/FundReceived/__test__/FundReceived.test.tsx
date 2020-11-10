@@ -4,6 +4,8 @@ import {
 	projectDetails,
 	projectDonorMock,
 	mockFundReceiptProjectList,
+	mockProjectDonors,
+	mockCountryList,
 } from "../../../utils/testMock.json";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -20,11 +22,12 @@ import { getTodaysDate } from "../../../utils";
 import { CREATE_FUND_RECEIPT } from "../../../graphql/FundRecevied/mutation";
 import { IFundReceivedForm } from "../../../models/fundReceived/index.js";
 import FundReceived from "../FundReceivedGraphql";
-import { GET_PROJECT_DONORS } from "../../../graphql";
+import { GET_PROJECT_DONORS, GET_COUNTRY_LIST } from "../../../graphql";
 import {
 	GET_FUND_RECEIPT_PROJECT_LIST,
 	GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 } from "../../../graphql/FundRecevied";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 
 const handleClose = jest.fn();
 
@@ -61,6 +64,31 @@ const mocks = [
 		result: {
 			data: {
 				projDonors: projectDonorMock,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: projectDonorMock,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
 			},
 		},
 	},

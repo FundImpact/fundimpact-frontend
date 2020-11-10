@@ -1,5 +1,5 @@
 import React from "react";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../../graphql";
+import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST, GET_COUNTRY_LIST } from "../../../../graphql";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
@@ -9,6 +9,7 @@ import {
 	projectDetails,
 	mockOrgBudgetCategory,
 	mockProjectDonors,
+	mockCountryList
 } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -39,6 +40,16 @@ const intialFormValue: IBudgetTargetForm = {
 const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
 
 const mocks = [
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
+			},
+		},
+	},
 	{
 		request: {
 			query: GET_ORGANIZATION_BUDGET_CATEGORY,
