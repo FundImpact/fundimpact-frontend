@@ -277,6 +277,18 @@ function Donor(props: IDonorProps) {
 	// 	description: `This text will be show as subtitle of donor form`,
 	// });
 
+	const updateDonorSubtitle = intl.formatMessage({
+		id: "DonorUpdateFormSubtitle",
+		defaultMessage: "Update Donor Of Organization",
+		description: `This text will be show on update Donor form`,
+	});
+
+	const createDonorSubtitle = intl.formatMessage({
+		id: "DonorCreateFormSubtitle",
+		defaultMessage: "Create New Donor For Organization",
+		description: `This text will be show on create Donor form`,
+	});
+
 	return (
 		<>
 			<FormDialog
@@ -284,7 +296,11 @@ function Donor(props: IDonorProps) {
 				open={props.open}
 				loading={creatingDonor || updatingDonor || creatingProjectDonors}
 				title={title}
-				subtitle={""}
+				subtitle={
+					props.formAction === FORM_ACTIONS.CREATE
+						? createDonorSubtitle
+						: updateDonorSubtitle
+				}
 				workspace={""}
 				project={""}
 			>

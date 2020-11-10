@@ -1,5 +1,5 @@
-import { useApolloClient, useMutation } from "@apollo/client";
-import React from "react";
+import { useApolloClient, useMutation, useQuery, useLazyQuery, ApolloClient } from "@apollo/client";
+import React, { useEffect } from "react";
 import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -8,16 +8,143 @@ import { CREATE_GRANT_PERIOD, UPDATE_GRANT_PERIOD } from "../../graphql/grantPer
 import { FETCH_GRANT_PERIODS } from "../../graphql/grantPeriod/query";
 import { FORM_ACTIONS } from "../../models/constants";
 import { GrantPeriodDialogProps } from "../../models/grantPeriod/grantPeriodDialog";
-import { IGrantPeriod } from "../../models/grantPeriod/grantPeriodForm";
+import { IGrantPeriod, DonorType } from "../../models/grantPeriod/grantPeriodForm";
 import { setSuccessNotification } from "../../reducers/notificationReducer";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import FormDialog from "../FormDialog";
 import { GranPeriodForm } from "../Forms/GrantPeriod/GranPeriod";
+import {
+	IGetProjectDonor,
+	ICreateProjectDonor,
+	ICreateProjectDonorVariables,
+} from "../../models/project/project";
+import { IGET_DONOR } from "../../models/donor/query";
+import { GET_PROJ_DONORS } from "../../graphql/project";
+import { GET_ORG_DONOR } from "../../graphql/donor";
+import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+
+const getDonors = ({
+	projectDonors,
+	orgDonors,
+}: {
+	projectDonors: IGetProjectDonor["projectDonors"];
+	orgDonors: IGET_DONOR["orgDonors"];
+}) => {
+	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
+		acc[projDonor.donor.id] = true;
+		return acc;
+	}, {});
+	let donorArr = [];
+	projectDonors.length &&
+		donorArr.push(
+			{ groupName: DonorType.project },
+			...projectDonors
+				.filter((donor) => donor)
+				.map((projDonor) => ({
+					id: projDonor.donor.id,
+					name: projDonor.donor.name,
+				}))
+		);
+
+	let filteredOrgDonor = orgDonors
+		.filter((donor) => !projectDonorIdHash[donor.id])
+		.map((donor) => ({ id: donor.id, name: donor.name }));
+
+	filteredOrgDonor.length &&
+		donorArr.push({ groupName: DonorType.organization }, ...filteredOrgDonor);
+
+	return donorArr;
+};
+
+const checkDonorType = ({
+	projectDonors,
+	donorId,
+}: {
+	projectDonors: IGetProjectDonor["projectDonors"];
+	donorId: string;
+}) => {
+	for (let i = 0; i < projectDonors.length; i++) {
+		if (projectDonors[i].donor.id === donorId) {
+			return DonorType.project;
+		}
+	}
+	return DonorType.organization;
+};
+
+const updateProjectDonorCache = ({
+	apolloClient,
+	projecttDonorCreated,
+}: {
+	apolloClient: ApolloClient<object>;
+	projecttDonorCreated: ICreateProjectDonor;
+}) => {
+	try {
+		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
+			query: GET_PROJ_DONORS,
+			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+		});
+		if (cachedProjectDonors) {
+			apolloClient.writeQuery<IGetProjectDonor>({
+				query: GET_PROJ_DONORS,
+				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+				data: {
+					projectDonors: [
+						projecttDonorCreated.createProjDonor,
+						...cachedProjectDonors.projectDonors,
+					],
+				},
+			});
+		}
+	} catch (err) {
+		console.error(err);
+	}
+};
 
 function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialogProps) {
 	const dashboardData = useDashBoardData();
 	const apolloClient = useApolloClient();
 	const cache = apolloClient.cache;
+
+	const [createProjectDonor] = useMutation<ICreateProjectDonor, ICreateProjectDonorVariables>(
+		CREATE_PROJECT_DONOR,
+		{
+			onCompleted: (data) => {
+				updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+			},
+		}
+	);
+
+	const [getProjectDonors, { data: donorList }] = useLazyQuery(GET_PROJ_DONORS);
+	let [getOrganizationDonors, { data: orgDonors }] = useLazyQuery<IGET_DONOR>(GET_ORG_DONOR);
+
+	useEffect(() => {
+		if (dashboardData?.organization?.id) {
+			getOrganizationDonors({
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+		}
+	}, [getOrganizationDonors]);
+
+	useEffect(() => {
+		if (dashboardData?.project?.id) {
+			getProjectDonors({
+				variables: {
+					filter: {
+						project: dashboardData?.project?.id,
+					},
+				},
+			});
+		}
+	}, [getProjectDonors]);
+
+	const allDonors = getDonors({
+		orgDonors: orgDonors?.orgDonors || [],
+		projectDonors: donorList?.projectDonors || [],
+	});
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -28,26 +155,31 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 	//change type
 	const onCreatingNewGrantPeriodSuccess = (newGrantPeriod: any, action: FORM_ACTIONS) => {
 		console.log("newGrantPeriod :>> ", newGrantPeriod);
-		const cacheData = cache.readQuery({
-			query: FETCH_GRANT_PERIODS,
-			variables: { filter: { project: dashboardData?.project?.id } },
-		});
-		let oldList = (cacheData as any).grantPeriodsProjectList;
-		let newList = oldList ? [...oldList] : [];
-		if (action === FORM_ACTIONS.CREATE) newList = [{ ...newGrantPeriod }, ...newList];
-		else {
-			const indexFound = newList.find((data) => data.id === newGrantPeriod.id);
-			if (indexFound > -1) {
-				newList[indexFound] = { ...newGrantPeriod };
+		try {
+			const cacheData = cache.readQuery({
+				query: FETCH_GRANT_PERIODS,
+				variables: { filter: { project: dashboardData?.project?.id } },
+			});
+			let oldList = (cacheData as any).grantPeriodsProjectList;
+			let newList = oldList ? [...oldList] : [];
+			if (action === FORM_ACTIONS.CREATE) newList = [{ ...newGrantPeriod }, ...newList];
+			else {
+				const indexFound = newList.find((data) => data.id === newGrantPeriod.id);
+				if (indexFound > -1) {
+					newList[indexFound] = { ...newGrantPeriod };
+				}
 			}
+			console.log(`new list`, newList);
+			let tt = cache.writeQuery({
+				query: FETCH_GRANT_PERIODS,
+				data: { grantPeriodsProjectList: newList },
+				variables: { filter: { project: dashboardData?.project?.id } },
+				broadcast: true,
+			});
+		} catch (err) {
+			console.error(err);
 		}
-		console.log(`new list`, newList);
-		let tt = cache.writeQuery({
-			query: FETCH_GRANT_PERIODS,
-			data: { grantPeriodsProjectList: newList },
-			variables: { filter: { project: dashboardData?.project?.id } },
-			broadcast: true,
-		});
+
 		try {
 			const garntPeriodList: any = cache.readQuery({
 				query: FETCH_GRANT_PERIODS,
@@ -110,7 +242,22 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		},
 	});
 
-	const onSubmit = (value: IGrantPeriod) => {
+	const onSubmit = async (value: IGrantPeriod) => {
+		let donorTypeSelected = checkDonorType({
+			projectDonors: donorList?.projectDonors || [],
+			donorId: value?.donor || "",
+		});
+		if (donorTypeSelected === DonorType.organization) {
+			let createdProjectDonor = await createProjectDonor({
+				variables: {
+					input: {
+						donor: value?.donor || "",
+						project: `${dashboardData?.project?.id}` || "",
+					},
+				},
+			});
+		}
+
 		if (action === FORM_ACTIONS.CREATE)
 			return createGrantPeriod({ variables: { input: { ...value } } });
 		const id = value.id;
@@ -141,6 +288,19 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 	}
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(action);
+
+	const updateGrantPeriodSubtitle = intl.formatMessage({
+		id: "GrantPeriodUpdateFormSubtitle",
+		defaultMessage: "Update Grant Period Of Project",
+		description: `This text will be show on Grant Period form for subtitle`,
+	});
+
+	const createGrantPeriodSubtitle = intl.formatMessage({
+		id: "GrantPeriodCreateFormSubtitle",
+		defaultMessage: "Create Grant Period For Project",
+		description: `This text will be show on Grant Period form for subtitle`,
+	});
+
 	return (
 		<div>
 			<FormDialog
@@ -155,12 +315,12 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 						description: `This text will be show on Grant Periodform for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "GrantCategoryFormSubtitle",
-					defaultMessage: "Manage Budget Category",
-					description: `This text will be show on Grant Period form for subtitle`,
-				})}
-				workspace={dashboardData?.workspace?.name || ""}
+				subtitle={
+					action == FORM_ACTIONS.CREATE
+						? createGrantPeriodSubtitle
+						: updateGrantPeriodSubtitle
+				}
+				workspace={dashboardData?.project?.workspace?.name || ""}
 				handleClose={onClose}
 				project={dashboardData?.project?.name || ""}
 			>
@@ -169,6 +329,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 						action={FORM_ACTIONS.CREATE}
 						onCancel={onCancel}
 						onSubmit={onSubmit}
+						allDonors={allDonors}
 					/>
 				) : (
 					<GranPeriodForm
@@ -176,6 +337,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 						onCancel={onCancel}
 						onSubmit={onSubmit}
 						initialValues={defaultValues}
+						allDonors={allDonors}
 					/>
 				)}
 			</FormDialog>

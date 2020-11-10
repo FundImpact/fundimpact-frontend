@@ -3,7 +3,10 @@ import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
 import { FORM_ACTIONS } from "../../../../models/constants";
-import { IBudgetTargetProjectResponse } from "../../../../models/budget/query";
+import {
+	IBudgetTargetProjectResponse,
+	IGET_BUDGET_TARGET_PROJECT,
+} from "../../../../models/budget/query";
 import {
 	IBudgetTargetForm,
 	IBudgetTrackingLineitemForm,
@@ -21,6 +24,7 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 import { ITableHeadings } from "../../../../models";
+import { IBudgetTarget } from "../../../../models/budget";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -350,13 +354,12 @@ function BudgetTargetView({
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
+						{...(selectedBudgetTarget.current
+							? { budgetTarget: selectedBudgetTarget.current }
+							: {})}
 					/>
 				</>
-				{(rowData: {
-					id: string;
-					description: string;
-					donor: { id: string; country: { id: string } };
-				}) => (
+				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (
 					<>
 						<Grid container>
 							<Grid item xs={12}>

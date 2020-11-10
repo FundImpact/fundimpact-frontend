@@ -198,6 +198,19 @@ function BudgetCategory({
 	};
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+
+	const updateBudgetCategorySubtitle = intl.formatMessage({
+		id: "BudgetCategoryUpdateFormSubtitle",
+		defaultMessage: "Update Budget Category Of Organization",
+		description: `This text will be show on update budget category form`,
+	});
+
+	const createBudgetCategorySubtitle = intl.formatMessage({
+		id: "BudgetCategoryCreateFormSubtitle",
+		defaultMessage: "Create New Budget Category For Organization",
+		description: `This text will be show on create budget category form`,
+	});
+
 	return (
 		<>
 			<FormDialog
@@ -213,13 +226,13 @@ function BudgetCategory({
 						description: `This text will be show on Budget category form for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "budgetCategoryFormSubtitle",
-					defaultMessage: "Manage Budget Category",
-					description: `This text will be show on Budget category form for subtitle`,
-				})}
-				workspace={dashboardData?.workspace?.name}
-				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+				subtitle={
+					formAction === FORM_ACTIONS.CREATE
+						? createBudgetCategorySubtitle
+						: updateBudgetCategorySubtitle
+				}
+				workspace={""}
+				project={""}
 			>
 				<CommonForm
 					initialValues={initialValues}

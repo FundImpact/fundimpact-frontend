@@ -1,5 +1,11 @@
 import { FORM_ACTIONS } from "../constants";
 import { IDONOR } from "../donor";
+import { FetchResult } from "@apollo/client";
+
+export enum DonorType {
+	project = "PROJECT'S DONOR",
+	organization = "ALL DONOR",
+}
 
 export interface IGrantPeriod {
 	id?: string;
@@ -14,7 +20,18 @@ export interface IGrantPeriod {
 }
 export type GrantPeriodFormProps = {
 	onCancel: () => void;
-	onSubmit: (values: IGrantPeriod) => void;
+	onSubmit: (
+		value: IGrantPeriod
+	) => Promise<FetchResult<any, Record<string, any>, Record<string, any>> | undefined>;
+	allDonors: (
+		| {
+				id: string;
+				name: string;
+		  }
+		| {
+				groupName: DonorType;
+		  }
+	)[];
 } & (
 	| { action: FORM_ACTIONS.CREATE }
 	| { action: FORM_ACTIONS.UPDATE; initialValues: IGrantPeriod }

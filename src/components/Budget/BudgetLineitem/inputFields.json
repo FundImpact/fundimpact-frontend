@@ -12,9 +12,7 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"type": "select",
 			"displayName": "budget target",
-			"required": true,
-			"addNewClick": {},
-			"addNew": true
+			"required": true
 		},
 		{
 			"name": "annual_year",

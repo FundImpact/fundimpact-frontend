@@ -2,6 +2,7 @@ import { FORM_ACTIONS } from "./constants";
 import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
 import { AttachFile } from "../AttachFile";
 import { ApolloQueryResult } from "@apollo/client";
+import { IGET_BUDGET_TARGET_PROJECT } from "./query";
 
 export interface IBudgetCategory {
 	id?: string;
@@ -56,12 +57,14 @@ export type IBudgetLineitemProps =
 						variables?: Partial<Record<string, any>> | undefined
 				  ) => Promise<ApolloQueryResult<any>>)
 				| undefined;
+			budgetTarget?: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0];
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IBudgetTrackingLineitemForm;
+			budgetTarget?: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0];
 	  };
 
 export type IBudgetCategoryProps =

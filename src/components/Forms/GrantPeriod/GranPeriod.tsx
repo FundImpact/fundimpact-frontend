@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import {
 	Button,
 	createStyles,
@@ -11,6 +11,7 @@ import {
 	Theme,
 	Box,
 	Typography,
+	ListSubheader,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
@@ -18,7 +19,11 @@ import React, { useEffect, useState } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_PROJECT_DONORS } from "../../../graphql";
 import { FORM_ACTIONS } from "../../../models/constants";
-import { GrantPeriodFormProps, IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
+import {
+	GrantPeriodFormProps,
+	IGrantPeriod,
+	DonorType,
+} from "../../../models/grantPeriod/grantPeriodForm";
 import InputField from "../../InputField/InputField";
 import { ICustomDatePicker } from "./BasicDateRangePicker";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
@@ -26,6 +31,9 @@ import { FormattedMessage } from "react-intl";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 import Donor from "../../Donor";
+import { IGET_DONOR } from "../../../models/donor/query";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { IGetProjectDonor } from "../../../models/project/project";
 
 // import { BasicDateRangePicker } from './dateRange';
 
@@ -52,11 +60,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export function GranPeriodForm(props: GrantPeriodFormProps) {
 	const classes = useStyles();
 	const dashboardData = useDashBoardData();
-	const { data: donorList } = useQuery(GET_PROJ_DONORS, {
-		variables: { filter: { project: dashboardData?.project?.id } },
-	});
+
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
-	useEffect(() => {}, [donorList]);
 
 	const validate = (values: any) => {
 		return {};
@@ -192,17 +197,28 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 											formik.handleChange(event);
 										}}
 									>
-										{donorList?.projectDonors?.map((project: any) => (
-											<MenuItem
-												key={project?.donor?.id}
-												value={project?.donor?.id}
-											>
-												{project?.donor?.name}
-											</MenuItem>
-										))}
-										{!donorList?.projectDonors?.length ? (
+										{props.allDonors.map(
+											(
+												donor:
+													| {
+															id: string;
+															name: string;
+													  }
+													| {
+															groupName: DonorType;
+													  }
+											) =>
+												"groupName" in donor ? (
+													<ListSubheader>{donor.groupName}</ListSubheader>
+												) : (
+													<MenuItem key={donor?.id} value={donor?.id}>
+														{donor?.name}
+													</MenuItem>
+												)
+										)}
+										{!props.allDonors.length && (
 											<MenuItem disabled>No Donors available</MenuItem>
-										) : null}
+										)}
 										<MenuItem onClick={() => setOpenDonorDialog(true)}>
 											<Box display="flex">
 												<AddCircleIcon />

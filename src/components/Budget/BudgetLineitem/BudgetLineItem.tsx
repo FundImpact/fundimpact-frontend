@@ -18,11 +18,12 @@ import {
 } from "../../../graphql/Budget/mutation";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
 import { AttachFile } from "../../../models/AttachFile";
-import { IBudgetLineitemProps } from "../../../models/budget/";
+import { IBudgetLineitemProps, IBudgetTarget } from "../../../models/budget/";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import {
 	IBUDGET_LINE_ITEM_RESPONSE,
 	IGET_BUDGET_TARCKING_LINE_ITEM,
+	IGET_BUDGET_TARGET_PROJECT,
 } from "../../../models/budget/query";
 import { FORM_ACTIONS } from "../../../models/constants";
 import {
@@ -46,6 +47,8 @@ import {
 } from "./inputFields.json";
 import BudgetTarget from "../BudgetTarget";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
+import { Grid, Box, Typography, useTheme } from "@material-ui/core";
+import AmountSpent from "../../Table/Budget/BudgetTargetTable/AmountSpent";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -64,6 +67,57 @@ let budgetTargetHash: {
 		country: { id: string };
 	};
 } = {};
+
+const FormDetails = ({
+	budgetTarget,
+	currency,
+}: {
+	budgetTarget: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0];
+	currency?: string;
+}) => {
+	const theme = useTheme();
+	return (
+		<Grid container>
+			<Grid item xs={12}>
+				<Box py={2} display="flex" justifyContent="space-between">
+					<Typography color="primary">Budget Category</Typography>
+					<Typography>{budgetTarget?.budget_category_organization?.name}</Typography>
+				</Box>
+				<Box py={2} display="flex" justifyContent="space-between">
+					<Typography color="primary">Donor</Typography>
+					<Typography>{budgetTarget?.donor?.name}</Typography>
+				</Box>
+				<Box py={2} display="flex" justifyContent="space-between">
+					<Typography color="primary">Money Spent</Typography>
+					<AmountSpent budgetTargetId={budgetTarget.id}>
+						{(amount: number) => {
+							return (
+								<Box display="flex">
+									<Typography
+										color="textSecondary"
+										style={{ marginRight: theme.spacing(1) }}
+									>
+										{currency}
+									</Typography>
+									<Typography>{amount}</Typography>
+								</Box>
+							);
+						}}
+					</AmountSpent>
+				</Box>
+				<Box py={2} display="flex" justifyContent="space-between">
+					<Typography color="primary">Total Amount</Typography>
+					<Box display="flex">
+						<Typography color="textSecondary" style={{ marginRight: theme.spacing(1) }}>
+							{currency}
+						</Typography>
+						<Typography>{budgetTarget?.total_target_amount}</Typography>
+					</Box>
+				</Box>
+			</Grid>
+		</Grid>
+	);
+};
 
 function BudgetLineitem(props: IBudgetLineitemProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -545,21 +599,20 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			financialYearDonor?.financialYearList || [];
 	}
 
-	budgetLineitemFormSelectFields[0].addNewClick = () => setOpenBudgetTargetDialog(true);
+	// budgetLineitemFormSelectFields[0].addNewClick = () => setOpenBudgetTargetDialog(true);
 	budgetLineitemFormSelectFields[4].addNewClick = () => setOpenGrantPeriodDialog(true);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<>
-			<BudgetTarget
+			{/* <BudgetTarget
 				open={openBudgetTargetDialog}
 				formAction={FORM_ACTIONS.CREATE}
 				handleClose={() => setOpenBudgetTargetDialog(false)}
-			/>
+			/> */}
 			<GrantPeriodDialog
 				open={openGrantPeriodDialog}
 				onClose={() => {
-					console.log("here");
 					setOpenGrantPeriodDialog(false);
 				}}
 				action={FORM_ACTIONS.CREATE}
@@ -570,8 +623,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				loading={creatingLineItem || updatingLineItem}
 				title={newOrEdit + " " + budgetTargetLineTitle}
 				subtitle={""}
-				workspace={dashboardData?.workspace?.name}
+				workspace={dashboardData?.project?.workspace?.name || ""}
 				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+				{...(props.budgetTarget
+					? {
+							formDetails: (
+								<FormDetails
+									budgetTarget={props.budgetTarget}
+									currency={currency?.currencyList[0]?.code}
+								/>
+							),
+					  }
+					: {})}
 			>
 				<CommonForm
 					initialValues={initialValues}
