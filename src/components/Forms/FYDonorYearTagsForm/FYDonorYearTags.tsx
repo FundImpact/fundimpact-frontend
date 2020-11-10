@@ -43,65 +43,79 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const FinancialYearAndGrantPeriodFields = ({
 	formik,
-	donor,
+	projectDonor,
 }: {
 	formik: any;
-	donor: {
+	projectDonor: {
 		id: string;
 		name: string;
 		donor: { id: string; name: string; country: { id: string; name: string } };
 	};
 }) => {
-	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const dashboardData = useDashBoardData();
 	const project = dashboardData?.project?.id;
 
-	const { data: fyData } = useQuery(GET_FINANCIAL_YEARS, {
-		variables: { filter: { country: donor.donor.country?.id } },
-	});
+	// const { data: fyData } = useQuery(GET_FINANCIAL_YEARS, {
+	// 	variables: { filter: { country: donor.donor.country?.id } },
+	// });
+
+	const { data: fyData } = useQuery(GET_FINANCIAL_YEARS);
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
-		variables: { filter: { donor: donor.donor.id, project: project } },
+		variables: { filter: { donor: projectDonor.donor.id, project: project } },
 	});
 	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState<boolean>();
 
+	let noContextAvailable = (
+		<FormattedMessage
+			id="noContextAvailable"
+			defaultMessage="No (context) available"
+			description="This text will be displayed as select field for no context available"
+		/>
+	);
 	return (
 		<>
 			<Grid item xs={12}>
 				<Typography variant="button" display="block" gutterBottom>
-					{`${donor.name} Year Tags`}
+					{`${projectDonor.name} Year Tags`}
 				</Typography>
 			</Grid>
 
 			<Grid item xs={6}>
 				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="demo-simple-select-outlined-label">Financial Year</InputLabel>
+					<InputLabel id="demo-simple-select-outlined-label">
+						<FormattedMessage
+							id="TracklineDonorFinancialYearTags"
+							defaultMessage="Financial Year"
+							description="This text will be displayed as title for financial year on trackline donor dialog"
+						/>
+					</InputLabel>
 
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id={"demo-simple-select-outlined-1"}
 						error={
-							!!formik.errors[`${donor.id}mapValues`]?.financial_year &&
-							!!formik.touched[`${donor.id}mapValues`]?.financial_year
+							!!formik.errors[`${projectDonor.id}mapValues`]?.financial_year &&
+							!!formik.touched[`${projectDonor.id}mapValues`]?.financial_year
 						}
-						value={formik.values[`${donor.id}mapValues.financial_year`]}
+						value={formik.values[`${projectDonor.id}mapValues.financial_year`]}
 						onChange={(event) => {
 							// handleFinancialYearChange(donor.id, event.target.value);
 							formik.handleChange(event);
 						}}
 						onBlur={formik.handleBlur}
 						required
-						defaultValue={formik.values[`${donor.id}mapValues`]?.financial_year}
+						defaultValue={formik.values[`${projectDonor.id}mapValues`]?.financial_year}
 						label={`Financial Year`}
-						name={`${donor.id}mapValues.financial_year`}
-						data-testid={`DeliverabletracklinefinancialYear${donor.id}`}
+						name={`${projectDonor.id}mapValues.financial_year`}
+						data-testid={`DeliverabletracklinefinancialYear${projectDonor.id}`}
 						inputProps={{
-							"data-testid": `DeliverabletracklinefinancialYearInput${donor.id}`,
+							"data-testid": `DeliverabletracklinefinancialYearInput${projectDonor.id}`,
 						}}
 					>
 						{fyData?.financialYearList.length === 0 && (
 							<MenuItem value="">
-								<em>No (context) available</em>
+								<em>{noContextAvailable}</em>
 							</MenuItem>
 						)}
 						{fyData &&
@@ -121,33 +135,40 @@ const FinancialYearAndGrantPeriodFields = ({
 			</Grid>
 			<Grid item xs={6}>
 				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="demo-simple-select-outlined-label">Grant Periods</InputLabel>
-
+					<InputLabel id="demo-simple-select-outlined-label">
+						<FormattedMessage
+							id="TracklineDonorGrantPeriodTags"
+							defaultMessage="Grant Period"
+							description="This text will be displayed as title for Grant Period on trackline donor dialog"
+						/>
+					</InputLabel>
 					<Select
 						labelId="demo-simple-select-outlined-label"
 						id={"demo-simple-select-outlined-1"}
 						error={
-							!!formik.errors[`${donor.id}mapValues`]?.grant_periods_project &&
-							!!formik.touched[`${donor.id}mapValues`]?.grant_periods_project
+							!!formik.errors[`${projectDonor.id}mapValues`]?.grant_periods_project &&
+							!!formik.touched[`${projectDonor.id}mapValues`]?.grant_periods_project
 						}
-						value={formik.values[`${donor.id}mapValues.grant_periods_project`]}
+						value={formik.values[`${projectDonor.id}mapValues.grant_periods_project`]}
 						onChange={(event) => {
 							// handleGrantPeriodChange(donor.id, event.target.value);
 							formik.handleChange(event);
 						}}
 						onBlur={formik.handleBlur}
-						defaultValue={formik.values[`${donor.id}mapValues`]?.grant_periods_project}
+						defaultValue={
+							formik.values[`${projectDonor.id}mapValues`]?.grant_periods_project
+						}
 						required
 						label={`Grant Period`}
-						name={`${donor.id}mapValues.grant_periods_project`}
-						data-testid={`grantPeriod${donor.id}`}
+						name={`${projectDonor.id}mapValues.grant_periods_project`}
+						data-testid={`grantPeriod${projectDonor.id}`}
 						inputProps={{
-							"data-testid": `grantPeriod${donor.id}`,
+							"data-testid": `grantPeriod${projectDonor.id}`,
 						}}
 					>
 						{grantPeriods?.grantPeriodsProjectList.length === 0 && (
 							<MenuItem value="">
-								<em>No (context) available</em>
+								<em>{noContextAvailable}</em>
 							</MenuItem>
 						)}
 						{grantPeriods &&
@@ -175,8 +196,8 @@ const FinancialYearAndGrantPeriodFields = ({
 						</MenuItem>
 					</Select>
 					<FormHelperText error>
-						{formik.touched[`${donor.id}mapValues`]?.grant_periods_project &&
-							formik.errors[`${donor.id}mapValues`]?.grant_periods_project}
+						{formik.touched[`${projectDonor.id}mapValues`]?.grant_periods_project &&
+							formik.errors[`${projectDonor.id}mapValues`]?.grant_periods_project}
 					</FormHelperText>
 				</FormControl>
 			</Grid>
@@ -197,7 +218,7 @@ function DonorYearTagForm({
 	TracklineFyId,
 	formAction,
 	validate,
-	donors,
+	projectDonors,
 	onCreate,
 	onUpdate,
 	onCancel,
@@ -222,8 +243,8 @@ function DonorYearTagForm({
 				return (
 					<Form>
 						<Grid container spacing={2}>
-							{donors.map(
-								(donor: {
+							{projectDonors.map(
+								(projectDonor: {
 									id: string;
 									name: string;
 									donor: {
@@ -233,7 +254,9 @@ function DonorYearTagForm({
 									};
 								}) => {
 									return (
-										<FinancialYearAndGrantPeriodFields {...{ donor, formik }} />
+										<FinancialYearAndGrantPeriodFields
+											{...{ projectDonor, formik }}
+										/>
 									);
 								}
 							)}
@@ -250,7 +273,11 @@ function DonorYearTagForm({
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
 									</Button>
 									<Button className={classes.cancelButton} onClick={onCancel}>
-										Cancel
+										<FormattedMessage
+											id="cancelButtonTracklineDonorForm"
+											defaultMessage="Cancel"
+											description="This text will be displayed for cancel button on trackline donor form"
+										/>
 									</Button>
 								</Box>
 							</Grid>

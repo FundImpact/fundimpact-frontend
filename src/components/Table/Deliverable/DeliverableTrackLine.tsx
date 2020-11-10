@@ -115,6 +115,7 @@ function EditDeliverableTrackLineIcon({
 	useEffect(() => {
 		let deliverableTracklineMapValueObj: any = {};
 		let donors: any = [];
+		console.log("dadada", data);
 		data?.deliverableLinitemFyDonorList?.forEach((elem: any) => {
 			deliverableTracklineMapValueObj[`${elem.project_donor.id}mapValues`] = {
 				id: elem.id,
@@ -124,7 +125,7 @@ function EditDeliverableTrackLineIcon({
 				project_donor: elem.project_donor?.id,
 			};
 			donors.push({
-				id: elem.project_donor?.id,
+				id: elem.project_donor?.donor.id,
 				name: elem.project_donor?.donor?.name,
 				donor: elem.project_donor?.donor,
 			});

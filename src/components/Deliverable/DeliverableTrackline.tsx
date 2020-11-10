@@ -1,5 +1,5 @@
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -43,7 +43,12 @@ import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { CircularPercentage } from "../commons";
 import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../graphql/project";
 import DeliverableTarget from "./DeliverableTarget";
-import { IGetProjectDonor } from "../../models/project/project";
+import { IGetProjectDonor, IProjectDonor } from "../../models/project/project";
+import { GET_ORG_DONOR } from "../../graphql/donor";
+import { IGET_DONOR } from "../../models/donor/query";
+import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { updateProjectDonorCache } from "../Project/Project";
+import Donor from "../Donor";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -56,6 +61,29 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 		donors: [],
 	};
 }
+
+const getProjectDonorsWithDonorsId = (
+	selectedDonors: any,
+	projectDonors: IProjectDonor[] | undefined
+) => {
+	let projectDonorsWithSameIdAsSelectedDonors: any = [];
+
+	projectDonors?.forEach((projectDonor: IProjectDonor) => {
+		let projectDonoContainsSelectedDonor = false;
+		selectedDonors?.forEach((selectedDonor: any) => {
+			if (projectDonor.donor.id === selectedDonor.id) {
+				projectDonoContainsSelectedDonor = true;
+				return false;
+			}
+		});
+		if (projectDonoContainsSelectedDonor)
+			projectDonorsWithSameIdAsSelectedDonors.push({
+				...projectDonor,
+				name: projectDonor.donor.name,
+			});
+	});
+	return projectDonorsWithSameIdAsSelectedDonors;
+};
 
 function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const apolloClient = useApolloClient();
@@ -72,12 +100,29 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 
+	useQuery(GET_ORG_DONOR, {
+		variables: { filter: { organization: DashBoardData?.organization?.id } },
+	});
+
 	let cachedProjectDonors: IGetProjectDonor | null = null;
 	try {
 		cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>(
 			{
 				query: GET_PROJ_DONORS,
 				variables: { filter: { project: DashBoardData?.project?.id } },
+			},
+			true
+		);
+	} catch (error) {
+		console.error(error);
+	}
+
+	let cachedOrganizationDonors: IGET_DONOR | null = null;
+	try {
+		cachedOrganizationDonors = apolloClient.readQuery<IGET_DONOR>(
+			{
+				query: GET_ORG_DONOR,
+				variables: { filter: { organization: DashBoardData?.organization?.id } },
 			},
 			true
 		);
@@ -150,8 +195,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [openDeliverableTargetDialog, setOpenDeliverableTargetDialog] = React.useState<boolean>();
 	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
 
-	const [openProjectDialog, setOpenProjectDialog] = React.useState<boolean>();
-	deliverableTragetLineForm[3].addNewClick = () => setOpenProjectDialog(true);
+	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
+	deliverableTragetLineForm[3].addNewClick = () => setOpenDonorDialog(true);
 
 	const { refetch: deliverableTracklineRefetch } = useQuery(
 		GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
@@ -168,6 +213,28 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
+
+	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
+		CREATE_PROJECT_DONOR,
+		{
+			onCompleted: (data) => {
+				updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+			},
+		}
+	);
+
+	const createProjectDonorHelper = (value: any) => {
+		createProjectDonor({
+			variables: {
+				input: {
+					project: DashBoardData?.project?.id,
+					donor: value.id,
+				},
+			},
+		});
+	};
+
+	deliverableTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
 
 	React.useEffect(() => {
 		if (uploadSuccess) {
@@ -287,23 +354,48 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	}, [deliverableTargets]);
 
-	// updating project_donor field with fetched project_donor  list
-	useEffect(() => {
-		if (cachedProjectDonors) {
-			let array: any = [];
-			cachedProjectDonors.projectDonors.forEach(
-				(elem: { id: string; donor: { id: string; name: string } }) => {
-					if (
-						props.type === DELIVERABLE_ACTIONS.UPDATE &&
-						props.alreadyMappedDonorsIds?.includes(elem.id)
-					)
-						array.push({ ...elem, name: elem.donor.name, disabled: true });
-					else array.push({ ...elem, name: elem.donor.name });
-				}
-			);
-			deliverableTragetLineForm[3].optionsArray = array;
-		}
+	deliverableTragetLineForm[3].optionsArray = useMemo(() => {
+		let donorsArray: any = [];
+		if (cachedProjectDonors)
+			cachedProjectDonors.projectDonors.forEach((elem: IProjectDonor) => {
+				if (
+					props.type === DELIVERABLE_ACTIONS.UPDATE &&
+					props.alreadyMappedDonorsIds?.includes(elem.donor.id)
+				)
+					donorsArray.push({
+						...elem,
+						id: elem.donor.id,
+						name: elem.donor.name,
+						disabled: true,
+					});
+				else
+					donorsArray.push({
+						...elem,
+						id: elem.donor.id,
+						name: elem.donor.name,
+					});
+			});
+		return donorsArray;
 	}, [cachedProjectDonors, props]);
+
+	deliverableTragetLineForm[3].secondOptionsArray = useMemo(() => {
+		let organizationMinusProjectDonors: any = [];
+		if (cachedProjectDonors && cachedOrganizationDonors)
+			cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
+				let projectDonorNotContainsOrgDonor = true;
+				cachedProjectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
+					if (orgDonor.id === projectDonor.donor.id) {
+						projectDonorNotContainsOrgDonor = false;
+						return false;
+					}
+				});
+				if (projectDonorNotContainsOrgDonor)
+					organizationMinusProjectDonors.push({
+						...orgDonor,
+					});
+			});
+		return organizationMinusProjectDonors;
+	}, [cachedProjectDonors, cachedOrganizationDonors]);
 
 	// updating financial year field with fetched financial year list
 	useEffect(() => {
@@ -315,12 +407,19 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		setSelectedDeliverableTarget(value.deliverable_target_project);
-		setDonors(value.donors?.filter((item) => !!item));
+
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
 		delete (input as any).donors;
 		if (!input.annual_year) delete (input as any).annual_year;
 		if (!input.financial_year) delete (input as any).financial_year;
+
+		let donorsForTracklineDonorForm = getProjectDonorsWithDonorsId(
+			value.donors?.filter((item) => !!item),
+			cachedProjectDonors?.projectDonors
+		);
+		setDonors(donorsForTracklineDonorForm);
+
 		createDeliverableTrackline({
 			variables: { input },
 			update: async (
@@ -418,16 +517,23 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		let DeliverableTargetLineId = value.id;
 		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
-		console.log(`on update is called with: `, value);
-		setDonors(value.donors?.filter((item) => !!item));
+
 		setDonorFormData(value.donorMapValues);
 		let input = { ...value };
 
+		let donorsForTracklineDonorForm = getProjectDonorsWithDonorsId(
+			value.donors?.filter((item) => !!item),
+			cachedProjectDonors?.projectDonors
+		);
+		setDonors(donorsForTracklineDonorForm);
+
 		if (!input.annual_year) delete (input as any).annual_year;
 		if (!input.financial_year) delete (input as any).financial_year;
+
 		delete (input as any).donors;
 		delete (input as any).donorMapValues;
 		delete (input as any).attachments;
+
 		updateDeliverableTrackLine({
 			variables: {
 				id: DeliverableTargetLineId,
@@ -546,6 +652,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							open={openDeliverableTargetDialog}
 							handleClose={() => setOpenDeliverableTargetDialog(false)}
 							project={DashBoardData?.project?.id}
+						/>
+					)}
+					{openDonorDialog && (
+						<Donor
+							open={openDonorDialog}
+							formAction={FORM_ACTIONS.CREATE}
+							handleClose={() => setOpenDonorDialog(false)}
 						/>
 					)}
 				</>

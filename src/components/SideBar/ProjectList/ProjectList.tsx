@@ -179,6 +179,7 @@ export default function ProjectList({
 													: ""
 											}
 											key={project.id}
+											button
 											onClick={() => {
 												dispatch(setProject(project));
 												setIsAnyActiveProject(true);

@@ -69,19 +69,20 @@ export interface ICreateProjectDonorVariables {
 }
 
 export interface IGetProjectDonor {
-	projectDonors: {
-		id: string;
-		project: {
-			id: string;
-			name: string;
-		};
-		donor: {
-			id: string;
-			name: string;
-		};
-	}[];
+	projectDonors: IProjectDonor[];
 }
 
+export interface IProjectDonor {
+	id: string;
+	project: {
+		id: string;
+		name: string;
+	};
+	donor: {
+		id: string;
+		name: string;
+	};
+}
 export interface ICreateProject {
 	createOrgProject: {
 		id: number;
