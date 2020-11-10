@@ -329,9 +329,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						name: elem.donor.name,
 					});
 			});
-		if (props.type === IMPACT_ACTIONS.UPDATE)
-			console.log("ddonorsAA", props.alreadyMappedDonorsIds);
-		console.log("donorsArray", donorsArray, cachedProjectDonorsForImpact);
 		return donorsArray;
 	}, [cachedProjectDonorsForImpact, props]);
 
@@ -501,13 +498,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			value.donors?.filter((item) => !!item),
 			cachedProjectDonorsForImpact?.projectDonors
 		);
-		console.log(
-			"here",
-			donorsForTracklineDonorForm,
-			value.donors,
-			cachedProjectDonorsForImpact?.projectDonors
-		);
-
 		setDonors(donorsForTracklineDonorForm);
 
 		delete (input as any).donors;
