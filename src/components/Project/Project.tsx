@@ -323,7 +323,6 @@ function Project(props: ProjectProps) {
 					createdProject: createdProject.data.createOrgProject,
 				}));
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
-			console.log('selectDonors :>> ', selectDonors);
 			selectDonors.forEach(async (donorId) => {
 				await createDonors({
 					projectId: createdProject.data.createOrgProject.id,

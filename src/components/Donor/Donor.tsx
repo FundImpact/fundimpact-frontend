@@ -92,7 +92,7 @@ function Donor(props: IDonorProps) {
 		onCompleted: (data) => {
 			updateProjectDonorCache({ apolloClient, projectDonorCreated: data });
 		},
-		onError: (error) => console.log("error >> ", error),
+		onError: (error) => console.error(error),
 	});
 
 	addDonorFormSelectFields[0].optionsArray = countryList?.countries || [];
@@ -198,17 +198,11 @@ function Donor(props: IDonorProps) {
 					}
 				},
 			});
-			console.log(donorCreated);
 			if (
 				props.formAction === FORM_ACTIONS.CREATE &&
 				props.dialogType === DONOR_DIALOG_TYPE.PROJECT &&
 				donorCreated.data
 			) {
-				console.log("props.projectId :>> ", props.projectId);
-				console.log(
-					"donorCreated.data?.createOrgDonor?.id :>> ",
-					donorCreated.data?.createOrgDonor?.id
-				);
 				await createProjectDonor({
 					variables: {
 						input: {

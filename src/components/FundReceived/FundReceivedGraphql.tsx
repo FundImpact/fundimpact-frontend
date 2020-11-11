@@ -103,13 +103,11 @@ function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: I
 			},
 		});
 	}, [getOrganizationDonors]);
-	console.log('DonorType :>> ', DonorType);
 	const initialFormValues = getInitialFormValues({
 		formAction,
 		initialValues,
 		projectDonors: donorList?.projectDonors || [],
 	});
-	console.log('initialFormValues :>> ', initialFormValues);
 
 	useEffect(() => {
 		if (dashboardData) {

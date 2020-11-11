@@ -363,7 +363,6 @@ function FundReceivedContainer({
 		projectDonors: projectDonors,
 		orgDonors: orgDonors,
 	});
-	console.log('fundReceivedForm[2].optionsArray :>> ', fundReceivedForm[2].optionsArray);
 	const notificationDispatch = useNotificationDispatch();
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
 	const submitForm = useCallback(
