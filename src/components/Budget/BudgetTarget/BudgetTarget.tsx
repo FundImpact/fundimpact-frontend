@@ -101,27 +101,27 @@ const checkDonorType = ({
 };
 
 const updateProjectDonorCache = ({
-	apolloClient,
 	projecttDonorCreated,
+	apolloClient,
 }: {
 	apolloClient: ApolloClient<object>;
 	projecttDonorCreated: ICreateProjectDonor;
 }) => {
 	try {
 		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
-			query: GET_PROJ_DONORS,
 			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+			query: GET_PROJ_DONORS,
 		});
 		if (cachedProjectDonors) {
 			apolloClient.writeQuery<IGetProjectDonor>({
 				query: GET_PROJ_DONORS,
-				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
 				data: {
 					projectDonors: [
 						projecttDonorCreated.createProjDonor,
 						...cachedProjectDonors.projectDonors,
 					],
 				},
+				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
 			});
 		}
 	} catch (err) {
