@@ -50,24 +50,24 @@ const validate = (values: IDONOR) => {
 };
 
 const updateProjectDonorCache = ({
+	projectDonorCreated,
 	apolloClient,
-	projecttDonorCreated,
 }: {
+	projectDonorCreated: ICreateProjectDonor;
 	apolloClient: ApolloClient<object>;
-	projecttDonorCreated: ICreateProjectDonor;
 }) => {
 	try {
 		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
 			query: GET_PROJ_DONORS,
-			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+			variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
 		});
 		if (cachedProjectDonors) {
 			apolloClient.writeQuery<IGetProjectDonor>({
 				query: GET_PROJ_DONORS,
-				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+				variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
 				data: {
 					projectDonors: [
-						projecttDonorCreated.createProjDonor,
+						projectDonorCreated.createProjDonor,
 						...cachedProjectDonors.projectDonors,
 					],
 				},
