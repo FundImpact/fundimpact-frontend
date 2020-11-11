@@ -68,7 +68,6 @@ let budgetTargetHash: {
 	};
 } = {};
 
-//write formatted message
 const FormDetails = ({
 	budgetTarget,
 	currency,
@@ -181,7 +180,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		},
 	});
 
-	const [openBudgetTargetDialog, setOpenBudgetTargetDialog] = useState<boolean>(false);
+	// const [openBudgetTargetDialog, setOpenBudgetTargetDialog] = useState<boolean>(false);
 	const [openGrantPeriodDialog, setOpenGrantPeriodDialog] = useState<boolean>(false);
 
 	const { handleClose } = props;
