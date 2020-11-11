@@ -75,6 +75,21 @@ let mockProjectDonors = [
 const mocks = [
 	{
 		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: mockProjectDonors,
+			},
+		},
+	},
+	{
+		request: {
 			query: GET_USER_ROLES,
 			variables: {
 				filter: {
@@ -101,21 +116,6 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_PROJ_DONORS,
-			variables: {
-				filter: {
-					project: 3,
-				},
-			},
-		},
-		result: {
-			data: {
-				projectDonors: mockProjectDonors,
-			},
-		},
-	},
-	{
-		request: {
 			query: GET_ORG_DONOR,
 			variables: {
 				filter: {
@@ -131,16 +131,6 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_COUNTRY_LIST,
-		},
-		result: {
-			data: {
-				countries: mockCountryList,
-			},
-		},
-	},
-	{
-		request: {
 			query: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 			variables: {
 				filter: {
@@ -151,6 +141,16 @@ const mocks = [
 		result: {
 			data: {
 				fundReceiptProjectListCount: 2,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
 			},
 		},
 	},

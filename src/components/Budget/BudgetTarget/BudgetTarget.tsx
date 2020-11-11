@@ -53,11 +53,11 @@ interface IBudgetTargetSubmittedValues extends Omit<IBudgetTargetForm, "donor"> 
 }
 
 const getDonors = ({
-	projectDonors,
 	orgDonors,
+	projectDonors,
 }: {
-	projectDonors: IGetProjectDonor["projectDonors"];
 	orgDonors: IGET_DONOR["orgDonors"];
+	projectDonors: IGetProjectDonor["projectDonors"];
 }) => {
 	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
 		acc[projDonor.donor.id] = true;
@@ -70,8 +70,8 @@ const getDonors = ({
 			...projectDonors
 				.filter((donor) => donor)
 				.map((projDonor) => ({
-					id: projDonor.donor.id,
 					name: projDonor.donor.name,
+					id: projDonor.donor.id,
 				}))
 		);
 

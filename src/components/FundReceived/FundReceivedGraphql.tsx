@@ -43,21 +43,21 @@ const getInitialFormValues = ({
 };
 
 const updateProjectDonorCache = ({
-	apolloClient,
 	projecttDonorCreated,
+	apolloClient,
 }: {
-	apolloClient: ApolloClient<object>;
 	projecttDonorCreated: ICreateProjectDonor;
+	apolloClient: ApolloClient<object>;
 }) => {
 	try {
 		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
-			query: GET_PROJ_DONORS,
 			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+			query: GET_PROJ_DONORS,
 		});
 		if (cachedProjectDonors) {
 			apolloClient.writeQuery<IGetProjectDonor>({
-				query: GET_PROJ_DONORS,
 				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+				query: GET_PROJ_DONORS,
 				data: {
 					projectDonors: [
 						projecttDonorCreated.createProjDonor,
