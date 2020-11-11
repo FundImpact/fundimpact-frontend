@@ -1,4 +1,4 @@
-import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useMemo } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -37,7 +37,7 @@ import {
 import { AttachFile } from "../../models/AttachFile";
 import AttachFileForm from "../Forms/AttachFiles";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
-import { CircularPercentage } from "../commons";
+import { CircularPercentage, FormDetails } from "../commons";
 import { GET_ALL_IMPACT_AMOUNT_SPEND } from "../../graphql/Impact/query";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { GET_PROJ_DONORS } from "../../graphql/project";
@@ -218,6 +218,69 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
 	};
 	if (uploadSuccess) successMessage();
+
+	const [currentTarget, setCurrentTarget] = React.useState<string | number | undefined>(
+		props.impactTarget ? props.impactTarget : ""
+	);
+	const [formDetailsArray, setFormDetailsArray] = React.useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [getImpactTarget, { data: impactTargetResponse }] = useLazyQuery(
+		GET_IMPACT_TARGET_BY_PROJECT
+	);
+	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
+		GET_ACHIEVED_VALLUE_BY_TARGET
+	);
+	impactTragetLineForm[0].getInputValue = setCurrentTarget;
+
+	useEffect(() => {
+		if (currentTarget) {
+			getImpactTarget({ variables: { filter: { id: currentTarget } } });
+			getTargetAchieveValue({
+				variables: { filter: { impactTargetProject: currentTarget } },
+			});
+		}
+	}, [currentTarget, getImpactTarget, getTargetAchieveValue]);
+
+	const intl = useIntl();
+
+	let impactCategoryLabel = intl.formatMessage({
+		id: "impactCategoryLabelFormDetail",
+		defaultMessage: "Impact's Category",
+		description: "This text will be show on deliverable trackline form for impact category",
+	});
+	let impactTotalTargetLabel = intl.formatMessage({
+		id: "impactTotalTargetLabelFormDetail",
+		defaultMessage: "Impact's Target",
+		description: "This text will be show on deliverable trackline form for impact category",
+	});
+	let impactAchievedTargetLabel = intl.formatMessage({
+		id: "impactAchievedTargetLabelFormDetail",
+		defaultMessage: "Impact's Achived",
+		description: "This text will be show on deliverable trackline form for impact category",
+	});
+
+	useEffect(() => {
+		let fetchedImpactTarget = impactTargetResponse?.impactTargetProjectList[0];
+		if (fetchedImpactTarget && achivedValue) {
+			setFormDetailsArray([
+				{
+					label: impactCategoryLabel,
+					value: fetchedImpactTarget.impact_category_unit.impact_category_org.name,
+				},
+				{
+					label: impactTotalTargetLabel,
+					value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+				},
+				{
+					label: impactAchievedTargetLabel,
+					value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+				},
+			]);
+		}
+	}, [impactTargetResponse, achivedValue, setFormDetailsArray]);
+
+	let formDetailsComponent = <FormDetails formDetails={formDetailsArray} />;
 
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
@@ -569,7 +632,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			}}
 		/>
 	);
-	const intl = useIntl();
+
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -592,6 +655,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
+				formDetails={formDetailsComponent}
 			>
 				<Stepper
 					stepperHelpers={{
