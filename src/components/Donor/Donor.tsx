@@ -90,7 +90,7 @@ function Donor(props: IDonorProps) {
 		ICreateProjectDonorVariables
 	>(CREATE_PROJECT_DONOR, {
 		onCompleted: (data) => {
-			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+			updateProjectDonorCache({ apolloClient, projectDonorCreated: data });
 		},
 		onError: (error) => console.log("error >> ", error),
 	});
