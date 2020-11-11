@@ -22,6 +22,7 @@ import {
 import { IGET_DONOR } from "../../models/donor/query";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { DonorType } from "../../models/fundReceived/conatsnt";
 
 const getInitialFormValues = ({
 	formAction,
@@ -37,7 +38,7 @@ const getInitialFormValues = ({
 	}
 	return {
 		amount: "",
-		project_donor: projectDonors.length === 1 ? projectDonors[0].id : "",
+		project_donor: projectDonors.length === 1 ? projectDonors[0].id + `-${DonorType.project}`: "",
 		reporting_date: getTodaysDate(),
 	};
 };
@@ -102,12 +103,13 @@ function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: I
 			},
 		});
 	}, [getOrganizationDonors]);
-
+	console.log('DonorType :>> ', DonorType);
 	const initialFormValues = getInitialFormValues({
 		formAction,
 		initialValues,
 		projectDonors: donorList?.projectDonors || [],
 	});
+	console.log('initialFormValues :>> ', initialFormValues);
 
 	useEffect(() => {
 		if (dashboardData) {

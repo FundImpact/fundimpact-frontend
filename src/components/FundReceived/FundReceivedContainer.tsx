@@ -28,6 +28,7 @@ import {
 	ICreateProjectDonor,
 	ICreateProjectDonorVariables,
 } from "../../models/project/project";
+import { DonorType } from "../../models/fundReceived/conatsnt";
 
 interface IFundReceivedContainerProps {
 	formAction: FORM_ACTIONS;
@@ -112,11 +113,6 @@ const validate = (values: IFundReceivedForm) => {
 	return errors;
 };
 
-enum donorType {
-	project = "PROJECT'S DONOR",
-	organization = "ALL DONOR",
-}
-
 const getDonors = ({
 	projectDonors,
 	orgDonors,
@@ -131,21 +127,21 @@ const getDonors = ({
 	let donorArr = [];
 	projectDonors.length &&
 		donorArr.push(
-			{ groupName: donorType.project },
+			{ groupName: DonorType.project },
 			...projectDonors
 				.filter((donor) => donor)
 				.map((projDonor) => ({
-					id: projDonor.id + `-${donorType.project}`,
+					id: projDonor.id + `-${DonorType.project}`,
 					name: projDonor.donor.name,
 				}))
 		);
 
 	let filteredOrgDonor = orgDonors
 		.filter((donor) => !projectDonorIdHash[donor.id])
-		.map((donor) => ({ id: donor.id + `-${donorType.organization}`, name: donor.name }));
+		.map((donor) => ({ id: donor.id + `-${DonorType.organization}`, name: donor.name }));
 
 	filteredOrgDonor.length &&
-		donorArr.push({ groupName: donorType.organization }, ...filteredOrgDonor);
+		donorArr.push({ groupName: DonorType.organization }, ...filteredOrgDonor);
 
 	return donorArr;
 };
@@ -314,7 +310,7 @@ const onFormSubmit = async ({
 		let projectDonorId = valuesSubmitted.project_donor.split("-")[0];
 		let donorSelected = valuesSubmitted.project_donor.split("-")[1];
 
-		if (donorSelected === donorType.organization) {
+		if (donorSelected === DonorType.organization) {
 			let createdProjectDonor = await createProjectDonor({
 				variables: {
 					input: {
@@ -367,6 +363,7 @@ function FundReceivedContainer({
 		projectDonors: projectDonors,
 		orgDonors: orgDonors,
 	});
+	console.log('fundReceivedForm[2].optionsArray :>> ', fundReceivedForm[2].optionsArray);
 	const notificationDispatch = useNotificationDispatch();
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
 	const submitForm = useCallback(
