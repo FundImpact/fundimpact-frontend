@@ -73,23 +73,23 @@ const checkDonorType = ({
 
 const updateProjectDonorCache = ({
 	apolloClient,
-	projecttDonorCreated,
+	projectDonorCreated,
 }: {
 	apolloClient: ApolloClient<object>;
-	projecttDonorCreated: ICreateProjectDonor;
+	projectDonorCreated: ICreateProjectDonor;
 }) => {
 	try {
 		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
+			variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
 			query: GET_PROJ_DONORS,
-			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
 		});
 		if (cachedProjectDonors) {
 			apolloClient.writeQuery<IGetProjectDonor>({
+				variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
 				query: GET_PROJ_DONORS,
-				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
 				data: {
 					projectDonors: [
-						projecttDonorCreated.createProjDonor,
+						projectDonorCreated.createProjDonor,
 						...cachedProjectDonors.projectDonors,
 					],
 				},
@@ -109,7 +109,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		CREATE_PROJECT_DONOR,
 		{
 			onCompleted: (data) => {
-				updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+				updateProjectDonorCache({ apolloClient, projectDonorCreated: data });
 			},
 		}
 	);
