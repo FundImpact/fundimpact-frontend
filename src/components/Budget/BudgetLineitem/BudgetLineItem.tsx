@@ -236,7 +236,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			} else {
 				budgetLineitemFormSelectFields[2].hidden = false;
 				budgetLineitemFormSelectFields[4].size = 12;
+			}
+
+			if (!values.budget_targets_project) {
 				budgetLineitemFormSelectFields[4].optionsArray = [];
+			} else {
+				budgetLineitemFormSelectFields[4].optionsArray =
+					grantPeriodProject?.grantPeriodsProjectList || [];
 			}
 
 			if (!values.budget_targets_project) {
