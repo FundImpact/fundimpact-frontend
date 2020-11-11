@@ -101,7 +101,7 @@ export const RolesContainer = () => {
 						</>
 					)}
 				</Grid>
-				{userRoleCreateAccess && (
+				{/* {userRoleCreateAccess && (
 					<Fab
 						style={{ position: "fixed", right: "0px", bottom: "10px" }}
 						data-testid="add-role-button"
@@ -112,7 +112,7 @@ export const RolesContainer = () => {
 					>
 						<AddIcon />
 					</Fab>
-				)}
+				)} */}
 			</Box>
 			<AddRoleForm open={open} handleClose={() => setOpen(false)} />
 		</Box>
