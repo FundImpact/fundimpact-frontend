@@ -68,6 +68,7 @@ let budgetTargetHash: {
 	};
 } = {};
 
+//write formatted message
 const FormDetails = ({
 	budgetTarget,
 	currency,
