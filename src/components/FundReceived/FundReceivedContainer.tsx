@@ -75,7 +75,6 @@ interface IFormSubmitProps {
 			| MutationFunctionOptions<ICreateProjectDonor, ICreateProjectDonorVariables>
 			| undefined
 	) => Promise<FetchResult<ICreateProjectDonor, Record<string, any>, Record<string, any>>>;
-	projectDonors: IGetProjectDonor["projectDonors"];
 }
 
 interface IUpdateFundReceiptProps {
@@ -136,34 +135,19 @@ const getDonors = ({
 			...projectDonors
 				.filter((donor) => donor)
 				.map((projDonor) => ({
-					id: projDonor.id,
+					id: projDonor.id + `-${donorType.project}`,
 					name: projDonor.donor.name,
 				}))
 		);
 
 	let filteredOrgDonor = orgDonors
 		.filter((donor) => !projectDonorIdHash[donor.id])
-		.map((donor) => ({ id: donor.id, name: donor.name }));
+		.map((donor) => ({ id: donor.id + `-${donorType.organization}`, name: donor.name }));
 
 	filteredOrgDonor.length &&
 		donorArr.push({ groupName: donorType.organization }, ...filteredOrgDonor);
 
 	return donorArr;
-};
-
-const checkDonorType = ({
-	projectDonors,
-	donorId,
-}: {
-	projectDonors: IGetProjectDonor["projectDonors"];
-	donorId: string;
-}) => {
-	for (let i = 0; i < projectDonors.length; i++) {
-		if (projectDonors[i].id === donorId) {
-			return donorType.project;
-		}
-	}
-	return donorType.organization;
 };
 
 const updateFundReceiptProjectTotalAmount = ({
@@ -325,19 +309,16 @@ const onFormSubmit = async ({
 	updateFundReceipt,
 	initialFormValues,
 	createProjectDonor,
-	projectDonors,
 }: IFormSubmitProps) => {
 	try {
-		let projectDonorId = valuesSubmitted.project_donor;
-		let donorSelected = checkDonorType({
-			projectDonors,
-			donorId: valuesSubmitted.project_donor,
-		});
+		let projectDonorId = valuesSubmitted.project_donor.split("-")[0];
+		let donorSelected = valuesSubmitted.project_donor.split("-")[1];
+
 		if (donorSelected === donorType.organization) {
 			let createdProjectDonor = await createProjectDonor({
 				variables: {
 					input: {
-						donor: valuesSubmitted.project_donor,
+						donor: valuesSubmitted.project_donor.split("-")[0],
 						project: `${project}` || "",
 					},
 				},
@@ -399,7 +380,6 @@ function FundReceivedContainer({
 				updateFundReceipt,
 				initialFormValues: initialValues,
 				createProjectDonor,
-				projectDonors,
 			});
 			handleClose();
 		},

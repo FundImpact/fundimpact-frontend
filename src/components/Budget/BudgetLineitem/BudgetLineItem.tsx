@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useCallback, useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -68,6 +68,7 @@ let budgetTargetHash: {
 	};
 } = {};
 
+//write formatted message
 const FormDetails = ({
 	budgetTarget,
 	currency,
@@ -80,15 +81,33 @@ const FormDetails = ({
 		<Grid container>
 			<Grid item xs={12}>
 				<Box py={2} display="flex" justifyContent="space-between">
-					<Typography color="primary">Budget Category</Typography>
+					<Typography color="primary">
+						<FormattedMessage
+							id="budgetCategoryTitle"
+							defaultMessage="Budget Category"
+							description="This text will tell user about budget category"
+						/>
+					</Typography>
 					<Typography>{budgetTarget?.budget_category_organization?.name}</Typography>
 				</Box>
 				<Box py={2} display="flex" justifyContent="space-between">
-					<Typography color="primary">Donor</Typography>
+					<Typography color="primary">
+						<FormattedMessage
+							id="donorTitle"
+							defaultMessage="Donor"
+							description="This text will tell user about donor"
+						/>
+					</Typography>
 					<Typography>{budgetTarget?.donor?.name}</Typography>
 				</Box>
 				<Box py={2} display="flex" justifyContent="space-between">
-					<Typography color="primary">Money Spent</Typography>
+					<Typography color="primary">
+						<FormattedMessage
+							id="moneySpentTitle"
+							defaultMessage="Money Spent"
+							description="This text will tell user about Money Spent"
+						/>
+					</Typography>
 					<AmountSpent budgetTargetId={budgetTarget.id}>
 						{(amount: number) => {
 							return (
@@ -106,7 +125,13 @@ const FormDetails = ({
 					</AmountSpent>
 				</Box>
 				<Box py={2} display="flex" justifyContent="space-between">
-					<Typography color="primary">Total Amount</Typography>
+					<Typography color="primary">
+						<FormattedMessage
+							id="totalAmoutTitle"
+							defaultMessage="Total Amount"
+							description="This text will tell user about Money Spent"
+						/>
+					</Typography>
 					<Box display="flex">
 						<Typography color="textSecondary" style={{ marginRight: theme.spacing(1) }}>
 							{currency}
