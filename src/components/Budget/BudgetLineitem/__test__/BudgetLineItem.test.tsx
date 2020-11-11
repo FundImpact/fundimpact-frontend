@@ -30,7 +30,8 @@ import {
 	mockCurrencyList,
 	mockCountryList,
 	mockOrgBudgetCategory,
-	mockProjectDonors
+	mockProjectDonors,
+	mockOrgDonor,
 } from "../../../../utils/testMock.json";
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
@@ -42,6 +43,7 @@ import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 import { mockBudgetLineItem } from "../../../../utils/testMock.json";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../../graphql/donor";
 const handleClose = jest.fn();
 
 let dialog: any;
@@ -84,6 +86,21 @@ const mocks = [
 			},
 		},
 		result: { data: mockUserRoles },
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
 	},
 	{
 		request: {
@@ -158,6 +175,21 @@ const mocks = [
 			variables: {
 				filter: {
 					budget_targets_project: "",
+				},
+			},
+		},
+		result: {
+			data: {
+				projBudgetTrackings: mockBudgetLineItem,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_TARCKING,
+			variables: {
+				filter: {
+					budget_targets_project: "3",
 				},
 			},
 		},
@@ -265,6 +297,7 @@ const mocks = [
 			return {
 				data: {
 					createProjBudgetTracking: {
+						id: "1",
 						amount: 213,
 						note: "desc",
 						reporting_date: new Date(getTodaysDate()),
@@ -319,6 +352,10 @@ beforeEach(() => {
 
 const inputIds = [...budgetLineitemFormInputFields, ...budgetLineitemFormSelectFields];
 
+//removing the last filed which is grant period
+let inputFieldsWithRemovedGrantPeriod = [...inputIds];
+inputFieldsWithRemovedGrantPeriod.pop();
+
 const {
 	checkElementHaveCorrectValue,
 	checkSubmitButtonIsEnabled,
@@ -335,23 +372,46 @@ describe("Budget Line Item Dialog tests", () => {
 		});
 	});
 
-	for (let i = 0; i < inputIds.length; i++) {
-		test(`running test for ${inputIds[i].name} to check if the value is equal to value provided`, async () => {
+	test("running test to check value of grant period is equal to value provided", async () => {
+		let budgetTargetField = (await dialog.findByTestId(
+			"createBudgetLineitemBudgetTargetsOption"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(budgetTargetField, {
+				target: { value: intialFormValue.budget_targets_project },
+			});
+		});
+		await expect(budgetTargetField.value).toBe(intialFormValue.budget_targets_project);
+		let grantPeriodField = (await dialog.findByTestId(
+			"createBudgetLineitemGrantPeriodProjectOption"
+		)) as HTMLInputElement;
+		await act(async () => {
+			await fireEvent.change(grantPeriodField, {
+				target: { value: intialFormValue.grant_periods_project },
+			});
+		});
+		await expect(grantPeriodField.value).toBe(intialFormValue.grant_periods_project);
+	});
+
+	//Inorder to check value of grant period we have to provide value of budgetTarget
+	for (let i = 0; i < inputFieldsWithRemovedGrantPeriod.length; i++) {
+		test(`running test for ${inputFieldsWithRemovedGrantPeriod[i].name} to check if the value is equal to value provided`, async () => {
 			await checkElementHaveCorrectValue({
-				inputElement: inputIds[i],
+				inputElement: inputFieldsWithRemovedGrantPeriod[i],
 				reactElement: dialog,
-				value: intialFormValue[inputIds[i].name],
+				value: intialFormValue[inputFieldsWithRemovedGrantPeriod[i].name],
 			});
 		});
 	}
 
-	for (let i = 0; i < inputIds.length; i++) {
-		test(`Required Field test for ${inputIds[i].name}`, async () => {
+	//grantPeriod is not required hence not running required test for grantPeriod
+	for (let i = 0; i < inputFieldsWithRemovedGrantPeriod.length; i++) {
+		test(`Required Field test for ${inputFieldsWithRemovedGrantPeriod[i].name}`, async () => {
 			await requiredFieldTestForInputElement<IBudgetTrackingLineitemForm>({
-				inputFields: inputIds,
+				inputFields: inputFieldsWithRemovedGrantPeriod,
 				reactElement: dialog,
 				intialFormValue,
-				inputElement: inputIds[i],
+				inputElement: inputFieldsWithRemovedGrantPeriod[i],
 			});
 		});
 	}
