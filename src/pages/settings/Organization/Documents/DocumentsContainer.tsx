@@ -9,13 +9,14 @@ import { AttachFile } from "../../../../models/AttachFile";
 import AttachFileForm from "../../../../components/Forms/AttachFiles";
 import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { uploadPercentageCalculator } from "../../../../utils";
-import { CircularPercentage } from "../../../../components/commons";
 import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
 import { GET_ORGANISATIONS_DOCUMENTS } from "../../../../graphql";
 import { useQuery } from "@apollo/client";
 import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../../reducers/notificationReducer";
+
+// import { uploadPercentageCalculator } from "../../../../utils";
+// import { CircularPercentage } from "../../../../components/commons";
 
 export const OrganizationDocumentContainer = () => {
 	const organizationEditAccess = userHasAccess(
@@ -29,40 +30,43 @@ export const OrganizationDocumentContainer = () => {
 	const { data, loading, refetch } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
 	const notificationDispatch = useNotificationDispatch();
-	const [documentsUploadLoading, setDocumentsUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+	// const [documentsUploadLoading, setDocumentsUploadLoading] = React.useState(0);
+	// const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
 
-	React.useEffect(() => {
-		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setDocumentsUploadLoading(percentage);
-	}, [filesArray, totalFilesToUpload, setDocumentsUploadLoading]);
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	// React.useEffect(() => {
+	// 	let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
+	// 	let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+	// 	setDocumentsUploadLoading(percentage);
+	// }, [filesArray, totalFilesToUpload, setDocumentsUploadLoading]);
+
+	// const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+
+	let { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
+		filesArray,
+		setFilesArray
+	);
 
 	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		// if (totalFilesToUpload)
+		notificationDispatch(setSuccessNotification("Files Uploaded !"));
 		refetch();
-		setUploadSuccess(false);
+		setSuccess(false);
 		setFilesArray([]);
 	};
-	if (uploadSuccess) successMessage();
+	if (success) successMessage();
 
-	let { multiplefileUpload } = useMultipleFileUpload();
 	const dashBoardData = useDashBoardData();
 	const attachFileOnSave = () => {
 		let orgId: any = dashBoardData?.organization?.id;
-		setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-		multiplefileUpload({
+		// setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
+		multiplefileUploader({
 			ref: "organization",
 			refId: orgId,
 			field: "attachments",
 			path: `org-${orgId}/organizations`,
-			filesArray: filesArray,
-			setFilesArray: setFilesArray,
-			setUploadSuccess: setUploadSuccess,
 		});
 	};
-	let uploadingFileMessage = CommonUploadingFilesMessage();
+	// let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<Box>
 			<Grid md={12}>
@@ -104,12 +108,12 @@ export const OrganizationDocumentContainer = () => {
 						}}
 					/>
 				)}
-				{documentsUploadLoading > 0 ? (
+				{/* {documentsUploadLoading > 0 ? (
 					<CircularPercentage
 						progress={documentsUploadLoading}
 						message={uploadingFileMessage}
 					/>
-				) : null}
+				) : null} */}
 			</Grid>
 		</Box>
 	);

@@ -3,13 +3,17 @@ export interface AttachFile {
 	file?: any;
 	preview?: string;
 	remark?: string;
-	uploadingStatus?: boolean;
+	uploadStatus?: boolean;
 	name?: string;
 	size?: string;
 	url?: string;
 	caption?: string;
 	ext?: string;
 	created_at?: string;
+	uploaderConfig?: {
+		loaded: number;
+		total: number;
+	};
 }
 
 export interface Attachments {
