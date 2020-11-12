@@ -363,12 +363,11 @@ beforeEach(() => {
 });
 
 const inputIds = [...budgetLineitemFormInputFields];
-
+//remove attach file element
+inputIds.pop();
 //removing the last filed which is grant period
 let inputFieldsWithRemovedGrantPeriod = [...inputIds];
 inputFieldsWithRemovedGrantPeriod.splice(7, 1);
-
-console.log('inputFieldsWithRemovedGrantPeriod :>> ', inputFieldsWithRemovedGrantPeriod);
 
 const {
 	checkElementHaveCorrectValue,
