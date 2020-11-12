@@ -23,7 +23,7 @@ import {
 import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
+import CommonForm from "../../CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
@@ -237,7 +237,7 @@ function BudgetCategory({
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onSubmit}
+					onCreate={onSubmit}
 					onCancel={handleClose}
 					inputFields={inputFields}
 					formAction={formAction}

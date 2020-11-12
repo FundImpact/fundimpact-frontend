@@ -354,9 +354,6 @@ function BudgetTargetView({
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
-						{...(selectedBudgetTarget.current
-							? { budgetTarget: selectedBudgetTarget.current }
-							: {})}
 					/>
 				</>
 				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (

@@ -18,8 +18,8 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { compareObjectKeys } from "../../utils";
 import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
-import CommonForm from "../Forms/CommonForm";
-import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
+import CommonForm from "../CommonForm";
+import { addDonorForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import { DONOR_DIALOG_TYPE } from "../../models/donor/constants";
 import {
@@ -28,8 +28,6 @@ import {
 	ICreateProjectDonorVariables,
 } from "../../models/project/project";
 import { GET_PROJ_DONORS } from "../../graphql/project";
-
-let inputFields: IInputField[] = addDonorForm;
 
 const defaultFormValues: IDONOR = {
 	country: "",
@@ -95,7 +93,7 @@ function Donor(props: IDonorProps) {
 		onError: (error) => console.error(error),
 	});
 
-	addDonorFormSelectFields[0].optionsArray = countryList?.countries || [];
+	addDonorForm[3].optionsArray = countryList?.countries || [];
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
@@ -301,10 +299,9 @@ function Donor(props: IDonorProps) {
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onCreate}
+					onCreate={onCreate}
 					onCancel={props.handleClose}
-					inputFields={inputFields}
-					selectFields={addDonorFormSelectFields}
+					inputFields={addDonorForm}
 					formAction={props.formAction}
 					onUpdate={onUpdate}
 				/>

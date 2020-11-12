@@ -39,12 +39,8 @@ import {
 import { CircularPercentage } from "../../commons";
 import FormDialog from "../../FormDialog";
 import AttachFileForm from "../../Forms/AttachFiles";
-import CommonForm from "../../Forms/CommonForm";
-import {
-	budgetLineitemFormInputFields,
-	budgetLineitemFormSelectFields,
-	budgetLineitemFormButtons,
-} from "./inputFields.json";
+import CommonForm from "../../CommonForm";
+import { budgetLineitemFormInputFields } from "./inputFields.json";
 import BudgetTarget from "../BudgetTarget";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { Grid, Box, Typography, useTheme } from "@material-ui/core";
@@ -68,6 +64,14 @@ let budgetTargetHash: {
 	};
 } = {};
 
+const getBudgetTarget = ({
+	budgetTargetId,
+	budgetTargets,
+}: {
+	budgetTargetId: string;
+	budgetTargets: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"];
+}) => budgetTargets.find((budgetTarget) => budgetTarget.id === budgetTargetId);
+
 const FormDetails = ({
 	budgetTarget,
 	currency,
@@ -79,11 +83,16 @@ const FormDetails = ({
 	return (
 		<Grid container>
 			<Grid item xs={12}>
+				<Box mt={1}>
+					<Typography color="textSecondary" align="center">
+						<Box fontWeight="bolder">{budgetTarget?.name?.toUpperCase()}</Box>
+					</Typography>
+				</Box>
 				<Box py={2} display="flex" justifyContent="space-between">
 					<Typography color="primary">
 						<FormattedMessage
 							id="budgetCategoryTitle"
-							defaultMessage="Budget Category"
+							defaultMessage="Category"
 							description="This text will tell user about budget category"
 						/>
 					</Typography>
@@ -170,13 +179,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
 	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
-	const [selectedBudgetTarget, setSelectedDeliverableTarget] = React.useState<
+	const [submittedBudgetTarget, setSubmittedBudgetTarget] = React.useState<
 		string | number | undefined
 	>("");
 
+	const [selectedBudgetTarget, setSelectedBudgetTarget] = useState<
+		IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]
+	>();
+
 	const { refetch: budgetTrackingRefetch } = useQuery(GET_PROJECT_BUDGET_TARCKING, {
 		variables: {
-			filter: { budget_targets_project: selectedBudgetTarget ? selectedBudgetTarget : "" },
+			filter: { budget_targets_project: submittedBudgetTarget ? submittedBudgetTarget : "" },
 		},
 	});
 
@@ -190,9 +203,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [initialValues]);
 
 	const closeDialog = useCallback(() => {
-		budgetLineitemFormSelectFields[2].hidden = false;
-		budgetLineitemFormSelectFields[4].size = 12;
-		budgetLineitemFormSelectFields[4].optionsArray = [];
+		budgetLineitemFormInputFields[5].hidden = false;
+		budgetLineitemFormInputFields[7].size = 12;
+		budgetLineitemFormInputFields[7].optionsArray = [];
 		handleClose();
 	}, [handleClose]);
 
@@ -274,10 +287,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [props]);
 
 	/* Open Attach File Form*/
-	budgetLineitemFormButtons[0].onClick = () => setOpenAttachFiles(true);
+	budgetLineitemFormInputFields[8].onClick = () => setOpenAttachFiles(true);
 
-	if (filesArray.length) budgetLineitemFormButtons[0].label = "View Files";
-	else budgetLineitemFormButtons[0].label = "Attach Files";
+	if (filesArray.length) budgetLineitemFormInputFields[8].label = "View Files";
+	else budgetLineitemFormInputFields[8].label = "Attach Files";
 
 	useEffect(() => {
 		if (currentProject) {
@@ -309,17 +322,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				budgetTargetHash[values.budget_targets_project]?.country?.id ===
 					dashboardData?.organization?.country?.id
 			) {
-				budgetLineitemFormSelectFields[2].hidden = true;
-				budgetLineitemFormSelectFields[4].size = 6;
+				budgetLineitemFormInputFields[5].hidden = true;
+				budgetLineitemFormInputFields[7].size = 6;
 			} else {
-				budgetLineitemFormSelectFields[2].hidden = false;
-				budgetLineitemFormSelectFields[4].size = 12;
+				budgetLineitemFormInputFields[5].hidden = false;
+				budgetLineitemFormInputFields[7].size = 12;
 			}
 
 			if (!values.budget_targets_project) {
-				budgetLineitemFormSelectFields[4].optionsArray = [];
+				budgetLineitemFormInputFields[7].optionsArray = [];
 			} else {
-				budgetLineitemFormSelectFields[4].optionsArray =
+				budgetLineitemFormInputFields[7].optionsArray =
 					grantPeriodProject?.grantPeriodsProjectList || [];
 			}
 
@@ -421,13 +434,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
-		setSelectedDeliverableTarget(valuesSubmitted.budget_targets_project);
+		setSubmittedBudgetTarget(valuesSubmitted.budget_targets_project);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
 			objectToCheck: valuesSubmitted,
 		});
 
 		try {
-			if (budgetLineitemFormSelectFields[2].hidden) {
+			if (budgetLineitemFormInputFields[5].hidden) {
 				values.fy_donor = values.fy_org;
 			}
 			await createProjectBudgetTracking({
@@ -548,7 +561,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			}
 			delete (values as any).id;
 			delete (values as any).attachments;
-			if (budgetLineitemFormSelectFields[2].hidden) {
+			if (budgetLineitemFormInputFields[5].hidden) {
 				values.fy_donor = values.fy_org;
 			}
 			await updateProjectBudgetTracking({
@@ -597,12 +610,32 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	};
 
+	useEffect(() => {
+		if (initialValues.budget_targets_project) {
+			setSelectedBudgetTarget(
+				getBudgetTarget({
+					budgetTargetId: initialValues.budget_targets_project,
+					budgetTargets: budgetTargets?.projectBudgetTargets || [],
+				})
+			);
+		}
+	}, [initialValues, budgetTargets]);
+
+	budgetLineitemFormInputFields[3].getInputValue = (budgetTargetId: string) => {
+		setSelectedBudgetTarget(
+			getBudgetTarget({
+				budgetTargetId,
+				budgetTargets: budgetTargets?.projectBudgetTargets || [],
+			})
+		);
+	};
+
 	if (grantPeriodProject) {
-		budgetLineitemFormSelectFields[4].optionsArray = grantPeriodProject.grantPeriodsProjectList;
+		budgetLineitemFormInputFields[7].optionsArray = grantPeriodProject.grantPeriodsProjectList;
 	}
 
 	if (financialYearOrg) {
-		budgetLineitemFormSelectFields[3].optionsArray = financialYearOrg?.financialYearList
+		budgetLineitemFormInputFields[6].optionsArray = financialYearOrg?.financialYearList
 			? financialYearOrg?.financialYearList
 			: [];
 	}
@@ -612,19 +645,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}
 
 	if (annualYears) {
-		budgetLineitemFormSelectFields[1].optionsArray = annualYears.annualYearList;
+		budgetLineitemFormInputFields[4].optionsArray = annualYears.annualYearList;
 	}
 
 	if (budgetTargets) {
-		budgetLineitemFormSelectFields[0].optionsArray = budgetTargets.projectBudgetTargets;
+		budgetLineitemFormInputFields[3].optionsArray = budgetTargets.projectBudgetTargets;
 	}
 	if (financialYearDonor) {
-		budgetLineitemFormSelectFields[2].optionsArray =
-			financialYearDonor?.financialYearList || [];
+		budgetLineitemFormInputFields[5].optionsArray = financialYearDonor?.financialYearList || [];
 	}
 
-	// budgetLineitemFormSelectFields[0].addNewClick = () => setOpenBudgetTargetDialog(true);
-	budgetLineitemFormSelectFields[4].addNewClick = () => setOpenGrantPeriodDialog(true);
+	// budgetLineitemFormInputFields[0].addNewClick = () => setOpenBudgetTargetDialog(true);
+	budgetLineitemFormInputFields[7].addNewClick = () => setOpenGrantPeriodDialog(true);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
@@ -648,12 +680,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				title={newOrEdit + " " + budgetTargetLineTitle}
 				subtitle={""}
 				workspace={dashboardData?.project?.workspace?.name || ""}
-				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
-				{...(props.budgetTarget
+				project={dashboardData?.project?.name || ""}
+				{...(selectedBudgetTarget
 					? {
 							formDetails: (
 								<FormDetails
-									budgetTarget={props.budgetTarget}
+									budgetTarget={selectedBudgetTarget}
 									currency={currency?.currencyList[0]?.code}
 								/>
 							),
@@ -663,13 +695,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onCreate}
+					onCreate={onCreate}
 					onCancel={closeDialog}
 					inputFields={budgetLineitemFormInputFields}
-					selectFields={budgetLineitemFormSelectFields}
 					formAction={props.formAction}
 					onUpdate={onUpdate}
-					buttons={budgetLineitemFormButtons}
 				/>
 				{openAttachFiles && (
 					<AttachFileForm
