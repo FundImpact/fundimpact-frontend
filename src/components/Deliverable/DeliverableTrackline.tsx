@@ -153,9 +153,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	if (filesArray.length) deliverableTragetLineForm[7].label = "View Files";
 	else deliverableTragetLineForm[7].label = "Attach Files";
 
-	const [currentTarget, setCurrentTarget] = React.useState<string | number | undefined>(
+	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.deliverableTarget ? props.deliverableTarget : ""
 	);
+	const [currentTargetName, setCurrentTargetName] = React.useState<string>("");
+
 	const [formDetailsArray, setFormDetailsArray] = React.useState<
 		{ label: string; value: string }[]
 	>([]);
@@ -165,34 +167,34 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
 		GET_ACHIEVED_VALLUE_BY_TARGET
 	);
-	deliverableTragetLineForm[0].getInputValue = setCurrentTarget;
+	deliverableTragetLineForm[0].getInputValue = setCurrentTargetId;
 
 	useEffect(() => {
-		if (currentTarget) {
-			getDeliverableTarget({ variables: { filter: { id: currentTarget } } });
+		if (currentTargetId) {
+			getDeliverableTarget({ variables: { filter: { id: currentTargetId } } });
 			getTargetAchieveValue({
-				variables: { filter: { deliverableTargetProject: currentTarget } },
+				variables: { filter: { deliverableTargetProject: currentTargetId } },
 			});
 		}
-	}, [currentTarget, getDeliverableTarget, getTargetAchieveValue]);
+	}, [currentTargetId, getDeliverableTarget, getTargetAchieveValue]);
 
 	const intl = useIntl();
 
 	let deliverableCategoryLabel = intl.formatMessage({
 		id: "deliverableCategoryLabelFormDetail",
-		defaultMessage: "Deliverable's Category",
+		defaultMessage: "Category",
 		description:
 			"This text will be show on deliverable trackline form for deliverable category",
 	});
 	let deliverableTotalTargetLabel = intl.formatMessage({
 		id: "deliverableTotalTargetLabelFormDetail",
-		defaultMessage: "Deliverable's Target",
+		defaultMessage: "Target",
 		description:
 			"This text will be show on deliverable trackline form for deliverable category",
 	});
 	let deliverableAchievedTargetLabel = intl.formatMessage({
 		id: "deliverableAchievedTargetLabelFormDetail",
-		defaultMessage: "Deliverable's Achived",
+		defaultMessage: "Achieved",
 		description:
 			"This text will be show on deliverable trackline form for deliverable category",
 	});
@@ -200,6 +202,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	useEffect(() => {
 		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
 		if (fetchedDeliverableTarget && achivedValue) {
+			setCurrentTargetName(fetchedDeliverableTarget.name);
 			setFormDetailsArray([
 				{
 					label: deliverableCategoryLabel,
@@ -217,9 +220,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				},
 			]);
 		}
-	}, [deliverableTargetResponse, achivedValue, setFormDetailsArray]);
+	}, [deliverableTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
 
-	let formDetailsComponent = <FormDetails formDetails={formDetailsArray} />;
+	let formDetailsComponent = (
+		<FormDetails formDetails={formDetailsArray} title={currentTargetName} />
+	);
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);

@@ -58,11 +58,20 @@ function FormDialog({
 								mt={3}
 								style={{ backgroundColor: theme.palette.action.hover }}
 							>
-								<Typography color="primary" gutterBottom>
+								<Typography
+									color="primary"
+									gutterBottom
+									style={{ fontWeight: "bold", fontSize: "large" }}
+								>
 									{workspace}
 								</Typography>
 								<Box mt={1}>
-									<Typography variant="subtitle2">{project}</Typography>
+									<Typography
+										variant="subtitle2"
+										style={{ fontWeight: "bold", fontSize: "large" }}
+									>
+										{project}
+									</Typography>
 								</Box>
 								{formDetails && (
 									<Box mt={1}>
