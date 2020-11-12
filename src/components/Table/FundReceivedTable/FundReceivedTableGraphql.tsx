@@ -16,6 +16,7 @@ import pagination from "../../../hooks/pagination";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { fundReceiptInputFields } from "./inputFields.json";
 import { GET_PROJECT_DONORS } from "../../../graphql";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 
 let donorHash = {};
 
@@ -52,20 +53,21 @@ function FundReceivedTableGraphql() {
 	}>(getDefaultFilterList());
 
 	const [getProjectDonors, { data }] = useLazyQuery<{
-		projDonors: { id: string; donor: { id: string; name: string } }[];
-	}>(GET_PROJECT_DONORS, {
+		projectDonors: { id: string; donor: { id: string; name: string } }[];
+	}>(GET_PROJ_DONORS, {
 		onCompleted: (data) => {
 			donorHash = mapIdToName(
-				convertProjectDonorListToIdNameFormat(data?.projDonors || []),
+				convertProjectDonorListToIdNameFormat(data?.projectDonors || []),
 				donorHash
-			);
-		},
-	});
-
+				);
+			},
+		});
+		
+		console.log("data :>> ", data);
 	(fundReceiptInputFields[1].optionsArray as {
 		id: string;
 		name: string;
-	}[]) = convertProjectDonorListToIdNameFormat(data?.projDonors || []);
+	}[]) = convertProjectDonorListToIdNameFormat(data?.projectDonors || []);
 
 	useEffect(() => {
 		if (dashboardData && dashboardData.project) {

@@ -127,6 +127,8 @@ export interface ISelectField {
 	hidden?: boolean;
 	displayName?: string;
 	required?: boolean;
+	addNew?: boolean;
+	addNewClick?: any;
 }
 
 export interface IFormDialog {

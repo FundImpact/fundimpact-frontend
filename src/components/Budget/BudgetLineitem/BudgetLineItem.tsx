@@ -44,6 +44,8 @@ import {
 	budgetLineitemFormSelectFields,
 	budgetLineitemFormButtons,
 } from "./inputFields.json";
+import BudgetTarget from "../BudgetTarget";
+import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -72,11 +74,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		defaultMessage: "Budget Expenditure",
 		description: `This text will be show on Budget Expenditure form for title`,
 	});
-	let budgetTargetLineSubtitle = intl.formatMessage({
-		id: "budgetExpenditureFormSubtitle",
-		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
-		description: `This text will be show on Budget Expenditureform for subtitle`,
-	});
+	// let budgetTargetLineSubtitle = intl.formatMessage({
+	// 	id: "budgetExpenditureFormSubtitle",
+	// 	defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+	// 	description: `This text will be show on Budget Expenditureform for subtitle`,
+	// });
 	const [selectedDonor, setSelectedDonor] = useState<{
 		id: string;
 		country: { id: string };
@@ -100,6 +102,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		},
 	});
 
+	const [openBudgetTargetDialog, setOpenBudgetTargetDialog] = useState<boolean>(false);
+	const [openGrantPeriodDialog, setOpenGrantPeriodDialog] = useState<boolean>(false);
+
 	const { handleClose } = props;
 
 	useEffect(() => {
@@ -109,6 +114,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormSelectFields[2].hidden = false;
 		budgetLineitemFormSelectFields[4].size = 12;
+		budgetLineitemFormSelectFields[4].optionsArray = [];
 		handleClose();
 	}, [handleClose]);
 
@@ -232,6 +238,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				budgetLineitemFormSelectFields[4].size = 12;
 			}
 
+			if (!values.budget_targets_project) {
+				budgetLineitemFormSelectFields[4].optionsArray = [];
+			} else {
+				budgetLineitemFormSelectFields[4].optionsArray =
+					grantPeriodProject?.grantPeriodsProjectList || [];
+			}
+
 			if (!values.amount) {
 				errors.amount = "Amount is required";
 			}
@@ -246,7 +259,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 			return errors;
 		},
-		[setSelectedDonor, dashboardData]
+		[setSelectedDonor, dashboardData, grantPeriodProject]
 	);
 
 	useEffect(() => {
@@ -518,43 +531,63 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			financialYearDonor?.financialYearList || [];
 	}
 
+	budgetLineitemFormSelectFields[0].addNewClick = () => setOpenBudgetTargetDialog(true);
+	budgetLineitemFormSelectFields[4].addNewClick = () => setOpenGrantPeriodDialog(true);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
-		<FormDialog
-			handleClose={closeDialog}
-			open={props.open}
-			loading={creatingLineItem || updatingLineItem}
-			title={newOrEdit + " " + budgetTargetLineTitle}
-			subtitle={budgetTargetLineSubtitle}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
-		>
-			<CommonForm
-				initialValues={initialValues}
-				validate={validate}
-				onSubmit={onCreate}
-				onCancel={closeDialog}
-				inputFields={budgetLineitemFormInputFields}
-				selectFields={budgetLineitemFormSelectFields}
-				formAction={props.formAction}
-				onUpdate={onUpdate}
-				buttons={budgetLineitemFormButtons}
+		<>
+			<BudgetTarget
+				open={openBudgetTargetDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenBudgetTargetDialog(false)}
 			/>
-			{openAttachFiles && (
-				<AttachFileForm
-					open={openAttachFiles}
-					handleClose={() => setOpenAttachFiles(false)}
-					{...{
-						filesArray: filesArray,
-						setFilesArray: setFilesArray,
-					}}
+			<GrantPeriodDialog
+				open={openGrantPeriodDialog}
+				onClose={() => {
+					console.log("here");
+					setOpenGrantPeriodDialog(false);
+				}}
+				action={FORM_ACTIONS.CREATE}
+			/>
+			<FormDialog
+				handleClose={closeDialog}
+				open={props.open}
+				loading={creatingLineItem || updatingLineItem}
+				title={newOrEdit + " " + budgetTargetLineTitle}
+				subtitle={""}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			>
+				<CommonForm
+					initialValues={initialValues}
+					validate={validate}
+					onSubmit={onCreate}
+					onCancel={closeDialog}
+					inputFields={budgetLineitemFormInputFields}
+					selectFields={budgetLineitemFormSelectFields}
+					formAction={props.formAction}
+					onUpdate={onUpdate}
+					buttons={budgetLineitemFormButtons}
 				/>
-			)}
-			{loadingPercentage > 0 ? (
-				<CircularPercentage progress={loadingPercentage} message={uploadingFileMessage} />
-			) : null}
-		</FormDialog>
+				{openAttachFiles && (
+					<AttachFileForm
+						open={openAttachFiles}
+						handleClose={() => setOpenAttachFiles(false)}
+						{...{
+							filesArray: filesArray,
+							setFilesArray: setFilesArray,
+						}}
+					/>
+				)}
+				{loadingPercentage > 0 ? (
+					<CircularPercentage
+						progress={loadingPercentage}
+						message={uploadingFileMessage}
+					/>
+				) : null}
+			</FormDialog>
+		</>
 	);
 }
 

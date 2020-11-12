@@ -6,9 +6,12 @@ import {
 	makeStyles,
 	MenuItem,
 	Select,
+	Box,
+	Typography,
 } from "@material-ui/core";
 import React from "react";
-
+import { FormattedMessage } from "react-intl";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { ISelectField } from "../../models";
 
 const useStyles = makeStyles(() =>
@@ -34,6 +37,8 @@ const SelectField = ({
 	selectId,
 	displayName = "data",
 	required = false,
+	addNew = false,
+	addNewClick,
 }: Omit<ISelectField, "size" | "type">) => {
 	const classes = useStyles();
 	return (
@@ -68,6 +73,22 @@ const SelectField = ({
 						{elem.name}
 					</MenuItem>
 				))}
+				{addNew && addNewClick && (
+					<MenuItem onClick={addNewClick} value="">
+						<Box display="flex">
+							<AddCircleIcon />
+							<Box ml={1}>
+								<Typography>
+									<FormattedMessage
+										id="addNewSelectField"
+										defaultMessage="Add new"
+										description="This text will be displayed as select field for select Field"
+									/>
+								</Typography>
+							</Box>
+						</Box>
+					</MenuItem>
+				)}
 			</Select>
 			<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 		</FormControl>

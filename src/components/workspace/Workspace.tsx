@@ -203,12 +203,7 @@ function Workspace(props: WorkspaceProps) {
 						description: `This text will be show on workspace form for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "workspaceFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on workspace form for subtitle`,
-				})}
+				subtitle={""}
 				workspace={DashBoardData?.organization?.name}
 				open={showForm}
 				handleClose={() => setShowForm(false)}

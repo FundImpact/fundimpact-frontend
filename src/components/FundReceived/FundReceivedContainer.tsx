@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import FormDialog from "../FormDialog";
 import { FORM_ACTIONS } from "../../models/constants";
 import { useIntl } from "react-intl";
@@ -20,6 +20,8 @@ import {
 	GET_FUND_RECEIPT_PROJECT_LIST,
 	GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 } from "../../graphql/FundRecevied";
+import Donor from "../Donor";
+import { DONOR_DIALOG_TYPE } from "../../models/donor/constants";
 
 const validate = (values: IFundReceivedForm) => {
 	let errors: Partial<IFundReceivedForm> = {};
@@ -272,6 +274,7 @@ function FundReceivedContainer({
 	const intl = useIntl();
 	(fundReceivedForm[2].optionsArray as { id: string; name: string }[]) = donorList;
 	const notificationDispatch = useNotificationDispatch();
+	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
 	const submitForm = useCallback(
 		async (valuesSubmitted: IFundReceivedForm) => {
 			await onFormSubmit({
@@ -295,35 +298,44 @@ function FundReceivedContainer({
 			handleClose,
 		]
 	);
-
+	fundReceivedForm[2].addNewClick = () => setOpenDonorCreateDialog(true);
 	return (
-		<FormDialog
-			handleClose={handleClose}
-			open={open}
-			loading={loading}
-			title={intl.formatMessage({
-				id: "fundReceivedFormTitle",
-				defaultMessage: "Report Fund Received",
-				description: `This text will be show on Fund Received form for title`,
-			})}
-			subtitle={intl.formatMessage({
-				id: "fundReceivedFormSubtitle",
-				defaultMessage: "Manage Fund Received",
-				description: `This text will be show on Fund Received form for subtitle`,
-			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
-		>
-			<CommonForm
-				initialValues={initialValues}
-				validate={validate}
-				onCreate={submitForm}
-				onCancel={handleClose}
-				inputFields={fundReceivedForm}
-				formAction={formAction}
-				onUpdate={submitForm}
+		<>
+			<Donor
+				open={openDonorCreateDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenDonorCreateDialog(false)}
+				dialogType={DONOR_DIALOG_TYPE.PROJECT}
+				projectId={`${dashboardData?.project?.id}`}
 			/>
-		</FormDialog>
+			<FormDialog
+				handleClose={handleClose}
+				open={open}
+				loading={loading}
+				title={intl.formatMessage({
+					id: "fundReceivedFormTitle",
+					defaultMessage: "Report Fund Received",
+					description: `This text will be show on Fund Received form for title`,
+				})}
+				subtitle={intl.formatMessage({
+					id: "fundReceivedFormSubtitle",
+					defaultMessage: "Manage Fund Received",
+					description: `This text will be show on Fund Received form for subtitle`,
+				})}
+				workspace={dashboardData?.workspace?.name}
+				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			>
+				<CommonForm
+					initialValues={initialValues}
+					validate={validate}
+					onCreate={submitForm}
+					onCancel={handleClose}
+					inputFields={fundReceivedForm}
+					formAction={formAction}
+					onUpdate={submitForm}
+				/>
+			</FormDialog>
+		</>
 	);
 }
 

@@ -6,6 +6,7 @@ import {
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_GRANT_PERIODS_PROJECT_LIST,
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
+	GET_ORGANIZATION_BUDGET_CATEGORY,
 } from "../../../../../graphql/Budget";
 import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
@@ -21,18 +22,23 @@ import {
 	mockFinancialYears,
 	mockBudgetTrackingsCount,
 	mockCurrencyList,
+	projectDonorMock,
+	mockCountryList,
+	mockOrgBudgetCategory
 } from "../../../../../utils/testMock.json";
 import {
 	GET_ORG_CURRENCIES_BY_ORG,
 	GET_ANNUAL_YEAR_LIST,
 	GET_FINANCIAL_YEARS,
 	GET_CURRENCY_LIST,
+	GET_COUNTRY_LIST,
 } from "../../../../../graphql";
 import BudgetLineItemTable from "../BudgetLineItemTableGraphql";
 import { budgetLineItemTableHeading } from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
 import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
+import { GET_PROJ_DONORS } from "../../../../../graphql/project";
 
 let table: any;
 
@@ -143,6 +149,46 @@ const mocks = [
 		result: {
 			data: {
 				projectBudgetTargets: mockOrgBudgetTargetProject,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: projectDonorMock,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ORGANIZATION_BUDGET_CATEGORY,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgBudgetCategory: mockOrgBudgetCategory,
 			},
 		},
 	},

@@ -10,8 +10,10 @@ import {
 	projectDonorMock,
 	mockFundReceiptProjectList,
 	fundReceiptProjectListCount,
+	mockProjectDonors,
+	mockCountryList,
 } from "../../../../utils/testMock.json";
-import { GET_PROJECT_DONORS } from "../../../../graphql";
+import { GET_PROJECT_DONORS, GET_COUNTRY_LIST } from "../../../../graphql";
 import FundReceivedTable from "../FundReceivedTableGraphql";
 import { fundReceivedTableHeadings } from "../../constants";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
@@ -22,6 +24,7 @@ import {
 } from "../../../../graphql/FundRecevied";
 import { getTodaysDate } from "../../../../utils";
 import { fundReceiptInputFields } from "../inputFields.json";
+import { GET_PROJ_DONORS } from "../../../../graphql/project";
 
 let table: RenderResult;
 
@@ -73,6 +76,31 @@ const mocks = [
 		result: {
 			data: {
 				fundReceiptProjectList: mockFundReceiptProjectList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: mockProjectDonors,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
 			},
 		},
 	},
