@@ -336,20 +336,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					grantPeriodProject?.grantPeriodsProjectList || [];
 			}
 
-			if (!values.budget_targets_project) {
-				budgetLineitemFormSelectFields[4].optionsArray = [];
-			} else {
-				budgetLineitemFormSelectFields[4].optionsArray =
-					grantPeriodProject?.grantPeriodsProjectList || [];
-			}
-
-			if (!values.budget_targets_project) {
-				budgetLineitemFormSelectFields[4].optionsArray = [];
-			} else {
-				budgetLineitemFormSelectFields[4].optionsArray =
-					grantPeriodProject?.grantPeriodsProjectList || [];
-			}
-
 			if (!values.amount) {
 				errors.amount = "Amount is required";
 			}
