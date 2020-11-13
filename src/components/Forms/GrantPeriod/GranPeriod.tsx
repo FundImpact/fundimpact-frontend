@@ -205,7 +205,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 															name: string;
 													  }
 													| {
-															groupName: DonorType;
+															groupName: React.ReactNode;
 													  }
 											) =>
 												"groupName" in donor ? (

@@ -29,7 +29,7 @@ export type GrantPeriodFormProps = {
 				name: string;
 		  }
 		| {
-				groupName: DonorType;
+				groupName: React.ReactNode;
 		  }
 	)[];
 } & (

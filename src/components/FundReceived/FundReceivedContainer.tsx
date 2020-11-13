@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import FormDialog from "../FormDialog";
 import { FORM_ACTIONS } from "../../models/constants";
-import { useIntl } from "react-intl";
+import { useIntl, FormattedMessage } from "react-intl";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import CommonForm from "../CommonForm";
 import { IFundReceivedForm } from "../../models/fundReceived";
@@ -127,7 +127,15 @@ const getDonors = ({
 	let donorArr = [];
 	projectDonors.length &&
 		donorArr.push(
-			{ groupName: DonorType.project },
+			{
+				groupName: (
+					<FormattedMessage
+						id="selectInputProjectDonor"
+						defaultMessage="PROJECT'S DONOR"
+						description="This text will be heading of project donor"
+					/>
+				),
+			},
 			...projectDonors
 				.filter((donor) => donor)
 				.map((projDonor) => ({
@@ -141,7 +149,18 @@ const getDonors = ({
 		.map((donor) => ({ id: donor.id + `-${DonorType.organization}`, name: donor.name }));
 
 	filteredOrgDonor.length &&
-		donorArr.push({ groupName: DonorType.organization }, ...filteredOrgDonor);
+		donorArr.push(
+			{
+				groupName: (
+					<FormattedMessage
+						id="selectInputAllDonor"
+						defaultMessage="ALL DONOR"
+						description="This text will be heading of all donor"
+					/>
+				),
+			},
+			...filteredOrgDonor
+		);
 
 	return donorArr;
 };
