@@ -69,8 +69,8 @@ const getDonors = ({
 			{
 				groupName: (
 					<FormattedMessage
-						id="selectInputProjectDonor"
 						defaultMessage="PROJECT'S DONOR"
+						id="selectInputProjectDonor"
 						description="This text will be heading of project donor"
 					/>
 				),

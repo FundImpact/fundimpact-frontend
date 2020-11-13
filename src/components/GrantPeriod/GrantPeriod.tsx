@@ -40,9 +40,9 @@ const getDonors = ({
 			{
 				groupName: (
 					<FormattedMessage
-						id="selectInputProjectDonor"
-						defaultMessage="PROJECT'S DONOR"
 						description="This text will be heading of project donor"
+						defaultMessage="PROJECT'S DONOR"
+						id="selectInputProjectDonor"
 					/>
 				),
 			},
@@ -63,9 +63,9 @@ const getDonors = ({
 			{
 				groupName: (
 					<FormattedMessage
-						id="selectInputAllDonor"
-						defaultMessage="ALL DONOR"
 						description="This text will be heading of all donor"
+						defaultMessage="ALL DONOR"
+						id="selectInputAllDonor"
 					/>
 				),
 			},
