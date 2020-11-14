@@ -8,6 +8,7 @@ import {
 	GET_GRANT_PERIODS_PROJECT_LIST,
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
+	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 } from "../../../../graphql/Budget";
 import {
 	GET_ANNUAL_YEAR_LIST,
@@ -36,7 +37,7 @@ import {
 import { getTodaysDate } from "../../../../utils";
 import { IBudgetTrackingLineitemForm } from "../../../../models/budget/budgetForm";
 import { act } from "react-dom/test-utils";
-import { budgetLineitemFormInputFields, budgetLineitemFormSelectFields } from "../inputFields.json";
+import { budgetLineitemFormInputFields } from "../inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { fireEvent, wait } from "@testing-library/dom";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
@@ -278,6 +279,17 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+			variables: {
+				filter: {
+					budgetTargetsProject: "3",
+				},
+			},
+		},
+		result: { data: { projBudgetTrackingsTotalAmount: 10 } },
+	},
+	{
+		request: {
 			query: CREATE_PROJECT_BUDGET_TRACKING,
 			variables: {
 				input: {
@@ -350,11 +362,12 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = [...budgetLineitemFormInputFields, ...budgetLineitemFormSelectFields];
-
+const inputIds = [...budgetLineitemFormInputFields];
+//remove attach file element
+inputIds.pop();
 //removing the last filed which is grant period
 let inputFieldsWithRemovedGrantPeriod = [...inputIds];
-inputFieldsWithRemovedGrantPeriod.pop();
+inputFieldsWithRemovedGrantPeriod.splice(7, 1);
 
 const {
 	checkElementHaveCorrectValue,

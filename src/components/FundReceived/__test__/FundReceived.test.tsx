@@ -4,8 +4,8 @@ import {
 	projectDetails,
 	projectDonorMock,
 	mockFundReceiptProjectList,
-	mockProjectDonors,
 	mockCountryList,
+	mockOrgDonor,
 } from "../../../utils/testMock.json";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -28,19 +28,66 @@ import {
 	GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 } from "../../../graphql/FundRecevied";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 
 const handleClose = jest.fn();
 
 let dialog: RenderResult;
 let creationOccured = false;
+enum donorType {
+	project = "PROJECT'S DONOR",
+	organization = "ALL DONOR",
+}
 
 const intialFormValue: IFundReceivedForm = {
 	amount: "100",
 	reporting_date: getTodaysDate(),
-	project_donor: "18",
+	project_donor: "18"+ `-${donorType.project}`,
 };
 
+
+let mockOrganizationDonor = [
+	{
+		id: "20",
+		name: "vikram pathak",
+		country: {
+			id: "1",
+			name: "India",
+		},
+		legal_name: "vikram legal 001",
+		short_name: "vikram short 100",
+	},
+];
+
+let mockProjectDonors = [
+	{
+		id: "18",
+		donor: { id: "1", name: "donor 1" },
+		project: { id: "3", name: "my project" },
+	},
+	{
+		id: "2",
+		donor: { id: "2", name: "donor 2" },
+		project: { id: "3", name: "my project" },
+	},
+];
+
 const mocks = [
+	{
+		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: mockProjectDonors,
+			},
+		},
+	},
 	{
 		request: {
 			query: GET_USER_ROLES,
@@ -69,26 +116,16 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_PROJ_DONORS,
+			query: GET_ORG_DONOR,
 			variables: {
 				filter: {
-					project: 3,
+					organization: "3",
 				},
 			},
 		},
 		result: {
 			data: {
-				projectDonors: projectDonorMock,
-			},
-		},
-	},
-	{
-		request: {
-			query: GET_COUNTRY_LIST,
-		},
-		result: {
-			data: {
-				countries: mockCountryList,
+				orgDonors: mockOrganizationDonor,
 			},
 		},
 	},
@@ -104,6 +141,16 @@ const mocks = [
 		result: {
 			data: {
 				fundReceiptProjectListCount: 2,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
 			},
 		},
 	},

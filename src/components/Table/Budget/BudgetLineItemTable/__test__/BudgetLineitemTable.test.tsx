@@ -24,7 +24,8 @@ import {
 	mockCurrencyList,
 	projectDonorMock,
 	mockCountryList,
-	mockOrgBudgetCategory
+	mockOrgBudgetCategory,
+	mockOrgDonor
 } from "../../../../../utils/testMock.json";
 import {
 	GET_ORG_CURRENCIES_BY_ORG,
@@ -39,6 +40,7 @@ import { getTodaysDate } from "../../../../../utils";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
 import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 import { GET_PROJ_DONORS } from "../../../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../../../graphql/donor";
 
 let table: any;
 
@@ -189,6 +191,21 @@ const mocks = [
 		result: {
 			data: {
 				orgBudgetCategory: mockOrgBudgetCategory,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
 			},
 		},
 	},

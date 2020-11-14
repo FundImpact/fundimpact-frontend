@@ -18,8 +18,8 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { compareObjectKeys } from "../../utils";
 import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
-import CommonForm from "../Forms/CommonForm";
-import { addDonorForm, addDonorFormSelectFields } from "./inputField.json";
+import CommonForm from "../CommonForm";
+import { addDonorForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import { DONOR_DIALOG_TYPE } from "../../models/donor/constants";
 import {
@@ -28,8 +28,6 @@ import {
 	ICreateProjectDonorVariables,
 } from "../../models/project/project";
 import { GET_PROJ_DONORS } from "../../graphql/project";
-
-let inputFields: IInputField[] = addDonorForm;
 
 const defaultFormValues: IDONOR = {
 	country: "",
@@ -92,10 +90,10 @@ function Donor(props: IDonorProps) {
 		onCompleted: (data) => {
 			updateProjectDonorCache({ apolloClient, projectDonorCreated: data });
 		},
-		onError: (error) => console.log("error >> ", error),
+		onError: (error) => console.error(error),
 	});
 
-	addDonorFormSelectFields[0].optionsArray = countryList?.countries || [];
+	addDonorForm[3].optionsArray = countryList?.countries || [];
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
@@ -198,17 +196,11 @@ function Donor(props: IDonorProps) {
 					}
 				},
 			});
-			console.log(donorCreated);
 			if (
 				props.formAction === FORM_ACTIONS.CREATE &&
 				props.dialogType === DONOR_DIALOG_TYPE.PROJECT &&
 				donorCreated.data
 			) {
-				console.log("props.projectId :>> ", props.projectId);
-				console.log(
-					"donorCreated.data?.createOrgDonor?.id :>> ",
-					donorCreated.data?.createOrgDonor?.id
-				);
 				await createProjectDonor({
 					variables: {
 						input: {
@@ -277,6 +269,18 @@ function Donor(props: IDonorProps) {
 	// 	description: `This text will be show as subtitle of donor form`,
 	// });
 
+	const updateDonorSubtitle = intl.formatMessage({
+		id: "DonorUpdateFormSubtitle",
+		defaultMessage: "Update Donor Of Organization",
+		description: `This text will be show on update Donor form`,
+	});
+
+	const createDonorSubtitle = intl.formatMessage({
+		id: "DonorCreateFormSubtitle",
+		defaultMessage: "Create New Donor For Organization",
+		description: `This text will be show on create Donor form`,
+	});
+
 	return (
 		<>
 			<FormDialog
@@ -284,17 +288,20 @@ function Donor(props: IDonorProps) {
 				open={props.open}
 				loading={creatingDonor || updatingDonor || creatingProjectDonors}
 				title={title}
-				subtitle={""}
+				subtitle={
+					props.formAction === FORM_ACTIONS.CREATE
+						? createDonorSubtitle
+						: updateDonorSubtitle
+				}
 				workspace={""}
 				project={""}
 			>
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onCreate}
+					onCreate={onCreate}
 					onCancel={props.handleClose}
-					inputFields={inputFields}
-					selectFields={addDonorFormSelectFields}
+					inputFields={addDonorForm}
 					formAction={props.formAction}
 					onUpdate={onUpdate}
 				/>
