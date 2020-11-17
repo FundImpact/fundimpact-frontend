@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { AttachFile } from "../../models/AttachFile";
 import useFileUpload from "../fileUpload";
 
@@ -10,7 +10,7 @@ const useMultipleFileUpload = (
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState<boolean>(false);
 
-	useEffect(() => {
+	useMemo(() => {
 		if (loadingStatus && filesArray && filesArray?.length && setFilesArray) {
 			let arr = [...filesArray];
 			arr[loadingStatus.index].uploadStatus = true;
@@ -135,6 +135,7 @@ const useMultipleFileUpload = (
 			} finally {
 				if (!error) console.log("success");
 				setSuccess(true);
+				return true;
 			}
 		}
 	};

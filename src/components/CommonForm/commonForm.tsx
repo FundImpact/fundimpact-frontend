@@ -123,6 +123,11 @@ function CommonInputForm({
 													element.autoCompleteGroupBy || undefined
 												}
 												onClick={element.onClick ? element.onClick : null}
+												textNextToButton={
+													element.textNextToButton
+														? element.textNextToButton
+														: undefined
+												}
 												addNew={element.addNew ? element.addNew : false}
 												addNewClick={
 													element.addNewClick ? element.addNewClick : null

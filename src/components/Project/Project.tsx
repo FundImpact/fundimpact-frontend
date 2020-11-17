@@ -154,6 +154,10 @@ function Project(props: ProjectProps) {
 	if (projectFilesArray.length) projectForm[5].label = "View Files";
 	else projectForm[5].label = "Attach Files";
 
+	if (projectFilesArray.length)
+		projectForm[5].textNextToButton = `${projectFilesArray.length} files attached`;
+	else projectForm[5].textNextToButton = ``;
+
 	let { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
 		projectFilesArray,
 		setProjectFilesArray
@@ -471,9 +475,15 @@ function Project(props: ProjectProps) {
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={projectFilesArray}
 					setFilesArray={setProjectFilesArray}
-					parentOnSave={
-						formAction === PROJECT_ACTIONS.UPDATE ? attachFileOnSave : undefined
-					}
+					// parentOnSave={
+					// 	formAction === PROJECT_ACTIONS.UPDATE ? attachFileOnSave : undefined
+					// }
+					uploadApiConfig={{
+						ref: "project",
+						refId: dashboardData?.project?.id?.toString() || "",
+						field: "attachments",
+						path: `org-${dashboardData?.organization?.id}/project-${dashboardData?.project?.id}/project`,
+					}}
 				/>
 			)}
 		</>

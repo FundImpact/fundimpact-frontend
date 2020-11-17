@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Fab, Grid, Typography } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import AddButton from "../../../../components/Dasboard/AddButton";
 import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
@@ -14,7 +14,7 @@ import { GET_ORGANISATIONS_DOCUMENTS } from "../../../../graphql";
 import { useQuery } from "@apollo/client";
 import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../../reducers/notificationReducer";
-
+import AddIcon from "@material-ui/icons/Add";
 // import { uploadPercentageCalculator } from "../../../../utils";
 // import { CircularPercentage } from "../../../../components/commons";
 
@@ -29,6 +29,7 @@ export const OrganizationDocumentContainer = () => {
 	);
 	const { data, loading, refetch } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>(false);
 	const notificationDispatch = useNotificationDispatch();
 	// const [documentsUploadLoading, setDocumentsUploadLoading] = React.useState(0);
 	// const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
@@ -41,31 +42,32 @@ export const OrganizationDocumentContainer = () => {
 
 	// const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
 
-	let { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
-		filesArray,
-		setFilesArray
-	);
+	// let { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
+	// 	filesArray,
+	// 	setFilesArray
+	// );
 
-	const successMessage = () => {
-		// if (totalFilesToUpload)
-		notificationDispatch(setSuccessNotification("Files Uploaded !"));
-		refetch();
-		setSuccess(false);
-		setFilesArray([]);
-	};
-	if (success) successMessage();
+	// const successMessage = () => {
+	// 	// if (totalFilesToUpload)
+	// 	notificationDispatch(setSuccessNotification("Files Uploaded !"));
+	// 	refetch();
+	// 	setSuccess(false);
+	// 	setOpenAttachFiles(false);
+	// 	setFilesArray([]);
+	// };
+	// if (success) successMessage();
 
 	const dashBoardData = useDashBoardData();
-	const attachFileOnSave = () => {
-		let orgId: any = dashBoardData?.organization?.id;
-		// setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-		multiplefileUploader({
-			ref: "organization",
-			refId: orgId,
-			field: "attachments",
-			path: `org-${orgId}/organizations`,
-		});
-	};
+	// const attachFileOnSave = () => {
+	// 	let orgId: any = dashBoardData?.organization?.id;
+	// 	// setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
+	// 	multiplefileUploader({
+	// 		ref: "organization",
+	// 		refId: orgId,
+	// 		field: "attachments",
+	// 		path: `org-${orgId}/organizations`,
+	// 	});
+	// };
 	// let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<Box>
@@ -83,30 +85,39 @@ export const OrganizationDocumentContainer = () => {
 					{organizationFindAccess && <DocumentsTable data={data} loading={loading} />}
 				</Box>
 				{organizationEditAccess && (
-					<AddButton
-						createButtons={[]}
-						buttonAction={{
-							dialog: ({
-								open,
-								handleClose,
-							}: {
-								open: boolean;
-								handleClose: () => void;
-							}) => {
-								return (
-									<AttachFileForm
-										{...{
-											open,
-											handleClose,
-											filesArray,
-											setFilesArray,
-											parentOnSave: attachFileOnSave,
-										}}
-									/>
-								);
-							},
-						}}
-					/>
+					<>
+						<Fab
+							style={{ position: "fixed", right: "10px", bottom: "10px" }}
+							data-testid="add-button"
+							color="primary"
+							aria-label="add"
+							onClick={() => setOpenAttachFiles(true)}
+							disableRipple
+						>
+							<AddIcon />
+						</Fab>
+						{openAttachFiles && (
+							<AttachFileForm
+								{...{
+									open: openAttachFiles,
+									handleClose: () => setOpenAttachFiles(false),
+									filesArray,
+									setFilesArray,
+									// parentOnSave: attachFileOnSave,
+									uploadApiConfig: {
+										ref: "organization",
+										refId: dashBoardData?.organization?.id?.toString() || "",
+										field: "attachments",
+										path: `org-${dashBoardData?.organization?.id}/organizations`,
+									},
+									parentOnSuccessCall: () => {
+										refetch();
+										setFilesArray([]);
+									},
+								}}
+							/>
+						)}
+					</>
 				)}
 				{/* {documentsUploadLoading > 0 ? (
 					<CircularPercentage
