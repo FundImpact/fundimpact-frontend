@@ -78,7 +78,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		defaultMessage: "Allocated",
 		description: `This text will be show on organization dashboard for allocated Label`,
 	});
-
+	console.log(props, props.tooltip);
 	let projectCardConfig: ProjectCardConfig = {
 		mainHeading: "",
 		title: "",
@@ -137,6 +137,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					],
 				},
 				loading: loading,
+				tooltip: props.tooltip ? props.tooltip : "",
 			};
 		}
 		if (props.cardOf === CARD_OF.BUDGET) {
@@ -164,6 +165,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					comparativeErrorMeasureData: [{ name: targetLabel, y: budgetTargetSum }],
 				},
 				loading: loading,
+				tooltip: props.tooltip ? props.tooltip : "",
 			};
 		}
 
@@ -192,6 +194,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					comparativeErrorMeasureData: [{ name: targetLabel, y: totalDeliverableByOrg }],
 				},
 				loading: loading,
+				tooltip: props.tooltip ? props.tooltip : "",
 			};
 		}
 	}

@@ -21,7 +21,7 @@ import { useIntl } from "react-intl";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 export default function DashboardCard(props: CardProps) {
-	const { title, children, cardHeight = "180px", cardFilter } = props;
+	const { title, children, cardHeight = "180px", cardFilter, tooltip } = props;
 	const [currentFilter, setCurrentFilter] = useState<{ label: string; base: string }>();
 	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
 		...props,
@@ -77,7 +77,7 @@ export default function DashboardCard(props: CardProps) {
 
 	let byLabel = intl.formatMessage({
 		id: "byLabelCards",
-		defaultMessage: "Filtered By",
+		defaultMessage: "filtered By",
 		description: "This text will be show on cards for top label",
 	});
 
@@ -89,7 +89,7 @@ export default function DashboardCard(props: CardProps) {
 
 	let projectsLabel = intl.formatMessage({
 		id: "projectsLableCard",
-		defaultMessage: "Project's",
+		defaultMessage: "Project",
 		description: "This text will be show on cards for Project's label",
 	});
 
@@ -151,7 +151,8 @@ export default function DashboardCard(props: CardProps) {
 							{title &&
 								((cardFilter && cardFilter.length > 0) ||
 									props.type === CARD_TYPES.PROGRESS ||
-									props.type === CARD_TYPES.DEFAULT) && (
+									props.type === CARD_TYPES.DEFAULT) &&
+								tooltip && (
 									<Box color="text.disabled" mt={1}>
 										{/* <Typography variant="caption" gutterBottom noWrap>
 										{currentFilter?.label}
@@ -160,10 +161,14 @@ export default function DashboardCard(props: CardProps) {
 											<Tooltip
 												title={
 													props.type === CARD_TYPES.PROGRESS
-														? `${topLabel} ${title}`
+														? `${tooltip}`
 														: props.type === CARD_TYPES.DEFAULT
-														? `${projectsLabel} ${title.toLocaleLowerCase()}`
-														: `${byLabel} ${currentFilter?.label}`
+														? `${tooltip} ${
+																dashboardData?.project?.name
+																	? dashboardData?.project?.name
+																	: projectsLabel
+														  }`
+														: `${tooltip} ${byLabel} ${currentFilter?.label}`
 												}
 											>
 												<InfoOutlinedIcon fontSize="small" />
