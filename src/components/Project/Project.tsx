@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useApolloClient, ApolloClient } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -34,6 +34,8 @@ import { useIntl } from "react-intl";
 import { setProject } from "../../reducers/dashboardReducer";
 import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
 import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
+import Donor from "../Donor";
+import { FORM_ACTIONS } from "../Forms/constant";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -129,6 +131,7 @@ const updateCachedProject = async ({
 };
 
 function Project(props: ProjectProps) {
+	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -401,11 +404,17 @@ function Project(props: ProjectProps) {
 	const onCancel = props.handleClose;
 	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
+	projectForm[4].addNewClick = () => setOpenDonorDialog(true);
 	let uploadingFileMessage = CommonUploadingFilesMessage();
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.type);
 	return (
 		<>
+			<Donor
+				open={openDonorDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenDonorDialog(false)}
+			/>
 			<FormDialog
 				title={
 					newOrEdit +
@@ -416,12 +425,7 @@ function Project(props: ProjectProps) {
 						description: `This text will be show on Project form for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "projectFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on Project form for subtitle`,
-				})}
+				subtitle={""}
 				workspace={props.workspace ? DashBoardData?.workspace?.name : ""}
 				open={formIsOpen}
 				handleClose={onCancel}

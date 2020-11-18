@@ -12,8 +12,9 @@ import {
 	TextField,
 	FormControlLabel,
 	Switch,
-	Typography,
 	Box,
+	Typography,
+	ListSubheader,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -122,6 +123,9 @@ const InputFields = ({
 				formik.handleChange(event);
 			}
 			if (inputType === "select") {
+				if (multiple && Array.isArray(event.target.value)) {
+					event.target.value = (event.target.value as any[]).filter((elem) => elem);
+				}
 				if (getInputValue) {
 					getInputValue(event.target.value);
 					formik.handleChange(event);
@@ -190,11 +194,19 @@ const InputFields = ({
 						))}
 					{!multiple &&
 						!multiSelect &&
-						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
-							<MenuItem key={index} value={elem.id}>
-								{elem.name}
-							</MenuItem>
-						))}
+						optionsArray?.map(
+							(
+								elem: { id: string; name: string; groupName?: string },
+								index: number
+							) =>
+								elem.groupName ? (
+									<ListSubheader>{elem.groupName}</ListSubheader>
+								) : (
+									<MenuItem key={index} value={elem.id}>
+										{elem.name}
+									</MenuItem>
+								)
+						)}
 					{multiple &&
 						optionsArray?.map(
 							(
@@ -212,8 +224,8 @@ const InputFields = ({
 							)
 						)}
 					{addNew && addNewClick && (
-						<MenuItem>
-							<Box display="flex" onClick={addNewClick}>
+						<MenuItem onClick={addNewClick} selected={false} value="">
+							<Box display="flex">
 								<AddCircleIcon />
 								<Box ml={1}>
 									<Typography>

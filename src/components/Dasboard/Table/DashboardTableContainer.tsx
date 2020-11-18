@@ -162,10 +162,10 @@ export default function DashboardTableContainer() {
 		PROJECT_USER_ACCESS_ACTIONS.UPDATE_PROJECT
 	);
 
-	const budgetCategoryCreateAccess = userHasAccess(
-		MODULE_CODES.BUDGET_CATEGORY,
-		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
-	);
+	// const budgetCategoryCreateAccess = userHasAccess(
+	// 	MODULE_CODES.BUDGET_CATEGORY,
+	// 	BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	// );
 	const budgetTargetLineItemCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
@@ -259,21 +259,21 @@ export default function DashboardTableContainer() {
 			}),
 			table: <BudgetTargetTable />,
 			createButtons: [
-				{
-					text: intl.formatMessage({
-						id: "createBudgetCategory",
-						defaultMessage: "Create Budget Category",
-						description: `This text will be show on Add Button for create Budget Category`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategory
-							open={open}
-							handleClose={handleClose}
-							formAction={FORM_ACTIONS.CREATE}
-						/>
-					),
-					createButtonAccess: budgetCategoryCreateAccess,
-				},
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "createBudgetCategory",
+				// 		defaultMessage: "Create Budget Category",
+				// 		description: `This text will be show on Add Button for create Budget Category`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<BudgetCategory
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			formAction={FORM_ACTIONS.CREATE}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: budgetCategoryCreateAccess,
+				// },
 				{
 					text: intl.formatMessage({
 						id: "createBudgetTarget",
@@ -308,7 +308,7 @@ export default function DashboardTableContainer() {
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
-				budgetCategoryCreateAccess ||
+				// budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
 				budgetTargetLineItemCreateAccess,
 			tableVisibility: budgetTargetFindAccess,
@@ -572,7 +572,7 @@ export default function DashboardTableContainer() {
 	useEffect(() => {
 		if (
 			budgetTargetFindAccess ||
-			budgetCategoryCreateAccess ||
+			// budgetCategoryCreateAccess ||
 			budgetTargetCreateAccess ||
 			budgetTargetLineItemCreateAccess ||
 			fundReceiptCreateAccess ||
@@ -594,7 +594,7 @@ export default function DashboardTableContainer() {
 			setValue(
 				getTabToShow(
 					budgetTargetFindAccess ||
-						budgetCategoryCreateAccess ||
+						// budgetCategoryCreateAccess ||
 						budgetTargetCreateAccess ||
 						budgetTargetLineItemCreateAccess,
 					impactTargetFindAccess ||
@@ -615,7 +615,7 @@ export default function DashboardTableContainer() {
 		}
 	}, [
 		budgetTargetFindAccess,
-		budgetCategoryCreateAccess,
+		// budgetCategoryCreateAccess,
 		budgetTargetCreateAccess,
 		budgetTargetLineItemCreateAccess,
 		impactTargetFindAccess,

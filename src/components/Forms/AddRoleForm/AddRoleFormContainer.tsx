@@ -244,6 +244,12 @@ function AddRoleFormContainer({
 		[createOrganizationUserRole, dashboardData, notificationDispatch, formType, handleClose]
 	);
 
+	const addRoleFormSubtitle = intl.formatMessage({
+		id: "roleCreateFormSubtitle",
+		defaultMessage: "Create New Role For Organization Or Project",
+		description: `This text will be show on create Role form`,
+	});
+
 	return (
 		<FormDialog
 			handleClose={handleClose}
@@ -254,7 +260,7 @@ function AddRoleFormContainer({
 				defaultMessage: "Add Role",
 				description: `This text will be show when user want to add role`,
 			})}
-			subtitle=""
+			subtitle={addRoleFormSubtitle}
 			workspace={""}
 			project={""}
 		>

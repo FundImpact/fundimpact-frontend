@@ -15,7 +15,8 @@ import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import pagination from "../../../hooks/pagination";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { fundReceiptInputFields } from "./inputFields.json";
-import { GET_PROJECT_DONORS } from "../../../graphql";
+import { GET_PROJECT_DONORS, GET_CURRENCY_LIST } from "../../../graphql";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 
 let donorHash = {};
 
@@ -51,12 +52,26 @@ function FundReceivedTableGraphql() {
 		[key: string]: string | string[];
 	}>(getDefaultFilterList());
 
+	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
+
+	useEffect(() => {
+		if (dashboardData) {
+			getCurrency({
+				variables: {
+					filter: {
+						country: dashboardData?.organization?.country?.id,
+					},
+				},
+			});
+		}
+	}, [getCurrency, dashboardData]);
+
 	const [getProjectDonors, { data }] = useLazyQuery<{
-		projDonors: { id: string; donor: { id: string; name: string } }[];
-	}>(GET_PROJECT_DONORS, {
+		projectDonors: { id: string; donor: { id: string; name: string } }[];
+	}>(GET_PROJ_DONORS, {
 		onCompleted: (data) => {
 			donorHash = mapIdToName(
-				convertProjectDonorListToIdNameFormat(data?.projDonors || []),
+				convertProjectDonorListToIdNameFormat(data?.projectDonors || []),
 				donorHash
 			);
 		},
@@ -65,7 +80,7 @@ function FundReceivedTableGraphql() {
 	(fundReceiptInputFields[1].optionsArray as {
 		id: string;
 		name: string;
-	}[]) = convertProjectDonorListToIdNameFormat(data?.projDonors || []);
+	}[]) = convertProjectDonorListToIdNameFormat(data?.projectDonors || []);
 
 	useEffect(() => {
 		if (dashboardData && dashboardData.project) {
@@ -132,6 +147,7 @@ function FundReceivedTableGraphql() {
 			setFilterList={setFilterList}
 			inputFields={fundReceiptInputFields}
 			donorHash={donorHash}
+			currency={currency?.currencyList[0]?.code || ""}
 		/>
 	);
 }

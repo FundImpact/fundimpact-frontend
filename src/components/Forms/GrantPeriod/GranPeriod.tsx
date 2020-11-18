@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import {
 	Button,
 	createStyles,
@@ -9,16 +9,31 @@ import {
 	Select,
 	TextField,
 	Theme,
+	Box,
+	Typography,
+	ListSubheader,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_PROJECT_DONORS } from "../../../graphql";
 import { FORM_ACTIONS } from "../../../models/constants";
-import { GrantPeriodFormProps, IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
+import {
+	GrantPeriodFormProps,
+	IGrantPeriod,
+	DonorType,
+} from "../../../models/grantPeriod/grantPeriodForm";
 import InputField from "../../InputField/InputField";
 import { ICustomDatePicker } from "./BasicDateRangePicker";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { FormattedMessage } from "react-intl";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
+import Donor from "../../Donor";
+import { IGET_DONOR } from "../../../models/donor/query";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { IGetProjectDonor } from "../../../models/project/project";
 
 // import { BasicDateRangePicker } from './dateRange';
 
@@ -45,11 +60,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export function GranPeriodForm(props: GrantPeriodFormProps) {
 	const classes = useStyles();
 	const dashboardData = useDashBoardData();
-	const { data: donorList } = useQuery(GET_PROJECT_DONORS, {
-		variables: { filter: { project: dashboardData?.project?.id } },
-	});
-	console.log("donorList :>> ", donorList);
-	useEffect(() => {}, [donorList]);
+
+	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 
 	const validate = (values: any) => {
 		return {};
@@ -93,36 +105,44 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 	}
 
 	return (
-		<Formik
-			validateOnBlur
-			validateOnChange
-			// isInitialValid={(props: any) => validate(props.initialValues)}
-			initialValues={initialValues as any}
-			enableReinitialize={true}
-			validate={validate}
-			onSubmit={(values: any) => {
-				values = { ...values, project: dashboardData?.project?.id };
-				props.onSubmit(values);
-			}}
-		>
-			{(formik) => {
-				return (
-					<Form autoComplete="off" data-testid="form" onChange={clearErrors}>
-						<Grid container spacing={4}>
-							<Grid item xs={12} md={6}>
-								<InputField
-									formik={formik}
-									name={"name"}
-									id={"name"}
-									dataTestId="name"
-									testId="name"
-									label="Name"
-									multiline={false}
-									rows={1}
-									type="text"
-									endAdornment={""}
-								/>
-								{/* <TextField
+		<>
+			<Donor
+				open={openDonorDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenDonorDialog(false)}
+				dialogType={DONOR_DIALOG_TYPE.PROJECT}
+				projectId={`${dashboardData?.project?.id}`}
+			/>
+			<Formik
+				validateOnBlur
+				validateOnChange
+				// isInitialValid={(props: any) => validate(props.initialValues)}
+				initialValues={initialValues as any}
+				enableReinitialize={true}
+				validate={validate}
+				onSubmit={(values: any) => {
+					values = { ...values, project: dashboardData?.project?.id };
+					props.onSubmit(values);
+				}}
+			>
+				{(formik) => {
+					return (
+						<Form autoComplete="off" data-testid="form" onChange={clearErrors}>
+							<Grid container spacing={4}>
+								<Grid item xs={12} md={6}>
+									<InputField
+										formik={formik}
+										name={"name"}
+										id={"name"}
+										dataTestId="name"
+										testId="name"
+										label="Name"
+										multiline={false}
+										rows={1}
+										type="text"
+										endAdornment={""}
+									/>
+									{/* <TextField
 									fullWidth
 									value={formik.values.name}
 									error={!!formik.errors.name}
@@ -133,64 +153,91 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									type="text"
 									variant="outlined"
 								/> */}
-							</Grid>
+								</Grid>
 
-							<Grid item xs={12} md={6}>
-								<TextField
-									fullWidth
-									value={formik.values.short_name}
-									error={!!formik.errors.short_name}
-									onChange={formik.handleChange}
-									label="Short Name"
-									name="short_name"
-									type="text"
-									variant="outlined"
-								/>
-							</Grid>
+								<Grid item xs={12} md={6}>
+									<TextField
+										fullWidth
+										value={formik.values.short_name}
+										error={!!formik.errors.short_name}
+										onChange={formik.handleChange}
+										label="Short Name"
+										name="short_name"
+										type="text"
+										variant="outlined"
+									/>
+								</Grid>
 
-							<Grid item xs={12} md={12}>
-								<TextField
-									fullWidth
-									value={formik.values.description}
-									error={!!formik.errors.description}
-									onChange={formik.handleChange}
-									label="Description"
-									name="description"
-									type="text"
-									variant="outlined"
-								/>
-							</Grid>
+								<Grid item xs={12} md={12}>
+									<TextField
+										fullWidth
+										value={formik.values.description}
+										error={!!formik.errors.description}
+										onChange={formik.handleChange}
+										label="Description"
+										name="description"
+										type="text"
+										variant="outlined"
+									/>
+								</Grid>
 
-							<Grid item xs={12} md={12}>
-								<InputLabel id="demo-simple-select-label">Select Donor</InputLabel>
-								<Select
-									required
-									variant="outlined"
-									fullWidth
-									labelId="demo-simple-select-label"
-									id="demo-simple-select"
-									name="donor"
-									value={formik.values["donor"]}
-									onChange={(event) => {
-										formik.handleChange(event);
-									}}
-								>
-									{donorList?.projDonors?.map((project: any) => (
-										<MenuItem
-											key={project?.donor?.id}
-											value={project?.donor?.id}
-										>
-											{project.donor.name}
+								<Grid item xs={12} md={12}>
+									<InputLabel id="demo-simple-select-label">
+										Select Donor
+									</InputLabel>
+									<Select
+										required
+										variant="outlined"
+										fullWidth
+										labelId="demo-simple-select-label"
+										id="demo-simple-select"
+										name="donor"
+										value={formik.values["donor"]}
+										onChange={(event) => {
+											formik.handleChange(event);
+										}}
+									>
+										{props.allDonors.map(
+											(
+												donor:
+													| {
+															id: string;
+															name: string;
+													  }
+													| {
+															groupName: React.ReactNode;
+													  }
+											) =>
+												"groupName" in donor ? (
+													<ListSubheader>{donor.groupName}</ListSubheader>
+												) : (
+													<MenuItem key={donor?.id} value={donor?.id}>
+														{donor?.name}
+													</MenuItem>
+												)
+										)}
+										{!props.allDonors.length && (
+											<MenuItem disabled>No Donors available</MenuItem>
+										)}
+										<MenuItem onClick={() => setOpenDonorDialog(true)}>
+											<Box display="flex">
+												<AddCircleIcon />
+												<Box ml={1}>
+													<Typography>
+														<FormattedMessage
+															id="addNewSelectField"
+															defaultMessage="Add new"
+															description="This text will be displayed as select field for select Field"
+														/>
+													</Typography>
+												</Box>
+											</Box>
 										</MenuItem>
-									))}
-									{!donorList?.projDonors?.length ? (
-										<MenuItem disabled>No Donors availabel</MenuItem>
-									) : null}
-								</Select>
-							</Grid>
+									</Select>
+								</Grid>
 
-							<Grid item xs={12} md={12}>
-								{/* <DateRangePicker
+								<Grid item xs={12} md={12}>
+									{/* <DateRangePicker
 									disableCloseOnSelect={true}
 									startText={from.text}
 									endText={to.text}
@@ -206,40 +253,41 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									)}
 								/> */}
 
-								{/* <Field
+									{/* <Field
 									name="date"
 									disablePast
 									component={DatePickerField}
 									shouldDisableDate={false}
 									getShouldDisableDateError={false}
 								/> */}
-								<ICustomDatePicker
-									from={startDate}
-									to={endData}
-									onChange={(from, to) => {
-										formik.setFieldValue("start_date", from?.toISOString());
-										formik.setFieldValue("end_date", to?.toISOString());
-									}}
-								/>
-							</Grid>
+									<ICustomDatePicker
+										from={startDate}
+										to={endData}
+										onChange={(from, to) => {
+											formik.setFieldValue("start_date", from?.toISOString());
+											formik.setFieldValue("end_date", to?.toISOString());
+										}}
+									/>
+								</Grid>
 
-							<Button
-								disabled={!formik.isValid}
-								type="submit"
-								data-testid="submit"
-								variant="contained"
-								color="primary"
-							>
-								Submit
-							</Button>
-							<Button onClick={props.onCancel} className={classes.cancelButton}>
-								Cancel
-							</Button>
-						</Grid>
-					</Form>
-				);
-			}}
-		</Formik>
+								<Button
+									disabled={!formik.isValid}
+									type="submit"
+									data-testid="submit"
+									variant="contained"
+									color="primary"
+								>
+									Submit
+								</Button>
+								<Button onClick={props.onCancel} className={classes.cancelButton}>
+									Cancel
+								</Button>
+							</Grid>
+						</Form>
+					);
+				}}
+			</Formik>
+		</>
 	);
 }
 

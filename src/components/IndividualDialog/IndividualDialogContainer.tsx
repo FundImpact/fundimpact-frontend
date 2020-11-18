@@ -600,8 +600,16 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 			loading={loading}
 			title={title}
 			subtitle={""}
-			workspace={""}
-			project={""}
+			workspace={
+				dialogType === IndividualDialogType.project
+					? dashboardData?.project?.workspace?.name || ""
+					: ""
+			}
+			project={
+				dialogType === IndividualDialogType.project
+					? dashboardData?.project?.name || ""
+					: ""
+			}
 		>
 			<CommonForm
 				initialValues={initialValues}
