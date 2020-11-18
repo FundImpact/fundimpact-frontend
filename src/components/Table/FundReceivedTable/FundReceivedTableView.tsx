@@ -118,6 +118,7 @@ function FundReceivedTableView({
 	inputFields,
 	removeFilterListElements,
 	donorHash,
+	currency,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;
@@ -144,8 +145,11 @@ function FundReceivedTableView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	inputFields: any[];
 	donorHash: { [key: string]: string };
+	currency: string;
 }) {
 	const intl = useIntl();
+
+	fundReceivedTableHeadings[2].label = `Amount ${currency && "(" + currency + ")"}`;
 
 	fundReceivedTableHeadings[fundReceivedTableHeadings.length - 1].renderComponent = () => (
 		<FilterList
