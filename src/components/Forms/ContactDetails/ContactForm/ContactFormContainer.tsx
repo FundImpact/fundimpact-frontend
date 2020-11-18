@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { contactFormFields } from "./inputField.json";
 import { FORM_ACTIONS } from "../../constant";
 import CommonForm from "../../../CommonForm";
-import { IContactForm, IContact } from "../../../../models/contact/index.js";
+import { IContactForm, IContact, IContactInputElements } from "../../../../models/contact/index.js";
 import { validateEmail } from "../../../../utils";
 import {
 	MutationFunctionOptions,
@@ -22,6 +22,12 @@ import {
 	setErrorNotification,
 } from "../../../../reducers/notificationReducer";
 import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../../../graphql/Contact";
+import ContactFormView from "./ContactFormView";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PhoneIcon from "@material-ui/icons/Phone";
+import { FormattedMessage } from "react-intl";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
 
 type ICreateContactContainer =
 	| {
@@ -165,38 +171,61 @@ const getInitialFormValues = (contact?: IContact): IContactForm => {
 	};
 };
 
-// const getCachedContactList = ({
-// 	apolloClient,
-// 	entity_id,
-// 	entity_name,
-// }: {
-// 	apolloClient: ApolloClient<object>;
-// 	entity_id: string;
-// 	entity_name: string;
-// }) => {
-// 	let contactList = [];
-// 	try {
-// 		const count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
+const contactInputArr: IContactInputElements = [
+	{
+		icon: <AccountCircleIcon fontSize="large" />,
+		inputs: [{ label: "First name" }, { label: "Surname" }],
+		showAddIcon: false,
+		numberOfTimeToReplicate: 1,
+	},
+	{
+		icon: <MailOutlineIcon fontSize="large" />,
+		inputs: [{ label: "Email" }, { label: "Label" }],
+		showAddIcon: true,
+		numberOfTimeToReplicate: 1,
+	},
+	{
+		icon: <PhoneIcon fontSize="large" />,
+		inputs: [{ label: "Phone" }, { label: "Label" }],
+		showAddIcon: true,
+		numberOfTimeToReplicate: 1,
+	},
+	{
+		icon: <LocationOnIcon fontSize="large" />,
+		inputs: [
+			{ label: "Address Line 1" },
+			{ label: "Address Line 2" },
+			{ label: "Pincode" },
+			{ label: "City" },
+		],
+		showAddIcon: true,
+		numberOfTimeToReplicate: 1,
+		fullWidth: true,
+	},
+];
 
-// 		let cachedCount = apolloClient.readQuery({
-// 			query: GET_CONTACT_LIST,
-// 			variables: {
-// 				filter: {
-// 					entity_name,
-// 					entity_id,
-// 				},
-// 				limit: count > 10 ? 10 : count,
-// 				start: 0,
-// 				sort: "created_at:DESC",
-// 			},
-// 		});
-// 		contactList = cachedCount?.t4DContacts || [];
-// 	} catch (err) {
-// 		console.log("err.message :>> ", err.message);
-// 	}
-// 	console.log("contactList :>> ", contactList);
-// 	return contactList;
-// };
+const replicateOrRemoveInputElement = ({
+	setContactInputElements,
+	elementPosition,
+	removeElement = false,
+}: {
+	setContactInputElements: React.Dispatch<React.SetStateAction<IContactInputElements>>;
+	elementPosition: number;
+	removeElement?: boolean;
+}) => {
+	setContactInputElements((contactInputElements) =>
+		contactInputElements.map((inputElement, index) =>
+			index !== elementPosition
+				? { ...inputElement }
+				: {
+						...inputElement,
+						numberOfTimeToReplicate: removeElement
+							? inputElement.numberOfTimeToReplicate - 1
+							: inputElement.numberOfTimeToReplicate + 1,
+				  }
+		)
+	);
+};
 
 const fetchContactListCount = async ({
 	apolloClient,
@@ -346,6 +375,7 @@ const validate = (values: IContactForm) => {
 };
 
 function ContactFormContainer(props: ICreateContactContainer) {
+	const [contactInputElements, setContactInputElements] = useState(contactInputArr);
 	const {
 		loading,
 		createContact,
@@ -384,16 +414,21 @@ function ContactFormContainer(props: ICreateContactContainer) {
 	};
 
 	return (
-		<CommonForm
-			initialValues={initialValues}
-			validate={validate}
-			onCreate={onFormSubmit}
-			onCancel={() =>
-				props.getCreatedOrUpdatedContact && props.getCreatedOrUpdatedContact(null)
-			}
-			inputFields={contactFormFields}
-			formAction={props.formAction}
-			onUpdate={onFormSubmit}
+		<ContactFormView
+			contactInputElements={contactInputElements}
+			replicateOrRemoveInputElement={({
+				elementPosition,
+				removeElement = false,
+			}: {
+				elementPosition: number;
+				removeElement?: boolean;
+			}) => {
+				replicateOrRemoveInputElement({
+					setContactInputElements,
+					elementPosition,
+					removeElement,
+				});
+			}}
 		/>
 	);
 }
