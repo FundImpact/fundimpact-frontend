@@ -21,7 +21,7 @@ export type ProjectProps = {
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
-		| ((options?: QueryLazyOptions<{ filter: { workspace: any } }> | undefined) => void)
+		| ((options?: QueryLazyOptions<{ filter: { workspace: any } }> | undefined) => void);
 } & (
 	| {
 			type: PROJECT_ACTIONS.CREATE;

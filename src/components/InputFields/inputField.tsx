@@ -12,8 +12,9 @@ import {
 	TextField,
 	FormControlLabel,
 	Switch,
-	Typography,
 	Box,
+	Typography,
+	ListSubheader,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -87,12 +88,20 @@ const InputFields = ({
 
 	useEffect(() => {
 		if (inputType == "multiSelect") {
-			setElemName((formik.values[name]?.map((elem: any) => elem.id) as string[]) || []);
+			setElemName(
+				formik.values[name]?.map((elem: any) => {
+					if (elem) return elem.id;
+				})
+			);
 		}
 	}, [formik, setElemName, name, inputType]);
 
 	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
-		setElemName(event.target.value.map((elem: any) => elem.id) as string[]);
+		setElemName(
+			event.target.value.map((elem: any) => {
+				if (elem) return elem.id;
+			})
+		);
 	};
 	let renderValue;
 	if (multiple) {
@@ -126,8 +135,8 @@ const InputFields = ({
 
 		if (multiSelect) {
 			renderValue = (selected: any) => {
-				let arr: any = selected.map((elem: any) => elem.name);
-				return arr.join(", ");
+				let arr: any = selected.map((elem: any) => elem?.name);
+				return arr.filter((item: any) => !!item).join(", ");
 			};
 		}
 		return (
@@ -185,11 +194,19 @@ const InputFields = ({
 						))}
 					{!multiple &&
 						!multiSelect &&
-						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
-							<MenuItem key={index} value={elem.id}>
-								{elem.name}
-							</MenuItem>
-						))}
+						optionsArray?.map(
+							(
+								elem: { id: string; name: string; groupName?: string },
+								index: number
+							) =>
+								elem.groupName ? (
+									<ListSubheader>{elem.groupName}</ListSubheader>
+								) : (
+									<MenuItem key={index} value={elem.id}>
+										{elem.name}
+									</MenuItem>
+								)
+						)}
 					{multiple &&
 						optionsArray?.map(
 							(

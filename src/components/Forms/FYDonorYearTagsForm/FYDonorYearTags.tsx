@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
 	Box,
 	Button,
@@ -14,11 +14,13 @@ import {
 	Typography,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { GET_FINANCIAL_YEARS, GET_GRANT_PERIOD } from "../../../graphql";
 import { FORM_ACTIONS } from "../constant";
+import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -50,6 +52,7 @@ const FinancialYearAndGrantPeriodFields = ({
 		donor: { id: string; name: string; country: { id: string; name: string } };
 	};
 }) => {
+	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const dashboardData = useDashBoardData();
 	const project = dashboardData?.project?.id;
@@ -60,6 +63,7 @@ const FinancialYearAndGrantPeriodFields = ({
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
 		variables: { filter: { donor: donor.donor.id, project: project } },
 	});
+	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState<boolean>();
 
 	return (
 		<>
@@ -155,6 +159,20 @@ const FinancialYearAndGrantPeriodFields = ({
 									</MenuItem>
 								)
 							)}
+						<MenuItem>
+							<Box display="flex" onClick={() => setOpenGrantPeriodForm(true)}>
+								<AddCircleIcon />
+								<Box ml={1}>
+									<Typography>
+										<FormattedMessage
+											id="addNewSelectField"
+											defaultMessage="Add new"
+											description="This text will be displayed as select field for add new"
+										/>
+									</Typography>
+								</Box>
+							</Box>
+						</MenuItem>
 					</Select>
 					<FormHelperText error>
 						{formik.touched[`${donor.id}mapValues`]?.grant_periods_project &&
@@ -162,6 +180,13 @@ const FinancialYearAndGrantPeriodFields = ({
 					</FormHelperText>
 				</FormControl>
 			</Grid>
+			{openGrantPeriodForm && (
+				<GrantPeriodDialog
+					open={openGrantPeriodForm}
+					onClose={() => setOpenGrantPeriodForm(false)}
+					action={FORM_ACTIONS.CREATE}
+				/>
+			)}
 		</>
 	);
 };
