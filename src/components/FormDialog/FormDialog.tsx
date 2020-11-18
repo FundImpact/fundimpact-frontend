@@ -1,4 +1,12 @@
-import { Box, CircularProgress, Dialog, Grid, Typography, useTheme } from "@material-ui/core";
+import {
+	Box,
+	CircularProgress,
+	Dialog,
+	Grid,
+	Typography,
+	useTheme,
+	Divider,
+} from "@material-ui/core";
 import React from "react";
 
 function FormDialog({
@@ -11,6 +19,7 @@ function FormDialog({
 	children,
 	loading,
 	leftComponent,
+	formDetails,
 }: {
 	open: boolean;
 	handleClose: () => void;
@@ -21,6 +30,7 @@ function FormDialog({
 	children: any;
 	loading?: boolean;
 	leftComponent?: React.ReactNode;
+	formDetails?: React.ReactNode;
 }) {
 	const theme = useTheme();
 
@@ -48,12 +58,27 @@ function FormDialog({
 								mt={3}
 								style={{ backgroundColor: theme.palette.action.hover }}
 							>
-								<Typography color="primary" gutterBottom>
+								<Typography
+									color="primary"
+									gutterBottom
+									style={{ fontWeight: 500, fontSize: "large" }}
+								>
 									{workspace}
 								</Typography>
 								<Box mt={1}>
-									<Typography variant="subtitle2">{project}</Typography>
+									<Typography
+										variant="subtitle2"
+										style={{ fontWeight: "bold", fontSize: "large" }}
+									>
+										{project}
+									</Typography>
 								</Box>
+								{formDetails && (
+									<Box mt={1}>
+										<Divider />
+										{formDetails}
+									</Box>
+								)}
 							</Box>
 						)}
 						<Grid item container justify="center">
