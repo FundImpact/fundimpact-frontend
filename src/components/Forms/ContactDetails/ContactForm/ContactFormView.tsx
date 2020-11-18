@@ -28,31 +28,27 @@ const InputElementRow = ({
 	replicateOrRemoveInputElement: (removeElement?: boolean) => void;
 }) => {
 	return (
-		<>
-			{new Array(inputElement.numberOfTimeToReplicate).map(() => (
-				<Grid item xs={12} style={{ display: "flex" }}>
-					<Box p={2}>{inputElement.icon}</Box>
-					<Box
-						px={2}
-						display="flex"
-						width="100%"
-						justifyContent="space-between"
-						{...(inputElement?.fullWidth ? { flexDirection: "column" } : {})}
-					>
-						{inputElement.inputs.map((element) => (
-							<Box p={1}>
-								<TextField label={element.label} fullWidth />
-							</Box>
-						))}
+		<Grid item xs={12} style={{ display: "flex" }}>
+			<Box p={2}>{inputElement.icon}</Box>
+			<Box
+				px={2}
+				display="flex"
+				width="100%"
+				justifyContent="space-between"
+				{...(inputElement?.fullWidth ? { flexDirection: "column" } : {})}
+			>
+				{inputElement.inputs.map((element) => (
+					<Box p={1}>
+						<TextField label={element.label} fullWidth />
 					</Box>
-					<Box mt={2}>
-						{inputElement.showAddIcon && (
-							<AddCircleOutlineIcon onClick={() => replicateOrRemoveInputElement()} />
-						)}
-					</Box>
-				</Grid>
-			))}
-		</>
+				))}
+			</Box>
+			<Box mt={2}>
+				{inputElement.showAddIcon && (
+					<AddCircleOutlineIcon onClick={() => replicateOrRemoveInputElement()} />
+				)}
+			</Box>
+		</Grid>
 	);
 };
 
