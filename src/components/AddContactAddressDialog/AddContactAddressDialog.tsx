@@ -85,7 +85,7 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	const addContactMessage = (
 		<FormattedMessage
 			id="addContactDialogTitle"
-			defaultMessage="Add Contact"
+			defaultMessage="Create New Contact"
 			description="This text will be displayed as title of add contact dialog"
 		/>
 	);
@@ -116,7 +116,7 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	const addContactSubtitle = (
 		<FormattedMessage
 			id="addContactDialogSubtitle"
-			defaultMessage="Add Contact Details"
+			defaultMessage="Create New Contact"
 			description="This text will be displayed as subtitle of add contact dialog"
 		/>
 	);
@@ -146,91 +146,57 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 	);
 
 	return (
-		<Dialog
-			fullWidth
-			maxWidth="md"
-			open={open}
-			onClose={closeDialog}
-			data-testid="addContact-dialog"
-			aria-labelledby="form-dialog-title"
-		>
-			<Box px={3} py={4}>
-				<Grid container spacing={2}>
-					<Grid item xs={4}>
-						<Typography data-testid="dialog-header" variant="h6" gutterBottom>
-							{activeForm == AddContactAddressDialogType.contact
-								? props.formActions === FORM_ACTIONS.UPDATE
-									? updateContactMessage
-									: addContactMessage
-								: props.formActions === FORM_ACTIONS.UPDATE
-								? updateAddressMessage
-								: addAddressMessage}
-						</Typography>
-						{/* <Box
-						// px={2}
-						// py={3}
-						// mt={3}
-						// style={{ backgroundColor: theme.palette.action.hover }}
-						> */}
-							<Typography
-								// color="primary"
-								gutterBottom
-								variant="subtitle2"
-								color="textSecondary"
-								// style={{ fontWeight: "bold", fontSize: "large" }}
-							>
-								{activeForm == AddContactAddressDialogType.contact
-									? props.formActions === FORM_ACTIONS.UPDATE
-										? updateContactSubtitle
-										: addContactSubtitle
-									: props.formActions === FORM_ACTIONS.UPDATE
-									? updateAddressSubtitle
-									: addAddressSubtitle}
-							</Typography>
-						{/* </Box> */}
-					</Grid>
-					<Grid item xs={8}>
-						{dialogType == undefined && (
-							<Stepper activeStep={activeForm} alternativeLabel>
-								{formSteps.map((label) => {
-									return (
-										<Step key={label}>
-											<StepLabel>{label}</StepLabel>
-										</Step>
-									);
-								})}
-							</Stepper>
-						)}
-						{activeForm == AddContactAddressDialogType.contact ? (
-							<ContactForm
-								entity_id={entity_id}
-								entity_name={entity_name}
-								getCreatedOrUpdatedContact={getCreatedOrUpdatedContact}
-								{...(props.formActions == FORM_ACTIONS.UPDATE &&
-								props.dialogType == AddContactAddressDialogType.contact
-									? {
-											initialValues: props.contactFormInitialValues,
-											formAction: FORM_ACTIONS.UPDATE,
-									  }
-									: { formAction: FORM_ACTIONS.CREATE })}
-							/>
-						) : (
-							<AddressForm
-								t_4_d_contact={contact_id}
-								getCreatedOrUpdatedAddress={getCreatedOrUpdatedAddress}
-								{...(props.formActions == FORM_ACTIONS.UPDATE &&
-								props.dialogType == AddContactAddressDialogType.address
-									? {
-											initialValues: props.addressFormInitialValues,
-											formAction: FORM_ACTIONS.UPDATE,
-									  }
-									: { formAction: FORM_ACTIONS.CREATE })}
-							/>
-						)}
-					</Grid>
-				</Grid>
-			</Box>
-		</Dialog>
+		// <Box px={3} py={4}>
+		// 	<Grid container spacing={2}>
+		// 		<Grid item xs={4}>
+		// 			<Typography data-testid="dialog-header" variant="h6" gutterBottom>
+		// 				{activeForm == AddContactAddressDialogType.contact
+		// 					? props.formActions === FORM_ACTIONS.UPDATE
+		// 						? updateContactMessage
+		// 						: addContactMessage
+		// 					: props.formActions === FORM_ACTIONS.UPDATE
+		// 					? updateAddressMessage
+		// 					: addAddressMessage}
+		// 			</Typography>
+		// 			{/* <Box
+		// 				// px={2}
+		// 				// py={3}
+		// 				// mt={3}
+		// 				// style={{ backgroundColor: theme.palette.action.hover }}
+		// 				> */}
+		// 			<Typography
+		// 				// color="primary"
+		// 				gutterBottom
+		// 				variant="subtitle2"
+		// 				color="textSecondary"
+		// 				// style={{ fontWeight: "bold", fontSize: "large" }}
+		// 			>
+		// 				{activeForm == AddContactAddressDialogType.contact
+		// 					? props.formActions === FORM_ACTIONS.UPDATE
+		// 						? updateContactSubtitle
+		// 						: addContactSubtitle
+		// 					: props.formActions === FORM_ACTIONS.UPDATE
+		// 					? updateAddressSubtitle
+		// 					: addAddressSubtitle}
+		// 			</Typography>
+		// 			{/* </Box> */}
+		// 		</Grid>
+		// 		<Grid item xs={8}>
+					<ContactForm
+						entity_id={entity_id}
+						entity_name={entity_name}
+						getCreatedOrUpdatedContact={getCreatedOrUpdatedContact}
+						{...(props.formActions == FORM_ACTIONS.UPDATE &&
+						props.dialogType == AddContactAddressDialogType.contact
+							? {
+									initialValues: props.contactFormInitialValues,
+									formAction: FORM_ACTIONS.UPDATE,
+							  }
+							: { formAction: FORM_ACTIONS.CREATE })}
+					/>
+	// 			</Grid>
+	// 		</Grid>
+	// 	</Box>
 	);
 }
 
