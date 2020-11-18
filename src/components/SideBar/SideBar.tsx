@@ -9,11 +9,18 @@ import {
 	Button,
 	Grid,
 	useTheme,
+	ButtonGroup,
+	Popover,
+	Popper,
+	Paper,
+	ClickAwayListener,
+	Grow,
+	MenuList,
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { GET_ORGANISATIONS, GET_WORKSPACES_BY_ORG, GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
@@ -33,6 +40,7 @@ import { useAuth } from "../../contexts/userContext";
 import Project from "../Project/Project";
 import { PROJECT_ACTIONS } from "../Project/constants";
 import { IGET_WORKSPACES_BY_ORG } from "../../models/workspace/query";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 let menuList: { children: JSX.Element }[] = [];
 
@@ -61,6 +69,8 @@ export default function SideBar({ children }: { children?: Function }) {
 	const [getWorkspaceList, { data: workspaceList }] = useLazyQuery<IGET_WORKSPACES_BY_ORG>(
 		GET_WORKSPACES_BY_ORG
 	);
+	const addProjectMenuRef = React.useRef(null);
+	const [openAddProjectMenu, setOpenAddProjectMenu] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (dashboardData) {
@@ -206,24 +216,79 @@ export default function SideBar({ children }: { children?: Function }) {
 				</div>
 			)}
 			<Box p={2} display="flex" flexGrow="1" position="relative">
-				<Button
+				<ButtonGroup
 					variant="contained"
 					color="secondary"
 					size="small"
 					style={{
-						color: theme.palette.background.paper,
 						position: "absolute",
 						bottom: theme.spacing(3),
 						width: "89%",
 					}}
-					onClick={() => setOpenProjectDialog(true)}
+					ref={addProjectMenuRef}
 				>
-					<FormattedMessage
-						id={`addProject`}
-						defaultMessage={`Add Project`}
-						description={`This text will be shown on  add project button`}
-					/>
-				</Button>
+					<Button
+						onClick={() => setOpenProjectDialog(true)}
+						style={{ width: "100%", color: theme.palette.background.paper }}
+					>
+						<FormattedMessage
+							id={`addProject`}
+							defaultMessage={`Add Project`}
+							description={`This text will be shown on  add project button`}
+						/>
+					</Button>
+					<Button
+						onClick={() => setOpenAddProjectMenu((open) => !open)}
+						style={{ color: theme.palette.background.paper }}
+					>
+						<ArrowDropDownIcon />
+					</Button>
+				</ButtonGroup>
+				<Popper
+					open={openAddProjectMenu}
+					anchorEl={addProjectMenuRef.current}
+					role={undefined}
+					transition
+					disablePortal
+					style={{ width: "89%" }}
+				>
+					{({ TransitionProps }) => (
+						<Grow
+							{...TransitionProps}
+							style={{
+								transformOrigin: "left top",
+							}}
+						>
+							<Paper>
+								<ClickAwayListener
+									onClickAway={() => {
+										setOpenAddProjectMenu(false);
+										setViewWorkspace(false);
+									}}
+								>
+									<Button
+										variant="contained"
+										color="secondary"
+										onClick={() => {
+											setViewWorkspace(true);
+											setOpenAddProjectMenu(false);
+										}}
+										style={{
+											width: "100%",
+											color: theme.palette.background.paper,
+										}}
+									>
+										<FormattedMessage
+											id={`addWorkspace`}
+											defaultMessage={`Add Workspace`}
+											description={`This text will be shown on  add workspace menu`}
+										/>
+									</Button>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
 			</Box>
 		</Box>
 	);

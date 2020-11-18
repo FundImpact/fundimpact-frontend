@@ -24,10 +24,12 @@ import {
 	annualYearListMock,
 	projectDonorMock,
 	financialYearListMock,
+	mockOrgDonor,
 } from "../../../utils/testMock.json";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
-import { GET_ALL_DELIVERABLES_SPEND_AMOUNT } from "../../../graphql/project";
+import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 let createDeliverableTracklineMutation = false;
 const mocks = [
 	{
@@ -77,10 +79,10 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_PROJECT_DONORS,
+			query: GET_PROJ_DONORS,
 			variables: { filter: { project: 2 } },
 		},
-		result: { data: { projDonors: projectDonorMock } },
+		result: { data: { projectDonors: projectDonorMock } },
 	},
 	{
 		request: {
@@ -151,6 +153,21 @@ const mocks = [
 			},
 		},
 		result: {},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "13",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
 	},
 ];
 let handleClose = jest.fn();

@@ -2,10 +2,10 @@ import {
 	Box,
 	CircularProgress,
 	Dialog,
-	Divider,
 	Grid,
 	Typography,
 	useTheme,
+	Divider,
 } from "@material-ui/core";
 import React from "react";
 
@@ -61,7 +61,7 @@ function FormDialog({
 								<Typography
 									color="primary"
 									gutterBottom
-									style={{ fontWeight: "bold", fontSize: "large" }}
+									style={{ fontWeight: 500, fontSize: "large" }}
 								>
 									{workspace}
 								</Typography>

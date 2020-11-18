@@ -166,22 +166,28 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 								? updateAddressMessage
 								: addAddressMessage}
 						</Typography>
-						<Box
-							px={2}
-							py={3}
-							mt={3}
-							style={{ backgroundColor: theme.palette.action.hover }}
+						{/* <Box
+						// px={2}
+						// py={3}
+						// mt={3}
+						// style={{ backgroundColor: theme.palette.action.hover }}
+						> */}
+						<Typography
+							// color="primary"
+							gutterBottom
+							variant="subtitle2"
+							color="textSecondary"
+							// style={{ fontWeight: "bold", fontSize: "large" }}
 						>
-							<Typography color="primary" gutterBottom>
-								{activeForm == AddContactAddressDialogType.contact
-									? props.formActions === FORM_ACTIONS.UPDATE
-										? updateContactSubtitle
-										: addContactSubtitle
-									: props.formActions === FORM_ACTIONS.UPDATE
-									? updateAddressSubtitle
-									: addAddressSubtitle}
-							</Typography>
-						</Box>
+							{activeForm == AddContactAddressDialogType.contact
+								? props.formActions === FORM_ACTIONS.UPDATE
+									? updateContactSubtitle
+									: addContactSubtitle
+								: props.formActions === FORM_ACTIONS.UPDATE
+								? updateAddressSubtitle
+								: addAddressSubtitle}
+						</Typography>
+						{/* </Box> */}
 					</Grid>
 					<Grid item xs={8}>
 						{dialogType == undefined && (
