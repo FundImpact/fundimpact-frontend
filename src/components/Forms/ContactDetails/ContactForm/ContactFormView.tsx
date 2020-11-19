@@ -9,6 +9,8 @@ import {
 	DialogContent,
 	DialogActions,
 	Button,
+	IconButton,
+	Divider,
 } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -19,13 +21,22 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import { IContactInputElements } from "../../../../models/contact";
 import { element } from "prop-types";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 
 const InputElementRow = ({
 	inputElement,
+	formik,
 	replicateOrRemoveInputElement,
 }: {
 	inputElement: IContactInputElements[0];
-	replicateOrRemoveInputElement: (removeElement?: boolean) => void;
+	formik: any;
+	replicateOrRemoveInputElement: ({
+		removeElement,
+		inputElemInputsIndex,
+	}: {
+		removeElement?: boolean | undefined;
+		inputElemInputsIndex: number;
+	}) => void;
 }) => {
 	return (
 		<Grid item xs={12} style={{ display: "flex" }}>
@@ -37,15 +48,87 @@ const InputElementRow = ({
 				justifyContent="space-between"
 				{...(inputElement?.fullWidth ? { flexDirection: "column" } : {})}
 			>
-				{inputElement.inputs.map((element) => (
+				<Grid container>
+					<Grid container item xs={12} justify="space-between">
+						{inputElement.inputs.map((inputArray, index) => {
+							let inputElemInputsIndex = -1;
+							return (
+								<>
+									<Grid container item xs={11}>
+										{inputArray.map((elem, elemIndex) => {
+											inputElemInputsIndex = elemIndex;
+											return (
+												<Grid item xs={elem.size}>
+													<Box p={1}>
+														<TextField
+															value={formik.values[elem.id]}
+															error={
+																!!formik.errors[elem.id] &&
+																!!formik.touched[elem.id]
+															}
+															helperText={
+																formik.touched[elem.id] &&
+																formik.errors[elem.id]
+															}
+															onBlur={formik.handleBlur}
+															onChange={formik.handleChange}
+															label={elem.label}
+															data-testid={"dataTestId"}
+															inputProps={{
+																"data-testid": "testId",
+															}}
+															fullWidth
+															name={`${inputElement.id}[${index}].${elem.id}`}
+														/>
+													</Box>
+												</Grid>
+											);
+										})}
+									</Grid>
+									{index !== 0 && (
+										<Grid item xs={1}>
+											<Box mt={2}>
+												<IconButton
+													onClick={() => {
+														console.log("acnkad", index);
+														replicateOrRemoveInputElement({
+															removeElement: true,
+															inputElemInputsIndex: index,
+														});
+													}}
+												>
+													<HighlightOffOutlinedIcon
+														color="error"
+														fontSize="small"
+													/>
+												</IconButton>
+											</Box>
+										</Grid>
+									)}
+								</>
+							);
+						})}
+					</Grid>
+				</Grid>
+
+				{/* {inputElement.inputs.map((element) => (
 					<Box p={1}>
 						<TextField label={element.label} fullWidth />
 					</Box>
-				))}
+				))} */}
 			</Box>
 			<Box mt={2}>
 				{inputElement.showAddIcon && (
-					<AddCircleOutlineIcon onClick={() => replicateOrRemoveInputElement()} />
+					<IconButton
+						onClick={() =>
+							replicateOrRemoveInputElement({
+								removeElement: false,
+								inputElemInputsIndex: -1,
+							})
+						}
+					>
+						<AddCircleOutlineIcon />
+					</IconButton>
 				)}
 			</Box>
 		</Grid>
@@ -60,9 +143,11 @@ function ContactFormView({
 	replicateOrRemoveInputElement: ({
 		elementPosition,
 		removeElement,
+		inputElemInputsIndex,
 	}: {
 		elementPosition: number;
 		removeElement?: boolean | undefined;
+		inputElemInputsIndex: number;
 	}) => void;
 }) {
 	return (
@@ -84,7 +169,12 @@ function ContactFormView({
 			<DialogContent dividers>
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
-						<Formik initialValues={{}} onSubmit={() => {}}>
+						<Formik
+							initialValues={{}}
+							onSubmit={(values: any) => {
+								console.log("valuescontact", values);
+							}}
+						>
 							{(formik) => (
 								<Form>
 									<Grid container>
@@ -92,16 +182,54 @@ function ContactFormView({
 											<InputElementRow
 												inputElement={contactInputElement}
 												key={index}
-												replicateOrRemoveInputElement={(
-													removeElement = false
-												) =>
+												formik={formik}
+												replicateOrRemoveInputElement={({
+													removeElement = false,
+													inputElemInputsIndex = -1,
+												}: {
+													removeElement?: boolean | undefined;
+													inputElemInputsIndex: number;
+												}) => {
+													console.log("replicated", index);
 													replicateOrRemoveInputElement({
 														elementPosition: index,
 														removeElement,
-													})
-												}
+														inputElemInputsIndex,
+													});
+												}}
 											/>
 										))}
+									</Grid>
+									<Box mt={2}>
+										<Divider />
+									</Box>
+
+									<Grid container item xs={12} justify="space-between">
+										<Grid>
+											<Box display="flex" p={1}>
+												<Button type="submit" color="primary">
+													Show more
+												</Button>
+											</Box>
+										</Grid>
+										<Grid>
+											<Box display="flex" p={1}>
+												<Box>
+													<Button
+														type="submit"
+														color="primary"
+														onClick={() => {}}
+													>
+														Submit
+													</Button>
+												</Box>
+												<Box>
+													<Button type="submit" color="primary">
+														Cancel
+													</Button>
+												</Box>
+											</Box>
+										</Grid>
 									</Grid>
 								</Form>
 							)}
@@ -109,7 +237,7 @@ function ContactFormView({
 					</Grid>
 				</Grid>
 			</DialogContent>
-			<DialogActions>
+			{/* <DialogActions>
 				<Grid container>
 					<Grid item xs={9}>
 						<Button onClick={() => {}} color="primary">
@@ -120,12 +248,12 @@ function ContactFormView({
 						<Button onClick={() => {}} color="primary">
 							Cancel
 						</Button>
-						<Button onClick={() => {}} color="primary">
+						<Button type="submit" color="primary">
 							Ok
 						</Button>
 					</Grid>
 				</Grid>
-			</DialogActions>
+			</DialogActions> */}
 		</Dialog>
 	);
 }
