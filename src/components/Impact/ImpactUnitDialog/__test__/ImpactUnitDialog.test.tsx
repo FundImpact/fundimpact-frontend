@@ -82,6 +82,7 @@ beforeEach(() => {
 						formAction={FORM_ACTIONS.CREATE}
 						open={true}
 						handleClose={handleClose}
+						organization={"3"}
 					/>
 				</NotificationProvider>
 			</DashboardProvider>,
