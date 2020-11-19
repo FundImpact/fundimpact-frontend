@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { contactFormFields } from "./inputField.json";
 import { FORM_ACTIONS } from "../../constant";
 import CommonForm from "../../../CommonForm";
-import { IContactForm, IContact, IContactInputElements } from "../../../../models/contact/index.js";
+import {
+	IContactForm,
+	IContact,
+	IContactInputElements,
+	IContactInputElement,
+} from "../../../../models/contact/index.js";
 import { validateEmail } from "../../../../utils";
 import {
 	MutationFunctionOptions,
@@ -174,58 +179,109 @@ const getInitialFormValues = (contact?: IContact): IContactForm => {
 const contactInputArr: IContactInputElements = [
 	{
 		icon: <AccountCircleIcon fontSize="large" />,
-		inputs: [{ label: "First name" }, { label: "Surname" }],
+		inputs: [
+			[
+				{ label: "First name", size: 6, id: "firstName" },
+				{ label: "Surname", size: 6, id: "surname" },
+			],
+		],
 		showAddIcon: false,
+		id: "name",
 		numberOfTimeToReplicate: 1,
 	},
 	{
 		icon: <MailOutlineIcon fontSize="large" />,
-		inputs: [{ label: "Email" }, { label: "Label" }],
+		inputs: [
+			[
+				{ label: "Email", size: 6, id: "email" },
+				{ label: "Label", size: 6, id: "label" },
+			],
+		],
 		showAddIcon: true,
+		id: "emails",
 		numberOfTimeToReplicate: 1,
 	},
 	{
 		icon: <PhoneIcon fontSize="large" />,
-		inputs: [{ label: "Phone" }, { label: "Label" }],
+		inputs: [
+			[
+				{ label: "Phone", size: 6, id: "phone" },
+				{ label: "Label", size: 6, id: "label" },
+			],
+		],
 		showAddIcon: true,
+		id: "phones",
 		numberOfTimeToReplicate: 1,
 	},
 	{
 		icon: <LocationOnIcon fontSize="large" />,
 		inputs: [
-			{ label: "Address Line 1" },
-			{ label: "Address Line 2" },
-			{ label: "Pincode" },
-			{ label: "City" },
+			[
+				{ label: "Address Line 1", size: 12, id: "addressLine" },
+				{ label: "Address Line 2", size: 12, id: "addressLineTwo" },
+				{ label: "Pincode", size: 6, id: "pincode" },
+				{ label: "City", size: 6, id: "city" },
+			],
 		],
 		showAddIcon: true,
+		id: "addresses",
 		numberOfTimeToReplicate: 1,
 		fullWidth: true,
 	},
 ];
 
+const addInputElement = ({ inputElement }: { inputElement: IContactInputElement }) => {
+	let inputToPush = inputElement.inputs[0];
+	inputElement.inputs.push(inputToPush);
+	return inputElement;
+};
+
+const removeInpuElement = ({
+	inputElement,
+	inputElemInputsIndex,
+}: {
+	inputElement: IContactInputElement;
+	inputElemInputsIndex: number;
+}) => {
+	let inputElemCopy = { ...inputElement };
+	inputElemCopy.inputs.splice(inputElemInputsIndex, 1);
+	return inputElemCopy;
+};
+
 const replicateOrRemoveInputElement = ({
 	setContactInputElements,
 	elementPosition,
 	removeElement = false,
+	inputElemInputsIndex,
 }: {
 	setContactInputElements: React.Dispatch<React.SetStateAction<IContactInputElements>>;
 	elementPosition: number;
 	removeElement?: boolean;
+	inputElemInputsIndex: number;
 }) => {
 	setContactInputElements((contactInputElements) =>
 		contactInputElements.map((inputElement, index) =>
 			index !== elementPosition
 				? { ...inputElement }
-				: {
-						...inputElement,
-						numberOfTimeToReplicate: removeElement
-							? inputElement.numberOfTimeToReplicate - 1
-							: inputElement.numberOfTimeToReplicate + 1,
-				  }
+				: removeElement
+				? removeInpuElement({ inputElement, inputElemInputsIndex })
+				: addInputElement({ inputElement })
 		)
 	);
 };
+
+// setContactInputElements((contactInputElements) =>
+// contactInputElements.map((inputElement, index) =>
+// 	index !== elementPosition
+// 		? { ...inputElement }
+// 		: {
+// 				...inputElement,
+// 				numberOfTimeToReplicate: removeElement
+// 					? inputElement.numberOfTimeToReplicate - 1
+// 					: inputElement.numberOfTimeToReplicate + 1,
+// 		  }
+// )
+// );
 
 const fetchContactListCount = async ({
 	apolloClient,
@@ -391,7 +447,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 
 	const notificationDispatch = useNotificationDispatch();
 	const apolloClient = useApolloClient();
-
+	console.log("arrHere", contactInputElements);
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
 		try {
 			//remove this
@@ -419,14 +475,17 @@ function ContactFormContainer(props: ICreateContactContainer) {
 			replicateOrRemoveInputElement={({
 				elementPosition,
 				removeElement = false,
+				inputElemInputsIndex = -1,
 			}: {
 				elementPosition: number;
 				removeElement?: boolean;
+				inputElemInputsIndex: number;
 			}) => {
 				replicateOrRemoveInputElement({
 					setContactInputElements,
 					elementPosition,
 					removeElement,
+					inputElemInputsIndex,
 				});
 			}}
 		/>

@@ -14,13 +14,27 @@ export interface IContact {
 	email_other: string;
 	contact_type: string;
 }
-
+export type IContactInputElement = {
+	icon: JSX.Element;
+	inputs: {
+		label: string;
+		size: 6 | 12;
+		id: string;
+	}[][];
+	showAddIcon: boolean;
+	id: string;
+	numberOfTimeToReplicate: number;
+	fullWidth?: boolean;
+};
 export type IContactInputElements = {
 	icon: JSX.Element;
 	inputs: {
 		label: string;
-	}[];
+		size: 6 | 12;
+		id: string;
+	}[][];
 	showAddIcon: boolean;
+	id: string;
 	numberOfTimeToReplicate: number;
 	fullWidth?: boolean;
 }[];
