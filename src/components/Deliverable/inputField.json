@@ -275,6 +275,7 @@
 			"testId": "deliverableTracklineAttachFileInput",
 			"label": "Attach files",
 			"inputType": "button",
+			"textNextToButton": "",
 			"onClick": {},
 			"size": 12
 		}
