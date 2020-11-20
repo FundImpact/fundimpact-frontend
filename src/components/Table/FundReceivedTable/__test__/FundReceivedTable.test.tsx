@@ -10,8 +10,10 @@ import {
 	projectDonorMock,
 	mockFundReceiptProjectList,
 	fundReceiptProjectListCount,
+	mockCountryList,
+	mockCurrencyList,
 } from "../../../../utils/testMock.json";
-import { GET_PROJECT_DONORS } from "../../../../graphql";
+import { GET_PROJECT_DONORS, GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../../../graphql";
 import FundReceivedTable from "../FundReceivedTableGraphql";
 import { fundReceivedTableHeadings } from "../../constants";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
@@ -22,6 +24,8 @@ import {
 } from "../../../../graphql/FundRecevied";
 import { getTodaysDate } from "../../../../utils";
 import { fundReceiptInputFields } from "../inputFields.json";
+import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../../graphql/donor";
 
 let table: RenderResult;
 
@@ -30,6 +34,32 @@ let intialFormValue = {
 	reporting_date: getTodaysDate(),
 	project_donor: "18",
 };
+
+let mockProjectDonors = [
+	{
+		id: "18",
+		donor: { id: "1", name: "donor 1" },
+		project: { id: "3", name: "my project" },
+	},
+	{
+		id: "2",
+		donor: { id: "2", name: "donor 2" },
+		project: { id: "3", name: "my project" },
+	},
+];
+
+let mockOrganizationDonor = [
+	{
+		id: "20",
+		name: "vikram pathak",
+		country: {
+			id: "1",
+			name: "India",
+		},
+		legal_name: "vikram legal 001",
+		short_name: "vikram short 100",
+	},
+];
 
 const mocks = [
 	{
@@ -78,6 +108,61 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJ_DONORS,
+			variables: {
+				filter: {
+					project: 3,
+				},
+			},
+		},
+		result: {
+			data: {
+				projectDonors: mockProjectDonors,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrganizationDonor,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
+			},
+		},
+	},
+	{
+		request: {
+			query: GET_CURRENCY_LIST,
+			variables: {
+				filter: {
+					country: "1",
+				},
+			},
+		},
+		result: {
+			data: {
+				currencyList: mockCurrencyList,
+			},
+		},
+	},
+	{
+		request: {
 			query: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 			variables: {
 				filter: {
@@ -112,6 +197,8 @@ beforeEach(() => {
 });
 
 describe("Fund Received Table tests", () => {
+	fundReceivedTableHeadings[2].label += `(${mockCurrencyList[0].code})`;
+
 	for (let i = 0; i < fundReceivedTableHeadings.length; i++) {
 		test(`Table Headings ${fundReceivedTableHeadings[i].label} for Fund Received Table`, async () => {
 			await waitForElement(() => table.getAllByText(fundReceivedTableHeadings[i].label));

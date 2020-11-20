@@ -24,8 +24,11 @@ import {
 	annualYearListMock,
 	projectDonorMock,
 	financialYearListMock,
+	mockOrgDonor,
 } from "../../../utils/testMock.json";
 import { GET_ALL_IMPACT_AMOUNT_SPEND } from "../../../graphql/Impact/query";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
 let createimpactTracklineFormMutation = false;
 const mocks = [
 	{
@@ -112,10 +115,10 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_PROJECT_DONORS,
+			query: GET_PROJ_DONORS,
 			variables: { filter: { project: 2 } },
 		},
-		result: { data: { projDonors: projectDonorMock } },
+		result: { data: { projectDonors: projectDonorMock } },
 	},
 	{
 		request: {
@@ -138,6 +141,21 @@ const mocks = [
 			},
 		},
 		result: {},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "13",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
 	},
 ];
 let handleClose = jest.fn();

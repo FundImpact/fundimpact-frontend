@@ -1,4 +1,4 @@
-import { IFundReceivedForm } from ".";
+import { IFundReceivedForm, IFundReceived } from ".";
 
 export interface IGet_Fund_Receipt_List {
 	fundReceiptProjectList: {
@@ -31,6 +31,6 @@ export interface ICreateFundReceiptVariables {
 }
 
 export interface IUpdateFundReceiptVariables {
-	id: string,
-	input: IFundReceivedForm;
+	id: string;
+	input: IFundReceived;
 }
