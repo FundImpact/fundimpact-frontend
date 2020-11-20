@@ -9,6 +9,7 @@ const useMultipleFileUpload = (
 	let { uploadFile, error: uploadingError, loadingStatus } = useFileUpload();
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	useMemo(() => {
 		if (loadingStatus && filesArray && filesArray?.length && setFilesArray) {
@@ -88,6 +89,46 @@ const useMultipleFileUpload = (
 		}
 	};
 
+	const multiplefileMorph = async ({
+		related_id,
+		related_type,
+		field,
+	}: {
+		related_id: string;
+		related_type: string;
+		field: string;
+	}) => {
+		if (filesArray && setFilesArray) {
+			let error = null;
+			try {
+				setLoading(true);
+				for (let i = 0; i < filesArray.length; i++) {
+					let file = filesArray[i];
+					/*if file.id === already uploaded */
+					if (file.id) {
+						let params = {
+							upload_file_id: file.id,
+							related_id,
+							related_type,
+							field,
+							order: 3,
+						};
+						await uploadFile(params, i, true);
+					}
+				}
+			} catch (err) {
+				error = err;
+				setError(err);
+				console.error(err);
+			} finally {
+				if (!error) console.log("success");
+				setLoading(false);
+				setSuccess(true);
+				return true;
+			}
+		}
+	};
+
 	const multiplefileUploader = async ({
 		ref,
 		refId,
@@ -140,10 +181,12 @@ const useMultipleFileUpload = (
 		}
 	};
 	return {
+		loading,
 		error,
 		success,
 		multiplefileUpload,
 		multiplefileUploader,
+		multiplefileMorph,
 		setSuccess,
 	};
 };

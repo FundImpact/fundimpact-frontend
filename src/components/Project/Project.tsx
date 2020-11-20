@@ -24,12 +24,7 @@ import AttachFileForm from "../Forms/AttachFiles";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
-import { uploadPercentageCalculator } from "../../utils";
-import {
-	CommonFormTitleFormattedMessage,
-	CommonUploadingFilesMessage,
-} from "../../utils/commonFormattedMessage";
-import { CircularPercentage } from "../commons";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import { useIntl } from "react-intl";
 import { setProject } from "../../reducers/dashboardReducer";
 import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
@@ -158,20 +153,12 @@ function Project(props: ProjectProps) {
 		projectForm[5].textNextToButton = `${projectFilesArray.length} files attached`;
 	else projectForm[5].textNextToButton = ``;
 
-	let { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
-		projectFilesArray,
-		setProjectFilesArray
-	);
-
-	// const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-	// const [projectUploadSuccess, setProjectUploadSuccess] = React.useState<boolean>(false);
-	// const [loadingPercentage, setLoadingPercentage] = React.useState(0);
-
-	// React.useEffect(() => {
-	// 	let remainFilestoUpload = projectFilesArray.filter((elem) => !elem.id).length;
-	// 	let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-	// 	setLoadingPercentage(percentage);
-	// }, [projectFilesArray, totalFilesToUpload]);
+	let {
+		multiplefileMorph,
+		loading: uploadMorphLoading,
+		success,
+		setSuccess,
+	} = useMultipleFileUpload(projectFilesArray, setProjectFilesArray);
 
 	React.useEffect(() => {
 		if (success) {
@@ -189,38 +176,20 @@ function Project(props: ProjectProps) {
 
 	const successMessage = () => {
 		// if (totalFilesToUpload)
-		notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		// notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		props.handleClose();
 	};
 	if (success) successMessage();
 
-	const attachFileOnSave = () => {
-		let projectId: any = dashboardData?.project?.id;
-		// setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-		multiplefileUploader({
-			ref: "project",
-			refId: projectId,
-			field: "attachments",
-			path: `org-${dashboardData?.organization?.id}/project-${dashboardData?.project?.id}/project`,
-		});
-		// setProjectFilesArray([]);
-	};
-
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
+			if (!data?.createOrgProject?.id) return;
 			dashboardDispatch(setProject(data.createOrgProject));
-			setSuccess(true);
-			// setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
-			// multiplefileUpload({
-			// 	ref: "project",
-			// 	refId: data.createOrgProject.id,
-			// 	field: "attachments",
-			// 	path: `org-${DashBoardData?.organization?.id}/projects`,
-			// 	filesArray: projectFilesArray,
-			// 	setFilesArray: setProjectFilesArray,
-			// 	setUploadSuccess: setProjectUploadSuccess,
-			// });
-			// setProjectFilesArray([]);
-			props.handleClose();
+			multiplefileMorph({
+				related_id: data.createOrgProject.id,
+				related_type: "projects",
+				field: "attachments",
+			});
 		},
 	});
 	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation<
@@ -458,26 +427,18 @@ function Project(props: ProjectProps) {
 							inputFields: projectForm,
 						}}
 					/>
-					{/* {loadingPercentage > 0 ? (
-						<CircularPercentage
-							progress={loadingPercentage}
-							message={uploadingFileMessage}
-						/>
-					) : null} */}
 				</>
 			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
 			{creatingProjectDonors ? <FullScreenLoader /> : null}
+			{uploadMorphLoading ? <FullScreenLoader /> : null}
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={projectFilesArray}
 					setFilesArray={setProjectFilesArray}
-					// parentOnSave={
-					// 	formAction === PROJECT_ACTIONS.UPDATE ? attachFileOnSave : undefined
-					// }
 					uploadApiConfig={{
 						ref: "project",
 						refId: dashboardData?.project?.id?.toString() || "",
