@@ -335,7 +335,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
-				setFilesArray([]);
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
