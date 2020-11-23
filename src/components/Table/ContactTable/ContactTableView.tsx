@@ -1,29 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { IGetContact } from "../../../models/contact/query";
-import CommonTable from "../CommonTable";
 import { contactTableHeadings } from "../constants";
 import { IContact } from "../../../models/contact";
-import AddContactAddressDialog from "../../AddContactAddressDialog";
-import { AddContactAddressDialogType, Enitity, FORM_ACTIONS } from "../../../models/constants";
+import { Enitity_Name } from "../../../models/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import AddressTable from "../AddressTable";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import { contactInputFields } from "./inputFields.json";
 import FilterList from "../../FilterList";
+import ContactCard from "../../ContactCard";
+import Pagination from "@material-ui/lab/Pagination";
 
 interface IContactTableView {
 	contactList: IGetContact["t4DContacts"];
 	changePage: (prev?: boolean | undefined) => void;
 	loading: boolean;
 	count: number;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	selectedContact: React.MutableRefObject<IContact | null>;
-	toggleDialogs: (index: number, val: boolean) => void;
-	openDialogs: boolean[];
-	initialValues: IContact;
 	filterList: {
 		[key: string]: string | string[];
 	};
@@ -33,8 +24,10 @@ interface IContactTableView {
 			[key: string]: string | string[];
 		}>
 	>;
-	addressFindAccess: boolean;
 	contactEditAccess: boolean;
+	entity_name: Enitity_Name;
+	page: number;
+	setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 (contactInputFields[4].optionsArray as { id: string; name: string }[]) = [
@@ -101,43 +94,17 @@ const createChipArray = ({
 	return null;
 };
 
-const rows = [
-	{ valueAccessKey: "email" },
-	{ valueAccessKey: "email_other" },
-	{ valueAccessKey: "phone" },
-	{ valueAccessKey: "phone_other" },
-	{ valueAccessKey: "contact_type" },
-	{ valueAccessKey: "" },
-];
-let conatctEditMenu = ["Edit Contact"];
-
 function ContactTableView({
 	contactList,
-	setOrderBy,
-	setOrder,
-	orderBy,
-	order,
 	loading,
 	count,
 	changePage,
-	openDialogs,
-	toggleDialogs,
-	initialValues,
-	selectedContact,
-	filterList,
-	removeFilterListElements,
 	setFilterList,
-	addressFindAccess,
 	contactEditAccess,
+	entity_name,
+	page,
+	setPage,
 }: IContactTableView) {
-	const dashboardData = useDashBoardData();
-
-	if (contactEditAccess) {
-		conatctEditMenu = ["Edit Contact"];
-	} else {
-		conatctEditMenu = [""];
-	}
-
 	contactTableHeadings[contactTableHeadings.length - 1].renderComponent = () => (
 		<FilterList
 			initialValues={{
@@ -154,47 +121,28 @@ function ContactTableView({
 
 	return (
 		<>
-			<Grid container>
-				<Grid item xs={12}>
-					<Box display="flex" flexWrap="wrap">
-						{Object.entries(filterList).map((filterListObjectKeyValuePair) =>
-							createChipArray({
-								filterListObjectKeyValuePair,
-								removeFilterListElements,
-							})
-						)}
-					</Box>
-				</Grid>
+			<Grid container spacing={2}>
+				{contactList.map((contact) => (
+					<Grid item xs={3} key={contact.id}>
+						<ContactCard contactDetails={contact} entity_name={entity_name} />
+					</Grid>
+				))}
 			</Grid>
-			<CommonTable
-				tableHeadings={contactTableHeadings}
-				valuesList={contactList}
-				rows={rows}
-				selectedRow={selectedContact}
-				toggleDialogs={toggleDialogs}
-				editMenuName={conatctEditMenu}
-				collapsableTable={true}
-				changePage={changePage}
-				loading={loading}
-				count={count}
-				order={order}
-				setOrder={setOrder}
-				orderBy={orderBy}
-				setOrderBy={setOrderBy}
-			>
-				<AddContactAddressDialog
-					dialogType={AddContactAddressDialogType.contact}
-					entity_id={dashboardData?.organization?.id || ""}
-					entity_name={Enitity.organization}
-					open={openDialogs[0]}
-					handleClose={() => toggleDialogs(0, false)}
-					formActions={FORM_ACTIONS.UPDATE}
-					contactFormInitialValues={initialValues}
+			<Box display="flex" justifyContent="center" width="100%" mt={5}>
+				<Pagination
+					count={Math.ceil(count / 8)}
+					color="primary"
+					page={page}
+					onChange={(e, pageNo) => {
+						if (pageNo > page) {
+							changePage();
+						} else {
+							changePage(true);
+						}
+						setPage(pageNo);
+					}}
 				/>
-				{(rowData: { id: string }) => (
-					<>{addressFindAccess && <AddressTable contactId={rowData.id} />}</>
-				)}
-			</CommonTable>
+			</Box>
 		</>
 	);
 }

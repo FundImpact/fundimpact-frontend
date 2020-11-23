@@ -5,10 +5,10 @@ export const CREATE_CONTACT = gql`
 		createT4DContact(input: $input) {
 			t4DContact {
 				id
-				email
-				email_other
-				phone
-				phone_other
+				addresses
+				phone_numbers
+				emails
+				contact_type
 			}
 		}
 	}
@@ -19,10 +19,9 @@ export const UPDATE_CONTACT = gql`
 		updateT4DContact(input: $input) {
 			t4DContact {
 				id
-				email
-				email_other
-				phone
-				phone_other
+				addresses
+				phone_numbers
+				emails
 				contact_type
 			}
 		}

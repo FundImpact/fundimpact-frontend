@@ -1,40 +1,51 @@
+interface Email {
+	label: string;
+	value: string;
+}
+
+interface PhoneNumber {
+	label: string;
+	value: string;
+}
+
+interface Addresses {
+	address_line_1: string;
+	address_line_2: string;
+	pincode: string;
+	city: string;
+}
+
+interface Name {
+	firstName: string;
+	surname: string;
+}
+
 export interface IContactForm {
-	phone: string;
-	phone_other: string;
-	email: string;
-	email_other: string;
+	name: Name[];
+	emails: Email[];
+	phone_numbers: PhoneNumber[];
+	addresses: Addresses[];
 	contact_type: string;
 }
 
 export interface IContact {
 	id: string;
-	phone: string;
-	phone_other: string;
-	email: string;
-	email_other: string;
+	emails: Email[];
+	phone_numbers: PhoneNumber[];
+	addresses: Addresses[];
 	contact_type: string;
 }
-export type IContactInputElement = {
-	icon: JSX.Element;
-	inputs: {
-		label: string;
-		size: 6 | 12;
-		id: string;
-	}[][];
-	showAddIcon: boolean;
-	id: string;
-	numberOfTimeToReplicate: number;
-	fullWidth?: boolean;
-};
+
 export type IContactInputElements = {
 	icon: JSX.Element;
-	inputs: {
+	inputsGroup: {
 		label: string;
 		size: 6 | 12;
 		id: string;
-	}[][];
+		initialValue: string;
+		required: boolean;
+	}[];
 	showAddIcon: boolean;
 	id: string;
-	numberOfTimeToReplicate: number;
 	fullWidth?: boolean;
 }[];

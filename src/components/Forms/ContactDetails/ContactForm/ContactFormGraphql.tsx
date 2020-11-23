@@ -8,26 +8,24 @@ import {
 	IUpdateContact,
 	IUpdateContactVariables,
 } from "../../../../models/contact/query";
-import { FORM_ACTIONS } from "../../../../models/constants";
+import { Enitity_Name, FORM_ACTIONS } from "../../../../models/constants";
 import { IContact } from "../../../../models/contact";
 
 type IContactFormGraphqlProps =
 	| {
 			formAction: FORM_ACTIONS.CREATE;
-			entity_name: string;
+			entity_name: Enitity_Name;
 			entity_id: string;
-			getCreatedOrUpdatedContact?: (
-				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
-			) => void;
+			open: boolean;
+			handleClose: () => void;
 	  }
 	| {
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IContact;
-			entity_name: string;
+			entity_name: Enitity_Name;
 			entity_id: string;
-			getCreatedOrUpdatedContact?: (
-				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
-			) => void;
+			open: boolean;
+			handleClose: () => void;
 	  };
 
 function ContactFormGraphql(props: IContactFormGraphqlProps) {
@@ -40,7 +38,7 @@ function ContactFormGraphql(props: IContactFormGraphqlProps) {
 		IUpdateContact,
 		IUpdateContactVariables
 	>(UPDATE_CONTACT);
-	const { entity_id, entity_name, getCreatedOrUpdatedContact } = props;
+	const { entity_id, entity_name } = props;
 
 	return (
 		<ContactFormContainer
@@ -48,7 +46,6 @@ function ContactFormGraphql(props: IContactFormGraphqlProps) {
 			loading={creatingContact || updatingContact}
 			entity_name={entity_name}
 			entity_id={entity_id}
-			getCreatedOrUpdatedContact={getCreatedOrUpdatedContact}
 			{...(props.formAction == FORM_ACTIONS.UPDATE
 				? {
 						initialValues: props.initialValues,
@@ -56,6 +53,8 @@ function ContactFormGraphql(props: IContactFormGraphqlProps) {
 				  }
 				: { formAction: FORM_ACTIONS.CREATE })}
 			updateContact={updateContact}
+			open={props.open}
+			handleClose={props.handleClose}
 		/>
 	);
 }
