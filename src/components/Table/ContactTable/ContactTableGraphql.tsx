@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ContactTableContainer from "./ContactTableContainer";
-import { useLazyQuery } from "@apollo/client";
-import { IGetContact } from "../../../models/contact/query";
 import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../../graphql/Contact";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { Enitity } from "../../../models/constants";
+import { Enitity_Name } from "../../../models/constants";
 import pagination from "../../../hooks/pagination";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 
@@ -21,10 +18,8 @@ function ContactTableGraphql({
 	entity_name,
 }: {
 	entity_id: string;
-	entity_name: Enitity;
+	entity_name: Enitity_Name;
 }) {
-	const [orderBy, setOrderBy] = useState<string>("created_at");
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
@@ -64,8 +59,9 @@ function ContactTableGraphql({
 			countFilter: queryFilter,
 			query: GET_CONTACT_LIST,
 			queryFilter,
-			sort: `${orderBy}:${order.toUpperCase()}`,
+			sort: `created_at:DESC`,
 			retrieveContFromCountQueryResponse: "t4DContactsConnection,aggregate,count",
+			limit: 8,
 		}
 	);
 
@@ -75,13 +71,10 @@ function ContactTableGraphql({
 			count={count}
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
-			order={order}
-			orderBy={orderBy}
-			setOrder={setOrder}
-			setOrderBy={setOrderBy}
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			entity_name={entity_name}
 		/>
 	);
 }

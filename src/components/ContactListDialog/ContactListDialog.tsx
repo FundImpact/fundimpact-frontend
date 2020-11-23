@@ -2,7 +2,7 @@ import React from "react";
 import { Dialog, Box, Grid, Typography } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 import ContactTable from "../Table/ContactTable";
-import { Enitity } from "../../models/constants";
+import { Enitity_Name } from "../../models/constants";
 
 function ContactListDialog({
 	open,
@@ -12,7 +12,7 @@ function ContactListDialog({
 }: {
 	open: boolean;
 	handleClose: () => void;
-	entity_name: Enitity;
+	entity_name: Enitity_Name;
 	entity_id: string;
 }) {
 	return (

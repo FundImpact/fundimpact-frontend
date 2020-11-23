@@ -1,14 +1,6 @@
-import React, { useState } from "react";
-import { contactFormFields } from "./inputField.json";
+import React, { useCallback } from "react";
 import { FORM_ACTIONS } from "../../constant";
-import CommonForm from "../../../CommonForm";
-import {
-	IContactForm,
-	IContact,
-	IContactInputElements,
-	IContactInputElement,
-} from "../../../../models/contact/index.js";
-import { validateEmail } from "../../../../utils";
+import { IContactForm, IContact, IContactInputElements } from "../../../../models/contact/index.js";
 import {
 	MutationFunctionOptions,
 	FetchResult,
@@ -31,8 +23,8 @@ import ContactFormView from "./ContactFormView";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import PhoneIcon from "@material-ui/icons/Phone";
-import { FormattedMessage } from "react-intl";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import { Enitity_Name } from "../../../../models/constants";
 
 type ICreateContactContainer =
 	| {
@@ -42,7 +34,7 @@ type ICreateContactContainer =
 					| undefined
 			) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
 			loading: boolean;
-			entity_name: string;
+			entity_name: Enitity_Name;
 			entity_id: string;
 			getCreatedOrUpdatedContact?: (
 				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
@@ -53,6 +45,8 @@ type ICreateContactContainer =
 					| MutationFunctionOptions<IUpdateContact, IUpdateContactVariables>
 					| undefined
 			) => Promise<FetchResult<IUpdateContact, Record<string, any>, Record<string, any>>>;
+			open: boolean;
+			handleClose: () => void;
 	  }
 	| {
 			createContact: (
@@ -61,7 +55,7 @@ type ICreateContactContainer =
 					| undefined
 			) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
 			loading: boolean;
-			entity_name: string;
+			entity_name: Enitity_Name;
 			entity_id: string;
 			getCreatedOrUpdatedContact?: (
 				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
@@ -73,21 +67,15 @@ type ICreateContactContainer =
 					| MutationFunctionOptions<IUpdateContact, IUpdateContactVariables>
 					| undefined
 			) => Promise<FetchResult<IUpdateContact, Record<string, any>, Record<string, any>>>;
+			open: boolean;
+			handleClose: () => void;
 	  };
 
 interface ISubmitForm {
 	createContact: (
 		options?: MutationFunctionOptions<ICreateContact, ICreateContactVariables> | undefined
 	) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
-	valuesSubmitted: {
-		entity_name: string;
-		entity_id: string;
-		phone: string;
-		phone_other: string;
-		email: string;
-		email_other: string;
-		contact_type: string;
-	};
+	valuesSubmitted: IContactForm;
 	notificationDispatch: React.Dispatch<any>;
 	updateContact: (
 		options?: MutationFunctionOptions<IUpdateContact, IUpdateContactVariables> | undefined
@@ -95,12 +83,9 @@ interface ISubmitForm {
 	contactId: string;
 	formAction: FORM_ACTIONS;
 	apolloClient: ApolloClient<object>;
+	entity_id: string;
+	entity_name: Enitity_Name;
 }
-
-(contactFormFields[4].optionsArray as { id: string; name: string }[]) = [
-	{ id: "PERSONAL", name: "PERSONAL" },
-	{ id: "OFFICE", name: "OFFICE" },
-];
 
 const getContactCountCachedValue = (
 	apolloClient: ApolloClient<object>,
@@ -132,7 +117,7 @@ const increaseContactListCount = ({
 }: {
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: string;
+	entity_name: Enitity_Name;
 }) => {
 	try {
 		const count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
@@ -157,131 +142,100 @@ const increaseContactListCount = ({
 	}
 };
 
-const getInitialFormValues = (contact?: IContact): IContactForm => {
-	if (contact) {
-		return {
-			contact_type: contact.contact_type,
-			email: contact.email,
-			email_other: contact.email_other,
-			phone: contact.phone,
-			phone_other: contact.phone_other,
-		};
+//change the form of name
+const getInitialFormValues = (initialValues?: IContact): IContactForm => {
+	if (initialValues) {
+		return { name: [{ firstName: "", surname: "" }], ...initialValues };
 	}
+
 	return {
+		name: [{ firstName: "", surname: "" }],
+		emails: [{ label: "", value: "" }],
+		phone_numbers: [{ label: "", value: "" }],
+		addresses: [
+			{
+				address_line_1: "",
+				address_line_2: "",
+				pincode: "",
+				city: "",
+			},
+		],
 		contact_type: "",
-		email: "",
-		email_other: "",
-		phone: "",
-		phone_other: "",
 	};
 };
 
+const removeEmptyFields = (fields: { label: string; value: string }[]) =>
+	fields.filter((field) => field.label.length);
+
+const removeEmptyAddresses = (
+	addresses: { address_line_1: string; address_line_2: string; pincode: string; city: string }[]
+) =>
+	addresses.filter(
+		(address) =>
+			address.pincode.length ||
+			address.address_line_1.length ||
+			address.address_line_2.length ||
+			address.city.length
+	);
+
+//ContactInputArray is an array of contact elements like name, emails, phone_numbers, addresses,
+//a contact element consists of various input elements like in case of addresses it consists of
+//address_line_1, address_line_2, pincode, city input elments. In the ui there would be a plus
+//button to add input fields which will be availabe only in some contact elements, that is why
+//there is showAddIcon key. inputGroup is group of all input elements present in contactElement.
 const contactInputArr: IContactInputElements = [
 	{
 		icon: <AccountCircleIcon fontSize="large" />,
-		inputs: [
-			[
-				{ label: "First name", size: 6, id: "firstName" },
-				{ label: "Surname", size: 6, id: "surname" },
-			],
+		inputsGroup: [
+			{ label: "First name", size: 6, id: "firstName", initialValue: "", required: true },
+			{ label: "Surname", size: 6, id: "surname", initialValue: "", required: false },
 		],
 		showAddIcon: false,
 		id: "name",
-		numberOfTimeToReplicate: 1,
 	},
 	{
 		icon: <MailOutlineIcon fontSize="large" />,
-		inputs: [
-			[
-				{ label: "Email", size: 6, id: "email" },
-				{ label: "Label", size: 6, id: "label" },
-			],
+		inputsGroup: [
+			{ label: "Email", size: 6, id: "value", initialValue: "", required: false },
+			{ label: "Label", size: 6, id: "label", initialValue: "", required: false },
 		],
 		showAddIcon: true,
 		id: "emails",
-		numberOfTimeToReplicate: 1,
 	},
 	{
 		icon: <PhoneIcon fontSize="large" />,
-		inputs: [
-			[
-				{ label: "Phone", size: 6, id: "phone" },
-				{ label: "Label", size: 6, id: "label" },
-			],
+		inputsGroup: [
+			{ label: "Phone", size: 6, id: "value", initialValue: "", required: false },
+			{ label: "Label", size: 6, id: "label", initialValue: "", required: false },
 		],
 		showAddIcon: true,
-		id: "phones",
-		numberOfTimeToReplicate: 1,
+		id: "phone_numbers",
 	},
 	{
 		icon: <LocationOnIcon fontSize="large" />,
-		inputs: [
-			[
-				{ label: "Address Line 1", size: 12, id: "addressLine" },
-				{ label: "Address Line 2", size: 12, id: "addressLineTwo" },
-				{ label: "Pincode", size: 6, id: "pincode" },
-				{ label: "City", size: 6, id: "city" },
-			],
+		inputsGroup: [
+			{
+				label: "Address Line 1",
+				size: 12,
+				id: "address_line_1",
+				initialValue: "",
+				required: false,
+			},
+			{
+				label: "Address Line 2",
+				size: 12,
+				id: "address_line_2",
+				initialValue: "",
+				required: false,
+			},
+			{ label: "Pincode", size: 6, id: "pincode", initialValue: "", required: false },
+			{ label: "City", size: 6, id: "city", initialValue: "", required: false },
 		],
 		showAddIcon: true,
 		id: "addresses",
-		numberOfTimeToReplicate: 1,
 		fullWidth: true,
 	},
 ];
-
-const addInputElement = ({ inputElement }: { inputElement: IContactInputElement }) => {
-	let inputToPush = inputElement.inputs[0];
-	inputElement.inputs.push(inputToPush);
-	return inputElement;
-};
-
-const removeInpuElement = ({
-	inputElement,
-	inputElemInputsIndex,
-}: {
-	inputElement: IContactInputElement;
-	inputElemInputsIndex: number;
-}) => {
-	let inputElemCopy = { ...inputElement };
-	inputElemCopy.inputs.splice(inputElemInputsIndex, 1);
-	return inputElemCopy;
-};
-
-const replicateOrRemoveInputElement = ({
-	setContactInputElements,
-	elementPosition,
-	removeElement = false,
-	inputElemInputsIndex,
-}: {
-	setContactInputElements: React.Dispatch<React.SetStateAction<IContactInputElements>>;
-	elementPosition: number;
-	removeElement?: boolean;
-	inputElemInputsIndex: number;
-}) => {
-	setContactInputElements((contactInputElements) =>
-		contactInputElements.map((inputElement, index) =>
-			index !== elementPosition
-				? { ...inputElement }
-				: removeElement
-				? removeInpuElement({ inputElement, inputElemInputsIndex })
-				: addInputElement({ inputElement })
-		)
-	);
-};
-
-// setContactInputElements((contactInputElements) =>
-// contactInputElements.map((inputElement, index) =>
-// 	index !== elementPosition
-// 		? { ...inputElement }
-// 		: {
-// 				...inputElement,
-// 				numberOfTimeToReplicate: removeElement
-// 					? inputElement.numberOfTimeToReplicate - 1
-// 					: inputElement.numberOfTimeToReplicate + 1,
-// 		  }
-// )
-// );
 
 const fetchContactListCount = async ({
 	apolloClient,
@@ -290,7 +244,7 @@ const fetchContactListCount = async ({
 }: {
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: string;
+	entity_name: Enitity_Name;
 }) => {
 	let count = 0;
 	try {
@@ -318,7 +272,7 @@ const refetchContactList = async ({
 }: {
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: string;
+	entity_name: Enitity_Name;
 }) => {
 	try {
 		let count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
@@ -332,7 +286,7 @@ const refetchContactList = async ({
 					entity_name,
 					entity_id,
 				},
-				limit: count > 10 ? 10 : count,
+				limit: count > 8 ? 8 : count,
 				start: 0,
 				sort: "created_at:DESC",
 			},
@@ -344,45 +298,56 @@ const refetchContactList = async ({
 };
 
 const submitForm = async ({
-	valuesSubmitted,
-	createContact,
-	notificationDispatch,
-	contactId,
-	formAction,
-	updateContact,
+	entity_id,
 	apolloClient,
+	updateContact,
+	entity_name,
+	createContact,
+	formAction,
+	notificationDispatch,
+	valuesSubmitted,
+	contactId,
 }: ISubmitForm) => {
 	try {
-		let createdContact, updatedContact;
 		if (formAction == FORM_ACTIONS.CREATE) {
-			createdContact = await createContact({
+			await createContact({
 				variables: {
 					input: {
 						data: {
-							...valuesSubmitted,
+							entity_id,
+							addresses: valuesSubmitted.addresses,
+							emails: valuesSubmitted.emails,
+							entity_name,
+							phone_numbers: valuesSubmitted.phone_numbers,
+							contact_type: valuesSubmitted.contact_type,
 						},
 					},
 				},
 			});
 			await refetchContactList({
 				apolloClient,
-				entity_id: valuesSubmitted.entity_id,
-				entity_name: valuesSubmitted.entity_name,
+				entity_id: entity_id,
+				entity_name: entity_name,
 			});
 			increaseContactListCount({
 				apolloClient,
-				entity_id: valuesSubmitted.entity_id,
-				entity_name: valuesSubmitted.entity_name,
+				entity_id: entity_id,
+				entity_name: entity_name,
 			});
 		} else {
-			updatedContact = await updateContact({
+			await updateContact({
 				variables: {
 					input: {
 						where: {
 							id: contactId,
 						},
 						data: {
-							...valuesSubmitted,
+							entity_id,
+							addresses: valuesSubmitted.addresses,
+							emails: valuesSubmitted.emails,
+							entity_name,
+							phone_numbers: valuesSubmitted.phone_numbers,
+							contact_type: valuesSubmitted.contact_type,
 						},
 					},
 				},
@@ -393,77 +358,81 @@ const submitForm = async ({
 				`Contact ${formAction == FORM_ACTIONS.CREATE ? "created" : "updated"} successfully`
 			)
 		);
-		if (formAction == FORM_ACTIONS.CREATE && createdContact && createdContact.data) {
-			return createdContact.data.createT4DContact.t4DContact;
-		}
-		if (formAction == FORM_ACTIONS.UPDATE && updatedContact && updatedContact.data) {
-			return updatedContact.data.updateT4DContact.t4DContact;
-		}
 	} catch (err) {
 		notificationDispatch(setErrorNotification(err.message));
 	}
 	return null;
 };
 
-const onCancel = () => {};
-
-const validate = (values: IContactForm) => {
-	let errors: Partial<IContactForm> = {};
-	if (!values.email) {
-		errors.email = "Email is required";
-	} else if (!validateEmail(values.email)) {
-		errors.email = "Email not correct";
-	}
-
-	if (values.email_other && !validateEmail(values.email_other)) {
-		errors.email_other = "Email not correct";
-	}
-
-	//add phone validation
-	if (!values.phone) {
-		errors.phone = "Phone is required";
-	}
-
-	if (!values.contact_type) {
-		errors.contact_type = "Contact type is required";
-	}
-	return errors;
-};
-
 function ContactFormContainer(props: ICreateContactContainer) {
-	const [contactInputElements, setContactInputElements] = useState(contactInputArr);
-	const {
-		loading,
-		createContact,
-		entity_id,
-		entity_name,
-		getCreatedOrUpdatedContact,
-		updateContact,
-	} = props;
+	const { loading, createContact, entity_id, entity_name, updateContact } = props;
 	const initialValues =
-		props.formAction == FORM_ACTIONS.CREATE
+		props.formAction === FORM_ACTIONS.CREATE
 			? getInitialFormValues()
 			: getInitialFormValues(props.initialValues);
 
 	const notificationDispatch = useNotificationDispatch();
 	const apolloClient = useApolloClient();
-	console.log("arrHere", contactInputElements);
+
+	const validate = useCallback(
+		(values: IContactForm) => {
+			let errors: Partial<IContactForm> = {};
+			if (!values.name[0].firstName) {
+				if (!errors.name) {
+					errors.name = [{ firstName: "", surname: "" }];
+				}
+				errors.name[0].firstName = `${
+					entity_name === Enitity_Name.organization ? "Group Name" : "First Name"
+				} is required`;
+			}
+			if (!values.contact_type) {
+				errors.contact_type = "Contact Type is required";
+			}
+			errors.emails = values.emails.map((email) => ({
+				label: "",
+				value: email.label && !email.value ? "Email is required" : "",
+			}));
+			errors.phone_numbers = values.phone_numbers.map((phone_number) => ({
+				label: "",
+				value: phone_number.label && !phone_number.value ? "Phone Number is required" : "",
+			}));
+			return errors;
+		},
+		[entity_name]
+	);
+
+	if (entity_name === Enitity_Name.organization) {
+		contactInputArr[0].inputsGroup = [
+			{ id: "firstName", initialValue: "", label: "Group Name", size: 12, required: true },
+		];
+	} else {
+		contactInputArr[0].inputsGroup = [
+			{ label: "First name", size: 6, id: "firstName", initialValue: "", required: true },
+			{ label: "Surname", size: 6, id: "surname", initialValue: "", required: false },
+		];
+	}
+
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
+		console.log("valuesSubmitted", valuesSubmitted);
+		const clonedValueSubmitted = JSON.parse(JSON.stringify(valuesSubmitted));
+		console.log("clonedValueSubmitted", clonedValueSubmitted);
+		clonedValueSubmitted.emails = removeEmptyFields(valuesSubmitted.emails);
+		clonedValueSubmitted.addresses = removeEmptyAddresses(valuesSubmitted.addresses);
+		clonedValueSubmitted.phone_numbers = removeEmptyFields(valuesSubmitted.phone_numbers);
+
 		try {
-			//remove this
-			valuesSubmitted.phone = `${valuesSubmitted.phone}`;
-			valuesSubmitted.phone_other = `${valuesSubmitted.phone_other}`;
-			const contactCreated = await submitForm({
-				valuesSubmitted: { ...valuesSubmitted, entity_id, entity_name },
+			await submitForm({
+				valuesSubmitted: { ...clonedValueSubmitted },
 				createContact,
 				notificationDispatch,
 				updateContact,
 				formAction: props.formAction,
 				contactId: props.formAction == FORM_ACTIONS.UPDATE ? props.initialValues.id : "",
 				apolloClient,
+				entity_name,
+				entity_id,
 			});
-
-			getCreatedOrUpdatedContact && getCreatedOrUpdatedContact(contactCreated);
+			props.handleClose();
 		} catch (err) {
 			console.error(err);
 		}
@@ -471,23 +440,13 @@ function ContactFormContainer(props: ICreateContactContainer) {
 
 	return (
 		<ContactFormView
-			contactInputElements={contactInputElements}
-			replicateOrRemoveInputElement={({
-				elementPosition,
-				removeElement = false,
-				inputElemInputsIndex = -1,
-			}: {
-				elementPosition: number;
-				removeElement?: boolean;
-				inputElemInputsIndex: number;
-			}) => {
-				replicateOrRemoveInputElement({
-					setContactInputElements,
-					elementPosition,
-					removeElement,
-					inputElemInputsIndex,
-				});
-			}}
+			contactInputElements={contactInputArr}
+			onSubmit={onFormSubmit}
+			initialValues={initialValues}
+			validate={validate}
+			open={props.open}
+			formAction={props.formAction}
+			handleClose={props.handleClose}
 		/>
 	);
 }

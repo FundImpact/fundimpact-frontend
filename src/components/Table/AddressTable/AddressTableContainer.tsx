@@ -55,23 +55,7 @@ function AddressTableContainer({
 
 	const addressEditAccess = userHasAccess(MODULE_CODES.ADDRESS, ADDRESS_ACTIONS.UPDATE_ADDRESS);
 
-	return (
-		<AddressTableView
-			addressList={addressList}
-			openDialogs={openDialogs}
-			toggleDialogs={toggleDialogs}
-			selectedAddress={selectedAddress}
-			initialValues={getInitialValues(selectedAddress.current)}
-			changePage={changePage}
-			loading={loading}
-			count={count}
-			order={order}
-			setOrder={setOrder}
-			orderBy={orderBy}
-			setOrderBy={setOrderBy}
-			addressEditAccess={addressEditAccess}
-		/>
-	);
+	return <></>;
 }
 
 export default AddressTableContainer;
