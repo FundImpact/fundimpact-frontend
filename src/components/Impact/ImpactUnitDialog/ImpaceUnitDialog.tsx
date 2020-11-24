@@ -71,9 +71,9 @@ const changeImpactCategoryUnitStatus = async ({
 	submittedImpactCategory,
 }: IChangeImpactCategoryUnitStatusProps) => {
 	const impactCategoryHash = submittedImpactCategory.reduce(
-		(acc: { [key: string]: boolean }, impactCategoryUnitList) => {
-			acc[impactCategoryUnitList] = true;
-			return acc;
+		(impCatHash: { [key: string]: boolean }, impactCategoryUnitList) => {
+			impCatHash[impactCategoryUnitList] = true;
+			return impCatHash;
 		},
 		{}
 	);

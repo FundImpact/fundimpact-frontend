@@ -93,9 +93,9 @@ const changeDeliverableCategoryUnitStatus = async ({
 	submittedDeliverableCategory,
 }: IChangeDeliverableCategoryUnitStatusProps) => {
 	const deliverableCategoryHash = submittedDeliverableCategory.reduce(
-		(acc: { [key: string]: boolean }, deliverableCategoryUnit) => {
-			acc[deliverableCategoryUnit] = true;
-			return acc;
+		(delCatHash: { [key: string]: boolean }, deliverableCategoryUnit) => {
+			delCatHash[deliverableCategoryUnit] = true;
+			return delCatHash;
 		},
 		{}
 	);
