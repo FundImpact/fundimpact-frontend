@@ -44,6 +44,7 @@ export type IContactInputElements = {
 		id: string;
 		initialValue: string;
 		required: boolean;
+		testId: string;
 	}[];
 	showAddIcon: boolean;
 	id: string;
