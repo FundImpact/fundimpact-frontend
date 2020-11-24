@@ -389,12 +389,13 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						name: elem.donor.name,
 						disabled: true,
 					});
-				} else
+				} else {
 					donorsArray.push({
 						...elem,
 						id: elem.donor.id,
 						name: elem.donor.name,
 					});
+				}
 			});
 		return donorsArray;
 	}, [cachedProjectDonorsForImpact, props]);
