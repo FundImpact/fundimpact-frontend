@@ -3,18 +3,17 @@ import UserForm from "../../../components/Forms/User";
 import PasswordReset from "../../../components/Forms/ResetPassword";
 import { Box, Button, Paper, ButtonGroup } from "@material-ui/core";
 import { useAuth, UserDispatchContext } from "../../../contexts/userContext";
-import { FORM_ACTIONS, Enitity_Name } from "../../../models/constants";
+import { FORM_ACTIONS, Entity_Name } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
 import { useLocation } from "react-router";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAILS } from "../../../graphql/User/query";
 import { setUser } from "../../../reducers/userReducer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AddContactAddressDialog from "../../../components/AddContactAddressDialog";
 import ContactListDialog from "../../../components/ContactListDialog";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
-import ContactForm from "../../../components/Forms/ContactDetails/ContactForm";
+import ContactDialog from "../../../components/ContactDialog";
 
 export const ProfileContainer = () => {
 	const [contactDialogOpen, setContactDialogOpen] = useState<boolean>(false);
@@ -131,17 +130,17 @@ export const ProfileContainer = () => {
 					type={FORM_ACTIONS.UPDATE}
 				/>
 			)}
-			<ContactForm
+			<ContactDialog
 				open={contactDialogOpen}
 				handleClose={() => setContactDialogOpen(false)}
 				entity_id={data?.id || ""}
-				entity_name={Enitity_Name.user}
+				entity_name={Entity_Name.user}
 				formAction={FORM_ACTIONS.CREATE}
 			/>
 			<ContactListDialog
 				open={contactListDialogOpen}
 				handleClose={() => setContactListDialogOpen(false)}
-				entity_name={Enitity_Name.user}
+				entity_name={Entity_Name.user}
 				entity_id={data?.id || ""}
 			/>
 		</Box>

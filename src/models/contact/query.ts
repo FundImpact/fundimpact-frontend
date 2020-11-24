@@ -1,4 +1,4 @@
-import { Enitity_Name } from "../constants";
+import { Entity_Name } from "../constants";
 
 export interface ICreateContactVariables {
 	input: {

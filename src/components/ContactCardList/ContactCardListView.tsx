@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { IGetContact } from "../../../models/contact/query";
-import { contactTableHeadings } from "../constants";
-import { IContact } from "../../../models/contact";
-import { Enitity_Name } from "../../../models/constants";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { IGetContact } from "../../models/contact/query";
+import { contactTableHeadings } from "../Table/constants";
+import { IContact } from "../../models/contact";
+import { Entity_Name } from "../../models/constants";
+import { useDashBoardData } from "../../contexts/dashboardContext";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import { contactInputFields } from "./inputFields.json";
-import FilterList from "../../FilterList";
-import ContactCard from "../../ContactCard";
+import FilterList from "../FilterList";
+import ContactCard from "../ContactCard";
 import Pagination from "@material-ui/lab/Pagination";
+import TableSkeleton from "../Skeletons/TableSkeleton";
 
-interface IContactTableView {
+interface IContactCardListView {
 	contactList: IGetContact["t4DContacts"];
 	changePage: (prev?: boolean | undefined) => void;
 	loading: boolean;
@@ -25,7 +26,7 @@ interface IContactTableView {
 		}>
 	>;
 	contactEditAccess: boolean;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 	page: number;
 	setPage: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -94,7 +95,7 @@ const createChipArray = ({
 	return null;
 };
 
-function ContactTableView({
+function ContactCardListView({
 	contactList,
 	loading,
 	count,
@@ -104,7 +105,7 @@ function ContactTableView({
 	entity_name,
 	page,
 	setPage,
-}: IContactTableView) {
+}: IContactCardListView) {
 	contactTableHeadings[contactTableHeadings.length - 1].renderComponent = () => (
 		<FilterList
 			initialValues={{
@@ -118,6 +119,18 @@ function ContactTableView({
 			inputFields={contactInputFields}
 		/>
 	);
+
+	if (loading) {
+		return (
+			<Grid container spacing={2}>
+				{new Array(4).fill(0).map((elem, idx) => (
+					<Grid item xs={3} key={idx}>
+						<TableSkeleton lines={5} headerHeight={190} />
+					</Grid>
+				))}
+			</Grid>
+		);
+	}
 
 	return (
 		<>
@@ -153,4 +166,4 @@ function ContactTableView({
 	);
 }
 
-export default ContactTableView;
+export default ContactCardListView;

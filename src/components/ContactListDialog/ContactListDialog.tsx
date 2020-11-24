@@ -1,8 +1,8 @@
 import React from "react";
 import { Dialog, Box, Grid, Typography } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
-import ContactTable from "../Table/ContactTable";
-import { Enitity_Name } from "../../models/constants";
+import ContactCardList from "../ContactCardList";
+import { Entity_Name } from "../../models/constants";
 
 function ContactListDialog({
 	open,
@@ -12,7 +12,7 @@ function ContactListDialog({
 }: {
 	open: boolean;
 	handleClose: () => void;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 	entity_id: string;
 }) {
 	return (
@@ -36,7 +36,7 @@ function ContactListDialog({
 						</Typography>
 					</Grid>
 					<Grid item xs={12}>
-						<ContactTable entity_name={entity_name} entity_id={entity_id} />
+						<ContactCardList entity_name={entity_name} entity_id={entity_id} />
 					</Grid>
 				</Grid>
 			</Box>

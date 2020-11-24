@@ -8,7 +8,7 @@ export enum AddContactAddressDialogType {
 	address = 1,
 }
 
-export enum Enitity_Name {
+export enum Entity_Name {
 	organization = "organization",
 	user = "user",
 	individual = "individual",

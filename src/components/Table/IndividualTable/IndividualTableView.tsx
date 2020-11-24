@@ -5,12 +5,12 @@ import { IIndividual } from "../../../models/individual";
 import { individualTableOrganizationHeadings, individualTableProjectHeadings } from "../constants";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import IndividualDialog from "../../IndividualDialog";
-import { FORM_ACTIONS, Enitity_Name } from "../../../models/constants";
+import { FORM_ACTIONS, Entity_Name } from "../../../models/constants";
 import ContactListDialog from "../../ContactListDialog";
 import FilterList from "../../FilterList";
 import { individualInputFields } from "./inputFields.json";
 import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
-import ContactFormGraphql from "../../Forms/ContactDetails/ContactForm";
+import ContactDialogGraphql from "../../ContactDialog";
 
 enum dialogType {
 	individual = 0,
@@ -210,17 +210,17 @@ function IndividualTableView({
 								: IndividualDialogType.project
 						}
 					/>
-					<ContactFormGraphql
+					<ContactDialogGraphql
 						open={openDialogs[dialogType.contact]}
 						handleClose={() => toggleDialogs(dialogType.contact, false)}
-						entity_name={Enitity_Name.individual}
+						entity_name={Entity_Name.individual}
 						entity_id={initialValues.id}
 						formAction={FORM_ACTIONS.CREATE}
 					/>
 					<ContactListDialog
 						open={openDialogs[dialogType.contactList]}
 						handleClose={() => toggleDialogs(dialogType.contactList, false)}
-						entity_name={Enitity_Name.individual}
+						entity_name={Entity_Name.individual}
 						entity_id={initialValues.id}
 					/>
 				</>

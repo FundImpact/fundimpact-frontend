@@ -18,14 +18,15 @@ import {
 	createStyles,
 	Theme,
 	FormHelperText,
+	CircularProgress,
 } from "@material-ui/core";
 import { Formik, Form, FormikProps, FieldArray, FormikHandlers, ErrorMessage, getIn } from "formik";
 import { FormattedMessage } from "react-intl";
-import { IContactForm, IContactInputElements } from "../../../../models/contact";
+import { IContactForm, IContactInputElements } from "../../models/contact";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 import HomeWorkIcon from "@material-ui/icons/HomeWork";
-import { FORM_ACTIONS } from "../../../../models/constants";
+import { FORM_ACTIONS } from "../../models/constants";
 
 interface IMemoizedTextFieldProps {
 	name: string;
@@ -284,7 +285,7 @@ const InputElementRow = ({
 	);
 };
 
-function ContactFormView({
+function ContactDialogView({
 	contactInputElements,
 	onSubmit,
 	validate,
@@ -292,6 +293,7 @@ function ContactFormView({
 	open,
 	formAction,
 	handleClose,
+	loading,
 }: {
 	contactInputElements: IContactInputElements;
 	validate: (values: IContactForm) => Partial<IContactForm>;
@@ -300,6 +302,7 @@ function ContactFormView({
 	open: boolean;
 	formAction: FORM_ACTIONS;
 	handleClose: () => void;
+	loading: boolean;
 }) {
 	const validateInitialValue = (initialValue: IContactForm) => {
 		const errors = validate(initialValue) as object;
@@ -481,8 +484,18 @@ function ContactFormView({
 					/>
 				</Button>
 			</DialogActions>
+			{loading ? (
+				<Box
+					position="fixed"
+					left="50%"
+					top="50%"
+					style={{ transform: "translate(-50%, -50%)" }}
+				>
+					<CircularProgress />
+				</Box>
+			) : null}
 		</Dialog>
 	);
 }
 
-export default ContactFormView;
+export default ContactDialogView;

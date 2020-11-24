@@ -27,17 +27,12 @@ import { FormattedMessage, useIntl } from "react-intl";
 import UploadFile from "../../../components/UploadFile";
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { IDashboardDataContext, ICountry } from "../../../models";
-import {
-	primaryColor,
-	secondaryColor,
-	Enitity_Name,
-	FORM_ACTIONS,
-} from "../../../models/constants";
+import { primaryColor, secondaryColor, Entity_Name, FORM_ACTIONS } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import ContactListDialog from "../../../components/ContactListDialog";
-import ContactForm from "../../../components/Forms/ContactDetails/ContactForm";
+import ContactDialog from "../../../components/ContactDialog";
 
 enum colorType {
 	primary = "primary",
@@ -252,10 +247,10 @@ function OrganizationView({
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<ContactForm
+					<ContactDialog
 						open={contactDialogOpen}
 						handleClose={() => setContactDialogOpen(false)}
-						entity_name={Enitity_Name.organization}
+						entity_name={Entity_Name.organization}
 						entity_id={dashboardData?.organization?.id || ""}
 						formAction={FORM_ACTIONS.CREATE}
 					/>
@@ -263,7 +258,7 @@ function OrganizationView({
 						open={contactListDialogOpen}
 						handleClose={() => setContactListDialogOpen(false)}
 						entity_id={dashboardData?.organization?.id || ""}
-						entity_name={Enitity_Name.organization}
+						entity_name={Entity_Name.organization}
 					/>
 					<Paper>
 						<Box p={2}>

@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
-import { FORM_ACTIONS } from "../../constant";
-import { IContactForm, IContact, IContactInputElements } from "../../../../models/contact/index.js";
+import { IContactForm, IContact, IContactInputElements } from "../../models/contact";
 import {
 	MutationFunctionOptions,
 	FetchResult,
@@ -12,19 +11,16 @@ import {
 	ICreateContactVariables,
 	IUpdateContactVariables,
 	IUpdateContact,
-} from "../../../../models/contact/query.js";
-import { useNotificationDispatch } from "../../../../contexts/notificationContext";
-import {
-	setSuccessNotification,
-	setErrorNotification,
-} from "../../../../reducers/notificationReducer";
-import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../../../graphql/Contact";
-import ContactFormView from "./ContactFormView";
+} from "../../models/contact/query.js";
+import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { setSuccessNotification, setErrorNotification } from "../../reducers/notificationReducer";
+import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../graphql/Contact";
+import ContactDialogView from "./ContactDialogView";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import PhoneIcon from "@material-ui/icons/Phone";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Enitity_Name } from "../../../../models/constants";
+import { Entity_Name, FORM_ACTIONS } from "../../models/constants";
 
 type ICreateContactContainer =
 	| {
@@ -34,7 +30,7 @@ type ICreateContactContainer =
 					| undefined
 			) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
 			loading: boolean;
-			entity_name: Enitity_Name;
+			entity_name: Entity_Name;
 			entity_id: string;
 			getCreatedOrUpdatedContact?: (
 				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
@@ -55,7 +51,7 @@ type ICreateContactContainer =
 					| undefined
 			) => Promise<FetchResult<ICreateContact, Record<string, any>, Record<string, any>>>;
 			loading: boolean;
-			entity_name: Enitity_Name;
+			entity_name: Entity_Name;
 			entity_id: string;
 			getCreatedOrUpdatedContact?: (
 				contact: ICreateContact["createT4DContact"]["t4DContact"] | null
@@ -84,7 +80,7 @@ interface ISubmitForm {
 	formAction: FORM_ACTIONS;
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 }
 
 const getContactCountCachedValue = (
@@ -117,7 +113,7 @@ const increaseContactListCount = ({
 }: {
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 }) => {
 	try {
 		const count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
@@ -142,10 +138,28 @@ const increaseContactListCount = ({
 	}
 };
 
-//change the form of name
 const getInitialFormValues = (initialValues?: IContact): IContactForm => {
 	if (initialValues) {
-		return { name: [{ firstName: "", surname: "" }], ...initialValues };
+		let contactFormInitialValues = { name: [{ firstName: "", surname: "" }], ...initialValues };
+		//if user has not entered email, phoneNumber or addresses in that case we have to send
+		//empty values
+		contactFormInitialValues.addresses = contactFormInitialValues.addresses.length
+			? contactFormInitialValues.addresses
+			: [
+					{
+						address_line_1: "",
+						address_line_2: "",
+						pincode: "",
+						city: "",
+					},
+			  ];
+		contactFormInitialValues.emails = contactFormInitialValues.emails.length
+			? contactFormInitialValues.emails
+			: [{ label: "", value: "" }];
+		contactFormInitialValues.phone_numbers = contactFormInitialValues.phone_numbers.length
+			? contactFormInitialValues.phone_numbers
+			: [{ label: "", value: "" }];
+		return contactFormInitialValues;
 	}
 
 	return {
@@ -302,7 +316,7 @@ const fetchContactListCount = async ({
 }: {
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 }) => {
 	let count = 0;
 	try {
@@ -330,7 +344,7 @@ const refetchContactList = async ({
 }: {
 	apolloClient: ApolloClient<object>;
 	entity_id: string;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 }) => {
 	try {
 		let count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
@@ -422,7 +436,7 @@ const submitForm = async ({
 	return null;
 };
 
-function ContactFormContainer(props: ICreateContactContainer) {
+function ContactDialogContainer(props: ICreateContactContainer) {
 	const { loading, createContact, entity_id, entity_name, updateContact } = props;
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE
@@ -440,7 +454,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 					errors.name = [{ firstName: "", surname: "" }];
 				}
 				errors.name[0].firstName = `${
-					entity_name === Enitity_Name.organization ? "Group Name" : "First Name"
+					entity_name === Entity_Name.organization ? "Group Name" : "First Name"
 				} is required`;
 			}
 			if (!values.contact_type) {
@@ -459,7 +473,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 		[entity_name]
 	);
 
-	if (entity_name === Enitity_Name.organization) {
+	if (entity_name === Entity_Name.organization) {
 		contactInputArr[0].inputsGroup = [
 			{
 				id: "firstName",
@@ -518,7 +532,7 @@ function ContactFormContainer(props: ICreateContactContainer) {
 	};
 
 	return (
-		<ContactFormView
+		<ContactDialogView
 			contactInputElements={contactInputArr}
 			onSubmit={onFormSubmit}
 			initialValues={initialValues}
@@ -526,8 +540,9 @@ function ContactFormContainer(props: ICreateContactContainer) {
 			open={props.open}
 			formAction={props.formAction}
 			handleClose={props.handleClose}
+			loading={props.loading}
 		/>
 	);
 }
 
-export default ContactFormContainer;
+export default ContactDialogContainer;

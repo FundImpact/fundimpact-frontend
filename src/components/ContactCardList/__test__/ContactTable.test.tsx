@@ -1,9 +1,9 @@
 import React from "react";
-import { waitForElement, fireEvent, RenderResult } from "@testing-library/react";
-import { DashboardProvider } from "../../../../contexts/dashboardContext";
-import { renderApollo } from "../../../../utils/test.util";
+import { waitForElement, fireEvent } from "@testing-library/react";
+import { DashboardProvider } from "../../../contexts/dashboardContext";
+import { renderApollo } from "../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../contexts/notificationContext";
+import { NotificationProvider } from "../../../contexts/notificationContext";
 import {
 	projectDetails,
 	organizationDetails,
@@ -74,7 +74,7 @@ beforeEach(() => {
 				defaultState={{ project: projectDetails, organization: organizationDetails }}
 			>
 				<NotificationProvider>
-					<ContactTable
+					<ContactCardList
 						entity_id={organizationDetails.id}
 						entity_name={Enitity_Name.organization}
 					/>

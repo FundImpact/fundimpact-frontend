@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import ContactTableContainer from "./ContactTableContainer";
-import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../../graphql/Contact";
-import { Enitity_Name } from "../../../models/constants";
-import pagination from "../../../hooks/pagination";
-import { removeFilterListObjectElements } from "../../../utils/filterList";
+import ContactCardListContainer from "./ContactCardListContainer";
+import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../graphql/Contact";
+import { Entity_Name } from "../../models/constants";
+import pagination from "../../hooks/pagination";
+import { removeFilterListObjectElements } from "../../utils/filterList";
 
 const getDefaultFilterList = () => ({
 	email: "",
@@ -13,12 +13,12 @@ const getDefaultFilterList = () => ({
 	contact_type: [],
 });
 
-function ContactTableGraphql({
+function ContactCardListGraphql({
 	entity_id,
 	entity_name,
 }: {
 	entity_id: string;
-	entity_name: Enitity_Name;
+	entity_name: Entity_Name;
 }) {
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<{
@@ -66,7 +66,7 @@ function ContactTableGraphql({
 	);
 
 	return (
-		<ContactTableContainer
+		<ContactCardListContainer
 			contactList={contactList?.t4DContacts || []}
 			count={count}
 			changePage={changePage}
@@ -79,4 +79,4 @@ function ContactTableGraphql({
 	);
 }
 
-export default ContactTableGraphql;
+export default ContactCardListGraphql;
