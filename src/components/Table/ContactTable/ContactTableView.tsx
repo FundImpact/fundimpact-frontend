@@ -130,16 +130,22 @@ function ContactTableView({
 			</Grid>
 			<Box display="flex" justifyContent="center" width="100%" mt={5}>
 				<Pagination
-					count={Math.ceil(count / 8)}
+					count={Math.ceil(count / 10)}
 					color="primary"
 					page={page}
-					onChange={(e, pageNo) => {
-						if (pageNo > page) {
-							changePage();
+					onChange={(e, nextPage) => {
+						//the difference between current page and next page can be more than 1 that is
+						//why using for loop
+						if (nextPage > page) {
+							for (let i = 0; i < nextPage - page; i++) {
+								changePage();
+							}
 						} else {
-							changePage(true);
+							for (let i = 0; i < page - nextPage; i++) {
+								changePage(true);
+							}
 						}
-						setPage(pageNo);
+						setPage(nextPage);
 					}}
 				/>
 			</Box>
