@@ -6,7 +6,7 @@ import {
 } from "../../../../graphql";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
-import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { GET_PROJECT_BUDGET_AMOUNT, GET_PROJ_DONORS } from "../../../../graphql/project";
 import { mockCurrencyList } from "../../../../utils/testMock.json";
 import {
 	organizationDetails,
@@ -173,6 +173,13 @@ const mocks = [
 				},
 			};
 		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_AMOUNT,
+			variables: { filter: { project: 3 } },
+		},
+		result: { data: { projectBudgetTargetAmountSum: 0 } },
 	},
 ];
 

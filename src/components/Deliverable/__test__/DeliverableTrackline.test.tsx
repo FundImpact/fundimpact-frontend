@@ -45,6 +45,15 @@ const mocks = [
 		request: {
 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 			variables: {
+				filter: { id: "1" },
+			},
+		},
+		result: { data: { deliverableTargetList: DeliverableTargetMock } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+			variables: {
 				sort: "created_at:DESC",
 				limit: 1,
 				start: 0,
@@ -143,7 +152,7 @@ const mocks = [
 			query: GET_ACHIEVED_VALLUE_BY_TARGET,
 			variables: { filter: { deliverableTargetProject: "1" } },
 		},
-		result: {},
+		result: { data: { deliverableTrackingTotalValue: 0 } },
 	},
 	{
 		request: {
@@ -228,10 +237,16 @@ describe("Deliverable Trackline Form", () => {
 			`createSaveButton`
 		);
 		expect(deliverableTracklineSubmit).toBeEnabled();
-		act(() => {
+		act(async () => {
 			fireEvent.click(deliverableTracklineSubmit);
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
-		expect(createDeliverableTracklineMutation).toBe(true);
+
+		new Promise((resolve) => setTimeout(resolve, 500))
+			.then(() => {
+				expect(createDeliverableTracklineMutation).toBe(true);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	});
 });
