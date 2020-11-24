@@ -187,8 +187,22 @@ const contactInputArr: IContactInputElements = [
 	{
 		icon: <AccountCircleIcon fontSize="large" />,
 		inputsGroup: [
-			{ label: "First name", size: 6, id: "firstName", initialValue: "", required: true },
-			{ label: "Surname", size: 6, id: "surname", initialValue: "", required: false },
+			{
+				label: "First name",
+				size: 6,
+				id: "firstName",
+				initialValue: "",
+				required: true,
+				testId: "createFirstNameInput",
+			},
+			{
+				label: "Surname",
+				size: 6,
+				id: "surname",
+				initialValue: "",
+				required: false,
+				testId: "createSurnameNameInput",
+			},
 		],
 		showAddIcon: false,
 		id: "name",
@@ -196,8 +210,22 @@ const contactInputArr: IContactInputElements = [
 	{
 		icon: <MailOutlineIcon fontSize="large" />,
 		inputsGroup: [
-			{ label: "Email", size: 6, id: "value", initialValue: "", required: false },
-			{ label: "Label", size: 6, id: "label", initialValue: "", required: false },
+			{
+				label: "Email",
+				size: 6,
+				id: "value",
+				initialValue: "",
+				required: false,
+				testId: "createEmailValueInput",
+			},
+			{
+				label: "Label",
+				size: 6,
+				id: "label",
+				initialValue: "",
+				required: false,
+				testId: "createEmailLabelInput",
+			},
 		],
 		showAddIcon: true,
 		id: "emails",
@@ -205,8 +233,22 @@ const contactInputArr: IContactInputElements = [
 	{
 		icon: <PhoneIcon fontSize="large" />,
 		inputsGroup: [
-			{ label: "Phone", size: 6, id: "value", initialValue: "", required: false },
-			{ label: "Label", size: 6, id: "label", initialValue: "", required: false },
+			{
+				label: "Phone",
+				size: 6,
+				id: "value",
+				initialValue: "",
+				required: false,
+				testId: "createPhoneValueInput",
+			},
+			{
+				label: "Label",
+				size: 6,
+				id: "label",
+				initialValue: "",
+				required: false,
+				testId: "createPhoneLabelInput",
+			},
 		],
 		showAddIcon: true,
 		id: "phone_numbers",
@@ -220,6 +262,7 @@ const contactInputArr: IContactInputElements = [
 				id: "address_line_1",
 				initialValue: "",
 				required: false,
+				testId: "createAddressesAddressLine1Input",
 			},
 			{
 				label: "Address Line 2",
@@ -227,9 +270,24 @@ const contactInputArr: IContactInputElements = [
 				id: "address_line_2",
 				initialValue: "",
 				required: false,
+				testId: "createAddressesAddressLine2Input",
 			},
-			{ label: "Pincode", size: 6, id: "pincode", initialValue: "", required: false },
-			{ label: "City", size: 6, id: "city", initialValue: "", required: false },
+			{
+				label: "Pincode",
+				size: 6,
+				id: "pincode",
+				initialValue: "",
+				required: false,
+				testId: "createAddressesPincodeInput",
+			},
+			{
+				label: "City",
+				size: 6,
+				id: "city",
+				initialValue: "",
+				required: false,
+				testId: "createAddressesCityInput",
+			},
 		],
 		showAddIcon: true,
 		id: "addresses",
@@ -403,12 +461,33 @@ function ContactFormContainer(props: ICreateContactContainer) {
 
 	if (entity_name === Enitity_Name.organization) {
 		contactInputArr[0].inputsGroup = [
-			{ id: "firstName", initialValue: "", label: "Group Name", size: 12, required: true },
+			{
+				id: "firstName",
+				initialValue: "",
+				label: "Group Name",
+				size: 12,
+				required: true,
+				testId: "createFirstNameInput",
+			},
 		];
 	} else {
 		contactInputArr[0].inputsGroup = [
-			{ label: "First name", size: 6, id: "firstName", initialValue: "", required: true },
-			{ label: "Surname", size: 6, id: "surname", initialValue: "", required: false },
+			{
+				label: "First name",
+				size: 6,
+				id: "firstName",
+				initialValue: "",
+				required: true,
+				testId: "createFirstNameInput",
+			},
+			{
+				label: "Surname",
+				size: 6,
+				id: "surname",
+				initialValue: "",
+				required: false,
+				testId: "createSurnameNameInput",
+			},
 		];
 	}
 

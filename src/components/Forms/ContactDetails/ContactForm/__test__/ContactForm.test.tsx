@@ -5,25 +5,46 @@ import { renderApollo } from "../../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../../contexts/notificationContext";
 import { organizationDetails } from "../../../../../utils/testMock.json";
-import { contactFormFields } from "../inputField.json";
 import { commonFormTestUtil } from "../../../../../utils/commonFormTest.util";
-import { FORM_ACTIONS, Enitity } from "../../../../../models/constants";
+import { Enitity_Name, FORM_ACTIONS } from "../../../../../models/constants";
 import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
 import { IContactForm } from "../../../../../models/contact";
 import ContactForm from "..";
 import { CREATE_CONTACT } from "../../../../../graphql/Contact/mutation";
+import { GET_CONTACT_LIST } from "../../../../../graphql/Contact";
+import { mockContactList } from "../../../../../utils/testMock.json";
 
 let contactForm: RenderResult;
 let creationOccured = false;
 
-const intialFormValue: IContactForm = {
+const handleClose = jest.fn();
+
+const intialFormValue = {
+	firstName: "sherlock",
+	emailValue: "sher@locked.com",
+	emailLabel: "famous detective email",
+	phoneValue: "9999999999",
+	phoneLabel: "famous detective phone",
+	address_line_1: "221 baker street",
+	address_line_2: "221 baker street england",
+	pincode: "112233",
+	city: "London",
 	contact_type: "PERSONAL",
-	email: "educationOrg@gmail.com",
-	email_other: "educationOrgDelhi@gmail.com",
-	phone: "9999999999",
-	phone_other: "8888888888",
 };
+
+let inputIds = [
+	{ testId: "createFirstNameInput", name: "firstName", required: true },
+	{ testId: "createEmailValueInput", name: "emailValue", required: true },
+	{ testId: "createEmailLabelInput", name: "emailLabel", required: false },
+	{ testId: "createPhoneValueInput", name: "phoneValue", required: true },
+	{ testId: "createPhoneLabelInput", name: "phoneLabel", required: false },
+	{ testId: "createAddressesAddressLine1Input", name: "address_line_1", required: false },
+	{ testId: "createAddressesAddressLine2Input", name: "address_line_2", required: false },
+	{ testId: "createAddressesPincodeInput", name: "pincode", required: false },
+	{ testId: "createAddressesCityInput", name: "city", required: false },
+	{ testId: "createContactTypeSelectField", name: "contact_type", required: true },
+];
 
 let orgDetails = organizationDetails;
 
@@ -41,12 +62,50 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_CONTACT_LIST,
+			variables: {
+				filter: {
+					entity_id: organizationDetails.id,
+					entity_name: Enitity_Name.organization,
+				},
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: {
+			data: {
+				t4DContacts: mockContactList,
+			},
+		},
+	},
+	{
+		request: {
 			query: CREATE_CONTACT,
 			variables: {
 				input: {
 					data: {
-						...intialFormValue,
-						entity_name: Enitity.organization,
+						emails: [
+							{
+								label: intialFormValue.emailLabel,
+								value: intialFormValue.emailValue,
+							},
+						],
+						phone_numbers: [
+							{
+								label: intialFormValue.phoneLabel,
+								value: intialFormValue.phoneValue,
+							},
+						],
+						addresses: [
+							{
+								address_line_1: intialFormValue.address_line_1,
+								address_line_2: intialFormValue.address_line_2,
+								pincode: intialFormValue.pincode,
+								city: intialFormValue.city,
+							},
+						],
+						contact_type: intialFormValue.contact_type,
+						entity_name: Enitity_Name.organization,
 						entity_id: orgDetails.id,
 					},
 				},
@@ -59,7 +118,27 @@ const mocks = [
 					createT4DContact: {
 						t4DContact: {
 							id: "1",
-							...intialFormValue,
+							emails: [
+								{
+									label: intialFormValue.emailLabel,
+									value: intialFormValue.emailValue,
+								},
+							],
+							phone_numbers: [
+								{
+									label: intialFormValue.phoneLabel,
+									value: intialFormValue.phoneValue,
+								},
+							],
+							addresses: [
+								{
+									address_line_1: intialFormValue.address_line_1,
+									address_line_2: intialFormValue.address_line_2,
+									pincode: intialFormValue.pincode,
+									city: intialFormValue.city,
+								},
+							],
+							contact_type: intialFormValue.contact_type,
 						},
 					},
 				},
@@ -74,9 +153,11 @@ beforeEach(() => {
 			<DashboardProvider defaultState={{ organization: orgDetails }}>
 				<NotificationProvider>
 					<ContactForm
-						entity_name={Enitity.organization}
+						entity_name={Enitity_Name.organization}
 						entity_id={orgDetails.id}
 						formAction={FORM_ACTIONS.CREATE}
+						open={true}
+						handleClose={handleClose}
 					/>
 				</NotificationProvider>
 			</DashboardProvider>,
@@ -88,13 +169,10 @@ beforeEach(() => {
 	});
 });
 
-let inputIds = contactFormFields;
-
 const {
 	checkElementHaveCorrectValue,
 	checkSubmitButtonIsEnabled,
 	requiredFieldTestForInputElement,
-	triggerMutation,
 } = commonFormTestUtil(fireEvent, wait, act);
 
 describe("Contact tests", () => {
@@ -109,7 +187,7 @@ describe("Contact tests", () => {
 	}
 
 	test("Submit button enabled", async () => {
-		await checkSubmitButtonIsEnabled<IContactForm>({
+		await checkSubmitButtonIsEnabled({
 			inputFields: inputIds,
 			reactElement: contactForm,
 			intialFormValue,
@@ -118,7 +196,7 @@ describe("Contact tests", () => {
 
 	for (let i = 0; i < inputIds.length; i++) {
 		test(`Required Field test for ${inputIds[i].name}`, async () => {
-			await requiredFieldTestForInputElement<IContactForm>({
+			await requiredFieldTestForInputElement({
 				inputFields: inputIds,
 				reactElement: contactForm,
 				intialFormValue,
@@ -128,11 +206,17 @@ describe("Contact tests", () => {
 	}
 
 	test("Mock response", async () => {
-		await triggerMutation<IContactForm>({
+		await checkSubmitButtonIsEnabled({
 			inputFields: inputIds,
 			reactElement: contactForm,
 			intialFormValue,
 		});
+
+		await act(async () => {
+			let form = await contactForm.getByTestId("contact-form");
+			fireEvent.submit(form);
+		});
+		await wait();
 		expect(creationOccured).toBe(true);
 	});
 });

@@ -116,6 +116,7 @@ const MemoizedTextField = React.memo(
 		label,
 		error,
 		required,
+		testId,
 	}: {
 		name: string;
 		value: string;
@@ -124,6 +125,7 @@ const MemoizedTextField = React.memo(
 		label: string;
 		error: boolean;
 		required: boolean;
+		testId: string;
 	}) => {
 		return (
 			<TextField
@@ -132,9 +134,8 @@ const MemoizedTextField = React.memo(
 				onBlur={onBlur}
 				onChange={onChange}
 				label={label}
-				data-testid={"dataTestId"}
 				inputProps={{
-					"data-testid": "testId",
+					"data-testid": testId,
 				}}
 				fullWidth
 				error={error}
@@ -213,13 +214,9 @@ const InputElementRow = ({
 																				required={
 																					input.required
 																				}
-																				// data-testid={
-																				// 	"dataTestId"
-																				// }
-																				// inputProps={{
-																				// 	"data-testid":
-																				// 		"testId",
-																				// }}
+																				testId={
+																					input.testId
+																				}
 																			/>
 																			<ErrorMessage
 																				name={`${inputElement.id}[${index}].${input.id}`}
@@ -373,7 +370,7 @@ function ContactFormView({
 									);
 								}
 								return (
-									<Form id="contact-form">
+									<Form id="contact-form" data-testid="contact-form">
 										<Grid container>
 											{contactInputElements.map(
 												(contactInputElement, index) => (
@@ -416,7 +413,8 @@ function ContactFormView({
 															name="contact_type"
 															data-testid={"dataTestId"}
 															inputProps={{
-																"data-testid": "testId",
+																"data-testid":
+																	"createContactTypeSelectField",
 															}}
 															error={
 																!!formik.errors.contact_type &&
