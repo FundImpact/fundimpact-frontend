@@ -1,19 +1,19 @@
 import React from "react";
 import { fireEvent, wait, RenderResult } from "@testing-library/react";
-import { DashboardProvider } from "../../../../../contexts/dashboardContext";
-import { renderApollo } from "../../../../../utils/test.util";
+import { DashboardProvider } from "../../../contexts/dashboardContext";
+import { renderApollo } from "../../../utils/test.util";
 import { act } from "react-dom/test-utils";
-import { NotificationProvider } from "../../../../../contexts/notificationContext";
-import { organizationDetails } from "../../../../../utils/testMock.json";
-import { commonFormTestUtil } from "../../../../../utils/commonFormTest.util";
-import { Enitity_Name, FORM_ACTIONS } from "../../../../../models/constants";
-import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
-import { GET_USER_ROLES } from "../../../../../graphql/User/query";
-import { IContactForm } from "../../../../../models/contact";
+import { NotificationProvider } from "../../../contexts/notificationContext";
+import { organizationDetails } from "../../../utils/testMock.json";
+import { commonFormTestUtil } from "../../../utils/commonFormTest.util";
+import { Entity_Name, FORM_ACTIONS } from "../../../models/constants";
+import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
+import { GET_USER_ROLES } from "../../../graphql/User/query";
+import { IContactForm } from "../../../models/contact";
 import ContactForm from "..";
-import { CREATE_CONTACT } from "../../../../../graphql/Contact/mutation";
-import { GET_CONTACT_LIST } from "../../../../../graphql/Contact";
-import { mockContactList } from "../../../../../utils/testMock.json";
+import { CREATE_CONTACT } from "../../../graphql/Contact/mutation";
+import { GET_CONTACT_LIST } from "../../../graphql/Contact";
+import { mockContactList } from "../../../utils/testMock.json";
 
 let contactForm: RenderResult;
 let creationOccured = false;
@@ -66,7 +66,7 @@ const mocks = [
 			variables: {
 				filter: {
 					entity_id: organizationDetails.id,
-					entity_name: Enitity_Name.organization,
+					entity_name: Entity_Name.organization,
 				},
 				start: 0,
 				sort: "created_at:DESC",
