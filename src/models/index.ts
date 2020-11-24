@@ -110,7 +110,7 @@ export interface IInputFields {
 	onClick?: any;
 	autoCompleteGroupBy?: <T>(option: T) => string;
 	addNew?: boolean;
-	addNewClick?: any;
+	addNewClick?: (() => void) | null;
 }
 
 export interface ISelectField {

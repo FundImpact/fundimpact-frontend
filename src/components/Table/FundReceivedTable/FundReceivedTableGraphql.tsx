@@ -77,6 +77,7 @@ function FundReceivedTableGraphql() {
 		},
 	});
 
+	console.log("data :>> ", data);
 	(fundReceiptInputFields[1].optionsArray as {
 		id: string;
 		name: string;

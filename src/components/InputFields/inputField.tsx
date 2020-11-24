@@ -232,7 +232,7 @@ const InputFields = ({
 										<FormattedMessage
 											id="addNewSelectField"
 											defaultMessage="Add new"
-											description="This text will be displayed as select field for add new"
+											description="This text will be displayed as select field for select Field"
 										/>
 									</Typography>
 								</Box>
