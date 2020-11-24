@@ -38,7 +38,8 @@ const getInitialFormValues = ({
 	}
 	return {
 		amount: "",
-		project_donor: projectDonors.length === 1 ? projectDonors[0].id + `-${DonorType.project}`: "",
+		project_donor:
+			projectDonors.length === 1 ? projectDonors[0].id + `-${DonorType.project}` : "",
 		reporting_date: getTodaysDate(),
 	};
 };

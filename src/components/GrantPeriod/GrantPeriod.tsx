@@ -4,6 +4,7 @@ import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
+import { GET_GRANT_PERIOD } from "../../graphql";
 import { CREATE_GRANT_PERIOD, UPDATE_GRANT_PERIOD } from "../../graphql/grantPeriod/mutation";
 import { FETCH_GRANT_PERIODS } from "../../graphql/grantPeriod/query";
 import { FORM_ACTIONS } from "../../models/constants";
@@ -230,10 +231,6 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		} catch (err) {
 			console.error(err);
 		}
-
-		setTimeout(() => {
-			onClose();
-		}, 2000);
 	};
 
 	const [createGrantPeriod, { loading }] = useMutation(CREATE_GRANT_PERIOD, {
@@ -244,7 +241,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 			};
 			console.log(`created data`, newGrantPeriod);
 			notificationDispatch(setSuccessNotification("Grant Period Created."));
-
+			onClose();
 			onCreatingNewGrantPeriodSuccess(newGrantPeriod, FORM_ACTIONS.CREATE);
 		},
 	});
@@ -278,13 +275,29 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		}
 
 		if (action === FORM_ACTIONS.CREATE)
-			return createGrantPeriod({ variables: { input: { ...value } } });
+			return createGrantPeriod({
+				variables: { input: { ...value } },
+				refetchQueries: [
+					{
+						query: GET_GRANT_PERIOD,
+						variables: { filter: { donor: value.donor, project: value.project } },
+					},
+				],
+			});
 		const id = value.id;
 		delete value["id"];
 		delete (value as any)["__typename"];
 
 		if (action === FORM_ACTIONS.UPDATE)
-			return updateGrantPeriod({ variables: { input: { ...value }, id } });
+			return updateGrantPeriod({
+				variables: { input: { ...value }, id },
+				refetchQueries: [
+					{
+						query: GET_GRANT_PERIOD,
+						variables: { filter: { donor: value.donor, project: value.project } },
+					},
+				],
+			});
 	};
 
 	let defaultValues: IGrantPeriod = {

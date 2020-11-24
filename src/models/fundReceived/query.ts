@@ -31,6 +31,6 @@ export interface ICreateFundReceiptVariables {
 }
 
 export interface IUpdateFundReceiptVariables {
-	id: string,
+	id: string;
 	input: IFundReceived;
 }

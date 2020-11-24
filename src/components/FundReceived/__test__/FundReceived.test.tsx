@@ -42,9 +42,8 @@ enum donorType {
 const intialFormValue: IFundReceivedForm = {
 	amount: "100",
 	reporting_date: getTodaysDate(),
-	project_donor: "18"+ `-${donorType.project}`,
+	project_donor: "18" + `-${donorType.project}`,
 };
-
 
 let mockOrganizationDonor = [
 	{

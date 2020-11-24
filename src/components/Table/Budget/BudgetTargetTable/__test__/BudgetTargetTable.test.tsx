@@ -32,7 +32,7 @@ import {
 	mockCurrencyList,
 	mockOrgDonor,
 	mockProjectDonors,
-	mockCountryList
+	mockCountryList,
 } from "../../../../../utils/testMock.json";
 import { GET_PROJ_DONORS } from "../../../../../graphql/project";
 import {

@@ -172,21 +172,21 @@ function AddContactAddressDialog(props: IAddContactAddressDialog) {
 						// mt={3}
 						// style={{ backgroundColor: theme.palette.action.hover }}
 						> */}
-							<Typography
-								// color="primary"
-								gutterBottom
-								variant="subtitle2"
-								color="textSecondary"
-								// style={{ fontWeight: "bold", fontSize: "large" }}
-							>
-								{activeForm == AddContactAddressDialogType.contact
-									? props.formActions === FORM_ACTIONS.UPDATE
-										? updateContactSubtitle
-										: addContactSubtitle
-									: props.formActions === FORM_ACTIONS.UPDATE
-									? updateAddressSubtitle
-									: addAddressSubtitle}
-							</Typography>
+						<Typography
+							// color="primary"
+							gutterBottom
+							variant="subtitle2"
+							color="textSecondary"
+							// style={{ fontWeight: "bold", fontSize: "large" }}
+						>
+							{activeForm == AddContactAddressDialogType.contact
+								? props.formActions === FORM_ACTIONS.UPDATE
+									? updateContactSubtitle
+									: addContactSubtitle
+								: props.formActions === FORM_ACTIONS.UPDATE
+								? updateAddressSubtitle
+								: addAddressSubtitle}
+						</Typography>
 						{/* </Box> */}
 					</Grid>
 					<Grid item xs={8}>

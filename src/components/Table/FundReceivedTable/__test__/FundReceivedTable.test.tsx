@@ -11,7 +11,7 @@ import {
 	mockFundReceiptProjectList,
 	fundReceiptProjectListCount,
 	mockCountryList,
-	mockCurrencyList
+	mockCurrencyList,
 } from "../../../../utils/testMock.json";
 import { GET_PROJECT_DONORS, GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../../../graphql";
 import FundReceivedTable from "../FundReceivedTableGraphql";

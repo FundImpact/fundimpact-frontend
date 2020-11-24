@@ -232,7 +232,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
 		onCompleted(data) {
 			if (!data?.deliverableCategoryUnitList) return;
-			if (!data.deliverableCategoryUnitList.length) return;
+			if (!data.deliverableCategoryUnitList.length) {
+				notificationDispatch(setErrorNotification("Unit not match with category !"));
+				return;
+			}
 
 			if (props.type === DELIVERABLE_ACTIONS.CREATE)
 				createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);

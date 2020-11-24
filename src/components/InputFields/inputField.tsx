@@ -88,12 +88,20 @@ const InputFields = ({
 
 	useEffect(() => {
 		if (inputType == "multiSelect") {
-			setElemName((formik.values[name]?.map((elem: any) => elem.id) as string[]) || []);
+			setElemName(
+				formik.values[name]?.map((elem: any) => {
+					if (elem) return elem.id;
+				})
+			);
 		}
 	}, [formik, setElemName, name, inputType]);
 
 	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
-		setElemName(event.target.value.map((elem: any) => elem.id) as string[]);
+		setElemName(
+			event.target.value.map((elem: any) => {
+				if (elem) return elem.id;
+			})
+		);
 	};
 	let renderValue;
 	if (multiple) {
@@ -127,8 +135,8 @@ const InputFields = ({
 
 		if (multiSelect) {
 			renderValue = (selected: any) => {
-				let arr: any = selected.map((elem: any) => elem.name);
-				return arr.join(", ");
+				let arr: any = selected.map((elem: any) => elem?.name);
+				return arr.filter((item: any) => !!item).join(", ");
 			};
 		}
 		return (

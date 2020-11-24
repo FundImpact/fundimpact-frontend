@@ -14,6 +14,10 @@ import FullScreenLoader from "../commons/GlobalLoader";
 import { FORM_ACTIONS } from "../Forms/constant";
 import DonorYearTagForm from "../Forms/FYDonorYearTagsForm/FYDonorYearTags";
 
+/*	financial_year: props.organizationCountry &&
+	props.organizationCountry === element.donor.country.id
+	? props.TracklineFyId : "" */
+
 export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) {
 	let donors: any = [];
 	if (props.type === FORM_ACTIONS.UPDATE) {
@@ -39,11 +43,7 @@ export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) 
 		}) => {
 			/*if Donor Id is 15 then it details will be stored in initialValues[15mapValues] */
 			initialValuesObj[`${element.id}mapValues`] = {
-				financial_year:
-					props.organizationCountry &&
-					props.organizationCountry === element.donor.country.id
-						? props.TracklineFyId
-						: "", //
+				financial_year: "", //
 				grant_periods_project: "",
 				project_donor: element.id,
 			};

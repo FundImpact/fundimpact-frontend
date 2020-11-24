@@ -29,7 +29,7 @@ function FundReceivedTableContainer({
 	inputFields,
 	removeFilterListElements,
 	donorHash,
-	currency
+	currency,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;

@@ -25,7 +25,7 @@ import {
 	projectDonorMock,
 	mockCountryList,
 	mockOrgBudgetCategory,
-	mockOrgDonor
+	mockOrgDonor,
 } from "../../../../../utils/testMock.json";
 import {
 	GET_ORG_CURRENCIES_BY_ORG,
