@@ -219,9 +219,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	};
 	if (uploadSuccess) successMessage();
 
-	const [currentTarget, setCurrentTarget] = React.useState<string | number | undefined>(
+	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.impactTarget ? props.impactTarget : ""
 	);
+	const [currentTargetName, setCurrentTargetName] = React.useState<string>("");
 	const [formDetailsArray, setFormDetailsArray] = React.useState<
 		{ label: string; value: string }[]
 	>([]);
@@ -231,38 +232,39 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
 		GET_ACHIEVED_VALLUE_BY_TARGET
 	);
-	impactTragetLineForm[0].getInputValue = setCurrentTarget;
+	impactTragetLineForm[0].getInputValue = setCurrentTargetId;
 
 	useEffect(() => {
-		if (currentTarget) {
-			getImpactTarget({ variables: { filter: { id: currentTarget } } });
+		if (currentTargetId) {
+			getImpactTarget({ variables: { filter: { id: currentTargetId } } });
 			getTargetAchieveValue({
-				variables: { filter: { impactTargetProject: currentTarget } },
+				variables: { filter: { impactTargetProject: currentTargetId } },
 			});
 		}
-	}, [currentTarget, getImpactTarget, getTargetAchieveValue]);
+	}, [currentTargetId, getImpactTarget, getTargetAchieveValue]);
 
 	const intl = useIntl();
 
 	let impactCategoryLabel = intl.formatMessage({
 		id: "impactCategoryLabelFormDetail",
-		defaultMessage: "Impact's Category",
+		defaultMessage: "Category",
 		description: "This text will be show on deliverable trackline form for impact category",
 	});
 	let impactTotalTargetLabel = intl.formatMessage({
 		id: "impactTotalTargetLabelFormDetail",
-		defaultMessage: "Impact's Target",
+		defaultMessage: "Target",
 		description: "This text will be show on deliverable trackline form for impact category",
 	});
 	let impactAchievedTargetLabel = intl.formatMessage({
 		id: "impactAchievedTargetLabelFormDetail",
-		defaultMessage: "Impact's Achived",
+		defaultMessage: "Achieved",
 		description: "This text will be show on deliverable trackline form for impact category",
 	});
 
 	useEffect(() => {
 		let fetchedImpactTarget = impactTargetResponse?.impactTargetProjectList[0];
 		if (fetchedImpactTarget && achivedValue) {
+			setCurrentTargetName(fetchedImpactTarget.name);
 			setFormDetailsArray([
 				{
 					label: impactCategoryLabel,
@@ -278,9 +280,11 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				},
 			]);
 		}
-	}, [impactTargetResponse, achivedValue, setFormDetailsArray]);
+	}, [impactTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
 
-	let formDetailsComponent = <FormDetails formDetails={formDetailsArray} />;
+	let formDetailsComponent = (
+		<FormDetails formDetails={formDetailsArray} title={currentTargetName} />
+	);
 
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {

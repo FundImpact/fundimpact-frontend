@@ -14,7 +14,7 @@ import {
 	CREATE_PROJECT_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { GET_PROJECT_BUDGET_AMOUNT, GET_PROJ_DONORS } from "../../../graphql/project";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
@@ -407,6 +407,12 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 						});
 					} catch (err) {}
 				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_BUDGET_AMOUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Target Creation Success"));
 			props.handleClose();
@@ -454,6 +460,12 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 						...values,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_BUDGET_AMOUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 

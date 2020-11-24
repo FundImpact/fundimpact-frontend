@@ -43,7 +43,7 @@ import { fireEvent, wait } from "@testing-library/dom";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
 import { mockBudgetLineItem } from "../../../../utils/testMock.json";
-import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { GET_PROJECT_AMOUNT_SPEND, GET_PROJ_DONORS } from "../../../../graphql/project";
 import { GET_ORG_DONOR } from "../../../../graphql/donor";
 const handleClose = jest.fn();
 
@@ -337,6 +337,13 @@ const mocks = [
 				},
 			};
 		},
+	},
+	{
+		request: {
+			query: GET_PROJECT_AMOUNT_SPEND,
+			variables: { filter: { project: 3 } },
+		},
+		result: { data: { projBudgetTrackingsTotalSpendAmount: 0 } },
 	},
 ];
 
