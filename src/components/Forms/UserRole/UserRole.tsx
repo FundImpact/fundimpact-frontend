@@ -39,6 +39,13 @@ import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import { Box, Grid, Typography } from "@material-ui/core";
 import { IGetUserRole } from "../../../models/access/query";
 
+const data = `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+Earum repellat nisi, officiis incidunt repudiandae
+<h1>dqwdqwdqwdqwdqwd</h1>
+corporis magnam explicabo, iusto quibusdam similique,
+laboriosam commodi dolor sunt odit non cupiditate?
+Quasi, explicabo? Nulla.`;
+
 interface IUserRoleError extends Partial<Omit<IUserRole, "project">> {
 	project?: string;
 }
@@ -572,7 +579,9 @@ function UserRoleForm(props: UserRoleProps) {
 										<Typography>{role?.name}</Typography>
 									</AccordionSummary>
 									<AccordionDetails>
-										<Typography>{role?.description}</Typography>
+										<Typography
+											dangerouslySetInnerHTML={{ __html: role?.description }}
+										/>
 									</AccordionDetails>
 								</Accordion>
 							)
