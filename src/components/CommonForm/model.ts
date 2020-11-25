@@ -18,4 +18,5 @@ export interface ICommonForm {
 	cancelButtonName?: string;
 	createButtonName?: string;
 	updateButtonName?: string;
+	children?: React.ReactNode;
 }
