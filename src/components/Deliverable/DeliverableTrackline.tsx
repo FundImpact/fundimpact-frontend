@@ -480,7 +480,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		setSelectedDeliverableTarget(value.deliverable_target_project);
-
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
 		delete (input as any).donors;
@@ -590,7 +589,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		let DeliverableTargetLineId = value.id;
 		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
-
 		setDonorFormData(value.donorMapValues);
 		let input = { ...value };
 
