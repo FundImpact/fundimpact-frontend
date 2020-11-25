@@ -52,6 +52,7 @@ const InputFields = ({
 	multiline = false,
 	rows = 1,
 	type = "text",
+	optionsLabel,
 	optionsArray,
 	inputLabelId,
 	selectLabelId,
@@ -65,6 +66,9 @@ const InputFields = ({
 	autoCompleteGroupBy,
 	addNew = false,
 	addNewClick,
+	secondOptionsArray,
+	secondOptionsLabel,
+	customMenuOnClick,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -163,6 +167,9 @@ const InputFields = ({
 					}}
 					disabled={disabled}
 				>
+					{optionsLabel && (
+						<ListSubheader disableSticky={true}>{optionsLabel}</ListSubheader>
+					)}
 					{!optionsArray?.length && (
 						<MenuItem value="">
 							<em>
@@ -223,6 +230,31 @@ const InputFields = ({
 								</MenuItem>
 							)
 						)}
+					{secondOptionsLabel && (
+						<ListSubheader disableSticky={true}>{secondOptionsLabel}</ListSubheader>
+					)}
+					{multiSelect &&
+						secondOptionsArray &&
+						secondOptionsArray.map((element: any, index: number) => (
+							<MenuItem
+								key={index}
+								value={multiSelect ? element : element.id}
+								disabled={element.disabled}
+								onClick={(e) =>
+									customMenuOnClick ? customMenuOnClick(element) : null
+								}
+							>
+								{multiSelect ? (
+									<Checkbox
+										color="primary"
+										checked={elemName.indexOf(element.id) > -1}
+										disabled={element.disabled}
+									/>
+								) : null}
+								<Typography>{element.name}</Typography>
+							</MenuItem>
+						))}
+
 					{addNew && addNewClick && (
 						<MenuItem onClick={addNewClick} selected={false} value="">
 							<Box display="flex">

@@ -48,7 +48,7 @@ function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	};
 }
 
-const updateProjectDonorCache = ({
+export const updateProjectDonorCache = ({
 	apolloClient,
 	projecttDonorCreated,
 }: {
