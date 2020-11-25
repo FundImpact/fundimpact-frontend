@@ -19,7 +19,7 @@ import DonorYearTagForm from "../Forms/FYDonorYearTagsForm/FYDonorYearTags";
 	? props.TracklineFyId : "" */
 
 export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) {
-	let donors: any = [];
+	let projectDonors: any = [];
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		/*Removing already mapped donors from donor list*/
 		let afterRemovingAlreadyMappedDonorsList: any = [];
@@ -27,15 +27,15 @@ export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) 
 			if (!props.alreadyMappedDonorsIds?.includes(element.id))
 				afterRemovingAlreadyMappedDonorsList.push(element);
 		});
-		donors = afterRemovingAlreadyMappedDonorsList;
+		projectDonors = afterRemovingAlreadyMappedDonorsList;
 	} else {
 		/*All donors if props.type === FORM_ACTION.CREATE */
-		donors = props.donors;
+		projectDonors = props.donors;
 	}
 
 	let initialValuesObj: any = {};
 
-	donors?.forEach(
+	projectDonors?.forEach(
 		(element: {
 			id: string;
 			name: string;
@@ -113,7 +113,7 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 
 	const onSubmit = (value: any) => {
 		let finalvalues: any = Object.values(value);
-
+		console.log("finalValues", finalvalues);
 		for (let i = 0; i < finalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = finalvalues[i]?.id;
 			if (deliverable_lineitem_fy_id) {
@@ -177,7 +177,7 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				<DonorYearTagForm
 					{...{
 						initialValues,
-						donors: props.donors,
+						projectDonors: props.donors,
 						TracklineFyId: props.TracklineFyId,
 						organizationCountry,
 						validate,

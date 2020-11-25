@@ -11,6 +11,7 @@ import { IDeliverableCategoryData } from "../../../models/deliverable/deliverabl
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
 	deliverableUnit: IDeliverableUnitData | null,
@@ -91,12 +92,15 @@ function DeliverableUnitTableContainer({
 
 	const deliverableCategoryMemoized = useMemo<string[]>(
 		() =>
-			deliverableCategoryUnitList?.deliverableCategoryUnitList.map(
-				(element: {
-					deliverable_category_org: IDeliverableCategoryData;
-					deliverable_units_org: IDeliverableUnitData;
-				}) => element.deliverable_category_org.id
-			),
+			deliverableCategoryUnitList?.deliverableCategoryUnitList
+				.filter(
+					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+						element.status
+				)
+				.map(
+					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+						element.deliverable_category_org.id
+				),
 		[deliverableCategoryUnitList]
 	);
 

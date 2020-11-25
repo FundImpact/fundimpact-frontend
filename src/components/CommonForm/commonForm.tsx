@@ -75,8 +75,28 @@ function CommonInputForm({
 												}
 												rows={element.rows ? element.rows : 1}
 												type={element.type ? element.type : "text"}
+												optionsLabel={
+													element.optionsLabel
+														? element.optionsLabel
+														: undefined
+												}
 												optionsArray={
 													element.optionsArray ? element.optionsArray : []
+												}
+												secondOptionsArray={
+													element.secondOptionsArray
+														? element.secondOptionsArray
+														: []
+												}
+												customMenuOnClick={
+													element.customMenuOnClick
+														? element.customMenuOnClick
+														: null
+												}
+												secondOptionsLabel={
+													element.secondOptionsLabel
+														? element.secondOptionsLabel
+														: undefined
 												}
 												inputLabelId={
 													element.inputLabelId ? element.inputLabelId : ""
