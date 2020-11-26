@@ -18,7 +18,6 @@ import { GetCardTypeAndValues } from "./cardHooks/GetCardType";
 import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { useIntl } from "react-intl";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 export default function DashboardCard(props: CardProps) {
 	const { title, children, cardHeight = "180px", cardFilter } = props;
@@ -68,7 +67,7 @@ export default function DashboardCard(props: CardProps) {
 		}
 	}
 	const intl = useIntl();
-	const dashboardData = useDashBoardData();
+
 	let topLabel = intl.formatMessage({
 		id: "topLabelCards",
 		defaultMessage: "Top",

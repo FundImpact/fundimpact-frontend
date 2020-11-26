@@ -154,9 +154,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		deliverableTragetLineForm[7].textNextToButton = `${filesArray.length} files attached`;
 	else deliverableTragetLineForm[7].textNextToButton = ``;
 
-	const [currentTarget, setCurrentTarget] = React.useState<string | number | undefined>(
+	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.deliverableTarget ? props.deliverableTarget : ""
 	);
+	const [currentTargetName, setCurrentTargetName] = React.useState<string>("");
+
 	const [formDetailsArray, setFormDetailsArray] = React.useState<
 		{ label: string; value: string }[]
 	>([]);
@@ -166,34 +168,34 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
 		GET_ACHIEVED_VALLUE_BY_TARGET
 	);
-	deliverableTragetLineForm[0].getInputValue = setCurrentTarget;
+	deliverableTragetLineForm[0].getInputValue = setCurrentTargetId;
 
 	useEffect(() => {
-		if (currentTarget) {
-			getDeliverableTarget({ variables: { filter: { id: currentTarget } } });
+		if (currentTargetId) {
+			getDeliverableTarget({ variables: { filter: { id: currentTargetId } } });
 			getTargetAchieveValue({
-				variables: { filter: { deliverableTargetProject: currentTarget } },
+				variables: { filter: { deliverableTargetProject: currentTargetId } },
 			});
 		}
-	}, [currentTarget, getDeliverableTarget, getTargetAchieveValue]);
+	}, [currentTargetId, getDeliverableTarget, getTargetAchieveValue]);
 
 	const intl = useIntl();
 
 	let deliverableCategoryLabel = intl.formatMessage({
 		id: "deliverableCategoryLabelFormDetail",
-		defaultMessage: "Deliverable's Category",
+		defaultMessage: "Category",
 		description:
 			"This text will be show on deliverable trackline form for deliverable category",
 	});
 	let deliverableTotalTargetLabel = intl.formatMessage({
 		id: "deliverableTotalTargetLabelFormDetail",
-		defaultMessage: "Deliverable's Target",
+		defaultMessage: "Target",
 		description:
 			"This text will be show on deliverable trackline form for deliverable category",
 	});
 	let deliverableAchievedTargetLabel = intl.formatMessage({
 		id: "deliverableAchievedTargetLabelFormDetail",
-		defaultMessage: "Deliverable's Achived",
+		defaultMessage: "Achieved",
 		description:
 			"This text will be show on deliverable trackline form for deliverable category",
 	});
@@ -201,6 +203,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	useEffect(() => {
 		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
 		if (fetchedDeliverableTarget && achivedValue) {
+			setCurrentTargetName(fetchedDeliverableTarget.name);
 			setFormDetailsArray([
 				{
 					label: deliverableCategoryLabel,
@@ -218,9 +221,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				},
 			]);
 		}
-	}, [deliverableTargetResponse, achivedValue, setFormDetailsArray]);
+	}, [deliverableTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
 
-	let formDetailsComponent = <FormDetails formDetails={formDetailsArray} />;
+	let formDetailsComponent = (
+		<FormDetails formDetails={formDetailsArray} title={currentTargetName} />
+	);
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -286,7 +291,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
 
-	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
+	const [createProjectDonor, { loading: creatingProjectDonorsLoading }] = useMutation(
 		CREATE_PROJECT_DONOR,
 		{
 			onCompleted: (data) => {
@@ -451,7 +456,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		setSelectedDeliverableTarget(value.deliverable_target_project);
-
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
 		delete (input as any).donors;
@@ -561,7 +565,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		let DeliverableTargetLineId = value.id;
 		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
-
 		setDonorFormData(value.donorMapValues);
 		let input = { ...value };
 
@@ -702,7 +705,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				</>
 			</FormDialog>
 
-			{updateDeliverableTrackLineLoading || uploadMorphLoading || loading ? (
+			{updateDeliverableTrackLineLoading ||
+			uploadMorphLoading ||
+			loading ||
+			creatingProjectDonorsLoading ? (
 				<FullScreenLoader />
 			) : null}
 

@@ -45,6 +45,7 @@ import BudgetTarget from "../BudgetTarget";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { Grid, Box, Typography, useTheme } from "@material-ui/core";
 import AmountSpent from "../../Table/Budget/BudgetTargetTable/AmountSpent";
+import { GET_PROJECT_AMOUNT_SPEND } from "../../../graphql/project";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -499,6 +500,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						});
 					} catch (err) {}
 				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_AMOUNT_SPEND,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));
 		} catch (err) {
@@ -564,6 +571,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						});
 					} catch (err) {}
 				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_AMOUNT_SPEND,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Budget  Line Item Updation Success"));
 		} catch (err) {

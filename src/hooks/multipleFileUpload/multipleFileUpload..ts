@@ -99,7 +99,7 @@ const useMultipleFileUpload = (
 		field: string;
 	}) => {
 		if (filesArray && setFilesArray) {
-			let error = null;
+			let uploadError = null;
 			try {
 				setLoading(true);
 				for (let i = 0; i < filesArray.length; i++) {
@@ -117,14 +117,13 @@ const useMultipleFileUpload = (
 					}
 				}
 			} catch (err) {
-				error = err;
-				setError(err);
-				console.error(err);
+				uploadError = err;
+				setError(uploadError);
+				console.error(uploadError);
 			} finally {
 				if (!error) console.log("success");
 				setLoading(false);
 				setSuccess(true);
-				return true;
 			}
 		}
 	};
@@ -141,7 +140,7 @@ const useMultipleFileUpload = (
 		path?: string;
 	}) => {
 		if (filesArray && setFilesArray) {
-			let error = null;
+			let uploadError = null;
 			try {
 				for (let i = 0; i < filesArray.length; i++) {
 					let file = filesArray[i];
@@ -170,13 +169,12 @@ const useMultipleFileUpload = (
 					}
 				}
 			} catch (err) {
-				error = err;
-				setError(err);
-				console.error(err);
+				uploadError = err;
+				setError(uploadError);
+				console.error(uploadError);
 			} finally {
 				if (!error) console.log("success");
 				setSuccess(true);
-				return true;
 			}
 		}
 	};

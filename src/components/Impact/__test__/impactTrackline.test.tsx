@@ -16,7 +16,12 @@ import { GET_ANNUAL_YEARS, GET_PROJECT_DONORS, GET_FINANCIAL_YEARS } from "../..
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { impactTargetMock, projectMock, impactTracklineByTargetMock } from "./testHelp";
+import {
+	impactTargetMock,
+	projectMock,
+	impactTracklineByTargetMock,
+	achieveValueMock,
+} from "./testHelp";
 import { getTodaysDate } from "../../../utils/index";
 import { impactTracklineTestFields } from "./testInputField.json";
 import {
@@ -36,6 +41,15 @@ const mocks = [
 			query: GET_IMPACT_TARGET_BY_PROJECT,
 			variables: {
 				filter: { project: 2 },
+			},
+		},
+		result: { data: { impactTargetProjectList: impactTargetMock } },
+	},
+	{
+		request: {
+			query: GET_IMPACT_TARGET_BY_PROJECT,
+			variables: {
+				filter: { id: "14" },
 			},
 		},
 		result: { data: { impactTargetProjectList: impactTargetMock } },
@@ -111,7 +125,7 @@ const mocks = [
 			query: GET_ACHIEVED_VALLUE_BY_TARGET,
 			variables: { filter: { impactTargetProject: "14" } },
 		},
-		result: {},
+		result: { data: { impactTrackingSpendValue: achieveValueMock } },
 	},
 	{
 		request: {
@@ -217,7 +231,13 @@ describe("Impact Trackline Form", () => {
 		act(() => {
 			fireEvent.click(impactTracklineFormSubmit);
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
-		expect(createimpactTracklineFormMutation).toBe(true);
+
+		new Promise((resolve) => setTimeout(resolve, 500))
+			.then(() => {
+				expect(createimpactTracklineFormMutation).toBe(true);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	});
 });
