@@ -122,6 +122,7 @@ const TableCellCheckBox = React.memo(
 			<TableCell align="left" className={classes.tableCellCheckBox}>
 				<Checkbox
 					color="primary"
+					disabled
 					checked={
 						(formik.values[roleId].permissions as IControllerAction)[controllerName][
 							actionName
@@ -317,6 +318,7 @@ const ControllerNameRow = React.memo(
 						{
 							<Checkbox
 								color="primary"
+								disabled
 								checked={roleIdCheckedHash[roleId]}
 								onChange={(e) => {
 									roleIdCheckedHashDispatch({
@@ -540,7 +542,7 @@ function RoleTableView({
 				</Table>
 			</TableContainer>
 			<Box display="flex" mt={2}>
-				<Button
+				{/* <Button
 					className={classes.button}
 					disableRipple
 					variant="contained"
@@ -555,7 +557,7 @@ function RoleTableView({
 						defaultMessage="Update"
 						description="This text will tell user to create role"
 					/>
-				</Button>
+				</Button> */}
 			</Box>
 			{updatingRole ? (
 				<Box

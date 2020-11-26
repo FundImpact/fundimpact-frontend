@@ -36,6 +36,7 @@ export const rolesMock = [
 		name: "Accountant",
 		type: "accountant-org-58",
 		is_project_level: false,
+		description: "this is accountant role",
 		organization: {
 			id: "58",
 			name: "HISAAB KITAAB",
