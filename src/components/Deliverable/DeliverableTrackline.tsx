@@ -1,4 +1,4 @@
-import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useMemo } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -40,7 +40,7 @@ import {
 import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
-import { CircularPercentage } from "../commons";
+import { CircularPercentage, FormDetails } from "../commons";
 import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../graphql/project";
 import DeliverableTarget from "./DeliverableTarget";
 import { IGetProjectDonor, IProjectDonor } from "../../models/project/project";
@@ -153,6 +153,79 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	if (filesArray.length) deliverableTragetLineForm[7].label = "View Files";
 	else deliverableTragetLineForm[7].label = "Attach Files";
 
+	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
+		props.deliverableTarget ? props.deliverableTarget : ""
+	);
+	const [currentTargetName, setCurrentTargetName] = React.useState<string>("");
+
+	const [formDetailsArray, setFormDetailsArray] = React.useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [getDeliverableTarget, { data: deliverableTargetResponse }] = useLazyQuery(
+		GET_DELIVERABLE_TARGET_BY_PROJECT
+	);
+	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
+		GET_ACHIEVED_VALLUE_BY_TARGET
+	);
+	deliverableTragetLineForm[0].getInputValue = setCurrentTargetId;
+
+	useEffect(() => {
+		if (currentTargetId) {
+			getDeliverableTarget({ variables: { filter: { id: currentTargetId } } });
+			getTargetAchieveValue({
+				variables: { filter: { deliverableTargetProject: currentTargetId } },
+			});
+		}
+	}, [currentTargetId, getDeliverableTarget, getTargetAchieveValue]);
+
+	const intl = useIntl();
+
+	let deliverableCategoryLabel = intl.formatMessage({
+		id: "deliverableCategoryLabelFormDetail",
+		defaultMessage: "Category",
+		description:
+			"This text will be show on deliverable trackline form for deliverable category",
+	});
+	let deliverableTotalTargetLabel = intl.formatMessage({
+		id: "deliverableTotalTargetLabelFormDetail",
+		defaultMessage: "Target",
+		description:
+			"This text will be show on deliverable trackline form for deliverable category",
+	});
+	let deliverableAchievedTargetLabel = intl.formatMessage({
+		id: "deliverableAchievedTargetLabelFormDetail",
+		defaultMessage: "Achieved",
+		description:
+			"This text will be show on deliverable trackline form for deliverable category",
+	});
+
+	useEffect(() => {
+		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
+		if (fetchedDeliverableTarget && achivedValue) {
+			setCurrentTargetName(fetchedDeliverableTarget.name);
+			setFormDetailsArray([
+				{
+					label: deliverableCategoryLabel,
+					value:
+						fetchedDeliverableTarget.deliverable_category_unit.deliverable_category_org
+							.name,
+				},
+				{
+					label: deliverableTotalTargetLabel,
+					value: `${fetchedDeliverableTarget.target_value} ${fetchedDeliverableTarget.deliverable_category_unit.deliverable_units_org.name}`,
+				},
+				{
+					label: deliverableAchievedTargetLabel,
+					value: `${achivedValue?.deliverableTrackingTotalValue} ${fetchedDeliverableTarget.deliverable_category_unit.deliverable_units_org.name}`,
+				},
+			]);
+		}
+	}, [deliverableTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
+
+	let formDetailsComponent = (
+		<FormDetails formDetails={formDetailsArray} title={currentTargetName} />
+	);
+
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
@@ -165,7 +238,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const formAction = props.type;
 	const formIsOpen = props.open;
-	const intl = useIntl();
+
 	const onCancel = () => {
 		props.handleClose();
 		handleReset();
@@ -625,6 +698,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
+				formDetails={formDetailsComponent}
 			>
 				<>
 					<DeliverableStepper

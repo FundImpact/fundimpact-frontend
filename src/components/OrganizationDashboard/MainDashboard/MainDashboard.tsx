@@ -144,6 +144,7 @@ export default function MainOrganizationDashboard() {
 									"This text will be show on budget org card for budget target second bar heading ",
 							}),
 						}}
+						cardHeight="220px"
 					/>
 				</Grid>
 				<Grid item md={4}>
@@ -170,6 +171,7 @@ export default function MainOrganizationDashboard() {
 									"This text will be show on budget org card for deliverable target second bar heading ",
 							}),
 						}}
+						cardHeight="220px"
 					/>
 				</Grid>
 				<Grid item md={4}>
@@ -196,6 +198,7 @@ export default function MainOrganizationDashboard() {
 									"This text will be show on budget org card for impact target second bar heading ",
 							}),
 						}}
+						cardHeight="220px"
 					/>
 				</Grid>
 				<Grid item md={12}>

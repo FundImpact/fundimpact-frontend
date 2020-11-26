@@ -7,6 +7,7 @@ import {
 	IconButton,
 	Menu,
 	MenuItem,
+	Tooltip,
 	Typography,
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -15,6 +16,9 @@ import { CARD_TYPES } from "./constants";
 import { CardProps } from "../../../models/cards/cards";
 import { GetCardTypeAndValues } from "./cardHooks/GetCardType";
 import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import { useIntl } from "react-intl";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 export default function DashboardCard(props: CardProps) {
 	const { title, children, cardHeight = "180px", cardFilter } = props;
@@ -63,13 +67,38 @@ export default function DashboardCard(props: CardProps) {
 				return <ProjectCard {...projectCardConfig} />;
 		}
 	}
+	const intl = useIntl();
+	const dashboardData = useDashBoardData();
+	let topLabel = intl.formatMessage({
+		id: "topLabelCards",
+		defaultMessage: "Top",
+		description: "This text will be show on cards for top label",
+	});
+
+	let byLabel = intl.formatMessage({
+		id: "byLabelCards",
+		defaultMessage: "Filtered By",
+		description: "This text will be show on cards for top label",
+	});
+
+	let filterLabel = intl.formatMessage({
+		id: "filterLabelCard",
+		defaultMessage: "Filter",
+		description: "This text will be show on cards for Filter label",
+	});
+
+	let projectsLabel = intl.formatMessage({
+		id: "projectsLableCard",
+		defaultMessage: "Project's",
+		description: "This text will be show on cards for Project's label",
+	});
 
 	return (
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
 				<Grid container>
 					<Grid item container justify="space-between">
-						<Grid item xs={7}>
+						<Grid item xs={8}>
 							{title && (
 								<Box mt={1} mb={1} mr={1}>
 									<Typography color="primary" gutterBottom noWrap>
@@ -80,19 +109,15 @@ export default function DashboardCard(props: CardProps) {
 						</Grid>
 						<Grid item xs={3}>
 							{cardFilter && cardFilter.length > 0 && (
-								<Box mt={1} mb={1} color="text.disabled">
-									<Typography variant="caption" gutterBottom noWrap>
-										{currentFilter?.label}
-									</Typography>
-								</Box>
-							)}
-						</Grid>
-						<Grid item xs={2}>
-							{cardFilter && cardFilter.length > 0 && (
 								<>
-									<IconButton onClick={handleClick}>
-										<FilterListIcon fontSize="small" />
-									</IconButton>
+									<Box mt={1}>
+										<Tooltip title={filterLabel}>
+											<IconButton onClick={handleClick} size="small">
+												<FilterListIcon fontSize="small" />
+											</IconButton>
+										</Tooltip>
+									</Box>
+
 									<Menu
 										id="simple-menu-budget-org"
 										anchorEl={anchorEl}
@@ -121,6 +146,31 @@ export default function DashboardCard(props: CardProps) {
 									</Menu>
 								</>
 							)}
+						</Grid>
+						<Grid item xs={1}>
+							{title &&
+								((cardFilter && cardFilter.length > 0) ||
+									props.type === CARD_TYPES.PROGRESS ||
+									props.type === CARD_TYPES.DEFAULT) && (
+									<Box color="text.disabled" mt={1}>
+										{/* <Typography variant="caption" gutterBottom noWrap>
+										{currentFilter?.label}
+									</Typography> */}
+										<IconButton size="small">
+											<Tooltip
+												title={
+													props.type === CARD_TYPES.PROGRESS
+														? `${topLabel} ${title}`
+														: props.type === CARD_TYPES.DEFAULT
+														? `${projectsLabel} ${title.toLocaleLowerCase()}`
+														: `${byLabel} ${currentFilter?.label}`
+												}
+											>
+												<InfoOutlinedIcon fontSize="small" />
+											</Tooltip>
+										</IconButton>
+									</Box>
+								)}
 						</Grid>
 					</Grid>
 					{renderCard()}

@@ -189,6 +189,7 @@
 			"inputType": "select",
 			"addNew": true,
 			"addNewClick": {},
+			"getInputValue": {},
 			"required": true
 		},
 		{

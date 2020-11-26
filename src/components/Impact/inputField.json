@@ -165,6 +165,7 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"addNew": true,
+			"getInputValue": {},
 			"addNewClick": {}
 		},
 		{

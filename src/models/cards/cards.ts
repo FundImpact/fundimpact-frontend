@@ -7,6 +7,7 @@ export type CardProps = {
 	cardHeight?: string;
 	cardFilter?: { label: string; base: string }[];
 	currentFilter?: { label: string; base: string };
+	showInfoIcon?: boolean;
 } & (
 	| {
 			type: CARD_TYPES.PIE;
