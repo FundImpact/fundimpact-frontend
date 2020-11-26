@@ -126,6 +126,7 @@ function ImpactUnitDialog({
 	handleClose,
 	formAction,
 	initialValues: formValues,
+	organization,
 }: IImpactUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -156,7 +157,7 @@ function ImpactUnitDialog({
 	}, [getImpactCategoryUnitList, initialValues]);
 
 	const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
-		variables: { filter: { organization: dashboardData?.organization?.id } },
+		variables: { filter: { organization: organization } },
 	});
 	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
 		CREATE_IMPACT_CATEGORY_UNIT
@@ -350,7 +351,7 @@ function ImpactUnitDialog({
 				variables: {
 					input: {
 						...values,
-						organization: dashboardData?.organization?.id,
+						organization: organization,
 					},
 				},
 				update: async (store, { data: { createImpactUnitsOrgData } }) => {
@@ -359,7 +360,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 						});
@@ -368,7 +369,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 							data: {
@@ -384,7 +385,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -399,7 +400,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -414,7 +415,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 						});
@@ -426,7 +427,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 							data: {

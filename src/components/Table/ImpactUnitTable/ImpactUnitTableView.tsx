@@ -12,6 +12,7 @@ import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import { impactUnitInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 const rows = [
 	{
@@ -143,7 +144,7 @@ function ImpactUnitTableContainer({
 			))) ||
 			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 	}
-
+	const dashboardData = useDashBoardData();
 	return (
 		<>
 			{!collapsableTable && (
@@ -185,6 +186,7 @@ function ImpactUnitTableContainer({
 					handleClose={() => toggleDialogs(0, false)}
 					open={openDialogs[0]}
 					initialValues={initialValues}
+					organization={dashboardData?.organization?.id || ""}
 				/>
 				{(rowData: { id: string }) => (
 					<>

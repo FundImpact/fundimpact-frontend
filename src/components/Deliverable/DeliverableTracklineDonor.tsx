@@ -113,7 +113,6 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 
 	const onSubmit = (value: any) => {
 		let finalvalues: any = Object.values(value);
-		console.log("finalValues", finalvalues);
 		for (let i = 0; i < finalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = finalvalues[i]?.id;
 			if (deliverable_lineitem_fy_id) {

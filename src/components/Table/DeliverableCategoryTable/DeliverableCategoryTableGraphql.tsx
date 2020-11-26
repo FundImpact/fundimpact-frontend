@@ -10,9 +10,7 @@ import {
 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 } from "../../../graphql/Deliverable/categoryUnit";
 import pagination from "../../../hooks/pagination";
-import {
-	IGetDeliverableCategoryUnit,
-} from "../../../models/deliverable/query";
+import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};

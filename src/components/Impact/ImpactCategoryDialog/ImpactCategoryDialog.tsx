@@ -50,6 +50,7 @@ function ImpactCategoryDialog({
 	handleClose,
 	formAction,
 	initialValues: formValues,
+	organization,
 }: IImpactCategoryProps) {
 	const [createImpactCategoryOrgInput, { loading: creatingImpactCategory }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
@@ -69,13 +70,13 @@ function ImpactCategoryDialog({
 				variables: {
 					input: {
 						...values,
-						organization: dashboardData?.organization?.id,
+						organization: organization,
 					},
 				},
 				refetchQueries: [
 					{
 						query: GET_IMPACT_CATEGORY_BY_ORG,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						variables: { filter: { organization: organization } },
 					},
 				],
 				update: async (store, { data: createImpactCategoryOrgInputData }) => {
@@ -84,7 +85,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 						});
@@ -93,7 +94,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 							data: {
@@ -110,7 +111,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -125,7 +126,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -159,7 +160,7 @@ function ImpactCategoryDialog({
 					id: initialValues?.id,
 					input: {
 						...values,
-						organization: dashboardData?.organization?.id,
+						organization: organization,
 					},
 				},
 			});

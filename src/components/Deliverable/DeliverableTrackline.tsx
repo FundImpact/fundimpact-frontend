@@ -62,7 +62,7 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 	};
 }
 
-const getProjectDonorsWithDonorsId = (
+export const getProjectDonorsWithDonorsId = (
 	selectedDonors: any,
 	projectDonors: IProjectDonor[] | undefined
 ) => {

@@ -30,6 +30,9 @@ import {
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import { GET_IMPACT_TARGET_SDG_COUNT } from "../../graphql/project";
+import ImpactCategoryDialog from "./ImpactCategoryDialog";
+import { FORM_ACTIONS } from "../Forms/constant";
+import ImpactUnitDialog from "./ImpactUnitDialog/ImpaceUnitDialog";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -71,6 +74,13 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const onCancel = props.handleClose;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	//for fetching category_unit id and creating impact target
+
+	const [openImpactCategoryDialog, setOpenImpactCategoryDialog] = useState<boolean>();
+	impactTargetForm[2].addNewClick = () => setOpenImpactCategoryDialog(true);
+
+	const [openImpactUnitDialog, setOpenImpactUnitDialog] = useState<boolean>();
+	impactTargetForm[3].addNewClick = () => setOpenImpactUnitDialog(true);
+
 	const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
 		onCompleted(data) {
 			if (data.impactCategoryUnitList && data.impactCategoryUnitList.length) {
@@ -396,6 +406,22 @@ function ImpactTarget(props: ImpactTargetProps) {
 						inputFields: impactTargetForm,
 					}}
 				/>
+				{openImpactCategoryDialog && (
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={openImpactCategoryDialog}
+						handleClose={() => setOpenImpactCategoryDialog(false)}
+						organization={dashboardData?.organization?.id}
+					/>
+				)}
+				{openImpactUnitDialog && (
+					<ImpactUnitDialog
+						formAction={FORM_ACTIONS.CREATE}
+						open={openImpactUnitDialog}
+						handleClose={() => setOpenImpactUnitDialog(false)}
+						organization={dashboardData?.organization?.id || ""}
+					/>
+				)}
 			</FormDialog>
 			{impactLoading ? <FullScreenLoader /> : null}
 			{updateImpactTargetLoading ? <FullScreenLoader /> : null}
