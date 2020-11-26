@@ -28,6 +28,7 @@ import { deliverableUnitForm } from "./inputField.json";
 import { IGetDeliverablUnit, IGetDeliverableCategoryUnit } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import Deliverable from "./Deliverable";
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -69,6 +70,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const [createCategoryUnit, { loading: creatingCategoryUnit }] = useMutation(
 		CREATE_CATEGORY_UNIT
 	);
+
+	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
+	deliverableUnitForm[1].addNewClick = () => setOpenDeliverableCategoryDialog(true);
 
 	const updateDeliverableCategoryUnitCount = async (store: ApolloCache<any>, filter: object) => {
 		try {
@@ -375,6 +379,14 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						inputFields: deliverableUnitForm,
 					}}
 				/>
+				{openDeliverableCategoryDialog && (
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.CREATE}
+						open={openDeliverableCategoryDialog}
+						handleClose={() => setOpenDeliverableCategoryDialog(false)}
+						organization={dashboardData?.organization?.id}
+					/>
+				)}
 			</FormDialog>
 			{/* {createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit ? (
 				<FullScreenLoader />
