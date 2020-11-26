@@ -85,9 +85,26 @@ export interface IGetImpactCategoryUnitVariables {
 	};
 }
 
+export interface IUpdateImpactCategoryUnitVariables {
+	id: string;
+	input: {
+		status: boolean;
+	};
+}
+
 export interface IGetImpactCategoryUnit {
 	impactCategoryUnitList: {
 		id: string;
+		status: boolean;
+		impact_category_org: IImpactCategoryData;
+		impact_units_org: IImpactUnitData;
+	}[];
+}
+
+export interface IUpdateImpactCategoryUnit {
+	updateImpactCategoryUnitInput: {
+		id: string;
+		status: boolean;
 		impact_category_org: IImpactCategoryData;
 		impact_units_org: IImpactUnitData;
 	}[];

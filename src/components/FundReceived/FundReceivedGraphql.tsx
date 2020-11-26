@@ -34,7 +34,10 @@ const getInitialFormValues = ({
 	projectDonors: IGetProjectDonor["projectDonors"];
 }): IFundReceivedForm => {
 	if (formAction == FORM_ACTIONS.UPDATE && initialValues) {
-		return initialValues;
+		return {
+			...initialValues,
+			project_donor: initialValues.project_donor + `-${DonorType.project}`,
+		};
 	}
 	return {
 		amount: "",

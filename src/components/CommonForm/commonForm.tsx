@@ -34,6 +34,7 @@ function CommonInputForm({
 	cancelButtonName = "Cancel",
 	createButtonName = "Create",
 	updateButtonName = "Update",
+	children,
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -132,6 +133,12 @@ function CommonInputForm({
 									)
 								);
 							})}
+
+							{children && (
+								<Grid item xs={12}>
+									{children}
+								</Grid>
+							)}
 
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>

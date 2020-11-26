@@ -246,11 +246,11 @@ export default function SettingContainer() {
 							userAccess={authFindUser || authInviteUser}
 							element={<UserRoleContainer />}
 						/>
-						<PrivateRoute
+						{/* <PrivateRoute
 							userAccess={userRoleFindAccess || userRoleCreateAccess}
 							path="user_roles"
 							element={<RolesContainer />}
-						/>
+						/> */}
 						<PrivateRoute
 							userAccess={individualCreateAccess || individualFindAccess}
 							element={<IndividualContainer />}
