@@ -6,6 +6,7 @@ export const GET_ROLES_BY_ORG = gql`
 			id
 			name
 			type
+			description
 			is_project_level
 			organization {
 				id

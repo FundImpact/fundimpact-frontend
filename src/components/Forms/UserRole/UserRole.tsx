@@ -32,6 +32,19 @@ import {
 import FormDialog from "../../FormDialog";
 import { GET_PROJECTS } from "../../../graphql";
 import { IGetProject } from "../../../models/project/project";
+import { withStyles } from "@material-ui/core/styles";
+import MuiAccordion from "@material-ui/core/Accordion";
+import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
+import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
+import { Box, Grid, Typography } from "@material-ui/core";
+import { IGetUserRole } from "../../../models/access/query";
+
+const data = `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+Earum repellat nisi, officiis incidunt repudiandae
+<h1>dqwdqwdqwdqwdqwd</h1>
+corporis magnam explicabo, iusto quibusdam similique,
+laboriosam commodi dolor sunt odit non cupiditate?
+Quasi, explicabo? Nulla.`;
 
 interface IUserRoleError extends Partial<Omit<IUserRole, "project">> {
 	project?: string;
@@ -107,6 +120,47 @@ interface IUnAssignSelectedProjectToUserProps {
 	>;
 }
 
+const Accordion = withStyles({
+	root: {
+		border: "1px solid rgba(0, 0, 0, .125)",
+		boxShadow: "none",
+		"&:not(:last-child)": {
+			borderBottom: 0,
+		},
+		"&:before": {
+			display: "none",
+		},
+		"&$expanded": {
+			margin: "auto",
+		},
+	},
+	expanded: {},
+})(MuiAccordion);
+
+const AccordionSummary = withStyles({
+	root: {
+		backgroundColor: "rgba(0, 0, 0, .03)",
+		borderBottom: "1px solid rgba(0, 0, 0, .125)",
+		marginBottom: -1,
+		minHeight: 56,
+		"&$expanded": {
+			minHeight: 56,
+		},
+	},
+	content: {
+		"&$expanded": {
+			margin: "12px 0",
+		},
+	},
+	expanded: {},
+})(MuiAccordionSummary);
+
+const AccordionDetails = withStyles((theme) => ({
+	root: {
+		padding: theme.spacing(2),
+	},
+}))(MuiAccordionDetails);
+
 function getInitialValues(
 	props: UserRoleProps
 ): UserRoleProps["type"] extends FORM_ACTIONS.CREATE ? IUserRole : IUserRoleUpdate {
@@ -145,7 +199,7 @@ const sortProjectsToGroupProject = (projects: IGetProject["orgProject"]) =>
 	projects.sort((project1, project2) => +project1.workspace.id - +project2.workspace.id);
 
 const filterOrganizationRoles = (
-	roles: { type: string; id: string; name: string }[],
+	roles: { type: string; id: string; name: string; description: string }[],
 	organizationId: string
 ) => roles.filter((role) => role.type !== `owner-org-${organizationId}`);
 
@@ -496,18 +550,44 @@ function UserRoleForm(props: UserRoleProps) {
 				}
 			>
 				<CommonForm
-					{...{
-						initialValues,
-						validate,
-						onCreate,
-						cancelButtonName: "Cancel",
-						createButtonName: "Add",
-						formAction,
-						onUpdate,
-						inputFields: userRoleForm,
-						onCancel,
-					}}
-				/>
+					initialValues={initialValues}
+					validate={validate}
+					onCreate={onCreate}
+					cancelButtonName="Cancel"
+					createButtonName="Add"
+					formAction={formAction}
+					onUpdate={onUpdate}
+					inputFields={userRoleForm}
+					onCancel={onCancel}
+				>
+					<Box maxHeight="300px" overflow="auto">
+						{filterOrganizationRoles(
+							userRoles?.organizationRoles || [],
+							dashboardData?.organization?.id || ""
+						)?.map(
+							(role: {
+								id: string;
+								name: string;
+								type: string;
+								description: string;
+							}) => (
+								<Accordion id={role?.id} square>
+									<AccordionSummary
+										aria-controls="panel1d-content"
+										id="panel1d-header"
+									>
+										<Typography>{role?.name}</Typography>
+									</AccordionSummary>
+									<AccordionDetails>
+										<Typography
+											dangerouslySetInnerHTML={{ __html: role?.description }}
+										/>
+									</AccordionDetails>
+								</Accordion>
+							)
+						)}
+					</Box>
+				</CommonForm>
 			</FormDialog>
 		</React.Fragment>
 	);
