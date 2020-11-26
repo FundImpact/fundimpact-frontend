@@ -85,9 +85,26 @@ export interface IGetDeliverableCategoryUnitVariables {
 	};
 }
 
+export interface IUpdateDeliverableCategoryUnitVariables {
+	id: string;
+	input: {
+		status: boolean;
+	};
+}
+
 export interface IGetDeliverableCategoryUnit {
 	deliverableCategoryUnitList: {
 		id: string;
+		status: boolean;
+		deliverable_category_org: IDeliverableCategoryData;
+		deliverable_units_org: IDeliverableUnitData;
+	}[];
+}
+
+export interface IUpdateDeliverableCategoryUnit {
+	updateDeliverableCategoryUnitInput: {
+		id: string;
+		status: boolean;
 		deliverable_category_org: IDeliverableCategoryData;
 		deliverable_units_org: IDeliverableUnitData;
 	}[];

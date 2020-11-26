@@ -215,11 +215,13 @@ export const impactUnitMock = [
 export const impactCategoryUnit = [
 	{
 		id: "1",
+		status: true,
 		impact_category_org: impactCategoryMock[0],
 		impact_units_org: impactUnitMock[0],
 	},
 	{
 		id: "2",
+		status: true,
 		impact_category_org: impactCategoryMock[1],
 		impact_units_org: impactUnitMock[1],
 	},
@@ -228,6 +230,7 @@ export const impactCategoryUnit = [
 export const impactCategoryUnitMock = [
 	{
 		id: "1",
+		status: true,
 		impact_category_org: impactCategoryMock[0],
 		impact_units_org: impactUnitMock[0],
 	},

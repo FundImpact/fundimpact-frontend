@@ -151,20 +151,21 @@ describe("Role table tests", () => {
 		});
 	}
 
-	test(`update role test`, async () => {
-		for (let i = 0; i < mockUserRoles.getRolePemissions.slice(0, 10).length; i++) {
-			let checkbox = await table.findByTestId(
-				`${mockUserRoles.getRolePemissions[i].controller}-${mockUserRoles.getRolePemissions[i].action}-${rolesMock[0].id}-input`
-			);
-			await act(async () => {
-				await fireEvent.click(checkbox);
-			});
-			let checkBoxInputElement = checkbox.querySelector('input[type="checkbox"]');
-			expect(checkBoxInputElement).toHaveProperty("checked", true);
-		}
-		let updateButton = table.getByTestId("createUpdateButton");
-		await act(async () => {
-			await fireEvent.click(updateButton);
-		});
-	});
+	//commenting as this feature is disabled
+	// test(`update role test`, async () => {
+	// 	for (let i = 0; i < mockUserRoles.getRolePemissions.slice(0, 10).length; i++) {
+	// 		let checkbox = await table.findByTestId(
+	// 			`${mockUserRoles.getRolePemissions[i].controller}-${mockUserRoles.getRolePemissions[i].action}-${rolesMock[0].id}-input`
+	// 		);
+	// 		await act(async () => {
+	// 			await fireEvent.click(checkbox);
+	// 		});
+	// 		let checkBoxInputElement = checkbox.querySelector('input[type="checkbox"]');
+	// 		expect(checkBoxInputElement).toHaveProperty("checked", true);
+	// 	}
+	// 	let updateButton = table.getByTestId("createUpdateButton");
+	// 	await act(async () => {
+	// 		await fireEvent.click(updateButton);
+	// 	});
+	// });
 });
