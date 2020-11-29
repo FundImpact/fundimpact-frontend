@@ -40,17 +40,6 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_USER_ROLES,
-			variables: {
-				filter: {
-					role: "1",
-				},
-			},
-		},
-		result: { data: mockUserRoles },
-	},
-	{
-		request: {
 			query: GET_CONTACT_LIST_COUNT,
 			variables: {
 				filter: {
@@ -62,6 +51,17 @@ const mocks = [
 		result: {
 			data: mockContactListCount,
 		},
+	},
+	{
+		request: {
+			query: GET_USER_ROLES,
+			variables: {
+				filter: {
+					role: "1",
+				},
+			},
+		},
+		result: { data: mockUserRoles },
 	},
 ];
 
