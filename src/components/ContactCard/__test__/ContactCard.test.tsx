@@ -21,20 +21,6 @@ let table: RenderResult;
 const mocks = [
 	{
 		request: {
-			query: GET_CONTACT_LIST_COUNT,
-			variables: {
-				filter: {
-					entity_id: organizationDetails.id,
-					entity_name: Entity_Name.organization,
-				},
-			},
-		},
-		result: {
-			data: mockContactListCount,
-		},
-	},
-	{
-		request: {
 			query: GET_CONTACT_LIST,
 			variables: {
 				filter: {
@@ -63,6 +49,20 @@ const mocks = [
 		},
 		result: { data: mockUserRoles },
 	},
+	{
+		request: {
+			query: GET_CONTACT_LIST_COUNT,
+			variables: {
+				filter: {
+					entity_id: organizationDetails.id,
+					entity_name: Entity_Name.organization,
+				},
+			},
+		},
+		result: {
+			data: mockContactListCount,
+		},
+	},
 ];
 
 beforeEach(() => {
@@ -89,20 +89,17 @@ beforeEach(() => {
 describe("Contact Table tests", () => {
 	test("renders correctly", async () => {
 		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockContactList[0].emails[0].value, "i"))
-		);
-		await waitForElement(() => table.getByText(new RegExp("" + mockContactList[0].label, "i")));
-		await waitForElement(() =>
 			table.getByText(new RegExp("" + mockContactList[0].emails[0].label, "i"))
 		);
 		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockContactList[0].phone_numbers[0].label, "i"))
+			table.getByText(new RegExp("" + mockContactList[0].emails[0].value, "i"))
 		);
 		await waitForElement(() =>
 			table.getAllByText(new RegExp("" + mockContactList[0].phone_numbers[0].value, "i"))
 		);
+		await waitForElement(() => table.getByText(new RegExp("" + mockContactList[0].label, "i")));
 		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockContactList[0].addresses[0].address_line_1, "i"))
+			table.getAllByText(new RegExp("" + mockContactList[0].phone_numbers[0].label, "i"))
 		);
 		await waitForElement(() =>
 			table.getAllByText(new RegExp("" + mockContactList[0].addresses[0].address_line_2, "i"))
@@ -112,6 +109,9 @@ describe("Contact Table tests", () => {
 		);
 		await waitForElement(() =>
 			table.getAllByText(new RegExp("" + mockContactList[0].addresses[0].pincode, "i"))
+		);
+		await waitForElement(() =>
+			table.getAllByText(new RegExp("" + mockContactList[0].addresses[0].address_line_1, "i"))
 		);
 	});
 });
