@@ -7,13 +7,12 @@ import Step from "@material-ui/core/Step";
 import AddressForm from "../Forms/ContactDetails/AddressForm";
 import { ICreateContactVariables, ICreateContact } from "../../models/contact/query";
 import { ICreateAddress } from "../../models/address/query";
-import { AddContactAddressDialogType } from "../../models/constants";
+import { AddContactAddressDialogType, Enitity_Name } from "../../models/constants";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IContactForm, IContact } from "../../models/contact";
 import { IAddress } from "../../models/address";
 import { MODULE_CODES, userHasAccess } from "../../utils/access";
 import { ADDRESS_ACTIONS } from "../../utils/access/modules/address/actions";
-import { Enitity_Name } from "../../models/constants";
 
 function getFormSteps() {
 	return ["Create Contact", "Add Address"];
