@@ -15,13 +15,12 @@ interface Addresses {
 	city: string;
 }
 
-interface Name {
-	firstName: string;
-	surname: string;
+interface Label {
+	label: string;
 }
 
 export interface IContactForm {
-	name: Name[];
+	label: Label[];
 	emails: Email[];
 	phone_numbers: PhoneNumber[];
 	addresses: Addresses[];
@@ -34,6 +33,7 @@ export interface IContact {
 	phone_numbers: PhoneNumber[];
 	addresses: Addresses[];
 	contact_type: string;
+	label: string;
 }
 
 export type IContactInputElements = {

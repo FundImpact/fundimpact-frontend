@@ -33,7 +33,6 @@ function ContactCardListContainer({
 	entity_name,
 }: IContactCardListContainer) {
 	const [page, setPage] = useState(1);
-	const contactEditAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.UPDATE_CONTACT);
 
 	return (
 		<ContactCardListView
@@ -44,7 +43,6 @@ function ContactCardListContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			contactEditAccess={contactEditAccess}
 			entity_name={entity_name}
 			page={page}
 			setPage={setPage}

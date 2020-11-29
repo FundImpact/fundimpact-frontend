@@ -9,6 +9,7 @@ export const GET_CONTACT_LIST = gql`
 			emails
 			contact_type
 			entity_id
+			label
 		}
 	}
 `;

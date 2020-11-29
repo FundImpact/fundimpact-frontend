@@ -407,7 +407,8 @@
 					"id": "1"
 				}
 			],
-			"entity_id": "1"
+			"entity_id": "1",
+			"label": "sherlock"
 		},
 		{
 			"id": "2",
@@ -423,7 +424,8 @@
 					"id": "2"
 				}
 			],
-			"entity_id": "1"
+			"entity_id": "1",
+			"label": "john watson"
 		}
 	],
 	"mockAddressList": [

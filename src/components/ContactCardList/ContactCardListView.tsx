@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { IGetContact } from "../../models/contact/query";
 import { contactTableHeadings } from "../Table/constants";
-import { IContact } from "../../models/contact";
 import { Entity_Name } from "../../models/constants";
-import { useDashBoardData } from "../../contexts/dashboardContext";
-import { Grid, Box, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, Typography } from "@material-ui/core";
 import { contactInputFields } from "./inputFields.json";
 import FilterList from "../FilterList";
 import ContactCard from "../ContactCard";
 import Pagination from "@material-ui/lab/Pagination";
 import TableSkeleton from "../Skeletons/TableSkeleton";
+import { FormattedMessage } from "react-intl";
 
 interface IContactCardListView {
 	contactList: IGetContact["t4DContacts"];
@@ -25,7 +24,6 @@ interface IContactCardListView {
 			[key: string]: string | string[];
 		}>
 	>;
-	contactEditAccess: boolean;
 	entity_name: Entity_Name;
 	page: number;
 	setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -101,7 +99,6 @@ function ContactCardListView({
 	count,
 	changePage,
 	setFilterList,
-	contactEditAccess,
 	entity_name,
 	page,
 	setPage,
@@ -129,6 +126,20 @@ function ContactCardListView({
 					</Grid>
 				))}
 			</Grid>
+		);
+	}
+
+	if (!contactList?.length) {
+		return (
+			<Box>
+				<Typography align="center">
+					<FormattedMessage
+						id="noConatctAvailableMessage"
+						defaultMessage="No Contact Available"
+						description="This message will be shown when no contact is availabele"
+					/>
+				</Typography>
+			</Box>
 		);
 	}
 

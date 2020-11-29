@@ -57,8 +57,8 @@ const checkIsFormValid = (formErrors: Partial<IContactForm>) => {
 			isFormValid = false;
 		}
 	});
-	formErrors.name?.forEach((name) => {
-		if (name.firstName || name.surname) {
+	formErrors.label?.forEach((label) => {
+		if (label?.label) {
 			isFormValid = false;
 		}
 	});

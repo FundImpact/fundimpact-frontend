@@ -14,7 +14,7 @@ import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { GET_CONTACT_LIST_COUNT, GET_CONTACT_LIST } from "../../../graphql/Contact";
 import { Entity_Name } from "../../../models/constants";
-import ContactCardList from "../ContactCardListGraphql";
+import ContactCard from "..";
 
 let table: RenderResult;
 
@@ -72,8 +72,8 @@ beforeEach(() => {
 				defaultState={{ project: projectDetails, organization: organizationDetails }}
 			>
 				<NotificationProvider>
-					<ContactCardList
-						entity_id={organizationDetails.id}
+					<ContactCard
+						contactDetails={mockContactList[0]}
 						entity_name={Entity_Name.organization}
 					/>
 				</NotificationProvider>
@@ -88,10 +88,10 @@ beforeEach(() => {
 
 describe("Contact Table tests", () => {
 	test("renders correctly", async () => {
-		await waitForElement(() => table.getByText(new RegExp("" + mockContactList[0].label, "i")));
 		await waitForElement(() =>
 			table.getByText(new RegExp("" + mockContactList[0].emails[0].value, "i"))
 		);
+		await waitForElement(() => table.getByText(new RegExp("" + mockContactList[0].label, "i")));
 		await waitForElement(() =>
 			table.getByText(new RegExp("" + mockContactList[0].emails[0].label, "i"))
 		);

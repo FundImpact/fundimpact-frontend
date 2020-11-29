@@ -140,7 +140,10 @@ const increaseContactListCount = ({
 
 const getInitialFormValues = (initialValues?: IContact): IContactForm => {
 	if (initialValues) {
-		let contactFormInitialValues = { name: [{ firstName: "", surname: "" }], ...initialValues };
+		let contactFormInitialValues = {
+			...initialValues,
+			label: [{ label: initialValues.label || "" }],
+		};
 		//if user has not entered email, phoneNumber or addresses in that case we have to send
 		//empty values
 		contactFormInitialValues.addresses = contactFormInitialValues.addresses.length
@@ -163,7 +166,7 @@ const getInitialFormValues = (initialValues?: IContact): IContactForm => {
 	}
 
 	return {
-		name: [{ firstName: "", surname: "" }],
+		label: [{ label: "" }],
 		emails: [{ label: "", value: "" }],
 		phone_numbers: [{ label: "", value: "" }],
 		addresses: [
@@ -202,24 +205,16 @@ const contactInputArr: IContactInputElements = [
 		icon: <AccountCircleIcon fontSize="large" />,
 		inputsGroup: [
 			{
-				label: "First name",
-				size: 6,
-				id: "firstName",
+				label: "Label",
+				size: 12,
+				id: "label",
 				initialValue: "",
 				required: true,
-				testId: "createFirstNameInput",
-			},
-			{
-				label: "Surname",
-				size: 6,
-				id: "surname",
-				initialValue: "",
-				required: false,
-				testId: "createSurnameNameInput",
+				testId: "createLabelInput",
 			},
 		],
 		showAddIcon: false,
-		id: "name",
+		id: "label",
 	},
 	{
 		icon: <MailOutlineIcon fontSize="large" />,
@@ -392,6 +387,7 @@ const submitForm = async ({
 							entity_name,
 							phone_numbers: valuesSubmitted.phone_numbers,
 							contact_type: valuesSubmitted.contact_type,
+							label: valuesSubmitted?.label[0]?.label,
 						},
 					},
 				},
@@ -420,6 +416,7 @@ const submitForm = async ({
 							entity_name,
 							phone_numbers: valuesSubmitted.phone_numbers,
 							contact_type: valuesSubmitted.contact_type,
+							label: valuesSubmitted?.label[0]?.label,
 						},
 					},
 				},
@@ -449,13 +446,11 @@ function ContactDialogContainer(props: ICreateContactContainer) {
 	const validate = useCallback(
 		(values: IContactForm) => {
 			let errors: Partial<IContactForm> = {};
-			if (!values.name[0].firstName) {
-				if (!errors.name) {
-					errors.name = [{ firstName: "", surname: "" }];
+			if (!values.label[0].label) {
+				if (!errors.label) {
+					errors.label = [{ label: "" }];
 				}
-				errors.name[0].firstName = `${
-					entity_name === Entity_Name.organization ? "Group Name" : "First Name"
-				} is required`;
+				errors.label[0].label = "Label is required";
 			}
 			if (!values.contact_type) {
 				errors.contact_type = "Contact Type is required";
@@ -473,42 +468,8 @@ function ContactDialogContainer(props: ICreateContactContainer) {
 		[entity_name]
 	);
 
-	if (entity_name === Entity_Name.organization) {
-		contactInputArr[0].inputsGroup = [
-			{
-				id: "firstName",
-				initialValue: "",
-				label: "Group Name",
-				size: 12,
-				required: true,
-				testId: "createFirstNameInput",
-			},
-		];
-	} else {
-		contactInputArr[0].inputsGroup = [
-			{
-				label: "First name",
-				size: 6,
-				id: "firstName",
-				initialValue: "",
-				required: true,
-				testId: "createFirstNameInput",
-			},
-			{
-				label: "Surname",
-				size: 6,
-				id: "surname",
-				initialValue: "",
-				required: false,
-				testId: "createSurnameNameInput",
-			},
-		];
-	}
-
 	const onFormSubmit = async (valuesSubmitted: IContactForm) => {
-		console.log("valuesSubmitted", valuesSubmitted);
 		const clonedValueSubmitted = JSON.parse(JSON.stringify(valuesSubmitted));
-		console.log("clonedValueSubmitted", clonedValueSubmitted);
 		clonedValueSubmitted.emails = removeEmptyFields(valuesSubmitted.emails);
 		clonedValueSubmitted.addresses = removeEmptyAddresses(valuesSubmitted.addresses);
 		clonedValueSubmitted.phone_numbers = removeEmptyFields(valuesSubmitted.phone_numbers);

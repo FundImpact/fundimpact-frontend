@@ -19,6 +19,8 @@ import { IGetContact } from "../../models/contact/query";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import contactImage from "../../assets/images/contact.png";
+import { MODULE_CODES, userHasAccess } from "../../utils/access";
+import { CONTACT_ACTION } from "../../utils/access/modules/contact/actions";
 
 function ContactCard({
 	contactDetails,
@@ -32,6 +34,7 @@ function ContactCard({
 	const [contactPhoneExpanded, setContactPhoneExpanded] = React.useState(false);
 	const [contactAddressExpanded, setContactAddressExpanded] = React.useState(false);
 	const [contactEmailExpanded, setContactEmailExpanded] = React.useState(false);
+	const contactEditAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.UPDATE_CONTACT);
 
 	return (
 		<Paper elevation={24}>
@@ -49,18 +52,20 @@ function ContactCard({
 					<Box p={2} pb={1} position="absolute" bottom="0" fontWeight="500">
 						{/* text is on image so color is hardcoded to white */}
 						<Typography variant="h5" style={{ color: "white" }}>
-							Shubham
+							{contactDetails?.label}
 						</Typography>
 					</Box>
-					<Box position="absolute" bottom="-10%" right="0" px={2}>
-						<IconButton
-							style={{ background: theme.palette.primary.main }}
-							size="medium"
-							onClick={() => setShowContactEditDialog(true)}
-						>
-							<EditIcon fontSize="small" style={{ color: "white" }} />
-						</IconButton>
-					</Box>
+					{contactEditAccess && (
+						<Box position="absolute" bottom="-10%" right="0" px={2}>
+							<IconButton
+								style={{ background: theme.palette.primary.main }}
+								size="medium"
+								onClick={() => setShowContactEditDialog(true)}
+							>
+								<EditIcon fontSize="small" style={{ color: "white" }} />
+							</IconButton>
+						</Box>
+					)}
 				</Grid>
 				<Grid item xs={12} style={{ display: "flex" }}>
 					<Box p={2} pl={3}>

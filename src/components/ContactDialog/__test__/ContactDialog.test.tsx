@@ -9,7 +9,6 @@ import { commonFormTestUtil } from "../../../utils/commonFormTest.util";
 import { Entity_Name, FORM_ACTIONS } from "../../../models/constants";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
-import { IContactForm } from "../../../models/contact";
 import ContactForm from "..";
 import { CREATE_CONTACT } from "../../../graphql/Contact/mutation";
 import { GET_CONTACT_LIST } from "../../../graphql/Contact";
@@ -21,7 +20,7 @@ let creationOccured = false;
 const handleClose = jest.fn();
 
 const intialFormValue = {
-	firstName: "sherlock",
+	label: "sherlock",
 	emailValue: "sher@locked.com",
 	emailLabel: "famous detective email",
 	phoneValue: "9999999999",
@@ -34,7 +33,7 @@ const intialFormValue = {
 };
 
 let inputIds = [
-	{ testId: "createFirstNameInput", name: "firstName", required: true },
+	{ testId: "createLabelInput", name: "label", required: true },
 	{ testId: "createEmailValueInput", name: "emailValue", required: true },
 	{ testId: "createEmailLabelInput", name: "emailLabel", required: false },
 	{ testId: "createPhoneValueInput", name: "phoneValue", required: true },
@@ -105,8 +104,9 @@ const mocks = [
 							},
 						],
 						contact_type: intialFormValue.contact_type,
-						entity_name: Enitity_Name.organization,
+						entity_name: Entity_Name.organization,
 						entity_id: orgDetails.id,
+						label: intialFormValue.label,
 					},
 				},
 			},
@@ -139,6 +139,7 @@ const mocks = [
 								},
 							],
 							contact_type: intialFormValue.contact_type,
+							label: intialFormValue.label,
 						},
 					},
 				},
@@ -153,7 +154,7 @@ beforeEach(() => {
 			<DashboardProvider defaultState={{ organization: orgDetails }}>
 				<NotificationProvider>
 					<ContactForm
-						entity_name={Enitity_Name.organization}
+						entity_name={Entity_Name.organization}
 						entity_id={orgDetails.id}
 						formAction={FORM_ACTIONS.CREATE}
 						open={true}

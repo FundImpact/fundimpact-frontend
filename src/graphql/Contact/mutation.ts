@@ -9,6 +9,7 @@ export const CREATE_CONTACT = gql`
 				phone_numbers
 				emails
 				contact_type
+				label
 			}
 		}
 	}
@@ -23,6 +24,7 @@ export const UPDATE_CONTACT = gql`
 				phone_numbers
 				emails
 				contact_type
+				label
 			}
 		}
 	}

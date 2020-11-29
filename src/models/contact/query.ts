@@ -14,6 +14,7 @@ export interface ICreateContactVariables {
 				city: string;
 			}[];
 			contact_type: string;
+			label: string;
 		};
 	};
 }
@@ -35,6 +36,7 @@ export interface IUpdateContactVariables {
 				city: string;
 			}[];
 			contact_type: string;
+			label: string;
 		};
 	};
 }
@@ -47,6 +49,7 @@ export interface ICreateContact {
 			email_other: string;
 			phone: string;
 			phone_other: string;
+			label: string;
 		};
 	};
 }
@@ -59,6 +62,7 @@ export interface IUpdateContact {
 			email_other: string;
 			phone: string;
 			phone_other: string;
+			label: string;
 		};
 	};
 }
@@ -84,5 +88,6 @@ export interface IGetContact {
 		}[];
 		contact_type: string;
 		entity_id: string;
+		label: string;
 	}[];
 }
