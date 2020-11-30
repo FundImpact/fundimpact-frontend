@@ -20,6 +20,7 @@ import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import { impactCategoryInputFields, impactUnitInputFields } from "./inputFields.json"; //make seprate json
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -96,7 +97,7 @@ const ImpactMasterView = ({
 	impactUnitCreateAccess: boolean;
 }) => {
 	const classes = useStyles();
-
+	const dashboardData = useDashBoardData();
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
 	};
@@ -112,6 +113,7 @@ const ImpactMasterView = ({
 						open={open}
 						handleClose={handleClose}
 						formAction={FORM_ACTIONS.CREATE}
+						organization={dashboardData?.organization?.id || ""}
 					/>
 				),
 			},
@@ -129,6 +131,7 @@ const ImpactMasterView = ({
 						open={open}
 						handleClose={handleClose}
 						formAction={FORM_ACTIONS.CREATE}
+						organization={dashboardData?.organization?.id || ""}
 					/>
 				),
 			},
