@@ -134,8 +134,6 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const location = useLocation();
-
 	const [deliverableCategory, setDeliverableCategory] = useState<string[]>([]);
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -469,12 +467,8 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						"Physical addresses of your organisation like headquarter branch etc",
 					description: `This text will be show on deliverable unit form for subtitle`,
 				})}
-				workspace={
-					location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
-				}
-				project={
-					location.pathname.includes("/settings") ? "" : dashboardData?.project?.name
-				}
+				workspace={""}
+				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit}

@@ -129,7 +129,6 @@ function ImpactUnitDialog({
 	initialValues: formValues,
 	organization,
 }: IImpactUnitProps) {
-	const location = useLocation();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [impactCategory, setImpactCategory] = useState<string[]>([]);
@@ -497,12 +496,8 @@ function ImpactUnitDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact unit form for subtitle`,
 			})}
-			workspace={
-				location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
-			}
-			project={
-				(!location.pathname.includes("/settings") && dashboardData?.project?.name) || ""
-			}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				initialValues={initialValues}

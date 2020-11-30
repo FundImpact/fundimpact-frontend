@@ -34,7 +34,6 @@ function getInitialValues(props: DeliverableProps) {
 }
 
 function Deliverable(props: DeliverableProps) {
-	const location = useLocation();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IDeliverable = getInitialValues(props);
@@ -177,12 +176,8 @@ function Deliverable(props: DeliverableProps) {
 					defaultMessage: "Manage Deliverable Category",
 					description: `This text will be show on deliverable category form for subtitle`,
 				})}
-				workspace={
-					location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
-				}
-				project={
-					location.pathname.includes("/settings") ? "" : dashboardData?.project?.name
-				}
+				workspace={""}
+				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

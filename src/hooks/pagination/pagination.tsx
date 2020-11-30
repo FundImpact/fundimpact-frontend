@@ -61,7 +61,7 @@ function Pagination({
 		getQueryData,
 		{ data: queryData, loading: queryLoading, error: queryError, refetch: queryRefetch },
 	] = useLazyQuery(query, {
-		fetchPolicy: "cache-and-network",
+		// fetchPolicy: "cache-and-network",
 	});
 
 	useEffect(() => {
@@ -126,7 +126,7 @@ function Pagination({
 		changePage,
 		queryData: queryData,
 		error,
-		queryLoading: !queryData && queryLoading,
+		queryLoading,
 		countQueryLoading,
 		countQueryError,
 		queryError,

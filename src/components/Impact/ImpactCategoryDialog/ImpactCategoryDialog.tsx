@@ -53,7 +53,6 @@ function ImpactCategoryDialog({
 	initialValues: formValues,
 	organization,
 }: IImpactCategoryProps) {
-	const location = useLocation();
 	const [createImpactCategoryOrgInput, { loading: creatingImpactCategory }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
 	);
@@ -195,12 +194,8 @@ function ImpactCategoryDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact Category form for subtitle`,
 			})}
-			workspace={
-				location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
-			}
-			project={
-				(!location.pathname.includes("/settings") && dashboardData?.project?.name) || ""
-			}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				inputFields={inputFields}
