@@ -43,6 +43,7 @@ import {
 } from "../../../graphql/Impact/categoryUnit";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import { useLocation } from "react-router";
 
 let inputFields: any[] = impactUnitForm;
 
@@ -128,6 +129,7 @@ function ImpactUnitDialog({
 	initialValues: formValues,
 	organization,
 }: IImpactUnitProps) {
+	const location = useLocation();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [impactCategory, setImpactCategory] = useState<string[]>([]);
@@ -495,8 +497,12 @@ function ImpactUnitDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact unit form for subtitle`,
 			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={
+				location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
+			}
+			project={
+				(!location.pathname.includes("/settings") && dashboardData?.project?.name) || ""
+			}
 		>
 			<CommonForm
 				initialValues={initialValues}

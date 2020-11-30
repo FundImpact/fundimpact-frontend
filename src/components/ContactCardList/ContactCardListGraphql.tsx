@@ -4,6 +4,7 @@ import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../graphql/Contact"
 import { Entity_Name } from "../../models/constants";
 import pagination from "../../hooks/pagination";
 import { removeFilterListObjectElements } from "../../utils/filterList";
+import { CARDS_PER_PAGE } from "../../models/contact/constant";
 
 const getDefaultFilterList = () => ({
 	email: "",
@@ -61,7 +62,7 @@ function ContactCardListGraphql({
 			queryFilter,
 			sort: `created_at:DESC`,
 			retrieveContFromCountQueryResponse: "t4DContactsConnection,aggregate,count",
-			limit: 8,
+			limit: CARDS_PER_PAGE,
 		}
 	);
 

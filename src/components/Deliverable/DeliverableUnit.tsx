@@ -42,6 +42,7 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import { useLocation } from "react-router";
 
 interface IChangeDeliverableCategoryUnitStatusProps {
 	updateDeliverableCategoryUnit: (
@@ -132,6 +133,8 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
+
+	const location = useLocation();
 
 	const [deliverableCategory, setDeliverableCategory] = useState<string[]>([]);
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
@@ -466,8 +469,12 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						"Physical addresses of your organisation like headquarter branch etc",
 					description: `This text will be show on deliverable unit form for subtitle`,
 				})}
-				workspace={dashboardData?.workspace?.name}
-				project={dashboardData?.project?.name}
+				workspace={
+					location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
+				}
+				project={
+					location.pathname.includes("/settings") ? "" : dashboardData?.project?.name
+				}
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit}

@@ -27,6 +27,7 @@ import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import { useLocation } from "react-router";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -52,6 +53,7 @@ function ImpactCategoryDialog({
 	initialValues: formValues,
 	organization,
 }: IImpactCategoryProps) {
+	const location = useLocation();
 	const [createImpactCategoryOrgInput, { loading: creatingImpactCategory }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
 	);
@@ -193,8 +195,12 @@ function ImpactCategoryDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact Category form for subtitle`,
 			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={
+				location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
+			}
+			project={
+				(!location.pathname.includes("/settings") && dashboardData?.project?.name) || ""
+			}
 		>
 			<CommonForm
 				inputFields={inputFields}

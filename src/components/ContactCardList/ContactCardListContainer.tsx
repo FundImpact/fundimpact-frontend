@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import ContactCardListView from "./ContactCardListView";
 import { IGetContact } from "../../models/contact/query";
-import { userHasAccess, MODULE_CODES } from "../../utils/access";
-import { CONTACT_ACTION } from "../../utils/access/modules/contact/actions";
 import { Entity_Name } from "../../models/constants";
 
 interface IContactCardListContainer {

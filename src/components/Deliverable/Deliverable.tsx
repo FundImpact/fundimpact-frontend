@@ -22,6 +22,7 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IGetDeliverableCategory } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import { useLocation } from "react-router";
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -33,6 +34,7 @@ function getInitialValues(props: DeliverableProps) {
 }
 
 function Deliverable(props: DeliverableProps) {
+	const location = useLocation();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IDeliverable = getInitialValues(props);
@@ -175,8 +177,12 @@ function Deliverable(props: DeliverableProps) {
 					defaultMessage: "Manage Deliverable Category",
 					description: `This text will be show on deliverable category form for subtitle`,
 				})}
-				workspace={dashboardData?.workspace?.name}
-				project={dashboardData?.project?.name}
+				workspace={
+					location.pathname.includes("/settings") ? "" : dashboardData?.workspace?.name
+				}
+				project={
+					location.pathname.includes("/settings") ? "" : dashboardData?.project?.name
+				}
 				open={formIsOpen}
 				handleClose={onCancel}
 			>

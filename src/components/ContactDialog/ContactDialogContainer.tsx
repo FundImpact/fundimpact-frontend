@@ -21,6 +21,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import PhoneIcon from "@material-ui/icons/Phone";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import { Entity_Name, FORM_ACTIONS } from "../../models/constants";
+import { CARDS_PER_PAGE } from "../../models/contact/constant";
 
 type ICreateContactContainer =
 	| {
@@ -353,7 +354,7 @@ const refetchContactList = async ({
 					entity_name,
 					entity_id,
 				},
-				limit: count > 8 ? 8 : count,
+				limit: count > CARDS_PER_PAGE ? CARDS_PER_PAGE : count,
 				start: 0,
 				sort: "created_at:DESC",
 			},

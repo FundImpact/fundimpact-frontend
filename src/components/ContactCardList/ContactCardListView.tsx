@@ -9,6 +9,7 @@ import ContactCard from "../ContactCard";
 import Pagination from "@material-ui/lab/Pagination";
 import TableSkeleton from "../Skeletons/TableSkeleton";
 import { FormattedMessage } from "react-intl";
+import { CARDS_PER_PAGE } from "../../models/contact/constant";
 
 interface IContactCardListView {
 	contactList: IGetContact["t4DContacts"];
@@ -154,7 +155,7 @@ function ContactCardListView({
 			</Grid>
 			<Box display="flex" justifyContent="center" width="100%" mt={5}>
 				<Pagination
-					count={Math.ceil(count / 10)}
+					count={Math.ceil(count / CARDS_PER_PAGE)}
 					color="primary"
 					page={page}
 					onChange={(e, nextPage) => {
