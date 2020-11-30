@@ -171,15 +171,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				: []
 			: []
 	);
-	let uploadingFileMessage = CommonUploadingFilesMessage();
-	const [impactUploadLoading, setImpactUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	React.useEffect(() => {
-		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setImpactUploadLoading(percentage);
-	}, [filesArray, totalFilesToUpload, setImpactUploadLoading]);
 
 	/* Open Attach File Form*/
 	impactTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -187,14 +178,22 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	if (filesArray.length) impactTragetLineForm[7].label = "View Files";
 	else impactTragetLineForm[7].label = "Attach Files";
 
-	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+	if (filesArray.length)
+		impactTragetLineForm[7].textNextToButton = `${filesArray.length} files attached`;
+	else impactTragetLineForm[7].textNextToButton = ``;
 
-	let { multiplefileUpload } = useMultipleFileUpload();
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	const [selectedImpactTarget, setSelectedImpactTarget] = React.useState<
 		string | number | undefined
 	>("");
+
+	let {
+		multiplefileMorph,
+		loading: uploadMorphLoading,
+		success,
+		setSuccess,
+	} = useMultipleFileUpload(filesArray, setFilesArray);
 
 	const { refetch: impactTracklineRefetch } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
 		variables: {
@@ -203,21 +202,16 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	});
 
 	React.useEffect(() => {
-		if (uploadSuccess) {
+		if (success) {
 			if (props.type === IMPACT_ACTIONS.CREATE) {
 				impactTracklineRefetch();
 			} else if (props.type === IMPACT_ACTIONS.UPDATE && props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
-			setUploadSuccess(false);
+			setSuccess(false);
 			handleNext();
 		}
-	}, [uploadSuccess]);
-
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-	};
-	if (uploadSuccess) successMessage();
+	}, [success]);
 
 	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.impactTarget ? props.impactTarget : ""
@@ -288,6 +282,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
+			multiplefileMorph({
+				related_id: data.createImpactTrackingLineitemInput.id,
+				related_type: "impact_tracking_lineitem",
+				field: "attachments",
+			});
+
 			setImpactDonorForm(
 				<ImpacTracklineDonorYearTags
 					donors={donors}
@@ -298,19 +298,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				/>
 			);
 
-			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-			multiplefileUpload({
-				ref: "impact-tracking-lineitem",
-				refId: data.createImpactTrackingLineitemInput.id,
-				field: "attachments",
-				path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
-				filesArray: filesArray,
-				setFilesArray: setFilesArray,
-				setUploadSuccess: setUploadSuccess,
-			});
-
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
-			setFilesArray([]);
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
@@ -339,21 +327,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					/>
 				);
 
-				setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-				multiplefileUpload({
-					ref: "impact-tracking-lineitem",
-					refId: data.updateImpactTrackingLineitemInput.id,
-					field: "attachments",
-					path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
-					filesArray: filesArray,
-					setFilesArray: setFilesArray,
-					setUploadSuccess: setUploadSuccess,
-				});
-
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
-				setFilesArray([]);
+				handleNext();
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
@@ -666,19 +643,14 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					stepperHelpers={{
 						activeStep: stepperActiveStep,
 						setActiveStep: setStepperActiveStep,
-						handleNext,
-						handleBack,
-						handleReset,
+						handleNext: handleNext,
+						handleBack: handleBack,
+						handleReset: handleReset,
 					}}
 					basicForm={basicForm}
 					donorForm={impactDonorForm}
 				/>
-				{impactUploadLoading > 0 ? (
-					<CircularPercentage
-						progress={impactUploadLoading}
-						message={uploadingFileMessage}
-					/>
-				) : null}
+
 				{openImpactTargetDialog && (
 					<ImpactTarget
 						type={IMPACT_ACTIONS.CREATE}
@@ -695,15 +667,29 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					/>
 				)}
 			</FormDialog>
-			{loading ? <FullScreenLoader /> : null}
-			{updateImpactTrackLineLoading ? <FullScreenLoader /> : null}
+
+			{updateImpactTrackLineLoading || uploadMorphLoading || loading ? (
+				<FullScreenLoader />
+			) : null}
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
-					{...{
-						filesArray,
-						setFilesArray,
+					filesArray={filesArray}
+					setFilesArray={setFilesArray}
+					parentOnSuccessCall={
+						props.type === IMPACT_ACTIONS.UPDATE && props.reftechOnSuccess
+							? props.reftechOnSuccess
+							: undefined
+					}
+					uploadApiConfig={{
+						ref: "impact-tracking-lineitem",
+						refId:
+							props.type === IMPACT_ACTIONS.UPDATE
+								? props.data.id?.toString() || ""
+								: "",
+						field: "attachments",
+						path: `org-${DashBoardData?.organization?.id}/project-${DashBoardData?.project?.id}/impact-tracking-lineitem`,
 					}}
 				/>
 			)}

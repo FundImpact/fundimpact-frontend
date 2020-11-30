@@ -30,45 +30,9 @@ export const OrganizationDocumentContainer = () => {
 	const { data, loading, refetch } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>(false);
-	const notificationDispatch = useNotificationDispatch();
-	// const [documentsUploadLoading, setDocumentsUploadLoading] = React.useState(0);
-	// const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	// React.useEffect(() => {
-	// 	let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
-	// 	let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-	// 	setDocumentsUploadLoading(percentage);
-	// }, [filesArray, totalFilesToUpload, setDocumentsUploadLoading]);
-
-	// const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
-
-	// let { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
-	// 	filesArray,
-	// 	setFilesArray
-	// );
-
-	// const successMessage = () => {
-	// 	// if (totalFilesToUpload)
-	// 	notificationDispatch(setSuccessNotification("Files Uploaded !"));
-	// 	refetch();
-	// 	setSuccess(false);
-	// 	setOpenAttachFiles(false);
-	// 	setFilesArray([]);
-	// };
-	// if (success) successMessage();
 
 	const dashBoardData = useDashBoardData();
-	// const attachFileOnSave = () => {
-	// 	let orgId: any = dashBoardData?.organization?.id;
-	// 	// setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-	// 	multiplefileUploader({
-	// 		ref: "organization",
-	// 		refId: orgId,
-	// 		field: "attachments",
-	// 		path: `org-${orgId}/organizations`,
-	// 	});
-	// };
-	// let uploadingFileMessage = CommonUploadingFilesMessage();
+
 	return (
 		<Box>
 			<Grid md={12}>

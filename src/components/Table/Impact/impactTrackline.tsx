@@ -144,37 +144,6 @@ function EditImpactTargetLineIcon({
 	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
 	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
 
-	const [impactTracklineUploadLoading, setImpactTracklineUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	React.useEffect(() => {
-		let remainFilestoUpload = impactTracklineFileArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setImpactTracklineUploadLoading(percentage);
-	}, [impactTracklineFileArray, totalFilesToUpload, setImpactTracklineUploadLoading]);
-
-	let { multiplefileUpload } = useMultipleFileUpload();
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-		if (refetch) refetch();
-		setUploadSuccess(false);
-	};
-	if (uploadSuccess) successMessage();
-
-	const attachImpactFileOnSave = () => {
-		setTotalFilesToUpload(impactTracklineFileArray.filter((elem) => !elem.id).length);
-		multiplefileUpload({
-			ref: "impact-tracking-lineitem",
-			refId: impactTargetLine.id,
-			field: "attachments",
-			path: `org-${dashBoardData?.organization?.id}/impact-tracking-lineitem`,
-			filesArray: impactTracklineFileArray,
-			setFilesArray: setImpactTracklineFileArray,
-			setUploadSuccess: setUploadSuccess,
-		});
-	};
-	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<>
 			<TableCell>
@@ -252,16 +221,20 @@ function EditImpactTargetLineIcon({
 						handleClose: () => setImpactOpenAttachFiles(false),
 						filesArray: impactTracklineFileArray,
 						setFilesArray: setImpactTracklineFileArray,
-						parentOnSave: attachImpactFileOnSave,
+						// parentOnSave: attachImpactFileOnSave,
+						uploadApiConfig: {
+							ref: "impact-tracking-lineitem",
+							refId: impactTargetLine.id,
+							field: "attachments",
+							path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/impact-tracking-lineitem`,
+						},
+						parentOnSuccessCall: () => {
+							if (refetch) refetch();
+							setImpactTracklineFileArray([]);
+						},
 					}}
 				/>
 			)}
-			{impactTracklineUploadLoading > 0 ? (
-				<CircularPercentage
-					progress={impactTracklineUploadLoading}
-					message={uploadingFileMessage}
-				/>
-			) : null}
 		</>
 	);
 }

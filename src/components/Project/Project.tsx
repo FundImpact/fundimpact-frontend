@@ -174,12 +174,7 @@ function Project(props: ProjectProps) {
 		}
 	}, [success]);
 
-	const successMessage = () => {
-		// if (totalFilesToUpload)
-		// notificationDispatch(setSuccessNotification("Files Uploaded !"));
-		props.handleClose();
-	};
-	if (success) successMessage();
+	if (success) props.handleClose();
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
