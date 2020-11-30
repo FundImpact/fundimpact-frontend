@@ -52,7 +52,6 @@ const FinancialYearAndGrantPeriodFields = ({
 		donor: { id: string; name: string; country: { id: string; name: string } };
 	};
 }) => {
-	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const dashboardData = useDashBoardData();
 	const project = dashboardData?.project?.id;
