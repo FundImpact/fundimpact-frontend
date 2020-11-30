@@ -8,10 +8,11 @@ export enum AddContactAddressDialogType {
 	address = 1,
 }
 
-export enum Enitity {
+export enum Entity_Name {
 	organization = "organization",
 	user = "user",
 	individual = "individual",
+	donor = "donor",
 }
 
 export const primaryColor = "#5567FF";

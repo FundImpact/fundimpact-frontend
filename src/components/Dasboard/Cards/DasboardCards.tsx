@@ -67,7 +67,6 @@ export default function DashboardCard(props: CardProps) {
 		}
 	}
 	const intl = useIntl();
-
 	let topLabel = intl.formatMessage({
 		id: "topLabelCards",
 		defaultMessage: "Top",

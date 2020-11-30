@@ -10,7 +10,7 @@ import { organizationDetail } from "../../../../utils/testMock.json";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
-	GET_ROLES_BY_ORG,
+	GET_ROLES,
 } from "../../../../graphql/UserRoles/query";
 import { rolesMock, userListMock } from "../../../Forms/UserRole/__test__/testHelp";
 import { invitedUserFilter } from "../../../../pages/settings/UserRole/inputFields.json";
@@ -32,12 +32,9 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_ROLES_BY_ORG,
-			variables: {
-				filter: { organization: "13" },
-			},
+			query: GET_ROLES,
 		},
-		result: { data: { organizationRoles: rolesMock } },
+		result: { data: { roles: rolesMock } },
 	},
 	{
 		request: {

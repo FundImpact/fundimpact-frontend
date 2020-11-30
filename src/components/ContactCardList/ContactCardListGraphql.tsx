@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import ContactTableContainer from "./ContactTableContainer";
-import { useLazyQuery } from "@apollo/client";
-import { IGetContact } from "../../../models/contact/query";
-import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../../graphql/Contact";
-import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { Enitity } from "../../../models/constants";
-import pagination from "../../../hooks/pagination";
-import { removeFilterListObjectElements } from "../../../utils/filterList";
+import ContactCardListContainer from "./ContactCardListContainer";
+import { GET_CONTACT_LIST, GET_CONTACT_LIST_COUNT } from "../../graphql/Contact";
+import { Entity_Name } from "../../models/constants";
+import pagination from "../../hooks/pagination";
+import { removeFilterListObjectElements } from "../../utils/filterList";
+import { CARDS_PER_PAGE } from "../../models/contact/constant";
 
 const getDefaultFilterList = () => ({
 	email: "",
@@ -16,15 +14,13 @@ const getDefaultFilterList = () => ({
 	contact_type: [],
 });
 
-function ContactTableGraphql({
+function ContactCardListGraphql({
 	entity_id,
 	entity_name,
 }: {
 	entity_id: string;
-	entity_name: Enitity;
+	entity_name: Entity_Name;
 }) {
-	const [orderBy, setOrderBy] = useState<string>("created_at");
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
@@ -64,26 +60,24 @@ function ContactTableGraphql({
 			countFilter: queryFilter,
 			query: GET_CONTACT_LIST,
 			queryFilter,
-			sort: `${orderBy}:${order.toUpperCase()}`,
+			sort: `created_at:DESC`,
 			retrieveContFromCountQueryResponse: "t4DContactsConnection,aggregate,count",
+			limit: CARDS_PER_PAGE,
 		}
 	);
 
 	return (
-		<ContactTableContainer
+		<ContactCardListContainer
 			contactList={contactList?.t4DContacts || []}
 			count={count}
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
-			order={order}
-			orderBy={orderBy}
-			setOrder={setOrder}
-			setOrderBy={setOrderBy}
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			entity_name={entity_name}
 		/>
 	);
 }
 
-export default ContactTableGraphql;
+export default ContactCardListGraphql;
