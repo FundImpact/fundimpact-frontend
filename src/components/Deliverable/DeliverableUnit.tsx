@@ -42,6 +42,8 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import Deliverable from "./Deliverable";
+import { useLocation } from "react-router";
 
 interface IChangeDeliverableCategoryUnitStatusProps {
 	updateDeliverableCategoryUnit: (
@@ -140,6 +142,9 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const [createCategoryUnit, { loading: creatingCategoryUnit }] = useMutation(
 		CREATE_CATEGORY_UNIT
 	);
+
+	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
+	deliverableUnitForm[1].addNewClick = () => setOpenDeliverableCategoryDialog(true);
 
 	const [getDeliverableCategoryUnit, { data: deliverableCategoryUnitList }] = useLazyQuery<
 		IGetDeliverableCategoryUnit,
@@ -466,8 +471,8 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						"Physical addresses of your organisation like headquarter branch etc",
 					description: `This text will be show on deliverable unit form for subtitle`,
 				})}
-				workspace={dashboardData?.workspace?.name}
-				project={dashboardData?.project?.name}
+				workspace={""}
+				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit}
@@ -483,6 +488,14 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						inputFields: deliverableUnitForm,
 					}}
 				/>
+				{openDeliverableCategoryDialog && (
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.CREATE}
+						open={openDeliverableCategoryDialog}
+						handleClose={() => setOpenDeliverableCategoryDialog(false)}
+						organization={dashboardData?.organization?.id}
+					/>
+				)}
 			</FormDialog>
 			{/* {createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit ? (
 				<FullScreenLoader />

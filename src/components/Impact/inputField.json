@@ -253,6 +253,7 @@
 			"label": "Attach files",
 			"inputType": "button",
 			"onClick": {},
+			"textNextToButton": "",
 			"size": 12
 		}
 	]

@@ -43,6 +43,8 @@ import {
 } from "../../../graphql/Impact/categoryUnit";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import ImpactCategoryDialog from "../ImpactCategoryDialog";
+import { useLocation } from "react-router";
 
 let inputFields: any[] = impactUnitForm;
 
@@ -163,6 +165,9 @@ function ImpactUnitDialog({
 		CREATE_IMPACT_CATEGORY_UNIT
 	);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+	const [openImpactCategoryDialog, setOpenImpactCategoryDialog] = useState<boolean>();
+	impactUnitForm[2].addNewClick = () => setOpenImpactCategoryDialog(true);
+
 	const updateImpactCategoryUnitCount = async (
 		store: ApolloCache<any>,
 		filter: { [key: string]: string }
@@ -495,8 +500,8 @@ function ImpactUnitDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact unit form for subtitle`,
 			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				initialValues={initialValues}
@@ -507,6 +512,14 @@ function ImpactUnitDialog({
 				onUpdate={onUpdate}
 				formAction={formAction}
 			/>
+			{openImpactCategoryDialog && (
+				<ImpactCategoryDialog
+					formAction={FORM_ACTIONS.CREATE}
+					open={openImpactCategoryDialog}
+					handleClose={() => setOpenImpactCategoryDialog(false)}
+					organization={dashboardData?.organization?.id}
+				/>
+			)}
 		</FormDialog>
 	);
 }

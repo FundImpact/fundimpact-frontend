@@ -9,6 +9,7 @@ export const userListMock = [
 			name: "Admin",
 			is_project_level: true,
 			type: "admin",
+			sequence: 2,
 		},
 		organization: {
 			id: "58",
@@ -41,5 +42,6 @@ export const rolesMock = [
 			id: "58",
 			name: "HISAAB KITAAB",
 		},
+		sequence: 2,
 	},
 ];

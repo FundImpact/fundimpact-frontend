@@ -359,37 +359,6 @@ function BudgetLineItemTableView({
 
 	const dashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
-	let { multiplefileUpload } = useMultipleFileUpload();
-	let uploadingFileMessage = CommonUploadingFilesMessage();
-	const [budgetUploadLoading, setbudgetUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-		if (refetchOnSuccess) refetchOnSuccess();
-		setUploadSuccess(false);
-	};
-	if (uploadSuccess) successMessage();
-
-	const attachFileOnSave = () => {
-		setTotalFilesToUpload(budgetTracklineFileArray.filter((elem) => !elem.id).length);
-		multiplefileUpload({
-			ref: "budget-tracking-lineitem",
-			refId: initialValues?.id || "",
-			field: "attachments",
-			path: `org-${dashBoardData?.organization?.id}/budget-tracking-lineitem`,
-			filesArray: budgetTracklineFileArray,
-			setFilesArray: setBudgetTracklineFileArray,
-			setUploadSuccess: setUploadSuccess,
-		});
-	};
-
-	React.useEffect(() => {
-		let remainFilestoUpload = budgetTracklineFileArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setbudgetUploadLoading(percentage);
-	}, [budgetTracklineFileArray, totalFilesToUpload, setbudgetUploadLoading]);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState(false);
 	return (
@@ -441,15 +410,18 @@ function BudgetLineItemTableView({
 							handleClose: () => setOpenAttachFiles(false),
 							filesArray: budgetTracklineFileArray,
 							setFilesArray: setBudgetTracklineFileArray,
-							parentOnSave: () => attachFileOnSave(),
+							uploadApiConfig: {
+								ref: "budget-tracking-lineitem",
+								refId: initialValues?.id || "",
+								field: "attachments",
+								path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/budget-tracking-lineitem`,
+							},
+							parentOnSuccessCall: () => {
+								if (refetchOnSuccess) refetchOnSuccess();
+								setBudgetTracklineFileArray([]);
+							},
 						}}
 					/>
-					{budgetUploadLoading > 0 ? (
-						<CircularPercentage
-							progress={budgetUploadLoading}
-							message={uploadingFileMessage}
-						/>
-					) : null}
 				</>
 			</CommonTable>
 		</>

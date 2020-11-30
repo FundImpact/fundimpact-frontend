@@ -152,6 +152,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
+			"addNew": true,
+			"addNewClick": {},
 			"size": 6,
 			"multiple": true
 		},
@@ -275,6 +277,7 @@
 			"testId": "deliverableTracklineAttachFileInput",
 			"label": "Attach files",
 			"inputType": "button",
+			"textNextToButton": "",
 			"onClick": {},
 			"size": 12
 		}

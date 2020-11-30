@@ -33,10 +33,7 @@ import {
 	IGET_DELIVERABLE_TRACKLINE_BY_TARGET,
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
-import {
-	CommonFormTitleFormattedMessage,
-	CommonUploadingFilesMessage,
-} from "../../utils/commonFormattedMessage";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
@@ -153,6 +150,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	if (filesArray.length) deliverableTragetLineForm[7].label = "View Files";
 	else deliverableTragetLineForm[7].label = "Attach Files";
 
+	if (filesArray.length)
+		deliverableTragetLineForm[7].textNextToButton = `${filesArray.length} files attached`;
+	else deliverableTragetLineForm[7].textNextToButton = ``;
+
 	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.deliverableTarget ? props.deliverableTarget : ""
 	);
@@ -212,11 +213,17 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				},
 				{
 					label: deliverableTotalTargetLabel,
-					value: `${fetchedDeliverableTarget.target_value} ${fetchedDeliverableTarget.deliverable_category_unit.deliverable_units_org.name}`,
+					value: `${fetchedDeliverableTarget.target_value} ${
+						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
+							?.name || ""
+					}`,
 				},
 				{
 					label: deliverableAchievedTargetLabel,
-					value: `${achivedValue?.deliverableTrackingTotalValue} ${fetchedDeliverableTarget.deliverable_category_unit.deliverable_units_org.name}`,
+					value: `${achivedValue?.deliverableTrackingTotalValue} ${
+						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
+							?.name || ""
+					}`,
 				},
 			]);
 		}
@@ -257,13 +264,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
-	let { multiplefileUpload } = useMultipleFileUpload();
+	let {
+		multiplefileMorph,
+		loading: uploadMorphLoading,
+		success,
+		setSuccess,
+	} = useMultipleFileUpload(filesArray, setFilesArray);
+
 	const [selectedDeliverableTarget, setSelectedDeliverableTarget] = React.useState<
 		string | number | undefined
 	>("");
-	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
 
 	const [openDeliverableTargetDialog, setOpenDeliverableTargetDialog] = React.useState<boolean>();
 	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
@@ -287,7 +297,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
 
-	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
+	const [createProjectDonor, { loading: creatingProjectDonorsLoading }] = useMutation(
 		CREATE_PROJECT_DONOR,
 		{
 			onCompleted: (data) => {
@@ -310,29 +320,26 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	deliverableTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
 
 	React.useEffect(() => {
-		if (uploadSuccess) {
+		if (success) {
+			console.log("success", success);
 			if (props.type === DELIVERABLE_ACTIONS.CREATE) {
 				deliverableTracklineRefetch();
 			} else if (props.type === DELIVERABLE_ACTIONS.UPDATE && props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
-			setUploadSuccess(false);
+			setSuccess(false);
 			handleNext();
 		}
-	}, [uploadSuccess, deliverableTracklineRefetch, props, setUploadSuccess]);
-
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-	};
-	if (uploadSuccess) successMessage();
-	React.useEffect(() => {
-		let remainToUpload = filesArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainToUpload, totalFilesToUpload);
-		setLoadingPercentage(percentage);
-	}, [filesArray, totalFilesToUpload, setLoadingPercentage]);
+	}, [success, deliverableTracklineRefetch, props, setSuccess]);
 
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
+			multiplefileMorph({
+				related_id: data.createDeliverableTrackingLineitemDetail.id,
+				related_type: "deliverable_tracking_lineitem",
+				field: "attachments",
+			});
+
 			setDonorForm(
 				<DeliverableTracklineDonorYearTags
 					donors={donors}
@@ -343,24 +350,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				/>
 			);
 
-			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-
-			multiplefileUpload({
-				ref: "deliverable-tracking-lineitem",
-				refId: data.createDeliverableTrackingLineitemDetail.id,
-				field: "attachments",
-				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-item`,
-				filesArray: filesArray,
-				setFilesArray: setFilesArray,
-				setUploadSuccess: setUploadSuccess,
-			});
-
 			// empty array after sending to upload function
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
-
-			setFilesArray([]);
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
@@ -391,22 +384,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					}
 				/>
 			);
-			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-			multiplefileUpload({
-				ref: "deliverable-tracking-lineitem",
-				refId: data.updateDeliverableTrackingLineitemDetail.id,
-				field: "attachments",
-				path: `org-${DashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
-				filesArray: filesArray,
-				setFilesArray: setFilesArray,
-				setUploadSuccess: setUploadSuccess,
-			});
-
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline Updated successfully!")
 			);
 
-			setFilesArray([]);
+			handleNext();
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
@@ -687,7 +669,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		/>
 	);
 
-	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<React.Fragment>
 			{/* {true ? <CircularPercentage progress={loadingPercentage} /> : null} */}
@@ -712,12 +693,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						basicForm={basicForm}
 						donorForm={donorForm}
 					/>
-					{loadingPercentage > 0 ? (
-						<CircularPercentage
-							progress={loadingPercentage}
-							message={uploadingFileMessage}
-						/>
-					) : null}
 					{openDeliverableTargetDialog && (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
@@ -735,16 +710,33 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					)}
 				</>
 			</FormDialog>
-			{loading ? <FullScreenLoader /> : null}
-			{updateDeliverableTrackLineLoading ? <FullScreenLoader /> : null}
+
+			{updateDeliverableTrackLineLoading ||
+			uploadMorphLoading ||
+			loading ||
+			creatingProjectDonorsLoading ? (
+				<FullScreenLoader />
+			) : null}
 
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
-					{...{
-						filesArray,
-						setFilesArray,
+					filesArray={filesArray}
+					setFilesArray={setFilesArray}
+					parentOnSuccessCall={
+						props.type === DELIVERABLE_ACTIONS.UPDATE && props.reftechOnSuccess
+							? props.reftechOnSuccess
+							: undefined
+					}
+					uploadApiConfig={{
+						ref: "deliverable-tracking-lineitem",
+						refId:
+							props.type === DELIVERABLE_ACTIONS.UPDATE
+								? props.data.id?.toString() || ""
+								: "",
+						field: "attachments",
+						path: `org-${DashBoardData?.organization?.id}/project-${DashBoardData?.project?.id}/deliverable-tracking-lineitem`,
 					}}
 				/>
 			)}

@@ -27,6 +27,7 @@ import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import { useLocation } from "react-router";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -193,8 +194,8 @@ function ImpactCategoryDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact Category form for subtitle`,
 			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				inputFields={inputFields}

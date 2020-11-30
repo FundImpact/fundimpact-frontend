@@ -112,6 +112,7 @@ export interface IInputFields {
 	logo?: string;
 	disabled?: boolean;
 	onClick?: (() => void) | null;
+	textNextToButton?: string;
 	autoCompleteGroupBy?: <T>(option: T) => string;
 	addNew?: boolean;
 	addNewClick?: (() => void) | null;

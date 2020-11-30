@@ -9,7 +9,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { useIntl } from "react-intl";
 
 export function ProjectCard(projectCardConfig: ProjectCardConfig) {
-	const { chartConfig } = projectCardConfig;
+	const { chartConfig, tooltip } = projectCardConfig;
 	const intl = useIntl();
 	if (projectCardConfig.loading) {
 		return (
@@ -43,7 +43,7 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 			<Grid item xs={12} container justify="flex-end">
 				<Box color="text.disabled" mr={1}>
 					<IconButton size="small">
-						<Tooltip title={`${overallLabel} ${projectCardConfig.title}`}>
+						<Tooltip title={tooltip || ""}>
 							<InfoOutlinedIcon fontSize="small" />
 						</Tooltip>
 					</IconButton>

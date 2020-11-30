@@ -41,7 +41,7 @@ function OrganizationContainer({
 	) => Promise<FetchResult<IUpdateOrganization, Record<string, any>, Record<string, any>>>;
 }) {
 	let { uploadFile, loading: fileUploading } = useFileUpload();
-	const [contactAddressDialogOpen, setContactAddressDialogOpen] = useState<boolean>(false);
+	const [contactDialogOpen, setContactDialogOpen] = useState<boolean>(false);
 	const [contactListDialogOpen, setContactListDialogOpen] = useState<boolean>(false);
 	const user = useAuth();
 	const dashboardData = useDashBoardData();
@@ -71,15 +71,9 @@ function OrganizationContainer({
 		},
 	};
 
-	const contactCreateAccess = userHasAccess(
-		MODULE_CODES.CONTACT,
-		CONTACT_ACTION.CREATE_CONTACT
-	);
+	const contactCreateAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.CREATE_CONTACT);
 
-	const contactFindAccess = userHasAccess(
-		MODULE_CODES.CONTACT,
-		CONTACT_ACTION.FIND_CONTACT
-	);
+	const contactFindAccess = userHasAccess(MODULE_CODES.CONTACT, CONTACT_ACTION.FIND_CONTACT);
 
 	const updateOrganizationCache = (
 		store: ApolloCache<IUpdateOrganization>,
@@ -195,8 +189,8 @@ function OrganizationContainer({
 			onSubmit={onSubmit}
 			logo={dashboardData?.organization?.logo?.url || ""}
 			countryList={countryList}
-			contactAddressDialogOpen={contactAddressDialogOpen}
-			setContactAddressDialogOpen={setContactAddressDialogOpen}
+			contactDialogOpen={contactDialogOpen}
+			setContactDialogOpen={setContactDialogOpen}
 			contactListDialogOpen={contactListDialogOpen}
 			setContactListDialogOpen={setContactListDialogOpen}
 			contactCreateAccess={contactCreateAccess}

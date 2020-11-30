@@ -17,7 +17,7 @@ import FITable from "../FITable";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
-	GET_ROLES_BY_ORG,
+	GET_ROLES,
 } from "../../../graphql/UserRoles/query";
 import { useQuery } from "@apollo/client";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -34,6 +34,7 @@ import { FORM_ACTIONS } from "../../../models/constants";
 import ProjectDialog from "./ProjectDialog";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { IInputField, IInputFields } from "../../../models";
+import { RESTRICTED_ROLES } from "../../../models/User/constant";
 
 let roleHash: { [key: string]: string } = {};
 const chipArray = ({
@@ -139,7 +140,7 @@ function EditUserIcon({
 	userData: {
 		id: string;
 		email: string;
-		role: { id: string; type: string; is_project_level: boolean };
+		role: { id: string; type: string; is_project_level: boolean; sequence?: number };
 		user_projects: {
 			id: string;
 			project: { id: string; name: string; workspace: { id: string; name: string } };
@@ -160,10 +161,7 @@ function EditUserIcon({
 			<TableCell>
 				<IconButton
 					onClick={handleMenuClick}
-					disabled={
-						userData.role.type == `owner-org-${dashboardData?.organization?.id}` ||
-						!userData.role.is_project_level
-					}
+					disabled={!userData?.role?.sequence || !userData.role.is_project_level}
 				>
 					<MoreVertIcon />
 				</IconButton>
@@ -231,12 +229,12 @@ export default function InvitedUserTable({
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 
-	useQuery(GET_ROLES_BY_ORG, {
-		variables: { filter: { organization: dashBoardData?.organization?.id } },
+	useQuery(GET_ROLES, {
+		// variables: { filter: { organization: dashBoardData?.organization?.id } },
 		onCompleted(data) {
-			if (data?.organizationRoles) {
-				invitedUserFilter[1].optionsArray = data.organizationRoles;
-				roleHash = mapIdToName(data.organizationRoles, roleHash);
+			if (data?.roles) {
+				invitedUserFilter[1].optionsArray = data.roles;
+				roleHash = mapIdToName(data.roles, roleHash);
 			}
 		},
 		onError(err) {
@@ -257,7 +255,6 @@ export default function InvitedUserTable({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-
 	const handleInvitedUserLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
 		newPage: number
