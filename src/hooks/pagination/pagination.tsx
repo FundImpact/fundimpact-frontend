@@ -60,7 +60,9 @@ function Pagination({
 	let [
 		getQueryData,
 		{ data: queryData, loading: queryLoading, error: queryError, refetch: queryRefetch },
-	] = useLazyQuery(query);
+	] = useLazyQuery(query, {
+		// fetchPolicy: "cache-and-network",
+	});
 
 	useEffect(() => {
 		if (fireRequest) {
