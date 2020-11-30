@@ -93,13 +93,9 @@ beforeEach(() => {
 describe("Individual Table tests", () => {
 	for (let i = 0; i < individualTableOrganizationHeadings.length; i++) {
 		test(`Table Headings ${individualTableOrganizationHeadings[i].label} for Individual Target Table`, async () => {
-			try {
-				await waitForElement(() =>
-					table.getAllByText(individualTableOrganizationHeadings[i].label)
-				);
-			} catch (err) {
-				console.log("err :>> ", err);
-			}
+			await waitForElement(() =>
+				table.getAllByText(individualTableOrganizationHeadings[i].label)
+			);
 		});
 	}
 

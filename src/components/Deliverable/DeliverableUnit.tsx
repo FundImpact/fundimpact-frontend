@@ -1,5 +1,12 @@
-import { useMutation, useQuery, ApolloCache } from "@apollo/client";
-import React, { useState } from "react";
+import {
+	useMutation,
+	useQuery,
+	ApolloCache,
+	useLazyQuery,
+	FetchResult,
+	MutationFunctionOptions,
+} from "@apollo/client";
+import React, { useState, useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import {
@@ -14,6 +21,7 @@ import {
 	CREATE_CATEGORY_UNIT,
 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 	GET_CATEGORY_UNIT,
+	UPDATE_DELIVERABLE_CATEGPRY_UNIT,
 } from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_UNIT,
@@ -25,9 +33,32 @@ import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { deliverableUnitForm } from "./inputField.json";
-import { IGetDeliverablUnit, IGetDeliverableCategoryUnit } from "../../models/deliverable/query";
+import {
+	IGetDeliverablUnit,
+	IGetDeliverableCategoryUnit,
+	IGetDeliverableCategoryUnitVariables,
+	IUpdateDeliverableCategoryUnit,
+	IUpdateDeliverableCategoryUnitVariables,
+} from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
+import Deliverable from "./Deliverable";
+import { useLocation } from "react-router";
+
+interface IChangeDeliverableCategoryUnitStatusProps {
+	updateDeliverableCategoryUnit: (
+		options?:
+			| MutationFunctionOptions<
+					IUpdateDeliverableCategoryUnit,
+					IUpdateDeliverableCategoryUnitVariables
+			  >
+			| undefined
+	) => Promise<
+		FetchResult<IUpdateDeliverableCategoryUnit, Record<string, any>, Record<any, any>>
+	>;
+	deliverableCategoryUnitList: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"];
+	submittedDeliverableCategory: string[];
+}
 
 function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -43,10 +74,13 @@ function getInitialValues(props: DeliverableUnitProps) {
 	};
 }
 
-const getNewDeliverableCategories = (
-	deliverableCategories: string[],
-	oldDeliverableCategories: string[]
-) =>
+const getNewDeliverableCategories = ({
+	deliverableCategories,
+	oldDeliverableCategories,
+}: {
+	deliverableCategories: string[];
+	oldDeliverableCategories: string[];
+}) =>
 	deliverableCategories.filter(
 		(element: string) => oldDeliverableCategories.indexOf(element) === -1
 	) || [];
@@ -54,6 +88,45 @@ const getNewDeliverableCategories = (
 interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	deliverableCategory?: string;
 }
+
+const changeDeliverableCategoryUnitStatus = async ({
+	updateDeliverableCategoryUnit,
+	deliverableCategoryUnitList,
+	submittedDeliverableCategory,
+}: IChangeDeliverableCategoryUnitStatusProps) => {
+	const deliverableCategoryHash = submittedDeliverableCategory.reduce(
+		(delCatHash: { [key: string]: boolean }, deliverableCategoryUnit) => {
+			delCatHash[deliverableCategoryUnit] = true;
+			return delCatHash;
+		},
+		{}
+	);
+
+	//write comment
+	return Promise.all(
+		deliverableCategoryUnitList.map((deliverableCategoryUnit) => {
+			if (deliverableCategoryUnit.deliverable_category_org.id in deliverableCategoryHash) {
+				return updateDeliverableCategoryUnit({
+					variables: {
+						id: deliverableCategoryUnit.id,
+						input: {
+							status: true,
+						},
+					},
+				});
+			} else {
+				return updateDeliverableCategoryUnit({
+					variables: {
+						id: deliverableCategoryUnit.id,
+						input: {
+							status: false,
+						},
+					},
+				});
+			}
+		})
+	);
+};
 
 function DeliverableUnit(props: DeliverableUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -69,6 +142,33 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const [createCategoryUnit, { loading: creatingCategoryUnit }] = useMutation(
 		CREATE_CATEGORY_UNIT
 	);
+
+	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
+	deliverableUnitForm[1].addNewClick = () => setOpenDeliverableCategoryDialog(true);
+
+	const [getDeliverableCategoryUnit, { data: deliverableCategoryUnitList }] = useLazyQuery<
+		IGetDeliverableCategoryUnit,
+		IGetDeliverableCategoryUnitVariables
+	>(GET_CATEGORY_UNIT, {
+		fetchPolicy: "cache-only",
+	});
+
+	const [updateDeliverableCategoryUnit] = useMutation<
+		IUpdateDeliverableCategoryUnit,
+		IUpdateDeliverableCategoryUnitVariables
+	>(UPDATE_DELIVERABLE_CATEGPRY_UNIT);
+
+	useEffect(() => {
+		if (props.type === DELIVERABLE_ACTIONS.UPDATE && props.data.id) {
+			getDeliverableCategoryUnit({
+				variables: {
+					filter: {
+						deliverable_units_org: `${props.data.id}`,
+					},
+				},
+			});
+		}
+	}, [getDeliverableCategoryUnit, props]);
 
 	const updateDeliverableCategoryUnitCount = async (store: ApolloCache<any>, filter: object) => {
 		try {
@@ -303,10 +403,16 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		try {
 			const submittedValue = Object.assign({}, value);
 			const id = submittedValue.id;
-			const newDeliverableCategories = getNewDeliverableCategories(
-				submittedValue?.deliverableCategory || [],
-				initialValues?.deliverableCategory || []
-			);
+			let submittedDeliverableCategory: string[] = submittedValue?.deliverableCategory || [];
+			const newDeliverableCategories = getNewDeliverableCategories({
+				deliverableCategories: submittedDeliverableCategory,
+				oldDeliverableCategories:
+					deliverableCategoryUnitList?.deliverableCategoryUnitList?.map(
+						(
+							deliverableCategoryUnit: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]
+						) => deliverableCategoryUnit.deliverable_category_org.id
+					) || [],
+			});
 			setDeliverableCategory(newDeliverableCategories);
 
 			delete submittedValue.id;
@@ -316,6 +422,13 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 					id,
 					input: submittedValue,
 				},
+			});
+			//remove newDeliverableCategories
+			await changeDeliverableCategoryUnitStatus({
+				updateDeliverableCategoryUnit,
+				deliverableCategoryUnitList:
+					deliverableCategoryUnitList?.deliverableCategoryUnitList || [],
+				submittedDeliverableCategory,
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Unit updation created !"));
 			onCancel();
@@ -358,8 +471,8 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						"Physical addresses of your organisation like headquarter branch etc",
 					description: `This text will be show on deliverable unit form for subtitle`,
 				})}
-				workspace={dashboardData?.workspace?.name}
-				project={dashboardData?.project?.name}
+				workspace={""}
+				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit}
@@ -375,6 +488,14 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						inputFields: deliverableUnitForm,
 					}}
 				/>
+				{openDeliverableCategoryDialog && (
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.CREATE}
+						open={openDeliverableCategoryDialog}
+						handleClose={() => setOpenDeliverableCategoryDialog(false)}
+						organization={dashboardData?.organization?.id}
+					/>
+				)}
 			</FormDialog>
 			{/* {createUnitLoading || updatingDeliverableUnit || creatingCategoryUnit ? (
 				<FullScreenLoader />

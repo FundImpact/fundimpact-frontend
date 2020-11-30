@@ -23,7 +23,7 @@ import {
 import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
-import CommonForm from "../../Forms/CommonForm";
+import CommonForm from "../../CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
@@ -198,6 +198,19 @@ function BudgetCategory({
 	};
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+
+	const updateBudgetCategorySubtitle = intl.formatMessage({
+		id: "BudgetCategoryUpdateFormSubtitle",
+		defaultMessage: "Update Budget Category Of Organization",
+		description: `This text will be show on update budget category form`,
+	});
+
+	const createBudgetCategorySubtitle = intl.formatMessage({
+		id: "BudgetCategoryCreateFormSubtitle",
+		defaultMessage: "Create New Budget Category For Organization",
+		description: `This text will be show on create budget category form`,
+	});
+
 	return (
 		<>
 			<FormDialog
@@ -213,18 +226,18 @@ function BudgetCategory({
 						description: `This text will be show on Budget category form for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "budgetCategoryFormSubtitle",
-					defaultMessage: "Manage Budget Category",
-					description: `This text will be show on Budget category form for subtitle`,
-				})}
-				workspace={dashboardData?.workspace?.name}
-				project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+				subtitle={
+					formAction === FORM_ACTIONS.CREATE
+						? createBudgetCategorySubtitle
+						: updateBudgetCategorySubtitle
+				}
+				workspace={""}
+				project={""}
 			>
 				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
-					onSubmit={onSubmit}
+					onCreate={onSubmit}
 					onCancel={handleClose}
 					inputFields={inputFields}
 					formAction={formAction}

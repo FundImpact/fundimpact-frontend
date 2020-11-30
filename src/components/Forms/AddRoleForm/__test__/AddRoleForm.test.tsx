@@ -10,7 +10,7 @@ import { GET_USER_ROLES } from "../../../../graphql/User/query";
 import { RenderResult } from "@testing-library/react";
 import { addRoleForm } from "../inputField.json";
 import AddRoleForm from "../";
-import { GET_ROLES_BY_ORG } from "../../../../graphql/UserRoles/query";
+import { GET_ROLES } from "../../../../graphql/UserRoles/query";
 import { rolesMock } from "../../UserRole/__test__/testHelp";
 import { CREATE_ORGANIZATION_USER_ROLE } from "../../../../graphql/AddRole/mutation";
 
@@ -67,12 +67,12 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_ROLES_BY_ORG,
+			query: GET_ROLES,
 			variables: {
 				organization: organizationDetails.id,
 			},
 		},
-		result: { data: { organizationRoles: rolesMock } },
+		result: { data: { roles: rolesMock } },
 	},
 	{
 		request: {

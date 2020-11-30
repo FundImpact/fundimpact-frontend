@@ -2,6 +2,7 @@ import { FORM_ACTIONS } from "./constants";
 import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
 import { AttachFile } from "../AttachFile";
 import { ApolloQueryResult } from "@apollo/client";
+import { IGET_BUDGET_TARGET_PROJECT } from "./query";
 
 export interface IBudgetCategory {
 	id?: string;

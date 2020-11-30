@@ -9,8 +9,8 @@ import {
 	GET_IMPACT_CATEGORY_UNIT,
 	GET_IMPACT_CATEGORY_UNIT_COUNT,
 } from "../../../graphql/Impact/categoryUnit";
-import { IImpactUnitData, IImpactCategoryData } from "../../../models/impact/impact";
 import pagination from "../../../hooks/pagination";
+import { IGetImpactCategoryUnit } from "../../../models/impact/query";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterList: { [key: string]: string } = {};
@@ -124,12 +124,14 @@ function ImpactUnitTableGraphql({
 
 	const impactCategoryUnitListMemoized = useMemo(
 		() =>
-			impactCategoryUnitList?.impactCategoryUnitList?.map(
-				(element: {
-					impact_category_org: IImpactCategoryData;
-					impact_units_org: IImpactUnitData;
-				}) => element?.impact_units_org
-			),
+			impactCategoryUnitList?.impactCategoryUnitList
+				?.filter(
+					(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) => element.status
+				)
+				.map(
+					(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
+						element?.impact_units_org
+				),
 		[impactCategoryUnitList]
 	);
 

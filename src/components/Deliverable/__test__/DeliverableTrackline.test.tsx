@@ -24,10 +24,12 @@ import {
 	annualYearListMock,
 	projectDonorMock,
 	financialYearListMock,
+	mockOrgDonor,
 } from "../../../utils/testMock.json";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
-import { GET_ALL_DELIVERABLES_SPEND_AMOUNT } from "../../../graphql/project";
+import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../../graphql/project";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 let createDeliverableTracklineMutation = false;
 const mocks = [
 	{
@@ -35,6 +37,15 @@ const mocks = [
 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 			variables: {
 				filter: { project: 2 },
+			},
+		},
+		result: { data: { deliverableTargetList: DeliverableTargetMock } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+			variables: {
+				filter: { id: "1" },
 			},
 		},
 		result: { data: { deliverableTargetList: DeliverableTargetMock } },
@@ -77,10 +88,10 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_PROJECT_DONORS,
+			query: GET_PROJ_DONORS,
 			variables: { filter: { project: 2 } },
 		},
-		result: { data: { projDonors: projectDonorMock } },
+		result: { data: { projectDonors: projectDonorMock } },
 	},
 	{
 		request: {
@@ -141,7 +152,7 @@ const mocks = [
 			query: GET_ACHIEVED_VALLUE_BY_TARGET,
 			variables: { filter: { deliverableTargetProject: "1" } },
 		},
-		result: {},
+		result: { data: { deliverableTrackingTotalValue: 0 } },
 	},
 	{
 		request: {
@@ -151,6 +162,21 @@ const mocks = [
 			},
 		},
 		result: {},
+	},
+	{
+		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "13",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
 	},
 ];
 let handleClose = jest.fn();
@@ -211,10 +237,16 @@ describe("Deliverable Trackline Form", () => {
 			`createSaveButton`
 		);
 		expect(deliverableTracklineSubmit).toBeEnabled();
-		act(() => {
+		act(async () => {
 			fireEvent.click(deliverableTracklineSubmit);
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
-		expect(createDeliverableTracklineMutation).toBe(true);
+
+		new Promise((resolve) => setTimeout(resolve, 500))
+			.then(() => {
+				expect(createDeliverableTracklineMutation).toBe(true);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	});
 });

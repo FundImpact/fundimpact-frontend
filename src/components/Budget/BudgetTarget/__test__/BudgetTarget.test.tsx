@@ -1,14 +1,20 @@
 import React from "react";
-import { GET_ORG_CURRENCIES_BY_ORG, GET_CURRENCY_LIST } from "../../../../graphql";
+import {
+	GET_ORG_CURRENCIES_BY_ORG,
+	GET_CURRENCY_LIST,
+	GET_COUNTRY_LIST,
+} from "../../../../graphql";
 import { GET_ORGANIZATION_BUDGET_CATEGORY } from "../../../../graphql/Budget";
 import { CREATE_PROJECT_BUDGET_TARGET } from "../../../../graphql/Budget/mutation";
-import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { GET_PROJECT_BUDGET_AMOUNT, GET_PROJ_DONORS } from "../../../../graphql/project";
 import { mockCurrencyList } from "../../../../utils/testMock.json";
 import {
 	organizationDetails,
 	projectDetails,
 	mockOrgBudgetCategory,
 	mockProjectDonors,
+	mockCountryList,
+	mockOrgDonor,
 } from "../../../../utils/testMock.json";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -16,12 +22,13 @@ import { renderApollo } from "../../../../utils/test.util";
 import BudgetTarget from "../BudgetTarget";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { FORM_ACTIONS } from "../../../../models/constants";
-import { budgetTargetFormInputFields, budgetTargetFormSelectFields } from "../inputFields.json";
+import { budgetTargetFormInputFields } from "../inputFields.json";
 import { commonFormTestUtil } from "../../../../utils/commonFormTest.util";
 import { IBudgetTargetForm } from "../../../../models/budget/budgetForm";
 import { fireEvent, wait } from "@testing-library/dom";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
+import { GET_ORG_DONOR } from "../../../../graphql/donor";
 
 const handleClose = jest.fn();
 
@@ -39,6 +46,16 @@ const intialFormValue: IBudgetTargetForm = {
 const mockOrgHomeCurrency = [{ currency: { code: "INR" } }];
 
 const mocks = [
+	{
+		request: {
+			query: GET_COUNTRY_LIST,
+		},
+		result: {
+			data: {
+				countries: mockCountryList,
+			},
+		},
+	},
 	{
 		request: {
 			query: GET_ORGANIZATION_BUDGET_CATEGORY,
@@ -113,6 +130,21 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: "3",
+				},
+			},
+		},
+		result: {
+			data: {
+				orgDonors: mockOrgDonor,
+			},
+		},
+	},
+	{
+		request: {
 			query: CREATE_PROJECT_BUDGET_TARGET,
 			variables: {
 				input: {
@@ -142,6 +174,13 @@ const mocks = [
 			};
 		},
 	},
+	{
+		request: {
+			query: GET_PROJECT_BUDGET_AMOUNT,
+			variables: { filter: { project: 3 } },
+		},
+		result: { data: { projectBudgetTargetAmountSum: 0 } },
+	},
 ];
 
 beforeEach(() => {
@@ -166,7 +205,7 @@ beforeEach(() => {
 	});
 });
 
-const inputIds = [...budgetTargetFormInputFields, ...budgetTargetFormSelectFields];
+const inputIds = [...budgetTargetFormInputFields];
 
 const {
 	checkElementHaveCorrectValue,

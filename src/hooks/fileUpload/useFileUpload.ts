@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/userContext";
-import { FILE_UPLOAD } from "../../utils/endpoints.util";
+import { FILE_UPLOAD, FILE_UPLOAD_MORPH } from "../../utils/endpoints.util";
 import { setResponseError } from "../fetch/usePostFetch";
 import axios from "axios";
 export const useFileUpload = <T>() => {
@@ -19,7 +19,7 @@ export const useFileUpload = <T>() => {
 	const { jwt } = useAuth();
 
 	const uploadFile = useCallback(
-		async (payload, index?: number) => {
+		async (payload, index?: number, update?: boolean) => {
 			const response = await intiatePostRequest(
 				payload,
 				setLoading,
@@ -27,7 +27,8 @@ export const useFileUpload = <T>() => {
 				setError,
 				setLoadingStatus,
 				index,
-				jwt
+				jwt,
+				update
 			);
 			return response;
 		},
@@ -44,14 +45,15 @@ const intiatePostRequest = async (
 	setError: Dispatch<SetStateAction<any>>,
 	setLoadingStatus: Dispatch<SetStateAction<any>>,
 	index?: number,
-	jwt?: string
+	jwt?: string,
+	update?: boolean
 ) => {
 	if (!payload) {
 		return;
 	}
 	setLoading(true);
 	try {
-		let response: any = await sendPostRequest(payload, jwt, setLoadingStatus, index);
+		let response: any = await sendPostRequest(payload, jwt, setLoadingStatus, index, update);
 		setLoading(false);
 
 		if (response.statusCode && response.statusCode !== 200) {
@@ -93,7 +95,8 @@ const sendPostRequest = async (
 	payload: any,
 	jwt?: string,
 	setLoadingStatus?: Dispatch<SetStateAction<any>>,
-	index?: number
+	index?: number,
+	update?: boolean
 ) => {
 	const headers = new Headers();
 	if (jwt) {
@@ -101,23 +104,31 @@ const sendPostRequest = async (
 	}
 
 	const config = {
+		params: update ? payload : {},
 		headers: {
 			...headers,
 			Authorization: `Bearer ${jwt}`,
 		},
-		onUploadProgress: (progressEvent: any) => {
-			if (setLoadingStatus) {
-				setLoadingStatus({
-					index: index,
-					loaded: progressEvent.loaded,
-					total: progressEvent.total,
-				});
-			}
-			console.log(progressEvent.loaded + " " + progressEvent.total);
-		},
+		onUploadProgress: update
+			? () => {}
+			: (progressEvent: any) => {
+					if (setLoadingStatus) {
+						setLoadingStatus({
+							index: index,
+							loaded: progressEvent.loaded,
+							total: progressEvent.total,
+						});
+					}
+			  },
 	};
 
 	let formData = payload;
-	let response = await axios.post(`${FILE_UPLOAD}`, formData, config);
+
+	let response = await axios.post(
+		`${update ? FILE_UPLOAD_MORPH : FILE_UPLOAD}`,
+		update ? {} : formData,
+		config
+	);
+	console.log("adcadsc", FILE_UPLOAD);
 	return response?.data;
 };

@@ -1,16 +1,16 @@
 import React from "react";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import CommonTable from "../CommonTable";
-import {  IIndividual } from "../../../models/individual";
+import { IIndividual } from "../../../models/individual";
 import { individualTableOrganizationHeadings, individualTableProjectHeadings } from "../constants";
 import { Grid, Box, Chip, Avatar } from "@material-ui/core";
 import IndividualDialog from "../../IndividualDialog";
-import { FORM_ACTIONS, Enitity } from "../../../models/constants";
-import AddContactAddressDialog from "../../AddContactAddressDialog";
+import { FORM_ACTIONS, Entity_Name } from "../../../models/constants";
 import ContactListDialog from "../../ContactListDialog";
 import FilterList from "../../FilterList";
 import { individualInputFields } from "./inputFields.json";
 import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
+import ContactDialogGraphql from "../../ContactDialog";
 
 enum dialogType {
 	individual = 0,
@@ -210,16 +210,17 @@ function IndividualTableView({
 								: IndividualDialogType.project
 						}
 					/>
-					<AddContactAddressDialog
+					<ContactDialogGraphql
 						open={openDialogs[dialogType.contact]}
 						handleClose={() => toggleDialogs(dialogType.contact, false)}
-						entity_name={Enitity.individual}
+						entity_name={Entity_Name.individual}
 						entity_id={initialValues.id}
+						formAction={FORM_ACTIONS.CREATE}
 					/>
 					<ContactListDialog
 						open={openDialogs[dialogType.contactList]}
 						handleClose={() => toggleDialogs(dialogType.contactList, false)}
-						entity_name={Enitity.individual}
+						entity_name={Entity_Name.individual}
 						entity_id={initialValues.id}
 					/>
 				</>

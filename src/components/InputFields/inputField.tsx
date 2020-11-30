@@ -14,7 +14,6 @@ import {
 	Switch,
 	Box,
 	Typography,
-	Divider,
 	ListSubheader,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -203,11 +202,19 @@ const InputFields = ({
 						))}
 					{!multiple &&
 						!multiSelect &&
-						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
-							<MenuItem key={index} value={elem.id}>
-								{elem.name}
-							</MenuItem>
-						))}
+						optionsArray?.map(
+							(
+								elem: { id: string; name: string; groupName?: string },
+								index: number
+							) =>
+								elem.groupName ? (
+									<ListSubheader>{elem.groupName}</ListSubheader>
+								) : (
+									<MenuItem key={index} value={elem.id}>
+										{elem.name}
+									</MenuItem>
+								)
+						)}
 					{multiple &&
 						optionsArray?.map(
 							(

@@ -310,6 +310,7 @@ function AttachFileForm(props: {
 									<AttachedFileList
 										{...{
 											file,
+											onSaveCall,
 											addRemark: (remark: string) => {
 												let fileArr = [...filesArray];
 												fileArr[index].remark = remark;
@@ -364,11 +365,12 @@ function AttachFileForm(props: {
 
 const AttachedFileList = (props: {
 	file: AttachFile;
+	onSaveCall: boolean;
 	addRemark: (text: string) => void;
 	removeFile: () => void;
 }) => {
 	const [openAddRemark, setOpenAddRemark] = React.useState(false);
-	const { file, addRemark, removeFile } = props;
+	const { file, onSaveCall, addRemark, removeFile } = props;
 	const [text, setText] = React.useState<string>("");
 	const handleTextField = (event: any) => {
 		setText(event.target.value);
@@ -386,7 +388,7 @@ const AttachedFileList = (props: {
 			<Card className={classes.root}>
 				<CardActionArea>
 					{/*if not uploaded*/}
-					{!file.id && !file.uploaderConfig && (
+					{!file.id && !file.uploaderConfig && !onSaveCall && (
 						<IconButton
 							className={classes.close}
 							onClick={() => {

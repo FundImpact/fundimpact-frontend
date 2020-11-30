@@ -9,6 +9,7 @@ const useMultipleFileUpload = (
 	let { uploadFile, error: uploadingError, loadingStatus } = useFileUpload();
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	useMemo(() => {
 		if (loadingStatus && filesArray && filesArray?.length && setFilesArray) {
@@ -88,6 +89,45 @@ const useMultipleFileUpload = (
 		}
 	};
 
+	const multiplefileMorph = async ({
+		related_id,
+		related_type,
+		field,
+	}: {
+		related_id: string;
+		related_type: string;
+		field: string;
+	}) => {
+		if (filesArray && setFilesArray) {
+			let uploadError = null;
+			try {
+				setLoading(true);
+				for (let i = 0; i < filesArray.length; i++) {
+					let file = filesArray[i];
+					/*if file.id === already uploaded */
+					if (file.id) {
+						let params = {
+							upload_file_id: file.id,
+							related_id,
+							related_type,
+							field,
+							order: 3,
+						};
+						await uploadFile(params, i, true);
+					}
+				}
+			} catch (err) {
+				uploadError = err;
+				setError(uploadError);
+				console.error(uploadError);
+			} finally {
+				if (!error) console.log("success");
+				setLoading(false);
+				setSuccess(true);
+			}
+		}
+	};
+
 	const multiplefileUploader = async ({
 		ref,
 		refId,
@@ -100,7 +140,7 @@ const useMultipleFileUpload = (
 		path?: string;
 	}) => {
 		if (filesArray && setFilesArray) {
-			let error = null;
+			let uploadError = null;
 			try {
 				for (let i = 0; i < filesArray.length; i++) {
 					let file = filesArray[i];
@@ -129,21 +169,22 @@ const useMultipleFileUpload = (
 					}
 				}
 			} catch (err) {
-				error = err;
-				setError(err);
-				console.error(err);
+				uploadError = err;
+				setError(uploadError);
+				console.error(uploadError);
 			} finally {
 				if (!error) console.log("success");
 				setSuccess(true);
-				return true;
 			}
 		}
 	};
 	return {
+		loading,
 		error,
 		success,
 		multiplefileUpload,
 		multiplefileUploader,
+		multiplefileMorph,
 		setSuccess,
 	};
 };
