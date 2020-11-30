@@ -19,7 +19,7 @@ import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
 import Donor from "../../Donor";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { Entity_Name, FORM_ACTIONS } from "../../../models/constants";
 import { IDONOR_RESPONSE } from "../../../models/donor/query";
 import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
 import { IDONOR } from "../../../models/donor";
@@ -33,6 +33,8 @@ import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { FormattedMessage } from "react-intl";
+import ContactDialog from "../../ContactDialog";
+import ContactListDialog from "../../ContactListDialog";
 
 enum tableHeader {
 	name = 1,
@@ -117,7 +119,10 @@ function DonorTable({
 		});
 	}, [tableFilterList, dashboardData]);
 
-	const [openDialog, setOpenDialog] = useState(false);
+	const [openDonorEditDialog, setOpenDonorEditDialog] = useState(false);
+	const [openContactAddDialog, setOpenContactAddDialog] = useState(false);
+	const [openContactListDialog, setOpenContactListDialog] = useState(false);
+
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
 	let { changePage, count, queryData: donorList, queryLoading, countQueryLoading } = pagination({
@@ -148,7 +153,7 @@ function DonorTable({
 			children: (
 				<MenuItem
 					onClick={() => {
-						setOpenDialog(true);
+						setOpenDonorEditDialog(true);
 						handleClose();
 					}}
 				>
@@ -156,6 +161,38 @@ function DonorTable({
 						id="editDonorMenuItem"
 						defaultMessage="Edit Donor"
 						description="This text will be shown on menu item to edit donor"
+					/>
+				</MenuItem>
+			),
+		},
+		{
+			children: (
+				<MenuItem
+					onClick={() => {
+						setOpenContactAddDialog(true);
+						handleClose();
+					}}
+				>
+					<FormattedMessage
+						id="addContactMenuItem"
+						defaultMessage="Add Contact"
+						description="This text will be shown on menu item to add contact"
+					/>
+				</MenuItem>
+			),
+		},
+		{
+			children: (
+				<MenuItem
+					onClick={() => {
+						setOpenContactListDialog(true);
+						handleClose();
+					}}
+				>
+					<FormattedMessage
+						id="showContactListMenuItem"
+						defaultMessage="Show Contacts"
+						description="This text will be shown on menu item to show contact list"
 					/>
 				</MenuItem>
 			),
@@ -184,9 +221,22 @@ function DonorTable({
 		<TableContainer component={Paper}>
 			<Donor
 				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenDialog(false)}
+				handleClose={() => setOpenDonorEditDialog(false)}
 				initialValues={getInitialValues(selectedDonor.current)}
-				open={openDialog}
+				open={openDonorEditDialog}
+			/>
+			<ContactDialog
+				entity_id={selectedDonor.current?.id || ""}
+				entity_name={Entity_Name.donor}
+				formAction={FORM_ACTIONS.CREATE}
+				open={openContactAddDialog}
+				handleClose={() => setOpenContactAddDialog(false)}
+			/>
+			<ContactListDialog
+				entity_id={selectedDonor.current?.id || ""}
+				entity_name={Entity_Name.donor}
+				open={openContactListDialog}
+				handleClose={() => setOpenContactListDialog(false)}
 			/>
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>

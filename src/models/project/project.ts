@@ -17,12 +17,11 @@ export type ProjectProps = {
 	open: boolean;
 	handleClose: () => void;
 	workspace: string;
-	reftechOnSuccess:
+	reftechOnSuccess?:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
-		| ((options?: QueryLazyOptions<{ filter: { workspace: any } }> | undefined) => void)
-		| undefined;
+		| ((options?: QueryLazyOptions<{ filter: { workspace: any } }> | undefined) => void);
 } & (
 	| {
 			type: PROJECT_ACTIONS.CREATE;
@@ -70,15 +69,26 @@ export interface ICreateProjectDonorVariables {
 }
 
 export interface IGetProjectDonor {
-	projectDonors: {
+	projectDonors: IProjectDonor[];
+}
+
+export interface IProjectDonor {
+	id: string;
+	project: {
 		id: string;
-		project: {
-			id: string;
-			name: string;
-		};
-		donor: {
-			id: string;
-			name: string;
-		};
-	}[];
+		name: string;
+	};
+	donor: {
+		id: string;
+		name: string;
+	};
+}
+export interface ICreateProject {
+	createOrgProject: {
+		id: number;
+		name: string;
+		workspace: IOrganisationWorkspaces;
+		short_name: string;
+		description: string;
+	};
 }

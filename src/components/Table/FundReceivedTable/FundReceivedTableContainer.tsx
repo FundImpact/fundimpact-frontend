@@ -29,6 +29,7 @@ function FundReceivedTableContainer({
 	inputFields,
 	removeFilterListElements,
 	donorHash,
+	currency,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;
@@ -49,6 +50,7 @@ function FundReceivedTableContainer({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	inputFields: any[];
 	donorHash: { [key: string]: string };
+	currency: string;
 }) {
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 	const selectedFundReceipt = useRef<IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null>(
@@ -80,6 +82,7 @@ function FundReceivedTableContainer({
 			setFilterList={setFilterList}
 			inputFields={inputFields}
 			donorHash={donorHash}
+			currency={currency || ""}
 		/>
 	);
 }

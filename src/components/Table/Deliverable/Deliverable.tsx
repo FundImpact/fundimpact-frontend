@@ -432,13 +432,13 @@ export default function DeliverablesTable() {
 						<TableCell
 							key={
 								deliverableTargetList[i].deliverable_category_unit
-									.deliverable_category_org.name +
+									?.deliverable_category_org?.name +
 								`${deliverableTargetList[i]?.id}-2`
 							}
 						>
 							{
 								deliverableTargetList[i].deliverable_category_unit
-									.deliverable_category_org.name
+									?.deliverable_category_org?.name
 							}
 						</TableCell>,
 						<TableCell
@@ -447,7 +447,7 @@ export default function DeliverablesTable() {
 								`${deliverableTargetList[i]?.id}-3`
 							}
 						>
-							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit.deliverable_units_org.name}
+							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit?.deliverable_units_org?.name}
 							`}
 						</TableCell>,
 					];
@@ -460,7 +460,7 @@ export default function DeliverablesTable() {
 							deliverableTargetValue={deliverableTargetList[i].target_value}
 							deliverableTargetUnit={
 								deliverableTargetList[i].deliverable_category_unit
-									.deliverable_units_org.name
+									?.deliverable_units_org?.name
 							}
 						/>
 					);

@@ -11,15 +11,32 @@ import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../../graphql/Individ
 import { useLazyQuery } from "@apollo/client";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { IndividualTableType } from "../../../models/individual/constant";
+import { IDashboardDataContext } from "../../../models";
 
 const getDefaultFilterList = () => ({
 	name: "",
 });
 
+const getQueryFilter = ({
+	individualTableType,
+	dashboardData,
+}: {
+	individualTableType: IndividualTableType;
+	dashboardData: IDashboardDataContext;
+}) => {
+	if (individualTableType == IndividualTableType.organization) {
+		return { organization: dashboardData?.organization?.id };
+	}
+	return { t4d_project_individuals: { project: dashboardData?.project?.id } };
+};
+
 function IndividualCategoryTableGraphql({
 	tableFilterList,
+	individualTableType = IndividualTableType.organization,
 }: {
 	tableFilterList?: { [key: string]: string };
+	individualTableType?: IndividualTableType;
 }) {
 	const dashboardData = useDashBoardData();
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -31,9 +48,7 @@ function IndividualCategoryTableGraphql({
 
 	useEffect(() => {
 		if (dashboardData) {
-			setQueryFilter({
-				organization: dashboardData?.organization?.id,
-			});
+			setQueryFilter(getQueryFilter({ individualTableType, dashboardData }));
 		}
 	}, [setQueryFilter, dashboardData]);
 
@@ -46,7 +61,7 @@ function IndividualCategoryTableGraphql({
 				}
 			}
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				...getQueryFilter({ individualTableType, dashboardData }),
 				...newFilterListObject,
 			});
 		}
@@ -86,6 +101,7 @@ function IndividualCategoryTableGraphql({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
+			individualTableType={individualTableType}
 		/>
 	);
 }

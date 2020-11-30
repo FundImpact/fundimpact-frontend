@@ -14,8 +14,12 @@ import FullScreenLoader from "../commons/GlobalLoader";
 import { FORM_ACTIONS } from "../Forms/constant";
 import DonorYearTagForm from "../Forms/FYDonorYearTagsForm/FYDonorYearTags";
 
+/*	financial_year: props.organizationCountry &&
+	props.organizationCountry === element.donor.country.id
+	? props.TracklineFyId : "" */
+
 export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) {
-	let donors: any = [];
+	let projectDonors: any = [];
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		/*Removing already mapped donors from donor list*/
 		let afterRemovingAlreadyMappedDonorsList: any = [];
@@ -23,15 +27,15 @@ export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) 
 			if (!props.alreadyMappedDonorsIds?.includes(element.id))
 				afterRemovingAlreadyMappedDonorsList.push(element);
 		});
-		donors = afterRemovingAlreadyMappedDonorsList;
+		projectDonors = afterRemovingAlreadyMappedDonorsList;
 	} else {
 		/*All donors if props.type === FORM_ACTION.CREATE */
-		donors = props.donors;
+		projectDonors = props.donors;
 	}
 
 	let initialValuesObj: any = {};
 
-	donors?.forEach(
+	projectDonors?.forEach(
 		(element: {
 			id: string;
 			name: string;
@@ -39,11 +43,7 @@ export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) 
 		}) => {
 			/*if Donor Id is 15 then it details will be stored in initialValues[15mapValues] */
 			initialValuesObj[`${element.id}mapValues`] = {
-				financial_year:
-					props.organizationCountry &&
-					props.organizationCountry === element.donor.country.id
-						? props.TracklineFyId
-						: "", //
+				financial_year: "", //
 				grant_periods_project: "",
 				project_donor: element.id,
 			};
@@ -113,7 +113,6 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 
 	const onSubmit = (value: any) => {
 		let finalvalues: any = Object.values(value);
-
 		for (let i = 0; i < finalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = finalvalues[i]?.id;
 			if (deliverable_lineitem_fy_id) {
@@ -177,7 +176,7 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				<DonorYearTagForm
 					{...{
 						initialValues,
-						donors: props.donors,
+						projectDonors: props.donors,
 						TracklineFyId: props.TracklineFyId,
 						organizationCountry,
 						validate,

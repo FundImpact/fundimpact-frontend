@@ -7,6 +7,8 @@ export type CardProps = {
 	cardHeight?: string;
 	cardFilter?: { label: string; base: string }[];
 	currentFilter?: { label: string; base: string };
+	showInfoIcon?: boolean;
+	tooltip?: string;
 } & (
 	| {
 			type: CARD_TYPES.PIE;
@@ -46,6 +48,7 @@ export type ProjectCardConfig = {
 		comparativeErrorMeasureData: { name: string; y: number }[];
 	};
 	loading?: boolean;
+	tooltip?: string;
 };
 
 export type PieCardConfig = {

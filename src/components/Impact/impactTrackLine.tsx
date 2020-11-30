@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
+import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useMemo } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -37,8 +37,17 @@ import {
 import { AttachFile } from "../../models/AttachFile";
 import AttachFileForm from "../Forms/AttachFiles";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
-import { CircularPercentage } from "../commons";
+import { CircularPercentage, FormDetails } from "../commons";
 import { GET_ALL_IMPACT_AMOUNT_SPEND } from "../../graphql/Impact/query";
+import { GET_ORG_DONOR } from "../../graphql/donor";
+import { GET_PROJ_DONORS } from "../../graphql/project";
+import { IGET_DONOR } from "../../models/donor/query";
+import { IGetProjectDonor, IProjectDonor } from "../../models/project/project";
+import { getProjectDonorsWithDonorsId } from "../Deliverable/DeliverableTrackline";
+import ImpactTarget from "./impactTarget";
+import Donor from "../Donor";
+import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { updateProjectDonorCache } from "../Project/Project";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -58,19 +67,69 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IImpactTargetLine = getInitialValues(props);
 	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
+	const apolloClient = useApolloClient();
 
 	const { data: impactFyData } = useQuery(GET_FINANCIAL_YEARS, {
 		variables: { filter: { country: DashBoardData?.organization?.country?.id } },
 	});
 
-	const { data: impactProjectDonors } = useQuery(GET_PROJECT_DONORS, {
-		variables: { filter: { project: DashBoardData?.project?.id } },
-	});
 	const [stepperActiveStep, setStepperActiveStep] = React.useState(0);
 
 	const { data: impactTargets } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
+
+	useQuery(GET_PROJ_DONORS, {
+		variables: { filter: { project: DashBoardData?.project?.id } },
+	});
+
+	useQuery(GET_ORG_DONOR, {
+		variables: { filter: { organization: DashBoardData?.organization?.id } },
+	});
+
+	let cachedProjectDonorsForImpact: IGetProjectDonor | null = null;
+	try {
+		cachedProjectDonorsForImpact = apolloClient.readQuery<IGetProjectDonor>(
+			{
+				query: GET_PROJ_DONORS,
+				variables: { filter: { project: DashBoardData?.project?.id } },
+			},
+			true
+		);
+	} catch (error) {
+		console.error(error);
+	}
+
+	let cachedOrganizationDonorsForImpact: IGET_DONOR | null = null;
+	try {
+		cachedOrganizationDonorsForImpact = apolloClient.readQuery<IGET_DONOR>(
+			{
+				query: GET_ORG_DONOR,
+				variables: { filter: { organization: DashBoardData?.organization?.id } },
+			},
+			true
+		);
+	} catch (error) {
+		console.error(error);
+	}
+	const [createProjectDonor] = useMutation(CREATE_PROJECT_DONOR, {
+		onCompleted: (data) => {
+			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+		},
+	});
+
+	const createProjectDonorHelper = (value: any) => {
+		createProjectDonor({
+			variables: {
+				input: {
+					project: DashBoardData?.project?.id,
+					donor: value.id,
+				},
+			},
+		});
+	};
+
+	impactTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
 
 	const [donors, setDonors] = React.useState<
 		{
@@ -79,8 +138,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			donor: { id: string; name: string; country: { id: string; name: string } };
 		}[]
 	>();
+
 	const [impactDonorForm, setImpactDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [impactDonorFormData, setImpactDonorFormData] = React.useState<any>();
+
 	const handleNext = () => {
 		setStepperActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
@@ -96,6 +157,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		props.handleClose();
 		handleReset();
 	};
+	const [openImpactTargetDialog, setOpenImpactTargetDialog] = React.useState<boolean>();
+	impactTragetLineForm[0].addNewClick = () => setOpenImpactTargetDialog(true);
+
+	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
+	impactTragetLineForm[3].addNewClick = () => setOpenDonorDialog(true);
+
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
 		props.type === IMPACT_ACTIONS.UPDATE
@@ -104,15 +171,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				: []
 			: []
 	);
-	let uploadingFileMessage = CommonUploadingFilesMessage();
-	const [impactUploadLoading, setImpactUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	React.useEffect(() => {
-		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setImpactUploadLoading(percentage);
-	}, [filesArray, totalFilesToUpload, setImpactUploadLoading]);
 
 	/* Open Attach File Form*/
 	impactTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -120,14 +178,22 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	if (filesArray.length) impactTragetLineForm[7].label = "View Files";
 	else impactTragetLineForm[7].label = "Attach Files";
 
-	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+	if (filesArray.length)
+		impactTragetLineForm[7].textNextToButton = `${filesArray.length} files attached`;
+	else impactTragetLineForm[7].textNextToButton = ``;
 
-	let { multiplefileUpload } = useMultipleFileUpload();
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
+	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	const [selectedImpactTarget, setSelectedImpactTarget] = React.useState<
 		string | number | undefined
 	>("");
+
+	let {
+		multiplefileMorph,
+		loading: uploadMorphLoading,
+		success,
+		setSuccess,
+	} = useMultipleFileUpload(filesArray, setFilesArray);
 
 	const { refetch: impactTracklineRefetch } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
 		variables: {
@@ -136,24 +202,92 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	});
 
 	React.useEffect(() => {
-		if (uploadSuccess) {
+		if (success) {
 			if (props.type === IMPACT_ACTIONS.CREATE) {
 				impactTracklineRefetch();
 			} else if (props.type === IMPACT_ACTIONS.UPDATE && props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
-			setUploadSuccess(false);
+			setSuccess(false);
 			handleNext();
 		}
-	}, [uploadSuccess]);
+	}, [success]);
 
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-	};
-	if (uploadSuccess) successMessage();
+	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
+		props.impactTarget ? props.impactTarget : ""
+	);
+	const [currentTargetName, setCurrentTargetName] = React.useState<string>("");
+	const [formDetailsArray, setFormDetailsArray] = React.useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [getImpactTarget, { data: impactTargetResponse }] = useLazyQuery(
+		GET_IMPACT_TARGET_BY_PROJECT
+	);
+	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
+		GET_ACHIEVED_VALLUE_BY_TARGET
+	);
+	impactTragetLineForm[0].getInputValue = setCurrentTargetId;
+
+	useEffect(() => {
+		if (currentTargetId) {
+			getImpactTarget({ variables: { filter: { id: currentTargetId } } });
+			getTargetAchieveValue({
+				variables: { filter: { impactTargetProject: currentTargetId } },
+			});
+		}
+	}, [currentTargetId, getImpactTarget, getTargetAchieveValue]);
+
+	const intl = useIntl();
+
+	let impactCategoryLabel = intl.formatMessage({
+		id: "impactCategoryLabelFormDetail",
+		defaultMessage: "Category",
+		description: "This text will be show on deliverable trackline form for impact category",
+	});
+	let impactTotalTargetLabel = intl.formatMessage({
+		id: "impactTotalTargetLabelFormDetail",
+		defaultMessage: "Target",
+		description: "This text will be show on deliverable trackline form for impact category",
+	});
+	let impactAchievedTargetLabel = intl.formatMessage({
+		id: "impactAchievedTargetLabelFormDetail",
+		defaultMessage: "Achieved",
+		description: "This text will be show on deliverable trackline form for impact category",
+	});
+
+	useEffect(() => {
+		let fetchedImpactTarget = impactTargetResponse?.impactTargetProjectList[0];
+		if (fetchedImpactTarget && achivedValue) {
+			setCurrentTargetName(fetchedImpactTarget.name);
+			setFormDetailsArray([
+				{
+					label: impactCategoryLabel,
+					value: fetchedImpactTarget.impact_category_unit.impact_category_org.name,
+				},
+				{
+					label: impactTotalTargetLabel,
+					value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+				},
+				{
+					label: impactAchievedTargetLabel,
+					value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+				},
+			]);
+		}
+	}, [impactTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
+
+	let formDetailsComponent = (
+		<FormDetails formDetails={formDetailsArray} title={currentTargetName} />
+	);
 
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
+			multiplefileMorph({
+				related_id: data.createImpactTrackingLineitemInput.id,
+				related_type: "impact_tracking_lineitem",
+				field: "attachments",
+			});
+
 			setImpactDonorForm(
 				<ImpacTracklineDonorYearTags
 					donors={donors}
@@ -164,19 +298,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				/>
 			);
 
-			setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-			multiplefileUpload({
-				ref: "impact-tracking-lineitem",
-				refId: data.createImpactTrackingLineitemInput.id,
-				field: "attachments",
-				path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
-				filesArray: filesArray,
-				setFilesArray: setFilesArray,
-				setUploadSuccess: setUploadSuccess,
-			});
-
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
-			setFilesArray([]);
 		},
 		onError(data) {
 			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
@@ -205,21 +327,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					/>
 				);
 
-				setTotalFilesToUpload(filesArray.filter((elem) => !elem.id).length);
-				multiplefileUpload({
-					ref: "impact-tracking-lineitem",
-					refId: data.updateImpactTrackingLineitemInput.id,
-					field: "attachments",
-					path: `org-${DashBoardData?.organization?.id}/impact-tracking-lineitem`,
-					filesArray: filesArray,
-					setFilesArray: setFilesArray,
-					setUploadSuccess: setUploadSuccess,
-				});
-
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
-				setFilesArray([]);
+				handleNext();
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
@@ -241,25 +352,53 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		}
 	}, [impactTargets]);
 
-	useEffect(() => {
-		if (impactProjectDonors) {
-			let donorsArray: any = [];
-			impactProjectDonors.projDonors.forEach(
-				(elem: {
-					id: string;
-					donor: { id: string; name: string; country: { id: string; name: string } };
-				}) => {
-					if (
-						props.type === IMPACT_ACTIONS.UPDATE &&
-						props.alreadyMappedDonorsIds?.includes(elem.id)
-					)
-						donorsArray.push({ ...elem, name: elem.donor.name, disabled: true });
-					else donorsArray.push({ ...elem, name: elem.donor.name });
+	impactTragetLineForm[3].optionsArray = useMemo(() => {
+		let donorsArray: any = [];
+		if (cachedProjectDonorsForImpact)
+			cachedProjectDonorsForImpact.projectDonors.forEach((elem: IProjectDonor) => {
+				if (
+					props.type === IMPACT_ACTIONS.UPDATE &&
+					props.alreadyMappedDonorsIds?.includes(elem.donor.id)
+				) {
+					donorsArray.push({
+						...elem,
+						id: elem.donor.id,
+						name: elem.donor.name,
+						disabled: true,
+					});
+				} else {
+					donorsArray.push({
+						...elem,
+						id: elem.donor.id,
+						name: elem.donor.name,
+					});
+				}
+			});
+		return donorsArray;
+	}, [cachedProjectDonorsForImpact, props]);
+
+	impactTragetLineForm[3].secondOptionsArray = useMemo(() => {
+		let organizationMinusProjectDonors: any = [];
+		if (cachedProjectDonorsForImpact && cachedOrganizationDonorsForImpact)
+			cachedOrganizationDonorsForImpact.orgDonors.forEach(
+				(orgDonor: { id: string; name: string }) => {
+					let projectDonorNotContainsOrgDonor = true;
+					cachedProjectDonorsForImpact?.projectDonors.forEach(
+						(projectDonor: IProjectDonor) => {
+							if (orgDonor.id === projectDonor.donor.id) {
+								projectDonorNotContainsOrgDonor = false;
+								return false;
+							}
+						}
+					);
+					if (projectDonorNotContainsOrgDonor)
+						organizationMinusProjectDonors.push({
+							...orgDonor,
+						});
 				}
 			);
-			impactTragetLineForm[3].optionsArray = donorsArray;
-		}
-	}, [impactProjectDonors, props]);
+		return organizationMinusProjectDonors;
+	}, [cachedProjectDonorsForImpact, cachedOrganizationDonorsForImpact]);
 
 	// updating financial year field with fetched financial year list
 	useEffect(() => {
@@ -270,11 +409,18 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 	const onCreate = (value: IImpactTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
-		setDonors(value.donors);
+
 		setSelectedImpactTarget(value.impact_target_project);
 		let input = { ...value };
 		if (!input.financial_year) delete (input as any).financial_year;
 		if (!input.annual_year) delete (input as any).annual_year;
+
+		let donorsForTracklineDonorForm = getProjectDonorsWithDonorsId(
+			value.donors?.filter((item) => !!item),
+			cachedProjectDonorsForImpact?.projectDonors
+		);
+		setDonors(donorsForTracklineDonorForm);
+
 		delete (input as any).donors;
 		createImpactTrackline({
 			variables: { input },
@@ -389,9 +535,15 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		let impactTargetLineId = value.id;
 		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
-		setDonors(value.donors);
+
 		setImpactDonorFormData(value.impactDonorMapValues);
 		let input = { ...value };
+
+		let donorsForTracklineDonorForm = getProjectDonorsWithDonorsId(
+			value.donors?.filter((item) => !!item),
+			cachedProjectDonorsForImpact?.projectDonors
+		);
+		setDonors(donorsForTracklineDonorForm);
 
 		delete (input as any).donors;
 		delete (input as any).impactDonorMapValues;
@@ -462,7 +614,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			}}
 		/>
 	);
-	const intl = useIntl();
+
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -485,34 +637,59 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
+				formDetails={formDetailsComponent}
 			>
 				<Stepper
 					stepperHelpers={{
 						activeStep: stepperActiveStep,
 						setActiveStep: setStepperActiveStep,
-						handleNext,
-						handleBack,
-						handleReset,
+						handleNext: handleNext,
+						handleBack: handleBack,
+						handleReset: handleReset,
 					}}
 					basicForm={basicForm}
 					donorForm={impactDonorForm}
 				/>
-				{impactUploadLoading > 0 ? (
-					<CircularPercentage
-						progress={impactUploadLoading}
-						message={uploadingFileMessage}
+
+				{openImpactTargetDialog && (
+					<ImpactTarget
+						type={IMPACT_ACTIONS.CREATE}
+						open={openImpactTargetDialog}
+						handleClose={() => setOpenImpactTargetDialog(false)}
+						project={DashBoardData?.project?.id}
 					/>
-				) : null}
+				)}
+				{openDonorDialog && (
+					<Donor
+						open={openDonorDialog}
+						formAction={FORM_ACTIONS.CREATE}
+						handleClose={() => setOpenDonorDialog(false)}
+					/>
+				)}
 			</FormDialog>
-			{loading ? <FullScreenLoader /> : null}
-			{updateImpactTrackLineLoading ? <FullScreenLoader /> : null}
+
+			{updateImpactTrackLineLoading || uploadMorphLoading || loading ? (
+				<FullScreenLoader />
+			) : null}
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
-					{...{
-						filesArray,
-						setFilesArray,
+					filesArray={filesArray}
+					setFilesArray={setFilesArray}
+					parentOnSuccessCall={
+						props.type === IMPACT_ACTIONS.UPDATE && props.reftechOnSuccess
+							? props.reftechOnSuccess
+							: undefined
+					}
+					uploadApiConfig={{
+						ref: "impact-tracking-lineitem",
+						refId:
+							props.type === IMPACT_ACTIONS.UPDATE
+								? props.data.id?.toString() || ""
+								: "",
+						field: "attachments",
+						path: `org-${DashBoardData?.organization?.id}/project-${DashBoardData?.project?.id}/impact-tracking-lineitem`,
 					}}
 				/>
 			)}

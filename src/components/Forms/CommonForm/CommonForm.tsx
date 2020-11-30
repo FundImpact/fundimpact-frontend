@@ -95,6 +95,10 @@ function CommonForm({
 												selectId={element.selectId}
 												displayName={element.displayName}
 												required={element.required || !!element.required}
+												addNew={element.addNew ? element.addNew : false}
+												addNewClick={
+													element.addNewClick ? element.addNewClick : null
+												}
 											/>
 										</Grid>
 									)

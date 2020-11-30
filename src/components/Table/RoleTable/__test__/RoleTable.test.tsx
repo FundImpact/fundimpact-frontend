@@ -13,7 +13,7 @@ import { GET_PROJECT_DONORS } from "../../../../graphql";
 import RoleTable from "../RoleTableGraphql";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
-import { GET_ROLES_BY_ORG } from "../../../../graphql/UserRoles/query";
+import { GET_ROLES } from "../../../../graphql/UserRoles/query";
 import { rolesMock } from "../../../Forms/UserRole/__test__/testHelp";
 import { UPDATE_ORGANIZATION_USER_ROLE } from "../../../../graphql/AddRole/mutation";
 
@@ -61,12 +61,9 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_ROLES_BY_ORG,
-			variables: {
-				organization: organizationDetails.id,
-			},
+			query: GET_ROLES,
 		},
-		result: { data: { organizationRoles: rolesMock } },
+		result: { data: { roles: rolesMock } },
 	},
 	{
 		request: {
@@ -151,20 +148,21 @@ describe("Role table tests", () => {
 		});
 	}
 
-	test(`update role test`, async () => {
-		for (let i = 0; i < mockUserRoles.getRolePemissions.slice(0, 10).length; i++) {
-			let checkbox = await table.findByTestId(
-				`${mockUserRoles.getRolePemissions[i].controller}-${mockUserRoles.getRolePemissions[i].action}-${rolesMock[0].id}-input`
-			);
-			await act(async () => {
-				await fireEvent.click(checkbox);
-			});
-			let checkBoxInputElement = checkbox.querySelector('input[type="checkbox"]');
-			expect(checkBoxInputElement).toHaveProperty("checked", true);
-		}
-		let updateButton = table.getByTestId("createUpdateButton");
-		await act(async () => {
-			await fireEvent.click(updateButton);
-		});
-	});
+	//commenting as this feature is disabled
+	// test(`update role test`, async () => {
+	// 	for (let i = 0; i < mockUserRoles.getRolePemissions.slice(0, 10).length; i++) {
+	// 		let checkbox = await table.findByTestId(
+	// 			`${mockUserRoles.getRolePemissions[i].controller}-${mockUserRoles.getRolePemissions[i].action}-${rolesMock[0].id}-input`
+	// 		);
+	// 		await act(async () => {
+	// 			await fireEvent.click(checkbox);
+	// 		});
+	// 		let checkBoxInputElement = checkbox.querySelector('input[type="checkbox"]');
+	// 		expect(checkBoxInputElement).toHaveProperty("checked", true);
+	// 	}
+	// 	let updateButton = table.getByTestId("createUpdateButton");
+	// 	await act(async () => {
+	// 		await fireEvent.click(updateButton);
+	// 	});
+	// });
 });

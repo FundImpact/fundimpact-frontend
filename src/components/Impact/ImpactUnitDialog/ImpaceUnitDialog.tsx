@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useMutation, useQuery, ApolloCache } from "@apollo/client";
+import {
+	useMutation,
+	useQuery,
+	ApolloCache,
+	FetchResult,
+	MutationFunctionOptions,
+	useLazyQuery,
+} from "@apollo/client";
 import {
 	CREATE_IMPACT_CATEGORY_UNIT,
 	CREATE_IMPACT_UNITS_ORG_INPUT,
@@ -22,13 +29,22 @@ import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm/commonForm";
 import { IImpactUnitProps, IImpactUnitData } from "../../../models/impact/impact";
 import { FORM_ACTIONS } from "../../../models/constants";
-import { IGetImpactUnit, IGetImpactCategoryUnit } from "../../../models/impact/query";
+import {
+	IGetImpactUnit,
+	IGetImpactCategoryUnit,
+	IUpdateImpactCategoryUnit,
+	IUpdateImpactCategoryUnitVariables,
+	IGetImpactCategoryUnitVariables,
+} from "../../../models/impact/query";
 import {
 	GET_IMPACT_CATEGORY_UNIT_COUNT,
 	GET_IMPACT_CATEGORY_UNIT,
+	UPDATE_IMPACT_CATEGORY_UNIT,
 } from "../../../graphql/Impact/categoryUnit";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import ImpactCategoryDialog from "../ImpactCategoryDialog";
+import { useLocation } from "react-router";
 
 let inputFields: any[] = impactUnitForm;
 
@@ -41,7 +57,62 @@ const defaultValues: IImpactUnitFormInput = {
 	impactCategory: [],
 };
 
-const getNewImpactCategories = (impactCategories: string[], oldImpactCategories: string[]) =>
+interface IChangeImpactCategoryUnitStatusProps {
+	updateImpactCategoryUnit: (
+		options?:
+			| MutationFunctionOptions<IUpdateImpactCategoryUnit, IUpdateImpactCategoryUnitVariables>
+			| undefined
+	) => Promise<FetchResult<IUpdateImpactCategoryUnit, Record<string, any>, Record<any, any>>>;
+	impactCategoryUnitList: IGetImpactCategoryUnit["impactCategoryUnitList"];
+	submittedImpactCategory: string[];
+}
+
+const changeImpactCategoryUnitStatus = async ({
+	updateImpactCategoryUnit,
+	impactCategoryUnitList,
+	submittedImpactCategory,
+}: IChangeImpactCategoryUnitStatusProps) => {
+	const impactCategoryHash = submittedImpactCategory.reduce(
+		(impCatHash: { [key: string]: boolean }, impactCategoryUnitList) => {
+			impCatHash[impactCategoryUnitList] = true;
+			return impCatHash;
+		},
+		{}
+	);
+
+	//write comment
+	return Promise.all(
+		impactCategoryUnitList.map((impactCategoryUnit) => {
+			if (impactCategoryUnit.impact_category_org.id in impactCategoryHash) {
+				return updateImpactCategoryUnit({
+					variables: {
+						id: impactCategoryUnit.id,
+						input: {
+							status: true,
+						},
+					},
+				});
+			} else {
+				return updateImpactCategoryUnit({
+					variables: {
+						id: impactCategoryUnit.id,
+						input: {
+							status: false,
+						},
+					},
+				});
+			}
+		})
+	);
+};
+
+const getNewImpactCategories = ({
+	impactCategories,
+	oldImpactCategories,
+}: {
+	impactCategories: string[];
+	oldImpactCategories: string[];
+}) =>
 	impactCategories.filter((element: string) => oldImpactCategories.indexOf(element) === -1) || [];
 
 const validate = (values: IImpactUnitFormInput) => {
@@ -57,18 +128,46 @@ function ImpactUnitDialog({
 	handleClose,
 	formAction,
 	initialValues: formValues,
+	organization,
 }: IImpactUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [impactCategory, setImpactCategory] = useState<string[]>([]);
+	const initialValues = formAction === FORM_ACTIONS.CREATE ? defaultValues : formValues;
+
+	const [updateImpactCategoryUnit] = useMutation<
+		IUpdateImpactCategoryUnit,
+		IUpdateImpactCategoryUnitVariables
+	>(UPDATE_IMPACT_CATEGORY_UNIT);
+
+	const [getImpactCategoryUnitList, { data: impactCategoryUnitList }] = useLazyQuery<
+		IGetImpactCategoryUnit,
+		IGetImpactCategoryUnitVariables
+	>(GET_IMPACT_CATEGORY_UNIT, {
+		fetchPolicy: "cache-only",
+	});
+	useEffect(() => {
+		if (formAction === FORM_ACTIONS.UPDATE && initialValues) {
+			getImpactCategoryUnitList({
+				variables: {
+					filter: {
+						impact_units_org: `${initialValues.id}`,
+					},
+				},
+			});
+		}
+	}, [getImpactCategoryUnitList, initialValues]);
 
 	const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
-		variables: { filter: { organization: dashboardData?.organization?.id } },
+		variables: { filter: { organization: organization } },
 	});
 	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
 		CREATE_IMPACT_CATEGORY_UNIT
 	);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+	const [openImpactCategoryDialog, setOpenImpactCategoryDialog] = useState<boolean>();
+	impactUnitForm[2].addNewClick = () => setOpenImpactCategoryDialog(true);
+
 	const updateImpactCategoryUnitCount = async (
 		store: ApolloCache<any>,
 		filter: { [key: string]: string }
@@ -240,7 +339,6 @@ function ImpactUnitDialog({
 		}
 	);
 
-	const initialValues = formAction === FORM_ACTIONS.CREATE ? defaultValues : formValues;
 	useEffect(() => {
 		if (impactCategories) {
 			impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
@@ -258,7 +356,7 @@ function ImpactUnitDialog({
 				variables: {
 					input: {
 						...values,
-						organization: dashboardData?.organization?.id,
+						organization: organization,
 					},
 				},
 				update: async (store, { data: { createImpactUnitsOrgData } }) => {
@@ -267,7 +365,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 						});
@@ -276,7 +374,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 							data: {
@@ -292,7 +390,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -307,7 +405,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -322,7 +420,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 						});
@@ -334,7 +432,7 @@ function ImpactUnitDialog({
 							query: GET_IMPACT_UNIT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 							data: {
@@ -350,10 +448,15 @@ function ImpactUnitDialog({
 	const onUpdate = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
 			const values = Object.assign({}, valuesSubmitted);
-			const newImpactCategories = getNewImpactCategories(
-				values?.impactCategory || [],
-				initialValues?.impactCategory || []
-			);
+			let submittedImpactCategory: string[] = valuesSubmitted?.impactCategory || [];
+			const newImpactCategories = getNewImpactCategories({
+				impactCategories: submittedImpactCategory,
+				oldImpactCategories:
+					impactCategoryUnitList?.impactCategoryUnitList.map(
+						(impactCategoryUnit: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
+							impactCategoryUnit.impact_category_org.id
+					) || [],
+			});
 			setImpactCategory(newImpactCategories);
 			delete values.impactCategory;
 			delete values.id;
@@ -361,10 +464,18 @@ function ImpactUnitDialog({
 				variables: {
 					id: initialValues?.id,
 					input: {
-						...values,
+						name: valuesSubmitted.name,
+						code: valuesSubmitted.code,
+						description: valuesSubmitted.description,
 						organization: dashboardData?.organization?.id,
 					},
 				},
+			});
+			//remove newImpactCategories
+			await changeImpactCategoryUnitStatus({
+				updateImpactCategoryUnit,
+				impactCategoryUnitList: impactCategoryUnitList?.impactCategoryUnitList || [],
+				submittedImpactCategory,
 			});
 		} catch (err) {}
 	};
@@ -389,8 +500,8 @@ function ImpactUnitDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact unit form for subtitle`,
 			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				initialValues={initialValues}
@@ -401,6 +512,14 @@ function ImpactUnitDialog({
 				onUpdate={onUpdate}
 				formAction={formAction}
 			/>
+			{openImpactCategoryDialog && (
+				<ImpactCategoryDialog
+					formAction={FORM_ACTIONS.CREATE}
+					open={openImpactCategoryDialog}
+					handleClose={() => setOpenImpactCategoryDialog(false)}
+					organization={dashboardData?.organization?.id}
+				/>
+			)}
 		</FormDialog>
 	);
 }

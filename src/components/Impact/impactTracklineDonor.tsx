@@ -48,8 +48,8 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				);
 				props.onCancel();
 			},
-			onError(data) {
-				console.log("err", data);
+			onError(err) {
+				console.error("err", err);
 				notificationDispatch(
 					setErrorNotification("Impact Trackline Financial year tags updation Failed !")
 				);
@@ -59,7 +59,7 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 
 	const onSubmit = (value: any) => {
 		let impactFyDonorFinalvalues: any = Object.values(value);
-		console.log("donorsss", impactFyDonorFinalvalues, value);
+
 		for (let i = 0; i < impactFyDonorFinalvalues.length; i++) {
 			let deliverable_lineitem_fy_id = impactFyDonorFinalvalues[i]?.id;
 			delete (impactFyDonorFinalvalues[i] as any).id;
@@ -120,7 +120,7 @@ function ImpactTracklineDonorYearTags(props: TracklineDonorFormProps) {
 				<DonorYearTagForm
 					{...{
 						initialValues,
-						donors: props.donors,
+						projectDonors: props.donors,
 						TracklineFyId: props.TracklineFyId,
 						organizationCountry,
 						validate,

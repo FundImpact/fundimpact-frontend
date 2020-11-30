@@ -18,22 +18,21 @@ import {
 	TextField,
 	Theme,
 	Typography,
-	ButtonGroup,
 } from "@material-ui/core";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import { Form, Formik, FormikProps } from "formik";
 import React, { useCallback, useEffect } from "react";
-import { FormattedMessage, useIntl, IntlShape } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import UploadFile from "../../../components/UploadFile";
 import { useDashBoardData, useDashboardDispatch } from "../../../contexts/dashboardContext";
 import { IDashboardDataContext, ICountry } from "../../../models";
-import { primaryColor, secondaryColor, Enitity } from "../../../models/constants";
+import { primaryColor, secondaryColor, Entity_Name, FORM_ACTIONS } from "../../../models/constants";
 import { IOrganisationForm, IOrganizationInputFields } from "../../../models/organisation/types";
 import { setOrganisation } from "../../../reducers/dashboardReducer";
-import AddContactAddressDialog from "../../../components/AddContactAddressDialog";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import ContactListDialog from "../../../components/ContactListDialog";
+import ContactDialog from "../../../components/ContactDialog";
 
 enum colorType {
 	primary = "primary",
@@ -169,8 +168,8 @@ function OrganizationView({
 	loading,
 	logo,
 	countryList,
-	contactAddressDialogOpen,
-	setContactAddressDialogOpen,
+	contactDialogOpen,
+	setContactDialogOpen,
 	setContactListDialogOpen,
 	contactListDialogOpen,
 	contactCreateAccess,
@@ -184,8 +183,8 @@ function OrganizationView({
 	onSubmit: (value: IOrganisationForm) => Promise<void>;
 	logo: string;
 	countryList: ICountry[];
-	contactAddressDialogOpen: boolean;
-	setContactAddressDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	contactDialogOpen: boolean;
+	setContactDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	contactListDialogOpen: boolean;
 	setContactListDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	contactCreateAccess: boolean;
@@ -248,17 +247,18 @@ function OrganizationView({
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<AddContactAddressDialog
-						open={contactAddressDialogOpen}
-						handleClose={() => setContactAddressDialogOpen(false)}
-						entity_name={Enitity.organization}
+					<ContactDialog
+						open={contactDialogOpen}
+						handleClose={() => setContactDialogOpen(false)}
+						entity_name={Entity_Name.organization}
 						entity_id={dashboardData?.organization?.id || ""}
+						formAction={FORM_ACTIONS.CREATE}
 					/>
 					<ContactListDialog
 						open={contactListDialogOpen}
 						handleClose={() => setContactListDialogOpen(false)}
 						entity_id={dashboardData?.organization?.id || ""}
-						entity_name={Enitity.organization}
+						entity_name={Entity_Name.organization}
 					/>
 					<Paper>
 						<Box p={2}>
@@ -426,7 +426,7 @@ function OrganizationView({
 																		color="secondary"
 																		fullWidth
 																		onClick={() =>
-																			setContactAddressDialogOpen(
+																			setContactDialogOpen(
 																				true
 																			)
 																		}

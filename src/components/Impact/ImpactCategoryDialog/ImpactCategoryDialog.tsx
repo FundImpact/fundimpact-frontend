@@ -27,6 +27,7 @@ import { FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+import { useLocation } from "react-router";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -50,6 +51,7 @@ function ImpactCategoryDialog({
 	handleClose,
 	formAction,
 	initialValues: formValues,
+	organization,
 }: IImpactCategoryProps) {
 	const [createImpactCategoryOrgInput, { loading: creatingImpactCategory }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
@@ -69,13 +71,13 @@ function ImpactCategoryDialog({
 				variables: {
 					input: {
 						...values,
-						organization: dashboardData?.organization?.id,
+						organization: organization,
 					},
 				},
 				refetchQueries: [
 					{
 						query: GET_IMPACT_CATEGORY_BY_ORG,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						variables: { filter: { organization: organization } },
 					},
 				],
 				update: async (store, { data: createImpactCategoryOrgInputData }) => {
@@ -84,7 +86,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 						});
@@ -93,7 +95,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 							},
 							data: {
@@ -110,7 +112,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -125,7 +127,7 @@ function ImpactCategoryDialog({
 							query: GET_IMPACT_CATEGORY_BY_ORG,
 							variables: {
 								filter: {
-									organization: dashboardData?.organization?.id,
+									organization: organization,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -159,7 +161,7 @@ function ImpactCategoryDialog({
 					id: initialValues?.id,
 					input: {
 						...values,
-						organization: dashboardData?.organization?.id,
+						organization: organization,
 					},
 				},
 			});
@@ -192,8 +194,8 @@ function ImpactCategoryDialog({
 					"Physical addresses of your organizatin like headquater, branch etc.",
 				description: `This text will be show on impact Category form for subtitle`,
 			})}
-			workspace={dashboardData?.workspace?.name}
-			project={dashboardData?.project?.name ? dashboardData?.project?.name : ""}
+			workspace={""}
+			project={""}
 		>
 			<CommonForm
 				inputFields={inputFields}

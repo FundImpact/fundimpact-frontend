@@ -44,6 +44,10 @@ import FundReceived from "../../FundReceived";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 import FundReceivedTable from "../../Table/FundReceivedTable";
 import ProjectDocumentsTable from "../../Table/ProjectDocument";
+import IndividualTable from "../../Table/IndividualTable";
+import IndividualDialog from "../../IndividualDialog";
+import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
+import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -76,7 +80,7 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		//flexGrow: 1,
+		flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
 		height: "100%",
 		overflow: "scroll",
@@ -158,10 +162,10 @@ export default function DashboardTableContainer() {
 		PROJECT_USER_ACCESS_ACTIONS.UPDATE_PROJECT
 	);
 
-	const budgetCategoryCreateAccess = userHasAccess(
-		MODULE_CODES.BUDGET_CATEGORY,
-		BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
-	);
+	// const budgetCategoryCreateAccess = userHasAccess(
+	// 	MODULE_CODES.BUDGET_CATEGORY,
+	// 	BUDGET_CATEGORY_ACTIONS.CREATE_BUDGET_CATEGORY
+	// );
 	const budgetTargetLineItemCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
@@ -231,6 +235,21 @@ export default function DashboardTableContainer() {
 		FUND_RECEIPT_ACTIONS.FIND_FUND_RECEIPT
 	);
 
+	const individualFindAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.FIND_INDIVIDUAL
+	);
+
+	const individualCreateAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.CREATE_INDIVIDUAL
+	);
+
+	const individualEditAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.UPDATE_INDIVIDUAL
+	);
+
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -240,21 +259,21 @@ export default function DashboardTableContainer() {
 			}),
 			table: <BudgetTargetTable />,
 			createButtons: [
-				{
-					text: intl.formatMessage({
-						id: "createBudgetCategory",
-						defaultMessage: "Create Budget Category",
-						description: `This text will be show on Add Button for create Budget Category`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetCategory
-							open={open}
-							handleClose={handleClose}
-							formAction={FORM_ACTIONS.CREATE}
-						/>
-					),
-					createButtonAccess: budgetCategoryCreateAccess,
-				},
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "createBudgetCategory",
+				// 		defaultMessage: "Create Budget Category",
+				// 		description: `This text will be show on Add Button for create Budget Category`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<BudgetCategory
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			formAction={FORM_ACTIONS.CREATE}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: budgetCategoryCreateAccess,
+				// },
 				{
 					text: intl.formatMessage({
 						id: "createBudgetTarget",
@@ -289,7 +308,7 @@ export default function DashboardTableContainer() {
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
-				budgetCategoryCreateAccess ||
+				// budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
 				budgetTargetLineItemCreateAccess,
 			tableVisibility: budgetTargetFindAccess,
@@ -409,6 +428,7 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
 						/>
 					),
 					createButtonAccess: impactUnitCreateAccess,
@@ -424,6 +444,7 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							organization={dashboardData?.organization?.id}
 						/>
 					),
 					createButtonAccess: impactCategoryCreateAccess,
@@ -517,6 +538,34 @@ export default function DashboardTableContainer() {
 			tabVisibility: projectFindAccess || projectEditAccess,
 			tableVisibility: projectFindAccess,
 		},
+		{
+			label: intl.formatMessage({
+				id: "individualTabHeading",
+				defaultMessage: "Individuals",
+				description: `This text will be show on tab for individuals`,
+			}),
+			table: <IndividualTable individualTableType={IndividualTableType.project} />,
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "createIndividual",
+						defaultMessage: "Create Individual",
+						description: `This text will be show on Add Button for Create Individual`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<IndividualDialog
+							open={open}
+							handleClose={handleClose}
+							formAction={FORM_ACTIONS.CREATE}
+							dialogType={IndividualDialogType.project}
+						/>
+					),
+					createButtonAccess: individualCreateAccess,
+				},
+			],
+			tabVisibility: individualFindAccess || individualCreateAccess,
+			tableVisibility: individualFindAccess,
+		},
 	];
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
@@ -525,7 +574,7 @@ export default function DashboardTableContainer() {
 	useEffect(() => {
 		if (
 			budgetTargetFindAccess ||
-			budgetCategoryCreateAccess ||
+			// budgetCategoryCreateAccess ||
 			budgetTargetCreateAccess ||
 			budgetTargetLineItemCreateAccess ||
 			fundReceiptCreateAccess ||
@@ -547,7 +596,7 @@ export default function DashboardTableContainer() {
 			setValue(
 				getTabToShow(
 					budgetTargetFindAccess ||
-						budgetCategoryCreateAccess ||
+						// budgetCategoryCreateAccess ||
 						budgetTargetCreateAccess ||
 						budgetTargetLineItemCreateAccess,
 					impactTargetFindAccess ||
@@ -568,7 +617,7 @@ export default function DashboardTableContainer() {
 		}
 	}, [
 		budgetTargetFindAccess,
-		budgetCategoryCreateAccess,
+		// budgetCategoryCreateAccess,
 		budgetTargetCreateAccess,
 		budgetTargetLineItemCreateAccess,
 		impactTargetFindAccess,

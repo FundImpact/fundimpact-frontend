@@ -5,13 +5,12 @@ import {
 	GET_DELIVERABLE_ORG_CATEGORY,
 	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 } from "../../../graphql/Deliverable/category";
-import { IDeliverableUnitData } from "../../../models/deliverable/deliverableUnit";
-import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
 import {
 	GET_CATEGORY_UNIT,
 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 } from "../../../graphql/Deliverable/categoryUnit";
 import pagination from "../../../hooks/pagination";
+import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -67,9 +66,7 @@ function DeliverableCategoryTableGraphql({
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
-			deliverable_units_org: {
-				id: delivarableUnitId,
-			},
+			deliverable_units_org: delivarableUnitId,
 		});
 	}, [delivarableUnitId]);
 
@@ -128,12 +125,15 @@ function DeliverableCategoryTableGraphql({
 
 	const deliverableCategoryUnitListMemoized = useMemo(
 		() =>
-			deliverableCategoryUnitList?.deliverableCategoryUnitList?.map(
-				(element: {
-					deliverable_category_org: IDeliverableCategoryData;
-					deliverable_units_org: IDeliverableUnitData;
-				}) => element?.deliverable_category_org
-			),
+			deliverableCategoryUnitList?.deliverableCategoryUnitList
+				?.filter(
+					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+						element.status
+				)
+				.map(
+					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+						element?.deliverable_category_org
+				),
 		[deliverableCategoryUnitList]
 	);
 

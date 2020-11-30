@@ -1,12 +1,29 @@
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { Box, Divider, List, MenuItem, Typography, Avatar } from "@material-ui/core";
+import {
+	Box,
+	Divider,
+	List,
+	MenuItem,
+	Typography,
+	Avatar,
+	Button,
+	Grid,
+	useTheme,
+	ButtonGroup,
+	Popover,
+	Popper,
+	Paper,
+	ClickAwayListener,
+	Grow,
+	MenuList,
+} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
-import { GET_ORGANISATIONS } from "../../graphql";
+import { GET_ORGANISATIONS, GET_WORKSPACES_BY_ORG, GET_PROJECTS_BY_WORKSPACE } from "../../graphql";
 import { IOrganisationFetchResponse } from "../../models/organisation/query";
 import { setOrganisation } from "../../reducers/dashboardReducer";
 import { sidePanelStyles } from "../Dasboard/styles";
@@ -17,9 +34,13 @@ import Workspace from "../workspace/Workspace";
 import WorkspaceList from "./WorkspaceList/WorkspaceList";
 import { userHasAccess, MODULE_CODES } from "../../utils/access";
 import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../utils/access/modules/workspaces/actions";
-import { useIntl } from "react-intl";
+import { useIntl, FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/userContext";
+import Project from "../Project/Project";
+import { PROJECT_ACTIONS } from "../Project/constants";
+import { IGET_WORKSPACES_BY_ORG } from "../../models/workspace/query";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 let menuList: { children: JSX.Element }[] = [];
 
@@ -30,7 +51,7 @@ export default function SideBar({ children }: { children?: Function }) {
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
 	const intl = useIntl();
-
+	const theme = useTheme();
 	const addWorkspace = intl.formatMessage({
 		id: "addWorkspaceOrganizationMenu",
 		defaultMessage: "Add workspace",
@@ -43,6 +64,25 @@ export default function SideBar({ children }: { children?: Function }) {
 		description: `This text will be show on organization menu for edit organization`,
 	});
 
+	const [openProjectDialog, setOpenProjectDialog] = React.useState<boolean>(false);
+
+	const [getWorkspaceList, { data: workspaceList }] = useLazyQuery<IGET_WORKSPACES_BY_ORG>(
+		GET_WORKSPACES_BY_ORG
+	);
+	const addProjectMenuRef = React.useRef(null);
+	const [openAddProjectMenu, setOpenAddProjectMenu] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (dashboardData) {
+			getWorkspaceList({
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+		}
+	}, [dashboardData]);
 	useEffect(() => {
 		if (user) {
 			getOrganization({
@@ -110,6 +150,13 @@ export default function SideBar({ children }: { children?: Function }) {
 				</Box>
 			) : (
 				<div>
+					<Project
+						workspaces={workspaceList?.orgWorkspaces || []}
+						open={openProjectDialog}
+						handleClose={() => setOpenProjectDialog(false)}
+						type={PROJECT_ACTIONS.CREATE}
+						workspace=""
+					/>
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1} display="flex">
 							{dashboardData?.organization?.name && (
@@ -168,6 +215,81 @@ export default function SideBar({ children }: { children?: Function }) {
 					) : null}
 				</div>
 			)}
+			<Box p={2} display="flex" flexGrow="1" position="relative">
+				<ButtonGroup
+					variant="contained"
+					color="secondary"
+					size="small"
+					style={{
+						position: "absolute",
+						bottom: theme.spacing(3),
+						width: "89%",
+					}}
+					ref={addProjectMenuRef}
+				>
+					<Button
+						onClick={() => setOpenProjectDialog(true)}
+						style={{ width: "100%", color: theme.palette.background.paper }}
+					>
+						<FormattedMessage
+							id={`addProject`}
+							defaultMessage={`Add Project`}
+							description={`This text will be shown on  add project button`}
+						/>
+					</Button>
+					<Button
+						onClick={() => setOpenAddProjectMenu((open) => !open)}
+						style={{ color: theme.palette.background.paper }}
+					>
+						<ArrowDropDownIcon />
+					</Button>
+				</ButtonGroup>
+				<Popper
+					open={openAddProjectMenu}
+					anchorEl={addProjectMenuRef.current}
+					role={undefined}
+					transition
+					disablePortal
+					style={{ width: "89%" }}
+				>
+					{({ TransitionProps }) => (
+						<Grow
+							{...TransitionProps}
+							style={{
+								transformOrigin: "left top",
+							}}
+						>
+							<Paper>
+								<ClickAwayListener
+									onClickAway={() => {
+										setOpenAddProjectMenu(false);
+										setViewWorkspace(false);
+									}}
+								>
+									<Button
+										variant="contained"
+										color="secondary"
+										onClick={() => {
+											setViewWorkspace(true);
+											setOpenAddProjectMenu(false);
+										}}
+										style={{
+											width: "100%",
+											color: theme.palette.background.paper,
+										}}
+									>
+										<FormattedMessage
+											id={`addWorkspace`}
+											defaultMessage={`Add Workspace`}
+											description={`This text will be shown on  add workspace menu`}
+										/>
+									</Button>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
+			</Box>
 		</Box>
 	);
 }

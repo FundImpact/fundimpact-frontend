@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useApolloClient, ApolloClient } from "@apollo/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -14,6 +14,7 @@ import {
 	ICreateProjectDonor,
 	ICreateProjectDonorVariables,
 	IGetProjectDonor,
+	ICreateProject,
 } from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -23,15 +24,13 @@ import AttachFileForm from "../Forms/AttachFiles";
 import { FullScreenLoader } from "../Loader/Loader";
 import { PROJECT_ACTIONS } from "./constants";
 import { projectForm } from "./inputField.json";
-import { uploadPercentageCalculator } from "../../utils";
-import {
-	CommonFormTitleFormattedMessage,
-	CommonUploadingFilesMessage,
-} from "../../utils/commonFormattedMessage";
-import { CircularPercentage } from "../commons";
+import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import { useIntl } from "react-intl";
 import { setProject } from "../../reducers/dashboardReducer";
 import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
+import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
+import Donor from "../Donor";
+import { FORM_ACTIONS } from "../Forms/constant";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -44,7 +43,7 @@ function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	};
 }
 
-const updateProjectDonorCache = ({
+export const updateProjectDonorCache = ({
 	apolloClient,
 	projecttDonorCreated,
 }: {
@@ -73,7 +72,61 @@ const updateProjectDonorCache = ({
 	}
 };
 
+const fetchProjectsInWorkspace = async ({
+	apolloClient,
+	workspaceId,
+}: {
+	apolloClient: ApolloClient<object>;
+	workspaceId: string;
+}) => {
+	try {
+		await apolloClient.query({
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { filter: { workspace: workspaceId } },
+			fetchPolicy: "network-only",
+		});
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+const fetchOrgProjects = async ({ apolloClient }: { apolloClient: ApolloClient<object> }) => {
+	try {
+		await apolloClient.query({ query: GET_PROJECTS, fetchPolicy: "network-only" });
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+const updateCachedProject = async ({
+	apolloClient,
+	createdProject,
+}: {
+	apolloClient: ApolloClient<object>;
+	createdProject: ICreateProject["createOrgProject"];
+}) => {
+	try {
+		let cachedProjects = apolloClient.readQuery<{
+			orgProject: ICreateProject["createOrgProject"][];
+		}>({ query: GET_PROJECTS });
+		if (cachedProjects) {
+			apolloClient.writeQuery<{
+				orgProject: ICreateProject["createOrgProject"][];
+			}>({
+				query: GET_PROJECTS,
+				data: { orgProject: [...cachedProjects.orgProject, createdProject] },
+			});
+		} else {
+			await fetchOrgProjects({ apolloClient });
+		}
+	} catch (err) {
+		await fetchOrgProjects({ apolloClient });
+		console.error(err);
+	}
+};
+
 function Project(props: ProjectProps) {
+	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -96,46 +149,42 @@ function Project(props: ProjectProps) {
 	if (projectFilesArray.length) projectForm[5].label = "View Files";
 	else projectForm[5].label = "Attach Files";
 
-	let { multiplefileUpload } = useMultipleFileUpload();
+	if (projectFilesArray.length)
+		projectForm[5].textNextToButton = `${projectFilesArray.length} files attached`;
+	else projectForm[5].textNextToButton = ``;
 
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-	const [projectUploadSuccess, setProjectUploadSuccess] = React.useState<boolean>(false);
-	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
+	let {
+		multiplefileMorph,
+		loading: uploadMorphLoading,
+		success,
+		setSuccess,
+	} = useMultipleFileUpload(projectFilesArray, setProjectFilesArray);
 
 	React.useEffect(() => {
-		let remainFilestoUpload = projectFilesArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setLoadingPercentage(percentage);
-	}, [projectFilesArray, totalFilesToUpload]);
-
-	React.useEffect(() => {
-		if (projectUploadSuccess) {
-			props.handleClose();
+		if (success) {
 			if (props.reftechOnSuccess) {
 				props.reftechOnSuccess();
+			} else {
+				fetchProjectsInWorkspace({
+					apolloClient,
+					workspaceId: dashboardData?.project?.workspace?.id,
+				});
 			}
-			setProjectUploadSuccess(false);
+			setSuccess(false);
 		}
-	}, [projectUploadSuccess]);
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-	};
-	if (projectUploadSuccess) successMessage();
+	}, [success]);
+
+	if (success) props.handleClose();
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
+			if (!data?.createOrgProject?.id) return;
 			dashboardDispatch(setProject(data.createOrgProject));
-			setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
-			multiplefileUpload({
-				ref: "project",
-				refId: data.createOrgProject.id,
+			multiplefileMorph({
+				related_id: data.createOrgProject.id,
+				related_type: "projects",
 				field: "attachments",
-				path: `org-${DashBoardData?.organization?.id}/projects`,
-				filesArray: projectFilesArray,
-				setFilesArray: setProjectFilesArray,
-				setUploadSuccess: setProjectUploadSuccess,
 			});
-			setProjectFilesArray([]);
 		},
 	});
 	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation<
@@ -254,7 +303,13 @@ function Project(props: ProjectProps) {
 				variables: { input: formData },
 			});
 			await updateProjectCount({ apolloClient });
+			createdProject &&
+				(await updateCachedProject({
+					apolloClient,
+					createdProject: createdProject.data.createOrgProject,
+				}));
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
+			console.log("selectDonors :>> ", selectDonors);
 			selectDonors.forEach(async (donorId) => {
 				await createDonors({
 					projectId: createdProject.data.createOrgProject.id,
@@ -272,17 +327,9 @@ function Project(props: ProjectProps) {
 		UPDATE_PROJECT,
 		{
 			onCompleted(data) {
-				setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
-				multiplefileUpload({
-					ref: "project",
-					refId: data.updateOrgProject.id,
-					field: "attachments",
-					path: `org-${DashBoardData?.organization?.id}/projects`,
-					filesArray: projectFilesArray,
-					setFilesArray: setProjectFilesArray,
-					setUploadSuccess: setProjectUploadSuccess,
-				});
+				// setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
 
+				props.handleClose();
 				setProjectFilesArray([]);
 
 				notificationDispatch(setSuccessNotification("Project Successfully updated !"));
@@ -336,11 +383,17 @@ function Project(props: ProjectProps) {
 	const onCancel = props.handleClose;
 	const workspaces: any = props.workspaces;
 	projectForm[1].optionsArray = workspaces;
-	let uploadingFileMessage = CommonUploadingFilesMessage();
+	projectForm[4].addNewClick = () => setOpenDonorDialog(true);
+	// let uploadingFileMessage = CommonUploadingFilesMessage();
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.type);
 	return (
 		<>
+			<Donor
+				open={openDonorDialog}
+				formAction={FORM_ACTIONS.CREATE}
+				handleClose={() => setOpenDonorDialog(false)}
+			/>
 			<FormDialog
 				title={
 					newOrEdit +
@@ -351,13 +404,8 @@ function Project(props: ProjectProps) {
 						description: `This text will be show on Project form for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "projectFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on Project form for subtitle`,
-				})}
-				workspace={DashBoardData?.workspace?.name}
+				subtitle={""}
+				workspace={props.workspace ? DashBoardData?.workspace?.name : ""}
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createLoading || updateLoading || creatingProjectDonors}
@@ -374,23 +422,24 @@ function Project(props: ProjectProps) {
 							inputFields: projectForm,
 						}}
 					/>
-					{loadingPercentage > 0 ? (
-						<CircularPercentage
-							progress={loadingPercentage}
-							message={uploadingFileMessage}
-						/>
-					) : null}
 				</>
 			</FormDialog>
 			{createLoading ? <FullScreenLoader /> : null}
 			{updateLoading ? <FullScreenLoader /> : null}
 			{creatingProjectDonors ? <FullScreenLoader /> : null}
+			{uploadMorphLoading ? <FullScreenLoader /> : null}
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={projectFilesArray}
 					setFilesArray={setProjectFilesArray}
+					uploadApiConfig={{
+						ref: "project",
+						refId: dashboardData?.project?.id?.toString() || "",
+						field: "attachments",
+						path: `org-${dashboardData?.organization?.id}/project-${dashboardData?.project?.id}/project`,
+					}}
 				/>
 			)}
 		</>

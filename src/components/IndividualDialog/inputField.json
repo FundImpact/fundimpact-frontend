@@ -22,7 +22,8 @@
 			"inputType": "autocomplete",
 			"size": 12,
 			"multiple": true,
-			"autoCompleteGroupBy": null
+			"autoCompleteGroupBy": null,
+			"hidden": true
 		}
 	]
 }

@@ -5,6 +5,7 @@ import { IIndividualForm, IIndividual } from "../../../models/individual";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
 import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";
+import { IndividualTableType } from "../../../models/individual/constant";
 
 interface IIndividualTableContainer {
 	count: number;
@@ -24,6 +25,7 @@ interface IIndividualTableContainer {
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	individualTableType: IndividualTableType;
 }
 
 const getInitialValues = (individual: IIndividual | null): IIndividual => {
@@ -46,6 +48,7 @@ function IndividualTableContainer({
 	filterList,
 	removeFilterListElements,
 	setFilterList,
+	individualTableType,
 }: IIndividualTableContainer) {
 	const selectedIndividual = useRef<IIndividual | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false]);
@@ -84,6 +87,7 @@ function IndividualTableContainer({
 			contactCreateAccess={contactCreateAccess}
 			contactFindAccess={contactFindAccess}
 			individualEditAccess={individualEditAccess}
+			individualTableType={individualTableType}
 		/>
 	);
 }
