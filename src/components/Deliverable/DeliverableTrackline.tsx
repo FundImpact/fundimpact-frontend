@@ -213,11 +213,17 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				},
 				{
 					label: deliverableTotalTargetLabel,
-					value: `${fetchedDeliverableTarget.target_value} ${fetchedDeliverableTarget.deliverable_category_unit.deliverable_units_org.name}`,
+					value: `${fetchedDeliverableTarget.target_value} ${
+						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
+							?.name || ""
+					}`,
 				},
 				{
 					label: deliverableAchievedTargetLabel,
-					value: `${achivedValue?.deliverableTrackingTotalValue} ${fetchedDeliverableTarget.deliverable_category_unit.deliverable_units_org.name}`,
+					value: `${achivedValue?.deliverableTrackingTotalValue} ${
+						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
+							?.name || ""
+					}`,
 				},
 			]);
 		}
@@ -330,7 +336,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		onCompleted(data) {
 			multiplefileMorph({
 				related_id: data.createDeliverableTrackingLineitemDetail.id,
-				related_type: "deliverable-tracking-lineitems",
+				related_type: "deliverable_tracking_lineitem",
 				field: "attachments",
 			});
 

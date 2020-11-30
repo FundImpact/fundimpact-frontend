@@ -171,15 +171,6 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				: []
 			: []
 	);
-	let uploadingFileMessage = CommonUploadingFilesMessage();
-	const [impactUploadLoading, setImpactUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	React.useEffect(() => {
-		let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setImpactUploadLoading(percentage);
-	}, [filesArray, totalFilesToUpload, setImpactUploadLoading]);
 
 	/* Open Attach File Form*/
 	impactTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -293,7 +284,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		onCompleted(data) {
 			multiplefileMorph({
 				related_id: data.createImpactTrackingLineitemInput.id,
-				related_type: "impact-tracking-lineitems",
+				related_type: "impact_tracking_lineitem",
 				field: "attachments",
 			});
 
@@ -339,6 +330,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				notificationDispatch(
 					setSuccessNotification("Impact Trackline Updated successfully!")
 				);
+				handleNext();
 			},
 			onError(err) {
 				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
@@ -651,9 +643,9 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					stepperHelpers={{
 						activeStep: stepperActiveStep,
 						setActiveStep: setStepperActiveStep,
-						handleNext,
-						handleBack,
-						handleReset,
+						handleNext: handleNext,
+						handleBack: handleBack,
+						handleReset: handleReset,
 					}}
 					basicForm={basicForm}
 					donorForm={impactDonorForm}

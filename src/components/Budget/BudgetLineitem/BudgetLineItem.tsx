@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -56,6 +56,7 @@ const defaultFormValues: IBudgetTrackingLineitemForm = {
 	fy_donor: "",
 	fy_org: "",
 	grant_periods_project: "",
+	attachments: [],
 };
 
 let budgetTargetHash: {
@@ -173,10 +174,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	} | null>(null);
 
 	const currentProject = dashboardData?.project;
-	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
+	let initialValues =
+		props.initialValues && props.formAction === FORM_ACTIONS.UPDATE
+			? props.initialValues
+			: defaultFormValues;
 
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
-
+	// console.log("here props", props, initialValues);
 	let {
 		multiplefileMorph,
 		loading: uploadMorphLoading,
@@ -203,16 +207,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const { handleClose } = props;
 
-	useEffect(() => {
-		setFilesArray(initialValues.attachments || []);
-	}, [initialValues]);
-
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormInputFields[5].hidden = false;
 		budgetLineitemFormInputFields[7].size = 12;
 		budgetLineitemFormInputFields[7].optionsArray = [];
+		setFilesArray([]);
+
 		handleClose();
-	}, [handleClose]);
+	}, [handleClose, setFilesArray]);
 
 	React.useEffect(() => {
 		if (success) {
@@ -226,13 +228,19 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [success, budgetTrackingRefetch, props, setSuccess]);
 
+	React.useEffect(() => {
+		if (initialValues.attachments?.length) {
+			setFilesArray(initialValues.attachments);
+		}
+	}, [initialValues]);
+
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING,
 		{
 			onCompleted(data) {
 				multiplefileMorph({
 					related_id: data.createProjBudgetTracking.id,
-					related_type: "deliverable-tracking-lineitems",
+					related_type: "budget_tracking_lineitem",
 					field: "attachments",
 				});
 			},
@@ -257,9 +265,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 
-	useEffect(() => {
-		if (props?.initialValues?.attachments) setFilesArray(props?.initialValues?.attachments);
-	}, [props]);
+	// useEffect(() => {
+	// 	// if (!filesArray.length && props.formAction === FORM_ACTIONS.UPDATE)
+	// 	if (props?.initialValues?.attachments && !didLoad) {
+	// 		setFilesArray(props?.initialValues?.attachments);
+	// 		setDidLoad(true);
+	// 	}
+	// }, [props]);
 
 	/* Open Attach File Form*/
 	budgetLineitemFormInputFields[8].onClick = () => setOpenAttachFiles(true);
@@ -281,13 +293,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			});
 		}
 	}, [currentProject, getBudgetTargetProject]);
-
-	useEffect(() => {
-		if (success) {
-			setSuccess(false);
-			closeDialog();
-		}
-	}, [success, closeDialog]);
 
 	const validate = useCallback(
 		(values: IBudgetTrackingLineitemForm) => {
@@ -511,7 +516,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Budget Line Item Creation Failure"));
 		} finally {
-			// closeDialog();
+			closeDialog();
 		}
 	};
 
@@ -684,10 +689,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						filesArray={filesArray}
 						setFilesArray={setFilesArray}
 						parentOnSuccessCall={
-							props.formAction === FORM_ACTIONS.UPDATE
-								? () => {
-										if (props.refetchOnSuccess) props.refetchOnSuccess();
-								  }
+							props.formAction === FORM_ACTIONS.UPDATE && props.refetchOnSuccess
+								? props.refetchOnSuccess
 								: undefined
 						}
 						uploadApiConfig={{
@@ -706,4 +709,4 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	);
 }
 
-export default React.memo(BudgetLineitem);
+export default BudgetLineitem;
