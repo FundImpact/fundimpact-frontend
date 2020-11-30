@@ -206,10 +206,10 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		individualCreateAccess || individualFindAccess
 	);
 
-	setSidebarTabUserAccess(
-		sidebarList[sidebar.manageUsers].subHeadings[2],
-		individualCreateAccess || individualFindAccess
-	);
+	// setSidebarTabUserAccess(
+	// 	sidebarList[sidebar.manageUsers].subHeadings[2],
+	// 	individualCreateAccess || individualFindAccess
+	// );
 
 	if (!data?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
