@@ -146,9 +146,9 @@ export default function MainOrganizationDashboard() {
 						}}
 						cardHeight="220px"
 						tooltip={intl.formatMessage({
-							id: "BudgetOrgCardTooltip",
 							defaultMessage:
 								"This card is showing overall progress of funds. Also total fund spend, received and expenditure made by organization",
+							id: "BudgetOrgCardTooltip",
 							description:
 								"This text will be show on budget org card for budget target title",
 						})}
@@ -180,11 +180,11 @@ export default function MainOrganizationDashboard() {
 						}}
 						cardHeight="220px"
 						tooltip={intl.formatMessage({
+							description:
+								"This text will be show on budget org card for deliverable target tooltip",
 							id: "DeliverableOrgCardTooltip",
 							defaultMessage:
 								"This card is showing overall progress of deliverable. Also total deliverable target and deliverable achieved by organization",
-							description:
-								"This text will be show on budget org card for deliverable target tooltip",
 						})}
 					/>
 				</Grid>
@@ -214,11 +214,11 @@ export default function MainOrganizationDashboard() {
 						}}
 						cardHeight="220px"
 						tooltip={intl.formatMessage({
-							id: "ImpactOrgCardTooltip",
 							defaultMessage:
 								"This card is showing overall progress of impact. Also total impact target and impact achieved by organization",
 							description:
 								"This text will be show on budget org card for impact target tooltip",
+							id: "ImpactOrgCardTooltip",
 						})}
 					/>
 				</Grid>
@@ -245,9 +245,9 @@ export default function MainOrganizationDashboard() {
 						cardOf={CARD_OF.BUDGET}
 						cardHeight="280px"
 						tooltip={intl.formatMessage({
-							id: "budgetProjectCardTooltip",
 							defaultMessage:
 								"This card is showing top projects fund spend, received and expenditure made by organization",
+							id: "budgetProjectCardTooltip",
 							description:
 								"This text will be show on dashboard for budget project card tooltip",
 						})}
@@ -266,10 +266,11 @@ export default function MainOrganizationDashboard() {
 						cardOf={CARD_OF.DELIVERABLE}
 						tooltip={intl.formatMessage({
 							id: "deliverableAchievedCardTooltip",
-							defaultMessage:
-								"This card is showing top projects deliverable target and deliverable achieved by organization",
+
 							description:
 								"This text will be show on dashboard for deliverable achieved card tooltip",
+							defaultMessage:
+								"This card is showing top projects deliverable target and deliverable achieved by organization",
 						})}
 					/>
 				</Grid>
@@ -286,10 +287,10 @@ export default function MainOrganizationDashboard() {
 						cardHeight="280px"
 						tooltip={intl.formatMessage({
 							id: "impactAchievedCardTooltip",
-							defaultMessage:
-								"This card is showing organization's top projects impact target and impact achieved by organization",
 							description:
 								"This text will be show on dashboard for impact achieved card tooltip",
+							defaultMessage:
+								"This card is showing organization's top projects impact target and impact achieved by organization",
 						})}
 					/>
 				</Grid>
@@ -340,11 +341,11 @@ export default function MainOrganizationDashboard() {
 											moreButtonLink: "/settings/budget",
 										}}
 										tooltip={intl.formatMessage({
+											description:
+												"This text will be show on dashboard for budget category card tooltip",
 											id: "budgetCategoryCardTitle",
 											defaultMessage:
 												"This card is showing pie chart for top budget categories",
-											description:
-												"This text will be show on dashboard for budget category card tooltip",
 										})}
 									/>
 								</Grid>
@@ -368,10 +369,10 @@ export default function MainOrganizationDashboard() {
 										cardOf={CARD_OF.DELIVERABLE}
 										tooltip={intl.formatMessage({
 											id: "deliverableCategoryCardTooltip",
-											defaultMessage:
-												"This card is showing pie chart for top deliverable categories",
 											description:
 												"This text will be show on dashboard for deliverable category card tooltip",
+											defaultMessage:
+												"This card is showing pie chart for top deliverable categories",
 										})}
 									/>
 								</Grid>
@@ -394,9 +395,9 @@ export default function MainOrganizationDashboard() {
 										}}
 										cardOf={CARD_OF.IMPACT}
 										tooltip={intl.formatMessage({
-											id: "impactCategoryCardTitle",
 											defaultMessage:
 												"This card is showing pie chart for top impact categories",
+											id: "impactCategoryCardTitle",
 											description:
 												"This text will be show on dashboard for impact category card tooltip",
 										})}
