@@ -191,14 +191,19 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		donorFindAccess || donorCreateAccess
 	);
 
+	// setSidebarTabUserAccess(
+	// 	sidebarList[sidebar.manageUsers].subHeadings[1],
+	// 	userRoleFindAccess || userRoleCreateAccess
+	// );
+
 	setSidebarTabUserAccess(
 		sidebarList[sidebar.manageUsers].subHeadings[0],
-		userRoleFindAccess || userRoleCreateAccess
+		authInviteUser || authFindUser
 	);
 
 	setSidebarTabUserAccess(
-		sidebarList[sidebar.manageUsers].subHeadings[1],
-		authInviteUser || authFindUser
+		sidebarList[sidebar.default].subHeadings[2],
+		individualCreateAccess || individualFindAccess
 	);
 
 	setSidebarTabUserAccess(
@@ -208,7 +213,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 
 	if (!data?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
-		<Box className={classes.sidePanel} mr={1} p={0} boxShadow={1}>
+		<Box className={classes.sidePanel} p={0} boxShadow={1}>
 			<Box display="flex" m={2}>
 				<Box flexGrow={1} ml={1} display="flex">
 					<Box mr={1}>

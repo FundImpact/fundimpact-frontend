@@ -373,7 +373,7 @@
 	"mockContactListCount": {
 		"t4DContactsConnection": {
 			"aggregate": {
-				"count": 1
+				"count": 2
 			}
 		}
 	},
@@ -395,11 +395,37 @@
 	"mockContactList": [
 		{
 			"id": "1",
-			"email": "sherLocked@gmai.com",
-			"email_other": "sherlock@gmail.com",
-			"phone": "9999999999",
-			"phone_other": "8888888888",
-			"contact_type": "PERSONAL"
+			"contact_type": "PERSONAL",
+			"emails": [{ "label": "personal email", "value": "sher@locked.com" }],
+			"phone_numbers": [{ "label": "personal phone", "value": "9999888877" }],
+			"addresses": [
+				{
+					"address_line_1": "prashant vihar delhi",
+					"address_line_2": "pitampura delhi",
+					"city": "Delhi",
+					"pincode": "118877",
+					"id": "1"
+				}
+			],
+			"entity_id": "1",
+			"label": "sherlock"
+		},
+		{
+			"id": "2",
+			"contact_type": "OFFICE",
+			"emails": [{ "label": "office email", "value": "sher1@locked.com" }],
+			"phone_numbers": [{ "label": "office phone", "value": "9999888866" }],
+			"addresses": [
+				{
+					"address_line_1": "prakash vihar delhi",
+					"address_line_2": "rohini delhi",
+					"city": "Delhi",
+					"pincode": "223344",
+					"id": "2"
+				}
+			],
+			"entity_id": "1",
+			"label": "john watson"
 		}
 	],
 	"mockAddressList": [

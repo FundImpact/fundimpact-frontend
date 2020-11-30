@@ -1,5 +1,5 @@
 import React, { ReactText } from "react";
-import { MenuItem, Box, CircularProgress, ThemeOptions } from "@material-ui/core";
+import { MenuItem, Box, CircularProgress, ThemeOptions, Typography, Grid } from "@material-ui/core";
 import { Brightness4, Brightness7 } from "@material-ui/icons";
 import { useAuth, UserDispatchContext } from "../../contexts/userContext";
 import { useMutation, MutationFunctionOptions, FetchResult } from "@apollo/client";
@@ -9,6 +9,7 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { IUserDataContext } from "../../models/userProvider";
 import { setUser } from "../../reducers/userReducer";
 import { GET_USER_DETAILS } from "../../graphql/User/query";
+import { FormattedMessage } from "react-intl";
 
 const updateUserTheme = async ({
 	user,
@@ -92,7 +93,33 @@ function ToggleDarkTheme() {
 				}}
 				data-testid="dark-theme-toggle-button"
 			>
-				{user?.theme?.palette?.type === "dark" ? <Brightness7 /> : <Brightness4 />}
+				{user?.theme?.palette?.type === "dark" ? (
+					<Box display="flex">
+						<Brightness7 />
+						<Box ml={1}>
+							<Typography>
+								<FormattedMessage
+									id={`lightColor`}
+									defaultMessage={`LIGHT`}
+									description={`This text will be shown on  toggle theme button for light theme`}
+								/>
+							</Typography>
+						</Box>
+					</Box>
+				) : (
+					<Box display="flex">
+						<Brightness4 />
+						<Box ml={1}>
+							<Typography>
+								<FormattedMessage
+									id={`darkColor`}
+									defaultMessage={`DARK`}
+									description={`This text will be shown on  toggle theme button for dark theme`}
+								/>
+							</Typography>
+						</Box>
+					</Box>
+				)}
 			</MenuItem>
 			{loading && (
 				<Box

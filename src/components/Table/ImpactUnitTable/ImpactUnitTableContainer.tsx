@@ -7,6 +7,8 @@ import { useLazyQuery } from "@apollo/client";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
+import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
+import { IGetImpactCategoryUnit } from "../../../models/impact/query";
 
 const getInitialValues = (
 	impactUnit: IImpactUnitData | null,
@@ -83,12 +85,14 @@ function ImpactUnitContainer({
 
 	const impactCategoryMemoized = useMemo(
 		() =>
-			impactCategoryUnitList?.impactCategoryUnitList.map(
-				(element: {
-					impact_category_org: IImpactCategoryData;
-					impact_units_org: IImpactUnitData;
-				}) => element.impact_category_org?.id
-			),
+			impactCategoryUnitList?.impactCategoryUnitList
+				.filter(
+					(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) => element.status
+				)
+				.map(
+					(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
+						element.impact_category_org?.id
+				),
 		[impactCategoryUnitList]
 	);
 

@@ -34,6 +34,7 @@ function CommonInputForm({
 	cancelButtonName = "Cancel",
 	createButtonName = "Create",
 	updateButtonName = "Update",
+	children,
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -74,8 +75,28 @@ function CommonInputForm({
 												}
 												rows={element.rows ? element.rows : 1}
 												type={element.type ? element.type : "text"}
+												optionsLabel={
+													element.optionsLabel
+														? element.optionsLabel
+														: undefined
+												}
 												optionsArray={
 													element.optionsArray ? element.optionsArray : []
+												}
+												secondOptionsArray={
+													element.secondOptionsArray
+														? element.secondOptionsArray
+														: []
+												}
+												customMenuOnClick={
+													element.customMenuOnClick
+														? element.customMenuOnClick
+														: null
+												}
+												secondOptionsLabel={
+													element.secondOptionsLabel
+														? element.secondOptionsLabel
+														: undefined
 												}
 												inputLabelId={
 													element.inputLabelId ? element.inputLabelId : ""
@@ -103,11 +124,26 @@ function CommonInputForm({
 													element.autoCompleteGroupBy || undefined
 												}
 												onClick={element.onClick ? element.onClick : null}
+												textNextToButton={
+													element.textNextToButton
+														? element.textNextToButton
+														: undefined
+												}
+												addNew={element.addNew ? element.addNew : false}
+												addNewClick={
+													element.addNewClick ? element.addNewClick : null
+												}
 											/>
 										</Grid>
 									)
 								);
 							})}
+
+							{children && (
+								<Grid item xs={12}>
+									{children}
+								</Grid>
+							)}
 
 							<Grid item xs={12}>
 								<Box display="flex" m={1}>

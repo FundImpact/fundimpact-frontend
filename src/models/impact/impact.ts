@@ -33,12 +33,14 @@ export type IImpactCategoryProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IImpactCategory;
+			organization?: string | number;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IImpactCategory;
+			organization?: string | number;
 	  };
 
 export type IImpactUnitProps =
@@ -47,10 +49,12 @@ export type IImpactUnitProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IImpactUnitFormInput;
+			organization?: string | number;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IImpactUnitFormInput;
+			organization?: string | number;
 	  };

@@ -124,7 +124,7 @@ function EditDeliverableTrackLineIcon({
 				project_donor: elem.project_donor?.id,
 			};
 			donors.push({
-				id: elem.project_donor?.id,
+				id: elem.project_donor?.donor.id,
 				name: elem.project_donor?.donor?.name,
 				donor: elem.project_donor?.donor,
 			});
@@ -154,40 +154,7 @@ function EditDeliverableTrackLineIcon({
 		AttachFile[]
 	>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
-	let { multiplefileUpload } = useMultipleFileUpload();
-	let uploadingFileMessage = CommonUploadingFilesMessage();
-	const [
-		deliverableTracklineUploadLoading,
-		setDeliverableTracklineUploadLoading,
-	] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
 
-	React.useEffect(() => {
-		let remainFilestoUpload = deliverableTracklineFileArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setDeliverableTracklineUploadLoading(percentage);
-	}, [deliverableTracklineFileArray, totalFilesToUpload, setDeliverableTracklineUploadLoading]);
-
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-		if (refetch) refetch();
-		setUploadSuccess(false);
-	};
-	if (uploadSuccess) successMessage();
-
-	const attachFileOnSave = () => {
-		setTotalFilesToUpload(deliverableTracklineFileArray.filter((elem) => !elem.id).length);
-		multiplefileUpload({
-			ref: "deliverable-tracking-lineitem",
-			refId: deliverableTrackline?.id,
-			field: "attachments",
-			path: `org-${dashBoardData?.organization?.id}/deliverable-tracking-lineitem`,
-			filesArray: deliverableTracklineFileArray,
-			setFilesArray: setDeliverableTracklineFileArray,
-			setUploadSuccess: setUploadSuccess,
-		});
-	};
 	return (
 		<>
 			<TableCell>
@@ -267,16 +234,20 @@ function EditDeliverableTrackLineIcon({
 						handleClose: () => setOpenAttachFiles(false),
 						filesArray: deliverableTracklineFileArray,
 						setFilesArray: setDeliverableTracklineFileArray,
-						parentOnSave: attachFileOnSave,
+						// parentOnSave: attachFileOnSave,
+						uploadApiConfig: {
+							ref: "deliverable-tracking-lineitem",
+							refId: deliverableTrackline?.id,
+							field: "attachments",
+							path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/deliverable-tracking-lineitem`,
+						},
+						parentOnSuccessCall: () => {
+							if (refetch) refetch();
+							setDeliverableTracklineFileArray([]);
+						},
 					}}
 				/>
 			)}
-			{deliverableTracklineUploadLoading > 0 ? (
-				<CircularPercentage
-					progress={deliverableTracklineUploadLoading}
-					message={uploadingFileMessage}
-				/>
-			) : null}
 		</>
 	);
 }

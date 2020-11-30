@@ -1,13 +1,16 @@
-import { Grid, Box, Typography } from "@material-ui/core";
+import { Grid, Box, Typography, IconButton, Tooltip } from "@material-ui/core";
 import React from "react";
 import { ProjectCardConfig } from "../../../../models/cards/cards";
 import BorderLinearProgress from "../../../BorderLinearProgress";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { Skeleton } from "@material-ui/lab";
 import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import { useIntl } from "react-intl";
 
 export function ProjectCard(projectCardConfig: ProjectCardConfig) {
-	const { chartConfig } = projectCardConfig;
+	const { chartConfig, tooltip } = projectCardConfig;
+	const intl = useIntl();
 	if (projectCardConfig.loading) {
 		return (
 			<>
@@ -30,8 +33,22 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 			</>
 		);
 	}
+	let overallLabel = intl.formatMessage({
+		id: "overallLabelCards",
+		defaultMessage: "Overall",
+		description: "This text will be show on cards for top label",
+	});
 	return (
 		<>
+			<Grid item xs={12} container justify="flex-end">
+				<Box color="text.disabled" mr={1}>
+					<IconButton size="small">
+						<Tooltip title={tooltip || ""}>
+							<InfoOutlinedIcon fontSize="small" />
+						</Tooltip>
+					</IconButton>
+				</Box>
+			</Grid>
 			<Grid item md={6} justify="center" container>
 				<Box ml={1}>
 					<Box mt={2} ml={3}>

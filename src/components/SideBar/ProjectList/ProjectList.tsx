@@ -1,5 +1,5 @@
 import { ApolloQueryResult, useQuery } from "@apollo/client";
-import { List, ListItem, ListItemText, Button, IconButton, Box } from "@material-ui/core";
+import { List, ListItem, ListItemText, Button, IconButton, Box, Link } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -15,6 +15,7 @@ import { PROJECT_ACTIONS as PROJECT_USER_ACCESS_ACTIONS } from "../../../utils/a
 import { useLocation, useNavigate } from "react-router";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { AttachFile } from "../../../models/AttachFile";
+import { FormattedMessage } from "react-intl";
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		project: {
@@ -146,15 +147,17 @@ export default function ProjectList({
 			) : (
 				<>
 					{!data?.orgProject?.length && projectCreateAccess && (
-						<Button
-							variant="contained"
-							color="secondary"
-							size="small"
-							className={classes.addProject}
+						<Link
+							component="button"
+							variant="body2"
 							onClick={() => setOpenFormDialog(true)}
 						>
-							Add project
-						</Button>
+							<FormattedMessage
+								id={`addProject`}
+								defaultMessage={`Add Project`}
+								description={`This text will be shown on  add project button`}
+							/>
+						</Link>
 					)}
 					<List>
 						{data &&
@@ -179,6 +182,7 @@ export default function ProjectList({
 													: ""
 											}
 											key={project.id}
+											button
 											onClick={() => {
 												dispatch(setProject(project));
 												setIsAnyActiveProject(true);

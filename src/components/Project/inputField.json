@@ -51,7 +51,9 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-2",
 			"inputType": "select",
-			"multiple": true
+			"multiple": true,
+			"addNewClick": {},
+			"addNew": true
 		},
 		{
 			"name": "attachfiles",
@@ -61,6 +63,7 @@
 			"label": "Attach files",
 			"inputType": "button",
 			"onClick": {},
+			"textNextToButton": "",
 			"size": 12
 		}
 	]

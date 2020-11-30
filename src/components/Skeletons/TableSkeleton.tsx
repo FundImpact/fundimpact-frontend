@@ -10,7 +10,13 @@ const useStyles = makeStyles({
 	},
 });
 
-function TableSkeleton({ lines = 6 }: { lines?: number }) {
+function TableSkeleton({
+	lines = 6,
+	headerHeight = 40,
+}: {
+	lines?: number;
+	headerHeight?: number;
+}) {
 	const classes = useStyles();
 	return (
 		<div>
@@ -20,7 +26,7 @@ function TableSkeleton({ lines = 6 }: { lines?: number }) {
 						<Skeleton
 							variant="rect"
 							width="100%"
-							height={40}
+							height={headerHeight}
 							animation="wave"
 						></Skeleton>
 					</ListItemText>

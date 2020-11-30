@@ -28,6 +28,8 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
 			"inputType": "select",
+			"addNew": true,
+			"addNewClick": {},
 			"hidden": false,
 			"multiple": true
 		},

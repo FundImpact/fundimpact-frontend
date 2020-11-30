@@ -26,6 +26,13 @@ export default function MainDashboard() {
 							description: `This text will be show on dashboard for fund status card title`,
 						})}
 						type={CARD_TYPES.DEFAULT}
+						tooltip={intl.formatMessage({
+							id: "fundStatusCardTooltip",
+							defaultMessage:
+								"This card is showing total fund spend, received and expenditure made for",
+							description:
+								"This text will be show on dashboard for fund status card tooltip",
+						})}
 					>
 						<FundStatus />
 					</DashboardCard>
@@ -38,6 +45,13 @@ export default function MainDashboard() {
 							description: `This text will be show on dashboard for achievement card title`,
 						})}
 						type={CARD_TYPES.DEFAULT}
+						tooltip={intl.formatMessage({
+							id: "achievementCardTooltip",
+							defaultMessage:
+								"This card is showing total deliverable target and deliverable achieved for",
+							description:
+								"This text will be show on dashboard for fund status card tooltip",
+						})}
 					>
 						<Achievement />
 					</DashboardCard>
@@ -50,6 +64,13 @@ export default function MainDashboard() {
 							description: `This text will be show on dashboard for impacts card title`,
 						})}
 						type={CARD_TYPES.DEFAULT}
+						tooltip={intl.formatMessage({
+							id: "impactCardTooltip",
+							defaultMessage:
+								"This card is showing count of sustainable development goals achieved for",
+							description:
+								"This text will be show on dashboard for impacts card tooltip",
+						})}
 					>
 						<Impact />
 					</DashboardCard>

@@ -12,12 +12,16 @@ import {
 	TextField,
 	FormControlLabel,
 	Switch,
+	Box,
+	Typography,
+	ListSubheader,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { IInputFields } from "../../models";
 import UploadFile from "../UploadFile";
 import { Autocomplete } from "@material-ui/lab";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles(() =>
 	createStyles({
@@ -48,6 +52,7 @@ const InputFields = ({
 	multiline = false,
 	rows = 1,
 	type = "text",
+	optionsLabel,
 	optionsArray,
 	inputLabelId,
 	selectLabelId,
@@ -59,6 +64,12 @@ const InputFields = ({
 	disabled,
 	onClick,
 	autoCompleteGroupBy,
+	addNew = false,
+	addNewClick,
+	secondOptionsArray,
+	secondOptionsLabel,
+	customMenuOnClick,
+	textNextToButton,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -82,12 +93,20 @@ const InputFields = ({
 
 	useEffect(() => {
 		if (inputType == "multiSelect") {
-			setElemName((formik.values[name]?.map((elem: any) => elem.id) as string[]) || []);
+			setElemName(
+				formik.values[name]?.map((elem: any) => {
+					if (elem) return elem.id;
+				})
+			);
 		}
 	}, [formik, setElemName, name, inputType]);
 
 	const elemHandleChange = (event: React.ChangeEvent<{ value: any }>) => {
-		setElemName(event.target.value.map((elem: any) => elem.id) as string[]);
+		setElemName(
+			event.target.value.map((elem: any) => {
+				if (elem) return elem.id;
+			})
+		);
 	};
 	let renderValue;
 	if (multiple) {
@@ -109,6 +128,9 @@ const InputFields = ({
 				formik.handleChange(event);
 			}
 			if (inputType === "select") {
+				if (multiple && Array.isArray(event.target.value)) {
+					event.target.value = (event.target.value as any[]).filter((elem) => elem);
+				}
 				if (getInputValue) {
 					getInputValue(event.target.value);
 					formik.handleChange(event);
@@ -118,8 +140,8 @@ const InputFields = ({
 
 		if (multiSelect) {
 			renderValue = (selected: any) => {
-				let arr: any = selected.map((elem: any) => elem.name);
-				return arr.join(", ");
+				let arr: any = selected.map((elem: any) => elem?.name);
+				return arr.filter((item: any) => !!item).join(", ");
 			};
 		}
 		return (
@@ -146,9 +168,18 @@ const InputFields = ({
 					}}
 					disabled={disabled}
 				>
+					{optionsLabel && (
+						<ListSubheader disableSticky={true}>{optionsLabel}</ListSubheader>
+					)}
 					{!optionsArray?.length && (
 						<MenuItem value="">
-							<em>No (context) available</em>
+							<em>
+								<FormattedMessage
+									id="noContextAvailable"
+									defaultMessage="No (context) available"
+									description="This text will be displayed as select field for no context available"
+								/>
+							</em>
 						</MenuItem>
 					)}
 					{multiSelect &&
@@ -171,11 +202,19 @@ const InputFields = ({
 						))}
 					{!multiple &&
 						!multiSelect &&
-						optionsArray?.map((elem: { id: string; name: string }, index: number) => (
-							<MenuItem key={index} value={elem.id}>
-								{elem.name}
-							</MenuItem>
-						))}
+						optionsArray?.map(
+							(
+								elem: { id: string; name: string; groupName?: string },
+								index: number
+							) =>
+								elem.groupName ? (
+									<ListSubheader>{elem.groupName}</ListSubheader>
+								) : (
+									<MenuItem key={index} value={elem.id}>
+										{elem.name}
+									</MenuItem>
+								)
+						)}
 					{multiple &&
 						optionsArray?.map(
 							(
@@ -192,6 +231,47 @@ const InputFields = ({
 								</MenuItem>
 							)
 						)}
+					{secondOptionsLabel && (
+						<ListSubheader disableSticky={true}>{secondOptionsLabel}</ListSubheader>
+					)}
+					{multiSelect &&
+						secondOptionsArray &&
+						secondOptionsArray.map((element: any, index: number) => (
+							<MenuItem
+								key={index}
+								value={multiSelect ? element : element.id}
+								disabled={element.disabled}
+								onClick={(e) =>
+									customMenuOnClick ? customMenuOnClick(element) : null
+								}
+							>
+								{multiSelect ? (
+									<Checkbox
+										color="primary"
+										checked={elemName.indexOf(element.id) > -1}
+										disabled={element.disabled}
+									/>
+								) : null}
+								<Typography>{element.name}</Typography>
+							</MenuItem>
+						))}
+
+					{addNew && addNewClick && (
+						<MenuItem onClick={addNewClick} selected={false} value="">
+							<Box display="flex">
+								<AddCircleIcon />
+								<Box ml={1}>
+									<Typography>
+										<FormattedMessage
+											id="addNewSelectField"
+											defaultMessage="Add new"
+											description="This text will be displayed as select field for select Field"
+										/>
+									</Typography>
+								</Box>
+							</Box>
+						</MenuItem>
+					)}
 				</Select>
 				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
 			</FormControl>
@@ -278,17 +358,24 @@ const InputFields = ({
 	}
 	if (inputType === "button") {
 		return (
-			<Button
-				className={classes.button}
-				disableRipple
-				variant="contained"
-				color="primary"
-				data-testid={`commonFormButton${label}`}
-				disabled={disabled}
-				onClick={onClick ? onClick : () => {}}
-			>
-				{label}
-			</Button>
+			<Box display="flex">
+				<Button
+					className={classes.button}
+					disableRipple
+					variant="contained"
+					color="primary"
+					data-testid={`commonFormButton${label}`}
+					disabled={disabled}
+					onClick={onClick ? onClick : () => {}}
+				>
+					{label}
+				</Button>
+				{textNextToButton && (
+					<Box m={1}>
+						<Typography color="textSecondary">{textNextToButton}</Typography>
+					</Box>
+				)}
+			</Box>
 		);
 	}
 	return (

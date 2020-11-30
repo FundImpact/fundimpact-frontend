@@ -103,7 +103,7 @@ function Workspace(props: WorkspaceProps) {
 	>(CREATE_WORKSPACE, {
 		onCompleted: (data) => {
 			notificationDispatch(setSuccessNotification("Workspace created successfully !"));
-			setShowForm(false);
+			props.close();
 		},
 		onError: () => {
 			notificationDispatch(setErrorNotification("Workspace creation Failed !"));
@@ -151,7 +151,7 @@ function Workspace(props: WorkspaceProps) {
 	>(UPDATE_WORKSPACE, {
 		onCompleted: (data) => {
 			notificationDispatch(setSuccessNotification("Workspace updated successfully !"));
-			setShowForm(false);
+			props.close();
 		},
 		onError: () => {
 			notificationDispatch(setErrorNotification("Workspace updation Failed !"));
@@ -203,15 +203,10 @@ function Workspace(props: WorkspaceProps) {
 						description: `This text will be show on workspace form for title`,
 					})
 				}
-				subtitle={intl.formatMessage({
-					id: "workspaceFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on workspace form for subtitle`,
-				})}
+				subtitle={""}
 				workspace={DashBoardData?.organization?.name}
 				open={showForm}
-				handleClose={() => setShowForm(false)}
+				handleClose={() => props.close()}
 				loading={loading || updateLoading}
 			>
 				<WorkspaceForm

@@ -104,27 +104,6 @@ function EditImpactTargetLineIcon({
 
 	const { data } = useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
 		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
-		onCompleted(data) {
-			let impactMapValueobj: any = {};
-			let impactProjectDonors: any = [];
-			data.impactLinitemFyDonorList.forEach((elem: any) => {
-				impactMapValueobj[`${elem.project_donor.id}mapValues`] = {
-					id: elem.id,
-					financial_year: elem.financial_year?.id,
-					grant_periods_project: elem.grant_periods_project?.id,
-					impact_tracking_lineitem: elem.impact_tracking_lineitem?.id,
-					project_donor: elem.project_donor?.id,
-				};
-				impactProjectDonors.push({
-					id: elem.project_donor?.id,
-					name: elem.project_donor?.donor?.name,
-					donor: elem.project_donor?.donor,
-				});
-			});
-			setImpactTracklineDonors(impactProjectDonors);
-			setImpactTracklineDonorsMapValues(impactMapValueobj);
-		},
-		onError(data) {},
 	});
 	useEffect(() => {
 		let impactMapValueobj: any = {};
@@ -138,7 +117,7 @@ function EditImpactTargetLineIcon({
 				project_donor: elem.project_donor?.id,
 			};
 			impactProjectDonors.push({
-				id: elem.project_donor?.id,
+				id: elem.project_donor?.donor.id,
 				name: elem.project_donor?.donor?.name,
 				donor: elem.project_donor?.donor,
 			});
@@ -165,37 +144,6 @@ function EditImpactTargetLineIcon({
 	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
 	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
 
-	const [impactTracklineUploadLoading, setImpactTracklineUploadLoading] = React.useState(0);
-	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
-
-	React.useEffect(() => {
-		let remainFilestoUpload = impactTracklineFileArray.filter((elem) => !elem.id).length;
-		let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
-		setImpactTracklineUploadLoading(percentage);
-	}, [impactTracklineFileArray, totalFilesToUpload, setImpactTracklineUploadLoading]);
-
-	let { multiplefileUpload } = useMultipleFileUpload();
-	const [uploadSuccess, setUploadSuccess] = React.useState<boolean>(false);
-	const successMessage = () => {
-		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
-		if (refetch) refetch();
-		setUploadSuccess(false);
-	};
-	if (uploadSuccess) successMessage();
-
-	const attachImpactFileOnSave = () => {
-		setTotalFilesToUpload(impactTracklineFileArray.filter((elem) => !elem.id).length);
-		multiplefileUpload({
-			ref: "impact-tracking-lineitem",
-			refId: impactTargetLine.id,
-			field: "attachments",
-			path: `org-${dashBoardData?.organization?.id}/impact-tracking-lineitem`,
-			filesArray: impactTracklineFileArray,
-			setFilesArray: setImpactTracklineFileArray,
-			setUploadSuccess: setUploadSuccess,
-		});
-	};
-	let uploadingFileMessage = CommonUploadingFilesMessage();
 	return (
 		<>
 			<TableCell>
@@ -273,16 +221,20 @@ function EditImpactTargetLineIcon({
 						handleClose: () => setImpactOpenAttachFiles(false),
 						filesArray: impactTracklineFileArray,
 						setFilesArray: setImpactTracklineFileArray,
-						parentOnSave: attachImpactFileOnSave,
+						// parentOnSave: attachImpactFileOnSave,
+						uploadApiConfig: {
+							ref: "impact-tracking-lineitem",
+							refId: impactTargetLine.id,
+							field: "attachments",
+							path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/impact-tracking-lineitem`,
+						},
+						parentOnSuccessCall: () => {
+							if (refetch) refetch();
+							setImpactTracklineFileArray([]);
+						},
 					}}
 				/>
 			)}
-			{impactTracklineUploadLoading > 0 ? (
-				<CircularPercentage
-					progress={impactTracklineUploadLoading}
-					message={uploadingFileMessage}
-				/>
-			) : null}
 		</>
 	);
 }

@@ -97,7 +97,11 @@ export interface IInputFields {
 	formik?: any;
 	type?: string;
 	size?: any;
+	optionsLabel?: string;
 	optionsArray?: any[];
+	secondOptionsArray?: any[];
+	secondOptionsLabel?: string;
+	customMenuOnClick?: any;
 	inputLabelId?: string;
 	selectLabelId?: string;
 	selectId?: string;
@@ -107,8 +111,11 @@ export interface IInputFields {
 	hidden?: boolean;
 	logo?: string;
 	disabled?: boolean;
-	onClick?: any;
+	onClick?: (() => void) | null;
+	textNextToButton?: string;
 	autoCompleteGroupBy?: <T>(option: T) => string;
+	addNew?: boolean;
+	addNewClick?: (() => void) | null;
 }
 
 export interface ISelectField {
@@ -125,6 +132,8 @@ export interface ISelectField {
 	hidden?: boolean;
 	displayName?: string;
 	required?: boolean;
+	addNew?: boolean;
+	addNewClick?: any;
 }
 
 export interface IFormDialog {
