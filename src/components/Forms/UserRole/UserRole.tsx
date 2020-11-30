@@ -8,7 +8,7 @@ import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
-	GET_ROLES_BY_ORG,
+	GET_ROLES,
 } from "../../../graphql/UserRoles/query";
 import {
 	useLazyQuery,
@@ -38,6 +38,7 @@ import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import { Box, Grid, Typography } from "@material-ui/core";
 import { IGetUserRole } from "../../../models/access/query";
+import { RESTRICTED_ROLES } from "../../../models/User/constant";
 
 const data = `Lorem ipsum dolor sit amet consectetur adipisicing elit.
 Earum repellat nisi, officiis incidunt repudiandae
@@ -198,10 +199,8 @@ const getProjectGroupHeadingInUserRoleForm = (project: IGetProject["orgProject"]
 const sortProjectsToGroupProject = (projects: IGetProject["orgProject"]) =>
 	projects.sort((project1, project2) => +project1.workspace.id - +project2.workspace.id);
 
-const filterOrganizationRoles = (
-	roles: { type: string; id: string; name: string; description: string }[],
-	organizationId: string
-) => roles.filter((role) => role.type !== `owner-org-${organizationId}`);
+const filterRoles = (roles: { type: string; id: string; name: string; description: string }[]) =>
+	roles.filter((role) => !RESTRICTED_ROLES.includes(role?.type));
 
 const getInvitedUserCountCachedValue = (apolloClient: ApolloClient<object>) => {
 	let count = 0;
@@ -404,8 +403,8 @@ function UserRoleForm(props: UserRoleProps) {
 
 	(userRoleForm[2].autoCompleteGroupBy as unknown) = getProjectGroupHeadingInUserRoleForm;
 
-	const { data: userRoles } = useQuery(GET_ROLES_BY_ORG, {
-		variables: { organization: dashboardData?.organization?.id },
+	const { data: userRoles } = useQuery(GET_ROLES, {
+		// variables: { organization: dashboardData?.organization?.id },
 		onError(err) {
 			console.log("role", err);
 		},
@@ -426,21 +425,14 @@ function UserRoleForm(props: UserRoleProps) {
 		type: string;
 		id: string;
 		name: string;
-	}[]) = useMemo(
-		() =>
-			filterOrganizationRoles(
-				userRoles?.organizationRoles || [],
-				dashboardData?.organization?.id || ""
-			),
-		[userRoles, dashboardData]
-	);
+	}[]) = useMemo(() => filterRoles(userRoles?.roles || []), [userRoles, dashboardData]);
 
 	useEffect(() => {
 		if (props.type == FORM_ACTIONS.UPDATE) {
 			setSelectedRole(
 				getSelectedRole({
 					roleId: props.data.role,
-					userRoles: userRoles?.organizationRoles || [],
+					userRoles: userRoles?.roles || [],
 				})
 			);
 		}
@@ -450,7 +442,7 @@ function UserRoleForm(props: UserRoleProps) {
 		(roleId: string) => {
 			let selectedUserRole = getSelectedRole({
 				roleId,
-				userRoles: userRoles?.organizationRoles || [],
+				userRoles: userRoles?.roles || [],
 			});
 
 			if (selectedUserRole?.is_project_level) {
@@ -561,10 +553,7 @@ function UserRoleForm(props: UserRoleProps) {
 					onCancel={onCancel}
 				>
 					<Box maxHeight="300px" overflow="auto">
-						{filterOrganizationRoles(
-							userRoles?.organizationRoles || [],
-							dashboardData?.organization?.id || ""
-						)?.map(
+						{filterRoles(userRoles?.roles || [])?.map(
 							(role: {
 								id: string;
 								name: string;

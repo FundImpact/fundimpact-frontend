@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RoleTableContainer from "./RoleTableContainer";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
+import { GET_ROLES } from "../../../graphql/UserRoles/query";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { IGetUserRole } from "../../../models/access/query";
@@ -33,13 +33,13 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 	// }, [tableFilterList, dashboardData]);
 
 	const [getUserRoles, { data: userRoles, loading: fetchingUserRoles }] = useLazyQuery<{
-		organizationRoles: { id: string; name: string; type: string }[];
-	}>(GET_ROLES_BY_ORG, {
+		roles: { id: string; name: string; type: string }[];
+	}>(GET_ROLES, {
 		onCompleted: async (userRoles) => {
 			getRolePermissions({
 				variables: {
 					filter: {
-						role: userRoles.organizationRoles[0].id,
+						role: userRoles.roles[0].id,
 					},
 				},
 			});
@@ -56,7 +56,7 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 	useEffect(() => {
 		if (getAsyncRolesAndPermissions && userRoles) {
 			Promise.all(
-				userRoles.organizationRoles
+				userRoles.roles
 					.filter((role) => role.type != adminRoletype)
 					.map((role) =>
 						getAsyncRolesAndPermissions({ filter: { role: role.id } }).then(
@@ -83,11 +83,7 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 
 	useEffect(() => {
 		if (dashboardData?.organization?.id) {
-			getUserRoles({
-				variables: {
-					organization: dashboardData?.organization?.id,
-				},
-			});
+			getUserRoles();
 		}
 	}, [dashboardData]);
 
@@ -95,9 +91,8 @@ function RoleTableGraphql({ tableFilterList }: { tableFilterList?: { [key: strin
 		<RoleTableContainer
 			loading={fetchingUserRoles || fetchingRolePermissions}
 			userRoles={
-				userRoles?.organizationRoles.filter(
-					(role: { type: string }) => role.type != adminRoletype
-				) || []
+				userRoles?.roles.filter((role: { type: string }) => role.type != adminRoletype) ||
+				[]
 			}
 			count={100}
 			changePage={(prev?: boolean) => {}}
