@@ -8,7 +8,7 @@ import {
 	setSuccessNotification,
 	setErrorNotification,
 } from "../../../reducers/notificationReducer";
-import { GET_ROLES_BY_ORG } from "../../../graphql/UserRoles/query";
+import { GET_ROLES } from "../../../graphql/UserRoles/query";
 import {
 	ICreateOrganizationUserRoleVariables,
 	ICreateOrganizationUserRole,
@@ -121,7 +121,7 @@ const createRole = async ({
 		},
 		refetchQueries: [
 			{
-				query: GET_ROLES_BY_ORG,
+				query: GET_ROLES,
 				variables: {
 					organization: organizationId,
 				},

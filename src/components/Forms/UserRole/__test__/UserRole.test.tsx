@@ -10,7 +10,7 @@ import { INVITE_USER } from "../../../../graphql/UserRoles/mutation";
 import {
 	GET_INVITED_USER_LIST,
 	GET_INVITED_USER_LIST_COUNT,
-	GET_ROLES_BY_ORG,
+	GET_ROLES,
 } from "../../../../graphql/UserRoles/query";
 import { rolesMock, userListMock } from "./testHelp";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
@@ -80,10 +80,7 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_ROLES_BY_ORG,
-			variables: {
-				organization: "13",
-			},
+			query: GET_ROLES,
 		},
 		result: { data: rolesMock },
 	},
