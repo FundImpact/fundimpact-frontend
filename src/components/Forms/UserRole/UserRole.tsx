@@ -199,8 +199,12 @@ const getProjectGroupHeadingInUserRoleForm = (project: IGetProject["orgProject"]
 const sortProjectsToGroupProject = (projects: IGetProject["orgProject"]) =>
 	projects.sort((project1, project2) => +project1.workspace.id - +project2.workspace.id);
 
-const filterRoles = (roles: { type: string; id: string; name: string; description: string }[]) =>
-	roles.filter((role) => !RESTRICTED_ROLES.includes(role?.type));
+const filterRoles = (
+	roles: { type: string; id: string; name: string; description: string; sequence: number }[]
+) =>
+	roles
+		.filter((role) => role.sequence)
+		.sort((roleOne, roleTwo) => roleOne.sequence - roleTwo.sequence);
 
 const getInvitedUserCountCachedValue = (apolloClient: ApolloClient<object>) => {
 	let count = 0;

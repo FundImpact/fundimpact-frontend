@@ -8,7 +8,7 @@ export const GET_ROLES = gql`
 			type
 			description
 			is_project_level
-			# order
+			sequence
 		}
 	}
 `;
@@ -25,6 +25,7 @@ export const GET_INVITED_USER_LIST = gql`
 				name
 				type
 				is_project_level
+				sequence
 			}
 			organization {
 				id

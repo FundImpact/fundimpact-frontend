@@ -140,7 +140,7 @@ function EditUserIcon({
 	userData: {
 		id: string;
 		email: string;
-		role: { id: string; type: string; is_project_level: boolean };
+		role: { id: string; type: string; is_project_level: boolean; sequence?: number };
 		user_projects: {
 			id: string;
 			project: { id: string; name: string; workspace: { id: string; name: string } };
@@ -161,10 +161,7 @@ function EditUserIcon({
 			<TableCell>
 				<IconButton
 					onClick={handleMenuClick}
-					disabled={
-						RESTRICTED_ROLES.includes(userData?.role?.type) ||
-						!userData.role.is_project_level
-					}
+					disabled={!userData?.role?.sequence || !userData.role.is_project_level}
 				>
 					<MoreVertIcon />
 				</IconButton>
