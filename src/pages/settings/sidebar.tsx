@@ -206,6 +206,11 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 		individualCreateAccess || individualFindAccess
 	);
 
+	// setSidebarTabUserAccess(
+	// 	sidebarList[sidebar.manageUsers].subHeadings[2],
+	// 	individualCreateAccess || individualFindAccess
+	// );
+
 	if (!data?.organization) return <SidebarSkeleton></SidebarSkeleton>;
 	return (
 		<Box className={classes.sidePanel} p={0} boxShadow={1}>
