@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
 	Box,
 	Button,
@@ -52,7 +52,6 @@ const FinancialYearAndGrantPeriodFields = ({
 		donor: { id: string; name: string; country: { id: string; name: string } };
 	};
 }) => {
-	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const dashboardData = useDashBoardData();
 	const project = dashboardData?.project?.id;

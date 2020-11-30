@@ -287,7 +287,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
 
-	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation(
+	const [createProjectDonor, { loading: creatingProjectDonorsLoading }] = useMutation(
 		CREATE_PROJECT_DONOR,
 		{
 			onCompleted: (data) => {
@@ -735,8 +735,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					)}
 				</>
 			</FormDialog>
-			{loading ? <FullScreenLoader /> : null}
-			{updateDeliverableTrackLineLoading ? <FullScreenLoader /> : null}
+			{updateDeliverableTrackLineLoading || creatingProjectDonorsLoading || loading ? (
+				<FullScreenLoader />
+			) : null}
 
 			{openAttachFiles && (
 				<AttachFileForm

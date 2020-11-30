@@ -69,6 +69,7 @@ const InputFields = ({
 	secondOptionsArray,
 	secondOptionsLabel,
 	customMenuOnClick,
+	textNextToButton,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -357,17 +358,24 @@ const InputFields = ({
 	}
 	if (inputType === "button") {
 		return (
-			<Button
-				className={classes.button}
-				disableRipple
-				variant="contained"
-				color="primary"
-				data-testid={`commonFormButton${label}`}
-				disabled={disabled}
-				onClick={onClick ? onClick : () => {}}
-			>
-				{label}
-			</Button>
+			<Box display="flex">
+				<Button
+					className={classes.button}
+					disableRipple
+					variant="contained"
+					color="primary"
+					data-testid={`commonFormButton${label}`}
+					disabled={disabled}
+					onClick={onClick ? onClick : () => {}}
+				>
+					{label}
+				</Button>
+				{textNextToButton && (
+					<Box m={1}>
+						<Typography color="textSecondary">{textNextToButton}</Typography>
+					</Box>
+				)}
+			</Box>
 		);
 	}
 	return (

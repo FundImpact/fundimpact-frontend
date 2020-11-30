@@ -25,7 +25,7 @@ import {
 	TextField,
 	Typography,
 } from "@material-ui/core";
-import { isValidImage, readableBytes } from "../../../utils";
+import { isValidImage, readableBytes, uploadPercentageCalculator } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -33,6 +33,13 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import FilterListContainer from "../../FilterList";
 import { attachFileFilter } from "./inputField.json";
 import { createChipArray } from "../../commons";
+import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
+import BorderLinearProgress from "../../BorderLinearProgress";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { setSuccessNotification } from "../../../reducers/notificationReducer";
+import LibraryAddCheckIcon from "@material-ui/icons/LibraryAddCheck";
+import LinearWithValueLabel from "../../commons/LinearWithValueLabel";
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		height: 270,
@@ -87,6 +94,9 @@ const useStyles = makeStyles((theme) => ({
 		padding: theme.spacing(1),
 		marginRight: theme.spacing(2),
 	},
+	uploaded: {
+		color: theme.palette.success.main,
+	},
 }));
 
 const noImagePreview = "https://i.stack.imgur.com/yGa0X.png";
@@ -96,6 +106,13 @@ function AttachFileForm(props: {
 	filesArray: AttachFile[];
 	setFilesArray: React.Dispatch<React.SetStateAction<AttachFile[]>>;
 	parentOnSave?: any;
+	uploadApiConfig?: {
+		ref: string;
+		refId: string;
+		field: string;
+		path: string;
+	};
+	parentOnSuccessCall?: () => void;
 }) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
@@ -103,6 +120,32 @@ function AttachFileForm(props: {
 	const intl = useIntl();
 	const classes = useStyles();
 	const { parentOnSave } = props;
+	const notificationDispatch = useNotificationDispatch();
+	const { multiplefileUploader, success, setSuccess } = useMultipleFileUpload(
+		filesArray,
+		setFilesArray
+	);
+	const [totalFilesToUpload, setTotalFilesToUpload] = React.useState(0);
+	const [loadingPercentage, setLoadingPercentage] = React.useState(0);
+	const [onSaveCall, setOnSaveCall] = React.useState(false);
+
+	React.useMemo(() => {
+		if (filesArray) {
+			let remainFilestoUpload = filesArray.filter((elem) => !elem.id).length;
+			let percentage = uploadPercentageCalculator(remainFilestoUpload, totalFilesToUpload);
+			setLoadingPercentage(percentage);
+		}
+	}, [filesArray, totalFilesToUpload]);
+
+	const successMessage = () => {
+		if (totalFilesToUpload) notificationDispatch(setSuccessNotification("Files Uploaded !"));
+		const { parentOnSuccessCall, handleClose } = props;
+		setSuccess(false);
+		setOnSaveCall(false);
+		if (parentOnSuccessCall) parentOnSuccessCall();
+		handleClose();
+	};
+	if (success) successMessage();
 
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
@@ -142,8 +185,11 @@ function AttachFileForm(props: {
 	});
 
 	const onSave = async () => {
-		if (parentOnSave) parentOnSave();
-		onCancel();
+		setTotalFilesToUpload(filesArray?.filter((elem) => !elem.id).length);
+		setOnSaveCall(true);
+		const { uploadApiConfig } = props;
+		if (parentOnSave) await parentOnSave();
+		else await multiplefileUploader(uploadApiConfig ? uploadApiConfig : {});
 	};
 	const [attachFilePage, setAttachFilePage] = React.useState(0);
 	const handleAttachFileChangePage = (event: unknown, newPage: number) => {
@@ -205,7 +251,7 @@ function AttachFileForm(props: {
 													)
 														? URL.createObjectURL(file)
 														: noImagePreview,
-													uploadingStatus: false,
+													uploadStatus: false,
 												});
 											});
 
@@ -245,7 +291,11 @@ function AttachFileForm(props: {
 								)}
 							</Box>
 						</Grid>
-
+						{loadingPercentage > 0 && onSaveCall && (
+							<Grid item xs={12}>
+								<LinearWithValueLabel progress={loadingPercentage} />
+							</Grid>
+						)}
 						<Grid item xs={12} className={classes.mediaListBox} container spacing={1}>
 							{!filesExist && (
 								<Grid item xs={12} container justify="center" alignItems="center">
@@ -330,12 +380,13 @@ const AttachedFileList = (props: {
 	}, [file]);
 
 	const fetchedFilePreview = file.ext && !isValidImage(file.ext) ? noImagePreview : file.url;
+
 	return (
 		<Grid item key={file?.preview} xs={3}>
 			<Card className={classes.root}>
 				<CardActionArea>
 					{/*if not uploaded*/}
-					{!file.id && (
+					{!file.id && !file.uploaderConfig && (
 						<IconButton
 							className={classes.close}
 							onClick={() => {
@@ -378,13 +429,29 @@ const AttachedFileList = (props: {
 							</Typography>
 						</Box>
 
-						<Typography gutterBottom variant="caption" noWrap>
-							{`Size-${
-								file?.file?.size
-									? readableBytes(file?.file?.size)
-									: `${file.size}Kb`
-							}`}
-						</Typography>
+						{file.uploaderConfig ? (
+							<Typography gutterBottom variant="caption" noWrap>
+								{`Uploading-${readableBytes(
+									file.uploaderConfig.loaded
+								)} / ${readableBytes(file.uploaderConfig.total)}`}
+							</Typography>
+						) : (
+							<Grid container justify="space-between">
+								<Typography gutterBottom variant="caption" noWrap>
+									{`Size-${
+										file?.file?.size
+											? readableBytes(file?.file?.size)
+											: `${file.size}Kb`
+									}`}
+								</Typography>
+								{file.uploadStatus && (
+									<LibraryAddCheckIcon
+										className={classes.uploaded}
+										fontSize="small"
+									/>
+								)}
+							</Grid>
+						)}
 					</Box>
 					{!file.id ? (
 						<>
@@ -419,6 +486,15 @@ const AttachedFileList = (props: {
 										</IconButton>
 									</Box>
 								</Box>
+							) : file.uploaderConfig ? (
+								<BorderLinearProgress
+									variant="determinate"
+									value={
+										(file.uploaderConfig.loaded / file.uploaderConfig.total) *
+										100
+									}
+									color={"primary"}
+								/>
 							) : (
 								<Box className={classes.remarkBox}>
 									{!file.remark ? (
