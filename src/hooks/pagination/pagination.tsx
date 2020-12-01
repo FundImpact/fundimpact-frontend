@@ -21,6 +21,11 @@ function getStartValue(startingValue: number, limit: number, prev: boolean): num
 	return startingValue - limit - +(startingValue % limit);
 }
 
+//This is done as there is a bug in apollo MockedProvider, due to which when the fetch policy is cache-and-network
+//we are not getting mock data in the test
+const getFetchPolicy = () =>
+	process.env.NODE_ENV === "test" ? "cache-first" : "cache-and-network";
+
 function Pagination({
 	limit = 10,
 	start = 0,
@@ -61,7 +66,7 @@ function Pagination({
 		getQueryData,
 		{ data: queryData, loading: queryLoading, error: queryError, refetch: queryRefetch },
 	] = useLazyQuery(query, {
-		// fetchPolicy: "cache-and-network",
+		fetchPolicy: getFetchPolicy(),
 	});
 
 	useEffect(() => {
@@ -126,7 +131,7 @@ function Pagination({
 		changePage,
 		queryData: queryData,
 		error,
-		queryLoading,
+		queryLoading: !queryData && queryLoading,
 		countQueryLoading,
 		countQueryError,
 		queryError,
