@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -18,7 +18,7 @@ import {
 } from "../../../graphql/Budget/mutation";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
 import { AttachFile } from "../../../models/AttachFile";
-import { IBudgetLineitemProps, IBudgetTarget } from "../../../models/budget/";
+import { IBudgetLineitemProps } from "../../../models/budget/";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import {
 	IBUDGET_LINE_ITEM_RESPONSE,
@@ -30,18 +30,14 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { compareObjectKeys, removeEmptyKeys, uploadPercentageCalculator } from "../../../utils";
+import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { getTodaysDate } from "../../../utils";
-import {
-	CommonFormTitleFormattedMessage,
-	CommonUploadingFilesMessage,
-} from "../../../utils/commonFormattedMessage";
-import { CircularPercentage } from "../../commons";
+import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
+
 import FormDialog from "../../FormDialog";
 import AttachFileForm from "../../Forms/AttachFiles";
 import CommonForm from "../../CommonForm";
 import { budgetLineitemFormInputFields } from "./inputFields.json";
-import BudgetTarget from "../BudgetTarget";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { Grid, Box, Typography, useTheme } from "@material-ui/core";
 import AmountSpent from "../../Table/Budget/BudgetTargetTable/AmountSpent";
@@ -174,12 +170,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	} | null>(null);
 
 	const currentProject = dashboardData?.project;
-	let initialValues =
-		props.initialValues && props.formAction === FORM_ACTIONS.UPDATE
-			? props.initialValues
-			: defaultFormValues;
+	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
 
-	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
+		initialValues.attachments ? initialValues.attachments : []
+	);
 	// console.log("here props", props, initialValues);
 	let {
 		multiplefileMorph,
@@ -216,7 +211,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		handleClose();
 	}, [handleClose, setFilesArray]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (success) {
 			if (props.formAction === FORM_ACTIONS.CREATE) {
 				budgetTrackingRefetch();
@@ -227,12 +222,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			closeDialog();
 		}
 	}, [success, budgetTrackingRefetch, props, setSuccess]);
-
-	React.useEffect(() => {
-		if (initialValues.attachments?.length) {
-			setFilesArray(initialValues.attachments);
-		}
-	}, [initialValues]);
 
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING,
@@ -264,14 +253,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
-
-	// useEffect(() => {
-	// 	// if (!filesArray.length && props.formAction === FORM_ACTIONS.UPDATE)
-	// 	if (props?.initialValues?.attachments && !didLoad) {
-	// 		setFilesArray(props?.initialValues?.attachments);
-	// 		setDidLoad(true);
-	// 	}
-	// }, [props]);
 
 	/* Open Attach File Form*/
 	budgetLineitemFormInputFields[8].onClick = () => setOpenAttachFiles(true);
