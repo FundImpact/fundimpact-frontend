@@ -172,8 +172,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const currentProject = dashboardData?.project;
 	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
 
-	const [values, setValues] = useState<IBudgetTrackingLineitemForm>(defaultFormValues);
-
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
 		initialValues.attachments ? initialValues.attachments : []
 	);
