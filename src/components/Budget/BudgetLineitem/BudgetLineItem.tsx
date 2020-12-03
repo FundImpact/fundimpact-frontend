@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -18,7 +18,7 @@ import {
 } from "../../../graphql/Budget/mutation";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload";
 import { AttachFile } from "../../../models/AttachFile";
-import { IBudgetLineitemProps, IBudgetTarget } from "../../../models/budget/";
+import { IBudgetLineitemProps } from "../../../models/budget/";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import {
 	IBUDGET_LINE_ITEM_RESPONSE,
@@ -154,8 +154,6 @@ const FormDetails = ({
 	);
 };
 
-const getInitialValues = (budget_target_project?: string) => {};
-
 function BudgetLineitem(props: IBudgetLineitemProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -230,12 +228,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			closeDialog();
 		}
 	}, [success, budgetTrackingRefetch, props, setSuccess]);
-	console.log("filesArray", filesArray, props);
-	// useEffect(() => {
-	// 	if (props.initialValues && props.initialValues.attachments?.length) {
-	// 		setFilesArray(props.initialValues.attachments);
-	// 	}
-	// }, [props.initialValues]);
 
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING,
@@ -267,14 +259,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
-
-	// useEffect(() => {
-	// 	// if (!filesArray.length && props.formAction === FORM_ACTIONS.UPDATE)
-	// 	if (props?.initialValues?.attachments && !didLoad) {
-	// 		setFilesArray(props?.initialValues?.attachments);
-	// 		setDidLoad(true);
-	// 	}
-	// }, [props]);
 
 	/* Open Attach File Form*/
 	budgetLineitemFormInputFields[8].onClick = () => setOpenAttachFiles(true);
