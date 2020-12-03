@@ -78,7 +78,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		defaultMessage: "Allocated",
 		description: `This text will be show on organization dashboard for allocated Label`,
 	});
-	console.log(props, props.tooltip);
+
 	let projectCardConfig: ProjectCardConfig = {
 		mainHeading: "",
 		title: "",
