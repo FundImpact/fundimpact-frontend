@@ -32,6 +32,7 @@ const getBudgetLineItemInitialValues = (
 		grant_periods_project: "",
 		fy_org: "",
 		fy_donor: "",
+		attachments: [],
 	};
 };
 
