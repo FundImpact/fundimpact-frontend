@@ -154,6 +154,8 @@ const FormDetails = ({
 	);
 };
 
+const getInitialValues = (budget_target_project?: string) => {};
+
 function BudgetLineitem(props: IBudgetLineitemProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -174,12 +176,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	} | null>(null);
 
 	const currentProject = dashboardData?.project;
-	let initialValues =
-		props.initialValues && props.formAction === FORM_ACTIONS.UPDATE
-			? props.initialValues
-			: defaultFormValues;
+	let initialValues = props.initialValues ? props.initialValues : defaultFormValues;
 
-	const [filesArray, setFilesArray] = React.useState<AttachFile[]>([]);
+	const [values, setValues] = useState<IBudgetTrackingLineitemForm>(defaultFormValues);
+
+	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
+		initialValues.attachments ? initialValues.attachments : []
+	);
 	// console.log("here props", props, initialValues);
 	let {
 		multiplefileMorph,
@@ -216,7 +219,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		handleClose();
 	}, [handleClose, setFilesArray]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (success) {
 			if (props.formAction === FORM_ACTIONS.CREATE) {
 				budgetTrackingRefetch();
@@ -227,12 +230,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			closeDialog();
 		}
 	}, [success, budgetTrackingRefetch, props, setSuccess]);
-
-	React.useEffect(() => {
-		if (initialValues.attachments?.length) {
-			setFilesArray(initialValues.attachments);
-		}
-	}, [initialValues]);
+	console.log("filesArray", filesArray, props);
+	// useEffect(() => {
+	// 	if (props.initialValues && props.initialValues.attachments?.length) {
+	// 		setFilesArray(props.initialValues.attachments);
+	// 	}
+	// }, [props.initialValues]);
 
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING,
