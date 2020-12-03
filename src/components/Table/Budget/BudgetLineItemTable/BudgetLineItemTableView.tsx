@@ -397,31 +397,35 @@ function BudgetLineItemTableView({
 				setOpenAttachFiles={setOpenAttachFiles}
 			>
 				<>
-					<BudgetLineitem
-						open={openDialogs[0]}
-						handleClose={() => toggleDialogs(0, false)}
-						formAction={FORM_ACTIONS.UPDATE}
-						initialValues={initialValues}
-						refetchOnSuccess={refetchOnSuccess}
-					/>
-					<AttachFileForm
-						{...{
-							open: openAttachFiles,
-							handleClose: () => setOpenAttachFiles(false),
-							filesArray: budgetTracklineFileArray,
-							setFilesArray: setBudgetTracklineFileArray,
-							uploadApiConfig: {
-								ref: "budget-tracking-lineitem",
-								refId: initialValues?.id || "",
-								field: "attachments",
-								path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/budget-tracking-lineitem`,
-							},
-							parentOnSuccessCall: () => {
-								if (refetchOnSuccess) refetchOnSuccess();
-								setBudgetTracklineFileArray([]);
-							},
-						}}
-					/>
+					{openDialogs[0] && (
+						<BudgetLineitem
+							open={openDialogs[0]}
+							handleClose={() => toggleDialogs(0, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+							refetchOnSuccess={refetchOnSuccess}
+						/>
+					)}
+					{openAttachFiles && (
+						<AttachFileForm
+							{...{
+								open: openAttachFiles,
+								handleClose: () => setOpenAttachFiles(false),
+								filesArray: budgetTracklineFileArray,
+								setFilesArray: setBudgetTracklineFileArray,
+								uploadApiConfig: {
+									ref: "budget-tracking-lineitem",
+									refId: initialValues?.id || "",
+									field: "attachments",
+									path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/budget-tracking-lineitem`,
+								},
+								parentOnSuccessCall: () => {
+									if (refetchOnSuccess) refetchOnSuccess();
+									setBudgetTracklineFileArray([]);
+								},
+							}}
+						/>
+					)}
 				</>
 			</CommonTable>
 		</>
