@@ -11,6 +11,23 @@ export const useGetFetch = <T>({ url = "" }: { url: string }) => {
 	return { error, loading, data };
 };
 
+export const useGetFetchWithCondition = <T>({
+	url = "",
+	condition,
+}: {
+	url: string;
+	condition: boolean;
+}) => {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [data, setData] = useState<T>();
+	useEffect(() => {
+		if (condition) intiateGetRequest(url, setLoading, setData, setError);
+	}, [url]);
+
+	return { error, loading, data };
+};
+
 const intiateGetRequest = async (
 	url: string,
 	setLoading: Dispatch<SetStateAction<any>>,

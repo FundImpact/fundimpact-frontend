@@ -1,7 +1,18 @@
-import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core";
+import {
+	Avatar,
+	Button,
+	createStyles,
+	IconButton,
+	Fab,
+	makeStyles,
+	TextField,
+	Theme,
+	Box,
+} from "@material-ui/core";
 import { Form, Formik, FormikErrors, FormikHelpers } from "formik";
 import React from "react";
 import { useIntl } from "react-intl";
+import { Link, Route } from "react-router-dom";
 
 import { ILoginForm } from "../../../models";
 import { placeholders } from "../../Placeholders/placeholder";
@@ -26,6 +37,10 @@ const useStyles = makeStyles((theme: Theme) =>
 				marginLeft: theme.spacing(1),
 				marginRight: theme.spacing(1),
 			},
+		},
+		small: {
+			width: theme.spacing(4),
+			height: theme.spacing(4),
 		},
 	})
 );
@@ -94,6 +109,23 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							color="primary"
 						>
 							Submit
+						</Button>
+
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={() => {
+								window.location.href = `${process.env.REACT_APP_BASEURL}connect/google`;
+								return null;
+							}}
+							startIcon={
+								<Avatar
+									className={classes.small}
+									src={require("../../../assets/icons/g-logo.png")}
+								/>
+							}
+						>
+							<Box ml={1}>Sign in with google</Box>
 						</Button>
 					</Form>
 				);

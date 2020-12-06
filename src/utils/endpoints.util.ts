@@ -6,3 +6,4 @@ export const ORGANISATION_TYPES_API = `${REACT_APP_BASEURL}organisation-registra
 export const COUNTRY_LIST_API = `${REACT_APP_BASEURL}countries`;
 export const FILE_UPLOAD = `${REACT_APP_BASEURL}upload`;
 export const FILE_UPLOAD_MORPH = `${REACT_APP_BASEURL}upload/file-morph`;
+export const GOOGLE_SIGN_IN = `${REACT_APP_BASEURL}auth/google/callback`;

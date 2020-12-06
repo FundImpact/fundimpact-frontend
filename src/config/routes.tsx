@@ -6,6 +6,7 @@ import MainDashboard from "../components/Dasboard/MainDashboard";
 import { NotificationProvider } from "../contexts/notificationContext";
 import { useAuth } from "../contexts/userContext";
 import { SetTokenAndRedirect } from "../hooks/userDetailsWithToken";
+import { UserResponseFromGoogleApiAndRedirect } from "../hooks/UserResponseFromGoogleApiAndRedirect";
 import Error404Container from "../pages/Error404/Error404Container";
 import LandingPage from "../pages/Landing/Landing";
 import { client } from "./grapql";
@@ -55,6 +56,10 @@ function AppRoutes() {
 						/>
 						<PrivateRoute path="settings/*" element={<SettingsContainer />} />
 						<PrivateRoute path="account/*" element={<AccountSettingsContainer />} />
+						<Route
+							path="auth/google/callback"
+							element={<UserResponseFromGoogleApiAndRedirect />}
+						/>
 						<Route path="" element={<LandingPage />}>
 							<Route path="login" element={<Login />} />
 							<Route path="signup/:id" element={<SignUp />} />

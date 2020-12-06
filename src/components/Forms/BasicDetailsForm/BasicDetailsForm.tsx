@@ -1,4 +1,6 @@
 import {
+	Avatar,
+	Box,
 	Button,
 	createStyles,
 	FormControl,
