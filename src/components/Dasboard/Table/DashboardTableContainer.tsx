@@ -540,9 +540,9 @@ export default function DashboardTableContainer() {
 		},
 		{
 			label: intl.formatMessage({
-				id: "individualTabHeading",
-				defaultMessage: "Individuals",
-				description: `This text will be show on tab for individuals`,
+				id: "contactDirectoryTabHeading",
+				defaultMessage: "Contact Directory",
+				description: `This text will be show on tab for contact directory`,
 			}),
 			table: <IndividualTable individualTableType={IndividualTableType.project} />,
 			createButtons: [
