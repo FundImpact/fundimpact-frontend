@@ -41,7 +41,8 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 
 	useEffect(() => {
 		if (apiError) {
-			if (apiError === "User not found") setError(apiError);
+			if (apiError === "User not found" || apiError === "email or password invalid.")
+				setError(apiError);
 			else setError("Internal server error");
 		}
 		if (logoutMsg) setError(logoutMsg);
