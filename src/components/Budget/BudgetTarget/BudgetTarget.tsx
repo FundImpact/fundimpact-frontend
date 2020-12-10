@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, ApolloClient, useApolloClient } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -15,7 +15,7 @@ import {
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
 import { GET_PROJECT_BUDGET_AMOUNT, GET_PROJ_DONORS } from "../../../graphql/project";
-import { IBudgetTargetProjectProps } from "../../../models/budget";
+import { IBudgetCategory, IBudgetTargetProjectProps } from "../../../models/budget";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
 import {
@@ -170,16 +170,18 @@ const validate = (values: IBudgetTargetForm) => {
 const getInitialValues = ({
 	props,
 	projectDonors,
+	createdBudgetCategory,
 }: {
 	props: IBudgetTargetProjectProps;
 	projectDonors: IGetProjectDonor["projectDonors"];
+	createdBudgetCategory?: IBudgetCategory | null;
 }) => {
 	if (props.formAction === FORM_ACTIONS.CREATE) {
 		return {
 			name: "",
 			total_target_amount: "",
 			description: "",
-			budget_category_organization: "",
+			budget_category_organization: createdBudgetCategory ? createdBudgetCategory.id : "",
 			donor: projectDonors.length === 1 ? projectDonors[0].donor.id : "",
 		};
 	}
@@ -190,6 +192,13 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const apolloClient = useApolloClient();
+	const { handleClose } = props;
+	const [createdBudgetCategory, setCreatedBudgetCategory] = useState<IBudgetCategory | null>();
+
+	const closeBudgetTargetProjectDialog = useCallback(() => {
+		handleClose();
+		setCreatedBudgetCategory(null);
+	}, [handleClose, setCreatedBudgetCategory]);
 
 	const [openBudgetCategoryDialog, setOpenBudgetCategoryDialog] = useState<boolean>(false);
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
@@ -205,6 +214,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	let initialValues = getInitialValues({
 		props,
 		projectDonors: projectDonors?.projectDonors || [],
+		createdBudgetCategory: createdBudgetCategory,
 	});
 
 	const [updateProjectBudgetTarget, { loading: updatingProjectBudgetTarget }] = useMutation(
@@ -415,10 +425,10 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Target Creation Success"));
-			props.handleClose();
+			closeBudgetTargetProjectDialog();
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Budget Target Creation Failure"));
-			props.handleClose();
+			closeBudgetTargetProjectDialog();
 		}
 	};
 
@@ -446,33 +456,34 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				},
 			});
 			if (compareObjectKeys(values, initialValues)) {
-				props.handleClose();
+				closeBudgetTargetProjectDialog();
 				return;
 			}
 
 			delete (values as any).id;
 
-			await updateProjectBudgetTarget({
-				variables: {
-					id: initialValues.id,
-					input: {
-						project: dashboardData?.project?.id,
-						...values,
+			props.formAction === FORM_ACTIONS.UPDATE &&
+				(await updateProjectBudgetTarget({
+					variables: {
+						id: props.initialValues.id,
+						input: {
+							project: dashboardData?.project?.id,
+							...values,
+						},
 					},
-				},
-				refetchQueries: [
-					{
-						query: GET_PROJECT_BUDGET_AMOUNT,
-						variables: { filter: { project: dashboardData?.project?.id } },
-					},
-				],
-			});
+					refetchQueries: [
+						{
+							query: GET_PROJECT_BUDGET_AMOUNT,
+							variables: { filter: { project: dashboardData?.project?.id } },
+						},
+					],
+				}));
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 
-			props.handleClose();
+			closeBudgetTargetProjectDialog();
 		} catch (err) {
 			notificationDispatch(setErrorNotification("Budget Target Updation Failure"));
-			props.handleClose();
+			closeBudgetTargetProjectDialog();
 		}
 	};
 
@@ -486,6 +497,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				open={openBudgetCategoryDialog}
 				formAction={FORM_ACTIONS.CREATE}
 				handleClose={() => setOpenBudgetCategoryDialog(false)}
+				getCreatedBudgetCategory={(budgetCategoryCreated) => {
+					setCreatedBudgetCategory(budgetCategoryCreated);
+				}}
 			/>
 			<Donor
 				open={openDonorCreateDialog}
@@ -495,7 +509,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				projectId={`${dashboardData?.project?.id}`}
 			/>
 			<FormDialog
-				handleClose={props.handleClose}
+				handleClose={closeBudgetTargetProjectDialog}
 				open={props.open}
 				loading={
 					creatingProjectBudgetTarget ||
@@ -515,7 +529,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 					initialValues={initialValues}
 					validate={validate}
 					onCreate={onCreate}
-					onCancel={props.handleClose}
+					onCancel={closeBudgetTargetProjectDialog}
 					inputFields={budgetTargetFormInputFields}
 					formAction={props.formAction}
 					onUpdate={onUpdate}
