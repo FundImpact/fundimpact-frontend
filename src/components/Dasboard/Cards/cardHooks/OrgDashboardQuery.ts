@@ -27,7 +27,10 @@ import {
 } from "../../../../graphql/organizationDashboard/query";
 import { useQuery } from "@apollo/client";
 
-export function GetImpactOrgStatus(queryFilter: { variables: { filter: object } }) {
+export function GetImpactOrgStatus(queryFilter: {
+	variables: { filter: object };
+	fetchPolicy: "cache-and-network";
+}) {
 	let { data: achiveImpactVsTargetByOrg, loading: achiveImpactVsTargetByOrgLoading } = useQuery(
 		GET_ACHIVEMENT_IMPACT_VS_TARGET,
 		queryFilter
@@ -71,7 +74,10 @@ export function GetImpactOrgStatus(queryFilter: { variables: { filter: object } 
 	};
 }
 
-export function GetDeliverableOrgStatus(queryFilter: { variables: { filter: object } }) {
+export function GetDeliverableOrgStatus(queryFilter: {
+	variables: { filter: object };
+	fetchPolicy: "cache-and-network";
+}) {
 	let {
 		data: achiveDeliverableVsTargetByOrg,
 		loading: achiveDeliverableVsTargetByOrgLoading,
@@ -118,7 +124,10 @@ export function GetDeliverableOrgStatus(queryFilter: { variables: { filter: obje
 	};
 }
 
-export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } }) {
+export function GetBudgetOrgStatus(queryFilter: {
+	variables: { filter: object };
+	fetchPolicy: "cache-and-network";
+}) {
 	let { data: budgetSpentValue, loading: budgetSpentValueLoading } = useQuery(
 		GET_BUDGET_SPEND_VALUE,
 		queryFilter
@@ -159,7 +168,10 @@ export function GetBudgetOrgStatus(queryFilter: { variables: { filter: object } 
 	};
 }
 
-export function GetBudgetProjects(queryFilter: { variables: { filter: object } }) {
+export function GetBudgetProjects(queryFilter: {
+	variables: { filter: object };
+	fetchPolicy: "cache-and-network";
+}) {
 	let { data: projectExpenditureValue, loading } = useQuery(
 		GET_BUDGET_PROJECTS_BY_EXPENDITURE,
 		queryFilter
@@ -178,7 +190,10 @@ export function GetBudgetProjects(queryFilter: { variables: { filter: object } }
 	};
 }
 
-export function GetDeliverableProjects(queryFilter: { variables: { filter: object } }) {
+export function GetDeliverableProjects(queryFilter: {
+	variables: { filter: object };
+	fetchPolicy: "cache-and-network";
+}) {
 	let { data: deliverableAchieved } = useQuery(GET_DELIVERABLE_PROJECTS_ACHIEVED, queryFilter);
 
 	return {
@@ -186,7 +201,10 @@ export function GetDeliverableProjects(queryFilter: { variables: { filter: objec
 	};
 }
 
-export function GetImpactProjects(queryFilter: { variables: { filter: object } }) {
+export function GetImpactProjects(queryFilter: {
+	variables: { filter: object };
+	fetchPolicy: "cache-and-network";
+}) {
 	let { data: impactAchieved } = useQuery(GET_IMPACTS_PROJECTS_ACHIEVED, queryFilter);
 
 	return {
@@ -196,7 +214,7 @@ export function GetImpactProjects(queryFilter: { variables: { filter: object } }
 
 export function GetDonors(
 	filter: string | undefined,
-	queryFilter: { variables: { filter: object } }
+	queryFilter: { variables: { filter: object }; fetchPolicy: "cache-and-network" }
 ) {
 	let { data: donorsAllocationValue } = useQuery(GET_DONOR_BY_FUND_ALLOCATED, queryFilter);
 	let { data: donorsRecievedValue } = useQuery(GET_DONOR_BY_FUND_RECEIVED, queryFilter);
@@ -210,7 +228,7 @@ export function GetDonors(
 
 export function GetBudgetCategories(
 	filter: string | undefined,
-	queryFilter: { variables: { filter: object } }
+	queryFilter: { variables: { filter: object }; fetchPolicy: "cache-and-network" }
 ) {
 	let { data: budgetCategoryTarget, loading: budgetCategoryTargetLoading } = useQuery(
 		GET_BUDGET_CATEGORY_TARGET,
@@ -234,7 +252,7 @@ export function GetBudgetCategories(
 
 export function GetDeliverableCategory(
 	filter: string | undefined,
-	queryFilter: { variables: { filter: object } }
+	queryFilter: { variables: { filter: object }; fetchPolicy: "cache-and-network" }
 ) {
 	let {
 		data: deliverableCategoryProjectCount,
@@ -259,7 +277,7 @@ export function GetDeliverableCategory(
 
 export function GetImpactCategory(
 	filter: string | undefined,
-	queryFilter: { variables: { filter: object } }
+	queryFilter: { variables: { filter: object }; fetchPolicy: "cache-and-network" }
 ) {
 	let { data: impactCategoryProjectCount, loading: impactCategoryProjectCountLoading } = useQuery(
 		GET_IMPACT_CATEGORY_PROJECT,

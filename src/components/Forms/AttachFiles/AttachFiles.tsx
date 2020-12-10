@@ -291,7 +291,7 @@ function AttachFileForm(props: {
 								)}
 							</Box>
 						</Grid>
-						{loadingPercentage > 0 && onSaveCall && (
+						{onSaveCall && (
 							<Grid item xs={12}>
 								<LinearWithValueLabel progress={loadingPercentage} />
 							</Grid>

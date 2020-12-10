@@ -91,7 +91,6 @@ export default function DashboardCard(props: CardProps) {
 		defaultMessage: "Project",
 		description: "This text will be show on cards for Project's label",
 	});
-
 	return (
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
