@@ -1,7 +1,8 @@
-import { TextField } from "@material-ui/core";
+import { Box, Grid, TextField } from "@material-ui/core";
 import { DateRangeDelimiter, DateRangePicker } from "@material-ui/pickers";
 import { DateRange } from "@material-ui/pickers/DateRangePicker/RangeTypes";
 import React from "react";
+import { getTodaysDate } from "../../../utils";
 
 export interface IDateStart {
 	text: string;
@@ -13,41 +14,57 @@ export function ICustomDatePicker({
 	to,
 	onChange,
 }: {
-	from: IDateStart;
-	to: IDateStart;
+	from: Date;
+	to: Date;
 	onChange: (from: Date | null, to: Date | null) => void;
 }) {
-	const [fromDateSelected, setfromDateSelected] = React.useState<Date | null>(
-		from.preFilledValue || null
-	);
-	const [toDateSelected, settoDateSelected] = React.useState<Date | null>(
-		to.preFilledValue || null
-	);
+	const [fromDateSelected, setfromDateSelected] = React.useState<Date>(from || new Date());
+	const [toDateSelected, settoDateSelected] = React.useState<Date>(to || new Date());
 
-	React.useEffect(() => {
+	React.useMemo(() => {
 		onChange(fromDateSelected, toDateSelected);
 	}, [fromDateSelected, toDateSelected]);
 
-	const handleDateChange = (dateRange: DateRange<Date | null>) => {
-		setfromDateSelected(dateRange[0]);
-		settoDateSelected(dateRange[1]);
-	};
+	// const handleDateChange = (dateRange: DateRange<Date | null>) => {
+	// 	setfromDateSelected(dateRange[0]);
+	// 	settoDateSelected(dateRange[1]);
+	// };
 
 	return (
-		<DateRangePicker
-			disableCloseOnSelect={true}
-			startText={from.text}
-			endText={to.text}
-			value={[fromDateSelected, toDateSelected]}
-			inputFormat="dd/MM/yyyy"
-			onChange={handleDateChange}
-			renderInput={(startProps, endProps) => (
-				<>
-					<TextField {...startProps} />
+		<Grid item container xs={12} md={12}>
+			<Grid item container xs={5} md={5}>
+				<TextField
+					id="date"
+					label="Start Date"
+					type="date"
+					fullWidth
+					value={getTodaysDate(fromDateSelected)}
+					onChange={(e) => setfromDateSelected(new Date(e.target.value))}
+					variant="outlined"
+					InputLabelProps={{
+						shrink: true,
+					}}
+				/>
+			</Grid>
+			<Grid item container xs={2} md={2}>
+				<Box mt={2} ml={2}>
 					<DateRangeDelimiter> to </DateRangeDelimiter>
-					<TextField {...endProps} />
-				</>
-			)}
-		/>
+				</Box>
+			</Grid>
+			<Grid item container xs={5} md={5}>
+				<TextField
+					id="date"
+					label="End Date"
+					type="date"
+					fullWidth
+					variant="outlined"
+					value={getTodaysDate(toDateSelected)}
+					onChange={(e) => settoDateSelected(new Date(e.target.value))}
+					InputLabelProps={{
+						shrink: true,
+					}}
+				/>
+			</Grid>
+		</Grid>
 	);
 }

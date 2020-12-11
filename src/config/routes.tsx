@@ -49,7 +49,7 @@ function AppRoutes() {
 							element={
 								<DashboardContainer
 									left={null}
-									main={<MainOrganizationDashboard />}
+									main={(props: any) => <MainOrganizationDashboard {...props} />}
 								/>
 							}
 						/>

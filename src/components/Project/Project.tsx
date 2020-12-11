@@ -143,7 +143,11 @@ function Project(props: ProjectProps) {
 
 	const apolloClient = useApolloClient();
 
+	const [workspaceSelected, setWorkspaceSelected] = useState(
+		props.type === PROJECT_ACTIONS.UPDATE ? props.data.workspace || "" : ""
+	);
 	/* Open Attach File Form*/
+
 	projectForm[5].onClick = () => setOpenAttachFiles(true);
 
 	if (projectFilesArray.length) projectForm[5].label = "View Files";
@@ -203,10 +207,7 @@ function Project(props: ProjectProps) {
 
 	let mappedDonors: any = [];
 
-	projectForm[1].disabled = false;
 	if (props.type === PROJECT_ACTIONS.UPDATE) {
-		/*Disable workspace field*/
-		projectForm[1].disabled = true;
 		/*Disable already mapped donors*/
 		mappedDonors = props?.data?.donor;
 		let donorList: any = [];
@@ -309,7 +310,6 @@ function Project(props: ProjectProps) {
 					createdProject: createdProject.data.createOrgProject,
 				}));
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
-			console.log("selectDonors :>> ", selectDonors);
 			selectDonors.forEach(async (donorId) => {
 				await createDonors({
 					projectId: createdProject.data.createOrgProject.id,
@@ -343,6 +343,7 @@ function Project(props: ProjectProps) {
 		try {
 			let formData: any = { ...value };
 			let projectId = formData.id;
+
 			let newDonors = formData?.donor?.filter(function (el: string) {
 				return !mappedDonors.includes(el);
 			});
@@ -352,6 +353,16 @@ function Project(props: ProjectProps) {
 			const updatedResponse = await updateProject({
 				variables: { id: projectId, input: formData },
 			});
+			if (workspaceSelected !== value.workspace) {
+				fetchProjectsInWorkspace({
+					apolloClient,
+					workspaceId: workspaceSelected,
+				});
+				fetchProjectsInWorkspace({
+					apolloClient,
+					workspaceId: value.workspace,
+				});
+			}
 			newDonors.forEach(async (donorId: string) => {
 				await createDonors({
 					projectId: updatedResponse?.data.updateOrgProject.id,

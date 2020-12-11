@@ -174,7 +174,6 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 
 	//change type
 	const onCreatingNewGrantPeriodSuccess = (newGrantPeriod: any, action: FORM_ACTIONS) => {
-		console.log("newGrantPeriod :>> ", newGrantPeriod);
 		try {
 			const cacheData = cache.readQuery({
 				query: FETCH_GRANT_PERIODS,
@@ -189,7 +188,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 					newList[indexFound] = { ...newGrantPeriod };
 				}
 			}
-			console.log(`new list`, newList);
+
 			let tt = cache.writeQuery({
 				query: FETCH_GRANT_PERIODS,
 				data: { grantPeriodsProjectList: newList },
@@ -227,7 +226,6 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 					grantPeriodsProjectList: newGrantPeriodList,
 				},
 			});
-			// console.log("garntPeriodList :>> ", garntPeriodList);
 		} catch (err) {
 			console.error(err);
 		}
@@ -239,7 +237,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 				...data.createGrantPeriodsProjectDetail,
 				__typename: "GrantPeriodsProject",
 			};
-			console.log(`created data`, newGrantPeriod);
+
 			notificationDispatch(setSuccessNotification("Grant Period Created."));
 			onClose();
 			onCreatingNewGrantPeriodSuccess(newGrantPeriod, FORM_ACTIONS.CREATE);
@@ -253,7 +251,7 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 				__typename: "GrantPeriodsProject",
 			};
 			notificationDispatch(setSuccessNotification("Grant Period Updated."));
-
+			onClose();
 			onCreatingNewGrantPeriodSuccess(newGrantPeriod, FORM_ACTIONS.UPDATE);
 		},
 	});
