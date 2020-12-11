@@ -118,7 +118,12 @@ export function GetCardTypeAndValues(props: CardProps) {
 				totalImpactProjectByOrg,
 				orgProjectCount,
 				loading,
-			} = GetImpactOrgStatus({ variables: { filter: { organization: organization } } });
+			} = GetImpactOrgStatus({
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
+			});
 
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
@@ -149,7 +154,10 @@ export function GetCardTypeAndValues(props: CardProps) {
 				orgProjectCount,
 				loading,
 			} = GetBudgetOrgStatus({
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
@@ -177,7 +185,10 @@ export function GetCardTypeAndValues(props: CardProps) {
 				totalDeliverableByOrg,
 				orgProjectCount,
 				loading,
-			} = GetDeliverableOrgStatus({ variables: { filter: { organization: organization } } });
+			} = GetDeliverableOrgStatus({
+				variables: { filter: { organization: organization } },
+				fetchPolicy: "cache-and-network",
+			});
 
 			projectCardConfig = {
 				title: props.projectCardConfig.title,
@@ -216,21 +227,30 @@ export function GetCardTypeAndValues(props: CardProps) {
 
 		if (props.cardOf === CARD_OF.BUDGET) {
 			let { data, loading } = GetBudgetCategories(props.currentFilter?.base, {
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 			pieCardConfig.loading = loading;
 			fetchedData = data;
 		}
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
 			let { data, loading } = GetDeliverableCategory(props.currentFilter?.base, {
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 			pieCardConfig.loading = loading;
 			fetchedData = data;
 		}
 		if (props.cardOf === CARD_OF.IMPACT) {
 			let { data, loading } = GetImpactCategory(props.currentFilter?.base, {
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 			pieCardConfig.loading = loading;
 			fetchedData = data;
@@ -255,37 +275,58 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.BUDGET) {
 			let { data: budgetProject, loading } = GetBudgetProjects({
 				variables: { filter: { organization: organization } },
+				fetchPolicy: "cache-and-network",
 			});
 
 			budgetProject.expenditure?.forEach((expData: ProgressCardResponse) => {
-				budgetProject.allocation?.forEach((allData: ProgressCardResponse) => {
-					if (expData.project_id === allData.project_id) {
-						progressCardConfig.dataToDisplay.push({
-							...expData,
-							avg_value_two: allData.avg_value,
-							label: expenditureLabel,
-							labelTwo: receievedLabel,
-						});
-					}
+				progressCardConfig.dataToDisplay.push({
+					...expData,
+					avg_value: expData.avg_value,
+					avg_value_two: 0,
+					label: expenditureLabel,
+					labelTwo: receievedLabel,
 				});
 			});
+
+			progressCardConfig.dataToDisplay.forEach(
+				(displayData: ProgressCardResponse, index: number) => {
+					budgetProject.allocation?.forEach((allData: ProgressCardResponse) => {
+						if (allData.id === displayData.id) {
+							progressCardConfig.dataToDisplay[index] = {
+								...displayData,
+								avg_value_two: allData.avg_value,
+							};
+						}
+					});
+				}
+			);
+
 			progressCardConfig.loading = loading;
 		}
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
 			let { deliverableAchieved } = GetDeliverableProjects({
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 			progressCardConfig.dataToDisplay = deliverableAchieved;
 		}
 		if (props.cardOf === CARD_OF.IMPACT) {
 			let { impactAchieved } = GetImpactProjects({
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 			progressCardConfig.dataToDisplay = impactAchieved;
 		}
 		if (props.cardOf === CARD_OF.DONOR) {
 			let { data: donors } = GetDonors(props.currentFilter?.base, {
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization },
+				},
+				fetchPolicy: "cache-and-network",
 			});
 
 			donors.allocation?.forEach((allData: ProgressCardResponse) => {
