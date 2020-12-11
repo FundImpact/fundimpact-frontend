@@ -71,10 +71,12 @@ export type IBudgetCategoryProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetCategory;
+			getCreatedBudgetCategory?: (budgetCategory: IBudgetCategory) => void;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IBudgetCategory;
+			getCreatedBudgetCategory?: (budgetCategory: IBudgetCategory) => void;
 	  };

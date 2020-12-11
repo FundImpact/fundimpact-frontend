@@ -1,7 +1,21 @@
-import { Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core";
+import {
+	Button,
+	createStyles,
+	FormControl,
+	FormHelperText,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	makeStyles,
+	OutlinedInput,
+	TextField,
+	Theme,
+	useTheme,
+} from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Form, Formik, FormikErrors, FormikHelpers } from "formik";
-import React from "react";
-import { useIntl } from "react-intl";
+import React, { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ILoginForm } from "../../../models";
 import { placeholders } from "../../Placeholders/placeholder";
@@ -27,11 +41,16 @@ const useStyles = makeStyles((theme: Theme) =>
 				marginRight: theme.spacing(1),
 			},
 		},
+		passowrdTextField: {
+			margin: theme.spacing(1),
+		},
 	})
 );
 
 function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 	const classes = useStyles();
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const theme = useTheme();
 	const validateInitialValue = (initialValue: ILoginForm) => {
 		const errors = validate(initialValue) as object;
 		if (!errors) return true;
@@ -73,19 +92,47 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							data-testid="email"
 							variant="outlined"
 						/>
-						<TextField
-							value={formik.values.password}
-							error={!!formik.errors.password && !!formik.touched.password}
-							helperText={formik.touched.password && formik.errors.password}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							label={passwordPlaceholder}
-							required
-							name="password"
-							type="password"
-							variant="outlined"
-							data-testid="password"
-						/>
+						<FormControl variant="outlined" className={classes.passowrdTextField}>
+							<InputLabel required htmlFor="outlined-adornment-password">
+								<FormattedMessage
+									id="passowrdLabel"
+									defaultMessage="Password"
+									description="This text will be label of password input field"
+								/>
+							</InputLabel>
+							<OutlinedInput
+								value={formik.values.password}
+								error={!!formik.errors.password && !!formik.touched.password}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+								label={passwordPlaceholder}
+								required
+								name="password"
+								type={showPassword ? "text" : "password"}
+								data-testid="password"
+								endAdornment={
+									<InputAdornment position="end">
+										<IconButton
+											aria-label="toggle password visibility"
+											onClick={() => {
+												setShowPassword(!showPassword);
+											}}
+											onMouseDown={(e) => {
+												e.preventDefault();
+											}}
+											edge="end"
+											style={{ marginTop: theme.spacing(0) }}
+										>
+											{showPassword ? <Visibility /> : <VisibilityOff />}
+										</IconButton>
+									</InputAdornment>
+								}
+								labelWidth={70}
+							/>
+							<FormHelperText error>
+								{formik.touched.password && formik.errors.password}
+							</FormHelperText>
+						</FormControl>
 						<Button
 							disabled={!formik.isValid}
 							type="submit"
