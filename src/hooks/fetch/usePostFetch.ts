@@ -10,6 +10,7 @@ export const usePostFetch = <T>({ body = null, url }: { body: any; url: string }
 
 	useEffect(() => {
 		intiatePostRequest(payload, url, setLoading, setData, setError);
+		setError("");
 	}, [payload, url]);
 
 	return { error, loading, data, setPayload };

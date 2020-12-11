@@ -24,6 +24,7 @@ import ProjectList from "../ProjectList/ProjectList";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { WORKSPACE_ACTIONS as WORKSPACE_USER_ACCESS_ACTIONS } from "../../../utils/access/modules/workspaces/actions";
 import { PROJECT_ACTIONS as PROJECT_USER_ACCESS_ACTIONS } from "../../../utils/access/modules/project/actions";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -187,7 +188,11 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 																closeMenuItems(index);
 															}}
 														>
-															Add Project
+															<FormattedMessage
+																id={`addProject`}
+																defaultMessage={`Add New Project`}
+																description={`This text will be shown on  add project button`}
+															/>
 														</MenuItem>
 													)}
 												</SimpleMenu>

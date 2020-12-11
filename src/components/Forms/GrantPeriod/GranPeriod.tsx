@@ -261,24 +261,25 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									getShouldDisableDateError={false}
 								/> */}
 									<ICustomDatePicker
-										from={startDate}
-										to={endData}
+										from={new Date(formik.values["start_date"])}
+										to={new Date(formik.values["end_date"])}
 										onChange={(from, to) => {
-											formik.setFieldValue("start_date", from?.toISOString());
-											formik.setFieldValue("end_date", to?.toISOString());
+											formik.setFieldValue("start_date", from);
+											formik.setFieldValue("end_date", to);
 										}}
 									/>
 								</Grid>
-
-								<Button
-									disabled={!formik.isValid}
-									type="submit"
-									data-testid="submit"
-									variant="contained"
-									color="primary"
-								>
-									Submit
-								</Button>
+								<Box ml={2}>
+									<Button
+										disabled={!formik.isValid}
+										type="submit"
+										data-testid="submit"
+										variant="contained"
+										color="primary"
+									>
+										Submit
+									</Button>
+								</Box>
 								<Button onClick={props.onCancel} className={classes.cancelButton}>
 									Cancel
 								</Button>

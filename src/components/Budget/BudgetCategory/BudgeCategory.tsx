@@ -47,6 +47,7 @@ function BudgetCategory({
 	handleClose,
 	initialValues: formValues,
 	formAction,
+	getCreatedBudgetCategory,
 }: IBudgetCategoryProps) {
 	const [createNewOrgBudgetCategory, { loading: creatingBudgetCategory }] = useMutation(
 		CREATE_ORG_BUDGET_CATEGORY
@@ -70,6 +71,10 @@ function BudgetCategory({
 				},
 				update: async (store, { data: { createOrgBudgetCategory } }) => {
 					try {
+						if (getCreatedBudgetCategory) {
+							getCreatedBudgetCategory(createOrgBudgetCategory);
+						}
+
 						const count = await store.readQuery<{ orgBudgetCategoryCount: number }>({
 							query: GET_ORG_BUDGET_CATEGORY_COUNT,
 							variables: {

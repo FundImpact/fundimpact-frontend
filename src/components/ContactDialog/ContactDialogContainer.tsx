@@ -183,7 +183,7 @@ const getInitialFormValues = (initialValues?: IContact): IContactForm => {
 };
 
 const removeEmptyFields = (fields: { label: string; value: string }[]) =>
-	fields.filter((field) => field.label.length);
+	fields.filter((field) => field.label.length || field.value.length);
 
 const removeEmptyAddresses = (
 	addresses: { address_line_1: string; address_line_2: string; pincode: string; city: string }[]
