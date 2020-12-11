@@ -36,7 +36,7 @@ let dialog: RenderResult;
 let creationOccured = false;
 enum donorType {
 	project = "PROJECT'S DONOR",
-	organization = "ALL DONOR",
+	organization = "ALL DONORS",
 }
 
 const intialFormValue: IFundReceivedForm = {
