@@ -233,7 +233,7 @@ export default function SideBar({ children }: { children?: Function }) {
 					>
 						<FormattedMessage
 							id={`addProject`}
-							defaultMessage={`Add Project`}
+							defaultMessage={`Add New Project`}
 							description={`This text will be shown on  add project button`}
 						/>
 					</Button>

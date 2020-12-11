@@ -4,7 +4,7 @@ import { FetchResult } from "@apollo/client";
 
 export enum DonorType {
 	project = "PROJECT'S DONOR",
-	organization = "ALL DONOR",
+	organization = "ALL DONORS",
 }
 
 export interface IGrantPeriod {
