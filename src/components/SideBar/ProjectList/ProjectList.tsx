@@ -154,7 +154,7 @@ export default function ProjectList({
 						>
 							<FormattedMessage
 								id={`addProject`}
-								defaultMessage={`Add Project`}
+								defaultMessage={`Add New Project`}
 								description={`This text will be shown on  add project button`}
 							/>
 						</Link>

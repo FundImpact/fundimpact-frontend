@@ -45,7 +45,7 @@ import { CREATE_PROJECT_DONOR } from "../../../graphql/donor/mutation";
 
 enum donorType {
 	project = "PROJECT'S DONOR",
-	organization = "ALL DONOR",
+	organization = "ALL DONORS",
 }
 
 interface IBudgetTargetSubmittedValues extends Omit<IBudgetTargetForm, "donor"> {
@@ -78,14 +78,14 @@ const getDonors = ({
 			...projectDonors
 				.filter((donor) => donor)
 				.map((projDonor) => ({
-					name: projDonor.donor.name,
-					id: projDonor.donor.id,
+					name: projDonor?.donor?.name,
+					id: projDonor?.donor?.id,
 				}))
 		);
 
 	let filteredOrgDonor = orgDonors
 		.filter((donor) => !projectDonorIdHash[donor.id])
-		.map((donor) => ({ id: donor.id, name: donor.name }));
+		.map((donor) => ({ id: donor?.id, name: donor?.name }));
 
 	filteredOrgDonor.length &&
 		donorArr.push(
@@ -93,7 +93,7 @@ const getDonors = ({
 				groupName: (
 					<FormattedMessage
 						id="selectInputAllDonor"
-						defaultMessage="ALL DONOR"
+						defaultMessage="ALL DONORS"
 						description="This text will be heading of all donor"
 					/>
 				),

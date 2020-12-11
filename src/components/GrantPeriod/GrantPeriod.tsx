@@ -65,7 +65,7 @@ const getDonors = ({
 				groupName: (
 					<FormattedMessage
 						description="This text will be heading of all donor"
-						defaultMessage="ALL DONOR"
+						defaultMessage="ALL DONORS"
 						id="selectInputAllDonor"
 					/>
 				),
