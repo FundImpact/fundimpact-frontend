@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, ApolloClient, useApolloClient } from "@apollo/client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -26,7 +26,7 @@ import {
 	setErrorNotification,
 	setSuccessNotification,
 } from "../../../reducers/notificationReducer";
-import { compareObjectKeys, removeEmptyKeys, validateEmail } from "../../../utils";
+import { compareObjectKeys, removeEmptyKeys } from "../../../utils";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm";
@@ -42,6 +42,7 @@ import {
 } from "../../../models/project/project";
 import { IGET_DONOR } from "../../../models/donor/query";
 import { CREATE_PROJECT_DONOR } from "../../../graphql/donor/mutation";
+import { FormikProps } from "formik";
 
 enum donorType {
 	project = "PROJECT'S DONOR",
@@ -193,12 +194,12 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const dashboardData = useDashBoardData();
 	const apolloClient = useApolloClient();
 	const { handleClose } = props;
-	const [createdBudgetCategory, setCreatedBudgetCategory] = useState<IBudgetCategory | null>();
+	const budgetTargetFormFormikInstance = useRef<FormikProps<any>>();
 
 	const closeBudgetTargetProjectDialog = useCallback(() => {
 		handleClose();
-		setCreatedBudgetCategory(null);
-	}, [handleClose, setCreatedBudgetCategory]);
+		budgetTargetFormFormikInstance.current = undefined;
+	}, [handleClose]);
 
 	const [openBudgetCategoryDialog, setOpenBudgetCategoryDialog] = useState<boolean>(false);
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
@@ -498,7 +499,10 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				formAction={FORM_ACTIONS.CREATE}
 				handleClose={() => setOpenBudgetCategoryDialog(false)}
 				getCreatedBudgetCategory={(budgetCategoryCreated) => {
-					setCreatedBudgetCategory(budgetCategoryCreated);
+					budgetTargetFormFormikInstance.current?.setFieldValue(
+						"budget_category_organization",
+						budgetCategoryCreated.id
+					);
 				}}
 			/>
 			<Donor
@@ -533,6 +537,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 					inputFields={budgetTargetFormInputFields}
 					formAction={props.formAction}
 					onUpdate={onUpdate}
+					getFormikInstance={(formik: FormikProps<any>) =>
+						(budgetTargetFormFormikInstance.current = formik)
+					}
 				/>
 			</FormDialog>
 		</>
