@@ -1,4 +1,4 @@
-import { FormikState } from "formik";
+import { FormikProps, FormikState } from "formik";
 
 export interface ICommonForm {
 	initialValues: any;
@@ -19,4 +19,5 @@ export interface ICommonForm {
 	createButtonName?: string;
 	updateButtonName?: string;
 	children?: React.ReactNode;
+	getFormikInstance?: (formik: FormikProps<any>) => void;
 }
