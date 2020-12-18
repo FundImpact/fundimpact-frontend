@@ -38,7 +38,10 @@ import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
 import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
-import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import {
+	getFetchPolicy,
+	removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows,
+} from "../../../utils";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS } from "../../../utils/access/modules/sustainableDevelopmentGoals/actions";
 import { ITableHeadings } from "../../../models";
@@ -112,12 +115,9 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 
 	useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
 		variables: {
-			sort: "created_at:DESC",
-			limit: 1,
-			start: 0,
 			filter: { id: impactTarget.id },
 		},
-		fetchPolicy: "cache-and-network",
+		fetchPolicy: getFetchPolicy(),
 	});
 
 	return (

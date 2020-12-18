@@ -19,7 +19,7 @@ import {
 	IDeliverableTargetLine,
 } from "../../models/deliverable/deliverableTrackline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { getTodaysDate, uploadPercentageCalculator } from "../../utils";
+import { getFetchPolicy, getTodaysDate, uploadPercentageCalculator } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
@@ -68,12 +68,9 @@ const FormDetailsCalculate = ({ currentTargetId }: { currentTargetId: string | n
 
 	const { data: deliverableTargetResponse } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: {
-			sort: "created_at:DESC",
-			limit: 1,
-			start: 0,
 			filter: { id: currentTargetId },
 		},
-		fetchPolicy: "cache-and-network",
+		fetchPolicy: getFetchPolicy(),
 	});
 	const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
 		variables: { filter: { deliverableTargetProject: currentTargetId } },

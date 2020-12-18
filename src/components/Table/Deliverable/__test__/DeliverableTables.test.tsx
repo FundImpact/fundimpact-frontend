@@ -119,6 +119,15 @@ const mocks = [
 		},
 		result: { data: { deliverableLinitemFyDonorList: deliverableLineitemFyDonorListMock } },
 	},
+	{
+		request: {
+			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+			variables: {
+				filter: { id: "1" },
+			},
+		},
+		result: { data: { deliverableTargetList: DeliverableTargetMock } },
+	},
 ];
 
 let deliverableTable: any;
