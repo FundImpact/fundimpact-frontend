@@ -398,6 +398,7 @@ const InputFields = ({
 			inputProps={{
 				"data-testid": testId,
 			}}
+			{...(type === "date" ? { InputLabelProps: { shrink: true } } : {})}
 			required={required}
 			fullWidth
 			name={`${name}`}
