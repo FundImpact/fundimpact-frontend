@@ -59,74 +59,72 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 	};
 }
 
-const FormDetailsCalculate = ({ currentTargetId }: { currentTargetId: string | number }) => {
-	const [currentTargetName, setCurrentTargetName] = useState<string>("");
+const FormDetailsCalculate = React.memo(
+	({ currentTargetId }: { currentTargetId: string | number }) => {
+		const { data: deliverableTargetResponse } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+			variables: {
+				filter: { id: currentTargetId },
+			},
+			fetchPolicy: getFetchPolicy(),
+		});
+		const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+			variables: { filter: { deliverableTargetProject: currentTargetId } },
+		});
 
-	const [formDetailsArray, setFormDetailsArray] = useState<{ label: string; value: string }[]>(
-		[]
-	);
+		// let deliverableTargetResponse: any;
+		const intl = useIntl();
+		let deliverableCategoryLabel = intl.formatMessage({
+			id: "deliverableCategoryLabelFormDetail",
+			defaultMessage: "Category",
+			description:
+				"This text will be show on deliverable trackline form for deliverable category",
+		});
+		let deliverableTotalTargetLabel = intl.formatMessage({
+			id: "deliverableTotalTargetLabelFormDetail",
+			defaultMessage: "Target",
+			description:
+				"This text will be show on deliverable trackline form for deliverable category",
+		});
+		let deliverableAchievedTargetLabel = intl.formatMessage({
+			id: "deliverableAchievedTargetLabelFormDetail",
+			defaultMessage: "Achieved",
+			description:
+				"This text will be show on deliverable trackline form for deliverable category",
+		});
 
-	const { data: deliverableTargetResponse } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
-		variables: {
-			filter: { id: currentTargetId },
-		},
-		fetchPolicy: getFetchPolicy(),
-	});
-	const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
-		variables: { filter: { deliverableTargetProject: currentTargetId } },
-	});
-
-	// let deliverableTargetResponse: any;
-	const intl = useIntl();
-	let deliverableCategoryLabel = intl.formatMessage({
-		id: "deliverableCategoryLabelFormDetail",
-		defaultMessage: "Category",
-		description:
-			"This text will be show on deliverable trackline form for deliverable category",
-	});
-	let deliverableTotalTargetLabel = intl.formatMessage({
-		id: "deliverableTotalTargetLabelFormDetail",
-		defaultMessage: "Target",
-		description:
-			"This text will be show on deliverable trackline form for deliverable category",
-	});
-	let deliverableAchievedTargetLabel = intl.formatMessage({
-		id: "deliverableAchievedTargetLabelFormDetail",
-		defaultMessage: "Achieved",
-		description:
-			"This text will be show on deliverable trackline form for deliverable category",
-	});
-
-	useMemo(() => {
 		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
-		if (fetchedDeliverableTarget && achivedValue) {
-			setCurrentTargetName(fetchedDeliverableTarget.name);
-			setFormDetailsArray([
-				{
-					label: deliverableCategoryLabel,
-					value:
-						fetchedDeliverableTarget.deliverable_category_unit.deliverable_category_org
-							.name,
-				},
-				{
-					label: deliverableTotalTargetLabel,
-					value: `${fetchedDeliverableTarget.target_value} ${
-						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
-							?.name || ""
-					}`,
-				},
-				{
-					label: deliverableAchievedTargetLabel,
-					value: `${achivedValue?.deliverableTrackingTotalValue} ${
-						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
-							?.name || ""
-					}`,
-				},
-			]);
-		}
-	}, [deliverableTargetResponse, achivedValue]);
-	return <FormDetails formDetails={formDetailsArray} title={currentTargetName} />;
-};
+		let formDetailsArray = fetchedDeliverableTarget
+			? [
+					{
+						label: deliverableCategoryLabel,
+						value:
+							fetchedDeliverableTarget.deliverable_category_unit
+								.deliverable_category_org.name,
+					},
+					{
+						label: deliverableTotalTargetLabel,
+						value: `${fetchedDeliverableTarget.target_value} ${
+							fetchedDeliverableTarget.deliverable_category_unit
+								?.deliverable_units_org?.name || ""
+						}`,
+					},
+					{
+						label: deliverableAchievedTargetLabel,
+						value: `${achivedValue?.deliverableTrackingTotalValue} ${
+							fetchedDeliverableTarget.deliverable_category_unit
+								?.deliverable_units_org?.name || ""
+						}`,
+					},
+			  ]
+			: [];
+		return (
+			<FormDetails
+				formDetails={formDetailsArray}
+				title={fetchedDeliverableTarget?.name || ""}
+			/>
+		);
+	}
+);
 export const getProjectDonorsWithDonorsId = (
 	selectedDonors: any,
 	projectDonors: IProjectDonor[] | undefined
@@ -331,7 +329,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	deliverableTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
 
-	React.useMemo(() => {
+	React.useEffect(() => {
 		if (success && donorForm) {
 			if (props.type === DELIVERABLE_ACTIONS.CREATE) {
 				fetchDeliverableTracklineByTarget({ apolloClient, currentTargetId });

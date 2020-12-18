@@ -61,63 +61,58 @@ function getInitialValues(props: ImpactTargetLineProps) {
 		donors: [],
 	};
 }
-const FormDetailsCalculate = ({ currentTargetId }: { currentTargetId: string | number }) => {
-	const [currentTargetName, setCurrentTargetName] = useState<string>("");
+const FormDetailsCalculate = React.memo(
+	({ currentTargetId }: { currentTargetId: string | number }) => {
+		const { data: impactTargetResponse } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
+			variables: {
+				filter: { id: currentTargetId },
+			},
+			fetchPolicy: getFetchPolicy(),
+		});
+		const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+			variables: { filter: { impactTargetProject: currentTargetId } },
+		});
 
-	const [formDetailsArray, setFormDetailsArray] = useState<{ label: string; value: string }[]>(
-		[]
-	);
+		const intl = useIntl();
+		let impactCategoryLabel = intl.formatMessage({
+			id: "impactCategoryLabelFormDetail",
+			defaultMessage: "Category",
+			description: "This text will be show on deliverable trackline form for impact category",
+		});
+		let impactTotalTargetLabel = intl.formatMessage({
+			id: "impactTotalTargetLabelFormDetail",
+			defaultMessage: "Target",
+			description: "This text will be show on deliverable trackline form for impact category",
+		});
+		let impactAchievedTargetLabel = intl.formatMessage({
+			id: "impactAchievedTargetLabelFormDetail",
+			defaultMessage: "Achieved",
+			description: "This text will be show on deliverable trackline form for impact category",
+		});
 
-	const { data: impactTargetResponse } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
-		variables: {
-			filter: { id: currentTargetId },
-		},
-		fetchPolicy: getFetchPolicy(),
-	});
-	const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
-		variables: { filter: { impactTargetProject: currentTargetId } },
-	});
-
-	// let deliverableTargetResponse: any;
-	const intl = useIntl();
-	let impactCategoryLabel = intl.formatMessage({
-		id: "impactCategoryLabelFormDetail",
-		defaultMessage: "Category",
-		description: "This text will be show on deliverable trackline form for impact category",
-	});
-	let impactTotalTargetLabel = intl.formatMessage({
-		id: "impactTotalTargetLabelFormDetail",
-		defaultMessage: "Target",
-		description: "This text will be show on deliverable trackline form for impact category",
-	});
-	let impactAchievedTargetLabel = intl.formatMessage({
-		id: "impactAchievedTargetLabelFormDetail",
-		defaultMessage: "Achieved",
-		description: "This text will be show on deliverable trackline form for impact category",
-	});
-
-	useMemo(() => {
 		let fetchedImpactTarget = impactTargetResponse?.impactTargetProjectList[0];
-		if (fetchedImpactTarget && achivedValue) {
-			setCurrentTargetName(fetchedImpactTarget.name);
-			setFormDetailsArray([
-				{
-					label: impactCategoryLabel,
-					value: fetchedImpactTarget.impact_category_unit.impact_category_org.name,
-				},
-				{
-					label: impactTotalTargetLabel,
-					value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
-				},
-				{
-					label: impactAchievedTargetLabel,
-					value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
-				},
-			]);
-		}
-	}, [impactTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
-	return <FormDetails formDetails={formDetailsArray} title={currentTargetName} />;
-};
+		let formDetailsArray = fetchedImpactTarget
+			? [
+					{
+						label: impactCategoryLabel,
+						value: fetchedImpactTarget.impact_category_unit.impact_category_org.name,
+					},
+					{
+						label: impactTotalTargetLabel,
+						value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+					},
+					{
+						label: impactAchievedTargetLabel,
+						value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+					},
+			  ]
+			: [];
+
+		return (
+			<FormDetails formDetails={formDetailsArray} title={fetchedImpactTarget?.name || ""} />
+		);
+	}
+);
 
 const fetchImpactTracklineByTarget = async ({
 	apolloClient,

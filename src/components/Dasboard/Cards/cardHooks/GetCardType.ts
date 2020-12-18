@@ -343,7 +343,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 					});
 				}
 			);
-			console.log("data", progressCardConfig.dataToDisplay, donors.received);
+
 			progressCardConfig.noBarDisplayTitle = [donorsLabel, receievedLabel, allocatedLabel];
 			progressCardConfig.noBarDisplay = true;
 		}

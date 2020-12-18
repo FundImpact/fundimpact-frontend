@@ -345,12 +345,10 @@ function ImpactUnitDialog({
 	useEffect(() => {
 		if (impactCategories) {
 			impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
-			console.log("cccsssccc", impactUnitForm[2].optionsArray);
 		}
 	}, [impactCategories]);
 
 	const onSubmit = async (valuesSubmitted: IImpactUnitFormInput) => {
-		console.log("ccccccc", valuesSubmitted);
 		try {
 			const values = Object.assign({}, valuesSubmitted);
 			setImpactCategory(values?.impactCategory || []);
