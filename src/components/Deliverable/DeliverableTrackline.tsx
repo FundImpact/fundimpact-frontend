@@ -1,5 +1,5 @@
-import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useMemo } from "react";
+import { ApolloClient, useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -19,7 +19,7 @@ import {
 	IDeliverableTargetLine,
 } from "../../models/deliverable/deliverableTrackline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { getTodaysDate, uploadPercentageCalculator } from "../../utils";
+import { getFetchPolicy, getTodaysDate, uploadPercentageCalculator } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
@@ -59,6 +59,72 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 	};
 }
 
+const FormDetailsCalculate = React.memo(
+	({ currentTargetId }: { currentTargetId: string | number }) => {
+		const { data: deliverableTargetResponse } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+			variables: {
+				filter: { id: currentTargetId },
+			},
+			fetchPolicy: getFetchPolicy(),
+		});
+		const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+			variables: { filter: { deliverableTargetProject: currentTargetId } },
+		});
+
+		// let deliverableTargetResponse: any;
+		const intl = useIntl();
+		let deliverableCategoryLabel = intl.formatMessage({
+			id: "deliverableCategoryLabelFormDetail",
+			defaultMessage: "Category",
+			description:
+				"This text will be show on deliverable trackline form for deliverable category",
+		});
+		let deliverableTotalTargetLabel = intl.formatMessage({
+			id: "deliverableTotalTargetLabelFormDetail",
+			defaultMessage: "Target",
+			description:
+				"This text will be show on deliverable trackline form for deliverable category",
+		});
+		let deliverableAchievedTargetLabel = intl.formatMessage({
+			id: "deliverableAchievedTargetLabelFormDetail",
+			defaultMessage: "Achieved",
+			description:
+				"This text will be show on deliverable trackline form for deliverable category",
+		});
+
+		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
+		let formDetailsArray = fetchedDeliverableTarget
+			? [
+					{
+						label: deliverableCategoryLabel,
+						value:
+							fetchedDeliverableTarget.deliverable_category_unit
+								.deliverable_category_org.name,
+					},
+					{
+						label: deliverableTotalTargetLabel,
+						value: `${fetchedDeliverableTarget.target_value} ${
+							fetchedDeliverableTarget.deliverable_category_unit
+								?.deliverable_units_org?.name || ""
+						}`,
+					},
+					{
+						label: deliverableAchievedTargetLabel,
+						value: `${achivedValue?.deliverableTrackingTotalValue} ${
+							fetchedDeliverableTarget.deliverable_category_unit
+								?.deliverable_units_org?.name || ""
+						}`,
+					},
+			  ]
+			: [];
+		return (
+			<FormDetails
+				formDetails={formDetailsArray}
+				title={fetchedDeliverableTarget?.name || ""}
+			/>
+		);
+	}
+);
 export const getProjectDonorsWithDonorsId = (
 	selectedDonors: any,
 	projectDonors: IProjectDonor[] | undefined
@@ -82,13 +148,34 @@ export const getProjectDonorsWithDonorsId = (
 	return projectDonorsWithSameIdAsSelectedDonors;
 };
 
+const fetchDeliverableTracklineByTarget = async ({
+	apolloClient,
+	currentTargetId = "",
+}: {
+	apolloClient: ApolloClient<object>;
+	currentTargetId: string | number | undefined;
+}) => {
+	try {
+		await apolloClient.query({
+			query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+			variables: {
+				filter: {
+					deliverable_target_project: currentTargetId,
+				},
+			},
+		});
+	} catch (err) {
+		console.error(err);
+	}
+};
+
 function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const apolloClient = useApolloClient();
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
 	const { data: annualYears } = useQuery(GET_ANNUAL_YEARS);
-
+	const intl = useIntl();
 	const { data: fyData } = useQuery(GET_FINANCIAL_YEARS, {
 		variables: { filter: { country: DashBoardData?.organization?.country?.id } },
 	});
@@ -157,81 +244,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.deliverableTarget ? props.deliverableTarget : ""
 	);
-	const [currentTargetName, setCurrentTargetName] = React.useState<string>("");
 
-	const [formDetailsArray, setFormDetailsArray] = React.useState<
-		{ label: string; value: string }[]
-	>([]);
-	const [getDeliverableTarget, { data: deliverableTargetResponse }] = useLazyQuery(
-		GET_DELIVERABLE_TARGET_BY_PROJECT
-	);
-	const [getTargetAchieveValue, { data: achivedValue }] = useLazyQuery(
-		GET_ACHIEVED_VALLUE_BY_TARGET
-	);
 	deliverableTragetLineForm[0].getInputValue = setCurrentTargetId;
-
-	useEffect(() => {
-		if (currentTargetId) {
-			getDeliverableTarget({ variables: { filter: { id: currentTargetId } } });
-			getTargetAchieveValue({
-				variables: { filter: { deliverableTargetProject: currentTargetId } },
-			});
-		}
-	}, [currentTargetId, getDeliverableTarget, getTargetAchieveValue]);
-
-	const intl = useIntl();
-
-	let deliverableCategoryLabel = intl.formatMessage({
-		id: "deliverableCategoryLabelFormDetail",
-		defaultMessage: "Category",
-		description:
-			"This text will be show on deliverable trackline form for deliverable category",
-	});
-	let deliverableTotalTargetLabel = intl.formatMessage({
-		id: "deliverableTotalTargetLabelFormDetail",
-		defaultMessage: "Target",
-		description:
-			"This text will be show on deliverable trackline form for deliverable category",
-	});
-	let deliverableAchievedTargetLabel = intl.formatMessage({
-		id: "deliverableAchievedTargetLabelFormDetail",
-		defaultMessage: "Achieved",
-		description:
-			"This text will be show on deliverable trackline form for deliverable category",
-	});
-
-	useEffect(() => {
-		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
-		if (fetchedDeliverableTarget && achivedValue) {
-			setCurrentTargetName(fetchedDeliverableTarget.name);
-			setFormDetailsArray([
-				{
-					label: deliverableCategoryLabel,
-					value:
-						fetchedDeliverableTarget.deliverable_category_unit.deliverable_category_org
-							.name,
-				},
-				{
-					label: deliverableTotalTargetLabel,
-					value: `${fetchedDeliverableTarget.target_value} ${
-						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
-							?.name || ""
-					}`,
-				},
-				{
-					label: deliverableAchievedTargetLabel,
-					value: `${achivedValue?.deliverableTrackingTotalValue} ${
-						fetchedDeliverableTarget.deliverable_category_unit?.deliverable_units_org
-							?.name || ""
-					}`,
-				},
-			]);
-		}
-	}, [deliverableTargetResponse, achivedValue, setFormDetailsArray, setCurrentTargetName]);
-
-	let formDetailsComponent = (
-		<FormDetails formDetails={formDetailsArray} title={currentTargetName} />
-	);
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -246,6 +260,15 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const formAction = props.type;
 	const formIsOpen = props.open;
 
+	// const [boolean, setBoolean] = useState(false);
+	// useEffect(() => {
+	// 	let timer1 = setTimeout(() => setBoolean(true), 2500);
+
+	// 	// this will clear Timeout when component unmount like in willComponentUnmount
+	// 	return () => {
+	// 		clearTimeout(timer1);
+	// 	};
+	// }, []);
 	const onCancel = () => {
 		props.handleClose();
 		handleReset();
@@ -271,28 +294,15 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		setSuccess,
 	} = useMultipleFileUpload(filesArray, setFilesArray);
 
-	const [selectedDeliverableTarget, setSelectedDeliverableTarget] = React.useState<
-		string | number | undefined
-	>("");
+	// const [selectedDeliverableTarget, setSelectedDeliverableTarget] = React.useState<
+	// 	string | number | undefined
+	// >("");
 
 	const [openDeliverableTargetDialog, setOpenDeliverableTargetDialog] = React.useState<boolean>();
 	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
 
 	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
 	deliverableTragetLineForm[3].addNewClick = () => setOpenDonorDialog(true);
-
-	const { refetch: deliverableTracklineRefetch } = useQuery(
-		GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-		{
-			variables: {
-				filter: {
-					deliverable_target_project: selectedDeliverableTarget
-						? selectedDeliverableTarget
-						: "",
-				},
-			},
-		}
-	);
 
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
@@ -320,26 +330,19 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	deliverableTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
 
 	React.useEffect(() => {
-		if (success) {
-			console.log("success", success);
+		if (success && donorForm) {
 			if (props.type === DELIVERABLE_ACTIONS.CREATE) {
-				deliverableTracklineRefetch();
+				fetchDeliverableTracklineByTarget({ apolloClient, currentTargetId });
 			} else if (props.type === DELIVERABLE_ACTIONS.UPDATE && props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
 			setSuccess(false);
 			handleNext();
 		}
-	}, [success, deliverableTracklineRefetch, props, setSuccess]);
+	}, [success, props, setSuccess, currentTargetId, donorForm]);
 
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
-			multiplefileMorph({
-				related_id: data.createDeliverableTrackingLineitemDetail.id,
-				related_type: "deliverable_tracking_lineitem",
-				field: "attachments",
-			});
-
 			setDonorForm(
 				<DeliverableTracklineDonorYearTags
 					donors={donors}
@@ -349,8 +352,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					type={FORM_ACTIONS.CREATE}
 				/>
 			);
-
-			// empty array after sending to upload function
+			multiplefileMorph({
+				related_id: data.createDeliverableTrackingLineitemDetail.id,
+				related_type: "deliverable_tracking_lineitem",
+				field: "attachments",
+			});
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
@@ -359,7 +365,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
 		},
 	});
-
 	const [
 		updateDeliverableTrackLine,
 		{ loading: updateDeliverableTrackLineLoading },
@@ -461,7 +466,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
-		setSelectedDeliverableTarget(value.deliverable_target_project);
+		// setSelectedDeliverableTarget(value.deliverable_target_project);
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 		let input = { ...value };
 		delete (input as any).donors;
@@ -668,7 +673,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			}}
 		/>
 	);
-
+	let formDetails = currentTargetId && <FormDetailsCalculate currentTargetId={currentTargetId} />;
 	return (
 		<React.Fragment>
 			{/* {true ? <CircularPercentage progress={loadingPercentage} /> : null} */}
@@ -679,7 +684,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				project={DashBoardData?.project?.name}
 				open={formIsOpen}
 				handleClose={onCancel}
-				formDetails={formDetailsComponent}
+				formDetails={formDetails}
 			>
 				<>
 					<DeliverableStepper

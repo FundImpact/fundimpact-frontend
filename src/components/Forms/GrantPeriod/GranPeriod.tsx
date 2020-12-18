@@ -26,14 +26,12 @@ import {
 } from "../../../models/grantPeriod/grantPeriodForm";
 import InputField from "../../InputField/InputField";
 import { ICustomDatePicker } from "./BasicDateRangePicker";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { FormattedMessage } from "react-intl";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 import Donor from "../../Donor";
-import { IGET_DONOR } from "../../../models/donor/query";
-import { GET_ORG_DONOR } from "../../../graphql/donor";
-import { IGetProjectDonor } from "../../../models/project/project";
+
+import { getTodaysDate } from "../../../utils";
 
 // import { BasicDateRangePicker } from './dateRange';
 
@@ -63,8 +61,21 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 
-	const validate = (values: any) => {
-		return {};
+	const validate = (values: IGrantPeriod) => {
+		let errors: Partial<IGrantPeriod> = {};
+		if (!values.name) {
+			errors.name = "Name is required";
+		}
+		if (!values.donor) {
+			errors.donor = "Donor is required";
+		}
+		if (!values.start_date) {
+			errors.start_date = "Start date is required";
+		}
+		if (!values.end_date) {
+			errors.end_date = "End date is required";
+		}
+		return errors;
 	};
 
 	const clearErrors = () => {
@@ -75,8 +86,8 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 		name: "",
 		short_name: "",
 		description: "",
-		start_date: "",
-		end_date: "",
+		start_date: getTodaysDate(new Date()),
+		end_date: getTodaysDate(new Date()),
 		project: undefined,
 		donor: undefined,
 	};
@@ -139,6 +150,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 										label="Name"
 										multiline={false}
 										rows={1}
+										required
 										type="text"
 										endAdornment={""}
 									/>
@@ -182,7 +194,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 								</Grid>
 
 								<Grid item xs={12} md={12}>
-									<InputLabel id="demo-simple-select-label">
+									<InputLabel id="demo-simple-select-label" required>
 										Select Donor
 									</InputLabel>
 									<Select
@@ -261,8 +273,8 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 									getShouldDisableDateError={false}
 								/> */}
 									<ICustomDatePicker
-										from={new Date(formik.values["start_date"])}
-										to={new Date(formik.values["end_date"])}
+										from={new Date(formik.values["start_date"] as any)}
+										to={new Date(formik.values["end_date"] as any)}
 										onChange={(from, to) => {
 											formik.setFieldValue("start_date", from);
 											formik.setFieldValue("end_date", to);
