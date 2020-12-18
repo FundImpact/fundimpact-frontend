@@ -5,6 +5,7 @@ import {
 	Grid,
 	IconButton,
 	Paper,
+	Tooltip,
 	Typography,
 	useTheme,
 } from "@material-ui/core";
@@ -21,6 +22,29 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import contactImage from "../../assets/images/contact.png";
 import { MODULE_CODES, userHasAccess } from "../../utils/access";
 import { CONTACT_ACTION } from "../../utils/access/modules/contact/actions";
+
+function TypographyContainer({
+	title,
+	color,
+}: {
+	title: string;
+	color?:
+		| "inherit"
+		| "initial"
+		| "primary"
+		| "secondary"
+		| "textPrimary"
+		| "textSecondary"
+		| "error";
+}) {
+	return (
+		<Tooltip title={title} aria-label={title}>
+			<Typography noWrap style={{ width: "150px" }} color={color}>
+				{title}
+			</Typography>
+		</Tooltip>
+	);
+}
 
 function ContactCard({
 	contactDetails,
@@ -51,9 +75,15 @@ function ContactCard({
 					<img src={contactImage} alt="" style={{ height: "100%", width: "100%" }} />
 					<Box p={2} pb={1} position="absolute" bottom="0" fontWeight="500">
 						{/* text is on image so color is hardcoded to white */}
-						<Typography variant="h5" style={{ color: "white" }}>
-							{contactDetails?.label}
-						</Typography>
+						<Tooltip title={contactDetails?.label} aria-label={contactDetails?.label}>
+							<Typography
+								variant="h5"
+								style={{ color: "white", width: "250px" }}
+								noWrap
+							>
+								{contactDetails?.label}
+							</Typography>
+						</Tooltip>
 					</Box>
 					{contactEditAccess && (
 						<Box position="absolute" bottom="-10%" right="0" px={2}>
@@ -76,18 +106,20 @@ function ContactCard({
 					</Box>
 					<Box>
 						<Box p={1}>
-							<Typography>{contactDetails?.phone_numbers[0]?.value}</Typography>
-							<Typography color="textSecondary">
-								{contactDetails?.phone_numbers[0]?.label}
-							</Typography>
+							<TypographyContainer title={contactDetails?.phone_numbers[0]?.value} />
+							<TypographyContainer
+								color="textSecondary"
+								title={contactDetails?.phone_numbers[0]?.label}
+							/>
 						</Box>
 						<Collapse in={contactPhoneExpanded} timeout="auto" unmountOnExit>
 							{contactDetails?.phone_numbers?.slice(1)?.map((phone_number, idx) => (
 								<Box p={1} key={idx}>
-									<Typography>{phone_number?.value}</Typography>
-									<Typography color="textSecondary">
-										{phone_number?.label}
-									</Typography>
+									<TypographyContainer title={phone_number?.value} />
+									<TypographyContainer
+										color="textSecondary"
+										title={phone_number?.label}
+									/>
 								</Box>
 							))}
 						</Collapse>
@@ -115,16 +147,20 @@ function ContactCard({
 					</Box>
 					<Box>
 						<Box p={1}>
-							<Typography>{contactDetails?.emails[0]?.value}</Typography>
-							<Typography color="textSecondary">
-								{contactDetails?.emails[0]?.label}
-							</Typography>
+							<TypographyContainer title={contactDetails?.emails[0]?.value} />
+							<TypographyContainer
+								title={contactDetails?.emails[0]?.label}
+								color="textSecondary"
+							/>
 						</Box>
 						<Collapse in={contactEmailExpanded} timeout="auto" unmountOnExit>
 							{contactDetails?.emails?.slice(1)?.map((email, idx) => (
 								<Box p={1} key={idx}>
-									<Typography>{email?.value}</Typography>
-									<Typography color="textSecondary">{email?.label}</Typography>
+									<TypographyContainer title={email?.value} />
+									<TypographyContainer
+										title={email?.label}
+										color="textSecondary"
+									/>
 								</Box>
 							))}
 						</Collapse>
@@ -152,24 +188,34 @@ function ContactCard({
 					</Box>
 					<Box>
 						<Box p={2} pl={1} pb={1}>
-							<Typography>{contactDetails?.addresses[0]?.address_line_1}</Typography>
-							<Typography>{contactDetails?.addresses[0]?.address_line_2}</Typography>
-							<Typography color="textSecondary">
-								{contactDetails?.addresses[0]?.pincode}
-							</Typography>
-							<Typography color="textSecondary">
-								{contactDetails?.addresses[0]?.city}
-							</Typography>
+							<TypographyContainer
+								title={contactDetails?.addresses[0]?.address_line_1}
+							/>
+							<TypographyContainer
+								title={contactDetails?.addresses[0]?.address_line_2}
+							/>
+							<TypographyContainer
+								title={contactDetails?.addresses[0]?.pincode}
+								color="textSecondary"
+							/>
+							<TypographyContainer
+								title={contactDetails?.addresses[0]?.city}
+								color="textSecondary"
+							/>
 						</Box>
 						<Collapse in={contactAddressExpanded} timeout="auto" unmountOnExit>
 							{contactDetails?.addresses?.slice(1).map((address, idx) => (
 								<Box p={2} pl={1} pb={1} key={idx}>
-									<Typography>{address?.address_line_1}</Typography>
-									<Typography>{address?.address_line_2}</Typography>
-									<Typography color="textSecondary">
-										{address?.pincode}
-									</Typography>
-									<Typography color="textSecondary">{address?.city}</Typography>
+									<TypographyContainer title={address?.address_line_1} />
+									<TypographyContainer title={address?.address_line_2} />
+									<TypographyContainer
+										title={address?.pincode}
+										color="textSecondary"
+									/>
+									<TypographyContainer
+										title={address?.city}
+										color="textSecondary"
+									/>
 								</Box>
 							))}
 						</Collapse>
