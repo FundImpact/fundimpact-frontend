@@ -83,7 +83,7 @@ const FinancialYearAndGrantPeriodFields = ({
 
 			<Grid item xs={6}>
 				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="demo-simple-select-outlined-label">
+					<InputLabel id="demo-simple-select-outlined-label" required>
 						<FormattedMessage
 							id="TracklineDonorFinancialYearTags"
 							defaultMessage="Financial Year"
@@ -135,7 +135,7 @@ const FinancialYearAndGrantPeriodFields = ({
 			</Grid>
 			<Grid item xs={6}>
 				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="demo-simple-select-outlined-label">
+					<InputLabel id="demo-simple-select-outlined-label" required>
 						<FormattedMessage
 							id="TracklineDonorGrantPeriodTags"
 							defaultMessage="Grant Period"

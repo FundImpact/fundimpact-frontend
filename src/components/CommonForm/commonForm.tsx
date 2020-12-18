@@ -35,6 +35,7 @@ function CommonInputForm({
 	createButtonName = "Create",
 	updateButtonName = "Update",
 	children,
+	getFormikInstance,
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -55,6 +56,9 @@ function CommonInputForm({
 			enableReinitialize
 		>
 			{(formik) => {
+				{
+					getFormikInstance && getFormikInstance(formik);
+				}
 				return (
 					<Form>
 						<Grid container spacing={2}>

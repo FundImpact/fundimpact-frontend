@@ -38,7 +38,10 @@ import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
 import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
-import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import {
+	getFetchPolicy,
+	removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows,
+} from "../../../utils";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS } from "../../../utils/access/modules/sustainableDevelopmentGoals/actions";
 import { ITableHeadings } from "../../../models";
@@ -109,6 +112,13 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
 	);
+
+	useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
+		variables: {
+			filter: { id: impactTarget.id },
+		},
+		fetchPolicy: getFetchPolicy(),
+	});
 
 	return (
 		<>

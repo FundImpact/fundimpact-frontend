@@ -122,6 +122,15 @@ const mocks = [
 		},
 		result: { data: { impactLinitemFyDonorList: impactLinitemFyDonorListMock } },
 	},
+	{
+		request: {
+			query: GET_IMPACT_TARGET_BY_PROJECT,
+			variables: {
+				filter: { id: "14" },
+			},
+		},
+		result: { data: { impactTargetProjectList: impactTargetMock } },
+	},
 ];
 
 let impactTable: any;

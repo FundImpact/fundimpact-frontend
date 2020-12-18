@@ -18,7 +18,7 @@ import DonorYearTagForm from "../Forms/FYDonorYearTagsForm/FYDonorYearTags";
 	props.organizationCountry === element.donor.country.id
 	? props.TracklineFyId : "" */
 
-export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) {
+const getProjectDonors = (props: TracklineDonorFormProps) => {
 	let projectDonors: any = [];
 	if (props.type === FORM_ACTIONS.UPDATE) {
 		/*Removing already mapped donors from donor list*/
@@ -32,7 +32,10 @@ export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) 
 		/*All donors if props.type === FORM_ACTION.CREATE */
 		projectDonors = props.donors;
 	}
-
+	return projectDonors;
+};
+export function getTracklineDonorsInitialValues(props: TracklineDonorFormProps) {
+	let projectDonors = getProjectDonors(props);
 	let initialValuesObj: any = {};
 
 	projectDonors?.forEach(
@@ -146,20 +149,33 @@ function DeliverableTracklineDonorYearTags(props: TracklineDonorFormProps) {
 
 	const validate = (values: any) => {
 		let errors: Partial<any> = {};
-		props.donors?.forEach(
+
+		let projectDonors = getProjectDonors(props);
+		projectDonors?.forEach(
 			(element: {
 				id: string;
 				name: string;
 				donor: { id: string; name: string; country: { id: string; name: string } };
 			}) => {
-				if (!values[`${element.id}mapValues.grant_periods_project`]) {
-					errors[`${element.id}mapValues`] = {};
-					errors[`${element.id}mapValues.grant_periods_project`] =
+				errors[`${element.id}mapValues`] = {
+					grant_periods_project: "",
+					financial_year: "",
+				};
+			}
+		);
+
+		projectDonors?.forEach(
+			(element: {
+				id: string;
+				name: string;
+				donor: { id: string; name: string; country: { id: string; name: string } };
+			}) => {
+				if (!values[`${element.id}mapValues`].grant_periods_project) {
+					errors[`${element.id}mapValues`].grant_periods_project =
 						"Grant Period is required";
 				}
-				if (!values[`${element.id}mapValues.financial_year`]) {
-					errors[`${element.id}mapValues`] = {};
-					errors[`${element.id}mapValues.financial_year`] = "Financial Year is required";
+				if (!values[`${element.id}mapValues`].financial_year) {
+					errors[`${element.id}mapValues`].financial_year = "Financial Year is required";
 				}
 			}
 		);
