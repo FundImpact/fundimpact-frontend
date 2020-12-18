@@ -291,11 +291,8 @@ export function GetCardTypeAndValues(props: CardProps) {
 			progressCardConfig.dataToDisplay.forEach(
 				(displayData: ProgressCardResponse, index: number) => {
 					budgetProject.allocation?.forEach((allData: ProgressCardResponse) => {
-						if (allData.id === displayData.id) {
-							progressCardConfig.dataToDisplay[index] = {
-								...displayData,
-								avg_value_two: allData.avg_value,
-							};
+						if (allData.project_id === displayData.project_id) {
+							displayData.avg_value_two = allData.avg_value;
 						}
 					});
 				}
@@ -341,15 +338,12 @@ export function GetCardTypeAndValues(props: CardProps) {
 				(displayData: ProgressCardResponse, index: number) => {
 					donors.received?.forEach((recData: ProgressCardResponse) => {
 						if (recData.id === displayData.id) {
-							progressCardConfig.dataToDisplay[index] = {
-								...displayData,
-								sum: recData.sum,
-							};
+							displayData.sum = recData.sum;
 						}
 					});
 				}
 			);
-
+			console.log("data", progressCardConfig.dataToDisplay, donors.received);
 			progressCardConfig.noBarDisplayTitle = [donorsLabel, receievedLabel, allocatedLabel];
 			progressCardConfig.noBarDisplay = true;
 		}

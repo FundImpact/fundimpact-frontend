@@ -106,6 +106,16 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
 
+	useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+		variables: {
+			sort: "created_at:DESC",
+			limit: 1,
+			start: 0,
+			filter: { id: deliverableTarget.id },
+		},
+		fetchPolicy: "cache-and-network",
+	});
+
 	return (
 		<>
 			<TableCell>
@@ -160,8 +170,8 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 				{deliverableTracklineCreateAccess && (
 					<MenuItem
 						onClick={() => {
-							handleMenuClose();
 							setTargetLineDialog(true);
+							handleMenuClose();
 						}}
 					>
 						<FormattedMessage

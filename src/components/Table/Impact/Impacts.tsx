@@ -110,6 +110,16 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
 	);
 
+	useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
+		variables: {
+			sort: "created_at:DESC",
+			limit: 1,
+			start: 0,
+			filter: { id: impactTarget.id },
+		},
+		fetchPolicy: "cache-and-network",
+	});
+
 	return (
 		<>
 			<TableCell>

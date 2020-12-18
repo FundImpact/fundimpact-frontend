@@ -38,6 +38,7 @@ export function ICustomDatePicker({
 					label="Start Date"
 					type="date"
 					fullWidth
+					required
 					value={getTodaysDate(fromDateSelected)}
 					onChange={(e) => setfromDateSelected(new Date(e.target.value))}
 					variant="outlined"
@@ -57,6 +58,7 @@ export function ICustomDatePicker({
 					label="End Date"
 					type="date"
 					fullWidth
+					required
 					variant="outlined"
 					value={getTodaysDate(toDateSelected)}
 					onChange={(e) => settoDateSelected(new Date(e.target.value))}

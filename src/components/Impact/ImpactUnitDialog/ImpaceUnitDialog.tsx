@@ -120,6 +120,9 @@ const validate = (values: IImpactUnitFormInput) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
+	if (!values.impactCategory?.length) {
+		errors.name = "Impact category is required";
+	}
 	return errors;
 };
 

@@ -387,7 +387,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 				subtitle={intl.formatMessage({
 					id: "impactTargetFormSubtitle",
 					defaultMessage:
-						"Physical addresses of your organizatin like headquater, branch etc.",
+						"Physical addresses of your organization like headquater, branch etc.",
 					description: `This text will be show on impact Target form for subtitle`,
 				})}
 				workspace={dashboardData?.workspace?.name}
