@@ -191,7 +191,7 @@ function ImpactCategoryDialog({
 			subtitle={intl.formatMessage({
 				id: "impactCategoryFormSubtitle",
 				defaultMessage:
-					"Physical addresses of your organizatin like headquater, branch etc.",
+					"Physical addresses of your organization like headquater, branch etc.",
 				description: `This text will be show on impact Category form for subtitle`,
 			})}
 			workspace={""}

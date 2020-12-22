@@ -63,6 +63,10 @@ export interface INotificationContext {
 	errorNotification: string;
 }
 
+export interface IDialogContext {
+	component: React.ReactNode | undefined;
+}
+
 export interface IOrganizationCurrency {
 	id: string;
 	currency: {
