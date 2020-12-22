@@ -307,7 +307,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 	}, [currCategoryId, getUnitsByCategory]);
 
 	// updating units field with fetched units list
-	useEffect(() => {
+	impactTargetForm[3].optionsArray = React.useMemo(() => {
 		if (unitByCategory) {
 			let arr: any = [];
 			unitByCategory.impactCategoryUnitList.forEach(
@@ -319,7 +319,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 				}
 			);
 
-			impactTargetForm[3].optionsArray = arr;
+			return arr;
 		}
 	}, [unitByCategory]);
 

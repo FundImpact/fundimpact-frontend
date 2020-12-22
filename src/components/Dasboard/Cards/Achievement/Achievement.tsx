@@ -166,8 +166,8 @@ export default function Achievement() {
 		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
 		setDELIVERABLE_STATUS({
 			...DELIVERABLE_STATUS,
-			achieved: AmoundSpend,
-			target: TargetAmount,
+			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+			target: TargetAmount ? 100 : 0,
 		});
 	}, [DeliverableAmountTarget, DeliverableAmountSpend]);
 
@@ -181,7 +181,11 @@ export default function Achievement() {
 		if (TargetAmount === undefined || TargetAmount === null) return;
 		if (AmoundSpend === undefined || AmoundSpend === null) return;
 		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setIMPACT_STATUS({ ...IMPACT_STATUS, achieved: AmoundSpend, target: TargetAmount });
+		setIMPACT_STATUS({
+			...IMPACT_STATUS,
+			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+			target: TargetAmount ? 100 : 0,
+		});
 	}, [ImpactAmountSpend, ImpactAmountTarget]);
 
 	if (

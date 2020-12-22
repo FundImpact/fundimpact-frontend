@@ -48,6 +48,7 @@ import IndividualTable from "../../Table/IndividualTable";
 import IndividualDialog from "../../IndividualDialog";
 import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
 import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";
+import { useDialogData } from "../../../contexts/DialogContext";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -570,7 +571,7 @@ export default function DashboardTableContainer() {
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
 	const notificationData = useNotificationData();
-
+	const dialogData = useDialogData();
 	useEffect(() => {
 		if (
 			budgetTargetFindAccess ||
@@ -641,7 +642,7 @@ export default function DashboardTableContainer() {
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
 	};
-
+	console.log("cccc", dialogData);
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs
@@ -683,6 +684,7 @@ export default function DashboardTableContainer() {
 			{notificationData!.errorNotification && (
 				<Snackbar severity="error" msg={notificationData!.errorNotification} />
 			)}
+			{dialogData!.component ? dialogData!.component : undefined}
 		</Box>
 	);
 }

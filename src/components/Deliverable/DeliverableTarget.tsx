@@ -271,7 +271,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	}, [currentCategory, getUnitsByCategory]);
 
 	// updating units field with fetched units list
-	useEffect(() => {
+	deliverableTargetForm[3].optionsArray = React.useMemo(() => {
 		if (unitsBycategory) {
 			let arr: any = [];
 			unitsBycategory.deliverableCategoryUnitList.forEach(
@@ -282,7 +282,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					});
 				}
 			);
-			deliverableTargetForm[3].optionsArray = arr;
+			return arr;
 		}
 	}, [unitsBycategory]);
 

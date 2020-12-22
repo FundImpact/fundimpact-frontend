@@ -43,6 +43,9 @@ import {
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { ITableHeadings } from "../../../models";
+import { useDialogDispatch } from "../../../contexts/DialogContext";
+import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
+import { FormatListBulleted } from "@material-ui/icons";
 
 enum tableHeaders {
 	name = 2,
@@ -88,7 +91,7 @@ const chipArray = ({
 	));
 };
 
-function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: any }) {
+const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: any }) => {
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
 	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
@@ -98,7 +101,7 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
 	};
-
+	const dialogDispatch = useDialogDispatch();
 	const deliverableTragetEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.UPDATE_DELIVERABLE_TARGET
@@ -115,6 +118,23 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 		},
 		fetchPolicy: getFetchPolicy(),
 	});
+
+	useEffect(() => {
+		if (targetLineDialog)
+			dialogDispatch(
+				setOpenDialog(
+					<DeliverableTrackLine
+						open={targetLineDialog}
+						handleClose={() => {
+							setTargetLineDialog(false);
+							dialogDispatch(setCloseDialog());
+						}}
+						type={DELIVERABLE_ACTIONS.CREATE}
+						deliverableTarget={deliverableTarget.id}
+					/>
+				)
+			);
+	}, [deliverableTarget, targetLineDialog]);
 
 	return (
 		<>
@@ -191,17 +211,9 @@ function EditDeliverableTargetIcon({ deliverableTarget }: { deliverableTarget: a
 					project={deliverableTarget.project.id}
 				/>
 			)}
-			{targetLineDialog && (
-				<DeliverableTrackLine
-					open={targetLineDialog}
-					handleClose={() => setTargetLineDialog(false)}
-					type={DELIVERABLE_ACTIONS.CREATE}
-					deliverableTarget={deliverableTarget.id}
-				/>
-			)}
 		</>
 	);
-}
+};
 
 function DeliverableTargetAchievementAndProgress({
 	deliverableTargetId,
