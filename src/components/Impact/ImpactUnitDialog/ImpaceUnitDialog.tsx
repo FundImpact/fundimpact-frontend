@@ -500,7 +500,7 @@ function ImpactUnitDialog({
 			subtitle={intl.formatMessage({
 				id: "impactUnitFormSubtitle",
 				defaultMessage:
-					"Physical addresses of your organizatin like headquater, branch etc.",
+					"Physical addresses of your organization like headquater, branch etc.",
 				description: `This text will be show on impact unit form for subtitle`,
 			})}
 			workspace={""}

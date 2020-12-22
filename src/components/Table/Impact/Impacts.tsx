@@ -38,13 +38,12 @@ import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_TARGET_ACTIONS } from "../../../utils/access/modules/impactTarget/actions";
 import { IMPACT_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/impactTrackingLineItem/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
-import {
-	getFetchPolicy,
-	removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows,
-} from "../../../utils";
+import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS } from "../../../utils/access/modules/sustainableDevelopmentGoals/actions";
 import { ITableHeadings } from "../../../models";
+import { useDialogDispatch } from "../../../contexts/DialogContext";
+import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
 
 enum tableHeaders {
 	name = 2,
@@ -113,12 +112,24 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
 	);
 
-	useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
-		variables: {
-			filter: { id: impactTarget.id },
-		},
-		fetchPolicy: getFetchPolicy(),
-	});
+	const dialogDispatch = useDialogDispatch();
+
+	useEffect(() => {
+		if (impactTargetLineDialog)
+			dialogDispatch(
+				setOpenDialog(
+					<ImpactTrackLine
+						open={impactTargetLineDialog}
+						handleClose={() => {
+							setImpactTargetLineDialog(false);
+							dialogDispatch(setCloseDialog());
+						}}
+						type={IMPACT_ACTIONS.CREATE}
+						impactTarget={impactTarget.id}
+					/>
+				)
+			);
+	}, [impactTarget, impactTargetLineDialog]);
 
 	return (
 		<>
@@ -191,14 +202,6 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 					type={IMPACT_ACTIONS.UPDATE}
 					data={impactTargetData}
 					project={impactTarget.project.id}
-				/>
-			)}
-			{impactTargetLineDialog && (
-				<ImpactTrackLine
-					open={impactTargetLineDialog}
-					handleClose={() => setImpactTargetLineDialog(false)}
-					type={IMPACT_ACTIONS.CREATE}
-					impactTarget={impactTarget.id}
 				/>
 			)}
 		</>

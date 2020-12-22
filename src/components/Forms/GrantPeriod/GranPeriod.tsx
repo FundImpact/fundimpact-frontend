@@ -86,8 +86,8 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 		name: "",
 		short_name: "",
 		description: "",
-		start_date: getTodaysDate(new Date()),
-		end_date: getTodaysDate(new Date()),
+		start_date: "",
+		end_date: "",
 		project: undefined,
 		donor: undefined,
 	};
