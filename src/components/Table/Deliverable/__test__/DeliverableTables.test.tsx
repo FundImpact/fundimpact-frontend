@@ -29,6 +29,7 @@ import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../../graphql";
 import { annualYearListMock } from "../../../Impact/__test__/testHelp";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
+import { DialogProvider } from "../../../../contexts/DialogContext";
 
 let intialFormValue = {
 	name: "new deliverable target name",
@@ -139,7 +140,9 @@ beforeEach(() => {
 				defaultState={{ project: projectsMock, organization: organizationDetail }}
 			>
 				<NotificationProvider>
-					<DeliverableTable />
+					<DialogProvider>
+						<DeliverableTable />
+					</DialogProvider>
 				</NotificationProvider>
 			</DashboardProvider>,
 			{

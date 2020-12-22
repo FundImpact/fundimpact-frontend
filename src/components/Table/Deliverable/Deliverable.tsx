@@ -36,12 +36,16 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/deliverableTarget/actions";
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
-import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
+import {
+	getFetchPolicy,
+	removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows,
+} from "../../../utils";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { ITableHeadings } from "../../../models";
 import { useDialogDispatch } from "../../../contexts/DialogContext";
 import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
+import { FormatListBulleted } from "@material-ui/icons";
 
 enum tableHeaders {
 	name = 2,
@@ -107,6 +111,13 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
+
+	useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+		variables: {
+			filter: { id: deliverableTarget.id },
+		},
+		fetchPolicy: getFetchPolicy(),
+	});
 
 	useEffect(() => {
 		if (targetLineDialog)
