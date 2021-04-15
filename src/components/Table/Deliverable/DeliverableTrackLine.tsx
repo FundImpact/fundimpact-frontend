@@ -569,8 +569,6 @@ export default function DeliverablesTrackLineTable({
 			>
 				<>
 					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
 						onClick={() =>
 							exportTable({
 								tableName: "Donors",
@@ -578,12 +576,12 @@ export default function DeliverablesTrackLineTable({
 								tableExportUrl: `${DONOR_EXPORT}`,
 							})
 						}
+						style={{ marginRight: theme.spacing(1) }}
+						variant="outlined"
 					>
 						Donor Export
 					</Button>
 					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
 						onClick={() =>
 							exportTable({
 								tableName: "Grant Period",
@@ -591,6 +589,8 @@ export default function DeliverablesTrackLineTable({
 								tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
 							})
 						}
+						style={{ marginRight: theme.spacing(1) }}
+						variant="outlined"
 					>
 						Grant Period Export
 					</Button>
