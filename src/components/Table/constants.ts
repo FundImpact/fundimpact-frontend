@@ -8,7 +8,6 @@ export const deliverableHeadings: ITableHeadings[] = [
 	{ label: "Target", keyMapping: "target_value" },
 	{ label: "Achieved" },
 	{ label: "Progess" },
-
 	{ label: "" }, //edit icon
 ];
 
@@ -80,7 +79,6 @@ export const donorTableHeading = [
 	{ label: "Legal Name", keyMapping: "legal_name" },
 	{ label: "Short Name", keyMapping: "short_name" },
 	{ label: "Country" },
-	{ label: "" },
 ];
 
 export const budgetCategoryHeading = [
@@ -89,7 +87,6 @@ export const budgetCategoryHeading = [
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];
 
@@ -101,7 +98,6 @@ export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
-	{ label: "" },
 ];
 
 export const deliverableUnitTableHeadings: ITableHeadings[] = [
@@ -111,7 +107,6 @@ export const deliverableUnitTableHeadings: ITableHeadings[] = [
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];
 
@@ -123,7 +118,6 @@ export const impactUnitTableHeadings: ITableHeadings[] = [
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
-	{ label: "" },
 ];
 
 export const impactCategoryTableHeadings: ITableHeadings[] = [
@@ -133,7 +127,6 @@ export const impactCategoryTableHeadings: ITableHeadings[] = [
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
-	{ label: "" },
 	{ label: "" },
 ];
 

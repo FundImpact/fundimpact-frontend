@@ -1,4 +1,9 @@
-import { useApolloClient, useLazyQuery } from "@apollo/client";
+import {
+	ApolloQueryResult,
+	OperationVariables,
+	useApolloClient,
+	useLazyQuery,
+} from "@apollo/client";
 import {
 	Box,
 	createStyles,
@@ -17,6 +22,8 @@ import {
 	Grid,
 	Avatar,
 	Chip,
+	useTheme,
+	Button,
 } from "@material-ui/core";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import React, { useEffect, useState } from "react";
@@ -36,6 +43,14 @@ import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { GRANT_PERIOD_ACTIONS } from "../../../utils/access/modules/grantPeriod/actions";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	DONOR_EXPORT,
+	GRANT_PERIOD_TABLE_EXPORT,
+	GRANT_PERIOD_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { useAuth } from "../../../contexts/userContext";
+import { exportTable } from "../../../utils/importExportTable.utils";
 
 const useStyles = makeStyles({
 	table: {
@@ -240,9 +255,12 @@ const getDefaultFilterList = () => ({
 export default function GrantPeriodTable() {
 	const apolloClient = useApolloClient();
 	const [queryFilter, setQueryFilter] = useState({});
-	let [getProjectGrantPeriods, { loading, data }] = useLazyQuery(FETCH_GRANT_PERIODS, {
-		notifyOnNetworkStatusChange: true,
-	});
+	let [getProjectGrantPeriods, { loading, data, refetch: refetchGrantPeriods }] = useLazyQuery(
+		FETCH_GRANT_PERIODS,
+		{
+			notifyOnNetworkStatusChange: true,
+		}
+	);
 
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onCompleted: (data) => {
@@ -333,6 +351,9 @@ export default function GrantPeriodTable() {
 
 	grantPeriodInputFields[3].optionsArray = donors?.orgDonors || [];
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	if (loading) return <TableSkeleton />;
 
 	return (
@@ -374,6 +395,28 @@ export default function GrantPeriodTable() {
 							setFilterList={setFilterList}
 							inputFields={grantPeriodInputFields}
 						/>
+						<ImportExportTableMenu
+							tableName="Grant Period"
+							tableExportUrl={`${GRANT_PERIOD_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+							tableImportUrl={`${GRANT_PERIOD_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+							onImportTableSuccess={() => refetchGrantPeriods?.()}
+						>
+							<>
+								<Button
+									variant="outlined"
+									style={{ marginRight: theme.spacing(1) }}
+									onClick={() =>
+										exportTable({
+											tableName: "Donors",
+											jwt: jwt as string,
+											tableExportUrl: `${DONOR_EXPORT}`,
+										})
+									}
+								>
+									Donor Export
+								</Button>
+							</>
+						</ImportExportTableMenu>
 					</SimpleTable>
 					<GrantPeriodDialog
 						open={!!grantPeriodToEdit}

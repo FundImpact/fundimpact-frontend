@@ -9,6 +9,8 @@ import {
 	Grid,
 	Chip,
 	Avatar,
+	Button,
+	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -46,6 +48,14 @@ import { ITableHeadings } from "../../../models";
 import { useDialogDispatch } from "../../../contexts/DialogContext";
 import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
 import { FormatListBulleted } from "@material-ui/icons";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	DELIVERABLE_CATEGORY_UNIT_EXPORT,
+	DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT,
+	DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
 
 enum tableHeaders {
 	name = 2,
@@ -401,6 +411,7 @@ export default function DeliverablesTable() {
 		changePage,
 		countQueryLoading,
 		queryLoading,
+		queryRefetch: refetchDeliverableTargetProject,
 	} = pagination({
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
@@ -421,6 +432,9 @@ export default function DeliverablesTable() {
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
 	);
+
+	const theme = useTheme();
+	const { jwt } = useAuth();
 
 	useEffect(() => {
 		if (
@@ -533,15 +547,39 @@ export default function DeliverablesTable() {
 	);
 
 	filteredDeliverableHeadings[filteredDeliverableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				name: "",
-				target_value: "",
-				deliverable_category_org: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={deliverableTargetInputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					name: "",
+					target_value: "",
+					deliverable_category_org: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={deliverableTargetInputFields}
+			/>
+			<ImportExportTableMenu
+				tableName="Deliverable"
+				tableExportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+				tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+				onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
+			>
+				<>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Deliverable category unit",
+								jwt: jwt as string,
+								tableExportUrl: `${DELIVERABLE_CATEGORY_UNIT_EXPORT}`,
+							})
+						}
+					>
+						Deliverable Category Unit Export
+					</Button>
+				</>
+			</ImportExportTableMenu>
+		</>
 	);
 	return (
 		<>

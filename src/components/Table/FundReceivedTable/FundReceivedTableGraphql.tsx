@@ -124,7 +124,14 @@ function FundReceivedTableGraphql() {
 		}
 	}, [filterList, dashboardData]);
 
-	let { changePage, count, queryData, queryLoading, countQueryLoading } = pagination({
+	let {
+		changePage,
+		count,
+		queryData,
+		queryLoading,
+		countQueryLoading,
+		queryRefetch: fundReceivedRefetch,
+	} = pagination({
 		countQuery: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 		countFilter: queryFilter,
 		query: GET_FUND_RECEIPT_PROJECT_LIST,
@@ -149,6 +156,7 @@ function FundReceivedTableGraphql() {
 			inputFields={fundReceiptInputFields}
 			donorHash={donorHash}
 			currency={currency?.currencyList[0]?.code || ""}
+			fundReceivedRefetch={fundReceivedRefetch}
 		/>
 	);
 }

@@ -41,6 +41,7 @@ function BudgetLineItemTableContainer({
 	removeFilterListElements,
 	currency,
 	refetchOnSuccess,
+	budgetTargetId,
 }: {
 	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
 	changePage: (prev?: boolean) => void;
@@ -58,6 +59,7 @@ function BudgetLineItemTableContainer({
 	filterList: {
 		[key: string]: string | string[];
 	};
+	budgetTargetId: string;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string | string[];
@@ -104,6 +106,7 @@ function BudgetLineItemTableContainer({
 			financialYearOrgHash={financialYearOrgHash}
 			currency={currency}
 			refetchOnSuccess={refetchOnSuccess}
+			budgetTargetId={budgetTargetId}
 		/>
 	);
 }

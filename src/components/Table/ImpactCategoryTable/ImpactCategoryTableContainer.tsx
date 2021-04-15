@@ -4,6 +4,7 @@ import { IImpactCategoryData } from "../../../models/impact/impact";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
+import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (impactCategory: IImpactCategoryData | null): IImpactCategoryData => {
 	return {
@@ -28,6 +29,7 @@ function ImpactCategoryTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechImpactCategoryAndUnitTable,
 }: {
 	impactCategoryList: IImpactCategoryData[];
 	collapsableTable: boolean;
@@ -47,6 +49,7 @@ function ImpactCategoryTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	const selectedImpactCategory = useRef<IImpactCategoryData | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
@@ -87,6 +90,7 @@ function ImpactCategoryTableContainer({
 			removeFilterListElements={removeFilterListElements}
 			impactCategoryEditAccess={impactCategoryEditAccess}
 			impactUnitFindAccess={impactUnitFindAccess}
+			reftechImpactCategoryAndUnitTable={reftechImpactCategoryAndUnitTable}
 		/>
 	);
 }

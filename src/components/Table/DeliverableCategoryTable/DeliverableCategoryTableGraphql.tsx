@@ -99,6 +99,7 @@ function DeliverableCategoryTableGraphql({
 		queryData: deliverableCategoryList,
 		queryLoading: deliverableCategoryLoading,
 		countQueryLoading: deliverableCategoryCountLoading,
+		queryRefetch: refetchDeliverableCategory,
 	} = pagination({
 		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 		countFilter: queryFilter,
@@ -114,6 +115,7 @@ function DeliverableCategoryTableGraphql({
 		queryData: deliverableCategoryUnitList,
 		queryLoading: deliverableCategoryUnitLoading,
 		countQueryLoading: deliverableCategoryUnitCountLoading,
+		queryRefetch: refetchDeliverableCategoryUnit,
 	} = pagination({
 		countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 		countFilter: nestedTableQueryFilter,
@@ -122,6 +124,11 @@ function DeliverableCategoryTableGraphql({
 		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
 		fireRequest: Boolean(delivarableUnitId && !collapsableTable),
 	});
+
+	const reftechDeliverableCategoryAndUnitTable = () => {
+		refetchDeliverableCategory?.();
+		refetchDeliverableCategoryUnit?.();
+	};
 
 	const deliverableCategoryUnitListMemoized = useMemo(
 		() =>
@@ -168,6 +175,7 @@ function DeliverableCategoryTableGraphql({
 			filterList={nestedTableFilterList}
 			setFilterList={setNestedTableFilterList}
 			removeFilterListElements={removeNestedFilterListElements}
+			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
 		/>
 	);
 }

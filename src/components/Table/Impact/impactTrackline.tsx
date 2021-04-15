@@ -9,6 +9,8 @@ import {
 	Chip,
 	Avatar,
 	Grid,
+	Button,
+	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -44,6 +46,15 @@ import { CircularPercentage } from "../../commons";
 import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
 import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	DONOR_EXPORT,
+	GRANT_PERIOD_TABLE_EXPORT,
+	IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT,
+	IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { useAuth } from "../../../contexts/userContext";
+import { exportTable } from "../../../utils/importExportTable.utils";
 
 enum tableHeaders {
 	date = 1,
@@ -523,20 +534,60 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		description: `This text will be shown if no target found for table`,
 	});
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	filteredImpactTracklineTableHeadings[
 		filteredImpactTracklineTableHeadings.length - 1
 	].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				reporting_date: "",
-				note: "",
-				value: "",
-				annual_year: [],
-				financial_year: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={impactTracklineInputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					reporting_date: "",
+					note: "",
+					value: "",
+					annual_year: [],
+					financial_year: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={impactTracklineInputFields}
+			/>
+			<ImportExportTableMenu
+				tableName="Impact Lineitem"
+				tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
+				tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
+				onImportTableSuccess={() => queryRefetch?.()}
+			>
+				<>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Donors",
+								jwt: jwt as string,
+								tableExportUrl: `${DONOR_EXPORT}`,
+							})
+						}
+					>
+						Donor Export
+					</Button>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Grant Period",
+								jwt: jwt as string,
+								tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+							})
+						}
+					>
+						Grant Period Export
+					</Button>
+				</>
+			</ImportExportTableMenu>
+		</>
 	);
 
 	return (

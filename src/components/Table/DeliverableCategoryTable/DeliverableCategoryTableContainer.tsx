@@ -5,6 +5,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (
 	deliverableCategory: IDeliverableCategoryData | null,
@@ -32,6 +33,7 @@ function DeliverableCategoryTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechDeliverableCategoryAndUnitTable,
 }: {
 	orderBy: string;
 	collapsableTable: boolean;
@@ -51,6 +53,7 @@ function DeliverableCategoryTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 	const selectedDeliverableCategory = useRef<IDeliverableCategoryData | null>(null);
@@ -96,6 +99,7 @@ function DeliverableCategoryTableContainer({
 			removeFilterListElements={removeFilterListElements}
 			deliverableCategoryEditAccess={deliverableCategoryEditAccess}
 			deliverableUnitFindAccess={deliverableUnitFindAccess}
+			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
 		/>
 	);
 }

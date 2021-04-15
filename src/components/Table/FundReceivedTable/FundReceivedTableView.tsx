@@ -7,9 +7,19 @@ import FundReceived from "../../FundReceived";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IFundReceivedForm } from "../../../models/fundReceived";
 import FilterList from "../../FilterList";
-import { Grid, Box, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, Button, useTheme } from "@material-ui/core";
 import { FormattedMessage, useIntl } from "react-intl";
 import { IntlShape } from "@formatjs/intl";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	DONOR_EXPORT,
+	FUND_RECEIPT_TABLE_EXPORT,
+	FUND_RECEIPT_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
 
 //add access
 const rows = [
@@ -119,6 +129,7 @@ function FundReceivedTableView({
 	removeFilterListElements,
 	donorHash,
 	currency,
+	fundReceivedRefetch,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;
@@ -146,21 +157,52 @@ function FundReceivedTableView({
 	inputFields: any[];
 	donorHash: { [key: string]: string };
 	currency: string;
+	fundReceivedRefetch:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const intl = useIntl();
-
+	const dashboardData = useDashBoardData();
 	fundReceivedTableHeadings[2].label = `Amount ${currency && "(" + currency + ")"}`;
 
+	const onImportFundReceivedTableSuccess = () => fundReceivedRefetch?.();
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	fundReceivedTableHeadings[fundReceivedTableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				amount: "",
-				reporting_date: "",
-				project_donor: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={inputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					amount: "",
+					reporting_date: "",
+					project_donor: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={inputFields}
+			/>
+			<ImportExportTableMenu
+				tableName="Fund Received"
+				tableExportUrl={`${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+				tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+				onImportTableSuccess={onImportFundReceivedTableSuccess}
+			>
+				<>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Donors",
+								jwt: jwt as string,
+								tableExportUrl: `${DONOR_EXPORT}`,
+							})
+						}
+					>
+						Donor Export
+					</Button>
+				</>
+			</ImportExportTableMenu>
+		</>
 	);
 	return (
 		<>

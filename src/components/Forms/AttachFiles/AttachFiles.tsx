@@ -113,10 +113,18 @@ function AttachFileForm(props: {
 		path: string;
 	};
 	parentOnSuccessCall?: () => void;
+	allowMultipleFileUpload?: boolean;
+	showAddRemarkButton?: boolean;
+	children?: React.ReactNode;
 }) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
-	const { filesArray, setFilesArray } = props;
+	const {
+		filesArray,
+		setFilesArray,
+		allowMultipleFileUpload = true,
+		showAddRemarkButton = true,
+	} = props;
 	const intl = useIntl();
 	const classes = useStyles();
 	const { parentOnSave } = props;
@@ -159,6 +167,9 @@ function AttachFileForm(props: {
 		setFilterList((filterListObject) =>
 			removeFilterListObjectElements({ filterListObject, key, index })
 		);
+
+	const checkIfAddFileButtonShouldBeVisible = () =>
+		!filesArray?.length || allowMultipleFileUpload;
 
 	let nofilesFound = intl.formatMessage({
 		id: "noFilesFoundForAttachFileForm",
@@ -223,19 +234,25 @@ function AttachFileForm(props: {
 				<DialogContent dividers>
 					<Grid container>
 						<Grid item xs={12} container justify="space-between">
+							<Box width="100%">{props.children}</Box>
 							<Box>
 								<FormControl>
-									<InputLabel
-										shrink={false}
-										htmlFor={"attachFileId"}
-										style={{ width: "100%", position: "static" }}
-									>
-										<Button component="span" className={classes.buttonAddFiles}>
-											{filesArray?.length > 0
-												? "Add more files"
-												: "Add files"}
-										</Button>
-									</InputLabel>
+									{checkIfAddFileButtonShouldBeVisible() && (
+										<InputLabel
+											shrink={false}
+											htmlFor={"attachFileId"}
+											style={{ width: "100%", position: "static" }}
+										>
+											<Button
+												component="span"
+												className={classes.buttonAddFiles}
+											>
+												{filesArray?.length > 0
+													? "Add more files"
+													: "Add files"}
+											</Button>
+										</InputLabel>
+									)}
 									<Input
 										onChange={(e: any): void => {
 											e.persist();
@@ -322,6 +339,7 @@ function AttachFileForm(props: {
 												setFilesArray(fileArr);
 											},
 										}}
+										showAddRemarkButton={showAddRemarkButton}
 									/>
 								))}
 						</Grid>
@@ -368,9 +386,10 @@ const AttachedFileList = (props: {
 	onSaveCall: boolean;
 	addRemark: (text: string) => void;
 	removeFile: () => void;
+	showAddRemarkButton: boolean;
 }) => {
 	const [openAddRemark, setOpenAddRemark] = React.useState(false);
-	const { file, onSaveCall, addRemark, removeFile } = props;
+	const { file, onSaveCall, addRemark, removeFile, showAddRemarkButton } = props;
 	const [text, setText] = React.useState<string>("");
 	const handleTextField = (event: any) => {
 		setText(event.target.value);
@@ -500,15 +519,17 @@ const AttachedFileList = (props: {
 							) : (
 								<Box className={classes.remarkBox}>
 									{!file.remark ? (
-										<Box>
-											<Button
-												size="small"
-												color="primary"
-												onClick={() => setOpenAddRemark(true)}
-											>
-												{"Add Remark"}
-											</Button>
-										</Box>
+										showAddRemarkButton && (
+											<Box>
+												<Button
+													size="small"
+													color="primary"
+													onClick={() => setOpenAddRemark(true)}
+												>
+													{"Add Remark"}
+												</Button>
+											</Box>
+										)
 									) : (
 										<Box mb={1} display="flex">
 											<Typography variant="caption" gutterBottom>
