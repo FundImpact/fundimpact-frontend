@@ -140,6 +140,7 @@ function CommonTable<T extends { id: string }>({
 	orderBy,
 	setOrderBy,
 	setOpenAttachFiles,
+	tableActionButton,
 }: ICommonTable<T>) {
 	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
@@ -157,6 +158,8 @@ function CommonTable<T extends { id: string }>({
 	useEffect(() => {
 		setPage(0);
 	}, [count, setPage]);
+
+	const getTablePaginationColSpan = () => tableHeadings.length + (tableActionButton ? 1 : 0);
 
 	const menuList = editMenuName
 		.map((element, index) => ({
@@ -253,6 +256,15 @@ function CommonTable<T extends { id: string }>({
 									</TableCell>
 							  ))
 							: null}
+						{tableActionButton && (
+							<TableCell className={tableStyles.th} align="left">
+								<Grid container>
+									<Grid item xs={12} style={{ display: "flex" }}>
+										{tableActionButton()}
+									</Grid>
+								</Grid>
+							</TableCell>
+						)}
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
@@ -302,7 +314,7 @@ function CommonTable<T extends { id: string }>({
 						<TableRow>
 							<TablePagination
 								rowsPerPageOptions={[]}
-								colSpan={tableHeadings.length}
+								colSpan={getTablePaginationColSpan()}
 								count={count}
 								rowsPerPage={count > defaultRows ? defaultRows : count}
 								page={page}

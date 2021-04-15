@@ -13,7 +13,7 @@ import {
 } from "../../../../models/budget/budgetForm";
 import AmountSpent from "./AmountSpent";
 import BudgetLineItemTable from "../BudgetLineItemTable";
-import { Grid, Box, Typography, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Typography, Chip, Avatar, Button, useTheme } from "@material-ui/core";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import FilterList from "../../../FilterList";
 import { BUDGET_TARGET_ACTIONS } from "../../../../utils/access/modules/budgetTarget/actions";
@@ -24,7 +24,17 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 import { ITableHeadings } from "../../../../models";
-import { IBudgetTarget } from "../../../../models/budget";
+import {
+	BUDGET_CATEGORY_TABLE_EXPORT,
+	BUDGET_TARGET_PROJECTS_TABLE_EXPORT,
+	BUDGET_TARGET_PROJECTS_TABLE_IMPORT,
+	DONOR_EXPORT,
+} from "../../../../utils/endpoints.util";
+import ImportExportTableMenu from "../../../ImportExportTableMenu";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+import { exportTable } from "../../../../utils/importExportTable.utils";
+import { useAuth } from "../../../../contexts/userContext";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -53,6 +63,9 @@ interface IBudgetTargetTableViewProps {
 	budgetCategoryHash: { [key: string]: string };
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
+	refetchBudgetTargetTable:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }
 
 enum tableHeader {
@@ -209,9 +222,10 @@ function BudgetTargetView({
 	budgetCategoryHash,
 	removeFilterListElements,
 	currency,
+	refetchBudgetTargetTable,
 }: IBudgetTargetTableViewProps) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
-
+	const dashboardData = useDashBoardData();
 	currencyFindAccess &&
 		(tableHeadings[5].label = getNewTotalAmountHeaderOfTable(
 			currencyFindAccess ? currency : ""
@@ -295,17 +309,59 @@ function BudgetTargetView({
 	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
 
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				name: "",
-				total_target_amount: "",
-				donor: [],
-				budget_category_organization: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={inputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					name: "",
+					total_target_amount: "",
+					donor: [],
+					budget_category_organization: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={inputFields}
+			/>
+			<ImportExportTableMenu
+				tableName="Budget"
+				tableExportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+				tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+				onImportTableSuccess={onImportBudgetTargetTableSuccess}
+			>
+				<>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Budget category",
+								jwt: jwt as string,
+								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}`,
+							})
+						}
+					>
+						Budget Category Export
+					</Button>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Donor",
+								jwt: jwt as string,
+								tableExportUrl: `${DONOR_EXPORT}`,
+							})
+						}
+					>
+						Donor Export
+					</Button>
+				</>
+			</ImportExportTableMenu>
+		</>
 	);
+
+	const onImportBudgetTargetTableSuccess = () => refetchBudgetTargetTable?.();
+
+	const theme = useTheme();
+	const { jwt } = useAuth();
 
 	return (
 		<>

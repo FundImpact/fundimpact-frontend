@@ -6,11 +6,19 @@ import { IImpactCategoryData } from "../../../models/impact/impact";
 import ImpactUnit from "../ImpactUnitTable";
 import { impactCategoryTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Avatar, Chip } from "@material-ui/core";
+import { Grid, Box, Avatar, Chip, MenuItem } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	IMPACT_CATEGORY_TABLE_EXPORT,
+	IMPACT_CATEGORY_TABLE_IMPORT,
+	IMPACT_CATEGORY_UNIT_EXPORT,
+} from "../../../utils/endpoints.util";
+import { ApolloQueryResult } from "@apollo/client";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { FormattedMessage } from "react-intl";
+import { useAuth } from "../../../contexts/userContext";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -93,6 +101,7 @@ function ImpactCategoryTableView({
 	removeFilterListElements,
 	impactCategoryEditAccess,
 	impactUnitFindAccess,
+	reftechImpactCategoryAndUnitTable,
 }: {
 	openDialogs: boolean[];
 	initialValues: IImpactCategoryData;
@@ -118,6 +127,7 @@ function ImpactCategoryTableView({
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	impactCategoryEditAccess: boolean;
 	impactUnitFindAccess: boolean;
+	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
@@ -140,6 +150,9 @@ function ImpactCategoryTableView({
 			))) ||
 			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 	}
+
+	const onImportImpactCategoryTableSuccess = () => reftechImpactCategoryAndUnitTable();
+	const { jwt } = useAuth();
 
 	return (
 		<>
@@ -176,6 +189,35 @@ function ImpactCategoryTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={() => (
+					<ImportExportTableMenu
+						tableName="Impact Category"
+						tableExportUrl={IMPACT_CATEGORY_TABLE_EXPORT}
+						tableImportUrl={IMPACT_CATEGORY_TABLE_IMPORT}
+						onImportTableSuccess={onImportImpactCategoryTableSuccess}
+						additionalMenuItems={[
+							{
+								children: (
+									<MenuItem
+										onClick={() =>
+											exportTable({
+												tableName: "Impact Category Unit Table",
+												jwt: jwt as string,
+												tableExportUrl: IMPACT_CATEGORY_UNIT_EXPORT,
+											})
+										}
+									>
+										<FormattedMessage
+											defaultMessage="Export Impact Category Unit Table"
+											id="export_table"
+											description="export table as csv"
+										/>
+									</MenuItem>
+								),
+							},
+						]}
+					/>
+				)}
 			>
 				<ImpactCategoryDialog
 					formAction={FORM_ACTIONS.UPDATE}

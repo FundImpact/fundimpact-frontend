@@ -9,6 +9,8 @@ import {
 	Grid,
 	Box,
 	Chip,
+	Button,
+	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -47,6 +49,14 @@ import { SUSTAINABLE_DEVELOPMENT_GOALS_ACTIONS } from "../../../utils/access/mod
 import { ITableHeadings } from "../../../models";
 import { useDialogDispatch } from "../../../contexts/DialogContext";
 import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	IMPACT_CATEGORY_UNIT_EXPORT,
+	IMPACT_TARGET_PROJECTS_TABLE_EXPORT,
+	IMPACT_TARGET_PROJECTS_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
 
 enum tableHeaders {
 	name = 2,
@@ -432,6 +442,7 @@ export default function ImpactsTable() {
 		changePage,
 		countQueryLoading,
 		queryLoading,
+		queryRefetch: refetchImpactTargetProject,
 	} = pagination({
 		query: GET_IMPACT_TARGET_BY_PROJECT,
 		countQuery: GET_IMPACT_TARGETS_COUNT,
@@ -572,17 +583,44 @@ export default function ImpactsTable() {
 		/>
 	);
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	filteredImpactHeadings[filteredImpactHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				name: "",
-				target_value: "",
-				sustainable_development_goal: [],
-				impact_category_org: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={impactTargetInputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					name: "",
+					target_value: "",
+					sustainable_development_goal: [],
+					impact_category_org: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={impactTargetInputFields}
+			/>
+			<ImportExportTableMenu
+				tableName="Impact"
+				tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+				tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+				onImportTableSuccess={() => refetchImpactTargetProject?.()}
+			>
+				<>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "Impact category unit",
+								jwt: jwt as string,
+								tableExportUrl: `${IMPACT_CATEGORY_UNIT_EXPORT}`,
+							})
+						}
+					>
+						Impact Category Unit Export
+					</Button>
+				</>
+			</ImportExportTableMenu>
+		</>
 	);
 
 	return (

@@ -39,6 +39,7 @@ function ImpactUnitContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechImpactCategoryAndUnitTable,
 }: {
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	count: number;
@@ -58,6 +59,7 @@ function ImpactUnitContainer({
 			[key: string]: string;
 		}>
 	>;
+	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	const selectedImpactUnit = useRef<IImpactUnitData | null>(null);
 	const [getImpactCategoryUnit, { data: impactCategoryUnitList }] = useLazyQuery(
@@ -129,6 +131,7 @@ function ImpactUnitContainer({
 			removeFilterListElements={removeFilterListElements}
 			impactUnitEditAccess={impactUnitEditAccess}
 			impactCategoryFindAccess={impactCategoryFindAccess}
+			reftechImpactCategoryAndUnitTable={reftechImpactCategoryAndUnitTable}
 		/>
 	);
 }

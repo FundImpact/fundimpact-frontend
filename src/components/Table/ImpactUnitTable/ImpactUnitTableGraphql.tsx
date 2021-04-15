@@ -98,6 +98,7 @@ function ImpactUnitTableGraphql({
 		queryData: impactUnitList,
 		queryLoading: impactUnitLoading,
 		countQueryLoading: impactUnitCountLoading,
+		queryRefetch: impactUnitRefetch,
 	} = pagination({
 		countQuery: GET_IMPACT_UNIT_COUNT_BY_ORG,
 		countFilter: queryFilter,
@@ -113,6 +114,7 @@ function ImpactUnitTableGraphql({
 		queryData: impactCategoryUnitList,
 		queryLoading: impactCategoryUnitLoading,
 		countQueryLoading: impactCategoryUnitCountLoading,
+		queryRefetch: impactCategoryUnitRefetch,
 	} = pagination({
 		countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
 		countFilter: nestedTableQueryFilter,
@@ -121,6 +123,11 @@ function ImpactUnitTableGraphql({
 		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
 		fireRequest: Boolean(impactCategoryId && !collapsableTable),
 	});
+
+	const reftechImpactCategoryAndUnitTable = () => {
+		impactUnitRefetch?.();
+		impactCategoryUnitRefetch?.();
+	};
 
 	const impactCategoryUnitListMemoized = useMemo(
 		() =>
@@ -160,6 +167,7 @@ function ImpactUnitTableGraphql({
 			filterList={nestedTableFilterList}
 			setFilterList={setNestedTableFilterList}
 			removeFilterListElements={removeNestedFilterListElements}
+			reftechImpactCategoryAndUnitTable={reftechImpactCategoryAndUnitTable}
 		/>
 	);
 }

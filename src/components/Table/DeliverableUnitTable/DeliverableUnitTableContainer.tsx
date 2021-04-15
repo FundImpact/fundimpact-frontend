@@ -5,7 +5,7 @@ import {
 	IDeliverableUnit,
 } from "../../../models/deliverable/deliverableUnit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useLazyQuery } from "@apollo/client";
+import { ApolloQueryResult, useLazyQuery } from "@apollo/client";
 import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
 import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
@@ -44,6 +44,7 @@ function DeliverableUnitTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechDeliverableCategoryAndUnitTable,
 }: {
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	count: number;
@@ -63,6 +64,7 @@ function DeliverableUnitTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
 
@@ -138,6 +140,7 @@ function DeliverableUnitTableContainer({
 			removeFilterListElements={removeFilterListElements}
 			deliverableUnitEditAccess={deliverableUnitEditAccess}
 			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
+			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
 		/>
 	);
 }

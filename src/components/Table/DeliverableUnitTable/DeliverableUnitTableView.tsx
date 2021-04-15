@@ -10,11 +10,22 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import DeliverableCategory from "../DeliverableCategoryTable";
 import { deliverableUnitTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, Button, useTheme, MenuItem } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import {
+	DELIVERABLE_CATEGORY_TABLE_EXPORT,
+	DELIVERABLE_CATEGORY_UNIT_EXPORT,
+	DELIVERABLE_UNIT_TABLE_EXPORT,
+	DELIVERABLE_UNIT_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import { ApolloQueryResult } from "@apollo/client";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
+import { FormattedMessage } from "react-intl";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -98,6 +109,7 @@ function DeliverableUnitTableView({
 	removeFilterListElements,
 	deliverableUnitEditAccess,
 	deliverableCategoryFindAccess,
+	reftechDeliverableCategoryAndUnitTable,
 }: {
 	filterList: {
 		[key: string]: string;
@@ -123,6 +135,7 @@ function DeliverableUnitTableView({
 	toggleDialogs: (index: number, val: boolean) => void;
 	deliverableUnitEditAccess: boolean;
 	deliverableCategoryFindAccess: boolean;
+	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
 	const dashboardData = useDashBoardData();
 
@@ -131,6 +144,8 @@ function DeliverableUnitTableView({
 			deliverableUnitTableEditMenu = ["Edit Deliverable Unit"];
 		}
 	}, [deliverableUnitEditAccess]);
+
+	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
 	{
 		(!collapsableTable &&
@@ -147,6 +162,9 @@ function DeliverableUnitTableView({
 			))) ||
 			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 	}
+
+	const theme = useTheme();
+	const { jwt } = useAuth();
 
 	return (
 		<>
@@ -183,6 +201,51 @@ function DeliverableUnitTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={() => (
+					<ImportExportTableMenu
+						tableName="Delivarable Unit"
+						tableExportUrl={DELIVERABLE_UNIT_TABLE_EXPORT}
+						tableImportUrl={DELIVERABLE_UNIT_TABLE_IMPORT}
+						onImportTableSuccess={onDeliverableUnitTableRefetchSuccess}
+						additionalMenuItems={[
+							{
+								children: (
+									<MenuItem
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable Category Unit Table",
+												jwt: jwt as string,
+												tableExportUrl: DELIVERABLE_CATEGORY_UNIT_EXPORT,
+											})
+										}
+									>
+										<FormattedMessage
+											defaultMessage="Export Deliverable Category Unit Table"
+											id="export_table"
+											description="export table as csv"
+										/>
+									</MenuItem>
+								),
+							},
+						]}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Deliverable Category",
+										jwt: jwt as string,
+										tableExportUrl: `${DELIVERABLE_CATEGORY_TABLE_EXPORT}`,
+									})
+								}
+							>
+								Deliverable Category Export
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<DeliverableUnit
 					type={DELIVERABLE_ACTIONS.UPDATE}

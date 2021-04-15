@@ -6,7 +6,7 @@ import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { budgetLineItemTableHeading as tableHeadings } from "../../constants";
 import { getTodaysDate, uploadPercentageCalculator } from "../../../../utils";
-import { Box, Chip, Avatar, Grid } from "@material-ui/core";
+import { Box, Chip, Avatar, Grid, useTheme, Button } from "@material-ui/core";
 import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
 import { userHasAccess, MODULE_CODES } from "../../../../utils/access";
@@ -25,6 +25,14 @@ import { CircularPercentage } from "../../../commons";
 import { ApolloQueryResult } from "@apollo/client";
 import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../../reducers/notificationReducer";
+import ImportExportTableMenu from "../../../ImportExportTableMenu";
+import {
+	BUDGET_LINE_ITEM_TABLE_EXPORT,
+	BUDGET_LINE_ITEM_TABLE_IMPORT,
+	GRANT_PERIOD_TABLE_EXPORT,
+} from "../../../../utils/endpoints.util";
+import { exportTable } from "../../../../utils/importExportTable.utils";
+import { useAuth } from "../../../../contexts/userContext";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -248,6 +256,7 @@ function BudgetLineItemTableView({
 	financialYearOrgHash,
 	currency,
 	refetchOnSuccess,
+	budgetTargetId,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -270,6 +279,7 @@ function BudgetLineItemTableView({
 			[key: string]: string | string[];
 		}>
 	>;
+	budgetTargetId: string;
 	inputFields: any[];
 	grantPeriodHash: { [key: string]: string };
 	annualYearHash: { [key: string]: string };
@@ -333,20 +343,47 @@ function BudgetLineItemTableView({
 		[annualYearFindAccess, financialYearOrgFindAccess, financialYearDonorFindAccess]
 	);
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				note: "",
-				amount: "",
-				grant_periods_project: [],
-				annual_year: [],
-				fy_org: [],
-				fy_donor: [],
-				reporting_date: "",
-			}}
-			setFilterList={setFilterList}
-			inputFields={inputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					note: "",
+					amount: "",
+					grant_periods_project: [],
+					annual_year: [],
+					fy_org: [],
+					fy_donor: [],
+					reporting_date: "",
+				}}
+				setFilterList={setFilterList}
+				inputFields={inputFields}
+			/>
+			<ImportExportTableMenu
+				tableName="Budget Lineitem"
+				tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
+				tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
+				onImportTableSuccess={() => refetchOnSuccess?.()}
+			>
+				<>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1) }}
+						onClick={() =>
+							exportTable({
+								tableName: "grant period",
+								jwt: jwt as string,
+								tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+							})
+						}
+					>
+						Grant Period Export
+					</Button>
+				</>
+			</ImportExportTableMenu>
+		</>
 	);
 
 	const [budgetTracklineFileArray, setBudgetTracklineFileArray] = React.useState<AttachFile[]>(

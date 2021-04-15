@@ -8,11 +8,19 @@ import ImpactCategory from "../ImpactCategoryTable";
 import { impactUnitTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import FilterList from "../../FilterList";
-import { Grid, Box, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, useTheme, Button, MenuItem } from "@material-ui/core";
 import { impactUnitInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import {
+	IMPACT_CATEGORY_TABLE_EXPORT,
+	IMPACT_CATEGORY_UNIT_EXPORT,
+	IMPACT_UNIT_TABLE_EXPORT,
+	IMPACT_UNIT_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import { useAuth } from "../../../contexts/userContext";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { FormattedMessage } from "react-intl";
 
 const rows = [
 	{
@@ -97,6 +105,7 @@ function ImpactUnitTableContainer({
 	removeFilterListElements,
 	impactUnitEditAccess,
 	impactCategoryFindAccess,
+	reftechImpactCategoryAndUnitTable,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -122,6 +131,7 @@ function ImpactUnitTableContainer({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	impactUnitEditAccess: boolean;
 	impactCategoryFindAccess: boolean;
+	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	useEffect(() => {
 		if (impactUnitEditAccess) {
@@ -145,6 +155,12 @@ function ImpactUnitTableContainer({
 			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 	}
 	const dashboardData = useDashBoardData();
+
+	const onImportUnitTableSuccess = () => reftechImpactCategoryAndUnitTable();
+
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	return (
 		<>
 			{!collapsableTable && (
@@ -180,6 +196,51 @@ function ImpactUnitTableContainer({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={() => (
+					<ImportExportTableMenu
+						tableName="Impact Unit"
+						tableExportUrl={IMPACT_UNIT_TABLE_EXPORT}
+						tableImportUrl={IMPACT_UNIT_TABLE_IMPORT}
+						onImportTableSuccess={onImportUnitTableSuccess}
+						additionalMenuItems={[
+							{
+								children: (
+									<MenuItem
+										onClick={() =>
+											exportTable({
+												tableName: "Impact Category Unit Table",
+												jwt: jwt as string,
+												tableExportUrl: IMPACT_CATEGORY_UNIT_EXPORT,
+											})
+										}
+									>
+										<FormattedMessage
+											defaultMessage="Export Impact Category Unit Table"
+											id="export_table"
+											description="export table as csv"
+										/>
+									</MenuItem>
+								),
+							},
+						]}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Impact Category",
+										jwt: jwt as string,
+										tableExportUrl: `${IMPACT_CATEGORY_TABLE_EXPORT}`,
+									})
+								}
+							>
+								Impact Category Export
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<ImpactUnitDialog
 					formAction={FORM_ACTIONS.UPDATE}

@@ -1,7 +1,7 @@
 import { FORM_ACTIONS } from "./constants";
 import { IOrganisation } from "./organisation/types";
 import { IProject } from "./project/project";
-import { MutableRefObject, ReactNode } from "react";
+import React, { MutableRefObject, ReactNode } from "react";
 
 export interface ISignUpStep {
 	label: string | JSX.Element;
@@ -192,6 +192,7 @@ export interface ICommonTable<T> {
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 	setOpenAttachFiles?: React.Dispatch<React.SetStateAction<any>>;
+	tableActionButton?: () => React.ReactElement;
 }
 
 export interface ITableHeadings {
