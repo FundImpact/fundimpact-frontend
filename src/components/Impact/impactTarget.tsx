@@ -378,9 +378,9 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const onDelete = async () => {
 		try {
 			const impactTargetValues = { ...initialValues };
-			delete impactTargetValues?.["id"];
-			delete impactTargetValues?.["impactCategory"];
-			delete impactTargetValues?.["impactUnit"];
+			delete impactTargetValues["id"];
+			delete impactTargetValues["impactCategory"];
+			delete impactTargetValues["impactUnit"];
 			await updateImpactTarget({
 				variables: {
 					id: initialValues?.id,

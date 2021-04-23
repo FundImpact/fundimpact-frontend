@@ -660,10 +660,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			delete deliverableTracklineValues["donors"];
 			delete deliverableTracklineValues["donorMapValues"];
 			!deliverableTracklineValues?.annual_year &&
-				delete (deliverableTracklineValues as any)?.["annual_year"];
+				delete (deliverableTracklineValues as any)["annual_year"];
 			!deliverableTracklineValues?.financial_year &&
-				delete (deliverableTracklineValues as any)?.["financial_year"];
-			delete deliverableTracklineValues?.["attachments"];
+				delete (deliverableTracklineValues as any)["financial_year"];
+			delete deliverableTracklineValues["attachments"];
 			await deleteDeliverableTrackLine({
 				variables: {
 					id: initialValues?.id,

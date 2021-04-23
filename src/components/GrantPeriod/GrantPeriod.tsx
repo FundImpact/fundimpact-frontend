@@ -335,8 +335,8 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 	const onDelete = async () => {
 		try {
 			const grantPeriodValues = { ...defaultValues };
-			delete grantPeriodValues?.["id"];
-			delete (grantPeriodValues as any)?.["__typename"];
+			delete grantPeriodValues["id"];
+			delete (grantPeriodValues as any)["__typename"];
 			await updateGrantPeriod({
 				variables: {
 					id: defaultValues?.id,

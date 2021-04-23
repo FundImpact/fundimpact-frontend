@@ -457,8 +457,8 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	const onDelete = async () => {
 		try {
 			const deliverableUnitValues = { ...initialValues };
-			delete deliverableUnitValues?.["id"];
-			delete deliverableUnitValues?.["deliverableCategory"];
+			delete deliverableUnitValues["id"];
+			delete deliverableUnitValues["deliverableCategory"];
 			await updateDeliverableUnit({
 				variables: {
 					id: initialValues?.id,
