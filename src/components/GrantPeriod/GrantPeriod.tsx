@@ -7,10 +7,10 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_GRANT_PERIOD } from "../../graphql";
 import { CREATE_GRANT_PERIOD, UPDATE_GRANT_PERIOD } from "../../graphql/grantPeriod/mutation";
 import { FETCH_GRANT_PERIODS } from "../../graphql/grantPeriod/query";
-import { FORM_ACTIONS } from "../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
 import { GrantPeriodDialogProps } from "../../models/grantPeriod/grantPeriodDialog";
 import { IGrantPeriod, DonorType } from "../../models/grantPeriod/grantPeriodForm";
-import { setSuccessNotification } from "../../reducers/notificationReducer";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import FormDialog from "../FormDialog";
 import { GranPeriodForm } from "../Forms/GrantPeriod/GranPeriod";
@@ -23,6 +23,7 @@ import { IGET_DONOR } from "../../models/donor/query";
 import { GET_PROJ_DONORS } from "../../graphql/project";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import DeleteModal from "../DeleteModal";
 
 const getDonors = ({
 	projectDonors,
@@ -120,7 +121,7 @@ const updateProjectDonorCache = ({
 	}
 };
 
-function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialogProps) {
+function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: GrantPeriodDialogProps) {
 	const dashboardData = useDashBoardData();
 	const apolloClient = useApolloClient();
 	const cache = apolloClient.cache;
@@ -330,6 +331,39 @@ function GrantPeriodDialog({ open, onClose, action, ...rest }: GrantPeriodDialog
 		defaultMessage: "Create Grant Period For Project",
 		description: `This text will be show on Grant Period form for subtitle`,
 	});
+
+	const onDelete = async () => {
+		try {
+			const grantPeriodValues = { ...defaultValues };
+			delete grantPeriodValues?.id;
+			delete (grantPeriodValues as any)?.__typename;
+			await updateGrantPeriod({
+				variables: {
+					id: defaultValues?.id,
+					input: {
+						...grantPeriodValues,
+						deleted: true,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Grant Period Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onClose();
+		}
+	};
+
+	if (dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				handleClose={onClose}
+				open={open}
+				title="Delete Grant Period"
+				onDeleteConformation={onDelete}
+			/>
+		);
+	}
 
 	return (
 		<div>

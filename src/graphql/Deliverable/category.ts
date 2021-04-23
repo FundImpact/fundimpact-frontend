@@ -24,6 +24,7 @@ export const GET_DELIVERABLE_ORG_CATEGORY = gql`
 					reg_type
 				}
 			}
+			deleted
 		}
 	}
 `;
@@ -63,6 +64,7 @@ export const UPDATE_DELIVERABLE_CATEGORY = gql`
 			name
 			description
 			code
+			deleted
 		}
 	}
 `;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import { IImpactCategoryData } from "../../../models/impact/impact";
 import ImpactUnit from "../ImpactUnitTable";
@@ -131,7 +131,7 @@ function ImpactCategoryTableView({
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
-			impactCategoryTableEditMenu = ["Edit Impact Category"];
+			impactCategoryTableEditMenu = ["Edit Impact Category", "Delete Impact Category"];
 		}
 	}, [impactCategoryEditAccess]);
 
@@ -219,12 +219,21 @@ function ImpactCategoryTableView({
 					/>
 				)}
 			>
-				<ImpactCategoryDialog
-					formAction={FORM_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					initialValues={initialValues}
-				/>
+				<>
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						initialValues={initialValues}
+					/>
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<ImpactUnit

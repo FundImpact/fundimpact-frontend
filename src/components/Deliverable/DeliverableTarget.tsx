@@ -28,9 +28,14 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-import { GET_ALL_DELIVERABLES_TARGET_AMOUNT } from "../../graphql/project";
+import {
+	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
+} from "../../graphql/project";
 import Deliverable from "./Deliverable";
 import DeliverableUnit from "./DeliverableUnit";
+import { DIALOG_TYPE } from "../../models/constants";
+import DeleteModal from "../DeleteModal";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -345,6 +350,60 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		return errors;
 	};
 	const intl = useIntl();
+	const onDelete = async () => {
+		try {
+			const deliverableTargetValues = { ...initialValues };
+			delete deliverableTargetValues?.id;
+			delete deliverableTargetValues?.deliverableCategory;
+			delete deliverableTargetValues?.deliverableUnit;
+			await updateDeliverableTarget({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...deliverableTargetValues,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { deliverableTargetProject: initialValues.id },
+						},
+					},
+					{
+						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Deliverable Target Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onCancel();
+		}
+	};
+
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				handleClose={onCancel}
+				open={props.open}
+				title="Delete Deliverable Target"
+				onDeleteConformation={onDelete}
+			/>
+		);
+	}
+
 	return (
 		<React.Fragment>
 			<FormDialog

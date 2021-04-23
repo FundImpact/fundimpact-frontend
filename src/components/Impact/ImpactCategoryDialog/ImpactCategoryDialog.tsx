@@ -23,11 +23,12 @@ import {
 	GET_IMPACT_CATEGORY_BY_ORG,
 	GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 } from "../../../graphql/Impact/query";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import { useLocation } from "react-router";
+import DeleteModal from "../../DeleteModal";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;
 
@@ -52,6 +53,7 @@ function ImpactCategoryDialog({
 	formAction,
 	initialValues: formValues,
 	organization,
+	dialogType,
 }: IImpactCategoryProps) {
 	const [createImpactCategoryOrgInput, { loading: creatingImpactCategory }] = useMutation(
 		CREATE_IMPACT_CATEGORY_ORG_INPUT
@@ -172,7 +174,40 @@ function ImpactCategoryDialog({
 			handleClose();
 		}
 	};
+
+	const onDelete = async () => {
+		try {
+			const impactCategoryValues = { ...initialValues };
+			delete impactCategoryValues?.id;
+			await updateImpactCategory({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...impactCategoryValues,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Impact Category Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
+	};
+
 	const intl = useIntl();
+
+	if (dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={open}
+				handleClose={handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Impact Category"
+			/>
+		);
+	}
 
 	return (
 		<FormDialog

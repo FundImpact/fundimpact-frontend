@@ -1,6 +1,7 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
 import { AttachFile } from "../AttachFile";
+import { DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTargetLine {
 	id?: number;
@@ -28,6 +29,7 @@ export type DeliverableTargetLineProps = {
 	reftechOnSuccess?: (
 		variables?: Partial<Record<string, any>> | undefined
 	) => Promise<ApolloQueryResult<any>>;
+	dialogType?: DIALOG_TYPE;
 } & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;

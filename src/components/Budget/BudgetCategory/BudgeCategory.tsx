@@ -15,7 +15,7 @@ import {
 import { IInputField } from "../../../models";
 import { IBudgetCategory, IBudgetCategoryProps } from "../../../models/budget";
 import { IGET_BUDGET_CATEGORY } from "../../../models/budget/query";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
@@ -25,6 +25,7 @@ import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedM
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
+import DeleteModal from "../../DeleteModal";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -48,6 +49,7 @@ function BudgetCategory({
 	initialValues: formValues,
 	formAction,
 	getCreatedBudgetCategory,
+	dialogType,
 }: IBudgetCategoryProps) {
 	const [createNewOrgBudgetCategory, { loading: creatingBudgetCategory }] = useMutation(
 		CREATE_ORG_BUDGET_CATEGORY
@@ -196,11 +198,34 @@ function BudgetCategory({
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Updation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget Category Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			handleClose();
 		}
 	};
+
+	const onDelete = async () => {
+		try {
+			const budgetCategoryValues = { ...initialValues };
+			delete budgetCategoryValues?.id;
+			await updateBudgetCategory({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...budgetCategoryValues,
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Budget Category Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
+	};
+
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
@@ -215,6 +240,17 @@ function BudgetCategory({
 		defaultMessage: "Create New Budget Category For Organization",
 		description: `This text will be show on create budget category form`,
 	});
+
+	if (dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={open}
+				handleClose={handleClose}
+				title="Budget Category"
+				onDeleteConformation={onDelete}
+			/>
+		);
+	}
 
 	return (
 		<>

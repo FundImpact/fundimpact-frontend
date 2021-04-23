@@ -28,7 +28,7 @@ import { impactUnitForm } from "./inputFields.json";
 import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm/commonForm";
 import { IImpactUnitProps, IImpactUnitData } from "../../../models/impact/impact";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import {
 	IGetImpactUnit,
 	IGetImpactCategoryUnit,
@@ -45,6 +45,7 @@ import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
 import { useLocation } from "react-router";
+import DeleteModal from "../../DeleteModal";
 
 let inputFields: any[] = impactUnitForm;
 
@@ -132,6 +133,7 @@ function ImpactUnitDialog({
 	formAction,
 	initialValues: formValues,
 	organization,
+	dialogType,
 }: IImpactUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -482,7 +484,44 @@ function ImpactUnitDialog({
 			});
 		} catch (err) {}
 	};
+
+	const onDelete = async () => {
+		try {
+			const impactUnitValues = { ...initialValues };
+			delete impactUnitValues?.id;
+			await updateImpactUnitsOrgInput({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						name: initialValues?.name,
+						code: initialValues?.code,
+						description: initialValues?.description,
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Impact Unit Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
+	};
+
 	const intl = useIntl();
+
+	if (dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={open}
+				handleClose={handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Impact Unit"
+			/>
+		);
+	}
+
 	return (
 		<FormDialog
 			handleClose={handleClose}

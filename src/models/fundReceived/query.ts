@@ -9,6 +9,7 @@ export interface IGet_Fund_Receipt_List {
 			id: string;
 			donor: { id: string; name: string };
 		};
+		deleted: boolean;
 	}[];
 }
 

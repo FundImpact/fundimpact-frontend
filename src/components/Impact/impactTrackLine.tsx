@@ -48,6 +48,8 @@ import ImpactTarget from "./impactTarget";
 import Donor from "../Donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../Project/Project";
+import DeleteModal from "../DeleteModal";
+import { DIALOG_TYPE } from "../../models/constants";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -342,6 +344,9 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			},
 		}
 	);
+	const [deleteImpactTrackLine, { loading: deleteImpactTrackLineLoading }] = useMutation(
+		UPDATE_IMPACT_TRACKLINE
+	);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
@@ -606,6 +611,50 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		}
 		return errors;
 	};
+
+	const onDelete = async () => {
+		try {
+			const reporting_date = new Date(initialValues?.reporting_date);
+			const impactTracklineValues = { ...initialValues, reporting_date };
+			delete impactTracklineValues?.id;
+			delete impactTracklineValues?.donors;
+			delete impactTracklineValues?.impactDonorMapValues;
+			!impactTracklineValues?.annual_year &&
+				delete (impactTracklineValues as any)?.annual_year;
+			!impactTracklineValues?.financial_year &&
+				delete (impactTracklineValues as any)?.financial_year;
+			delete impactTracklineValues?.attachments;
+			await deleteImpactTrackLine({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...impactTracklineValues,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: { impactTargetProject: initialValues?.impact_target_project },
+						},
+					},
+					{
+						query: GET_ALL_IMPACT_AMOUNT_SPEND,
+						variables: {
+							filter: { project: DashBoardData?.project?.id },
+						},
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Impact Line Item Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onCancel();
+		}
+	};
+
 	let basicForm = (
 		<CommonForm
 			{...{
@@ -619,6 +668,17 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 			}}
 		/>
 	);
+
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				handleClose={onCancel}
+				open={props.open}
+				title="Delete Impact Line Item"
+				onDeleteConformation={onDelete}
+			/>
+		);
+	}
 
 	return (
 		<React.Fragment>
@@ -673,7 +733,10 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				)}
 			</FormDialog>
 
-			{updateImpactTrackLineLoading || uploadMorphLoading || loading ? (
+			{updateImpactTrackLineLoading ||
+			uploadMorphLoading ||
+			deleteImpactTrackLineLoading ||
+			loading ? (
 				<FullScreenLoader />
 			) : null}
 			{openAttachFiles && (

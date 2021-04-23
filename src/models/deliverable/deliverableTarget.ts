@@ -1,4 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
+import { DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTarget {
 	id?: number;
@@ -15,6 +16,7 @@ export type DeliverableTargetProps = {
 	open: boolean;
 	handleClose: () => void;
 	project: number | undefined;
+	dialogType?: DIALOG_TYPE;
 } & (
 	| {
 			type: DELIVERABLE_ACTIONS.CREATE;

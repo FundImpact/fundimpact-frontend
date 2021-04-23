@@ -65,7 +65,12 @@ function ImpactUnitContainer({
 	const [getImpactCategoryUnit, { data: impactCategoryUnitList }] = useLazyQuery(
 		GET_IMPACT_CATEGORY_UNIT
 	);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditImpactUnitDialog = false,
+		openDeleteImpactUnitDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditImpactUnitDialog,
+		openDeleteImpactUnitDialog,
+	]);
 
 	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>

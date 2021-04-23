@@ -89,6 +89,7 @@ export const GET_CATEGORY_UNIT = gql`
 						reg_type
 					}
 				}
+				deleted
 			}
 			deliverable_units_org {
 				id
@@ -98,6 +99,7 @@ export const GET_CATEGORY_UNIT = gql`
 				unit_type
 				prefix_label
 				suffix_label
+				deleted
 				organization {
 					id
 					name
@@ -136,6 +138,7 @@ export const UPDATE_DELIVERABLE_CATEGPRY_UNIT = gql`
 				name
 				description
 				code
+				deleted
 				organization {
 					id
 					name
@@ -162,6 +165,7 @@ export const UPDATE_DELIVERABLE_CATEGPRY_UNIT = gql`
 				unit_type
 				prefix_label
 				suffix_label
+				deleted
 				organization {
 					id
 					name

@@ -25,6 +25,7 @@ export const GET_IMPACT_CATEGORY = gql`
 					reg_type
 				}
 			}
+			deleted
 		}
 	}
 `;

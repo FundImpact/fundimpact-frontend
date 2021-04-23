@@ -4,7 +4,7 @@ import { budgetCategoryHeading as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import { IBudgetCategory } from "../../../models/budget";
 import BudgetCategory from "../../Budget/BudgetCategory";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
@@ -71,7 +71,7 @@ function BudgetCategoryTableView({
 
 	useEffect(() => {
 		if (budgetCategoryEditAccess) {
-			budgetCategoryTableEditMenu = ["Edit Budget Category"];
+			budgetCategoryTableEditMenu = ["Edit Budget Category", "Delete Budget Category"];
 		}
 	}, [budgetCategoryEditAccess]);
 
@@ -100,12 +100,21 @@ function BudgetCategoryTableView({
 				/>
 			)}
 		>
-			<BudgetCategory
-				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => toggleDialogs(0, false)}
-				open={openDialogs[0]}
-				initialValues={initialValues}
-			/>
+			<>
+				<BudgetCategory
+					formAction={FORM_ACTIONS.UPDATE}
+					handleClose={() => toggleDialogs(0, false)}
+					open={openDialogs[0]}
+					initialValues={initialValues}
+				/>
+				<BudgetCategory
+					formAction={FORM_ACTIONS.UPDATE}
+					handleClose={() => toggleDialogs(1, false)}
+					open={openDialogs[1]}
+					initialValues={initialValues}
+					dialogType={DIALOG_TYPE.DELETE}
+				/>
+			</>
 		</CommonTable>
 	);
 }
