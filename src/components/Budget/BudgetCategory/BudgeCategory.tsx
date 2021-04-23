@@ -207,7 +207,7 @@ function BudgetCategory({
 	const onDelete = async () => {
 		try {
 			const budgetCategoryValues = { ...initialValues };
-			delete budgetCategoryValues?.id;
+			delete budgetCategoryValues["id"];
 			await updateBudgetCategory({
 				variables: {
 					id: initialValues?.id,
