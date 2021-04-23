@@ -631,7 +631,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					note: 1,
 				},
 			});
-			delete budgetLineItemValues?.id;
+			delete budgetLineItemValues["id"];
 			await updateProjectBudgetTracking({
 				variables: {
 					id: initialValues?.id,

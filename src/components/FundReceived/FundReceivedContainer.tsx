@@ -428,7 +428,7 @@ function FundReceivedContainer({
 	const onDelete = async () => {
 		try {
 			const fundReceivedValues = { ...initialValues };
-			delete fundReceivedValues?.id;
+			delete fundReceivedValues?.["id"];
 			await updateFundReceipt({
 				variables: {
 					id: initialValues?.id as string,

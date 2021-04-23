@@ -616,14 +616,14 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 		try {
 			const reporting_date = new Date(initialValues?.reporting_date);
 			const impactTracklineValues = { ...initialValues, reporting_date };
-			delete impactTracklineValues?.id;
-			delete impactTracklineValues?.donors;
-			delete impactTracklineValues?.impactDonorMapValues;
+			delete impactTracklineValues?.["id"];
+			delete impactTracklineValues?.["donors"];
+			delete impactTracklineValues?.["impactDonorMapValues"];
 			!impactTracklineValues?.annual_year &&
-				delete (impactTracklineValues as any)?.annual_year;
+				delete (impactTracklineValues as any)?.["annual_year"];
 			!impactTracklineValues?.financial_year &&
-				delete (impactTracklineValues as any)?.financial_year;
-			delete impactTracklineValues?.attachments;
+				delete (impactTracklineValues as any)?.["financial_year"];
+			delete impactTracklineValues?.["attachments"];
 			await deleteImpactTrackLine({
 				variables: {
 					id: initialValues?.id,

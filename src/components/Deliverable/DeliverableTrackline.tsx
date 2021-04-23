@@ -656,14 +656,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		try {
 			const reporting_date = new Date(initialValues?.reporting_date);
 			const deliverableTracklineValues = { ...initialValues, reporting_date };
-			delete deliverableTracklineValues?.id;
-			delete deliverableTracklineValues?.donors;
-			delete deliverableTracklineValues?.donorMapValues;
+			delete deliverableTracklineValues["id"];
+			delete deliverableTracklineValues["donors"];
+			delete deliverableTracklineValues["donorMapValues"];
 			!deliverableTracklineValues?.annual_year &&
-				delete (deliverableTracklineValues as any)?.annual_year;
+				delete (deliverableTracklineValues as any)?.["annual_year"];
 			!deliverableTracklineValues?.financial_year &&
-				delete (deliverableTracklineValues as any)?.financial_year;
-			delete deliverableTracklineValues?.attachments;
+				delete (deliverableTracklineValues as any)?.["financial_year"];
+			delete deliverableTracklineValues?.["attachments"];
 			await deleteDeliverableTrackLine({
 				variables: {
 					id: initialValues?.id,

@@ -353,9 +353,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const onDelete = async () => {
 		try {
 			const deliverableTargetValues = { ...initialValues };
-			delete deliverableTargetValues?.id;
-			delete deliverableTargetValues?.deliverableCategory;
-			delete deliverableTargetValues?.deliverableUnit;
+			delete deliverableTargetValues["id"];
+			delete deliverableTargetValues["deliverableCategory"];
+			delete deliverableTargetValues["deliverableUnit"];
 			await updateDeliverableTarget({
 				variables: {
 					id: initialValues?.id,

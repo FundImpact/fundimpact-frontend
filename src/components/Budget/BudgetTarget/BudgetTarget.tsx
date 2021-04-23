@@ -494,7 +494,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const onDelete = async () => {
 		try {
 			const budgetTargetValues = { ...initialValues };
-			delete budgetTargetValues?.id;
+			delete budgetTargetValues["id"];
 			await updateProjectBudgetTarget({
 				variables: {
 					id: initialValues?.id,

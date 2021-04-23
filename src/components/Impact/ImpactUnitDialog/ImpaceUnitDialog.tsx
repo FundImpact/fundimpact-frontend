@@ -488,7 +488,7 @@ function ImpactUnitDialog({
 	const onDelete = async () => {
 		try {
 			const impactUnitValues = { ...initialValues };
-			delete impactUnitValues?.id;
+			delete impactUnitValues?.["id"];
 			await updateImpactUnitsOrgInput({
 				variables: {
 					id: initialValues?.id,
