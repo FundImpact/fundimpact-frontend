@@ -13,6 +13,9 @@ import {
 	BUDGET_CATEGORY_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
 import { ApolloQueryResult, OperationVariables, useApolloClient } from "@apollo/client";
+import { Button, useTheme } from "@material-ui/core";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -75,6 +78,9 @@ function BudgetCategoryTableView({
 		}
 	}, [budgetCategoryEditAccess]);
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	return (
 		<CommonTable
 			tableHeadings={tableHeadings}
@@ -91,13 +97,28 @@ function BudgetCategoryTableView({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
-			tableActionButton={() => (
+			tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 				<ImportExportTableMenu
 					tableName="Budget Category"
 					tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
 					tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
 					onImportTableSuccess={onImportTableSuccess}
-				/>
+					importButtonOnly={importButtonOnly}
+				>
+					<Button
+						variant="outlined"
+						style={{ marginRight: theme.spacing(1), float: "right" }}
+						onClick={() =>
+							exportTable({
+								tableName: "Budget Category Template",
+								jwt: jwt as string,
+								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
+							})
+						}
+					>
+						Budget Category Template
+					</Button>
+				</ImportExportTableMenu>
 			)}
 		>
 			<>

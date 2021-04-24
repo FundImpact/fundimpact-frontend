@@ -222,6 +222,7 @@ function BudgetLineItemTableGraphql({
 			currency={currency?.currencyList[0]?.code || ""}
 			refetchOnSuccess={queryRefetch}
 			budgetTargetId={budgetTargetId}
+			donorCountryId={donor?.country?.id}
 		/>
 	);
 }

@@ -180,28 +180,6 @@ function FundReceivedTableView({
 				setFilterList={setFilterList}
 				inputFields={inputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Fund Received"
-				tableExportUrl={`${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={onImportFundReceivedTableSuccess}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Donors",
-								jwt: jwt as string,
-								tableExportUrl: `${DONOR_EXPORT}`,
-							})
-						}
-					>
-						Donor Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 	return (
@@ -235,6 +213,44 @@ function FundReceivedTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Fund Received"
+						tableExportUrl={`${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+						tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+						onImportTableSuccess={onImportFundReceivedTableSuccess}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donors",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Fund Receipt Template",
+										jwt: jwt as string,
+										tableExportUrl: `${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+									})
+								}
+							>
+								Fund Receipt Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					<FundReceived
