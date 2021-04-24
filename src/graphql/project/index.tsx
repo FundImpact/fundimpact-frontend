@@ -72,6 +72,7 @@ export const GET_PROJ_DONORS = gql`
 			donor {
 				id
 				name
+				deleted
 			}
 		}
 	}

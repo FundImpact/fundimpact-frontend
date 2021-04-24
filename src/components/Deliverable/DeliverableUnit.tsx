@@ -44,6 +44,8 @@ import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import Deliverable from "./Deliverable";
 import { useLocation } from "react-router";
+import DeleteModal from "../DeleteModal";
+import { DIALOG_TYPE } from "../../models/constants";
 
 interface IChangeDeliverableCategoryUnitStatusProps {
 	updateDeliverableCategoryUnit: (
@@ -451,8 +453,41 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 		}
 		return errors;
 	};
+
+	const onDelete = async () => {
+		try {
+			const deliverableUnitValues = { ...initialValues };
+			delete deliverableUnitValues["id"];
+			delete deliverableUnitValues["deliverableCategory"];
+			await updateDeliverableUnit({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...deliverableUnitValues,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Budget Category Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onCancel();
+		}
+	};
+
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				handleClose={onCancel}
+				onDeleteConformation={onDelete}
+				open={props.open}
+				title="Delete Deliverable Unit"
+			/>
+		);
+	}
 	return (
 		<React.Fragment>
 			<FormDialog

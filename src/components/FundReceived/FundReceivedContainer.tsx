@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import FormDialog from "../FormDialog";
-import { FORM_ACTIONS } from "../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
 import { useIntl, FormattedMessage } from "react-intl";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import CommonForm from "../CommonForm";
@@ -29,6 +29,7 @@ import {
 	ICreateProjectDonorVariables,
 } from "../../models/project/project";
 import { DonorType } from "../../models/fundReceived/conatsnt";
+import DeleteModal from "../DeleteModal";
 
 interface IFundReceivedContainerProps {
 	formAction: FORM_ACTIONS;
@@ -36,6 +37,7 @@ interface IFundReceivedContainerProps {
 	handleClose: () => void;
 	projectDonors: IGetProjectDonor["projectDonors"];
 	loading: boolean;
+	dialogType?: DIALOG_TYPE;
 	createFundReceipt: (
 		options?:
 			| MutationFunctionOptions<ICreateFundReceipt, ICreateFundReceiptVariables>
@@ -375,6 +377,7 @@ function FundReceivedContainer({
 	updateFundReceipt,
 	orgDonors,
 	createProjectDonor,
+	dialogType,
 }: IFundReceivedContainerProps) {
 	const dashboardData = useDashBoardData();
 	const intl = useIntl();
@@ -421,6 +424,46 @@ function FundReceivedContainer({
 		defaultMessage: "Report Fund Recevied For Project",
 		description: `This text will be show on create Fund Recevied form`,
 	});
+
+	const onDelete = async () => {
+		try {
+			const fundReceivedValues = { ...initialValues };
+			delete fundReceivedValues["id"];
+			await updateFundReceipt({
+				variables: {
+					id: initialValues?.id as string,
+					input: {
+						deleted: true,
+						...fundReceivedValues,
+						amount: Number(fundReceivedValues.amount),
+						project_donor: fundReceivedValues?.project_donor?.split?.("-")?.[0],
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_AMOUNT_RECEIVED,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Fund Receipt Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
+	};
+
+	if (dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={open}
+				handleClose={handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Fund Receipt"
+			/>
+		);
+	}
 
 	return (
 		<>

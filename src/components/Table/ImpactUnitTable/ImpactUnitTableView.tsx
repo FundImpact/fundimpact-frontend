@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IImpactUnitData } from "../../../models/impact/impact";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
@@ -135,7 +135,7 @@ function ImpactUnitTableContainer({
 }) {
 	useEffect(() => {
 		if (impactUnitEditAccess) {
-			impactUnitTableEditMenu = ["Edit Impact Unit"];
+			impactUnitTableEditMenu = ["Edit Impact Unit", "Delete Impact Unit"];
 		}
 	}, [impactUnitEditAccess]);
 
@@ -196,11 +196,12 @@ function ImpactUnitTableContainer({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
-				tableActionButton={() => (
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Impact Unit"
 						tableExportUrl={IMPACT_UNIT_TABLE_EXPORT}
 						tableImportUrl={IMPACT_UNIT_TABLE_IMPORT}
+						importButtonOnly={importButtonOnly}
 						onImportTableSuccess={onImportUnitTableSuccess}
 						additionalMenuItems={[
 							{
@@ -238,17 +239,40 @@ function ImpactUnitTableContainer({
 							>
 								Impact Category Export
 							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Impact Unit Template",
+										jwt: jwt as string,
+										tableExportUrl: `${IMPACT_UNIT_TABLE_EXPORT}?header=true`,
+									})
+								}
+							>
+								Impact Unit Template
+							</Button>
 						</>
 					</ImportExportTableMenu>
 				)}
 			>
-				<ImpactUnitDialog
-					formAction={FORM_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					initialValues={initialValues}
-					organization={dashboardData?.organization?.id || ""}
-				/>
+				<>
+					<ImpactUnitDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						initialValues={initialValues}
+						organization={dashboardData?.organization?.id || ""}
+					/>
+					<ImpactUnitDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						initialValues={initialValues}
+						organization={dashboardData?.organization?.id || ""}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<ImpactCategory

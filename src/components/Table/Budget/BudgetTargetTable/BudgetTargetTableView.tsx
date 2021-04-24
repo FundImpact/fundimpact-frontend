@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
-import { FORM_ACTIONS } from "../../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../../models/constants";
 import {
 	IBudgetTargetProjectResponse,
 	IGET_BUDGET_TARGET_PROJECT,
@@ -306,6 +306,7 @@ function BudgetTargetView({
 		if (budgetTargetLineItemCreateAccess) {
 			budgetTargetTableEditMenu[1] = "Report Expenditure";
 		}
+		budgetTargetTableEditMenu[2] = "Delete Budget Target";
 	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
 
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
@@ -320,41 +321,6 @@ function BudgetTargetView({
 				setFilterList={setFilterList}
 				inputFields={inputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Budget"
-				tableExportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={onImportBudgetTargetTableSuccess}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Budget category",
-								jwt: jwt as string,
-								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}`,
-							})
-						}
-					>
-						Budget Category Export
-					</Button>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Donor",
-								jwt: jwt as string,
-								tableExportUrl: `${DONOR_EXPORT}`,
-							})
-						}
-					>
-						Donor Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -397,6 +363,57 @@ function BudgetTargetView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Budget"
+						tableExportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+						tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+						onImportTableSuccess={onImportBudgetTargetTableSuccess}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Budget category",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}`,
+									})
+								}
+							>
+								Budget Category Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donor",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Budget Target Template",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+									})
+								}
+							>
+								Budget Target Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					<BudgetTarget
@@ -410,6 +427,13 @@ function BudgetTargetView({
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
+					/>
+					<BudgetTarget
+						open={openDialogs[2]}
+						handleClose={() => toggleDialogs(2, false)}
+						formAction={FORM_ACTIONS.UPDATE}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
 				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (

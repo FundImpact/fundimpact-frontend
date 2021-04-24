@@ -25,7 +25,7 @@ import {
 	IGET_BUDGET_TARCKING_LINE_ITEM,
 	IGET_BUDGET_TARGET_PROJECT,
 } from "../../../models/budget/query";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import {
 	setErrorNotification,
 	setSuccessNotification,
@@ -42,6 +42,7 @@ import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { Grid, Box, Typography, useTheme } from "@material-ui/core";
 import AmountSpent from "../../Table/Budget/BudgetTargetTable/AmountSpent";
 import { GET_PROJECT_AMOUNT_SPEND } from "../../../graphql/project";
+import DeleteModal from "../../DeleteModal";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -249,7 +250,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
-
+	console.log(`financialYearOrg`, financialYearOrg);
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
@@ -351,7 +352,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			getFinancialYearDonor({
 				variables: {
 					filter: {
-						country: selectedDonor.country.id,
+						country: selectedDonor?.country?.id,
 					},
 				},
 			});
@@ -621,6 +622,58 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	budgetLineitemFormInputFields[7].addNewClick = () => setOpenGrantPeriodDialog(true);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
 
+	const onDelete = async () => {
+		try {
+			const reporting_date = new Date(initialValues?.reporting_date);
+			const budgetLineItemValues = removeEmptyKeys({
+				objectToCheck: { ...initialValues },
+				keysToRemainUnchecked: {
+					note: 1,
+				},
+			});
+			delete budgetLineItemValues["id"];
+			await updateProjectBudgetTracking({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...budgetLineItemValues,
+						reporting_date,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+						variables: {
+							filter: {
+								budgetTargetsProject: initialValues?.budget_targets_project,
+							},
+						},
+					},
+					{
+						query: GET_PROJECT_AMOUNT_SPEND,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Budget Line Item Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
+	};
+
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={props.open}
+				handleClose={handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Budget Line Item"
+			/>
+		);
+	}
 	return (
 		<>
 			{/* <BudgetTarget

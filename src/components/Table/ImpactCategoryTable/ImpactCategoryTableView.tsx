@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import { IImpactCategoryData } from "../../../models/impact/impact";
 import ImpactUnit from "../ImpactUnitTable";
 import { impactCategoryTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Avatar, Chip, MenuItem } from "@material-ui/core";
+import { Grid, Box, Avatar, Chip, MenuItem, Button, useTheme } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
@@ -131,7 +131,7 @@ function ImpactCategoryTableView({
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
-			impactCategoryTableEditMenu = ["Edit Impact Category"];
+			impactCategoryTableEditMenu = ["Edit Impact Category", "Delete Impact Category"];
 		}
 	}, [impactCategoryEditAccess]);
 
@@ -153,6 +153,7 @@ function ImpactCategoryTableView({
 
 	const onImportImpactCategoryTableSuccess = () => reftechImpactCategoryAndUnitTable();
 	const { jwt } = useAuth();
+	const theme = useTheme();
 
 	return (
 		<>
@@ -189,11 +190,12 @@ function ImpactCategoryTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
-				tableActionButton={() => (
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Impact Category"
 						tableExportUrl={IMPACT_CATEGORY_TABLE_EXPORT}
 						tableImportUrl={IMPACT_CATEGORY_TABLE_IMPORT}
+						importButtonOnly={importButtonOnly}
 						onImportTableSuccess={onImportImpactCategoryTableSuccess}
 						additionalMenuItems={[
 							{
@@ -216,15 +218,38 @@ function ImpactCategoryTableView({
 								),
 							},
 						]}
-					/>
+					>
+						<Button
+							variant="outlined"
+							style={{ marginRight: theme.spacing(1), float: "right" }}
+							onClick={() =>
+								exportTable({
+									tableName: "Impact Category Template",
+									jwt: jwt as string,
+									tableExportUrl: `${IMPACT_CATEGORY_TABLE_EXPORT}?header=true`,
+								})
+							}
+						>
+							Impact Category Template
+						</Button>
+					</ImportExportTableMenu>
 				)}
 			>
-				<ImpactCategoryDialog
-					formAction={FORM_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					initialValues={initialValues}
-				/>
+				<>
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						initialValues={initialValues}
+					/>
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<ImpactUnit

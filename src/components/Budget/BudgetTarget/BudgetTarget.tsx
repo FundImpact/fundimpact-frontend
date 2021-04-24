@@ -14,7 +14,11 @@ import {
 	CREATE_PROJECT_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
-import { GET_PROJECT_BUDGET_AMOUNT, GET_PROJ_DONORS } from "../../../graphql/project";
+import {
+	GET_PROJECT_AMOUNT_SPEND,
+	GET_PROJECT_BUDGET_AMOUNT,
+	GET_PROJ_DONORS,
+} from "../../../graphql/project";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
 import { IBudgetTargetForm } from "../../../models/budget/budgetForm";
 import { FORM_ACTIONS } from "../../../models/budget/constants";
@@ -43,6 +47,8 @@ import {
 import { IGET_DONOR } from "../../../models/donor/query";
 import { CREATE_PROJECT_DONOR } from "../../../graphql/donor/mutation";
 import { FormikProps } from "formik";
+import DeleteModal from "../../DeleteModal";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum donorType {
 	project = "PROJECT'S DONOR",
@@ -485,9 +491,52 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	};
 
+	const onDelete = async () => {
+		try {
+			const budgetTargetValues = { ...initialValues };
+			delete budgetTargetValues["id"];
+			await updateProjectBudgetTarget({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						project: dashboardData?.project?.id,
+						...budgetTargetValues,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_PROJECT_BUDGET_AMOUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_PROJECT_AMOUNT_SPEND,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Budget Target Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
+	};
+
 	budgetTargetFormInputFields[3].addNewClick = () => setOpenBudgetCategoryDialog(true);
 	budgetTargetFormInputFields[4].addNewClick = () => setOpenDonorCreateDialog(true);
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.formAction);
+
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={props.open}
+				handleClose={props.handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Budget Target"
+			/>
+		);
+	}
 
 	return (
 		<>

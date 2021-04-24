@@ -26,6 +26,7 @@ import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { FormattedMessage } from "react-intl";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -141,7 +142,7 @@ function DeliverableUnitTableView({
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu = ["Edit Deliverable Unit"];
+			deliverableUnitTableEditMenu = ["Edit Deliverable Unit", "Delete Deliverable Unit"];
 		}
 	}, [deliverableUnitEditAccess]);
 
@@ -201,12 +202,13 @@ function DeliverableUnitTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
-				tableActionButton={() => (
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Delivarable Unit"
 						tableExportUrl={DELIVERABLE_UNIT_TABLE_EXPORT}
 						tableImportUrl={DELIVERABLE_UNIT_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableUnitTableRefetchSuccess}
+						importButtonOnly={importButtonOnly}
 						additionalMenuItems={[
 							{
 								children: (
@@ -243,17 +245,40 @@ function DeliverableUnitTableView({
 							>
 								Deliverable Category Export
 							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Deliverable Unit Template",
+										jwt: jwt as string,
+										tableExportUrl: `${DELIVERABLE_UNIT_TABLE_EXPORT}?header=true`,
+									})
+								}
+							>
+								Deliverable Unit Template
+							</Button>
 						</>
 					</ImportExportTableMenu>
 				)}
 			>
-				<DeliverableUnit
-					type={DELIVERABLE_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					data={initialValues}
-					organization={dashboardData?.organization?.id || ""}
-				/>
+				<>
+					<DeliverableUnit
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+						organization={dashboardData?.organization?.id || ""}
+					/>
+					<DeliverableUnit
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						data={initialValues}
+						organization={dashboardData?.organization?.id || ""}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />
 				)}

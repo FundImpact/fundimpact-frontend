@@ -21,9 +21,11 @@ export const UPDATE_FUND_RECEIPT = gql`
 			id
 			amount
 			reporting_date
+			deleted
 			project_donor {
 				donor {
 					name
+					deleted
 				}
 			}
 		}

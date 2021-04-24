@@ -37,3 +37,6 @@ export const GRANT_PERIOD_TABLE_IMPORT = `${REACT_APP_BASEURL}grant-periods-proj
 export const DELIVERABLE_CATEGORY_UNIT_EXPORT = `${REACT_APP_BASEURL}deliverable-category-units/export-table`;
 export const IMPACT_CATEGORY_UNIT_EXPORT = `${REACT_APP_BASEURL}impact-category-units/export-table`;
 export const DONOR_EXPORT = `${REACT_APP_BASEURL}donors/export-table`;
+export const SUSTAINABLE_DEVELOPMENT_GOALS_EXPORT = `${REACT_APP_BASEURL}sustainable-development-goals/export-table`;
+export const ANNUAL_YEAR_EXPORT = `${REACT_APP_BASEURL}annual-years/export-table`;
+export const FINANCIAL_YEAR_EXPORT = `${REACT_APP_BASEURL}financial-years/export-table`;

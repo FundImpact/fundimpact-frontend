@@ -41,6 +41,7 @@ export default function FITable({
 	setOrderBy,
 	noRowHeading,
 	rowHeading,
+	tableActionButton,
 }: {
 	tableHeading: ITableHeadings[];
 	rows: React.ReactNode[];
@@ -51,6 +52,11 @@ export default function FITable({
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 	noRowHeading?: string;
 	rowHeading?: string;
+	tableActionButton?: ({
+		importButtonOnly,
+	}: {
+		importButtonOnly?: boolean;
+	}) => React.ReactElement;
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
@@ -61,10 +67,17 @@ export default function FITable({
 				<Grid container>
 					{noRowHeading && (
 						<Grid item xs={12}>
-							<Box m={2} display="flex" justifyContent="center">
+							<Box
+								m={2}
+								display="flex"
+								justifyContent="center"
+								alignItems="center"
+								flexDirection="column"
+							>
 								<Typography variant="subtitle1" gutterBottom color="textSecondary">
 									{noRowHeading}
 								</Typography>
+								{tableActionButton?.({ importButtonOnly: true })}
 							</Box>
 						</Grid>
 					)}
@@ -82,7 +95,7 @@ export default function FITable({
 								<TableRow color="primary">
 									{rows &&
 										rows.length > 0 &&
-										tableHeading.map((heading) => (
+										tableHeading.map((heading, index) => (
 											<TableCell
 												className={tableStyles.th}
 												key={heading.label}
@@ -131,6 +144,10 @@ export default function FITable({
 														)}
 													</>
 												)}
+												{index === tableHeading?.length - 1 &&
+													tableActionButton?.({
+														importButtonOnly: false,
+													})}
 											</TableCell>
 										))}
 								</TableRow>

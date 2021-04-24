@@ -6,7 +6,7 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableUnitTable from "../DeliverableUnitTable";
 import { deliverableCategoryTableHeading as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Chip, Avatar, MenuItem } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, MenuItem, Button, useTheme } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableCategoryInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
@@ -19,6 +19,7 @@ import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { FormattedMessage } from "react-intl";
 import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -132,7 +133,10 @@ function DeliverableCategoryView({
 }) {
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu = ["Edit Deliverable Category"];
+			deliverableCategoryTableEditMenu = [
+				"Edit Deliverable Category",
+				"Delete Deliverble Category",
+			];
 		}
 	}, [deliverableCategoryEditAccess]);
 
@@ -155,6 +159,7 @@ function DeliverableCategoryView({
 	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
 	const { jwt } = useAuth();
+	const theme = useTheme();
 
 	return (
 		<>
@@ -191,7 +196,7 @@ function DeliverableCategoryView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
-				tableActionButton={() => (
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Delivarable Category"
 						tableExportUrl={DELIVERABLE_CATEGORY_TABLE_EXPORT}
@@ -218,15 +223,39 @@ function DeliverableCategoryView({
 								),
 							},
 						]}
-					/>
+						importButtonOnly={importButtonOnly}
+					>
+						<Button
+							variant="outlined"
+							style={{ marginRight: theme.spacing(1), float: "right" }}
+							onClick={() =>
+								exportTable({
+									tableName: "Deliverable Category Template",
+									jwt: jwt as string,
+									tableExportUrl: `${DELIVERABLE_CATEGORY_TABLE_EXPORT}?header=true`,
+								})
+							}
+						>
+							Deliverable Category Template
+						</Button>
+					</ImportExportTableMenu>
 				)}
 			>
-				<Deliverable
-					type={DELIVERABLE_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					data={initialValues}
-				/>
+				<>
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+					/>
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						data={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<DeliverableUnitTable rowId={rowData.id} collapsableTable={false} />

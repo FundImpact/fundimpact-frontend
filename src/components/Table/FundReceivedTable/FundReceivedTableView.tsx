@@ -4,7 +4,7 @@ import CommonTable from "../CommonTable";
 import { fundReceivedTableHeadings } from "../../Table/constants";
 import { getTodaysDate } from "../../../utils";
 import FundReceived from "../../FundReceived";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IFundReceivedForm } from "../../../models/fundReceived";
 import FilterList from "../../FilterList";
 import { Grid, Box, Chip, Avatar, Button, useTheme } from "@material-ui/core";
@@ -180,28 +180,6 @@ function FundReceivedTableView({
 				setFilterList={setFilterList}
 				inputFields={inputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Fund Received"
-				tableExportUrl={`${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={onImportFundReceivedTableSuccess}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Donors",
-								jwt: jwt as string,
-								tableExportUrl: `${DONOR_EXPORT}`,
-							})
-						}
-					>
-						Donor Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 	return (
@@ -226,7 +204,7 @@ function FundReceivedTableView({
 				rows={rows}
 				selectedRow={selectedFundReceipt}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Fund Receipt"]}
+				editMenuName={["Edit Fund Receipt", "Delete Fund Receipt"]}
 				collapsableTable={false}
 				changePage={changePage}
 				loading={loading}
@@ -235,13 +213,60 @@ function FundReceivedTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Fund Received"
+						tableExportUrl={`${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+						tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+						onImportTableSuccess={onImportFundReceivedTableSuccess}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donors",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Fund Receipt Template",
+										jwt: jwt as string,
+										tableExportUrl: `${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+									})
+								}
+							>
+								Fund Receipt Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
-				<FundReceived
-					formAction={FORM_ACTIONS.UPDATE}
-					open={openDialogs[0]}
-					handleClose={() => toggleDialogs(0, false)}
-					initialValues={initialValues}
-				/>
+				<>
+					<FundReceived
+						formAction={FORM_ACTIONS.UPDATE}
+						open={openDialogs[0]}
+						handleClose={() => toggleDialogs(0, false)}
+						initialValues={initialValues}
+					/>
+					<FundReceived
+						formAction={FORM_ACTIONS.UPDATE}
+						open={openDialogs[1]}
+						handleClose={() => toggleDialogs(1, false)}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 			</CommonTable>
 		</>
 	);

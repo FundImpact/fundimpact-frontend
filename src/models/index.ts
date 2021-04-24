@@ -192,7 +192,11 @@ export interface ICommonTable<T> {
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 	setOpenAttachFiles?: React.Dispatch<React.SetStateAction<any>>;
-	tableActionButton?: () => React.ReactElement;
+	tableActionButton?: ({
+		importButtonOnly,
+	}: {
+		importButtonOnly?: boolean;
+	}) => React.ReactElement;
 }
 
 export interface ITableHeadings {

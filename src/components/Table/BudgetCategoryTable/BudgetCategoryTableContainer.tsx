@@ -40,7 +40,12 @@ function BudgetCategoryTableContainer({
 		| undefined;
 }) {
 	const selectedBudgetCategory = useRef<Required<IBudgetCategory> | null>(null);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditBudgetCategoryDialog = false,
+		openDeleteBudgetCategoryDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditBudgetCategoryDialog,
+		openDeleteBudgetCategoryDialog,
+	]);
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>

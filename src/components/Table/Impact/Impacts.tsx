@@ -54,9 +54,11 @@ import {
 	IMPACT_CATEGORY_UNIT_EXPORT,
 	IMPACT_TARGET_PROJECTS_TABLE_EXPORT,
 	IMPACT_TARGET_PROJECTS_TABLE_IMPORT,
+	SUSTAINABLE_DEVELOPMENT_GOALS_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	name = 2,
@@ -108,6 +110,7 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
 	const [impactTargetData, setImpactTargetData] = useState<IImpactTarget | null>();
+	const [openDeleteImpactTargetDialog, setOpenDeleteImpactTargetDialog] = useState(false);
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setImpactTargetMenuAnchor(event.currentTarget);
 	};
@@ -199,6 +202,27 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 						/>
 					</MenuItem>
 				)}
+				<MenuItem
+					onClick={() => {
+						setImpactTargetData({
+							id: impactTarget.id,
+							name: impactTarget.name,
+							target_value: impactTarget.target_value,
+							description: impactTarget.description,
+							impactCategory:
+								impactTarget.impact_category_unit?.impact_category_org.id,
+							impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
+							impact_category_unit: impactTarget.impact_category_unit.id,
+							sustainable_development_goal:
+								impactTarget.sustainable_development_goal?.id,
+							project: impactTarget.project.id,
+						});
+						setOpenDeleteImpactTargetDialog(true);
+						handleMenuClose();
+					}}
+				>
+					<FormattedMessage id="deleteTargetMenu" defaultMessage="Delete Target" />
+				</MenuItem>
 				{impactTracklineCreateAccess && (
 					<MenuItem
 						onClick={() => {
@@ -217,10 +241,16 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 			{impactTargetData && (
 				<ImpactTarget
 					open={impactTargetData !== null}
-					handleClose={() => setImpactTargetData(null)}
+					handleClose={() => {
+						setImpactTargetData(null);
+						setOpenDeleteImpactTargetDialog(false);
+					}}
 					type={IMPACT_ACTIONS.UPDATE}
 					data={impactTargetData}
 					project={impactTarget.project.id}
+					dialogType={
+						openDeleteImpactTargetDialog ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
 				/>
 			)}
 		</>
@@ -598,28 +628,6 @@ export default function ImpactsTable() {
 				setFilterList={setFilterList}
 				inputFields={impactTargetInputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Impact"
-				tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={() => refetchImpactTargetProject?.()}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Impact category unit",
-								jwt: jwt as string,
-								tableExportUrl: `${IMPACT_CATEGORY_UNIT_EXPORT}`,
-							})
-						}
-					>
-						Impact Category Unit Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -653,6 +661,61 @@ export default function ImpactsTable() {
 							impactTracklineFindAccess
 						)}
 						showNestedTable={impactTracklineFindAccess}
+						tableActionButton={({
+							importButtonOnly,
+						}: {
+							importButtonOnly?: boolean;
+						}) => (
+							<ImportExportTableMenu
+								tableName="Impact"
+								tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+								tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+								onImportTableSuccess={() => refetchImpactTargetProject?.()}
+								importButtonOnly={importButtonOnly}
+							>
+								<>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Impact category unit",
+												jwt: jwt as string,
+												tableExportUrl: `${IMPACT_CATEGORY_UNIT_EXPORT}`,
+											})
+										}
+									>
+										Impact Category Unit Export
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Sustainable Development Goals",
+												jwt: jwt as string,
+												tableExportUrl: SUSTAINABLE_DEVELOPMENT_GOALS_EXPORT,
+											})
+										}
+									>
+										Sustainable Development Goals
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1), float: "right" }}
+										onClick={() =>
+											exportTable({
+												tableName: "Impact Target Template",
+												jwt: jwt as string,
+												tableExportUrl: `${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+											})
+										}
+									>
+										Impact Target Template
+									</Button>
+								</>
+							</ImportExportTableMenu>
+						)}
 					/>
 				</>
 			)}

@@ -83,6 +83,7 @@ export const UPDATE_IMAPACT_TARGET = gql`
 			name
 			target_value
 			description
+			deleted
 			project {
 				id
 				name
@@ -91,12 +92,14 @@ export const UPDATE_IMAPACT_TARGET = gql`
 			}
 			impact_category_unit {
 				id
+				status
 				impact_category_org {
 					id
 					name
 					shortname
 					code
 					description
+					deleted
 					organization {
 						id
 						name
@@ -123,6 +126,7 @@ export const UPDATE_IMAPACT_TARGET = gql`
 					target_unit
 					prefix_label
 					suffix_label
+					deleted
 					organization {
 						id
 						name
@@ -158,6 +162,7 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 			name
 			target_value
 			description
+			deleted
 			project {
 				id
 				name
@@ -172,12 +177,14 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 			}
 			impact_category_unit {
 				id
+				status
 				impact_category_org {
 					id
 					name
 					shortname
 					code
 					description
+					deleted
 					organization {
 						id
 						name
@@ -204,6 +211,7 @@ export const GET_IMPACT_TARGET_BY_PROJECT = gql`
 					target_unit
 					prefix_label
 					suffix_label
+					deleted
 					organization {
 						id
 						name

@@ -55,7 +55,12 @@ function DeliverableCategoryTableContainer({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const editDeliverableCategory = false,
+		deleteDeliverableCategory = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		editDeliverableCategory,
+		deleteDeliverableCategory,
+	]);
 	const selectedDeliverableCategory = useRef<IDeliverableCategoryData | null>(null);
 
 	const dashboardData = useDashBoardData();

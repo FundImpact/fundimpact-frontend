@@ -23,6 +23,8 @@ import { IGetDeliverableCategory } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import { useLocation } from "react-router";
+import { DIALOG_TYPE } from "../../models/constants";
+import DeleteModal from "../DeleteModal";
 function getInitialValues(props: DeliverableProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -148,6 +150,27 @@ function Deliverable(props: DeliverableProps) {
 		}
 	};
 
+	const onDelete = async () => {
+		try {
+			const deliverableCategoryValues = { ...initialValues };
+			delete deliverableCategoryValues["id"];
+			await updateDeliverableCategory({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...deliverableCategoryValues,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Deliverable Category Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onCancel();
+		}
+	};
+
 	const validate = (values: IDeliverable) => {
 		let errors: Partial<IDeliverable> = {};
 		if (!values.name && !values.name.length) {
@@ -159,6 +182,18 @@ function Deliverable(props: DeliverableProps) {
 		return errors;
 	};
 	const intl = useIntl();
+
+	if (props?.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				open={props.open}
+				handleClose={onCancel}
+				onDeleteConformation={onDelete}
+				title="Delete Deliverable Category"
+			/>
+		);
+	}
+
 	return (
 		<React.Fragment>
 			<FormDialog

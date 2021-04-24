@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import IndividualTableContainer from "./IndividualTableContainer";
 import pagination from "../../../hooks/pagination";
-import {
-	GET_ORG_BUDGET_CATEGORY_COUNT,
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-} from "../../../graphql/Budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import IndividualTableGraphql from ".";
 import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../../graphql/Individual";

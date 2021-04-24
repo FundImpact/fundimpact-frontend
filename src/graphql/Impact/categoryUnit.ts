@@ -11,6 +11,7 @@ export const GET_IMPACT_CATEGORY_UNIT = gql`
 				shortname
 				code
 				description
+				deleted
 			}
 			impact_units_org {
 				id
@@ -20,6 +21,7 @@ export const GET_IMPACT_CATEGORY_UNIT = gql`
 				target_unit
 				prefix_label
 				suffix_label
+				deleted
 			}
 		}
 	}
