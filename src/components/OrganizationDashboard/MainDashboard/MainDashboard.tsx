@@ -51,17 +51,17 @@ const chipArray = ({
 	return elementList.map((element, index) => (
 		<Box key={index} m={1}>
 			<Chip
-				label={element}
 				avatar={
 					<Avatar
 						style={{
-							width: "30px",
 							height: "30px",
+							width: "30px",
 						}}
 					>
 						<span>{name}</span>
 					</Avatar>
 				}
+				label={element}
 				onDelete={() => removeChip(index)}
 			/>
 		</Box>
