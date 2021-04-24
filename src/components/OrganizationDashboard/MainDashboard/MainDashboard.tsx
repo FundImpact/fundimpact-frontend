@@ -41,14 +41,14 @@ let annualYearHash = {};
 
 const chipArray = ({
 	removeChip,
-	elementList,
+	elements,
 	name,
 }: {
-	elementList: string[];
+	elements: string[];
 	removeChip: (index: number) => void;
 	name: string;
 }) => {
-	return elementList.map((element, index) => (
+	return elements.map((element, index) => (
 		<Box key={index} m={1}>
 			<Chip
 				avatar={
@@ -84,7 +84,7 @@ const createChipArray = ({
 	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
 		if (filterListObjectKeyValuePair[0] === "donor") {
 			return chipArray({
-				elementList: filterListObjectKeyValuePair[1].map((ele) => donorHash[ele]),
+				elements: filterListObjectKeyValuePair[1].map((ele) => donorHash[ele]),
 				name: "do",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
@@ -93,7 +93,7 @@ const createChipArray = ({
 		}
 		if (filterListObjectKeyValuePair[0] === "financial_year") {
 			return chipArray({
-				elementList: filterListObjectKeyValuePair[1].map((ele) => financialYearHash[ele]),
+				elements: filterListObjectKeyValuePair[1].map((ele) => financialYearHash[ele]),
 				name: "fy",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
@@ -102,7 +102,7 @@ const createChipArray = ({
 		}
 		if (filterListObjectKeyValuePair[0] === "annual_year") {
 			return chipArray({
-				elementList: filterListObjectKeyValuePair[1].map((ele) => annualYearHash[ele]),
+				elements: filterListObjectKeyValuePair[1].map((ele) => annualYearHash[ele]),
 				name: "ay",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
