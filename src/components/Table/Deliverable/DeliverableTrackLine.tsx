@@ -57,6 +57,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	date = 1,
@@ -118,6 +119,7 @@ function EditDeliverableTrackLineIcon({
 			donor: { id: string; name: string; country: { id: string; name: string } };
 		}[]
 	>([]);
+	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 
 	const { data } = useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
@@ -213,6 +215,31 @@ function EditDeliverableTrackLineIcon({
 						/>
 					</MenuItem>
 				)}
+				<MenuItem
+					onClick={() => {
+						setDeliverableTracklineData({
+							id: deliverableTrackline?.id,
+							deliverable_target_project:
+								deliverableTrackline.deliverable_target_project?.id,
+							annual_year: deliverableTrackline.annual_year?.id,
+							reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
+							value: deliverableTrackline?.value,
+							note: deliverableTrackline?.note,
+							financial_year: deliverableTrackline.financial_year?.id,
+							donors: tracklineDonors,
+							donorMapValues: tracklineDonorsMapValues,
+							attachments: deliverableTrackline.attachments,
+						});
+						setOpenDeleteDeliverableLineItem(true);
+						handleMenuClose();
+					}}
+				>
+					<FormattedMessage
+						id="deleteAchievementMenu"
+						defaultMessage="Delete Achievement"
+						description="This text will be show on deliverable or impact target table for edit achievement menu"
+					/>
+				</MenuItem>
 				{deliverableTracklineEditAccess && (
 					<MenuItem
 						onClick={() => {
@@ -232,12 +259,18 @@ function EditDeliverableTrackLineIcon({
 			{deliverableTracklineData && (
 				<DeliverableTrackline
 					open={deliverableTracklineData !== null}
-					handleClose={() => setDeliverableTracklineData(null)}
+					handleClose={() => {
+						setDeliverableTracklineData(null);
+						setOpenDeleteDeliverableLineItem(false);
+					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
 					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}
+					dialogType={
+						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
 				/>
 			)}
 			{openAttachFiles && deliverableTracklineFileArray && (

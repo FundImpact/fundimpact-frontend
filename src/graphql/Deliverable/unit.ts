@@ -41,6 +41,7 @@ export const GET_DELIVERABLE_UNIT_BY_ORG = gql`
 			unit_type
 			prefix_label
 			suffix_label
+			deleted
 		}
 	}
 `;
@@ -55,6 +56,7 @@ export const UPDATE_DELIVERABLE_UNIT_ORG = gql`
 			unit_type
 			prefix_label
 			suffix_label
+			deleted
 		}
 	}
 `;

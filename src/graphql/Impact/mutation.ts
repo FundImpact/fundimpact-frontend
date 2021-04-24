@@ -91,6 +91,7 @@ export const UPDATE_IMPACT_UNIT_ORG = gql`
 			target_unit
 			prefix_label
 			suffix_label
+			deleted
 		}
 	}
 `;
@@ -103,6 +104,7 @@ export const UPDATE_IMPACT_CATEGORY_ORG = gql`
 			code
 			shortname
 			description
+			deleted
 		}
 	}
 `;

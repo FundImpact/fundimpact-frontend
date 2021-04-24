@@ -15,5 +15,10 @@ export enum Entity_Name {
 	donor = "donor",
 }
 
+export enum DIALOG_TYPE {
+	FORM = "FORM",
+	DELETE = "DELETE",
+}
+
 export const primaryColor = "#5567FF";
 export const secondaryColor = "#14BB4C";

@@ -58,6 +58,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	name = 2,
@@ -109,6 +110,7 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 	const [impactTargetMenuAnchor, setImpactTargetMenuAnchor] = useState<null | HTMLElement>(null);
 	const [impactTargetLineDialog, setImpactTargetLineDialog] = useState<boolean>();
 	const [impactTargetData, setImpactTargetData] = useState<IImpactTarget | null>();
+	const [openDeleteImpactTargetDialog, setOpenDeleteImpactTargetDialog] = useState(false);
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setImpactTargetMenuAnchor(event.currentTarget);
 	};
@@ -200,6 +202,27 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 						/>
 					</MenuItem>
 				)}
+				<MenuItem
+					onClick={() => {
+						setImpactTargetData({
+							id: impactTarget.id,
+							name: impactTarget.name,
+							target_value: impactTarget.target_value,
+							description: impactTarget.description,
+							impactCategory:
+								impactTarget.impact_category_unit?.impact_category_org.id,
+							impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
+							impact_category_unit: impactTarget.impact_category_unit.id,
+							sustainable_development_goal:
+								impactTarget.sustainable_development_goal?.id,
+							project: impactTarget.project.id,
+						});
+						setOpenDeleteImpactTargetDialog(true);
+						handleMenuClose();
+					}}
+				>
+					<FormattedMessage id="deleteTargetMenu" defaultMessage="Delete Target" />
+				</MenuItem>
 				{impactTracklineCreateAccess && (
 					<MenuItem
 						onClick={() => {
@@ -218,10 +241,16 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 			{impactTargetData && (
 				<ImpactTarget
 					open={impactTargetData !== null}
-					handleClose={() => setImpactTargetData(null)}
+					handleClose={() => {
+						setImpactTargetData(null);
+						setOpenDeleteImpactTargetDialog(false);
+					}}
 					type={IMPACT_ACTIONS.UPDATE}
 					data={impactTargetData}
 					project={impactTarget.project.id}
+					dialogType={
+						openDeleteImpactTargetDialog ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
 				/>
 			)}
 		</>

@@ -52,7 +52,12 @@ function ImpactCategoryTableContainer({
 	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	const selectedImpactCategory = useRef<IImpactCategoryData | null>(null);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditImpactCategoryDialog = false,
+		openDeleteImpactCategoryDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditImpactCategoryDialog,
+		openDeleteImpactCategoryDialog,
+	]);
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>

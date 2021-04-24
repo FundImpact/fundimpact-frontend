@@ -35,6 +35,7 @@ import {
 } from "../../../../utils/endpoints.util";
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../../models/constants";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -306,7 +307,11 @@ function BudgetLineItemTableView({
 
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
-			budgetLineItemTableEditMenu = ["Edit Budget Line Item", "View Documents"];
+			budgetLineItemTableEditMenu = [
+				"Edit Budget Line Item",
+				"Delete Budget Line Item",
+				"View Documents",
+			];
 		}
 	}, [budgetLineItemEditAccess]);
 
@@ -507,6 +512,16 @@ function BudgetLineItemTableView({
 							formAction={FORM_ACTIONS.UPDATE}
 							initialValues={initialValues}
 							refetchOnSuccess={refetchOnSuccess}
+						/>
+					)}
+					{openDialogs[1] && (
+						<BudgetLineitem
+							open={openDialogs[1]}
+							handleClose={() => toggleDialogs(1, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+							refetchOnSuccess={refetchOnSuccess}
+							dialogType={DIALOG_TYPE.DELETE}
 						/>
 					)}
 					{openAttachFiles && (

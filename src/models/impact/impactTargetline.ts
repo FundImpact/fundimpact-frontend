@@ -1,6 +1,7 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { IMPACT_ACTIONS } from "../../components/Impact/constants";
 import { AttachFile } from "../AttachFile";
+import { DIALOG_TYPE } from "../constants";
 
 export interface IImpactTargetLine {
 	id?: number;
@@ -28,6 +29,7 @@ export type ImpactTargetLineProps = {
 	reftechOnSuccess?: (
 		variables?: Partial<Record<string, any>> | undefined
 	) => Promise<ApolloQueryResult<any>>;
+	dialogType?: DIALOG_TYPE;
 } & (
 	| {
 			type: IMPACT_ACTIONS.CREATE;

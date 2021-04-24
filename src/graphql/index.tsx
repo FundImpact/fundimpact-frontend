@@ -174,6 +174,7 @@ export const GET_PROJECT_DONORS = gql`
 					id
 					name
 				}
+				deleted
 			}
 			project {
 				id
@@ -192,7 +193,9 @@ export const GET_GRANT_PERIOD = gql`
 			start_date
 			end_date
 			description
+			deleted
 			donor {
+				deleted
 				id
 				name
 				short_name

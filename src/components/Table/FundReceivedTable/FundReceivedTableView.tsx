@@ -4,7 +4,7 @@ import CommonTable from "../CommonTable";
 import { fundReceivedTableHeadings } from "../../Table/constants";
 import { getTodaysDate } from "../../../utils";
 import FundReceived from "../../FundReceived";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IFundReceivedForm } from "../../../models/fundReceived";
 import FilterList from "../../FilterList";
 import { Grid, Box, Chip, Avatar, Button, useTheme } from "@material-ui/core";
@@ -204,7 +204,7 @@ function FundReceivedTableView({
 				rows={rows}
 				selectedRow={selectedFundReceipt}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Fund Receipt"]}
+				editMenuName={["Edit Fund Receipt", "Delete Fund Receipt"]}
 				collapsableTable={false}
 				changePage={changePage}
 				loading={loading}
@@ -252,12 +252,21 @@ function FundReceivedTableView({
 					</ImportExportTableMenu>
 				)}
 			>
-				<FundReceived
-					formAction={FORM_ACTIONS.UPDATE}
-					open={openDialogs[0]}
-					handleClose={() => toggleDialogs(0, false)}
-					initialValues={initialValues}
-				/>
+				<>
+					<FundReceived
+						formAction={FORM_ACTIONS.UPDATE}
+						open={openDialogs[0]}
+						handleClose={() => toggleDialogs(0, false)}
+						initialValues={initialValues}
+					/>
+					<FundReceived
+						formAction={FORM_ACTIONS.UPDATE}
+						open={openDialogs[1]}
+						handleClose={() => toggleDialogs(1, false)}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 			</CommonTable>
 		</>
 	);

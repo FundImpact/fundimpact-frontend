@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
-import { FORM_ACTIONS } from "../../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../../models/constants";
 import {
 	IBudgetTargetProjectResponse,
 	IGET_BUDGET_TARGET_PROJECT,
@@ -306,6 +306,7 @@ function BudgetTargetView({
 		if (budgetTargetLineItemCreateAccess) {
 			budgetTargetTableEditMenu[1] = "Report Expenditure";
 		}
+		budgetTargetTableEditMenu[2] = "Delete Budget Target";
 	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
 
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
@@ -426,6 +427,13 @@ function BudgetTargetView({
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
+					/>
+					<BudgetTarget
+						open={openDialogs[2]}
+						handleClose={() => toggleDialogs(2, false)}
+						formAction={FORM_ACTIONS.UPDATE}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
 				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (

@@ -3,6 +3,7 @@ import { IBudgetTargetForm, IBudgetTrackingLineitemForm } from "./budgetForm";
 import { AttachFile } from "../AttachFile";
 import { ApolloQueryResult } from "@apollo/client";
 import { IGET_BUDGET_TARGET_PROJECT } from "./query";
+import { DIALOG_TYPE } from "../constants";
 
 export interface IBudgetCategory {
 	id?: string;
@@ -39,11 +40,13 @@ export type IBudgetTargetProjectProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetTargetForm;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
+			dialogType?: DIALOG_TYPE;
 	  };
 
 export type IBudgetLineitemProps =
@@ -52,6 +55,7 @@ export type IBudgetLineitemProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetTrackingLineitem;
+			dialogType?: DIALOG_TYPE;
 			refetchOnSuccess:
 				| ((
 						variables?: Partial<Record<string, any>> | undefined
@@ -63,6 +67,7 @@ export type IBudgetLineitemProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IBudgetTrackingLineitemForm;
+			dialogType?: DIALOG_TYPE;
 	  };
 
 export type IBudgetCategoryProps =
@@ -72,6 +77,7 @@ export type IBudgetCategoryProps =
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetCategory;
 			getCreatedBudgetCategory?: (budgetCategory: IBudgetCategory) => void;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
 			open: boolean;
@@ -79,4 +85,5 @@ export type IBudgetCategoryProps =
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IBudgetCategory;
 			getCreatedBudgetCategory?: (budgetCategory: IBudgetCategory) => void;
+			dialogType?: DIALOG_TYPE;
 	  };

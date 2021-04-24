@@ -57,7 +57,12 @@ function FundReceivedTableContainer({
 		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditFundReceiptDialog = false,
+		openDeleteFundReceiptDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditFundReceiptDialog,
+		openDeleteFundReceiptDialog,
+	]);
 	const selectedFundReceipt = useRef<IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null>(
 		null
 	);

@@ -57,6 +57,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	date = 1,
@@ -156,6 +157,7 @@ function EditImpactTargetLineIcon({
 	const dashBoardData = useDashBoardData();
 	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
 	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
+	const [openDeleteImpactTracklineDialog, setOpenDeleteImpactTracklineDialog] = useState(false);
 
 	return (
 		<>
@@ -200,6 +202,29 @@ function EditImpactTargetLineIcon({
 						/>
 					</MenuItem>
 				)}
+				<MenuItem
+					onClick={() => {
+						setImpactTargetLineData({
+							id: impactTargetLine.id,
+							impact_target_project: impactTargetLine.impact_target_project?.id,
+							annual_year: impactTargetLine.annual_year?.id,
+							reporting_date: getTodaysDate(impactTargetLine?.reporting_date),
+							value: impactTargetLine?.value,
+							note: impactTargetLine?.note,
+							financial_year: impactTargetLine.financial_year?.id,
+							donors: impactTracklineDonors,
+							impactDonorMapValues: impactTracklineDonorsMapValues,
+							attachments: impactTargetLine.attachments,
+						});
+						setOpenDeleteImpactTracklineDialog(true);
+						handleMenuClose();
+					}}
+				>
+					<FormattedMessage
+						id="deleteAchievementMenu"
+						defaultMessage="Delete Achievement"
+					/>
+				</MenuItem>
 				{impactTracklineEditAccess && (
 					<MenuItem
 						onClick={() => {
@@ -219,12 +244,18 @@ function EditImpactTargetLineIcon({
 			{impactTargetLineData && (
 				<ImpactTrackLine
 					open={impactTargetLineData !== null}
-					handleClose={() => setImpactTargetLineData(null)}
+					handleClose={() => {
+						setImpactTargetLineData(null);
+						setOpenDeleteImpactTracklineDialog(false);
+					}}
 					type={IMPACT_ACTIONS.UPDATE}
 					data={impactTargetLineData}
 					impactTarget={impactTargetLine.impact_target_project.id}
 					alreadyMappedDonorsIds={impactTracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}
+					dialogType={
+						openDeleteImpactTracklineDialog ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
 				/>
 			)}
 			{impactOpenAttachFiles && impactTracklineFileArray && (

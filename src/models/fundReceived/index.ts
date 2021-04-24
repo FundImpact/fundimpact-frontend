@@ -1,10 +1,11 @@
-import { FORM_ACTIONS } from "../constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 
 export interface IFundReceived {
 	amount: number;
 	id?: string;
 	project_donor: string;
 	reporting_date: string;
+	deleted?: boolean;
 }
 
 export interface IFundReceivedForm extends Omit<IFundReceived, "amount"> {
@@ -17,10 +18,12 @@ export type IFundReceivedProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IFundReceivedForm;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IFundReceivedForm;
+			dialogType?: DIALOG_TYPE;
 	  };

@@ -80,7 +80,14 @@ function BudgetTargetTableContainer({
 		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false]);
+	const openEditBudgetTargetDialog = false,
+		openReportBudgetLineItemDialog = false,
+		openDeleteBudgetTargetDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditBudgetTargetDialog,
+		openReportBudgetLineItemDialog,
+		openDeleteBudgetTargetDialog,
+	]);
 	const selectedBudgetTarget = useRef<IBudgetTargetProjectResponse | null>(null);
 
 	const toggleDialogs = (index: number, val: boolean) => {
