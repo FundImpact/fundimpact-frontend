@@ -9,9 +9,11 @@ export const GET_GRANT_PERIODS_PROJECT_LIST = gql`
 			start_date
 			end_date
 			description
+			deleted
 			donor {
 				id
 				name
+				deleted
 			}
 			project {
 				id
@@ -28,6 +30,7 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 			budget_targets_project {
 				id
 				name
+				deleted
 			}
 			amount
 			note
@@ -57,6 +60,7 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				ext
 				created_at
 			}
+			deleted
 		}
 	}
 `;
@@ -79,6 +83,7 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 			budget_category_organization {
 				id
 				name
+				deleted
 			}
 			description
 			total_target_amount
@@ -89,6 +94,7 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 					id
 				}
 			}
+			deleted
 		}
 	}
 `;
@@ -112,6 +118,7 @@ export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
 			name
 			code
 			description
+			deleted
 		}
 	}
 `;

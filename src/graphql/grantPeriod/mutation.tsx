@@ -30,9 +30,11 @@ export const UPDATE_GRANT_PERIOD = gql`
 			start_date
 			end_date
 			description
+			deleted
 			donor {
 				id
 				name
+				deleted
 			}
 			project {
 				id

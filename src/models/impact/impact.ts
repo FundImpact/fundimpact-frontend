@@ -1,4 +1,4 @@
-import { FORM_ACTIONS } from "../constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 import { IImpactUnitFormInput } from "./impactForm";
 
 export interface IImpactCategory {
@@ -34,9 +34,11 @@ export type IImpactCategoryProps =
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IImpactCategory;
 			organization?: string | number;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
 			open: boolean;
+			dialogType?: DIALOG_TYPE;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IImpactCategory;
@@ -50,6 +52,7 @@ export type IImpactUnitProps =
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IImpactUnitFormInput;
 			organization?: string | number;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
 			open: boolean;
@@ -57,4 +60,5 @@ export type IImpactUnitProps =
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IImpactUnitFormInput;
 			organization?: string | number;
+			dialogType?: DIALOG_TYPE;
 	  };

@@ -61,9 +61,11 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 			amount
 			note
 			reporting_date
+			deleted
 			budget_targets_project {
 				id
 				name
+				deleted
 			}
 			annual_year {
 				id
@@ -75,6 +77,7 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 			}
 			grant_periods_project {
 				id
+				deleted
 				name
 			}
 			fy_donor {
@@ -105,6 +108,7 @@ export const UPDATE_ORG_BUDGET_CATEGORY = gql`
 			name
 			code
 			description
+			deleted
 		}
 	}
 `;

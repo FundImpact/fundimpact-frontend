@@ -8,6 +8,7 @@ export const GET_IMPACT_CATEGORY_BY_ORG = gql`
 			code
 			description
 			shortname
+			deleted
 		}
 	}
 `;
@@ -34,6 +35,7 @@ export const GET_IMPACT_UNIT_BY_ORG = gql`
 			target_unit
 			prefix_label
 			suffix_label
+			deleted
 		}
 	}
 `;

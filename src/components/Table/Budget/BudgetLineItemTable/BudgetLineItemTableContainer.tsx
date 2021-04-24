@@ -73,7 +73,12 @@ function BudgetLineItemTableContainer({
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const editBudgetLineItem = false,
+		deleteBudgetLineItem = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		editBudgetLineItem,
+		deleteBudgetLineItem,
+	]);
 	const selectedBudgetLineItem = useRef<IBUDGET_LINE_ITEM_RESPONSE | null>(null);
 
 	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {

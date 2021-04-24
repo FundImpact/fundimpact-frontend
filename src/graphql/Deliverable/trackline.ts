@@ -98,18 +98,22 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 			value
 			note
 			reporting_date
+			deleted
 			deliverable_target_project {
 				id
 				name
 				description
 				target_value
+				deleted
 				deliverable_category_unit {
 					id
+					status
 					deliverable_category_org {
 						id
 						name
 						code
 						description
+						deleted
 						organization {
 							id
 							name
@@ -136,6 +140,7 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 						unit_type
 						prefix_label
 						suffix_label
+						deleted
 					}
 				}
 				project {
@@ -191,16 +196,19 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 			value
 			note
 			reporting_date
+			deleted
 			deliverable_target_project {
 				id
 				name
 				description
 				target_value
 				deliverable_category_unit {
+					status
 					deliverable_units_org {
 						name
 					}
 				}
+				deleted
 			}
 			annual_year {
 				id
@@ -276,6 +284,7 @@ export const CREATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 						id
 						name
 					}
+					deleted
 				}
 			}
 			grant_periods_project {
@@ -338,6 +347,7 @@ export const UPDATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 						id
 						name
 					}
+					deleted
 				}
 			}
 			grant_periods_project {
@@ -375,8 +385,10 @@ export const GET_DELIVERABLE_LINEITEM_FYDONOR = gql`
 				note
 				value
 				reporting_date
+				deleted
 				deliverable_target_project {
 					id
+					deleted
 				}
 				annual_year {
 					id

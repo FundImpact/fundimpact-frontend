@@ -56,6 +56,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	name = 2,
@@ -105,6 +106,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
 	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
+	const [openDeleteDeliverableTarget, setOpenDeleteDeliverableTarget] = useState(false);
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setMenuAnchor(event.currentTarget);
 	};
@@ -211,14 +213,44 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						/>
 					</MenuItem>
 				)}
+				<MenuItem
+					onClick={() => {
+						setTargetData({
+							id: deliverableTarget.id,
+							name: deliverableTarget.name,
+							target_value: deliverableTarget.target_value,
+							description: deliverableTarget.description,
+							deliverableCategory:
+								deliverableTarget.deliverable_category_unit
+									?.deliverable_category_org?.id,
+							deliverableUnit:
+								deliverableTarget.deliverable_category_unit?.deliverable_units_org
+									?.id,
+							deliverable_category_unit:
+								deliverableTarget.deliverable_category_unit.id,
+							project: deliverableTarget.project.id,
+						});
+						handleMenuClose();
+						setOpenDeleteDeliverableTarget(true);
+					}}
+				>
+					<FormattedMessage
+						id="deleteDeliverableTarget"
+						defaultMessage="Delete Deliverable Target"
+					/>
+				</MenuItem>
 			</Menu>
 			{targetData && (
 				<DeliverableTarget
 					open={targetData !== null}
-					handleClose={() => setTargetData(null)}
+					handleClose={() => {
+						setTargetData(null);
+						setOpenDeleteDeliverableTarget(false);
+					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={targetData}
 					project={deliverableTarget.project.id}
+					dialogType={openDeleteDeliverableTarget ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
 				/>
 			)}
 		</>

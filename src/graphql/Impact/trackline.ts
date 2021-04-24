@@ -111,11 +111,13 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 			id
 			value
 			note
+			deleted
 			impact_target_project {
 				id
 				name
 				target_value
 				description
+				deleted
 				project {
 					id
 					name
@@ -124,12 +126,14 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 				}
 				impact_category_unit {
 					id
+					status
 					impact_category_org {
 						id
 						name
 						shortname
 						code
 						description
+						deleted
 						organization {
 							id
 							name
@@ -156,6 +160,7 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 						target_unit
 						prefix_label
 						suffix_label
+						deleted
 						organization {
 							id
 							name
@@ -201,6 +206,7 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 				short_name
 				start_date
 				end_date
+				deleted
 				project {
 					id
 					name
@@ -222,11 +228,13 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 			value
 			note
 			reporting_date
+			deleted
 			impact_target_project {
 				id
 				name
 				target_value
 				description
+				deleted
 				project {
 					id
 					name
@@ -235,12 +243,14 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 				}
 				impact_category_unit {
 					id
+					status
 					impact_category_org {
 						id
 						name
 						shortname
 						code
 						description
+						deleted
 						organization {
 							id
 							name
@@ -267,6 +277,7 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 						target_unit
 						prefix_label
 						suffix_label
+						deleted
 						organization {
 							id
 							name
@@ -449,8 +460,10 @@ export const GET_IMPACT_LINEITEM_FYDONOR = gql`
 				note
 				reporting_date
 				value
+				deleted
 				impact_target_project {
 					id
+					deleted
 				}
 				annual_year {
 					id
@@ -471,6 +484,7 @@ export const GET_IMPACT_LINEITEM_FYDONOR = gql`
 						id
 						name
 					}
+					deleted
 				}
 			}
 			financial_year {

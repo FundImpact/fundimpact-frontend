@@ -1,4 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
+import { DIALOG_TYPE } from "../constants";
 
 export interface IDeliverable {
 	id?: number;
@@ -18,12 +19,14 @@ export type DeliverableProps =
 			open: boolean;
 			handleClose: () => void;
 			organization: number | string | undefined;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverable;
 			open: boolean;
 			handleClose: () => void;
+			dialogType?: DIALOG_TYPE;
 	  };
 
 // workspaces: NonNullable < Pick < IWorkspace, "id" | ("name" >> []);

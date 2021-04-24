@@ -19,6 +19,7 @@ import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { FormattedMessage } from "react-intl";
 import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -132,7 +133,10 @@ function DeliverableCategoryView({
 }) {
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu = ["Edit Deliverable Category"];
+			deliverableCategoryTableEditMenu = [
+				"Edit Deliverable Category",
+				"Delete Deliverble Category",
+			];
 		}
 	}, [deliverableCategoryEditAccess]);
 
@@ -221,12 +225,21 @@ function DeliverableCategoryView({
 					/>
 				)}
 			>
-				<Deliverable
-					type={DELIVERABLE_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					data={initialValues}
-				/>
+				<>
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+					/>
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						data={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<DeliverableUnitTable rowId={rowData.id} collapsableTable={false} />

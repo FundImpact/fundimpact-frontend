@@ -31,7 +31,7 @@ import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { FETCH_GRANT_PERIODS } from "../../../graphql/grantPeriod/query";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
 import { resolveJSON } from "../../../utils/jsonUtils";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
@@ -51,6 +51,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
+import DeleteModal from "../../DeleteModal";
 
 const useStyles = makeStyles({
 	table: {
@@ -75,6 +76,7 @@ interface ISImpleTableProps {
 	data: { [key: string]: string | number }[];
 	editGrantPeriod: (value: any) => void;
 	children: React.ReactNode;
+	deleteGrantPeriod: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const chipArr = ({
@@ -106,7 +108,13 @@ const chipArr = ({
 	));
 };
 
-function SimpleTable({ headers, data, editGrantPeriod, children }: ISImpleTableProps) {
+function SimpleTable({
+	headers,
+	data,
+	editGrantPeriod,
+	children,
+	deleteGrantPeriod,
+}: ISImpleTableProps) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
 
@@ -183,6 +191,19 @@ function SimpleTable({ headers, data, editGrantPeriod, children }: ISImpleTableP
 												description="This text will be show on menus for EDIT"
 											/>
 										</MenuItem>
+										<MenuItem
+											onClick={() => {
+												editGrantPeriod(data[index]);
+												closeMenuItems(index);
+												deleteGrantPeriod(true);
+											}}
+										>
+											<FormattedMessage
+												id="deleteGrantPeriod"
+												defaultMessage="Delete"
+												description="This text will be show on menus for DELETE"
+											/>
+										</MenuItem>
 									</SimpleMenu>
 								)}
 							</TableCell>
@@ -254,6 +275,7 @@ const getDefaultFilterList = () => ({
 
 export default function GrantPeriodTable() {
 	const apolloClient = useApolloClient();
+	const [deleteGrantPeriod, setDeleteGrantPeriod] = useState<boolean>(false);
 	const [queryFilter, setQueryFilter] = useState({});
 	let [getProjectGrantPeriods, { loading, data, refetch: refetchGrantPeriods }] = useLazyQuery(
 		FETCH_GRANT_PERIODS,
@@ -384,6 +406,7 @@ export default function GrantPeriodTable() {
 							// console.log(`grantPeriodToEdit`, newObj);
 							setGrantPeriodDialog(newObj);
 						}}
+						deleteGrantPeriod={setDeleteGrantPeriod}
 					>
 						<FilterList
 							initialValues={{
@@ -420,9 +443,13 @@ export default function GrantPeriodTable() {
 					</SimpleTable>
 					<GrantPeriodDialog
 						open={!!grantPeriodToEdit}
-						onClose={() => setGrantPeriodDialog(null)}
+						onClose={() => {
+							setGrantPeriodDialog(null);
+							setDeleteGrantPeriod(false);
+						}}
 						action={FORM_ACTIONS.UPDATE}
 						initialValues={(grantPeriodToEdit as any) as IGrantPeriod}
+						dialogType={deleteGrantPeriod ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
 					/>
 				</>
 			) : (
