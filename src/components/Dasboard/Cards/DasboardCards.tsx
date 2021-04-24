@@ -143,14 +143,6 @@ export default function DashboardCard(props: CardProps) {
 			financialYearHash = mapIdToName(data.financialYearList, financialYearHash);
 		},
 	});
-	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST, {
-		onCompleted: (data) => {
-			annualYearHash = mapIdToName(data.annualYearList, annualYearHash);
-		},
-		onError: (err) => {
-			console.error(err);
-		},
-	});
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -163,6 +155,15 @@ export default function DashboardCard(props: CardProps) {
 			});
 		}
 	}, [dashboardData, getFinancialYearOrg]);
+
+	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST, {
+		onCompleted: (data) => {
+			annualYearHash = mapIdToName(data.annualYearList, annualYearHash);
+		},
+		onError: (err) => {
+			console.error(err);
+		},
+	});
 
 	useEffect(() => {
 		getAnnualYears();
