@@ -40,12 +40,12 @@ let financialYearHash = {};
 let annualYearHash = {};
 
 const chipArray = ({
+	removeChip,
 	elementList,
 	name,
-	removeChip,
 }: {
-	removeChip: (index: number) => void;
 	elementList: string[];
+	removeChip: (index: number) => void;
 	name: string;
 }) => {
 	return elementList.map((element, index) => (
@@ -157,6 +157,12 @@ export default function MainOrganizationDashboard() {
 		},
 	});
 
+	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS, {
+		onCompleted: (data) => {
+			financialYearHash = mapIdToName(data.financialYearList, financialYearHash);
+		},
+	});
+
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getOrganizationDonors({
@@ -169,11 +175,6 @@ export default function MainOrganizationDashboard() {
 		}
 	}, [dashboardData, getOrganizationDonors]);
 
-	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS, {
-		onCompleted: (data) => {
-			financialYearHash = mapIdToName(data.financialYearList, financialYearHash);
-		},
-	});
 	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST, {
 		onCompleted: (data) => {
 			annualYearHash = mapIdToName(data.annualYearList, annualYearHash);
