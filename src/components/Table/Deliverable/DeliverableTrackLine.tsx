@@ -636,8 +636,6 @@ export default function DeliverablesTrackLineTable({
 								Grant Period
 							</Button>
 							<Button
-								variant="outlined"
-								style={{ marginRight: theme.spacing(1) }}
 								onClick={() =>
 									exportTable({
 										tableName: "Annual Year",
@@ -645,6 +643,8 @@ export default function DeliverablesTrackLineTable({
 										tableExportUrl: ANNUAL_YEAR_EXPORT,
 									})
 								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
 							>
 								Annual Year
 							</Button>
