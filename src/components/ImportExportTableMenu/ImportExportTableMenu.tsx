@@ -1,4 +1,12 @@
-import { Box, CircularProgress, IconButton, Input, InputLabel, MenuItem } from "@material-ui/core";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	IconButton,
+	Input,
+	InputLabel,
+	MenuItem,
+} from "@material-ui/core";
 import React, { useRef, useState } from "react";
 import { useAuth } from "../../contexts/userContext";
 import SimpleMenu from "../Menu/Menu";
@@ -18,6 +26,7 @@ const ImportExportTableMenu = ({
 	onImportTableSuccess,
 	children,
 	additionalMenuItems = [],
+	importButtonOnly,
 }: {
 	tableName: string;
 	tableExportUrl: string;
@@ -27,6 +36,7 @@ const ImportExportTableMenu = ({
 	additionalMenuItems?: {
 		children: JSX.Element;
 	}[];
+	importButtonOnly?: boolean;
 }) => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>(false);
@@ -103,20 +113,32 @@ const ImportExportTableMenu = ({
 
 	return (
 		<>
-			<IconButton
-				aria-haspopup="true"
-				onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-					handleClick(event);
-				}}
-			>
-				<MoreVertIcon />
-			</IconButton>
-			<SimpleMenu
-				handleClose={handleClose}
-				id={`${tableName}ImportExportButton`}
-				anchorEl={anchorEl}
-				menuList={menuList}
-			/>
+			{importButtonOnly ? (
+				<Button onClick={() => setOpenAttachFiles(true)}>
+					<FormattedMessage
+						defaultMessage="Import Table"
+						id="import_table"
+						description="import table as csv"
+					/>
+				</Button>
+			) : (
+				<>
+					<IconButton
+						aria-haspopup="true"
+						onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+							handleClick(event);
+						}}
+					>
+						<MoreVertIcon />
+					</IconButton>
+					<SimpleMenu
+						handleClose={handleClose}
+						id={`${tableName}ImportExportButton`}
+						anchorEl={anchorEl}
+						menuList={menuList}
+					/>
+				</>
+			)}
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}

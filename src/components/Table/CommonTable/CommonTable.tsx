@@ -188,15 +188,24 @@ function CommonTable<T extends { id: string }>({
 
 	if (!valuesList.length) {
 		return (
-			<Box m={2} display="flex" justifyContent="center">
-				<Typography variant="subtitle1" gutterBottom color="textSecondary">
-					<FormattedMessage
-						id={`nodataFound`}
-						defaultMessage={`No Data Found`}
-						description={`This text will be shown if no data found for table`}
-					/>
-				</Typography>
-			</Box>
+			<>
+				<Box
+					m={2}
+					display="flex"
+					justifyContent="center"
+					flexDirection="column"
+					alignItems="center"
+				>
+					<Typography variant="subtitle1" gutterBottom color="textSecondary">
+						<FormattedMessage
+							id={`nodataFound`}
+							defaultMessage={`No Data Found`}
+							description={`This text will be shown if no data found for table`}
+						/>
+					</Typography>
+					<Box>{tableActionButton?.({ importButtonOnly: true })}</Box>
+				</Box>
+			</>
 		);
 	}
 
@@ -253,18 +262,11 @@ function CommonTable<T extends { id: string }>({
 												</Grid>
 											</Grid>
 										)}
+										{index === tableHeadings.length - 1 &&
+											tableActionButton?.({ importButtonOnly: false })}
 									</TableCell>
 							  ))
 							: null}
-						{tableActionButton && (
-							<TableCell className={tableStyles.th} align="left">
-								<Grid container>
-									<Grid item xs={12} style={{ display: "flex" }}>
-										{tableActionButton()}
-									</Grid>
-								</Grid>
-							</TableCell>
-						)}
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>

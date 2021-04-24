@@ -196,11 +196,12 @@ function ImpactUnitTableContainer({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
-				tableActionButton={() => (
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Impact Unit"
 						tableExportUrl={IMPACT_UNIT_TABLE_EXPORT}
 						tableImportUrl={IMPACT_UNIT_TABLE_IMPORT}
+						importButtonOnly={importButtonOnly}
 						onImportTableSuccess={onImportUnitTableSuccess}
 						additionalMenuItems={[
 							{
@@ -237,6 +238,19 @@ function ImpactUnitTableContainer({
 								}
 							>
 								Impact Category Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Impact Unit Template",
+										jwt: jwt as string,
+										tableExportUrl: `${IMPACT_UNIT_TABLE_EXPORT}?header=true`,
+									})
+								}
+							>
+								Impact Unit Template
 							</Button>
 						</>
 					</ImportExportTableMenu>

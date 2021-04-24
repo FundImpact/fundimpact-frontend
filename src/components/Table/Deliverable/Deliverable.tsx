@@ -557,28 +557,6 @@ export default function DeliverablesTable() {
 				setFilterList={setFilterList}
 				inputFields={deliverableTargetInputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Deliverable"
-				tableExportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Deliverable category unit",
-								jwt: jwt as string,
-								tableExportUrl: `${DELIVERABLE_CATEGORY_UNIT_EXPORT}`,
-							})
-						}
-					>
-						Deliverable Category Unit Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 	return (
@@ -611,6 +589,48 @@ export default function DeliverablesTable() {
 						rows={rows}
 						pagination={deliverableTablePagination}
 						showNestedTable={deliverableTracklineFindAccess}
+						tableActionButton={({
+							importButtonOnly,
+						}: {
+							importButtonOnly?: boolean;
+						}) => (
+							<ImportExportTableMenu
+								tableName="Deliverable"
+								tableExportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+								tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+								onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
+								importButtonOnly={importButtonOnly}
+							>
+								<>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable category unit",
+												jwt: jwt as string,
+												tableExportUrl: `${DELIVERABLE_CATEGORY_UNIT_EXPORT}`,
+											})
+										}
+									>
+										Deliverable Category Unit Export
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1), float: "right" }}
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable Target Template",
+												jwt: jwt as string,
+												tableExportUrl: `${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+											})
+										}
+									>
+										Deliverable Target Template
+									</Button>
+								</>
+							</ImportExportTableMenu>
+						)}
 					/>
 				</>
 			)}

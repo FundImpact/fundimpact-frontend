@@ -48,9 +48,11 @@ import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
+	ANNUAL_YEAR_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT,
 	DONOR_EXPORT,
+	FINANCIAL_YEAR_EXPORT,
 	GRANT_PERIOD_TABLE_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
@@ -561,41 +563,6 @@ export default function DeliverablesTrackLineTable({
 				setFilterList={setFilterList}
 				inputFields={deliverableTracklineInputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Deliverable Lineitem"
-				tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
-				tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
-				onImportTableSuccess={() => queryRefetch?.()}
-			>
-				<>
-					<Button
-						onClick={() =>
-							exportTable({
-								tableName: "Donors",
-								jwt: jwt as string,
-								tableExportUrl: `${DONOR_EXPORT}`,
-							})
-						}
-						style={{ marginRight: theme.spacing(1) }}
-						variant="outlined"
-					>
-						Donor Export
-					</Button>
-					<Button
-						onClick={() =>
-							exportTable({
-								tableName: "Grant Period",
-								jwt: jwt as string,
-								tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
-							})
-						}
-						style={{ marginRight: theme.spacing(1) }}
-						variant="outlined"
-					>
-						Grant Period Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -633,6 +600,83 @@ export default function DeliverablesTrackLineTable({
 					defaultMessage: `Achievements`,
 					description: `This text will be shown for description of table`,
 				})}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Deliverable Lineitem"
+						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
+						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
+						onImportTableSuccess={() => queryRefetch?.()}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Donors",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
+							>
+								Donor
+							</Button>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Grant Period",
+										jwt: jwt as string,
+										tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+									})
+								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
+							>
+								Grant Period
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+							>
+								Annual Year
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Financial Year",
+										jwt: jwt as string,
+										tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${dashBoardData?.organization?.country?.id}`,
+									})
+								}
+							>
+								Financial Year
+							</Button>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Deliverable Trackline Template",
+										jwt: jwt as string,
+										tableExportUrl: `${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}?header=true`,
+									})
+								}
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								variant="outlined"
+							>
+								Deliverable Trackline Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			/>
 		</>
 	);

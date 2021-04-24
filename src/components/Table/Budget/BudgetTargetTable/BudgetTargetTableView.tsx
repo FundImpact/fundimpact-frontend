@@ -320,41 +320,6 @@ function BudgetTargetView({
 				setFilterList={setFilterList}
 				inputFields={inputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Budget"
-				tableExportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={onImportBudgetTargetTableSuccess}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Budget category",
-								jwt: jwt as string,
-								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}`,
-							})
-						}
-					>
-						Budget Category Export
-					</Button>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Donor",
-								jwt: jwt as string,
-								tableExportUrl: `${DONOR_EXPORT}`,
-							})
-						}
-					>
-						Donor Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -397,6 +362,57 @@ function BudgetTargetView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Budget"
+						tableExportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+						tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+						onImportTableSuccess={onImportBudgetTargetTableSuccess}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Budget category",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}`,
+									})
+								}
+							>
+								Budget Category Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donor",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Budget Target Template",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+									})
+								}
+							>
+								Budget Target Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					<BudgetTarget

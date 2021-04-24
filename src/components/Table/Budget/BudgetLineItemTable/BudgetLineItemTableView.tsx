@@ -27,8 +27,10 @@ import { useNotificationDispatch } from "../../../../contexts/notificationContex
 import { setSuccessNotification } from "../../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../../ImportExportTableMenu";
 import {
+	ANNUAL_YEAR_EXPORT,
 	BUDGET_LINE_ITEM_TABLE_EXPORT,
 	BUDGET_LINE_ITEM_TABLE_IMPORT,
+	FINANCIAL_YEAR_EXPORT,
 	GRANT_PERIOD_TABLE_EXPORT,
 } from "../../../../utils/endpoints.util";
 import { exportTable } from "../../../../utils/importExportTable.utils";
@@ -257,6 +259,7 @@ function BudgetLineItemTableView({
 	currency,
 	refetchOnSuccess,
 	budgetTargetId,
+	donorCountryId,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -286,6 +289,7 @@ function BudgetLineItemTableView({
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
+	donorCountryId: string;
 	refetchOnSuccess:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
@@ -361,28 +365,6 @@ function BudgetLineItemTableView({
 				setFilterList={setFilterList}
 				inputFields={inputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Budget Lineitem"
-				tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
-				tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
-				onImportTableSuccess={() => refetchOnSuccess?.()}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "grant period",
-								jwt: jwt as string,
-								tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
-							})
-						}
-					>
-						Grant Period Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -432,6 +414,90 @@ function BudgetLineItemTableView({
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
 				setOpenAttachFiles={setOpenAttachFiles}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Budget Lineitem"
+						tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
+						tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
+						onImportTableSuccess={() => refetchOnSuccess?.()}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								variant="outlined"
+								size="small"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "grant period",
+										jwt: jwt as string,
+										tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+									})
+								}
+							>
+								Grant Period
+							</Button>
+							<Button
+								variant="outlined"
+								size="small"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+							>
+								Annual Year
+							</Button>
+							<Button
+								variant="outlined"
+								size="small"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Financial Year Organization",
+										jwt: jwt as string,
+										tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${dashBoardData?.organization?.country?.id}`,
+									})
+								}
+							>
+								Financial Year Org
+							</Button>
+							{dashBoardData?.organization?.country?.id != donorCountryId && (
+								<Button
+									variant="outlined"
+									size="small"
+									style={{ marginRight: theme.spacing(1) }}
+									onClick={() =>
+										exportTable({
+											tableName: "Financial Year Donor",
+											jwt: jwt as string,
+											tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${donorCountryId}`,
+										})
+									}
+								>
+									Financial Year Donor
+								</Button>
+							)}
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								size="small"
+								onClick={() =>
+									exportTable({
+										tableName: "Budget Lineitem template",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}?header=true`,
+									})
+								}
+							>
+								Budget Lineitem Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					{openDialogs[0] && (

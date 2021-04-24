@@ -48,7 +48,9 @@ import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
+	ANNUAL_YEAR_EXPORT,
 	DONOR_EXPORT,
+	FINANCIAL_YEAR_EXPORT,
 	GRANT_PERIOD_TABLE_EXPORT,
 	IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT,
 	IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT,
@@ -552,41 +554,6 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				setFilterList={setFilterList}
 				inputFields={impactTracklineInputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Impact Lineitem"
-				tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
-				tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
-				onImportTableSuccess={() => queryRefetch?.()}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Donors",
-								jwt: jwt as string,
-								tableExportUrl: `${DONOR_EXPORT}`,
-							})
-						}
-					>
-						Donor Export
-					</Button>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Grant Period",
-								jwt: jwt as string,
-								tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
-							})
-						}
-					>
-						Grant Period Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -616,6 +583,83 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				setOrderBy={setOrderBy}
 				noRowHeading={noRowHeadingImpact}
 				rowHeading={rowHeadingImpact}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Impact Lineitem"
+						tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
+						tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
+						onImportTableSuccess={() => queryRefetch?.()}
+						importButtonOnly={importButtonOnly}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donors",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Grant Period",
+										jwt: jwt as string,
+										tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+									})
+								}
+							>
+								Grant Period
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+							>
+								Annual Year
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Financial Year",
+										jwt: jwt as string,
+										tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${dashBoardData?.organization?.country?.id}`,
+									})
+								}
+							>
+								Financial Year
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Impact Trackline Template",
+										jwt: jwt as string,
+										tableExportUrl: `${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}?header=true`,
+									})
+								}
+							>
+								Impact Trackline Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			/>
 		</>
 	);

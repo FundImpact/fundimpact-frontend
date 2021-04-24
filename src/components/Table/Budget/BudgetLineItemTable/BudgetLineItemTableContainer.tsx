@@ -42,6 +42,7 @@ function BudgetLineItemTableContainer({
 	currency,
 	refetchOnSuccess,
 	budgetTargetId,
+	donorCountryId,
 }: {
 	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
 	changePage: (prev?: boolean) => void;
@@ -67,6 +68,7 @@ function BudgetLineItemTableContainer({
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
+	donorCountryId: string;
 	refetchOnSuccess:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
@@ -107,6 +109,7 @@ function BudgetLineItemTableContainer({
 			currency={currency}
 			refetchOnSuccess={refetchOnSuccess}
 			budgetTargetId={budgetTargetId}
+			donorCountryId={donorCountryId}
 		/>
 	);
 }

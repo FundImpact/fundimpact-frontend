@@ -245,6 +245,58 @@ const createChipArray = ({
 	}
 };
 
+const ImportExportTableMenuHoc = ({
+	importButtonOnly,
+	refetchGrantPeriods,
+}: {
+	importButtonOnly?: boolean;
+	refetchGrantPeriods:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+}) => {
+	const dashboardData = useDashBoardData();
+	const theme = useTheme();
+	const { jwt } = useAuth();
+	return (
+		<ImportExportTableMenu
+			tableName="Grant Period"
+			tableExportUrl={`${GRANT_PERIOD_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+			tableImportUrl={`${GRANT_PERIOD_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+			onImportTableSuccess={() => refetchGrantPeriods?.()}
+			importButtonOnly={importButtonOnly}
+		>
+			<>
+				<Button
+					variant="outlined"
+					style={{ marginRight: theme.spacing(1) }}
+					onClick={() =>
+						exportTable({
+							tableName: "Donors",
+							jwt: jwt as string,
+							tableExportUrl: `${DONOR_EXPORT}`,
+						})
+					}
+				>
+					Donor Export
+				</Button>
+				<Button
+					variant="outlined"
+					style={{ marginRight: theme.spacing(1), float: "right" }}
+					onClick={() =>
+						exportTable({
+							tableName: "Grant Period Template",
+							jwt: jwt as string,
+							tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+						})
+					}
+				>
+					Grant Period Template
+				</Button>
+			</>
+		</ImportExportTableMenu>
+	);
+};
+
 const getDefaultFilterList = () => ({
 	name: "",
 	start_date: "",
@@ -351,9 +403,6 @@ export default function GrantPeriodTable() {
 
 	grantPeriodInputFields[3].optionsArray = donors?.orgDonors || [];
 
-	const theme = useTheme();
-	const { jwt } = useAuth();
-
 	if (loading) return <TableSkeleton />;
 
 	return (
@@ -395,28 +444,7 @@ export default function GrantPeriodTable() {
 							setFilterList={setFilterList}
 							inputFields={grantPeriodInputFields}
 						/>
-						<ImportExportTableMenu
-							tableName="Grant Period"
-							tableExportUrl={`${GRANT_PERIOD_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-							tableImportUrl={`${GRANT_PERIOD_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-							onImportTableSuccess={() => refetchGrantPeriods?.()}
-						>
-							<>
-								<Button
-									variant="outlined"
-									style={{ marginRight: theme.spacing(1) }}
-									onClick={() =>
-										exportTable({
-											tableName: "Donors",
-											jwt: jwt as string,
-											tableExportUrl: `${DONOR_EXPORT}`,
-										})
-									}
-								>
-									Donor Export
-								</Button>
-							</>
-						</ImportExportTableMenu>
+						<ImportExportTableMenuHoc refetchGrantPeriods={refetchGrantPeriods} />
 					</SimpleTable>
 					<GrantPeriodDialog
 						open={!!grantPeriodToEdit}
@@ -426,7 +454,13 @@ export default function GrantPeriodTable() {
 					/>
 				</>
 			) : (
-				<Box m={2} display="flex" justifyContent="center">
+				<Box
+					m={2}
+					display="flex"
+					justifyContent="center"
+					alignItems="center"
+					flexDirection="column"
+				>
 					<Typography variant="subtitle1" gutterBottom color="textSecondary">
 						<FormattedMessage
 							id={`nodataFound`}
@@ -434,6 +468,10 @@ export default function GrantPeriodTable() {
 							description={`This text will be shown if no data found for table`}
 						/>
 					</Typography>
+					<ImportExportTableMenuHoc
+						refetchGrantPeriods={refetchGrantPeriods}
+						importButtonOnly={true}
+					/>
 				</Box>
 			)}
 		</>

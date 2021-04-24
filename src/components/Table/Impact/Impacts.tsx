@@ -54,6 +54,7 @@ import {
 	IMPACT_CATEGORY_UNIT_EXPORT,
 	IMPACT_TARGET_PROJECTS_TABLE_EXPORT,
 	IMPACT_TARGET_PROJECTS_TABLE_IMPORT,
+	SUSTAINABLE_DEVELOPMENT_GOALS_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
@@ -598,28 +599,6 @@ export default function ImpactsTable() {
 				setFilterList={setFilterList}
 				inputFields={impactTargetInputFields}
 			/>
-			<ImportExportTableMenu
-				tableName="Impact"
-				tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
-				tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-				onImportTableSuccess={() => refetchImpactTargetProject?.()}
-			>
-				<>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1) }}
-						onClick={() =>
-							exportTable({
-								tableName: "Impact category unit",
-								jwt: jwt as string,
-								tableExportUrl: `${IMPACT_CATEGORY_UNIT_EXPORT}`,
-							})
-						}
-					>
-						Impact Category Unit Export
-					</Button>
-				</>
-			</ImportExportTableMenu>
 		</>
 	);
 
@@ -653,6 +632,61 @@ export default function ImpactsTable() {
 							impactTracklineFindAccess
 						)}
 						showNestedTable={impactTracklineFindAccess}
+						tableActionButton={({
+							importButtonOnly,
+						}: {
+							importButtonOnly?: boolean;
+						}) => (
+							<ImportExportTableMenu
+								tableName="Impact"
+								tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+								tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+								onImportTableSuccess={() => refetchImpactTargetProject?.()}
+								importButtonOnly={importButtonOnly}
+							>
+								<>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Impact category unit",
+												jwt: jwt as string,
+												tableExportUrl: `${IMPACT_CATEGORY_UNIT_EXPORT}`,
+											})
+										}
+									>
+										Impact Category Unit Export
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Sustainable Development Goals",
+												jwt: jwt as string,
+												tableExportUrl: SUSTAINABLE_DEVELOPMENT_GOALS_EXPORT,
+											})
+										}
+									>
+										Sustainable Development Goals
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1), float: "right" }}
+										onClick={() =>
+											exportTable({
+												tableName: "Impact Target Template",
+												jwt: jwt as string,
+												tableExportUrl: `${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+											})
+										}
+									>
+										Impact Target Template
+									</Button>
+								</>
+							</ImportExportTableMenu>
+						)}
 					/>
 				</>
 			)}

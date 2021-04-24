@@ -201,12 +201,13 @@ function DeliverableUnitTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
-				tableActionButton={() => (
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Delivarable Unit"
 						tableExportUrl={DELIVERABLE_UNIT_TABLE_EXPORT}
 						tableImportUrl={DELIVERABLE_UNIT_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableUnitTableRefetchSuccess}
+						importButtonOnly={importButtonOnly}
 						additionalMenuItems={[
 							{
 								children: (
@@ -242,6 +243,19 @@ function DeliverableUnitTableView({
 								}
 							>
 								Deliverable Category Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Deliverable Unit Template",
+										jwt: jwt as string,
+										tableExportUrl: `${DELIVERABLE_UNIT_TABLE_EXPORT}?header=true`,
+									})
+								}
+							>
+								Deliverable Unit Template
 							</Button>
 						</>
 					</ImportExportTableMenu>
