@@ -25,11 +25,30 @@ import {
 	GetImpactProjects,
 } from "./OrgDashboardQuery";
 
+const checkIfLocalOrGlobalDonorFinancialYearFilterShouldBeApplied = (
+	globalDonorAndFinancialYearFilter?: { [key: string]: string[] },
+	localDonorAndFinancialYearFilter?: { [key: string]: string[] }
+) => {
+	if (!localDonorAndFinancialYearFilter) {
+		return globalDonorAndFinancialYearFilter;
+	}
+	return Object.values(localDonorAndFinancialYearFilter).filter(
+		(donorFinancialYearFilterVal) => donorFinancialYearFilterVal?.length
+	).length
+		? localDonorAndFinancialYearFilter
+		: globalDonorAndFinancialYearFilter;
+};
+
 export function GetCardTypeAndValues(props: CardProps) {
 	const dashboardData = useDashBoardData();
 	const organization = dashboardData?.organization?.id;
 	const theme = useTheme();
 	const intl = useIntl();
+
+	const donorAndFinancialYearFilter = checkIfLocalOrGlobalDonorFinancialYearFilterShouldBeApplied(
+		props.globalDonorAndFinancialYearFilter,
+		props.localDonorAndFinancialYearFilter
+	);
 
 	const receievedLabel = intl.formatMessage({
 		id: "receievedLabel",
@@ -120,7 +139,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				loading,
 			} = GetImpactOrgStatus({
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -155,7 +174,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 				loading,
 			} = GetBudgetOrgStatus({
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -186,7 +205,9 @@ export function GetCardTypeAndValues(props: CardProps) {
 				orgProjectCount,
 				loading,
 			} = GetDeliverableOrgStatus({
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
+				},
 				fetchPolicy: "cache-and-network",
 			});
 
@@ -228,7 +249,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.BUDGET) {
 			let { data, loading } = GetBudgetCategories(props.currentFilter?.base, {
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -238,7 +259,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
 			let { data, loading } = GetDeliverableCategory(props.currentFilter?.base, {
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -248,7 +269,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.IMPACT) {
 			let { data, loading } = GetImpactCategory(props.currentFilter?.base, {
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -274,7 +295,9 @@ export function GetCardTypeAndValues(props: CardProps) {
 	if (props.type === CARD_TYPES.PROGRESS) {
 		if (props.cardOf === CARD_OF.BUDGET) {
 			let { data: budgetProject, loading } = GetBudgetProjects({
-				variables: { filter: { organization: organization } },
+				variables: {
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
+				},
 				fetchPolicy: "cache-and-network",
 			});
 
@@ -303,7 +326,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.DELIVERABLE) {
 			let { deliverableAchieved } = GetDeliverableProjects({
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -312,7 +335,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.IMPACT) {
 			let { impactAchieved } = GetImpactProjects({
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -321,7 +344,7 @@ export function GetCardTypeAndValues(props: CardProps) {
 		if (props.cardOf === CARD_OF.DONOR) {
 			let { data: donors } = GetDonors(props.currentFilter?.base, {
 				variables: {
-					filter: { organization: organization },
+					filter: { organization: organization, ...donorAndFinancialYearFilter },
 				},
 				fetchPolicy: "cache-and-network",
 			});

@@ -8,6 +8,8 @@ export type CardProps = {
 	cardFilter?: { label: string; base: string }[];
 	currentFilter?: { label: string; base: string };
 	showInfoIcon?: boolean;
+	localDonorAndFinancialYearFilter?: { [key: string]: string[] };
+	globalDonorAndFinancialYearFilter?: { [key: string]: string[] };
 	tooltip?: string;
 } & (
 	| {
