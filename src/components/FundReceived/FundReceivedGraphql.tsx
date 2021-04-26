@@ -44,6 +44,8 @@ const getInitialFormValues = ({
 		project_donor:
 			projectDonors.length === 1 ? projectDonors[0].id + `-${DonorType.project}` : "",
 		reporting_date: getTodaysDate(),
+		donor: "",
+		project: "",
 	};
 };
 

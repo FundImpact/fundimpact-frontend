@@ -27,6 +27,7 @@ import {
 	IGetProjectDonor,
 	ICreateProjectDonor,
 	ICreateProjectDonorVariables,
+	IProjectDonor,
 } from "../../models/project/project";
 import { DonorType } from "../../models/fundReceived/conatsnt";
 import DeleteModal from "../DeleteModal";
@@ -78,6 +79,7 @@ interface IFormSubmitProps {
 			| MutationFunctionOptions<ICreateProjectDonor, ICreateProjectDonorVariables>
 			| undefined
 	) => Promise<FetchResult<ICreateProjectDonor, Record<string, any>, Record<string, any>>>;
+	projectDonors: IProjectDonor[];
 }
 
 interface IUpdateFundReceiptProps {
@@ -89,6 +91,7 @@ interface IUpdateFundReceiptProps {
 	) => Promise<FetchResult<IUpdateFundReceipt, Record<string, any>, Record<string, any>>>;
 	project: string | number;
 	fundReceiptToUpdate: IFundReceivedForm;
+	donor: string;
 }
 
 interface ICreateProjectFundReceipt {
@@ -99,6 +102,7 @@ interface ICreateProjectFundReceipt {
 			| undefined
 	) => Promise<FetchResult<ICreateFundReceipt, Record<string, any>, Record<string, any>>>;
 	project: number | string;
+	donor: string;
 }
 
 const validate = (values: IFundReceivedForm) => {
@@ -236,10 +240,11 @@ const createProjectFundReceipt = async ({
 	createFundReceipt,
 	valuesSubmitted,
 	project,
+	donor,
 }: ICreateProjectFundReceipt) => {
 	await createFundReceipt({
 		variables: {
-			input: valuesSubmitted,
+			input: { ...valuesSubmitted, project: project as string, donor },
 		},
 		update: (store, { data }) => {
 			try {
@@ -283,6 +288,7 @@ const updateProjectFundReceipt = async ({
 	updateFundReceipt,
 	project,
 	fundReceiptToUpdate,
+	donor,
 }: IUpdateFundReceiptProps) => {
 	const fundReceiptId = valuesSubmitted.id;
 	delete valuesSubmitted.id;
@@ -293,6 +299,8 @@ const updateProjectFundReceipt = async ({
 				amount: parseInt(valuesSubmitted.amount),
 				project_donor: valuesSubmitted.project_donor,
 				reporting_date: valuesSubmitted.reporting_date,
+				project: project as string,
+				donor,
 			},
 		},
 		update: (store, { data }) => {
@@ -317,6 +325,9 @@ const updateProjectFundReceipt = async ({
 	});
 };
 
+const getDonorWithGivenProjectDonorId = (projectDonors: IProjectDonor[], projectDonorId: string) =>
+	projectDonors?.find((projectDonor) => projectDonor.id == projectDonorId)?.donor?.id || "";
+
 const onFormSubmit = async ({
 	valuesSubmitted,
 	notificationDispatch,
@@ -326,6 +337,7 @@ const onFormSubmit = async ({
 	updateFundReceipt,
 	initialFormValues,
 	createProjectDonor,
+	projectDonors,
 }: IFormSubmitProps) => {
 	try {
 		let projectDonorId = valuesSubmitted.project_donor.split("-")[0];
@@ -350,6 +362,7 @@ const onFormSubmit = async ({
 				valuesSubmitted: { ...valuesSubmitted, project_donor: projectDonorId },
 				createFundReceipt,
 				project,
+				donor: getDonorWithGivenProjectDonorId(projectDonors, projectDonorId),
 			}));
 
 		formAction == FORM_ACTIONS.UPDATE &&
@@ -358,6 +371,7 @@ const onFormSubmit = async ({
 				updateFundReceipt,
 				project,
 				fundReceiptToUpdate: initialFormValues,
+				donor: getDonorWithGivenProjectDonorId(projectDonors, projectDonorId),
 			}));
 
 		notificationDispatch(setSuccessNotification("Fund Received Reported"));
@@ -398,6 +412,7 @@ function FundReceivedContainer({
 				updateFundReceipt,
 				initialFormValues: initialValues,
 				createProjectDonor,
+				projectDonors,
 			});
 			handleClose();
 		},

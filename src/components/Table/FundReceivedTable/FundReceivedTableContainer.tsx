@@ -13,6 +13,8 @@ const getInitialValues = (
 		reporting_date: getTodaysDate(fundReceipt?.reporting_date || undefined),
 		id: fundReceipt?.id || "",
 		project_donor: fundReceipt?.project_donor?.id || "",
+		donor: fundReceipt?.donor?.id || "",
+		project: fundReceipt?.project?.id || "",
 	};
 };
 
