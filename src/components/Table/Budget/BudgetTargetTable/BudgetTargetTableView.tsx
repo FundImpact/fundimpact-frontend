@@ -235,6 +235,20 @@ function BudgetTargetView({
 		MODULE_CODES.BUDGET_TARGET,
 		BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET
 	);
+	const budgetTargetDeleteAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.DELETE_BUDGET_TARGET
+	);
+
+	const budgetTargetCreateFromCsvAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET_FROM_CSV
+	);
+
+	const budgetTargetExportTable = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.BUDGET_TARGET_EXPORT
+	);
 
 	const budgetTargetLineItemCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
@@ -306,8 +320,10 @@ function BudgetTargetView({
 		if (budgetTargetLineItemCreateAccess) {
 			budgetTargetTableEditMenu[1] = "Report Expenditure";
 		}
-		budgetTargetTableEditMenu[2] = "Delete Budget Target";
-	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
+		if (budgetTargetDeleteAccess) {
+			budgetTargetTableEditMenu[2] = "Delete Budget Target";
+		}
+	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess, budgetTargetDeleteAccess]);
 
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
 		<>
@@ -370,6 +386,8 @@ function BudgetTargetView({
 						tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
 						onImportTableSuccess={onImportBudgetTargetTableSuccess}
 						importButtonOnly={importButtonOnly}
+						hideImport={!budgetTargetCreateFromCsvAccess}
+						hideExport={!budgetTargetExportTable}
 					>
 						<>
 							<Button

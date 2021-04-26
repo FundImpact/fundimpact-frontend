@@ -118,6 +118,10 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.UPDATE_DELIVERABLE_TARGET
 	);
+	const deliverableTragetDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELETE_DELIVERABLE_TARGET
+	);
 
 	const deliverableTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
@@ -154,7 +158,9 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 				<IconButton
 					style={{
 						visibility:
-							deliverableTragetEditAccess || deliverableTracklineCreateAccess
+							deliverableTragetEditAccess ||
+							deliverableTracklineCreateAccess ||
+							deliverableTragetDeleteAccess
 								? "visible"
 								: "hidden",
 					}}
@@ -213,32 +219,34 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						/>
 					</MenuItem>
 				)}
-				<MenuItem
-					onClick={() => {
-						setTargetData({
-							id: deliverableTarget.id,
-							name: deliverableTarget.name,
-							target_value: deliverableTarget.target_value,
-							description: deliverableTarget.description,
-							deliverableCategory:
-								deliverableTarget.deliverable_category_unit
-									?.deliverable_category_org?.id,
-							deliverableUnit:
-								deliverableTarget.deliverable_category_unit?.deliverable_units_org
-									?.id,
-							deliverable_category_unit:
-								deliverableTarget.deliverable_category_unit.id,
-							project: deliverableTarget.project.id,
-						});
-						handleMenuClose();
-						setOpenDeleteDeliverableTarget(true);
-					}}
-				>
-					<FormattedMessage
-						id="deleteDeliverableTarget"
-						defaultMessage="Delete Deliverable Target"
-					/>
-				</MenuItem>
+				{deliverableTragetDeleteAccess && (
+					<MenuItem
+						onClick={() => {
+							setTargetData({
+								id: deliverableTarget.id,
+								name: deliverableTarget.name,
+								target_value: deliverableTarget.target_value,
+								description: deliverableTarget.description,
+								deliverableCategory:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_category_org?.id,
+								deliverableUnit:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_units_org?.id,
+								deliverable_category_unit:
+									deliverableTarget.deliverable_category_unit.id,
+								project: deliverableTarget.project.id,
+							});
+							handleMenuClose();
+							setOpenDeleteDeliverableTarget(true);
+						}}
+					>
+						<FormattedMessage
+							id="deleteDeliverableTarget"
+							defaultMessage="Delete Deliverable Target"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{targetData && (
 				<DeliverableTarget
@@ -464,6 +472,14 @@ export default function DeliverablesTable() {
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
 	);
+	const deliverableImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_IMPORT_FROM_CSV
+	);
+	const deliverableExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_EXPORT
+	);
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
@@ -632,6 +648,8 @@ export default function DeliverablesTable() {
 								tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
 								onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
 								importButtonOnly={importButtonOnly}
+								hideExport={!deliverableExportAccess}
+								hideImport={!deliverableImportFromCsvAccess}
 							>
 								<>
 									<Button

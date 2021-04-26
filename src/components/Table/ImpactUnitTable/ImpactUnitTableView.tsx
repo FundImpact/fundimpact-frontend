@@ -106,6 +106,9 @@ function ImpactUnitTableContainer({
 	impactUnitEditAccess,
 	impactCategoryFindAccess,
 	reftechImpactCategoryAndUnitTable,
+	impactUnitDeleteAccess,
+	impactUnitExportAccess,
+	impactUnitImportFromCsvAccess,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -132,12 +135,21 @@ function ImpactUnitTableContainer({
 	impactUnitEditAccess: boolean;
 	impactCategoryFindAccess: boolean;
 	reftechImpactCategoryAndUnitTable: () => void;
+	impactUnitDeleteAccess: boolean;
+	impactUnitImportFromCsvAccess: boolean;
+	impactUnitExportAccess: boolean;
 }) {
 	useEffect(() => {
 		if (impactUnitEditAccess) {
-			impactUnitTableEditMenu = ["Edit Impact Unit", "Delete Impact Unit"];
+			impactUnitTableEditMenu.push("Edit Impact Unit");
 		}
 	}, [impactUnitEditAccess]);
+
+	useEffect(() => {
+		if (impactUnitDeleteAccess) {
+			impactUnitTableEditMenu.push("Delete Impact Unit");
+		}
+	}, [impactUnitDeleteAccess]);
 
 	{
 		(!collapsableTable &&
@@ -203,6 +215,8 @@ function ImpactUnitTableContainer({
 						tableImportUrl={IMPACT_UNIT_TABLE_IMPORT}
 						importButtonOnly={importButtonOnly}
 						onImportTableSuccess={onImportUnitTableSuccess}
+						hideImport={!impactUnitImportFromCsvAccess}
+						hideExport={!impactUnitExportAccess}
 						additionalMenuItems={[
 							{
 								children: (

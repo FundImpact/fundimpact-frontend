@@ -187,7 +187,7 @@ export default function DashboardCard(props: CardProps) {
 								</Box>
 							)}
 						</Grid>
-						{!cardFilter?.length && (
+						{!cardFilter?.length && !props?.hideDonorAndFinancialYearFilter && (
 							<Grid item xs={2}>
 								<Box mt={title ? -0.75 : -1.75} mr={2} position={"absolute"}>
 									{/* <Tooltip title={filterLabel}> */}

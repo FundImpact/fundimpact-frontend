@@ -20,6 +20,8 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
+import { MODULE_CODES, userHasAccess } from "../../../utils/access";
+import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 
 //add access
 const rows = [
@@ -182,6 +184,33 @@ function FundReceivedTableView({
 			/>
 		</>
 	);
+
+	const editMenu = [];
+	const fundReceiptEditAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.UPDATE_FUND_RECEIPT
+	);
+	const fundReceiptDeleteAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.DELETE_FUND_RECEIPT
+	);
+	const fundReceiptImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.FUND_RECEIPT_CREATE_FROM_CSV
+	);
+	const fundReceiptExportAccess = userHasAccess(
+		MODULE_CODES.FUND_RECEIPT,
+		FUND_RECEIPT_ACTIONS.FUND_RECEIPT_EXPORT
+	);
+
+	if (fundReceiptEditAccess) {
+		editMenu.push("Edit Fund Receipt");
+	}
+
+	if (fundReceiptDeleteAccess) {
+		editMenu.push("Delete Fund Receipt");
+	}
+
 	return (
 		<>
 			<Grid container>
@@ -204,7 +233,7 @@ function FundReceivedTableView({
 				rows={rows}
 				selectedRow={selectedFundReceipt}
 				toggleDialogs={toggleDialogs}
-				editMenuName={["Edit Fund Receipt", "Delete Fund Receipt"]}
+				editMenuName={editMenu}
 				collapsableTable={false}
 				changePage={changePage}
 				loading={loading}
@@ -220,6 +249,8 @@ function FundReceivedTableView({
 						tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
 						onImportTableSuccess={onImportFundReceivedTableSuccess}
 						importButtonOnly={importButtonOnly}
+						hideImport={!fundReceiptImportFromCsvAccess}
+						hideExport={!fundReceiptExportAccess}
 					>
 						<>
 							<Button

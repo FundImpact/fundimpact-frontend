@@ -103,6 +103,9 @@ function DeliverableCategoryView({
 	deliverableCategoryEditAccess,
 	deliverableUnitFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
+	deliverableCategoryDeleteAccess,
+	deliverableCategoryExportAccess,
+	deliverableCategoryImportFromCsvAccess,
 }: {
 	count: number;
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -130,15 +133,21 @@ function DeliverableCategoryView({
 	deliverableCategoryEditAccess: boolean;
 	deliverableUnitFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
+	deliverableCategoryDeleteAccess: boolean;
+	deliverableCategoryImportFromCsvAccess: boolean;
+	deliverableCategoryExportAccess: boolean;
 }) {
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu = [
-				"Edit Deliverable Category",
-				"Delete Deliverble Category",
-			];
+			deliverableCategoryTableEditMenu.push("Edit Deliverable Category");
 		}
 	}, [deliverableCategoryEditAccess]);
+
+	useEffect(() => {
+		if (deliverableCategoryDeleteAccess) {
+			deliverableCategoryTableEditMenu.push("Delete Deliverble Category");
+		}
+	}, [deliverableCategoryDeleteAccess]);
 
 	{
 		(!collapsableTable &&
@@ -224,6 +233,8 @@ function DeliverableCategoryView({
 							},
 						]}
 						importButtonOnly={importButtonOnly}
+						hideImport={!deliverableCategoryImportFromCsvAccess}
+						hideExport={!deliverableCategoryExportAccess}
 					>
 						<Button
 							variant="outlined"

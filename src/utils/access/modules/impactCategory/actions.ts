@@ -3,4 +3,6 @@ export enum IMPACT_CATEGORY_ACTIONS {
 	UPDATE_IMPACT_CATEGORY = "update",
 	DELETE_IMPACT_CATEGORY = "delete",
 	FIND_IMPACT_CATEGORY = "find",
+	IMPACT_CATEGORY_CREATE_FROM_CSV = "createimpactcategoryorgfromcsv",
+	IMPACT_CATEGORY_EXPORT = "exporttable",
 }

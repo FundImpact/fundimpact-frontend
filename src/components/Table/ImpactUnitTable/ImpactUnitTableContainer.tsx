@@ -107,6 +107,18 @@ function ImpactUnitContainer({
 		MODULE_CODES.IMPACT_UNIT,
 		IMPACT_UNIT_ACTIONS.UPDATE_IMPACT_UNIT
 	);
+	const impactUnitDeleteAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.DELETE_IMPACT_UNIT
+	);
+	const impactUnitImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.IMPACT_UNIT_IMPORT_FROM_CSV
+	);
+	const impactUnitExportAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.IMPACT_UNIT_EXPORT
+	);
 
 	const impactCategoryFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_CATEGORY,
@@ -137,6 +149,9 @@ function ImpactUnitContainer({
 			impactUnitEditAccess={impactUnitEditAccess}
 			impactCategoryFindAccess={impactCategoryFindAccess}
 			reftechImpactCategoryAndUnitTable={reftechImpactCategoryAndUnitTable}
+			impactUnitDeleteAccess={impactUnitDeleteAccess}
+			impactUnitImportFromCsvAccess={impactUnitImportFromCsvAccess}
+			impactUnitExportAccess={impactUnitExportAccess}
 		/>
 	);
 }

@@ -102,6 +102,9 @@ function ImpactCategoryTableView({
 	impactCategoryEditAccess,
 	impactUnitFindAccess,
 	reftechImpactCategoryAndUnitTable,
+	impactCategoryDeleteAccess,
+	impactCategoryExportAccess,
+	impactCategoryImportFromCsvAccess,
 }: {
 	openDialogs: boolean[];
 	initialValues: IImpactCategoryData;
@@ -128,13 +131,20 @@ function ImpactCategoryTableView({
 	impactCategoryEditAccess: boolean;
 	impactUnitFindAccess: boolean;
 	reftechImpactCategoryAndUnitTable: () => void;
+	impactCategoryDeleteAccess: boolean;
+	impactCategoryImportFromCsvAccess: boolean;
+	impactCategoryExportAccess: boolean;
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
-			impactCategoryTableEditMenu = ["Edit Impact Category", "Delete Impact Category"];
+			impactCategoryTableEditMenu.push("Edit Impact Category");
 		}
 	}, [impactCategoryEditAccess]);
-
+	useEffect(() => {
+		if (impactCategoryDeleteAccess) {
+			impactCategoryTableEditMenu.push("Delete Impact Category");
+		}
+	}, [impactCategoryDeleteAccess]);
 	{
 		(!collapsableTable &&
 			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
@@ -197,6 +207,8 @@ function ImpactCategoryTableView({
 						tableImportUrl={IMPACT_CATEGORY_TABLE_IMPORT}
 						importButtonOnly={importButtonOnly}
 						onImportTableSuccess={onImportImpactCategoryTableSuccess}
+						hideImport={!impactCategoryImportFromCsvAccess}
+						hideExport={!impactCategoryExportAccess}
 						additionalMenuItems={[
 							{
 								children: (

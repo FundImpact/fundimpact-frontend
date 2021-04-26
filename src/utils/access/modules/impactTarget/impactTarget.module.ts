@@ -25,5 +25,13 @@ export const IMPACT_TARGET_MODULE = {
 			name: "Impact Achieved",
 			code: IMPACT_TARGET_ACTIONS.IMPACT_ACHIEVED,
 		},
+		[IMPACT_TARGET_ACTIONS.IMPACT_CREATE_FROM_CSV]: {
+			name: "Create Impact Target From Csv",
+			code: IMPACT_TARGET_ACTIONS.IMPACT_CREATE_FROM_CSV,
+		},
+		[IMPACT_TARGET_ACTIONS.IMPACT_EXPORT]: {
+			name: "Impact Export",
+			code: IMPACT_TARGET_ACTIONS.IMPACT_EXPORT,
+		},
 	},
 };

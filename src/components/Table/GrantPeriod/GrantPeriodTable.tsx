@@ -135,6 +135,11 @@ function SimpleTable({
 		GRANT_PERIOD_ACTIONS.UPDATE_GRANT_PERIOD
 	);
 
+	const grantPeriodDeleteAccess = userHasAccess(
+		MODULE_CODES.GRANT_PERIOD,
+		GRANT_PERIOD_ACTIONS.DELETE_GRANT_PERIOD
+	);
+
 	return (
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="simple table">
@@ -166,17 +171,20 @@ function SimpleTable({
 										handleClick(e, index);
 									}}
 									style={{
-										visibility: grantPeriodEditAccess ? "visible" : "hidden",
+										visibility:
+											grantPeriodEditAccess || grantPeriodDeleteAccess
+												? "visible"
+												: "hidden",
 									}}
 								>
 									<MoreVertOutlinedIcon fontSize="small" />
 								</IconButton>
-								{grantPeriodEditAccess && (
-									<SimpleMenu
-										handleClose={() => closeMenuItems(index)}
-										id={`projectmenu${index}`}
-										anchorEl={anchorEl[index]}
-									>
+								<SimpleMenu
+									handleClose={() => closeMenuItems(index)}
+									id={`projectmenu${index}`}
+									anchorEl={anchorEl[index]}
+								>
+									{grantPeriodEditAccess && (
 										<MenuItem
 											onClick={() => {
 												console.log(data[index]);
@@ -191,6 +199,8 @@ function SimpleTable({
 												description="This text will be show on menus for EDIT"
 											/>
 										</MenuItem>
+									)}
+									{grantPeriodDeleteAccess && (
 										<MenuItem
 											onClick={() => {
 												editGrantPeriod(data[index]);
@@ -204,8 +214,8 @@ function SimpleTable({
 												description="This text will be show on menus for DELETE"
 											/>
 										</MenuItem>
-									</SimpleMenu>
-								)}
+									)}
+								</SimpleMenu>
 							</TableCell>
 						</TableRow>
 					))}
@@ -278,6 +288,16 @@ const ImportExportTableMenuHoc = ({
 	const dashboardData = useDashBoardData();
 	const theme = useTheme();
 	const { jwt } = useAuth();
+
+	const grantPeriodImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.GRANT_PERIOD,
+		GRANT_PERIOD_ACTIONS.GRANT_PERIOD_IMPORT_FROM_CSV
+	);
+
+	const grantPeriodExportAccess = userHasAccess(
+		MODULE_CODES.GRANT_PERIOD,
+		GRANT_PERIOD_ACTIONS.GRANT_PERIOD_EXPORT
+	);
 	return (
 		<ImportExportTableMenu
 			tableName="Grant Period"
@@ -285,6 +305,8 @@ const ImportExportTableMenuHoc = ({
 			tableImportUrl={`${GRANT_PERIOD_TABLE_IMPORT}/${dashboardData?.project?.id}`}
 			onImportTableSuccess={() => refetchGrantPeriods?.()}
 			importButtonOnly={importButtonOnly}
+			hideExport={!grantPeriodExportAccess}
+			hideImport={!grantPeriodImportFromCsvAccess}
 		>
 			<>
 				<Button

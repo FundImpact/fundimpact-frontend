@@ -304,16 +304,31 @@ function BudgetLineItemTableView({
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.UPDATE_BUDGET_TARGET_LINE_ITEM
 	);
+	const budgetLineItemDeleteAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.DELETE_BUDGET_TARGET_LINE_ITEM
+	);
+	const budgetLineItemImportFromCsv = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.BUDGET_TARGET_LINE_ITEM_CREATE_FROM_CSV
+	);
+	const budgetLineItemExport = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.BUDGET_TARGET_LINE_ITEM_EXPORT_TABLE
+	);
 
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
-			budgetLineItemTableEditMenu = [
-				"Edit Budget Line Item",
-				"Delete Budget Line Item",
-				"View Documents",
-			];
+			budgetLineItemTableEditMenu[0] = "Edit Budget Line Item";
+			budgetLineItemTableEditMenu[1] = "View Documents";
 		}
 	}, [budgetLineItemEditAccess]);
+
+	useEffect(() => {
+		if (budgetLineItemDeleteAccess) {
+			budgetLineItemTableEditMenu[2] = "Delete Budget Line Item";
+		}
+	}, [budgetLineItemDeleteAccess]);
 
 	const annualYearFindAccess = userHasAccess(
 		MODULE_CODES.ANNUAL_YEAR,
@@ -426,6 +441,8 @@ function BudgetLineItemTableView({
 						tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
 						onImportTableSuccess={() => refetchOnSuccess?.()}
 						importButtonOnly={importButtonOnly}
+						hideImport={!budgetLineItemImportFromCsv}
+						hideExport={!budgetLineItemExport}
 					>
 						<>
 							<Button

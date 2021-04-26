@@ -122,6 +122,10 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 		MODULE_CODES.IMPACT_TARGET,
 		IMPACT_TARGET_ACTIONS.UPDATE_IMPACT_TARGET
 	);
+	const impactTragetDeleteAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.DELETE_IMPACT_TARGET
+	);
 
 	const impactTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
@@ -161,7 +165,9 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 					onClick={handleMenuClick}
 					style={{
 						visibility:
-							impactTragetEditAccess || impactTracklineCreateAccess
+							impactTragetEditAccess ||
+							impactTracklineCreateAccess ||
+							impactTragetDeleteAccess
 								? "visible"
 								: "hidden",
 					}}
@@ -202,27 +208,29 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 						/>
 					</MenuItem>
 				)}
-				<MenuItem
-					onClick={() => {
-						setImpactTargetData({
-							id: impactTarget.id,
-							name: impactTarget.name,
-							target_value: impactTarget.target_value,
-							description: impactTarget.description,
-							impactCategory:
-								impactTarget.impact_category_unit?.impact_category_org.id,
-							impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
-							impact_category_unit: impactTarget.impact_category_unit.id,
-							sustainable_development_goal:
-								impactTarget.sustainable_development_goal?.id,
-							project: impactTarget.project.id,
-						});
-						setOpenDeleteImpactTargetDialog(true);
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage id="deleteTargetMenu" defaultMessage="Delete Target" />
-				</MenuItem>
+				{impactTragetDeleteAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTargetData({
+								id: impactTarget.id,
+								name: impactTarget.name,
+								target_value: impactTarget.target_value,
+								description: impactTarget.description,
+								impactCategory:
+									impactTarget.impact_category_unit?.impact_category_org.id,
+								impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
+								impact_category_unit: impactTarget.impact_category_unit.id,
+								sustainable_development_goal:
+									impactTarget.sustainable_development_goal?.id,
+								project: impactTarget.project.id,
+							});
+							setOpenDeleteImpactTargetDialog(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage id="deleteTargetMenu" defaultMessage="Delete Target" />
+					</MenuItem>
+				)}
 				{impactTracklineCreateAccess && (
 					<MenuItem
 						onClick={() => {
@@ -397,6 +405,14 @@ export default function ImpactsTable() {
 	const impactAchievedFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_TARGET,
 		IMPACT_TARGET_ACTIONS.IMPACT_ACHIEVED
+	);
+	const impactImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.IMPACT_CREATE_FROM_CSV
+	);
+	const impactExportAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.IMPACT_EXPORT
 	);
 
 	const sdgFindAccess = userHasAccess(
@@ -672,6 +688,8 @@ export default function ImpactsTable() {
 								tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
 								onImportTableSuccess={() => refetchImpactTargetProject?.()}
 								importButtonOnly={importButtonOnly}
+								hideImport={!impactImportFromCsvAccess}
+								hideExport={!impactExportAccess}
 							>
 								<>
 									<Button

@@ -3,4 +3,6 @@ export enum BUDGET_CATEGORY_ACTIONS {
 	UPDATE_BUDGET_CATEGORY = "update",
 	DELETE_BUDGET_CATEGORY = "delete",
 	FIND_BUDGET_CATEGORY = "find",
+	BUDGET_CATEGORY_IMPORT_FROM_CSV = "createbudgetcategoryorgfromcsv",
+	BUDGET_CATEGORY_EXPORT = "exporttable",
 }
