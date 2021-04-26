@@ -86,6 +86,7 @@ export default function CollapsibleTable({
 	orderBy,
 	setOrderBy,
 	showNestedTable = true,
+	tableActionButton,
 }: {
 	tableHeading: ITableHeadings[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
@@ -95,13 +96,23 @@ export default function CollapsibleTable({
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 	showNestedTable?: boolean;
+	tableActionButton?: ({
+		importButtonOnly,
+	}: {
+		importButtonOnly?: boolean;
+	}) => React.ReactElement;
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
 	if (!rows.length) {
 		return (
-			<Box m={2} display="flex" justifyContent="center">
-				{" "}
+			<Box
+				m={2}
+				display="flex"
+				justifyContent="center"
+				flexDirection="column"
+				alignItems="center"
+			>
 				<Typography variant="subtitle1" gutterBottom color="textSecondary">
 					<FormattedMessage
 						id={`nodataFound`}
@@ -109,6 +120,7 @@ export default function CollapsibleTable({
 						description={`This text will be shown if no data found for table`}
 					/>
 				</Typography>
+				{tableActionButton?.({ importButtonOnly: true })}
 			</Box>
 		);
 	}
@@ -163,6 +175,10 @@ export default function CollapsibleTable({
 												)}
 											</>
 										)}
+										{index === tableHeading?.length - 1 &&
+											tableActionButton?.({
+												importButtonOnly: false,
+											})}
 									</TableCell>
 								))}
 						</TableRow>

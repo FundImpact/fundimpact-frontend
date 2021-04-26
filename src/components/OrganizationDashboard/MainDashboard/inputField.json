@@ -1,0 +1,43 @@
+{
+	"mainDashboardCardFilter": [
+		{
+			"name": "donor",
+			"label": "Choose Donor",
+			"size": 12,
+			"testId": "createAnnualYearOption",
+			"dataTestId": "createAnnualYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "annual_year",
+			"label": "Choose Annual Year",
+			"size": 12,
+			"testId": "createAnnualYearOption",
+			"dataTestId": "createAnnualYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		},
+		{
+			"name": "financial_year",
+			"label": "Choose Financial Year",
+			"size": 12,
+			"testId": "createFinancialYearDonorOption",
+			"dataTestId": "createFinancialYearDonor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true
+		}
+	]
+}

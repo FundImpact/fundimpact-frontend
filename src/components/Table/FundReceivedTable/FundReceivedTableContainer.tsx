@@ -3,6 +3,7 @@ import FundReceivedTableView from "./FundReceivedTableView";
 import { IGet_Fund_Receipt_List } from "../../../models/fundReceived/query";
 import { getTodaysDate } from "../../../utils";
 import { IFundReceivedForm } from "../../../models/fundReceived";
+import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
 const getInitialValues = (
 	fundReceipt: IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null
@@ -30,6 +31,7 @@ function FundReceivedTableContainer({
 	removeFilterListElements,
 	donorHash,
 	currency,
+	fundReceivedRefetch,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;
@@ -51,8 +53,16 @@ function FundReceivedTableContainer({
 	inputFields: any[];
 	donorHash: { [key: string]: string };
 	currency: string;
+	fundReceivedRefetch:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditFundReceiptDialog = false,
+		openDeleteFundReceiptDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditFundReceiptDialog,
+		openDeleteFundReceiptDialog,
+	]);
 	const selectedFundReceipt = useRef<IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null>(
 		null
 	);
@@ -83,6 +93,7 @@ function FundReceivedTableContainer({
 			inputFields={inputFields}
 			donorHash={donorHash}
 			currency={currency || ""}
+			fundReceivedRefetch={fundReceivedRefetch}
 		/>
 	);
 }

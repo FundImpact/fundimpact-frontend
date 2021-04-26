@@ -7,8 +7,10 @@ export const GET_DELIVERABLE_TARGETS = gql`
 			name
 			description
 			target_value
+			deleted
 			deliverable_category_unit {
 				id
+				status
 				deliverable_category_org {
 					id
 					name
@@ -31,6 +33,7 @@ export const GET_DELIVERABLE_TARGETS = gql`
 							reg_type
 						}
 					}
+					deleted
 				}
 				deliverable_units_org {
 					id
@@ -40,6 +43,7 @@ export const GET_DELIVERABLE_TARGETS = gql`
 					unit_type
 					prefix_label
 					suffix_label
+					deleted
 				}
 			}
 			project {
@@ -59,11 +63,14 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 			name
 			description
 			target_value
+			deleted
 			deliverable_category_unit {
+				status
 				deliverable_category_org {
 					id
 					name
 					code
+					deleted
 					description
 					organization {
 						id
@@ -91,6 +98,7 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 					unit_type
 					prefix_label
 					suffix_label
+					deleted
 				}
 			}
 
@@ -116,13 +124,16 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			name
 			description
 			target_value
-
+			deleted
 			deliverable_category_unit {
+				id
+				status
 				deliverable_category_org {
 					id
 					name
 					code
 					description
+					deleted
 					organization {
 						id
 						name
@@ -149,6 +160,7 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 					unit_type
 					prefix_label
 					suffix_label
+					deleted
 				}
 			}
 

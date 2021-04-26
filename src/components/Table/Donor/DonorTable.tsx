@@ -35,6 +35,8 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { FormattedMessage } from "react-intl";
 import ContactDialog from "../../ContactDialog";
 import ContactListDialog from "../../ContactListDialog";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import { DONOR_EXPORT } from "../../../utils/endpoints.util";
 
 enum tableHeader {
 	name = 1,
@@ -125,7 +127,14 @@ function DonorTable({
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-	let { changePage, count, queryData: donorList, queryLoading, countQueryLoading } = pagination({
+	let {
+		changePage,
+		count,
+		queryData: donorList,
+		queryLoading,
+		countQueryLoading,
+		queryRefetch: refetchDonors,
+	} = pagination({
 		countQuery: GET_DONOR_COUNT,
 		countFilter: queryFilter,
 		query: GET_ORG_DONOR,
@@ -147,6 +156,7 @@ function DonorTable({
 	};
 
 	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
+	const donorExportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.EXPORT_DONOR);
 
 	const menuList = [
 		{
@@ -276,6 +286,14 @@ function DonorTable({
 									)
 							  )
 							: null}
+						<TableCell className={tableStyles.th} align="left">
+							<ImportExportTableMenu
+								tableName="Donors"
+								tableExportUrl={DONOR_EXPORT}
+								onImportTableSuccess={() => refetchDonors?.()}
+								hideExport={!donorExportAccess}
+							/>
+						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>

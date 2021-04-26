@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import BudgetCategoryTableView from "./BudgetCategoryTableView";
 import { IBudgetCategory } from "../../../models/budget";
+import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
 const getInitialValues = (
 	budgetCategory: Required<IBudgetCategory> | null
@@ -23,6 +24,7 @@ function BudgetCategoryTableContainer({
 	setOrder,
 	orderBy,
 	setOrderBy,
+	budgetCategoryTableRefetch,
 }: {
 	budgetCategoryList: Required<IBudgetCategory>[];
 	collapsableTable: boolean;
@@ -33,9 +35,17 @@ function BudgetCategoryTableContainer({
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	budgetCategoryTableRefetch:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const selectedBudgetCategory = useRef<Required<IBudgetCategory> | null>(null);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditBudgetCategoryDialog = false,
+		openDeleteBudgetCategoryDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditBudgetCategoryDialog,
+		openDeleteBudgetCategoryDialog,
+	]);
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>
@@ -58,6 +68,7 @@ function BudgetCategoryTableContainer({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
+			budgetCategoryTableRefetch={budgetCategoryTableRefetch}
 		/>
 	);
 }

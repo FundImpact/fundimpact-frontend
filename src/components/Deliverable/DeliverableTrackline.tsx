@@ -46,6 +46,8 @@ import { IGET_DONOR } from "../../models/donor/query";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../Project/Project";
 import Donor from "../Donor";
+import { DIALOG_TYPE } from "../../models/constants";
+import DeleteModal from "../DeleteModal";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -386,6 +388,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
 		},
 	});
+	const [deleteDeliverableTrackLine, { loading: deletingDeliverableTrackline }] = useMutation(
+		UPDATE_DELIVERABLE_TRACKLINE
+	);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
@@ -647,6 +652,51 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 		return errors;
 	};
+	const onDelete = async () => {
+		try {
+			const reporting_date = new Date(initialValues?.reporting_date);
+			const deliverableTracklineValues = { ...initialValues, reporting_date };
+			delete deliverableTracklineValues["id"];
+			delete deliverableTracklineValues["donors"];
+			delete deliverableTracklineValues["donorMapValues"];
+			!deliverableTracklineValues?.annual_year &&
+				delete (deliverableTracklineValues as any)["annual_year"];
+			!deliverableTracklineValues?.financial_year &&
+				delete (deliverableTracklineValues as any)["financial_year"];
+			delete deliverableTracklineValues["attachments"];
+			await deleteDeliverableTrackLine({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...deliverableTracklineValues,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_ACHIEVED_VALLUE_BY_TARGET,
+						variables: {
+							filter: {
+								deliverableTargetProject: initialValues?.deliverable_target_project,
+							},
+						},
+					},
+					{
+						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+						variables: {
+							filter: { project: DashBoardData?.project?.id },
+						},
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Deliverable Line Item Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onCancel();
+		}
+	};
+
 	let basicForm = (
 		<CommonForm
 			{...{
@@ -661,6 +711,18 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		/>
 	);
 	let formDetails = currentTargetId && <FormDetailsCalculate currentTargetId={currentTargetId} />;
+
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				handleClose={onCancel}
+				open={props.open}
+				title="Delete Deliverable Line Item"
+				onDeleteConformation={onDelete}
+			/>
+		);
+	}
+
 	return (
 		<React.Fragment>
 			{/* {true ? <CircularPercentage progress={loadingPercentage} /> : null} */}
@@ -706,7 +768,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			{updateDeliverableTrackLineLoading ||
 			uploadMorphLoading ||
 			loading ||
-			creatingProjectDonorsLoading ? (
+			creatingProjectDonorsLoading ||
+			deletingDeliverableTrackline ? (
 				<FullScreenLoader />
 			) : null}
 

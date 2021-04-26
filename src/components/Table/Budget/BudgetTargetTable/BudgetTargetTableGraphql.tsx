@@ -110,6 +110,7 @@ function BudgetTargetTableGraphql() {
 		changePage,
 		queryLoading,
 		countQueryLoading,
+		queryRefetch: refetchBudgetTargetTable,
 	} = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
@@ -163,6 +164,7 @@ function BudgetTargetTableGraphql() {
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
 			currency={currency?.currencyList[0]?.code || ""}
+			refetchBudgetTargetTable={refetchBudgetTargetTable}
 		/>
 	);
 }

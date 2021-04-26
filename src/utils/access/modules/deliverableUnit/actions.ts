@@ -3,4 +3,6 @@ export enum DELIVERABLE_UNIT_ACTIONS {
 	UPDATE_DELIVERABLE_UNIT = "update",
 	DELETE_DELIVERABLE_UNIT = "delete",
 	FIND_DELIVERABLE_UNIT = "find",
+	DELIVERABLE_UNIT_IMPORT_FROM_CSV = "createdeliverableunitorgfromcsv",
+	DELIVERABLE_UNIT_EXORT = "exporttable",
 }

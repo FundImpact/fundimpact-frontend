@@ -9,6 +9,8 @@ import {
 	Grid,
 	Chip,
 	Avatar,
+	Button,
+	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -46,6 +48,15 @@ import { ITableHeadings } from "../../../models";
 import { useDialogDispatch } from "../../../contexts/DialogContext";
 import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
 import { FormatListBulleted } from "@material-ui/icons";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	DELIVERABLE_CATEGORY_UNIT_EXPORT,
+	DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT,
+	DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	name = 2,
@@ -95,6 +106,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [targetLineDialog, setTargetLineDialog] = useState<boolean>();
 	const [targetData, setTargetData] = useState<IDeliverableTarget | null>();
+	const [openDeleteDeliverableTarget, setOpenDeleteDeliverableTarget] = useState(false);
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setMenuAnchor(event.currentTarget);
 	};
@@ -105,6 +117,10 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 	const deliverableTragetEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.UPDATE_DELIVERABLE_TARGET
+	);
+	const deliverableTragetDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELETE_DELIVERABLE_TARGET
 	);
 
 	const deliverableTracklineCreateAccess = userHasAccess(
@@ -142,7 +158,9 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 				<IconButton
 					style={{
 						visibility:
-							deliverableTragetEditAccess || deliverableTracklineCreateAccess
+							deliverableTragetEditAccess ||
+							deliverableTracklineCreateAccess ||
+							deliverableTragetDeleteAccess
 								? "visible"
 								: "hidden",
 					}}
@@ -201,14 +219,46 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						/>
 					</MenuItem>
 				)}
+				{deliverableTragetDeleteAccess && (
+					<MenuItem
+						onClick={() => {
+							setTargetData({
+								id: deliverableTarget.id,
+								name: deliverableTarget.name,
+								target_value: deliverableTarget.target_value,
+								description: deliverableTarget.description,
+								deliverableCategory:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_category_org?.id,
+								deliverableUnit:
+									deliverableTarget.deliverable_category_unit
+										?.deliverable_units_org?.id,
+								deliverable_category_unit:
+									deliverableTarget.deliverable_category_unit.id,
+								project: deliverableTarget.project.id,
+							});
+							handleMenuClose();
+							setOpenDeleteDeliverableTarget(true);
+						}}
+					>
+						<FormattedMessage
+							id="deleteDeliverableTarget"
+							defaultMessage="Delete Deliverable Target"
+						/>
+					</MenuItem>
+				)}
 			</Menu>
 			{targetData && (
 				<DeliverableTarget
 					open={targetData !== null}
-					handleClose={() => setTargetData(null)}
+					handleClose={() => {
+						setTargetData(null);
+						setOpenDeleteDeliverableTarget(false);
+					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={targetData}
 					project={deliverableTarget.project.id}
+					dialogType={openDeleteDeliverableTarget ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
 				/>
 			)}
 		</>
@@ -401,6 +451,7 @@ export default function DeliverablesTable() {
 		changePage,
 		countQueryLoading,
 		queryLoading,
+		queryRefetch: refetchDeliverableTargetProject,
 	} = pagination({
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
@@ -421,6 +472,17 @@ export default function DeliverablesTable() {
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_ACHIEVED
 	);
+	const deliverableImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_IMPORT_FROM_CSV
+	);
+	const deliverableExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.DELIVERABLE_EXPORT
+	);
+
+	const theme = useTheme();
+	const { jwt } = useAuth();
 
 	useEffect(() => {
 		if (
@@ -533,15 +595,17 @@ export default function DeliverablesTable() {
 	);
 
 	filteredDeliverableHeadings[filteredDeliverableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				name: "",
-				target_value: "",
-				deliverable_category_org: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={deliverableTargetInputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					name: "",
+					target_value: "",
+					deliverable_category_org: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={deliverableTargetInputFields}
+			/>
+		</>
 	);
 	return (
 		<>
@@ -573,6 +637,50 @@ export default function DeliverablesTable() {
 						rows={rows}
 						pagination={deliverableTablePagination}
 						showNestedTable={deliverableTracklineFindAccess}
+						tableActionButton={({
+							importButtonOnly,
+						}: {
+							importButtonOnly?: boolean;
+						}) => (
+							<ImportExportTableMenu
+								tableName="Deliverable"
+								tableExportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+								tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+								onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
+								importButtonOnly={importButtonOnly}
+								hideExport={!deliverableExportAccess}
+								hideImport={!deliverableImportFromCsvAccess}
+							>
+								<>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable category unit",
+												jwt: jwt as string,
+												tableExportUrl: `${DELIVERABLE_CATEGORY_UNIT_EXPORT}`,
+											})
+										}
+									>
+										Deliverable Category Unit Export
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1), float: "right" }}
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable Target Template",
+												jwt: jwt as string,
+												tableExportUrl: `${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+											})
+										}
+									>
+										Deliverable Target Template
+									</Button>
+								</>
+							</ImportExportTableMenu>
+						)}
 					/>
 				</>
 			)}

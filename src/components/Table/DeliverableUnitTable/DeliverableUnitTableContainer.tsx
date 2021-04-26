@@ -5,7 +5,7 @@ import {
 	IDeliverableUnit,
 } from "../../../models/deliverable/deliverableUnit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { useLazyQuery } from "@apollo/client";
+import { ApolloQueryResult, useLazyQuery } from "@apollo/client";
 import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
 import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
@@ -44,6 +44,7 @@ function DeliverableUnitTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechDeliverableCategoryAndUnitTable,
 }: {
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	count: number;
@@ -63,8 +64,14 @@ function DeliverableUnitTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const editDeliverableUnit = false,
+		deleteDeliverableUnit = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		editDeliverableUnit,
+		deleteDeliverableUnit,
+	]);
 
 	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
 	const dashboardData = useDashBoardData();
@@ -108,6 +115,18 @@ function DeliverableUnitTableContainer({
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
+	const deliverableUnitDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+	);
+	const deliverableUnitImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
+	);
+	const deliverableUnitExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_EXORT
+	);
 
 	const deliverableCategoryFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
@@ -138,6 +157,10 @@ function DeliverableUnitTableContainer({
 			removeFilterListElements={removeFilterListElements}
 			deliverableUnitEditAccess={deliverableUnitEditAccess}
 			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
+			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
+			deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
+			deliverableUnitImportFromCsvAccess={deliverableUnitImportFromCsvAccess}
+			deliverableUnitExportAccess={deliverableUnitExportAccess}
 		/>
 	);
 }

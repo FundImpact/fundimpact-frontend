@@ -42,6 +42,7 @@ function BudgetCategoryTableGraphql({
 		queryData: budgetCategoryList,
 		queryLoading,
 		countQueryLoading,
+		queryRefetch,
 	} = pagination({
 		countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
 		countFilter: queryFilter,
@@ -61,6 +62,7 @@ function BudgetCategoryTableGraphql({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
+			budgetCategoryTableRefetch={queryRefetch}
 		/>
 	);
 }

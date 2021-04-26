@@ -6,11 +6,20 @@ import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableUnitTable from "../DeliverableUnitTable";
 import { deliverableCategoryTableHeading as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, MenuItem, Button, useTheme } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { deliverableCategoryInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	DELIVERABLE_CATEGORY_TABLE_EXPORT,
+	DELIVERABLE_CATEGORY_TABLE_IMPORT,
+	DELIVERABLE_CATEGORY_UNIT_EXPORT,
+} from "../../../utils/endpoints.util";
+import { ApolloQueryResult } from "@apollo/client";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { FormattedMessage } from "react-intl";
+import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -93,6 +102,10 @@ function DeliverableCategoryView({
 	removeFilterListElements,
 	deliverableCategoryEditAccess,
 	deliverableUnitFindAccess,
+	reftechDeliverableCategoryAndUnitTable,
+	deliverableCategoryDeleteAccess,
+	deliverableCategoryExportAccess,
+	deliverableCategoryImportFromCsvAccess,
 }: {
 	count: number;
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -119,12 +132,22 @@ function DeliverableCategoryView({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	deliverableCategoryEditAccess: boolean;
 	deliverableUnitFindAccess: boolean;
+	reftechDeliverableCategoryAndUnitTable: () => void;
+	deliverableCategoryDeleteAccess: boolean;
+	deliverableCategoryImportFromCsvAccess: boolean;
+	deliverableCategoryExportAccess: boolean;
 }) {
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu = ["Edit Deliverable Category"];
+			deliverableCategoryTableEditMenu.push("Edit Deliverable Category");
 		}
 	}, [deliverableCategoryEditAccess]);
+
+	useEffect(() => {
+		if (deliverableCategoryDeleteAccess) {
+			deliverableCategoryTableEditMenu.push("Delete Deliverble Category");
+		}
+	}, [deliverableCategoryDeleteAccess]);
 
 	{
 		(!collapsableTable &&
@@ -141,6 +164,11 @@ function DeliverableCategoryView({
 			))) ||
 			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 	}
+
+	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
+
+	const { jwt } = useAuth();
+	const theme = useTheme();
 
 	return (
 		<>
@@ -177,13 +205,68 @@ function DeliverableCategoryView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Delivarable Category"
+						tableExportUrl={DELIVERABLE_CATEGORY_TABLE_EXPORT}
+						tableImportUrl={DELIVERABLE_CATEGORY_TABLE_IMPORT}
+						onImportTableSuccess={onDeliverableCategoryTableImportSuccess}
+						additionalMenuItems={[
+							{
+								children: (
+									<MenuItem
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable Category Unit Table",
+												jwt: jwt as string,
+												tableExportUrl: DELIVERABLE_CATEGORY_UNIT_EXPORT,
+											})
+										}
+									>
+										<FormattedMessage
+											defaultMessage="Export Deliverable Category Unit Table"
+											id="export_table"
+											description="export table as csv"
+										/>
+									</MenuItem>
+								),
+							},
+						]}
+						importButtonOnly={importButtonOnly}
+						hideImport={!deliverableCategoryImportFromCsvAccess}
+						hideExport={!deliverableCategoryExportAccess}
+					>
+						<Button
+							variant="outlined"
+							style={{ marginRight: theme.spacing(1), float: "right" }}
+							onClick={() =>
+								exportTable({
+									tableName: "Deliverable Category Template",
+									jwt: jwt as string,
+									tableExportUrl: `${DELIVERABLE_CATEGORY_TABLE_EXPORT}?header=true`,
+								})
+							}
+						>
+							Deliverable Category Template
+						</Button>
+					</ImportExportTableMenu>
+				)}
 			>
-				<Deliverable
-					type={DELIVERABLE_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					data={initialValues}
-				/>
+				<>
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+					/>
+					<Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						data={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<DeliverableUnitTable rowId={rowData.id} collapsableTable={false} />

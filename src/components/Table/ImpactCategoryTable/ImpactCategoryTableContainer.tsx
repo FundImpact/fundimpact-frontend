@@ -4,6 +4,7 @@ import { IImpactCategoryData } from "../../../models/impact/impact";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
+import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (impactCategory: IImpactCategoryData | null): IImpactCategoryData => {
 	return {
@@ -28,6 +29,7 @@ function ImpactCategoryTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechImpactCategoryAndUnitTable,
 }: {
 	impactCategoryList: IImpactCategoryData[];
 	collapsableTable: boolean;
@@ -47,9 +49,15 @@ function ImpactCategoryTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	const selectedImpactCategory = useRef<IImpactCategoryData | null>(null);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditImpactCategoryDialog = false,
+		openDeleteImpactCategoryDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditImpactCategoryDialog,
+		openDeleteImpactCategoryDialog,
+	]);
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>
@@ -60,6 +68,18 @@ function ImpactCategoryTableContainer({
 	const impactCategoryEditAccess = userHasAccess(
 		MODULE_CODES.IMPACT_CATEGORY,
 		IMPACT_CATEGORY_ACTIONS.UPDATE_IMPACT_CATEGORY
+	);
+	const impactCategoryDeleteAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.DELETE_IMPACT_CATEGORY
+	);
+	const impactCategoryImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.IMPACT_CATEGORY_CREATE_FROM_CSV
+	);
+	const impactCategoryExportAccess = userHasAccess(
+		MODULE_CODES.IMPACT_CATEGORY,
+		IMPACT_CATEGORY_ACTIONS.IMPACT_CATEGORY_EXPORT
 	);
 
 	const impactUnitFindAccess = userHasAccess(
@@ -87,6 +107,10 @@ function ImpactCategoryTableContainer({
 			removeFilterListElements={removeFilterListElements}
 			impactCategoryEditAccess={impactCategoryEditAccess}
 			impactUnitFindAccess={impactUnitFindAccess}
+			reftechImpactCategoryAndUnitTable={reftechImpactCategoryAndUnitTable}
+			impactCategoryDeleteAccess={impactCategoryDeleteAccess}
+			impactCategoryImportFromCsvAccess={impactCategoryImportFromCsvAccess}
+			impactCategoryExportAccess={impactCategoryExportAccess}
 		/>
 	);
 }

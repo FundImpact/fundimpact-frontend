@@ -21,6 +21,14 @@ export const IMPACT_UNIT_MODULE = {
 			name: "Find Impact Unit",
 			code: IMPACT_UNIT_ACTIONS.FIND_IMPACT_UNIT,
 		},
+		[IMPACT_UNIT_ACTIONS.IMPACT_UNIT_IMPORT_FROM_CSV]: {
+			name: "create impact unit org from csv",
+			code: IMPACT_UNIT_ACTIONS.IMPACT_UNIT_IMPORT_FROM_CSV,
+		},
+		[IMPACT_UNIT_ACTIONS.IMPACT_UNIT_EXPORT]: {
+			name: "Impact Unit Export",
+			code: IMPACT_UNIT_ACTIONS.IMPACT_UNIT_EXPORT,
+		},
 	},
 
 	// actionsAvailable: [

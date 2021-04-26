@@ -21,6 +21,14 @@ export const IMPACT_CATEGORY_MODULE = {
 			name: "Find Impact Category",
 			code: IMPACT_CATEGORY_ACTIONS.FIND_IMPACT_CATEGORY,
 		},
+		[IMPACT_CATEGORY_ACTIONS.IMPACT_CATEGORY_CREATE_FROM_CSV]: {
+			name: "create impact category org from csv",
+			code: IMPACT_CATEGORY_ACTIONS.IMPACT_CATEGORY_CREATE_FROM_CSV,
+		},
+		[IMPACT_CATEGORY_ACTIONS.IMPACT_CATEGORY_EXPORT]: {
+			name: "Impact Category Export",
+			code: IMPACT_CATEGORY_ACTIONS.IMPACT_CATEGORY_EXPORT,
+		},
 	},
 
 	// actionsAvailable: [

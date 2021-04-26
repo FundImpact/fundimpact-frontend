@@ -32,7 +32,7 @@
 		"react-router": "^6.0.0-beta.0",
 		"react-router-dom": "^6.0.0-beta.0",
 		"react-scripts": "3.4.1",
-		"typescript": "~4.0.2"
+		"typescript": "~4.2.4"
 	},
 	"devDependencies": {
 		"@formatjs/cli": "^2.9.0",
@@ -52,7 +52,7 @@
 		"build": "react-scripts build",
 		"buildCI": "CI= react-scripts build",
 		"testCI": "CI=true react-scripts test",
-		"test": "react-scripts test --coverage=true ",
+		"test": "react-scripts test --coverage=true --testPathIgnorePatterns=src/components/*",
 		"eject": "react-scripts eject",
 		"extract": "formatjs extract",
 		"compile": "formatjs compile",

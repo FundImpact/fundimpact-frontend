@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
-import { FORM_ACTIONS } from "../../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../../models/constants";
 import {
 	IBudgetTargetProjectResponse,
 	IGET_BUDGET_TARGET_PROJECT,
@@ -13,7 +13,7 @@ import {
 } from "../../../../models/budget/budgetForm";
 import AmountSpent from "./AmountSpent";
 import BudgetLineItemTable from "../BudgetLineItemTable";
-import { Grid, Box, Typography, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Typography, Chip, Avatar, Button, useTheme } from "@material-ui/core";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import FilterList from "../../../FilterList";
 import { BUDGET_TARGET_ACTIONS } from "../../../../utils/access/modules/budgetTarget/actions";
@@ -24,7 +24,17 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { BUDGET_TARGET_DONOR_ACTION } from "../../../../utils/access/modules/budgetTargetDonor/actions";
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 import { ITableHeadings } from "../../../../models";
-import { IBudgetTarget } from "../../../../models/budget";
+import {
+	BUDGET_CATEGORY_TABLE_EXPORT,
+	BUDGET_TARGET_PROJECTS_TABLE_EXPORT,
+	BUDGET_TARGET_PROJECTS_TABLE_IMPORT,
+	DONOR_EXPORT,
+} from "../../../../utils/endpoints.util";
+import ImportExportTableMenu from "../../../ImportExportTableMenu";
+import { useDashBoardData } from "../../../../contexts/dashboardContext";
+import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+import { exportTable } from "../../../../utils/importExportTable.utils";
+import { useAuth } from "../../../../contexts/userContext";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -53,6 +63,9 @@ interface IBudgetTargetTableViewProps {
 	budgetCategoryHash: { [key: string]: string };
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
+	refetchBudgetTargetTable:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }
 
 enum tableHeader {
@@ -209,9 +222,10 @@ function BudgetTargetView({
 	budgetCategoryHash,
 	removeFilterListElements,
 	currency,
+	refetchBudgetTargetTable,
 }: IBudgetTargetTableViewProps) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
-
+	const dashboardData = useDashBoardData();
 	currencyFindAccess &&
 		(tableHeadings[5].label = getNewTotalAmountHeaderOfTable(
 			currencyFindAccess ? currency : ""
@@ -220,6 +234,20 @@ function BudgetTargetView({
 	const budgetTargetEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
 		BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET
+	);
+	const budgetTargetDeleteAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.DELETE_BUDGET_TARGET
+	);
+
+	const budgetTargetCreateFromCsvAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET_FROM_CSV
+	);
+
+	const budgetTargetExportTable = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.BUDGET_TARGET_EXPORT
 	);
 
 	const budgetTargetLineItemCreateAccess = userHasAccess(
@@ -292,20 +320,30 @@ function BudgetTargetView({
 		if (budgetTargetLineItemCreateAccess) {
 			budgetTargetTableEditMenu[1] = "Report Expenditure";
 		}
-	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess]);
+		if (budgetTargetDeleteAccess) {
+			budgetTargetTableEditMenu[2] = "Delete Budget Target";
+		}
+	}, [budgetTargetEditAccess, budgetTargetLineItemCreateAccess, budgetTargetDeleteAccess]);
 
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				name: "",
-				total_target_amount: "",
-				donor: [],
-				budget_category_organization: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={inputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					name: "",
+					total_target_amount: "",
+					donor: [],
+					budget_category_organization: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={inputFields}
+			/>
+		</>
 	);
+
+	const onImportBudgetTargetTableSuccess = () => refetchBudgetTargetTable?.();
+
+	const theme = useTheme();
+	const { jwt } = useAuth();
 
 	return (
 		<>
@@ -341,6 +379,59 @@ function BudgetTargetView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Budget"
+						tableExportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
+						tableImportUrl={`${BUDGET_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
+						onImportTableSuccess={onImportBudgetTargetTableSuccess}
+						importButtonOnly={importButtonOnly}
+						hideImport={!budgetTargetCreateFromCsvAccess}
+						hideExport={!budgetTargetExportTable}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Budget category",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}`,
+									})
+								}
+							>
+								Budget Category Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donor",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor Export
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Budget Target Template",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}?header=true`,
+									})
+								}
+							>
+								Budget Target Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					<BudgetTarget
@@ -354,6 +445,13 @@ function BudgetTargetView({
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
+					/>
+					<BudgetTarget
+						open={openDialogs[2]}
+						handleClose={() => toggleDialogs(2, false)}
+						formAction={FORM_ACTIONS.UPDATE}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
 				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (

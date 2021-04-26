@@ -76,7 +76,13 @@ const updateProjectDonorCache = ({
 	}
 };
 
-function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: IFundReceivedProps) {
+function FundReceivedGraphql({
+	formAction,
+	open,
+	handleClose,
+	initialValues,
+	dialogType,
+}: IFundReceivedProps) {
 	const [getProjectDonors, { data: donorList }] = useLazyQuery(GET_PROJ_DONORS);
 	const [createFundReceipt, { loading: creatingFundReceipt }] = useMutation<
 		ICreateFundReceipt,
@@ -134,6 +140,7 @@ function FundReceivedGraphql({ formAction, open, handleClose, initialValues }: I
 			updateFundReceipt={updateFundReceipt}
 			orgDonors={orgDonors?.orgDonors || []}
 			createProjectDonor={createProjectDonor}
+			dialogType={dialogType}
 		/>
 	);
 }

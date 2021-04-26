@@ -1,16 +1,24 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import { IImpactCategoryData } from "../../../models/impact/impact";
 import ImpactUnit from "../ImpactUnitTable";
 import { impactCategoryTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Avatar, Chip } from "@material-ui/core";
+import { Grid, Box, Avatar, Chip, MenuItem, Button, useTheme } from "@material-ui/core";
 import FilterList from "../../FilterList";
 import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	IMPACT_CATEGORY_TABLE_EXPORT,
+	IMPACT_CATEGORY_TABLE_IMPORT,
+	IMPACT_CATEGORY_UNIT_EXPORT,
+} from "../../../utils/endpoints.util";
+import { ApolloQueryResult } from "@apollo/client";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { FormattedMessage } from "react-intl";
+import { useAuth } from "../../../contexts/userContext";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -93,6 +101,10 @@ function ImpactCategoryTableView({
 	removeFilterListElements,
 	impactCategoryEditAccess,
 	impactUnitFindAccess,
+	reftechImpactCategoryAndUnitTable,
+	impactCategoryDeleteAccess,
+	impactCategoryExportAccess,
+	impactCategoryImportFromCsvAccess,
 }: {
 	openDialogs: boolean[];
 	initialValues: IImpactCategoryData;
@@ -118,13 +130,21 @@ function ImpactCategoryTableView({
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	impactCategoryEditAccess: boolean;
 	impactUnitFindAccess: boolean;
+	reftechImpactCategoryAndUnitTable: () => void;
+	impactCategoryDeleteAccess: boolean;
+	impactCategoryImportFromCsvAccess: boolean;
+	impactCategoryExportAccess: boolean;
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
-			impactCategoryTableEditMenu = ["Edit Impact Category"];
+			impactCategoryTableEditMenu.push("Edit Impact Category");
 		}
 	}, [impactCategoryEditAccess]);
-
+	useEffect(() => {
+		if (impactCategoryDeleteAccess) {
+			impactCategoryTableEditMenu.push("Delete Impact Category");
+		}
+	}, [impactCategoryDeleteAccess]);
 	{
 		(!collapsableTable &&
 			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
@@ -140,6 +160,10 @@ function ImpactCategoryTableView({
 			))) ||
 			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
 	}
+
+	const onImportImpactCategoryTableSuccess = () => reftechImpactCategoryAndUnitTable();
+	const { jwt } = useAuth();
+	const theme = useTheme();
 
 	return (
 		<>
@@ -176,13 +200,68 @@ function ImpactCategoryTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Impact Category"
+						tableExportUrl={IMPACT_CATEGORY_TABLE_EXPORT}
+						tableImportUrl={IMPACT_CATEGORY_TABLE_IMPORT}
+						importButtonOnly={importButtonOnly}
+						onImportTableSuccess={onImportImpactCategoryTableSuccess}
+						hideImport={!impactCategoryImportFromCsvAccess}
+						hideExport={!impactCategoryExportAccess}
+						additionalMenuItems={[
+							{
+								children: (
+									<MenuItem
+										onClick={() =>
+											exportTable({
+												tableName: "Impact Category Unit Table",
+												jwt: jwt as string,
+												tableExportUrl: IMPACT_CATEGORY_UNIT_EXPORT,
+											})
+										}
+									>
+										<FormattedMessage
+											defaultMessage="Export Impact Category Unit Table"
+											id="export_table"
+											description="export table as csv"
+										/>
+									</MenuItem>
+								),
+							},
+						]}
+					>
+						<Button
+							variant="outlined"
+							style={{ marginRight: theme.spacing(1), float: "right" }}
+							onClick={() =>
+								exportTable({
+									tableName: "Impact Category Template",
+									jwt: jwt as string,
+									tableExportUrl: `${IMPACT_CATEGORY_TABLE_EXPORT}?header=true`,
+								})
+							}
+						>
+							Impact Category Template
+						</Button>
+					</ImportExportTableMenu>
+				)}
 			>
-				<ImpactCategoryDialog
-					formAction={FORM_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					initialValues={initialValues}
-				/>
+				<>
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						initialValues={initialValues}
+					/>
+					<ImpactCategoryDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
 				{(rowData: { id: string }) => (
 					<>
 						<ImpactUnit

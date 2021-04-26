@@ -6,6 +6,7 @@ import {
 	IBudgetTrackingLineitemForm,
 } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
+import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
 function getBudgetTargetInitialValues(
 	budgetTarget: IBudgetTargetProjectResponse | null
@@ -52,6 +53,7 @@ function BudgetTargetTableContainer({
 	setFilterList,
 	removeFilterListElements,
 	currency,
+	refetchBudgetTargetTable,
 }: {
 	budgetTargetList: IBudgetTargetProjectResponse[];
 	changePage: (prev?: boolean) => void;
@@ -74,8 +76,18 @@ function BudgetTargetTableContainer({
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
+	refetchBudgetTargetTable:
+		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false]);
+	const openEditBudgetTargetDialog = false,
+		openReportBudgetLineItemDialog = false,
+		openDeleteBudgetTargetDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditBudgetTargetDialog,
+		openReportBudgetLineItemDialog,
+		openDeleteBudgetTargetDialog,
+	]);
 	const selectedBudgetTarget = useRef<IBudgetTargetProjectResponse | null>(null);
 
 	const toggleDialogs = (index: number, val: boolean) => {
@@ -108,6 +120,7 @@ function BudgetTargetTableContainer({
 			budgetCategoryHash={budgetCategoryHash}
 			removeFilterListElements={removeFilterListElements}
 			currency={currency}
+			refetchBudgetTargetTable={refetchBudgetTargetTable}
 		/>
 	);
 }

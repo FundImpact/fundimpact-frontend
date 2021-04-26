@@ -9,6 +9,8 @@ import {
 	Chip,
 	Avatar,
 	Grid,
+	Button,
+	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -44,6 +46,18 @@ import { CircularPercentage } from "../../commons";
 import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
 import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	ANNUAL_YEAR_EXPORT,
+	DONOR_EXPORT,
+	FINANCIAL_YEAR_EXPORT,
+	GRANT_PERIOD_TABLE_EXPORT,
+	IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT,
+	IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT,
+} from "../../../utils/endpoints.util";
+import { useAuth } from "../../../contexts/userContext";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	date = 1,
@@ -140,15 +154,25 @@ function EditImpactTargetLineIcon({
 		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
 		IMPACT_TRACKING_LINE_ITEM_ACTIONS.UPDATE_IMPACT_TRACKING_LINE_ITEM
 	);
+	const impactTracklineDeleteAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.DELETE_IMPACT_TRACKING_LINE_ITEM
+	);
 	const dashBoardData = useDashBoardData();
 	const [impactTracklineFileArray, setImpactTracklineFileArray] = useState<AttachFile[]>([]);
 	const [impactOpenAttachFiles, setImpactOpenAttachFiles] = useState(false);
+	const [openDeleteImpactTracklineDialog, setOpenDeleteImpactTracklineDialog] = useState(false);
 
 	return (
 		<>
 			<TableCell>
 				<IconButton
-					style={{ visibility: impactTracklineEditAccess ? "visible" : "hidden" }}
+					style={{
+						visibility:
+							impactTracklineEditAccess || impactTracklineDeleteAccess
+								? "visible"
+								: "hidden",
+					}}
 					aria-label="impact_trackline-edit"
 					onClick={handleMenuClick}
 				>
@@ -187,6 +211,31 @@ function EditImpactTargetLineIcon({
 						/>
 					</MenuItem>
 				)}
+				{impactTracklineDeleteAccess && (
+					<MenuItem
+						onClick={() => {
+							setImpactTargetLineData({
+								id: impactTargetLine.id,
+								impact_target_project: impactTargetLine.impact_target_project?.id,
+								annual_year: impactTargetLine.annual_year?.id,
+								reporting_date: getTodaysDate(impactTargetLine?.reporting_date),
+								value: impactTargetLine?.value,
+								note: impactTargetLine?.note,
+								financial_year: impactTargetLine.financial_year?.id,
+								donors: impactTracklineDonors,
+								impactDonorMapValues: impactTracklineDonorsMapValues,
+								attachments: impactTargetLine.attachments,
+							});
+							setOpenDeleteImpactTracklineDialog(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="deleteAchievementMenu"
+							defaultMessage="Delete Achievement"
+						/>
+					</MenuItem>
+				)}
 				{impactTracklineEditAccess && (
 					<MenuItem
 						onClick={() => {
@@ -206,12 +255,18 @@ function EditImpactTargetLineIcon({
 			{impactTargetLineData && (
 				<ImpactTrackLine
 					open={impactTargetLineData !== null}
-					handleClose={() => setImpactTargetLineData(null)}
+					handleClose={() => {
+						setImpactTargetLineData(null);
+						setOpenDeleteImpactTracklineDialog(false);
+					}}
 					type={IMPACT_ACTIONS.UPDATE}
 					data={impactTargetLineData}
 					impactTarget={impactTargetLine.impact_target_project.id}
 					alreadyMappedDonorsIds={impactTracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}
+					dialogType={
+						openDeleteImpactTracklineDialog ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
 				/>
 			)}
 			{impactOpenAttachFiles && impactTracklineFileArray && (
@@ -398,6 +453,16 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
+	const impactTracklineCreateFromCsvAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.IMPACT_TRACKING_LINE_ITEM_CREATE_FROM_CSV
+	);
+
+	const impactTracklineExportAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+		IMPACT_TRACKING_LINE_ITEM_ACTIONS.IMPACT_TRACKING_LINE_ITEM_EXPORT
+	);
+
 	useEffect(() => {
 		if (
 			impactTracklineData &&
@@ -523,20 +588,25 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		description: `This text will be shown if no target found for table`,
 	});
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	filteredImpactTracklineTableHeadings[
 		filteredImpactTracklineTableHeadings.length - 1
 	].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				reporting_date: "",
-				note: "",
-				value: "",
-				annual_year: [],
-				financial_year: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={impactTracklineInputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					reporting_date: "",
+					note: "",
+					value: "",
+					annual_year: [],
+					financial_year: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={impactTracklineInputFields}
+			/>
+		</>
 	);
 
 	return (
@@ -565,6 +635,85 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 				setOrderBy={setOrderBy}
 				noRowHeading={noRowHeadingImpact}
 				rowHeading={rowHeadingImpact}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Impact Lineitem"
+						tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
+						tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
+						onImportTableSuccess={() => queryRefetch?.()}
+						importButtonOnly={importButtonOnly}
+						hideImport={!impactTracklineCreateFromCsvAccess}
+						hideExport={!impactTracklineExportAccess}
+					>
+						<>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Donors",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+							>
+								Donor
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Grant Period",
+										jwt: jwt as string,
+										tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+									})
+								}
+							>
+								Grant Period
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+							>
+								Annual Year
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Financial Year",
+										jwt: jwt as string,
+										tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${dashBoardData?.organization?.country?.id}`,
+									})
+								}
+							>
+								Financial Year
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Impact Trackline Template",
+										jwt: jwt as string,
+										tableExportUrl: `${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}?header=true`,
+									})
+								}
+							>
+								Impact Trackline Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			/>
 		</>
 	);

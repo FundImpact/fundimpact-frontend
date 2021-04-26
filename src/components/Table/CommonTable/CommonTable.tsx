@@ -140,6 +140,7 @@ function CommonTable<T extends { id: string }>({
 	orderBy,
 	setOrderBy,
 	setOpenAttachFiles,
+	tableActionButton,
 }: ICommonTable<T>) {
 	const tableStyles = styledTable();
 	const [page, setPage] = useState<number>(0);
@@ -157,6 +158,8 @@ function CommonTable<T extends { id: string }>({
 	useEffect(() => {
 		setPage(0);
 	}, [count, setPage]);
+
+	const getTablePaginationColSpan = () => tableHeadings.length + (tableActionButton ? 1 : 0);
 
 	const menuList = editMenuName
 		.map((element, index) => ({
@@ -185,15 +188,24 @@ function CommonTable<T extends { id: string }>({
 
 	if (!valuesList.length) {
 		return (
-			<Box m={2} display="flex" justifyContent="center">
-				<Typography variant="subtitle1" gutterBottom color="textSecondary">
-					<FormattedMessage
-						id={`nodataFound`}
-						defaultMessage={`No Data Found`}
-						description={`This text will be shown if no data found for table`}
-					/>
-				</Typography>
-			</Box>
+			<>
+				<Box
+					m={2}
+					display="flex"
+					justifyContent="center"
+					flexDirection="column"
+					alignItems="center"
+				>
+					<Typography variant="subtitle1" gutterBottom color="textSecondary">
+						<FormattedMessage
+							id={`nodataFound`}
+							defaultMessage={`No Data Found`}
+							description={`This text will be shown if no data found for table`}
+						/>
+					</Typography>
+					<Box>{tableActionButton?.({ importButtonOnly: true })}</Box>
+				</Box>
+			</>
 		);
 	}
 
@@ -250,6 +262,8 @@ function CommonTable<T extends { id: string }>({
 												</Grid>
 											</Grid>
 										)}
+										{index === tableHeadings.length - 1 &&
+											tableActionButton?.({ importButtonOnly: false })}
 									</TableCell>
 							  ))
 							: null}
@@ -302,7 +316,7 @@ function CommonTable<T extends { id: string }>({
 						<TableRow>
 							<TablePagination
 								rowsPerPageOptions={[]}
-								colSpan={tableHeadings.length}
+								colSpan={getTablePaginationColSpan()}
 								count={count}
 								rowsPerPage={count > defaultRows ? defaultRows : count}
 								page={page}

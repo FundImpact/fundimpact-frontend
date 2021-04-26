@@ -6,7 +6,7 @@ import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { budgetLineItemTableHeading as tableHeadings } from "../../constants";
 import { getTodaysDate, uploadPercentageCalculator } from "../../../../utils";
-import { Box, Chip, Avatar, Grid } from "@material-ui/core";
+import { Box, Chip, Avatar, Grid, useTheme, Button } from "@material-ui/core";
 import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
 import { userHasAccess, MODULE_CODES } from "../../../../utils/access";
@@ -25,6 +25,17 @@ import { CircularPercentage } from "../../../commons";
 import { ApolloQueryResult } from "@apollo/client";
 import { useNotificationDispatch } from "../../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../../reducers/notificationReducer";
+import ImportExportTableMenu from "../../../ImportExportTableMenu";
+import {
+	ANNUAL_YEAR_EXPORT,
+	BUDGET_LINE_ITEM_TABLE_EXPORT,
+	BUDGET_LINE_ITEM_TABLE_IMPORT,
+	FINANCIAL_YEAR_EXPORT,
+	GRANT_PERIOD_TABLE_EXPORT,
+} from "../../../../utils/endpoints.util";
+import { exportTable } from "../../../../utils/importExportTable.utils";
+import { useAuth } from "../../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../../models/constants";
 
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
@@ -248,6 +259,8 @@ function BudgetLineItemTableView({
 	financialYearOrgHash,
 	currency,
 	refetchOnSuccess,
+	budgetTargetId,
+	donorCountryId,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -270,12 +283,14 @@ function BudgetLineItemTableView({
 			[key: string]: string | string[];
 		}>
 	>;
+	budgetTargetId: string;
 	inputFields: any[];
 	grantPeriodHash: { [key: string]: string };
 	annualYearHash: { [key: string]: string };
 	financialYearDonorHash: { [key: string]: string };
 	financialYearOrgHash: { [key: string]: string };
 	currency: string;
+	donorCountryId: string;
 	refetchOnSuccess:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
@@ -289,12 +304,31 @@ function BudgetLineItemTableView({
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.UPDATE_BUDGET_TARGET_LINE_ITEM
 	);
+	const budgetLineItemDeleteAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.DELETE_BUDGET_TARGET_LINE_ITEM
+	);
+	const budgetLineItemImportFromCsv = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.BUDGET_TARGET_LINE_ITEM_CREATE_FROM_CSV
+	);
+	const budgetLineItemExport = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
+		BUDGET_TARGET_LINE_ITEM_ACTIONS.BUDGET_TARGET_LINE_ITEM_EXPORT_TABLE
+	);
 
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
-			budgetLineItemTableEditMenu = ["Edit Budget Line Item", "View Documents"];
+			budgetLineItemTableEditMenu[0] = "Edit Budget Line Item";
+			budgetLineItemTableEditMenu[1] = "View Documents";
 		}
 	}, [budgetLineItemEditAccess]);
+
+	useEffect(() => {
+		if (budgetLineItemDeleteAccess) {
+			budgetLineItemTableEditMenu[2] = "Delete Budget Line Item";
+		}
+	}, [budgetLineItemDeleteAccess]);
 
 	const annualYearFindAccess = userHasAccess(
 		MODULE_CODES.ANNUAL_YEAR,
@@ -333,20 +367,25 @@ function BudgetLineItemTableView({
 		[annualYearFindAccess, financialYearOrgFindAccess, financialYearDonorFindAccess]
 	);
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	filteredTableHeadings[filteredTableHeadings.length - 1].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				note: "",
-				amount: "",
-				grant_periods_project: [],
-				annual_year: [],
-				fy_org: [],
-				fy_donor: [],
-				reporting_date: "",
-			}}
-			setFilterList={setFilterList}
-			inputFields={inputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					note: "",
+					amount: "",
+					grant_periods_project: [],
+					annual_year: [],
+					fy_org: [],
+					fy_donor: [],
+					reporting_date: "",
+				}}
+				setFilterList={setFilterList}
+				inputFields={inputFields}
+			/>
+		</>
 	);
 
 	const [budgetTracklineFileArray, setBudgetTracklineFileArray] = React.useState<AttachFile[]>(
@@ -395,6 +434,92 @@ function BudgetLineItemTableView({
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
 				setOpenAttachFiles={setOpenAttachFiles}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Budget Lineitem"
+						tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
+						tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
+						onImportTableSuccess={() => refetchOnSuccess?.()}
+						importButtonOnly={importButtonOnly}
+						hideImport={!budgetLineItemImportFromCsv}
+						hideExport={!budgetLineItemExport}
+					>
+						<>
+							<Button
+								variant="outlined"
+								size="small"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "grant period",
+										jwt: jwt as string,
+										tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+									})
+								}
+							>
+								Grant Period
+							</Button>
+							<Button
+								variant="outlined"
+								size="small"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+							>
+								Annual Year
+							</Button>
+							<Button
+								variant="outlined"
+								size="small"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Financial Year Organization",
+										jwt: jwt as string,
+										tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${dashBoardData?.organization?.country?.id}`,
+									})
+								}
+							>
+								Financial Year Org
+							</Button>
+							{dashBoardData?.organization?.country?.id != donorCountryId && (
+								<Button
+									variant="outlined"
+									size="small"
+									style={{ marginRight: theme.spacing(1) }}
+									onClick={() =>
+										exportTable({
+											tableName: "Financial Year Donor",
+											jwt: jwt as string,
+											tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${donorCountryId}`,
+										})
+									}
+								>
+									Financial Year Donor
+								</Button>
+							)}
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								size="small"
+								onClick={() =>
+									exportTable({
+										tableName: "Budget Lineitem template",
+										jwt: jwt as string,
+										tableExportUrl: `${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}?header=true`,
+									})
+								}
+							>
+								Budget Lineitem Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					{openDialogs[0] && (
@@ -404,6 +529,16 @@ function BudgetLineItemTableView({
 							formAction={FORM_ACTIONS.UPDATE}
 							initialValues={initialValues}
 							refetchOnSuccess={refetchOnSuccess}
+						/>
+					)}
+					{openDialogs[1] && (
+						<BudgetLineitem
+							open={openDialogs[1]}
+							handleClose={() => toggleDialogs(1, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+							refetchOnSuccess={refetchOnSuccess}
+							dialogType={DIALOG_TYPE.DELETE}
 						/>
 					)}
 					{openAttachFiles && (

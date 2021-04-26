@@ -5,6 +5,7 @@ import { DashboardProvider, useDashBoardData } from "../../contexts/dashboardCon
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_IMPACT_CATEGORY_UNIT } from "../../graphql/Impact/categoryUnit";
 import {
+	GET_ALL_IMPACT_AMOUNT_SPEND,
 	GET_ALL_IMPACT_TARGET_AMOUNT,
 	GET_IMPACT_CATEGORY_BY_ORG,
 } from "../../graphql/Impact/query";
@@ -33,6 +34,8 @@ import { GET_IMPACT_TARGET_SDG_COUNT } from "../../graphql/project";
 import ImpactCategoryDialog from "./ImpactCategoryDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
 import ImpactUnitDialog from "./ImpactUnitDialog/ImpaceUnitDialog";
+import { DIALOG_TYPE } from "../../models/constants";
+import DeleteModal from "../DeleteModal";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -371,7 +374,67 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 		return errors;
 	};
+
+	const onDelete = async () => {
+		try {
+			const impactTargetValues = { ...initialValues };
+			delete impactTargetValues["id"];
+			delete impactTargetValues["impactCategory"];
+			delete impactTargetValues["impactUnit"];
+			await updateImpactTarget({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...impactTargetValues,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_TARGET_BY_PROJECT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_IMPACT_TARGET_SDG_COUNT,
+						variables: {
+							filter: { organization: dashboardData?.organization?.id },
+						},
+					},
+					{
+						query: GET_ALL_IMPACT_TARGET_AMOUNT,
+						variables: {
+							filter: { project: dashboardData?.project?.id },
+						},
+					},
+					{
+						query: GET_ALL_IMPACT_AMOUNT_SPEND,
+						variables: {
+							filter: { project: dashboardData?.project?.id },
+						},
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Impact Target Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			onCancel();
+		}
+	};
+
 	const intl = useIntl();
+
+	if (props.dialogType === DIALOG_TYPE.DELETE) {
+		return (
+			<DeleteModal
+				handleClose={onCancel}
+				open={props.open}
+				title="Delete Impact Target"
+				onDeleteConformation={onDelete}
+			/>
+		);
+	}
+
 	return (
 		<DashboardProvider>
 			<FormDialog

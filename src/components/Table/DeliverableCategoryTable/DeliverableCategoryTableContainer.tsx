@@ -5,6 +5,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (
 	deliverableCategory: IDeliverableCategoryData | null,
@@ -32,6 +33,7 @@ function DeliverableCategoryTableContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechDeliverableCategoryAndUnitTable,
 }: {
 	orderBy: string;
 	collapsableTable: boolean;
@@ -51,8 +53,14 @@ function DeliverableCategoryTableContainer({
 		}>
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const editDeliverableCategory = false,
+		deleteDeliverableCategory = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		editDeliverableCategory,
+		deleteDeliverableCategory,
+	]);
 	const selectedDeliverableCategory = useRef<IDeliverableCategoryData | null>(null);
 
 	const dashboardData = useDashBoardData();
@@ -66,6 +74,18 @@ function DeliverableCategoryTableContainer({
 	const deliverableCategoryEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
+	);
+	const deliverableCategoryDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.DELETE_DELIVERABLE_CATEGORY
+	);
+	const deliverableCategoryImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.DELIVERABLE_CATEGORY_IMPORT_FROM_CSV
+	);
+	const deliverableCategoryExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.DELIVERABLE_CATEGORY_EXPORT
 	);
 
 	const deliverableUnitFindAccess = userHasAccess(
@@ -96,6 +116,10 @@ function DeliverableCategoryTableContainer({
 			removeFilterListElements={removeFilterListElements}
 			deliverableCategoryEditAccess={deliverableCategoryEditAccess}
 			deliverableUnitFindAccess={deliverableUnitFindAccess}
+			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
+			deliverableCategoryDeleteAccess={deliverableCategoryDeleteAccess}
+			deliverableCategoryImportFromCsvAccess={deliverableCategoryImportFromCsvAccess}
+			deliverableCategoryExportAccess={deliverableCategoryExportAccess}
 		/>
 	);
 }

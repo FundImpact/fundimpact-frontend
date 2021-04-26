@@ -3,6 +3,7 @@ import {
 	Box,
 	Card,
 	CardContent,
+	Chip,
 	Grid,
 	IconButton,
 	Menu,
@@ -19,13 +20,40 @@ import { ProjectCard, PieCard, ProgressCard } from "./CommonCards";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { useIntl } from "react-intl";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useLazyQuery } from "@apollo/client";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS } from "../../../graphql";
+import FilterList from "../../FilterList";
+import { dashboardCardFilter } from "./inputFields.json";
+
+let donorHash = {};
+let financialYearHash = {};
+let annualYearHash = {};
+
+const mapIdToName = (
+	arr: { id: string; name: string }[],
+	initialObject: { [key: string]: string }
+) => {
+	return arr.reduce(
+		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
+			accumulator[current.id] = current.name;
+			return accumulator;
+		},
+		initialObject
+	);
+};
 
 export default function DashboardCard(props: CardProps) {
 	const { title, children, cardHeight = "180px", cardFilter, tooltip } = props;
+	const [localDonorAndFinancialYearFilter, setLocalDonorAndFinancialYearFilter] = useState<{
+		[key: string]: string[];
+	}>({ donor: [], financial_year: [], annual_year: [] });
 	const [currentFilter, setCurrentFilter] = useState<{ label: string; base: string }>();
 	let { projectCardConfig, pieCardConfig, progressCardConfig } = GetCardTypeAndValues({
 		...props,
 		currentFilter,
+		localDonorAndFinancialYearFilter,
+		globalDonorAndFinancialYearFilter: props.globalDonorAndFinancialYearFilter,
 	});
 
 	const useStyles = makeStyles((theme: Theme) => ({
@@ -91,6 +119,60 @@ export default function DashboardCard(props: CardProps) {
 		defaultMessage: "Project",
 		description: "This text will be show on cards for Project's label",
 	});
+
+	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
+		onCompleted: (data) => {
+			donorHash = mapIdToName(data.orgDonors, donorHash);
+		},
+	});
+
+	useEffect(() => {
+		if (dashboardData?.organization) {
+			getOrganizationDonors({
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+		}
+	}, [dashboardData, getOrganizationDonors]);
+
+	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS, {
+		onCompleted: (data) => {
+			financialYearHash = mapIdToName(data.financialYearList, financialYearHash);
+		},
+	});
+
+	useEffect(() => {
+		if (dashboardData?.organization) {
+			getFinancialYearOrg({
+				variables: {
+					filter: {
+						country: dashboardData?.organization?.country?.id,
+					},
+				},
+			});
+		}
+	}, [dashboardData, getFinancialYearOrg]);
+
+	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST, {
+		onCompleted: (data) => {
+			annualYearHash = mapIdToName(data.annualYearList, annualYearHash);
+		},
+		onError: (err) => {
+			console.error(err);
+		},
+	});
+
+	useEffect(() => {
+		getAnnualYears();
+	}, [getAnnualYears]);
+
+	dashboardCardFilter[0].optionsArray = donors?.orgDonors || [];
+	dashboardCardFilter[1].optionsArray = annualYears?.annualYearList || [];
+	dashboardCardFilter[2].optionsArray = financialYearOrg?.financialYearList || [];
+
 	return (
 		<Card raised={false} className={classes.card} style={{ height: cardHeight }}>
 			<CardContent>
@@ -105,46 +187,59 @@ export default function DashboardCard(props: CardProps) {
 								</Box>
 							)}
 						</Grid>
-						<Grid item xs={3}>
-							{cardFilter && cardFilter.length > 0 && (
-								<>
-									<Box mt={1}>
-										<Tooltip title={filterLabel}>
-											<IconButton onClick={handleClick} size="small">
-												<FilterListIcon fontSize="small" />
-											</IconButton>
-										</Tooltip>
-									</Box>
+						{!cardFilter?.length && !props?.hideDonorAndFinancialYearFilter && (
+							<Grid item xs={2}>
+								<Box mt={title ? -0.75 : -1.75} mr={2} position={"absolute"}>
+									{/* <Tooltip title={filterLabel}> */}
+									<IconButton onClick={handleClick} size="small">
+										<FilterList
+											initialValues={{ ...localDonorAndFinancialYearFilter }}
+											setFilterList={setLocalDonorAndFinancialYearFilter}
+											inputFields={dashboardCardFilter}
+										/>
+									</IconButton>
+									{/* </Tooltip> */}
+								</Box>
+							</Grid>
+						)}
+						{cardFilter && cardFilter.length > 0 && (
+							<Grid item xs={3}>
+								<Box mt={1}>
+									<Tooltip title={filterLabel}>
+										<IconButton onClick={handleClick} size="small">
+											<FilterListIcon fontSize="small" />
+										</IconButton>
+									</Tooltip>
+								</Box>
 
-									<Menu
-										id="simple-menu-budget-org"
-										anchorEl={anchorEl}
-										keepMounted
-										open={Boolean(anchorEl)}
-										onClose={handleClose}
-									>
-										{cardFilter.map(
-											(
-												filter: { label: string; base: string },
-												mapIndex: number
-											) => {
-												return (
-													<MenuItem
-														key={mapIndex}
-														onClick={() => {
-															setCurrentFilter(filter);
-															handleClose();
-														}}
-													>
-														{filter.label}
-													</MenuItem>
-												);
-											}
-										)}
-									</Menu>
-								</>
-							)}
-						</Grid>
+								<Menu
+									id="simple-menu-budget-org"
+									anchorEl={anchorEl}
+									keepMounted
+									open={Boolean(anchorEl)}
+									onClose={handleClose}
+								>
+									{cardFilter.map(
+										(
+											filter: { label: string; base: string },
+											mapIndex: number
+										) => {
+											return (
+												<MenuItem
+													key={mapIndex}
+													onClick={() => {
+														setCurrentFilter(filter);
+														handleClose();
+													}}
+												>
+													{filter.label}
+												</MenuItem>
+											);
+										}
+									)}
+								</Menu>
+							</Grid>
+						)}
 						<Grid item xs={1}>
 							{title &&
 								((cardFilter && cardFilter.length > 0) ||

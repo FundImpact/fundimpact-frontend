@@ -9,6 +9,8 @@ import {
 	TableCell,
 	TablePagination,
 	Grid,
+	Button,
+	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -44,6 +46,18 @@ import { CircularPercentage } from "../../commons";
 import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../reducers/notificationReducer";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import {
+	ANNUAL_YEAR_EXPORT,
+	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT,
+	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT,
+	DONOR_EXPORT,
+	FINANCIAL_YEAR_EXPORT,
+	GRANT_PERIOD_TABLE_EXPORT,
+} from "../../../utils/endpoints.util";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { useAuth } from "../../../contexts/userContext";
+import { DIALOG_TYPE } from "../../../models/constants";
 
 enum tableHeaders {
 	date = 1,
@@ -105,6 +119,7 @@ function EditDeliverableTrackLineIcon({
 			donor: { id: string; name: string; country: { id: string; name: string } };
 		}[]
 	>([]);
+	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 
 	const { data } = useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
@@ -149,6 +164,10 @@ function EditDeliverableTrackLineIcon({
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.UPDATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
+	const deliverableTracklineDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELETE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
 
 	const [deliverableTracklineFileArray, setDeliverableTracklineFileArray] = useState<
 		AttachFile[]
@@ -159,7 +178,12 @@ function EditDeliverableTrackLineIcon({
 		<>
 			<TableCell>
 				<IconButton
-					style={{ visibility: deliverableTracklineEditAccess ? "visible" : "hidden" }}
+					style={{
+						visibility:
+							deliverableTracklineEditAccess || deliverableTracklineDeleteAccess
+								? "visible"
+								: "hidden",
+					}}
 					aria-label="delete"
 					onClick={handleMenuClick}
 				>
@@ -200,6 +224,33 @@ function EditDeliverableTrackLineIcon({
 						/>
 					</MenuItem>
 				)}
+				{deliverableTracklineDeleteAccess && (
+					<MenuItem
+						onClick={() => {
+							setDeliverableTracklineData({
+								id: deliverableTrackline?.id,
+								deliverable_target_project:
+									deliverableTrackline.deliverable_target_project?.id,
+								annual_year: deliverableTrackline.annual_year?.id,
+								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
+								value: deliverableTrackline?.value,
+								note: deliverableTrackline?.note,
+								financial_year: deliverableTrackline.financial_year?.id,
+								donors: tracklineDonors,
+								donorMapValues: tracklineDonorsMapValues,
+								attachments: deliverableTrackline.attachments,
+							});
+							setOpenDeleteDeliverableLineItem(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="deleteAchievementMenu"
+							defaultMessage="Delete Achievement"
+							description="This text will be show on deliverable or impact target table for edit achievement menu"
+						/>
+					</MenuItem>
+				)}
 				{deliverableTracklineEditAccess && (
 					<MenuItem
 						onClick={() => {
@@ -219,12 +270,18 @@ function EditDeliverableTrackLineIcon({
 			{deliverableTracklineData && (
 				<DeliverableTrackline
 					open={deliverableTracklineData !== null}
-					handleClose={() => setDeliverableTracklineData(null)}
+					handleClose={() => {
+						setDeliverableTracklineData(null);
+						setOpenDeleteDeliverableLineItem(false);
+					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
 					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}
+					dialogType={
+						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
 				/>
 			)}
 			{openAttachFiles && deliverableTracklineFileArray && (
@@ -413,6 +470,15 @@ export default function DeliverablesTrackLineTable({
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
+	const deliverableTracklineImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_IMPORT_FROM_CSV
+	);
+	const deliverableTracklineExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_EXPORT
+	);
+
 	useEffect(() => {
 		if (
 			deliverableTracklineData &&
@@ -532,20 +598,25 @@ export default function DeliverablesTrackLineTable({
 	);
 	const intl = useIntl();
 
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
 	filteredDeliverableTracklineTableHeadings[
 		filteredDeliverableTracklineTableHeadings.length - 1
 	].renderComponent = () => (
-		<FilterList
-			initialValues={{
-				reporting_date: "",
-				note: "",
-				value: "",
-				annual_year: [],
-				financial_year: [],
-			}}
-			setFilterList={setFilterList}
-			inputFields={deliverableTracklineInputFields}
-		/>
+		<>
+			<FilterList
+				initialValues={{
+					reporting_date: "",
+					note: "",
+					value: "",
+					annual_year: [],
+					financial_year: [],
+				}}
+				setFilterList={setFilterList}
+				inputFields={deliverableTracklineInputFields}
+			/>
+		</>
 	);
 
 	return (
@@ -582,6 +653,85 @@ export default function DeliverablesTrackLineTable({
 					defaultMessage: `Achievements`,
 					description: `This text will be shown for description of table`,
 				})}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Deliverable Lineitem"
+						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
+						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
+						onImportTableSuccess={() => queryRefetch?.()}
+						importButtonOnly={importButtonOnly}
+						hideImport={!deliverableTracklineImportFromCsvAccess}
+						hideExport={!deliverableTracklineExportAccess}
+					>
+						<>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Donors",
+										jwt: jwt as string,
+										tableExportUrl: `${DONOR_EXPORT}`,
+									})
+								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
+							>
+								Donor
+							</Button>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Grant Period",
+										jwt: jwt as string,
+										tableExportUrl: `${GRANT_PERIOD_TABLE_EXPORT}/${dashBoardData?.project?.id}`,
+									})
+								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
+							>
+								Grant Period
+							</Button>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
+							>
+								Annual Year
+							</Button>
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1) }}
+								onClick={() =>
+									exportTable({
+										tableName: "Financial Year",
+										jwt: jwt as string,
+										tableExportUrl: `${FINANCIAL_YEAR_EXPORT}/${dashBoardData?.organization?.country?.id}`,
+									})
+								}
+							>
+								Financial Year
+							</Button>
+							<Button
+								onClick={() =>
+									exportTable({
+										tableName: "Deliverable Trackline Template",
+										jwt: jwt as string,
+										tableExportUrl: `${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}?header=true`,
+									})
+								}
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								variant="outlined"
+							>
+								Deliverable Trackline Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			/>
 		</>
 	);

@@ -39,6 +39,7 @@ function ImpactUnitContainer({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
+	reftechImpactCategoryAndUnitTable,
 }: {
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	count: number;
@@ -58,12 +59,18 @@ function ImpactUnitContainer({
 			[key: string]: string;
 		}>
 	>;
+	reftechImpactCategoryAndUnitTable: () => void;
 }) {
 	const selectedImpactUnit = useRef<IImpactUnitData | null>(null);
 	const [getImpactCategoryUnit, { data: impactCategoryUnitList }] = useLazyQuery(
 		GET_IMPACT_CATEGORY_UNIT
 	);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false]);
+	const openEditImpactUnitDialog = false,
+		openDeleteImpactUnitDialog = false;
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
+		openEditImpactUnitDialog,
+		openDeleteImpactUnitDialog,
+	]);
 
 	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
@@ -100,6 +107,18 @@ function ImpactUnitContainer({
 		MODULE_CODES.IMPACT_UNIT,
 		IMPACT_UNIT_ACTIONS.UPDATE_IMPACT_UNIT
 	);
+	const impactUnitDeleteAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.DELETE_IMPACT_UNIT
+	);
+	const impactUnitImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.IMPACT_UNIT_IMPORT_FROM_CSV
+	);
+	const impactUnitExportAccess = userHasAccess(
+		MODULE_CODES.IMPACT_UNIT,
+		IMPACT_UNIT_ACTIONS.IMPACT_UNIT_EXPORT
+	);
 
 	const impactCategoryFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_CATEGORY,
@@ -129,6 +148,10 @@ function ImpactUnitContainer({
 			removeFilterListElements={removeFilterListElements}
 			impactUnitEditAccess={impactUnitEditAccess}
 			impactCategoryFindAccess={impactCategoryFindAccess}
+			reftechImpactCategoryAndUnitTable={reftechImpactCategoryAndUnitTable}
+			impactUnitDeleteAccess={impactUnitDeleteAccess}
+			impactUnitImportFromCsvAccess={impactUnitImportFromCsvAccess}
+			impactUnitExportAccess={impactUnitExportAccess}
 		/>
 	);
 }
