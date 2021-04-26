@@ -14,6 +14,9 @@ import {
 } from "../../../../graphql/project";
 import { useIntl } from "react-intl";
 import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
+import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
+import { DELIVERABLE_TARGET_ACTIONS } from "../../../../utils/access/modules/deliverableTarget/actions";
+import { IMPACT_TARGET_ACTIONS } from "../../../../utils/access/modules/impactTarget/actions";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: { height: "100vh" },
@@ -105,6 +108,15 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 export default function Achievement() {
 	const dashboardData = useDashBoardData();
 	const projectId = dashboardData?.project?.id;
+	const deliverableTargetFindAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TARGET,
+		DELIVERABLE_TARGET_ACTIONS.FIND_DELIVERABLE_TARGET
+	);
+	const impactTargetFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	);
+
 	let [GetDeliverableAmountTarget, { data: DeliverableAmountTarget }] = useLazyQuery(
 		GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
@@ -204,11 +216,9 @@ export default function Achievement() {
 	return (
 		<>
 			<Grid container>
-				<ISTATUS {...DELIVERABLE_STATUS} />
+				{deliverableTargetFindAccess && <ISTATUS {...DELIVERABLE_STATUS} />}
 			</Grid>
-			<Grid container>
-				<ISTATUS {...IMPACT_STATUS} />
-			</Grid>
+			<Grid container>{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}</Grid>
 		</>
 	);
 }

@@ -29,5 +29,13 @@ export const BUDGET_TARGET_MODULE = {
 			name: "Budget Target Project Allocation Value",
 			code: BUDGET_TARGET_ACTIONS.PROJECT_ALLOCATION_VALUE,
 		},
+		[BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET_FROM_CSV]: {
+			name: "Budget Target Create From Csv",
+			code: BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET_FROM_CSV,
+		},
+		[BUDGET_TARGET_ACTIONS.BUDGET_TARGET_EXPORT]: {
+			name: "Budget Target Table Export",
+			code: BUDGET_TARGET_ACTIONS.BUDGET_TARGET_EXPORT,
+		},
 	},
 };

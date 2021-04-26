@@ -27,6 +27,8 @@ const ImportExportTableMenu = ({
 	children,
 	additionalMenuItems = [],
 	importButtonOnly,
+	hideExport,
+	hideImport,
 }: {
 	tableName: string;
 	tableExportUrl: string;
@@ -37,6 +39,8 @@ const ImportExportTableMenu = ({
 		children: JSX.Element;
 	}[];
 	importButtonOnly?: boolean;
+	hideImport?: boolean;
+	hideExport?: boolean;
 }) => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>(false);
@@ -74,8 +78,10 @@ const ImportExportTableMenu = ({
 		}
 	};
 
-	const menuList = [
-		{
+	const menuList = [...additionalMenuItems];
+
+	if (!hideExport) {
+		menuList.push({
 			children: (
 				<MenuItem
 					onClick={() =>
@@ -93,11 +99,10 @@ const ImportExportTableMenu = ({
 					/>
 				</MenuItem>
 			),
-		},
-		...additionalMenuItems,
-	];
+		});
+	}
 
-	if (tableImportUrl) {
+	if (tableImportUrl && !hideImport) {
 		menuList.push({
 			children: (
 				<MenuItem onClick={() => setOpenAttachFiles(true)}>
@@ -113,32 +118,34 @@ const ImportExportTableMenu = ({
 
 	return (
 		<>
-			{importButtonOnly ? (
-				<Button onClick={() => setOpenAttachFiles(true)}>
-					<FormattedMessage
-						defaultMessage="Import Table"
-						id="import_table"
-						description="import table as csv"
-					/>
-				</Button>
-			) : (
-				<>
-					<IconButton
-						aria-haspopup="true"
-						onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-							handleClick(event);
-						}}
-					>
-						<MoreVertIcon />
-					</IconButton>
-					<SimpleMenu
-						handleClose={handleClose}
-						id={`${tableName}ImportExportButton`}
-						anchorEl={anchorEl}
-						menuList={menuList}
-					/>
-				</>
-			)}
+			{importButtonOnly
+				? !hideImport && (
+						<Button onClick={() => setOpenAttachFiles(true)}>
+							<FormattedMessage
+								defaultMessage="Import Table"
+								id="import_table"
+								description="import table as csv"
+							/>
+						</Button>
+				  )
+				: (!hideExport || !hideImport) && (
+						<>
+							<IconButton
+								aria-haspopup="true"
+								onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+									handleClick(event);
+								}}
+							>
+								<MoreVertIcon />
+							</IconButton>
+							<SimpleMenu
+								handleClose={handleClose}
+								id={`${tableName}ImportExportButton`}
+								anchorEl={anchorEl}
+								menuList={menuList}
+							/>
+						</>
+				  )}
 			{openAttachFiles && (
 				<AttachFileForm
 					open={openAttachFiles}

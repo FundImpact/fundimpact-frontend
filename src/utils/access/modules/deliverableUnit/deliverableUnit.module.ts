@@ -21,5 +21,13 @@ export const DELIVERABLE_UNIT_MODULE = {
 			name: "Find deliverable unit",
 			code: DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT,
 		},
+		[DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV]: {
+			name: "Import deliverable unit form csv",
+			code: DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV,
+		},
+		[DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_EXORT]: {
+			name: "Export deliverable unit",
+			code: DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_EXORT,
+		},
 	},
 };

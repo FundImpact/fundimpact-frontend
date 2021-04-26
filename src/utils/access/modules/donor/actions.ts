@@ -3,4 +3,5 @@ export enum DONOR_ACTIONS {
 	UPDATE_DONOR = "update",
 	DELETE_DONOR = "delete",
 	FIND_DONOR = "find",
+	EXPORT_DONOR = "exporttable",
 }

@@ -115,6 +115,18 @@ function DeliverableUnitTableContainer({
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
+	const deliverableUnitDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+	);
+	const deliverableUnitImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
+	);
+	const deliverableUnitExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_UNIT,
+		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_EXORT
+	);
 
 	const deliverableCategoryFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
@@ -146,6 +158,9 @@ function DeliverableUnitTableContainer({
 			deliverableUnitEditAccess={deliverableUnitEditAccess}
 			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
+			deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
+			deliverableUnitImportFromCsvAccess={deliverableUnitImportFromCsvAccess}
+			deliverableUnitExportAccess={deliverableUnitExportAccess}
 		/>
 	);
 }

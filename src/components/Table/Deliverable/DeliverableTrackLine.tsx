@@ -164,6 +164,10 @@ function EditDeliverableTrackLineIcon({
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.UPDATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
+	const deliverableTracklineDeleteAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELETE_DELIVERABLE_TRACKING_LINE_ITEM
+	);
 
 	const [deliverableTracklineFileArray, setDeliverableTracklineFileArray] = useState<
 		AttachFile[]
@@ -174,7 +178,12 @@ function EditDeliverableTrackLineIcon({
 		<>
 			<TableCell>
 				<IconButton
-					style={{ visibility: deliverableTracklineEditAccess ? "visible" : "hidden" }}
+					style={{
+						visibility:
+							deliverableTracklineEditAccess || deliverableTracklineDeleteAccess
+								? "visible"
+								: "hidden",
+					}}
 					aria-label="delete"
 					onClick={handleMenuClick}
 				>
@@ -215,31 +224,33 @@ function EditDeliverableTrackLineIcon({
 						/>
 					</MenuItem>
 				)}
-				<MenuItem
-					onClick={() => {
-						setDeliverableTracklineData({
-							id: deliverableTrackline?.id,
-							deliverable_target_project:
-								deliverableTrackline.deliverable_target_project?.id,
-							annual_year: deliverableTrackline.annual_year?.id,
-							reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
-							value: deliverableTrackline?.value,
-							note: deliverableTrackline?.note,
-							financial_year: deliverableTrackline.financial_year?.id,
-							donors: tracklineDonors,
-							donorMapValues: tracklineDonorsMapValues,
-							attachments: deliverableTrackline.attachments,
-						});
-						setOpenDeleteDeliverableLineItem(true);
-						handleMenuClose();
-					}}
-				>
-					<FormattedMessage
-						id="deleteAchievementMenu"
-						defaultMessage="Delete Achievement"
-						description="This text will be show on deliverable or impact target table for edit achievement menu"
-					/>
-				</MenuItem>
+				{deliverableTracklineDeleteAccess && (
+					<MenuItem
+						onClick={() => {
+							setDeliverableTracklineData({
+								id: deliverableTrackline?.id,
+								deliverable_target_project:
+									deliverableTrackline.deliverable_target_project?.id,
+								annual_year: deliverableTrackline.annual_year?.id,
+								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
+								value: deliverableTrackline?.value,
+								note: deliverableTrackline?.note,
+								financial_year: deliverableTrackline.financial_year?.id,
+								donors: tracklineDonors,
+								donorMapValues: tracklineDonorsMapValues,
+								attachments: deliverableTrackline.attachments,
+							});
+							setOpenDeleteDeliverableLineItem(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="deleteAchievementMenu"
+							defaultMessage="Delete Achievement"
+							description="This text will be show on deliverable or impact target table for edit achievement menu"
+						/>
+					</MenuItem>
+				)}
 				{deliverableTracklineEditAccess && (
 					<MenuItem
 						onClick={() => {
@@ -459,6 +470,15 @@ export default function DeliverablesTrackLineTable({
 		ANNUAL_YEAR_ACTIONS.FIND_ANNUAL_YEAR
 	);
 
+	const deliverableTracklineImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_IMPORT_FROM_CSV
+	);
+	const deliverableTracklineExportAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
+		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_EXPORT
+	);
+
 	useEffect(() => {
 		if (
 			deliverableTracklineData &&
@@ -640,6 +660,8 @@ export default function DeliverablesTrackLineTable({
 						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
 						onImportTableSuccess={() => queryRefetch?.()}
 						importButtonOnly={importButtonOnly}
+						hideImport={!deliverableTracklineImportFromCsvAccess}
+						hideExport={!deliverableTracklineExportAccess}
 					>
 						<>
 							<Button

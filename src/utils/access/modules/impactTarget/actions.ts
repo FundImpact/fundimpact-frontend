@@ -4,4 +4,6 @@ export enum IMPACT_TARGET_ACTIONS {
 	DELETE_IMPACT_TARGET = "delete",
 	FIND_IMPACT_TARGET = "find",
 	IMPACT_ACHIEVED = "impact_achieved",
+	IMPACT_CREATE_FROM_CSV = "createimpacttargetprojectfromcsv",
+	IMPACT_EXPORT = "exporttable",
 }

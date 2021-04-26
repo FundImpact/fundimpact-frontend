@@ -156,6 +156,7 @@ function DonorTable({
 	};
 
 	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
+	const donorExportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.EXPORT_DONOR);
 
 	const menuList = [
 		{
@@ -290,6 +291,7 @@ function DonorTable({
 								tableName="Donors"
 								tableExportUrl={DONOR_EXPORT}
 								onImportTableSuccess={() => refetchDonors?.()}
+								hideExport={!donorExportAccess}
 							/>
 						</TableCell>
 					</TableRow>

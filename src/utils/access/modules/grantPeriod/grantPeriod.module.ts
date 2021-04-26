@@ -21,5 +21,13 @@ export const GRANT_PERIOD_MODULE = {
 			name: "Find Grant Period",
 			code: GRANT_PERIOD_ACTIONS.FIND_GRANT_PERIOD,
 		},
+		[GRANT_PERIOD_ACTIONS.GRANT_PERIOD_IMPORT_FROM_CSV]: {
+			name: "create grant periods project from csv",
+			code: GRANT_PERIOD_ACTIONS.GRANT_PERIOD_IMPORT_FROM_CSV,
+		},
+		[GRANT_PERIOD_ACTIONS.GRANT_PERIOD_EXPORT]: {
+			name: "Export Grant Period",
+			code: GRANT_PERIOD_ACTIONS.GRANT_PERIOD_EXPORT,
+		},
 	},
 };

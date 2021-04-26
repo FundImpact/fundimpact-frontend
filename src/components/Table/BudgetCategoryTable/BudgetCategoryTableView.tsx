@@ -70,13 +70,33 @@ function BudgetCategoryTableView({
 		BUDGET_CATEGORY_ACTIONS.UPDATE_BUDGET_CATEGORY
 	);
 
+	const budgetCategoryDeleteAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.DELETE_BUDGET_CATEGORY
+	);
+	const budgetCategoryImportFromCsvAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.BUDGET_CATEGORY_IMPORT_FROM_CSV
+	);
+
+	const budgetCategoryExportAccess = userHasAccess(
+		MODULE_CODES.BUDGET_CATEGORY,
+		BUDGET_CATEGORY_ACTIONS.BUDGET_CATEGORY_EXPORT
+	);
+
 	const onImportTableSuccess = () => budgetCategoryTableRefetch && budgetCategoryTableRefetch();
 
 	useEffect(() => {
 		if (budgetCategoryEditAccess) {
-			budgetCategoryTableEditMenu = ["Edit Budget Category", "Delete Budget Category"];
+			budgetCategoryTableEditMenu.push("Edit Budget Category");
 		}
 	}, [budgetCategoryEditAccess]);
+
+	useEffect(() => {
+		if (budgetCategoryDeleteAccess) {
+			budgetCategoryTableEditMenu.push("Delete Budget Category");
+		}
+	}, [budgetCategoryDeleteAccess]);
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
@@ -104,6 +124,8 @@ function BudgetCategoryTableView({
 					tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
 					onImportTableSuccess={onImportTableSuccess}
 					importButtonOnly={importButtonOnly}
+					hideImport={!budgetCategoryImportFromCsvAccess}
+					hideExport={!budgetCategoryExportAccess}
 				>
 					<Button
 						variant="outlined"

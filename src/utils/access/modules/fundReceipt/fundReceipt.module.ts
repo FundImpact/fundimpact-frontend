@@ -21,5 +21,13 @@ export const FUND_RECEIPT_MODULE = {
 			name: "Find Fund Receipt",
 			code: FUND_RECEIPT_ACTIONS.FIND_FUND_RECEIPT,
 		},
+		[FUND_RECEIPT_ACTIONS.FUND_RECEIPT_CREATE_FROM_CSV]: {
+			name: "create fund receipt project from csv",
+			code: FUND_RECEIPT_ACTIONS.FUND_RECEIPT_CREATE_FROM_CSV,
+		},
+		[FUND_RECEIPT_ACTIONS.FUND_RECEIPT_EXPORT]: {
+			name: "Export Fund Receipt",
+			code: FUND_RECEIPT_ACTIONS.FUND_RECEIPT_EXPORT,
+		},
 	},
 };

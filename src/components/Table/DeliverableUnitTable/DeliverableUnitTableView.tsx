@@ -111,6 +111,9 @@ function DeliverableUnitTableView({
 	deliverableUnitEditAccess,
 	deliverableCategoryFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
+	deliverableUnitDeleteAccess,
+	deliverableUnitExportAccess,
+	deliverableUnitImportFromCsvAccess,
 }: {
 	filterList: {
 		[key: string]: string;
@@ -137,14 +140,23 @@ function DeliverableUnitTableView({
 	deliverableUnitEditAccess: boolean;
 	deliverableCategoryFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
+	deliverableUnitDeleteAccess: boolean;
+	deliverableUnitImportFromCsvAccess: boolean;
+	deliverableUnitExportAccess: boolean;
 }) {
 	const dashboardData = useDashBoardData();
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu = ["Edit Deliverable Unit", "Delete Deliverable Unit"];
+			deliverableUnitTableEditMenu.push("Edit Deliverable Unit");
 		}
 	}, [deliverableUnitEditAccess]);
+
+	useEffect(() => {
+		if (deliverableUnitDeleteAccess) {
+			deliverableUnitTableEditMenu.push("Delete Deliverable Unit");
+		}
+	}, [deliverableUnitDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -209,6 +221,8 @@ function DeliverableUnitTableView({
 						tableImportUrl={DELIVERABLE_UNIT_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableUnitTableRefetchSuccess}
 						importButtonOnly={importButtonOnly}
+						hideImport={!deliverableUnitImportFromCsvAccess}
+						hideExport={!deliverableUnitExportAccess}
 						additionalMenuItems={[
 							{
 								children: (

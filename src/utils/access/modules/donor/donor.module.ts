@@ -21,5 +21,9 @@ export const DONOR_MODULE = {
 			name: "Find Donor",
 			code: DONOR_ACTIONS.FIND_DONOR,
 		},
+		[DONOR_ACTIONS.EXPORT_DONOR]: {
+			name: "Export Donor",
+			code: DONOR_ACTIONS.EXPORT_DONOR,
+		},
 	},
 };

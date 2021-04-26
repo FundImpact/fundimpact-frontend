@@ -10,6 +10,7 @@ export type CardProps = {
 	showInfoIcon?: boolean;
 	localDonorAndFinancialYearFilter?: { [key: string]: string[] };
 	globalDonorAndFinancialYearFilter?: { [key: string]: string[] };
+	hideDonorAndFinancialYearFilter?: boolean;
 	tooltip?: string;
 } & (
 	| {
