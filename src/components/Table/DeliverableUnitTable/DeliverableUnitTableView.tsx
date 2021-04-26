@@ -148,13 +148,13 @@ function DeliverableUnitTableView({
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu.push("Edit Deliverable Unit");
+			deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
 	}, [deliverableUnitEditAccess]);
 
 	useEffect(() => {
 		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu.push("Delete Deliverable Unit");
+			deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
 	}, [deliverableUnitDeleteAccess]);
 

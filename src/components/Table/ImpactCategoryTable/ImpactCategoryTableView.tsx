@@ -137,12 +137,12 @@ function ImpactCategoryTableView({
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
-			impactCategoryTableEditMenu.push("Edit Impact Category");
+			impactCategoryTableEditMenu[0] = "Edit Impact Category";
 		}
 	}, [impactCategoryEditAccess]);
 	useEffect(() => {
 		if (impactCategoryDeleteAccess) {
-			impactCategoryTableEditMenu.push("Delete Impact Category");
+			impactCategoryTableEditMenu[1] = "Delete Impact Category";
 		}
 	}, [impactCategoryDeleteAccess]);
 	{

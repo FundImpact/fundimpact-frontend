@@ -139,13 +139,13 @@ function DeliverableCategoryView({
 }) {
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu.push("Edit Deliverable Category");
+			deliverableCategoryTableEditMenu[0] = "Edit Deliverable Category";
 		}
 	}, [deliverableCategoryEditAccess]);
 
 	useEffect(() => {
 		if (deliverableCategoryDeleteAccess) {
-			deliverableCategoryTableEditMenu.push("Delete Deliverble Category");
+			deliverableCategoryTableEditMenu[1] = "Delete Deliverble Category";
 		}
 	}, [deliverableCategoryDeleteAccess]);
 
