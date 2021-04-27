@@ -88,13 +88,13 @@ function BudgetCategoryTableView({
 
 	useEffect(() => {
 		if (budgetCategoryEditAccess) {
-			budgetCategoryTableEditMenu.push("Edit Budget Category");
+			budgetCategoryTableEditMenu[0] = "Edit Budget Category";
 		}
 	}, [budgetCategoryEditAccess]);
 
 	useEffect(() => {
 		if (budgetCategoryDeleteAccess) {
-			budgetCategoryTableEditMenu.push("Delete Budget Category");
+			budgetCategoryTableEditMenu[1] = "Delete Budget Category";
 		}
 	}, [budgetCategoryDeleteAccess]);
 

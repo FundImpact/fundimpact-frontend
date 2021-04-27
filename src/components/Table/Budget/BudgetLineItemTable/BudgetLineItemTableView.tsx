@@ -320,13 +320,13 @@ function BudgetLineItemTableView({
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
 			budgetLineItemTableEditMenu[0] = "Edit Budget Line Item";
-			budgetLineItemTableEditMenu[1] = "View Documents";
+			budgetLineItemTableEditMenu[2] = "View Documents";
 		}
 	}, [budgetLineItemEditAccess]);
 
 	useEffect(() => {
 		if (budgetLineItemDeleteAccess) {
-			budgetLineItemTableEditMenu[2] = "Delete Budget Line Item";
+			budgetLineItemTableEditMenu[1] = "Delete Budget Line Item";
 		}
 	}, [budgetLineItemDeleteAccess]);
 

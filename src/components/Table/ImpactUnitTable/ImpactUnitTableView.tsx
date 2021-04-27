@@ -141,13 +141,13 @@ function ImpactUnitTableContainer({
 }) {
 	useEffect(() => {
 		if (impactUnitEditAccess) {
-			impactUnitTableEditMenu.push("Edit Impact Unit");
+			impactUnitTableEditMenu[0] = "Edit Impact Unit";
 		}
 	}, [impactUnitEditAccess]);
 
 	useEffect(() => {
 		if (impactUnitDeleteAccess) {
-			impactUnitTableEditMenu.push("Delete Impact Unit");
+			impactUnitTableEditMenu[1] = "Delete Impact Unit";
 		}
 	}, [impactUnitDeleteAccess]);
 
