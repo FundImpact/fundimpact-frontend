@@ -31,7 +31,7 @@ function FundReceivedTableContainer({
 	removeFilterListElements,
 	donorHash,
 	currency,
-	fundReceivedRefetch,
+	fundReceivedTableRefetch,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;
@@ -53,9 +53,7 @@ function FundReceivedTableContainer({
 	inputFields: any[];
 	donorHash: { [key: string]: string };
 	currency: string;
-	fundReceivedRefetch:
-		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
-		| undefined;
+	fundReceivedTableRefetch: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
 }) {
 	const openEditFundReceiptDialog = false,
 		openDeleteFundReceiptDialog = false;
@@ -93,7 +91,7 @@ function FundReceivedTableContainer({
 			inputFields={inputFields}
 			donorHash={donorHash}
 			currency={currency || ""}
-			fundReceivedRefetch={fundReceivedRefetch}
+			fundReceivedTableRefetch={fundReceivedTableRefetch}
 		/>
 	);
 }

@@ -55,7 +55,12 @@ function Pagination({
 
 	let [
 		getRequestedDataLength,
-		{ data: countData, loading: countQueryLoading, error: countQueryError },
+		{
+			data: countData,
+			loading: countQueryLoading,
+			error: countQueryError,
+			refetch: countRefetch,
+		},
 	] = useLazyQuery(countQuery, {
 		variables: {
 			filter: countFilter,
@@ -137,6 +142,7 @@ function Pagination({
 		queryError,
 		end: !countQueryLoading && startingValue.current >= count.current ? true : false,
 		queryRefetch,
+		countRefetch,
 	};
 }
 

@@ -337,8 +337,8 @@ function ImpactUnitDialog({
 				notificationDispatch(setSuccessNotification("Impact Unit Updation Success"));
 				handleClose();
 			},
-			onError() {
-				notificationDispatch(setErrorNotification("Impact Unit Updation Failure"));
+			onError(error) {
+				notificationDispatch(setErrorNotification(error.message));
 				handleClose();
 			},
 		}

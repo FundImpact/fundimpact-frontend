@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FundReceivedTableContainer from "./FundReceivedTableContainer";
 import { useLazyQuery } from "@apollo/client";
 import {
@@ -77,7 +77,6 @@ function FundReceivedTableGraphql() {
 		},
 	});
 
-	console.log("data :>> ", data);
 	(fundReceiptInputFields[1].optionsArray as {
 		id: string;
 		name: string;
@@ -130,7 +129,8 @@ function FundReceivedTableGraphql() {
 		queryData,
 		queryLoading,
 		countQueryLoading,
-		queryRefetch: fundReceivedRefetch,
+		queryRefetch: fundReceivedListRefetch,
+		countRefetch: fundReceivedListCountRefetch,
 	} = pagination({
 		countQuery: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
 		countFilter: queryFilter,
@@ -139,6 +139,11 @@ function FundReceivedTableGraphql() {
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && dashboardData?.project),
 	});
+
+	const fundReceivedTableRefetch = useCallback(
+		() => fundReceivedListCountRefetch?.().then(() => fundReceivedListRefetch?.()),
+		[fundReceivedListCountRefetch, fundReceivedListRefetch]
+	);
 
 	return (
 		<FundReceivedTableContainer
@@ -156,7 +161,7 @@ function FundReceivedTableGraphql() {
 			inputFields={fundReceiptInputFields}
 			donorHash={donorHash}
 			currency={currency?.currencyList[0]?.code || ""}
-			fundReceivedRefetch={fundReceivedRefetch}
+			fundReceivedTableRefetch={fundReceivedTableRefetch}
 		/>
 	);
 }

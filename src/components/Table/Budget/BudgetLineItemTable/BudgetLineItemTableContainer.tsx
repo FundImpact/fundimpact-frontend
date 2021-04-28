@@ -43,6 +43,7 @@ function BudgetLineItemTableContainer({
 	refetchOnSuccess,
 	budgetTargetId,
 	donorCountryId,
+	countRefetch,
 }: {
 	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
 	changePage: (prev?: boolean) => void;
@@ -72,6 +73,15 @@ function BudgetLineItemTableContainer({
 	refetchOnSuccess:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+	countRefetch:
+		| ((
+				variables?:
+					| Partial<{
+							filter: any;
+					  }>
+					| undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 }) {
@@ -115,6 +125,7 @@ function BudgetLineItemTableContainer({
 			refetchOnSuccess={refetchOnSuccess}
 			budgetTargetId={budgetTargetId}
 			donorCountryId={donorCountryId}
+			countRefetch={countRefetch}
 		/>
 	);
 }

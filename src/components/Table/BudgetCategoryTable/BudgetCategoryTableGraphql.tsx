@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BudgetCategoryTableContainer from "./BudgetCategoryTableContainer";
 import pagination from "../../../hooks/pagination";
 import {
@@ -43,6 +43,7 @@ function BudgetCategoryTableGraphql({
 		queryLoading,
 		countQueryLoading,
 		queryRefetch,
+		countRefetch,
 	} = pagination({
 		countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
 		countFilter: queryFilter,
@@ -50,6 +51,11 @@ function BudgetCategoryTableGraphql({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	const budgetCategoryTableRefetch = useCallback(
+		() => countRefetch?.().then(() => queryRefetch?.()),
+		[countRefetch, queryRefetch]
+	);
 
 	return (
 		<BudgetCategoryTableContainer
@@ -62,7 +68,7 @@ function BudgetCategoryTableGraphql({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
-			budgetCategoryTableRefetch={queryRefetch}
+			budgetCategoryTableRefetch={budgetCategoryTableRefetch}
 		/>
 	);
 }

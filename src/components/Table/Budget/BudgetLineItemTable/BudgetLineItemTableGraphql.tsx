@@ -102,6 +102,7 @@ function BudgetLineItemTableGraphql({
 		countQueryLoading,
 		queryLoading,
 		queryRefetch,
+		countRefetch,
 	} = pagination({
 		query: GET_PROJECT_BUDGET_TARCKING,
 		countQuery: GET_PROJ_BUDGET_TRACINGS_COUNT,
@@ -223,6 +224,7 @@ function BudgetLineItemTableGraphql({
 			refetchOnSuccess={queryRefetch}
 			budgetTargetId={budgetTargetId}
 			donorCountryId={donor?.country?.id}
+			countRefetch={countRefetch}
 		/>
 	);
 }

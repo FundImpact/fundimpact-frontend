@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -452,6 +452,7 @@ export default function DeliverablesTable() {
 		countQueryLoading,
 		queryLoading,
 		queryRefetch: refetchDeliverableTargetProject,
+		countRefetch: refetchDeliverableTargetProjectCount,
 	} = pagination({
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
@@ -459,6 +460,14 @@ export default function DeliverablesTable() {
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	const refetchDeliverableTargetProjectTable = useCallback(
+		() =>
+			refetchDeliverableTargetProjectCount?.().then(() =>
+				refetchDeliverableTargetProject?.()
+			),
+		[refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]
+	);
 
 	const [rows, setRows] = useState<any>([]);
 	const limit = 10;
@@ -646,7 +655,7 @@ export default function DeliverablesTable() {
 								tableName="Deliverable"
 								tableExportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
 								tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-								onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
+								onImportTableSuccess={refetchDeliverableTargetProjectTable}
 								importButtonOnly={importButtonOnly}
 								hideExport={!deliverableExportAccess}
 								hideImport={!deliverableImportFromCsvAccess}

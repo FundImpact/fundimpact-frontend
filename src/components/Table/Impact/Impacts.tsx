@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -488,7 +488,8 @@ export default function ImpactsTable() {
 		changePage,
 		countQueryLoading,
 		queryLoading,
-		queryRefetch: refetchImpactTargetProject,
+		queryRefetch: refetchImpactTargetProjectList,
+		countRefetch: refetchImpactTargetProjectCount,
 	} = pagination({
 		query: GET_IMPACT_TARGET_BY_PROJECT,
 		countQuery: GET_IMPACT_TARGETS_COUNT,
@@ -496,6 +497,12 @@ export default function ImpactsTable() {
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	const refetchImpactTargetProjectTable = useCallback(
+		() => refetchImpactTargetProjectCount?.().then(() => refetchImpactTargetProjectList?.()),
+		[refetchImpactTargetProjectCount, refetchImpactTargetProjectList]
+	);
+
 	const limit = 10;
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -686,7 +693,7 @@ export default function ImpactsTable() {
 								tableName="Impact"
 								tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
 								tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-								onImportTableSuccess={() => refetchImpactTargetProject?.()}
+								onImportTableSuccess={refetchImpactTargetProjectTable}
 								importButtonOnly={importButtonOnly}
 								hideImport={!impactImportFromCsvAccess}
 								hideExport={!impactExportAccess}

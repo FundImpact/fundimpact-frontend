@@ -433,6 +433,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		countQueryLoading: countLoading,
 		queryLoading: loading,
 		queryRefetch,
+		countRefetch,
 	} = pagination({
 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 		countQuery: GET_IMPACT_TRACKLINE_COUNT,
@@ -640,7 +641,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						tableName="Impact Lineitem"
 						tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
 						tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
-						onImportTableSuccess={() => queryRefetch?.()}
+						onImportTableSuccess={() => countRefetch?.().then(() => queryRefetch?.())}
 						importButtonOnly={importButtonOnly}
 						hideImport={!impactTracklineCreateFromCsvAccess}
 						hideExport={!impactTracklineExportAccess}
