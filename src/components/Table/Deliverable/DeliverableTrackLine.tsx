@@ -450,6 +450,7 @@ export default function DeliverablesTrackLineTable({
 		countQueryLoading,
 		queryLoading: loading,
 		queryRefetch,
+		countRefetch,
 	} = pagination({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
@@ -658,7 +659,7 @@ export default function DeliverablesTrackLineTable({
 						tableName="Deliverable Lineitem"
 						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
 						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
-						onImportTableSuccess={() => queryRefetch?.()}
+						onImportTableSuccess={() => countRefetch?.().then(() => queryRefetch?.())}
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableTracklineImportFromCsvAccess}
 						hideExport={!deliverableTracklineExportAccess}

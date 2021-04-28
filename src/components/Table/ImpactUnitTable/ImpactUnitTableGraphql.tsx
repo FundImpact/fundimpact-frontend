@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import ImpactUnitTableContainer from "./ImpactUnitTableContainer";
 import {
 	GET_IMPACT_UNIT_BY_ORG,
@@ -99,6 +99,7 @@ function ImpactUnitTableGraphql({
 		queryLoading: impactUnitLoading,
 		countQueryLoading: impactUnitCountLoading,
 		queryRefetch: impactUnitRefetch,
+		countRefetch: impactUnitCountRefetch,
 	} = pagination({
 		countQuery: GET_IMPACT_UNIT_COUNT_BY_ORG,
 		countFilter: queryFilter,
@@ -115,6 +116,7 @@ function ImpactUnitTableGraphql({
 		queryLoading: impactCategoryUnitLoading,
 		countQueryLoading: impactCategoryUnitCountLoading,
 		queryRefetch: impactCategoryUnitRefetch,
+		countRefetch: impactCategoryUnitCountRefetch,
 	} = pagination({
 		countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
 		countFilter: nestedTableQueryFilter,
@@ -124,10 +126,15 @@ function ImpactUnitTableGraphql({
 		fireRequest: Boolean(impactCategoryId && !collapsableTable),
 	});
 
-	const reftechImpactCategoryAndUnitTable = () => {
-		impactUnitRefetch?.();
-		impactCategoryUnitRefetch?.();
-	};
+	const reftechImpactCategoryAndUnitTable = useCallback(() => {
+		impactUnitCountRefetch?.().then(() => impactUnitRefetch?.());
+		impactCategoryUnitCountRefetch?.().then(() => impactCategoryUnitRefetch?.());
+	}, [
+		impactUnitCountRefetch,
+		impactUnitRefetch,
+		impactCategoryUnitCountRefetch,
+		impactCategoryUnitRefetch,
+	]);
 
 	const impactCategoryUnitListMemoized = useMemo(
 		() =>

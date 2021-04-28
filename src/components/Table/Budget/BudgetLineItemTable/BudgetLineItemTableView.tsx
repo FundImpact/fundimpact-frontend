@@ -261,6 +261,7 @@ function BudgetLineItemTableView({
 	refetchOnSuccess,
 	budgetTargetId,
 	donorCountryId,
+	countRefetch,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -294,6 +295,15 @@ function BudgetLineItemTableView({
 	refetchOnSuccess:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+	countRefetch:
+		| ((
+				variables?:
+					| Partial<{
+							filter: any;
+					  }>
+					| undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 }) {
@@ -439,7 +449,9 @@ function BudgetLineItemTableView({
 						tableName="Budget Lineitem"
 						tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
 						tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
-						onImportTableSuccess={() => refetchOnSuccess?.()}
+						onImportTableSuccess={() =>
+							countRefetch?.().then(() => refetchOnSuccess?.())
+						}
 						importButtonOnly={importButtonOnly}
 						hideImport={!budgetLineItemImportFromCsv}
 						hideExport={!budgetLineItemExport}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import DeliverableCategoryTableContainer from "./DeliverableCategoryTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -100,6 +100,7 @@ function DeliverableCategoryTableGraphql({
 		queryLoading: deliverableCategoryLoading,
 		countQueryLoading: deliverableCategoryCountLoading,
 		queryRefetch: refetchDeliverableCategory,
+		countRefetch: refetchDeliverableCategoryCount,
 	} = pagination({
 		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 		countFilter: queryFilter,
@@ -116,6 +117,7 @@ function DeliverableCategoryTableGraphql({
 		queryLoading: deliverableCategoryUnitLoading,
 		countQueryLoading: deliverableCategoryUnitCountLoading,
 		queryRefetch: refetchDeliverableCategoryUnit,
+		countRefetch: refetchDeliverableCategoryUnitCount,
 	} = pagination({
 		countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
 		countFilter: nestedTableQueryFilter,
@@ -125,10 +127,15 @@ function DeliverableCategoryTableGraphql({
 		fireRequest: Boolean(delivarableUnitId && !collapsableTable),
 	});
 
-	const reftechDeliverableCategoryAndUnitTable = () => {
-		refetchDeliverableCategory?.();
-		refetchDeliverableCategoryUnit?.();
-	};
+	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
+		refetchDeliverableCategoryCount?.().then(() => refetchDeliverableCategory?.());
+		refetchDeliverableCategoryUnitCount?.().then(() => refetchDeliverableCategoryUnit?.());
+	}, [
+		refetchDeliverableCategoryCount,
+		refetchDeliverableCategory,
+		refetchDeliverableCategoryUnitCount,
+		refetchDeliverableCategoryUnit,
+	]);
 
 	const deliverableCategoryUnitListMemoized = useMemo(
 		() =>

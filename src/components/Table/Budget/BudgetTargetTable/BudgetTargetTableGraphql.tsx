@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BudgetTargetTableContainer from "./BudgetTargetTableContainer";
 import pagination from "../../../../hooks/pagination";
 import {
@@ -110,7 +110,8 @@ function BudgetTargetTableGraphql() {
 		changePage,
 		queryLoading,
 		countQueryLoading,
-		queryRefetch: refetchBudgetTargetTable,
+		queryRefetch: refetchBudgetTargetList,
+		countRefetch: refetchBudgetTargetTableCount,
 	} = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
@@ -119,6 +120,11 @@ function BudgetTargetTableGraphql() {
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(currentProject),
 	});
+
+	const refetchBudgetTargetTable = useCallback(
+		() => refetchBudgetTargetTableCount?.().then(() => refetchBudgetTargetList?.()),
+		[refetchBudgetTargetTableCount, refetchBudgetTargetList]
+	);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
