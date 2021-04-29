@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
 	TableContainer,
 	Table,
@@ -13,8 +13,9 @@ import {
 	TableSortLabel,
 	Typography,
 	Box,
+	Button,
 } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
@@ -36,7 +37,9 @@ import { FormattedMessage } from "react-intl";
 import ContactDialog from "../../ContactDialog";
 import ContactListDialog from "../../ContactListDialog";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
-import { DONOR_EXPORT } from "../../../utils/endpoints.util";
+import { COUNTRY_EXPORT, DONOR_EXPORT, DONOR_IMPORT } from "../../../utils/endpoints.util";
+import { useAuth } from "../../../contexts/userContext";
+import { exportTable } from "../../../utils/importExportTable.utils";
 
 enum tableHeader {
 	name = 1,
@@ -75,6 +78,60 @@ const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 		short_name: donor?.short_name || "",
 		id: donor?.id || "",
 	};
+};
+
+const ImportExportTableMenuHoc = ({
+	importButtonOnly,
+	refetchDonorTable,
+}: {
+	importButtonOnly?: boolean;
+	refetchDonorTable: () => void;
+}) => {
+	const theme = useTheme();
+	const { jwt } = useAuth();
+
+	const donorExportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.EXPORT_DONOR);
+	const donorImportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.IMPORT_DONOR);
+	return (
+		<ImportExportTableMenu
+			tableName="Donors"
+			tableExportUrl={DONOR_EXPORT}
+			tableImportUrl={DONOR_IMPORT}
+			onImportTableSuccess={() => refetchDonorTable?.()}
+			hideExport={!donorExportAccess}
+			hideImport={!donorImportAccess}
+			importButtonOnly={importButtonOnly}
+		>
+			<>
+				<Button
+					variant="outlined"
+					style={{ marginRight: theme.spacing(1) }}
+					onClick={() =>
+						exportTable({
+							tableName: "Country",
+							jwt: jwt as string,
+							tableExportUrl: `${COUNTRY_EXPORT}`,
+						})
+					}
+				>
+					Country Export
+				</Button>
+				<Button
+					variant="outlined"
+					style={{ marginRight: theme.spacing(1), float: "right" }}
+					onClick={() =>
+						exportTable({
+							tableName: "Donor Template",
+							jwt: jwt as string,
+							tableExportUrl: `${DONOR_EXPORT}?header=true`,
+						})
+					}
+				>
+					Donor Template
+				</Button>
+			</>
+		</ImportExportTableMenu>
+	);
 };
 
 function DonorTable({
@@ -124,6 +181,7 @@ function DonorTable({
 	const [openDonorEditDialog, setOpenDonorEditDialog] = useState(false);
 	const [openContactAddDialog, setOpenContactAddDialog] = useState(false);
 	const [openContactListDialog, setOpenContactListDialog] = useState(false);
+	const [openDeleteDonorDialog, setOpenDeleteDonorDialog] = useState(false);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -133,7 +191,8 @@ function DonorTable({
 		queryData: donorList,
 		queryLoading,
 		countQueryLoading,
-		queryRefetch: refetchDonors,
+		queryRefetch: refetchDonorsList,
+		countRefetch: refetchDonorCount,
 	} = pagination({
 		countQuery: GET_DONOR_COUNT,
 		countFilter: queryFilter,
@@ -141,6 +200,10 @@ function DonorTable({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	const refetchDonorTable = useCallback(() => {
+		refetchDonorCount?.().then(() => refetchDonorsList?.());
+	}, [refetchDonorCount, refetchDonorsList]);
 
 	//this means new element has been added to the list
 	useEffect(() => {
@@ -156,7 +219,6 @@ function DonorTable({
 	};
 
 	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
-	const donorExportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.EXPORT_DONOR);
 
 	const menuList = [
 		{
@@ -175,6 +237,22 @@ function DonorTable({
 				</MenuItem>
 			),
 		},
+		// {
+		// 	children: (
+		// 		<MenuItem
+		// 			onClick={() => {
+		// 				setOpenDeleteDonorDialog(true);
+		// 				handleClose();
+		// 			}}
+		// 		>
+		// 			<FormattedMessage
+		// 				id="deleteDonorMenuItem"
+		// 				defaultMessage="Delete Donor"
+		// 				description="This text will be shown on menu item to delete donor"
+		// 			/>
+		// 		</MenuItem>
+		// 	),
+		// },
 		{
 			children: (
 				<MenuItem
@@ -215,7 +293,13 @@ function DonorTable({
 
 	if (!donorList?.orgDonors?.length) {
 		return (
-			<Box m={2} display="flex" justifyContent="center">
+			<Box
+				m={2}
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+				flexDirection="column"
+			>
 				<Typography variant="subtitle1" gutterBottom color="textSecondary">
 					<FormattedMessage
 						id={`nodataFound`}
@@ -223,6 +307,10 @@ function DonorTable({
 						description={`This text will be shown if no data found for table`}
 					/>
 				</Typography>
+				<ImportExportTableMenuHoc
+					refetchDonorTable={refetchDonorTable}
+					importButtonOnly={true}
+				/>
 			</Box>
 		);
 	}
@@ -235,6 +323,13 @@ function DonorTable({
 				initialValues={getInitialValues(selectedDonor.current)}
 				open={openDonorEditDialog}
 			/>
+			{/* <Donor
+				formAction={FORM_ACTIONS.UPDATE}
+				handleClose={() => setOpenDeleteDonorDialog(false)}
+				initialValues={getInitialValues(selectedDonor.current)}
+				open={openDeleteDonorDialog}
+				deleteDonor={true}
+			/> */}
 			<ContactDialog
 				entity_id={selectedDonor.current?.id || ""}
 				entity_name={Entity_Name.donor}
@@ -287,12 +382,7 @@ function DonorTable({
 							  )
 							: null}
 						<TableCell className={tableStyles.th} align="left">
-							<ImportExportTableMenu
-								tableName="Donors"
-								tableExportUrl={DONOR_EXPORT}
-								onImportTableSuccess={() => refetchDonors?.()}
-								hideExport={!donorExportAccess}
-							/>
+							<ImportExportTableMenuHoc refetchDonorTable={refetchDonorTable} />
 						</TableCell>
 					</TableRow>
 				</TableHead>

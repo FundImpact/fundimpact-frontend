@@ -4,4 +4,5 @@ export enum DONOR_ACTIONS {
 	DELETE_DONOR = "delete",
 	FIND_DONOR = "find",
 	EXPORT_DONOR = "exporttable",
+	IMPORT_DONOR = "createdonorfromcsv",
 }

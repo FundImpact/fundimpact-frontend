@@ -51,6 +51,11 @@ const removeDeliverableCategoryUnitList: FieldReadFunction<any, any> = (
 			!readField("deleted", readField("deliverable_units_org", { __ref }))
 	);
 
+const removeDeletedProjectDonors: FieldReadFunction<any, any> = (projectDonors, { readField }) =>
+	projectDonors?.filter(
+		({ __ref }: { __ref: string }) => !readField("deleted", readField("donor", { __ref }))
+	);
+
 export const client = new ApolloClient({
 	cache: new InMemoryCache({
 		typePolicies: {
@@ -105,6 +110,15 @@ export const client = new ApolloClient({
 						read: removeDeletedBudgetCategoryOrganizations,
 					},
 					deliverable_units_org: {
+						read: removeDeletedBudgetCategoryOrganizations,
+					},
+					orgDonors: {
+						read: removeDeletedBudgetCategoryOrganizations,
+					},
+					projectDonors: {
+						read: removeDeletedProjectDonors,
+					},
+					t4DIndividuals: {
 						read: removeDeletedBudgetCategoryOrganizations,
 					},
 				},

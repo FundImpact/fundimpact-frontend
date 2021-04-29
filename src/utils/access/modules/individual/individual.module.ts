@@ -21,5 +21,13 @@ export const INDIVIDUAL_MODULE = {
 			name: "Find Individual",
 			code: INDIVIDUAL_ACTIONS.FIND_INDIVIDUAL,
 		},
+		[INDIVIDUAL_ACTIONS.INDIVIDUAL_EXPORT]: {
+			name: "Individual Export",
+			code: INDIVIDUAL_ACTIONS.INDIVIDUAL_EXPORT,
+		},
+		[INDIVIDUAL_ACTIONS.INDIVIDUAL_IMPORT]: {
+			name: "Individual Import",
+			code: INDIVIDUAL_ACTIONS.INDIVIDUAL_IMPORT,
+		},
 	},
 };

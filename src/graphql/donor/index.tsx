@@ -9,6 +9,7 @@ export const GET_ORG_DONOR = gql`
 				id
 				name
 			}
+			deleted
 			legal_name
 			short_name
 		}

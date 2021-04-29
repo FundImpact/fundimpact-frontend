@@ -17,6 +17,7 @@ export const UPDATE_INDIVIDUAL = gql`
 			t4DIndividual {
 				id
 				name
+				deleted
 				t4d_project_individuals {
 					project {
 						id
