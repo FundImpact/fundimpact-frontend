@@ -11,6 +11,7 @@ export interface IUpdateIndividualVariables {
 	input: {
 		data: {
 			name: string;
+			deleted?: boolean;
 		};
 		where: {
 			id: string;

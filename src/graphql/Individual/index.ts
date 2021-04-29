@@ -5,6 +5,7 @@ export const GET_INDIVIDUALS = gql`
 		t4DIndividuals(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			name
+			deleted
 			t4d_project_individuals {
 				id
 				project {

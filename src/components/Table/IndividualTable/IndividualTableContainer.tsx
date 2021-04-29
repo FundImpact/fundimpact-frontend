@@ -26,6 +26,7 @@ interface IIndividualTableContainer {
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	individualTableType: IndividualTableType;
+	refetchIndividualTable: () => void;
 }
 
 const getInitialValues = (individual: IIndividual | null): IIndividual => {
@@ -49,6 +50,7 @@ function IndividualTableContainer({
 	removeFilterListElements,
 	setFilterList,
 	individualTableType,
+	refetchIndividualTable,
 }: IIndividualTableContainer) {
 	const selectedIndividual = useRef<IIndividual | null>(null);
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false]);
@@ -65,6 +67,14 @@ function IndividualTableContainer({
 	const individualEditAccess = userHasAccess(
 		MODULE_CODES.INDIVIDUAL,
 		INDIVIDUAL_ACTIONS.UPDATE_INDIVIDUAL
+	);
+	const individualExportAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.INDIVIDUAL_EXPORT
+	);
+	const individualImportAccess = userHasAccess(
+		MODULE_CODES.INDIVIDUAL,
+		INDIVIDUAL_ACTIONS.INDIVIDUAL_IMPORT
 	);
 
 	return (
@@ -88,6 +98,9 @@ function IndividualTableContainer({
 			contactFindAccess={contactFindAccess}
 			individualEditAccess={individualEditAccess}
 			individualTableType={individualTableType}
+			individualExportAccess={individualExportAccess}
+			individualImportAccess={individualImportAccess}
+			refetchIndividualTable={refetchIndividualTable}
 		/>
 	);
 }

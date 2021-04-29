@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import IndividualTableContainer from "./IndividualTableContainer";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -74,6 +74,8 @@ function IndividualCategoryTableGraphql({
 		queryData: individualList,
 		queryLoading,
 		countQueryLoading,
+		queryRefetch: refetchIndividualList,
+		countRefetch: refetchIndividualCount,
 	} = pagination({
 		countQuery: GET_INDIVIDUALS_COUNT,
 		countFilter: queryFilter,
@@ -83,6 +85,10 @@ function IndividualCategoryTableGraphql({
 		retrieveContFromCountQueryResponse: "t4DIndividualsConnection,aggregate,count",
 		fireRequest: Boolean(dashboardData),
 	});
+
+	const refetchIndividualTable = useCallback(() => {
+		refetchIndividualCount?.().then(() => refetchIndividualList?.());
+	}, [refetchIndividualCount, refetchIndividualList]);
 
 	return (
 		<IndividualTableContainer
@@ -98,6 +104,7 @@ function IndividualCategoryTableGraphql({
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
 			individualTableType={individualTableType}
+			refetchIndividualTable={refetchIndividualTable}
 		/>
 	);
 }
