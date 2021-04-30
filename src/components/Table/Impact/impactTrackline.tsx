@@ -647,7 +647,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						hideExport={!impactTracklineExportAccess}
 					>
 						<>
-							<Button
+							{/* <Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}
 								onClick={() =>
@@ -659,7 +659,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								}
 							>
 								Donor
-							</Button>
+							</Button> */}
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}

@@ -37,7 +37,7 @@ function DeleteModal({ open, handleClose, title, onDeleteConformation }: IDELETE
 				<DialogContentText>
 					<FormattedMessage
 						id="delete-dialog-confirmation-message"
-						defaultMessage="Are you sure you want to delete"
+						defaultMessage="Are you sure you want to delete ?"
 					/>
 				</DialogContentText>
 			</DialogContent>

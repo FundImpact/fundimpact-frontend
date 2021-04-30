@@ -642,7 +642,7 @@ export default function DashboardTableContainer() {
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);
 	};
-	console.log("cccc", dialogData);
+
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs

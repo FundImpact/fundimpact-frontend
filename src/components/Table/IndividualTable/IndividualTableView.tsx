@@ -237,19 +237,21 @@ function IndividualTableView({
 						hideExport={!individualExportAccess}
 					>
 						<>
-							<Button
-								variant="outlined"
-								style={{ marginRight: theme.spacing(1) }}
-								onClick={() =>
-									exportTable({
-										tableName: "Project",
-										jwt: jwt as string,
-										tableExportUrl: `${PROJECT_EXPORT}`,
-									})
-								}
-							>
-								Project Export
-							</Button>
+							{individualTableType == IndividualTableType.organization && (
+								<Button
+									variant="outlined"
+									style={{ marginRight: theme.spacing(1) }}
+									onClick={() =>
+										exportTable({
+											tableName: "Project",
+											jwt: jwt as string,
+											tableExportUrl: `${PROJECT_EXPORT}`,
+										})
+									}
+								>
+									Project Export
+								</Button>
+							)}
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1), float: "right" }}
@@ -257,7 +259,10 @@ function IndividualTableView({
 									exportTable({
 										tableName: "Individual Template",
 										jwt: jwt as string,
-										tableExportUrl: `${INDIVIDUAL_EXPORT}/?header=true`,
+										tableExportUrl:
+											individualTableType == IndividualTableType.organization
+												? `${INDIVIDUAL_EXPORT}?header=true`
+												: `${INDIVIDUAL_EXPORT}/${dashboardData?.project?.id}?header=true`,
 									})
 								}
 							>
