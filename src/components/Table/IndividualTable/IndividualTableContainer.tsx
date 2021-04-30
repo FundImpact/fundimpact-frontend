@@ -53,7 +53,7 @@ function IndividualTableContainer({
 	refetchIndividualTable,
 }: IIndividualTableContainer) {
 	const selectedIndividual = useRef<IIndividual | null>(null);
-	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false]);
+	const [openDialogs, setOpenDialogs] = useState<boolean[]>([false, false, false, false]);
 
 	const toggleDialogs = (index: number, val: boolean) => {
 		setOpenDialogs((openStatus) =>
