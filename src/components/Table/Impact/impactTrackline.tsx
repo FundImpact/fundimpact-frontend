@@ -654,13 +654,13 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 									exportTable({
 										tableName: "Donors",
 										jwt: jwt as string,
-										tableExportUrl: `${DONOR_EXPORT}`,
+										tableExportUrl: `${DONOR_EXPORT}/dashboardData?.project?.id`,
 									})
 								}
 							>
 								Donor
 							</Button> */}
-							<Button
+							{/* <Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}
 								onClick={() =>
@@ -672,7 +672,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								}
 							>
 								Grant Period
-							</Button>
+							</Button> */}
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}

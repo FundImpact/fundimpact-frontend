@@ -184,7 +184,10 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 
 	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[0], organizationEditAccess);
 
-	setSidebarTabUserAccess(sidebarList[sidebar.default].subHeadings[1], organizationFindAccess);
+	setSidebarTabUserAccess(
+		sidebarList[sidebar.default].subHeadings[1],
+		organizationFindAccess && organizationEditAccess
+	);
 
 	setSidebarTabUserAccess(
 		sidebarList[sidebar.managePortal].subHeadings[0],
@@ -203,7 +206,7 @@ export default function SettingsSidebar({ children }: { children?: Function }) {
 
 	setSidebarTabUserAccess(
 		sidebarList[sidebar.default].subHeadings[2],
-		individualCreateAccess || individualFindAccess
+		organizationFindAccess && organizationEditAccess
 	);
 
 	// setSidebarTabUserAccess(
