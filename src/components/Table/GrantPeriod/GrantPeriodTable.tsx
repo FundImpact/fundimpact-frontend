@@ -316,7 +316,7 @@ const ImportExportTableMenuHoc = ({
 						exportTable({
 							tableName: "Donors",
 							jwt: jwt as string,
-							tableExportUrl: `${DONOR_EXPORT}`,
+							tableExportUrl: `${DONOR_EXPORT}/${dashboardData?.project?.id}`,
 						})
 					}
 				>
