@@ -237,22 +237,22 @@ function DonorTable({
 				</MenuItem>
 			),
 		},
-		// {
-		// 	children: (
-		// 		<MenuItem
-		// 			onClick={() => {
-		// 				setOpenDeleteDonorDialog(true);
-		// 				handleClose();
-		// 			}}
-		// 		>
-		// 			<FormattedMessage
-		// 				id="deleteDonorMenuItem"
-		// 				defaultMessage="Delete Donor"
-		// 				description="This text will be shown on menu item to delete donor"
-		// 			/>
-		// 		</MenuItem>
-		// 	),
-		// },
+		{
+			children: (
+				<MenuItem
+					onClick={() => {
+						setOpenDeleteDonorDialog(true);
+						handleClose();
+					}}
+				>
+					<FormattedMessage
+						id="deleteDonorMenuItem"
+						defaultMessage="Delete Donor"
+						description="This text will be shown on menu item to delete donor"
+					/>
+				</MenuItem>
+			),
+		},
 		{
 			children: (
 				<MenuItem
@@ -323,13 +323,13 @@ function DonorTable({
 				initialValues={getInitialValues(selectedDonor.current)}
 				open={openDonorEditDialog}
 			/>
-			{/* <Donor
+			<Donor
 				formAction={FORM_ACTIONS.UPDATE}
 				handleClose={() => setOpenDeleteDonorDialog(false)}
 				initialValues={getInitialValues(selectedDonor.current)}
 				open={openDeleteDonorDialog}
 				deleteDonor={true}
-			/> */}
+			/>
 			<ContactDialog
 				entity_id={selectedDonor.current?.id || ""}
 				entity_name={Entity_Name.donor}

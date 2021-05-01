@@ -146,10 +146,10 @@ function FundReceivedTableView({
 		IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null
 	>;
 	toggleDialogs: (index: number, dialogNewOpenStatus: boolean) => void;
-	initialValues: IFundReceivedForm;
 	filterList: {
 		[key: string]: string | string[];
 	};
+	initialValues: IFundReceivedForm;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string | string[];

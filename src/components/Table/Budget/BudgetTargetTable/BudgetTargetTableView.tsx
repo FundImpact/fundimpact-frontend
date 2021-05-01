@@ -167,8 +167,8 @@ const createChipArray = ({
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
 		return chipArray({
-			elementList: [filterListObjectKeyValuePair[1]],
 			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			elementList: [filterListObjectKeyValuePair[1]],
 			removeChip: (index: number) => {
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
