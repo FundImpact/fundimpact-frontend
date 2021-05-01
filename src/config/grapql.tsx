@@ -8,7 +8,7 @@ import {
 } from "@apollo/client";
 import { getToken } from "../utils";
 
-const httpLink = new HttpLink({ uri: `${process.env.REACT_APP_BASEURL}graphql` });
+const httpLink = new HttpLink({ uri: `${process.env.REACT_APP_BASEURL}/graphql` });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
 	operation.setContext(({ headers = {} }: any) => ({
