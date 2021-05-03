@@ -18,23 +18,6 @@
 			"size": 6
 		},
 		{
-			"name": "impactCategory",
-			"label": "Choose Impact Category",
-			"size": 12,
-			"testId": "createImpactUnitImpactCategory",
-			"dataTestId": "createImpactUnitImpactCategoryInput",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined",
-			"inputType": "select",
-			"required": true,
-			"addNew": true,
-			"addNewClick": {},
-			"hidden": false,
-			"multiple": true
-		},
-		{
 			"name": "description",
 			"id": "description",
 			"dataTestId": "createImpactUnitDescription",

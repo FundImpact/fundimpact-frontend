@@ -522,7 +522,7 @@ export default function DeliverablesTrackLineTable({
 								deliverableTrackingLineitemList[i]?.value +
 								`${deliverableTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_category_unit?.deliverable_units_org?.name}`}</TableCell>,
+						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_unit_org?.name}`}</TableCell>,
 						<TableCell
 							key={
 								deliverableTrackingLineitemList[i]?.financial_year?.name +

@@ -99,22 +99,18 @@ const FormDetailsCalculate = React.memo(
 			? [
 					{
 						label: deliverableCategoryLabel,
-						value:
-							fetchedDeliverableTarget.deliverable_category_unit
-								.deliverable_category_org.name,
+						value: fetchedDeliverableTarget.deliverable_category_org?.name,
 					},
 					{
 						label: deliverableTotalTargetLabel,
 						value: `${fetchedDeliverableTarget.target_value} ${
-							fetchedDeliverableTarget.deliverable_category_unit
-								?.deliverable_units_org?.name || ""
+							fetchedDeliverableTarget?.deliverable_unit_org?.name || ""
 						}`,
 					},
 					{
 						label: deliverableAchievedTargetLabel,
 						value: `${achivedValue?.deliverableTrackingTotalValue} ${
-							fetchedDeliverableTarget.deliverable_category_unit
-								?.deliverable_units_org?.name || ""
+							fetchedDeliverableTarget?.deliverable_unit_org?.name || ""
 						}`,
 					},
 			  ]
@@ -473,72 +469,72 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 		createDeliverableTrackline({
 			variables: { input },
-			// update: async (
-			// 	store,
-			// 	{ data: { createDeliverableTrackingLineitemDetail: lineItemCreated } }
-			// ) => {
-			// 	try {
-			// 		const count = await store.readQuery<{
-			// 			deliverableTrackingLineitemCount: number;
-			// 		}>({
-			// 			query: GET_DELIVERABLE_TRACKLINE_COUNT,
-			// 			variables: {
-			// 				filter: {
-			// 					deliverable_target_project: value.deliverable_target_project,
-			// 				},
-			// 			},
-			// 		});
-			// 		store.writeQuery<{ deliverableTrackingLineitemCount: number }>({
-			// 			query: GET_DELIVERABLE_TRACKLINE_COUNT,
-			// 			variables: {
-			// 				filter: {
-			// 					deliverable_target_project: value.deliverable_target_project,
-			// 				},
-			// 			},
-			// 			data: {
-			// 				deliverableTrackingLineitemCount:
-			// 					count!.deliverableTrackingLineitemCount + 1,
-			// 			},
-			// 		});
-			// 		let limit = 0;
-			// 		if (count) {
-			// 			limit = count.deliverableTrackingLineitemCount;
-			// 		}
-			// 		const data = await store.readQuery<IGET_DELIVERABLE_TRACKLINE_BY_TARGET>({
-			// 			query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-			// 			variables: {
-			// 				filter: {
-			// 					deliverable_target_project: value.deliverable_target_project,
-			// 				},
-			// 				limit: limit > 10 ? 10 : limit,
-			// 				start: 0,
-			// 				sort: "created_at:DESC",
-			// 			},
-			// 		});
-			// 		let deliverableTrackingLineitemList: IDeliverableTracklineByTargetResponse[] = data?.deliverableTrackingLineitemList
-			// 			? data?.deliverableTrackingLineitemList
-			// 			: [];
-			// 		store.writeQuery<IGET_DELIVERABLE_TRACKLINE_BY_TARGET>({
-			// 			query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-			// 			variables: {
-			// 				filter: {
-			// 					deliverable_target_project: value.deliverable_target_project,
-			// 				},
-			// 				limit: limit > 10 ? 10 : limit,
-			// 				start: 0,
-			// 				sort: "created_at:DESC",
-			// 			},
-			// 			data: {
-			// 				deliverableTrackingLineitemList: [
-			// 					lineItemCreated,
-			// 					...deliverableTrackingLineitemList,
-			// 				],
-			// 			},
-			// 		});
-			// 	} catch (err) {
-			// 		console.error(err);
-			// 	}
-			// },
+			update: async (
+				store,
+				{ data: { createDeliverableTrackingLineitemDetail: lineItemCreated } }
+			) => {
+				try {
+					const count = await store.readQuery<{
+						deliverableTrackingLineitemCount: number;
+					}>({
+						query: GET_DELIVERABLE_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+						},
+					});
+					store.writeQuery<{ deliverableTrackingLineitemCount: number }>({
+						query: GET_DELIVERABLE_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+						},
+						data: {
+							deliverableTrackingLineitemCount:
+								count!.deliverableTrackingLineitemCount + 1,
+						},
+					});
+					let limit = 0;
+					if (count) {
+						limit = count.deliverableTrackingLineitemCount;
+					}
+					const data = await store.readQuery<IGET_DELIVERABLE_TRACKLINE_BY_TARGET>({
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+					});
+					let deliverableTrackingLineitemList: IDeliverableTracklineByTargetResponse[] = data?.deliverableTrackingLineitemList
+						? data?.deliverableTrackingLineitemList
+						: [];
+					store.writeQuery<IGET_DELIVERABLE_TRACKLINE_BY_TARGET>({
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								deliverable_target_project: value.deliverable_target_project,
+							},
+							limit: limit > 10 ? 10 : limit,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+						data: {
+							deliverableTrackingLineitemList: [
+								lineItemCreated,
+								...deliverableTrackingLineitemList,
+							],
+						},
+					});
+				} catch (err) {
+					console.error(err);
+				}
+			},
 			refetchQueries: [
 				// {
 				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,

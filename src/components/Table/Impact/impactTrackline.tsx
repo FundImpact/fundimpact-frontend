@@ -505,7 +505,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								impactTrackingLineitemList[i]?.value +
 								`${impactTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
+						>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_units_org?.name}`}</TableCell>,
 						<TableCell key={Math.random() + `${impactTrackingLineitemList[i]?.id}-4`}>
 							{" "}
 							<Box display="flex">
