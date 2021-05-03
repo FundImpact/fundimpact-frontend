@@ -149,21 +149,21 @@ function DeliverableCategoryView({
 		}
 	}, [deliverableCategoryDeleteAccess]);
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						code: "",
-						name: "",
-						description: "",
-					}}
-					inputFields={deliverableCategoryInputFields}
-					setFilterList={setFilterList}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					code: "",
+	// 					name: "",
+	// 					description: "",
+	// 				}}
+	// 				inputFields={deliverableCategoryInputFields}
+	// 				setFilterList={setFilterList}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 
 	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
 

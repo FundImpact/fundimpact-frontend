@@ -145,21 +145,21 @@ function ImpactCategoryTableView({
 			impactCategoryTableEditMenu[1] = "Delete Impact Category";
 		}
 	}, [impactCategoryDeleteAccess]);
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					setFilterList={setFilterList}
-					inputFields={impactCategoryInputFields}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					name: "",
+	// 					code: "",
+	// 					description: "",
+	// 				}}
+	// 				setFilterList={setFilterList}
+	// 				inputFields={impactCategoryInputFields}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 
 	const onImportImpactCategoryTableSuccess = () => reftechImpactCategoryAndUnitTable();
 	const { jwt } = useAuth();

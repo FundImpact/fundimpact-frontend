@@ -160,21 +160,21 @@ function DeliverableUnitTableView({
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					setFilterList={setFilterList}
-					inputFields={deliverableUnitInputFields}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					name: "",
+	// 					code: "",
+	// 					description: "",
+	// 				}}
+	// 				setFilterList={setFilterList}
+	// 				inputFields={deliverableUnitInputFields}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 
 	const theme = useTheme();
 	const { jwt } = useAuth();

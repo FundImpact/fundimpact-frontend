@@ -151,21 +151,21 @@ function ImpactUnitTableView({
 		}
 	}, [impactUnitDeleteAccess]);
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					inputFields={impactUnitInputFields}
-					setFilterList={setFilterList}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					name: "",
+	// 					code: "",
+	// 					description: "",
+	// 				}}
+	// 				inputFields={impactUnitInputFields}
+	// 				setFilterList={setFilterList}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 	const dashboardData = useDashBoardData();
 
 	const onImportUnitTableSuccess = () => reftechImpactCategoryAndUnitTable();
