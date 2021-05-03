@@ -469,7 +469,12 @@ function ImpactUnitDialog({
 			// 	impactCategoryUnitList: impactCategoryUnitList?.impactCategoryUnitList || [],
 			// 	submittedImpactCategory,
 			// });
-		} catch (err) {}
+			notificationDispatch(setSuccessNotification("Impact Unit Update Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
 	};
 
 	const onDelete = async () => {
