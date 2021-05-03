@@ -117,7 +117,7 @@ const BasicDetailsForm = () => {
 		return Object.keys(errors).length ? false : true;
 	};
 
-	if (!checkIfUserIsOnStagingDeployment()) {
+	if (!(checkIfUserIsOnStagingDeployment() || process.env.NODE_ENV === "test")) {
 		return null;
 	}
 
