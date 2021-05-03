@@ -27,8 +27,10 @@ import useRouteResolver from "../../../hooks/routes/useRouteResolver";
 import { IBasicInformation } from "../../../models";
 import { IUserSignupResponse } from "../../../models/signup/userSignUpResponse";
 import { setUser } from "../../../reducers/userReducer";
+import { checkIfUserIsOnStagingDeployment } from "../../../utils";
 import { COUNTRY_LIST_API, SIGNUP_API } from "../../../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../../../utils/signup.util";
+import { DEMO, DEMO1, LOCAL, STAGING } from "../../../utils/stagingDeploymentEndpoints.util";
 import AlertMsg from "../../AlertMessage/AlertMessage";
 import GlobalLoader from "../../commons/GlobalLoader";
 
@@ -114,6 +116,10 @@ const BasicDetailsForm = () => {
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
 	};
+
+	if (!checkIfUserIsOnStagingDeployment()) {
+		return null;
+	}
 
 	return (
 		<div onChange={clearErrors}>

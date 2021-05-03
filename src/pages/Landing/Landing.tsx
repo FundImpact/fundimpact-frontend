@@ -9,6 +9,7 @@ import useRouteResolver from "../../hooks/routes/useRouteResolver";
 import useSignUpStep from "../../hooks/signup/useSignupStep";
 import { ISignUpStep } from "../../models";
 import { getSteps } from "../../utils/signup.util";
+import { checkIfUserIsOnStagingDeployment } from "../../utils";
 
 function ActionDescription({ stepNumber }: { stepNumber: number | undefined }) {
 	const steps = getSteps();
@@ -60,7 +61,9 @@ function LandingPage() {
 	const location = useLocation();
 	const signUpPathMatch = matchPath("signup/:id", location.pathname);
 	const { currentStep } = useSignUpStep(signUpPathMatch ? signUpPathMatch.params.id : undefined);
+	const userIsOnStagingDeployment = checkIfUserIsOnStagingDeployment();
 	useRouteResolver();
+
 	return (
 		<Grid container>
 			<Grid item xs={12} component={Box} md={4}>
@@ -73,16 +76,22 @@ function LandingPage() {
 					height={{ md: "100vh" }}
 					bgcolor="primary.main"
 				>
-					<ActionDescription stepNumber={signUpPathMatch ? currentStep : undefined} />
+					<ActionDescription
+						stepNumber={
+							signUpPathMatch && userIsOnStagingDeployment ? currentStep : undefined
+						}
+					/>
 					<Box>
 						<Typography component="h6">
 							<Box>
 								{loginPathMatch ? (
-									<FormattedMessage
-										id="dontHaveAccount"
-										defaultMessage="Don't have account?"
-										description="This text will be show on login page on left side over blue cover"
-									/>
+									userIsOnStagingDeployment && (
+										<FormattedMessage
+											id="dontHaveAccount"
+											defaultMessage="Don't have account?"
+											description="This text will be show on login page on left side over blue cover"
+										/>
+									)
 								) : (
 									<FormattedMessage
 										id="alreadyHaveAccount"
@@ -93,17 +102,19 @@ function LandingPage() {
 							</Box>
 						</Typography>
 						{loginPathMatch ? (
-							<Button
-								onClick={() => navigate("/signup")}
-								variant={"contained"}
-								color="secondary"
-							>
-								<FormattedMessage
-									id="singupBtnText"
-									defaultMessage="Signup"
-									description="This text is to be shown on Signup button"
-								/>
-							</Button>
+							userIsOnStagingDeployment && (
+								<Button
+									onClick={() => navigate("/signup")}
+									variant={"contained"}
+									color="secondary"
+								>
+									<FormattedMessage
+										id="singupBtnText"
+										defaultMessage="Signup"
+										description="This text is to be shown on Signup button"
+									/>
+								</Button>
+							)
 						) : (
 							<Button
 								onClick={() => navigate("/login")}
