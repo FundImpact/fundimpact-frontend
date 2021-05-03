@@ -12,40 +12,37 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 				name
 				description
 				target_value
-				deliverable_category_unit {
+				deliverable_category_org {
 					id
-					deliverable_category_org {
+					name
+					code
+					description
+					organization {
 						id
 						name
-						code
-						description
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
-					deliverable_units_org {
-						id
-						name
-						description
-						code
-						unit_type
-						prefix_label
-						suffix_label
-					}
+				}
+				deliverable_unit_org {
+					id
+					name
+					description
+					code
+					unit_type
+					prefix_label
+					suffix_label
 				}
 				project {
 					id
@@ -105,43 +102,39 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 				description
 				target_value
 				deleted
-				deliverable_category_unit {
+				deliverable_category_org {
 					id
-					status
-					deliverable_category_org {
+					name
+					code
+					description
+					deleted
+					organization {
 						id
 						name
-						code
-						description
-						deleted
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
-					deliverable_units_org {
-						id
-						name
-						description
-						code
-						unit_type
-						prefix_label
-						suffix_label
-						deleted
-					}
+				}
+				deliverable_unit_org {
+					id
+					name
+					description
+					code
+					unit_type
+					prefix_label
+					suffix_label
+					deleted
 				}
 				project {
 					id
@@ -202,11 +195,9 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 				name
 				description
 				target_value
-				deliverable_category_unit {
-					status
-					deliverable_units_org {
-						name
-					}
+				deliverable_unit_org {
+					id
+					name
 				}
 				deleted
 			}

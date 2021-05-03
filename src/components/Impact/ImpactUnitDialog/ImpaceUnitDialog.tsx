@@ -55,7 +55,7 @@ const defaultValues: IImpactUnitFormInput = {
 	code: "",
 	prefix_label: "",
 	suffix_label: "",
-	impactCategory: [],
+	// impactCategory: [],
 };
 
 interface IChangeImpactCategoryUnitStatusProps {
@@ -68,62 +68,62 @@ interface IChangeImpactCategoryUnitStatusProps {
 	submittedImpactCategory: string[];
 }
 
-const changeImpactCategoryUnitStatus = async ({
-	updateImpactCategoryUnit,
-	impactCategoryUnitList,
-	submittedImpactCategory,
-}: IChangeImpactCategoryUnitStatusProps) => {
-	const impactCategoryHash = submittedImpactCategory.reduce(
-		(impCatHash: { [key: string]: boolean }, impactCategoryUnitList) => {
-			impCatHash[impactCategoryUnitList] = true;
-			return impCatHash;
-		},
-		{}
-	);
+// const changeImpactCategoryUnitStatus = async ({
+// 	updateImpactCategoryUnit,
+// 	impactCategoryUnitList,
+// 	submittedImpactCategory,
+// }: IChangeImpactCategoryUnitStatusProps) => {
+// 	const impactCategoryHash = submittedImpactCategory.reduce(
+// 		(impCatHash: { [key: string]: boolean }, impactCategoryUnitList) => {
+// 			impCatHash[impactCategoryUnitList] = true;
+// 			return impCatHash;
+// 		},
+// 		{}
+// 	);
 
-	//write comment
-	return Promise.all(
-		impactCategoryUnitList.map((impactCategoryUnit) => {
-			if (impactCategoryUnit.impact_category_org.id in impactCategoryHash) {
-				return updateImpactCategoryUnit({
-					variables: {
-						id: impactCategoryUnit.id,
-						input: {
-							status: true,
-						},
-					},
-				});
-			} else {
-				return updateImpactCategoryUnit({
-					variables: {
-						id: impactCategoryUnit.id,
-						input: {
-							status: false,
-						},
-					},
-				});
-			}
-		})
-	);
-};
+// 	//write comment
+// 	return Promise.all(
+// 		impactCategoryUnitList.map((impactCategoryUnit) => {
+// 			if (impactCategoryUnit.impact_category_org.id in impactCategoryHash) {
+// 				return updateImpactCategoryUnit({
+// 					variables: {
+// 						id: impactCategoryUnit.id,
+// 						input: {
+// 							status: true,
+// 						},
+// 					},
+// 				});
+// 			} else {
+// 				return updateImpactCategoryUnit({
+// 					variables: {
+// 						id: impactCategoryUnit.id,
+// 						input: {
+// 							status: false,
+// 						},
+// 					},
+// 				});
+// 			}
+// 		})
+// 	);
+// };
 
-const getNewImpactCategories = ({
-	impactCategories,
-	oldImpactCategories,
-}: {
-	impactCategories: string[];
-	oldImpactCategories: string[];
-}) =>
-	impactCategories.filter((element: string) => oldImpactCategories.indexOf(element) === -1) || [];
+// const getNewImpactCategories = ({
+// 	impactCategories,
+// 	oldImpactCategories,
+// }: {
+// 	impactCategories: string[];
+// 	oldImpactCategories: string[];
+// }) =>
+// 	impactCategories.filter((element: string) => oldImpactCategories.indexOf(element) === -1) || [];
 
 const validate = (values: IImpactUnitFormInput) => {
 	let errors: Partial<IImpactUnitFormInput> = {};
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.impactCategory?.length) {
-		errors.name = "Impact category is required";
-	}
+	// if (!values.impactCategory?.length) {
+	// 	errors.name = "Impact category is required";
+	// }
 	return errors;
 };
 
@@ -137,189 +137,189 @@ function ImpactUnitDialog({
 }: IImpactUnitProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	const [impactCategory, setImpactCategory] = useState<string[]>([]);
+	// const [impactCategory, setImpactCategory] = useState<string[]>([]);
 	const initialValues = formAction === FORM_ACTIONS.CREATE ? defaultValues : formValues;
 
-	const [updateImpactCategoryUnit] = useMutation<
-		IUpdateImpactCategoryUnit,
-		IUpdateImpactCategoryUnitVariables
-	>(UPDATE_IMPACT_CATEGORY_UNIT);
+	// const [updateImpactCategoryUnit] = useMutation<
+	// 	IUpdateImpactCategoryUnit,
+	// 	IUpdateImpactCategoryUnitVariables
+	// >(UPDATE_IMPACT_CATEGORY_UNIT);
 
-	const [getImpactCategoryUnitList, { data: impactCategoryUnitList }] = useLazyQuery<
-		IGetImpactCategoryUnit,
-		IGetImpactCategoryUnitVariables
-	>(GET_IMPACT_CATEGORY_UNIT, {
-		fetchPolicy: "cache-only",
-	});
-	useEffect(() => {
-		if (formAction === FORM_ACTIONS.UPDATE && initialValues) {
-			getImpactCategoryUnitList({
-				variables: {
-					filter: {
-						impact_units_org: `${initialValues.id}`,
-					},
-				},
-			});
-		}
-	}, [getImpactCategoryUnitList, initialValues]);
+	// const [getImpactCategoryUnitList, { data: impactCategoryUnitList }] = useLazyQuery<
+	// 	IGetImpactCategoryUnit,
+	// 	IGetImpactCategoryUnitVariables
+	// >(GET_IMPACT_CATEGORY_UNIT, {
+	// 	fetchPolicy: "cache-only",
+	// });
+	// useEffect(() => {
+	// 	if (formAction === FORM_ACTIONS.UPDATE && initialValues) {
+	// 		getImpactCategoryUnitList({
+	// 			variables: {
+	// 				filter: {
+	// 					impact_units_org: `${initialValues.id}`,
+	// 				},
+	// 			},
+	// 		});
+	// 	}
+	// }, [getImpactCategoryUnitList, initialValues]);
 
-	const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
-		variables: { filter: { organization: organization } },
-	});
-	const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
-		CREATE_IMPACT_CATEGORY_UNIT
-	);
+	// const { data: impactCategories } = useQuery(GET_IMPACT_CATEGORY_BY_ORG, {
+	// 	variables: { filter: { organization: organization } },
+	// });
+	// const [createImpactCategoryUnit, { loading: creatingImpactCategoryUnit }] = useMutation(
+	// 	CREATE_IMPACT_CATEGORY_UNIT
+	// );
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
-	const [openImpactCategoryDialog, setOpenImpactCategoryDialog] = useState<boolean>();
-	impactUnitForm[2].addNewClick = () => setOpenImpactCategoryDialog(true);
+	// const [openImpactCategoryDialog, setOpenImpactCategoryDialog] = useState<boolean>();
+	// impactUnitForm[2].addNewClick = () => setOpenImpactCategoryDialog(true);
 
-	const updateImpactCategoryUnitCount = async (
-		store: ApolloCache<any>,
-		filter: { [key: string]: string }
-	) => {
-		try {
-			const impactCategoryUnitCount = await store.readQuery<{
-				impactCategoryUnitListCount: number;
-			}>({
-				query: GET_IMPACT_CATEGORY_UNIT_COUNT,
-				variables: {
-					filter,
-				},
-			});
+	// const updateImpactCategoryUnitCount = async (
+	// 	store: ApolloCache<any>,
+	// 	filter: { [key: string]: string }
+	// ) => {
+	// 	try {
+	// 		const impactCategoryUnitCount = await store.readQuery<{
+	// 			impactCategoryUnitListCount: number;
+	// 		}>({
+	// 			query: GET_IMPACT_CATEGORY_UNIT_COUNT,
+	// 			variables: {
+	// 				filter,
+	// 			},
+	// 		});
 
-			store.writeQuery<{ impactCategoryUnitListCount: number }>({
-				query: GET_IMPACT_CATEGORY_UNIT_COUNT,
-				variables: {
-					filter,
-				},
-				data: {
-					impactCategoryUnitListCount:
-						(impactCategoryUnitCount &&
-							impactCategoryUnitCount.impactCategoryUnitListCount + 1) ||
-						0,
-				},
-			});
-			return impactCategoryUnitCount;
-		} catch (err) {}
-	};
+	// 		store.writeQuery<{ impactCategoryUnitListCount: number }>({
+	// 			query: GET_IMPACT_CATEGORY_UNIT_COUNT,
+	// 			variables: {
+	// 				filter,
+	// 			},
+	// 			data: {
+	// 				impactCategoryUnitListCount:
+	// 					(impactCategoryUnitCount &&
+	// 						impactCategoryUnitCount.impactCategoryUnitListCount + 1) ||
+	// 					0,
+	// 			},
+	// 		});
+	// 		return impactCategoryUnitCount;
+	// 	} catch (err) {}
+	// };
 
-	const updateImpactCategoryUnitList = async ({
-		limit,
-		filter,
-		store,
-		createdImpactCategoryUnit,
-	}: {
-		limit?: number;
-		filter: { [key: string]: string };
-		store: ApolloCache<any>;
-		createdImpactCategoryUnit: any;
-	}) => {
-		try {
-			const variables = (limit && {
-				filter,
-				limit: limit > 10 ? 10 : limit,
-				start: 0,
-				sort: "created_at:DESC",
-			}) || { filter };
+	// const updateImpactCategoryUnitList = async ({
+	// 	limit,
+	// 	filter,
+	// 	store,
+	// 	createdImpactCategoryUnit,
+	// }: {
+	// 	limit?: number;
+	// 	filter: { [key: string]: string };
+	// 	store: ApolloCache<any>;
+	// 	createdImpactCategoryUnit: any;
+	// }) => {
+	// 	try {
+	// 		const variables = (limit && {
+	// 			filter,
+	// 			limit: limit > 10 ? 10 : limit,
+	// 			start: 0,
+	// 			sort: "created_at:DESC",
+	// 		}) || { filter };
 
-			const impactCategoryUnitCacheByUnit = await store.readQuery<IGetImpactCategoryUnit>({
-				query: GET_IMPACT_CATEGORY_UNIT,
-				variables,
-			});
+	// 		const impactCategoryUnitCacheByUnit = await store.readQuery<IGetImpactCategoryUnit>({
+	// 			query: GET_IMPACT_CATEGORY_UNIT,
+	// 			variables,
+	// 		});
 
-			store.writeQuery<IGetImpactCategoryUnit>({
-				query: GET_IMPACT_CATEGORY_UNIT,
-				variables,
-				data: {
-					impactCategoryUnitList: [
-						createdImpactCategoryUnit,
-						...((impactCategoryUnitCacheByUnit &&
-							impactCategoryUnitCacheByUnit.impactCategoryUnitList) ||
-							[]),
-					],
-				},
-			});
-		} catch (err) {
-			console.error(err);
-		}
-	};
+	// 		store.writeQuery<IGetImpactCategoryUnit>({
+	// 			query: GET_IMPACT_CATEGORY_UNIT,
+	// 			variables,
+	// 			data: {
+	// 				impactCategoryUnitList: [
+	// 					createdImpactCategoryUnit,
+	// 					...((impactCategoryUnitCacheByUnit &&
+	// 						impactCategoryUnitCacheByUnit.impactCategoryUnitList) ||
+	// 						[]),
+	// 				],
+	// 			},
+	// 		});
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// };
 
-	const impactCategoryUnitHelper = async (impactUnitId: string) => {
-		try {
-			for (let i = 0; i < impactCategory.length; i++) {
-				await createImpactCategoryUnit({
-					variables: {
-						input: {
-							impact_category_org: impactCategory[i],
-							impact_units_org: impactUnitId,
-						},
-					},
-					refetchQueries: [],
-					update: async (store, { data: createdImpactCategoryUnit }) => {
-						const impactCategoryUnitByUnitCount = await updateImpactCategoryUnitCount(
-							store,
-							{
-								impact_units_org: impactUnitId,
-							}
-						);
+	// const impactCategoryUnitHelper = async (impactUnitId: string) => {
+	// 	try {
+	// 		for (let i = 0; i < impactCategory.length; i++) {
+	// 			await createImpactCategoryUnit({
+	// 				variables: {
+	// 					input: {
+	// 						impact_category_org: impactCategory[i],
+	// 						impact_units_org: impactUnitId,
+	// 					},
+	// 				},
+	// 				refetchQueries: [],
+	// 				update: async (store, { data: createdImpactCategoryUnit }) => {
+	// 					const impactCategoryUnitByUnitCount = await updateImpactCategoryUnitCount(
+	// 						store,
+	// 						{
+	// 							impact_units_org: impactUnitId,
+	// 						}
+	// 					);
 
-						const impactCategoryUnitByCategoryCount = await updateImpactCategoryUnitCount(
-							store,
-							{
-								impact_category_org: impactCategory[i],
-							}
-						);
+	// 					const impactCategoryUnitByCategoryCount = await updateImpactCategoryUnitCount(
+	// 						store,
+	// 						{
+	// 							impact_category_org: impactCategory[i],
+	// 						}
+	// 					);
 
-						let limit = 0;
-						if (impactCategoryUnitByUnitCount) {
-							limit = impactCategoryUnitByUnitCount.impactCategoryUnitListCount;
-						}
+	// 					let limit = 0;
+	// 					if (impactCategoryUnitByUnitCount) {
+	// 						limit = impactCategoryUnitByUnitCount.impactCategoryUnitListCount;
+	// 					}
 
-						await updateImpactCategoryUnitList({
-							createdImpactCategoryUnit,
-							limit,
-							filter: { impact_units_org: impactUnitId },
-							store,
-						});
+	// 					await updateImpactCategoryUnitList({
+	// 						createdImpactCategoryUnit,
+	// 						limit,
+	// 						filter: { impact_units_org: impactUnitId },
+	// 						store,
+	// 					});
 
-						if (impactCategoryUnitByCategoryCount) {
-							limit = impactCategoryUnitByCategoryCount.impactCategoryUnitListCount;
-						}
+	// 					if (impactCategoryUnitByCategoryCount) {
+	// 						limit = impactCategoryUnitByCategoryCount.impactCategoryUnitListCount;
+	// 					}
 
-						await updateImpactCategoryUnitList({
-							createdImpactCategoryUnit,
-							limit,
-							filter: { impact_category_org: impactCategory[i] },
-							store,
-						});
+	// 					await updateImpactCategoryUnitList({
+	// 						createdImpactCategoryUnit,
+	// 						limit,
+	// 						filter: { impact_category_org: impactCategory[i] },
+	// 						store,
+	// 					});
 
-						await updateImpactCategoryUnitList({
-							createdImpactCategoryUnit,
-							filter: { impact_units_org: impactUnitId },
-							store,
-						});
-					},
-				});
-			}
-		} catch (err) {
-			console.error(err);
-		}
-	};
+	// 					await updateImpactCategoryUnitList({
+	// 						createdImpactCategoryUnit,
+	// 						filter: { impact_units_org: impactUnitId },
+	// 						store,
+	// 					});
+	// 				},
+	// 			});
+	// 		}
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// };
 
 	const [createImpactUnitsOrgInput, { loading: creatingInpactUnit }] = useMutation(
 		CREATE_IMPACT_UNITS_ORG_INPUT,
 		{
-			async onCompleted(data) {
-				try {
-					if (impactCategory) {
-						await impactCategoryUnitHelper(data.createImpactUnitsOrgInput?.id);
-					}
-					notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
-				} catch (err) {
-				} finally {
-					handleClose();
-				}
-			},
+			// async onCompleted(data) {
+			// 	try {
+			// 		if (impactCategory) {
+			// 			await impactCategoryUnitHelper(data.createImpactUnitsOrgInput?.id);
+			// 		}
+			// 		notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
+			// 	} catch (err) {
+			// 	} finally {
+			// 		handleClose();
+			// 	}
+			// },
 			onError() {
 				notificationDispatch(setErrorNotification("Impact Unit Creation Failure"));
 				handleClose();
@@ -330,33 +330,33 @@ function ImpactUnitDialog({
 	const [updateImpactUnitsOrgInput, { loading: updatingImpactUnit }] = useMutation(
 		UPDATE_IMPACT_UNIT_ORG,
 		{
-			async onCompleted(data) {
-				if (impactCategory) {
-					await impactCategoryUnitHelper(data.updateImpactUnitsOrgInput?.id);
-				}
-				notificationDispatch(setSuccessNotification("Impact Unit Updation Success"));
-				handleClose();
-			},
+			// async onCompleted(data) {
+			// 	if (impactCategory) {
+			// 		await impactCategoryUnitHelper(data.updateImpactUnitsOrgInput?.id);
+			// 	}
+			// 	notificationDispatch(setSuccessNotification("Impact Unit Updation Success"));
+			// 	handleClose();
+			// },
 			onError(error) {
-				notificationDispatch(setErrorNotification(error.message));
+				notificationDispatch(setErrorNotification(error?.message));
 				handleClose();
 			},
 		}
 	);
 
-	useEffect(() => {
-		if (impactCategories) {
-			impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
-		}
-	}, [impactCategories]);
+	// useEffect(() => {
+	// 	if (impactCategories) {
+	// 		impactUnitForm[2].optionsArray = impactCategories?.impactCategoryOrgList;
+	// 	}
+	// }, [impactCategories]);
 
 	const onSubmit = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
 			const values = Object.assign({}, valuesSubmitted);
-			setImpactCategory(values?.impactCategory || []);
+			// setImpactCategory(values?.impactCategory || []);
 			delete values.prefix_label;
 			delete values.suffix_label;
-			delete values.impactCategory;
+			// delete values.impactCategory;
 			await createImpactUnitsOrgInput({
 				variables: {
 					input: {
@@ -420,50 +420,37 @@ function ImpactUnitDialog({
 								impactUnitsOrgList: [createImpactUnitsOrgData, ...impactUnits],
 							},
 						});
-
-						const cachedData = store.readQuery<IGetImpactUnit>({
-							query: GET_IMPACT_UNIT_BY_ORG,
-							variables: {
-								filter: {
-									organization: organization,
-								},
-							},
-						});
-
-						let impactUnitList: IImpactUnitData[] =
-							cachedData?.impactUnitsOrgList || [];
-
-						store.writeQuery<IGetImpactUnit>({
-							query: GET_IMPACT_UNIT_BY_ORG,
-							variables: {
-								filter: {
-									organization: organization,
-								},
-							},
-							data: {
-								impactUnitsOrgList: [createImpactUnitsOrgData, ...impactUnitList],
-							},
-						});
 					} catch (err) {}
 				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_UNIT_BY_ORG,
+						variables: { filter: { organization: dashboardData?.organization?.id } },
+					},
+				],
 			});
-		} catch (err) {}
+			notificationDispatch(setSuccessNotification("Impact Unit Creation Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
 	};
 
 	const onUpdate = async (valuesSubmitted: IImpactUnitFormInput) => {
 		try {
 			const values = Object.assign({}, valuesSubmitted);
-			let submittedImpactCategory: string[] = valuesSubmitted?.impactCategory || [];
-			const newImpactCategories = getNewImpactCategories({
-				impactCategories: submittedImpactCategory,
-				oldImpactCategories:
-					impactCategoryUnitList?.impactCategoryUnitList.map(
-						(impactCategoryUnit: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
-							impactCategoryUnit.impact_category_org.id
-					) || [],
-			});
-			setImpactCategory(newImpactCategories);
-			delete values.impactCategory;
+			// let submittedImpactCategory: string[] = valuesSubmitted?.impactCategory || [];
+			// const newImpactCategories = getNewImpactCategories({
+			// 	impactCategories: submittedImpactCategory,
+			// 	oldImpactCategories:
+			// 		impactCategoryUnitList?.impactCategoryUnitList.map(
+			// 			(impactCategoryUnit: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
+			// 				impactCategoryUnit.impact_category_org.id
+			// 		) || [],
+			// });
+			// setImpactCategory(newImpactCategories);
+			// delete values.impactCategory;
 			delete values.id;
 			await updateImpactUnitsOrgInput({
 				variables: {
@@ -477,11 +464,11 @@ function ImpactUnitDialog({
 				},
 			});
 			//remove newImpactCategories
-			await changeImpactCategoryUnitStatus({
-				updateImpactCategoryUnit,
-				impactCategoryUnitList: impactCategoryUnitList?.impactCategoryUnitList || [],
-				submittedImpactCategory,
-			});
+			// await changeImpactCategoryUnitStatus({
+			// 	updateImpactCategoryUnit,
+			// 	impactCategoryUnitList: impactCategoryUnitList?.impactCategoryUnitList || [],
+			// 	submittedImpactCategory,
+			// });
 		} catch (err) {}
 	};
 
@@ -526,7 +513,7 @@ function ImpactUnitDialog({
 		<FormDialog
 			handleClose={handleClose}
 			open={open}
-			loading={creatingInpactUnit || updatingImpactUnit || creatingImpactCategoryUnit}
+			loading={creatingInpactUnit || updatingImpactUnit}
 			title={
 				newOrEdit +
 				" " +
@@ -554,14 +541,14 @@ function ImpactUnitDialog({
 				onUpdate={onUpdate}
 				formAction={formAction}
 			/>
-			{openImpactCategoryDialog && (
+			{/* {openImpactCategoryDialog && (
 				<ImpactCategoryDialog
 					formAction={FORM_ACTIONS.CREATE}
 					open={openImpactCategoryDialog}
 					handleClose={() => setOpenImpactCategoryDialog(false)}
 					organization={dashboardData?.organization?.id}
 				/>
-			)}
+			)} */}
 		</FormDialog>
 	);
 }

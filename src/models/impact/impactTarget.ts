@@ -6,10 +6,9 @@ export interface IImpactTarget {
 	name: string;
 	description?: string;
 	target_value: number | string;
-	impactCategory?: number | string;
-	impactUnit?: number | string;
 	sustainable_development_goal?: string;
-	impact_category_unit: number | string;
+	impact_category_org: number | string;
+	impact_units_org: number | string;
 	project?: number | string;
 }
 

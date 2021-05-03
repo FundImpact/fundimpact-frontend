@@ -11,8 +11,8 @@ import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { IGetImpactCategoryUnit } from "../../../models/impact/query";
 
 const getInitialValues = (
-	impactUnit: IImpactUnitData | null,
-	impactCategory: string[]
+	impactUnit: IImpactUnitData | null
+	// impactCategory: string[]
 ): IImpactUnitFormInput => {
 	return {
 		code: impactUnit?.code || "",
@@ -22,7 +22,7 @@ const getInitialValues = (
 		target_unit: impactUnit?.target_unit + "" || "",
 		prefix_label: impactUnit?.prefix_label || "",
 		suffix_label: impactUnit?.suffix_label || "",
-		impactCategory,
+		// impactCategory,
 	};
 };
 
@@ -130,10 +130,7 @@ function ImpactUnitContainer({
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
 			selectedImpactUnit={selectedImpactUnit}
-			initialValues={getInitialValues(
-				selectedImpactUnit.current,
-				impactCategoryMemoized || []
-			)}
+			initialValues={getInitialValues(selectedImpactUnit.current)}
 			impactUnitList={impactUnitList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}

@@ -8,43 +8,13 @@ export const GET_DELIVERABLE_TARGETS = gql`
 			description
 			target_value
 			deleted
-			deliverable_category_unit {
+			deliverable_unit_org {
 				id
-				status
-				deliverable_category_org {
-					id
-					name
-					code
-					description
-					organization {
-						id
-						name
-						account {
-							id
-							name
-							description
-							account_no
-						}
-						short_name
-						legal_name
-						description
-						organization_registration_type {
-							id
-							reg_type
-						}
-					}
-					deleted
-				}
-				deliverable_units_org {
-					id
-					name
-					description
-					code
-					unit_type
-					prefix_label
-					suffix_label
-					deleted
-				}
+				name
+			}
+			deliverable_category_org {
+				id
+				name
 			}
 			project {
 				id
@@ -64,49 +34,19 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 			description
 			target_value
 			deleted
-			deliverable_category_unit {
-				status
-				deliverable_category_org {
-					id
-					name
-					code
-					deleted
-					description
-					organization {
-						id
-						name
-						account {
-							id
-							name
-							description
-							account_no
-						}
-						short_name
-						legal_name
-						description
-						organization_registration_type {
-							id
-							reg_type
-						}
-					}
-				}
-				deliverable_units_org {
-					id
-					name
-					description
-					code
-					unit_type
-					prefix_label
-					suffix_label
-					deleted
-				}
-			}
-
 			project {
 				id
 				name
 				short_name
 				description
+			}
+			deliverable_unit_org {
+				id
+				name
+			}
+			deliverable_category_org {
+				id
+				name
 			}
 		}
 	}
@@ -125,50 +65,19 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			description
 			target_value
 			deleted
-			deliverable_category_unit {
-				id
-				status
-				deliverable_category_org {
-					id
-					name
-					code
-					description
-					deleted
-					organization {
-						id
-						name
-						account {
-							id
-							name
-							description
-							account_no
-						}
-						short_name
-						legal_name
-						description
-						organization_registration_type {
-							id
-							reg_type
-						}
-					}
-				}
-				deliverable_units_org {
-					id
-					name
-					description
-					code
-					unit_type
-					prefix_label
-					suffix_label
-					deleted
-				}
-			}
-
 			project {
 				id
 				name
 				short_name
 				description
+			}
+			deliverable_unit_org {
+				id
+				name
+			}
+			deliverable_category_org {
+				id
+				name
 			}
 		}
 	}
@@ -180,46 +89,19 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 			name
 			description
 			target_value
-			deliverable_category_unit {
-				deliverable_category_org {
-					id
-					name
-					code
-					description
-					organization {
-						id
-						name
-						account {
-							id
-							name
-							description
-							account_no
-						}
-						short_name
-						legal_name
-						description
-						organization_registration_type {
-							id
-							reg_type
-						}
-					}
-				}
-				deliverable_units_org {
-					id
-					name
-					description
-					code
-					unit_type
-					prefix_label
-					suffix_label
-				}
-			}
-
 			project {
 				id
 				name
 				short_name
 				description
+			}
+			deliverable_unit_org {
+				id
+				name
+			}
+			deliverable_category_org {
+				id
+				name
 			}
 		}
 	}

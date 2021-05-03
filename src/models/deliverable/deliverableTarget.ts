@@ -6,9 +6,8 @@ export interface IDeliverableTarget {
 	name: string;
 	description?: string;
 	target_value: number;
-	deliverableCategory?: number | string;
-	deliverableUnit?: number | string;
-	deliverable_category_unit: number | string;
+	deliverable_category_org?: number | string;
+	deliverable_unit_org?: number | string;
 	project?: number | string;
 }
 

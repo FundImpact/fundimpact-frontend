@@ -58,8 +58,8 @@
 			"size": 6
 		},
 		{
-			"name": "impactCategory",
-			"id": "impactCategory",
+			"name": "impact_category_org",
+			"id": "impact_category_org",
 			"dataTestId": "impactTargetCategory",
 			"testId": "impactTargetCategoryInput",
 			"label": "Impact Category",
@@ -71,13 +71,12 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"getInputValue": {},
 			"size": 6
 		},
 
 		{
-			"name": "impactUnit",
-			"id": "impactUnit",
+			"name": "impact_units_org",
+			"id": "impact_units_org",
 			"dataTestId": "impactTargetUnit",
 			"testId": "impactTargetUnitInput",
 			"label": "Impact Unit",
