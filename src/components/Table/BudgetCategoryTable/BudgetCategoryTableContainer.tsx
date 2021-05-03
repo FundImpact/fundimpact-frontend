@@ -35,9 +35,7 @@ function BudgetCategoryTableContainer({
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	budgetCategoryTableRefetch:
-		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
-		| undefined;
+	budgetCategoryTableRefetch: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
 }) {
 	const selectedBudgetCategory = useRef<Required<IBudgetCategory> | null>(null);
 	const openEditBudgetCategoryDialog = false,

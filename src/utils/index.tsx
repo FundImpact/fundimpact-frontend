@@ -1,4 +1,5 @@
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { DEMO, DEMO1, LOCAL, STAGING } from "./stagingDeploymentEndpoints.util";
 
 export const months: { [key: number]: string } = {
 	1: "JAN",
@@ -165,3 +166,6 @@ export const validateEmail = (email: string) =>
 
 export const getFetchPolicy = () =>
 	process.env.NODE_ENV === "test" ? "cache-first" : "cache-and-network";
+
+export const checkIfUserIsOnStagingDeployment = () =>
+	[STAGING, DEMO1, DEMO, LOCAL].includes(window.location.origin);

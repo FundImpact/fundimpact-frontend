@@ -148,33 +148,33 @@ function DeliverableUnitTableView({
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu.push("Edit Deliverable Unit");
+			deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
 	}, [deliverableUnitEditAccess]);
 
 	useEffect(() => {
 		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu.push("Delete Deliverable Unit");
+			deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
 	}, [deliverableUnitDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					setFilterList={setFilterList}
-					inputFields={deliverableUnitInputFields}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					name: "",
+	// 					code: "",
+	// 					description: "",
+	// 				}}
+	// 				setFilterList={setFilterList}
+	// 				inputFields={deliverableUnitInputFields}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
@@ -223,42 +223,8 @@ function DeliverableUnitTableView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableUnitImportFromCsvAccess}
 						hideExport={!deliverableUnitExportAccess}
-						additionalMenuItems={[
-							{
-								children: (
-									<MenuItem
-										onClick={() =>
-											exportTable({
-												tableName: "Deliverable Category Unit Table",
-												jwt: jwt as string,
-												tableExportUrl: DELIVERABLE_CATEGORY_UNIT_EXPORT,
-											})
-										}
-									>
-										<FormattedMessage
-											defaultMessage="Export Deliverable Category Unit Table"
-											id="export_table"
-											description="export table as csv"
-										/>
-									</MenuItem>
-								),
-							},
-						]}
 					>
 						<>
-							<Button
-								variant="outlined"
-								style={{ marginRight: theme.spacing(1) }}
-								onClick={() =>
-									exportTable({
-										tableName: "Deliverable Category",
-										jwt: jwt as string,
-										tableExportUrl: `${DELIVERABLE_CATEGORY_TABLE_EXPORT}`,
-									})
-								}
-							>
-								Deliverable Category Export
-							</Button>
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1), float: "right" }}
@@ -293,9 +259,9 @@ function DeliverableUnitTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{(rowData: { id: string }) => (
+				{/* {(rowData: { id: string }) => (
 					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />
-				)}
+				)} */}
 			</CommonTable>
 		</>
 	);

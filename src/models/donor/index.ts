@@ -1,4 +1,4 @@
-import { FORM_ACTIONS } from "../constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 import { DONOR_DIALOG_TYPE } from "./constants";
 
 export interface IDONOR {
@@ -17,6 +17,7 @@ export type IDonorProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IDONOR;
+			deleteDonor?: boolean;
 	  }
 	| {
 			open: boolean;
@@ -24,10 +25,12 @@ export type IDonorProps =
 			formAction: FORM_ACTIONS.CREATE;
 			dialogType: DONOR_DIALOG_TYPE.PROJECT;
 			projectId: string;
+			deleteDonor?: boolean;
 	  }
 	| {
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			dialogType?: DONOR_DIALOG_TYPE.DONOR;
+			deleteDonor?: boolean;
 	  };

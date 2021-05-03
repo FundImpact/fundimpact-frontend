@@ -261,6 +261,7 @@ function BudgetLineItemTableView({
 	refetchOnSuccess,
 	budgetTargetId,
 	donorCountryId,
+	countRefetch,
 }: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
@@ -296,6 +297,15 @@ function BudgetLineItemTableView({
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
+	countRefetch:
+		| ((
+				variables?:
+					| Partial<{
+							filter: any;
+					  }>
+					| undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
 }) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
@@ -320,13 +330,13 @@ function BudgetLineItemTableView({
 	useEffect(() => {
 		if (budgetLineItemEditAccess) {
 			budgetLineItemTableEditMenu[0] = "Edit Budget Line Item";
-			budgetLineItemTableEditMenu[1] = "View Documents";
+			budgetLineItemTableEditMenu[2] = "View Documents";
 		}
 	}, [budgetLineItemEditAccess]);
 
 	useEffect(() => {
 		if (budgetLineItemDeleteAccess) {
-			budgetLineItemTableEditMenu[2] = "Delete Budget Line Item";
+			budgetLineItemTableEditMenu[1] = "Delete Budget Line Item";
 		}
 	}, [budgetLineItemDeleteAccess]);
 
@@ -439,7 +449,9 @@ function BudgetLineItemTableView({
 						tableName="Budget Lineitem"
 						tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
 						tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
-						onImportTableSuccess={() => refetchOnSuccess?.()}
+						onImportTableSuccess={() =>
+							countRefetch?.().then(() => refetchOnSuccess?.())
+						}
 						importButtonOnly={importButtonOnly}
 						hideImport={!budgetLineItemImportFromCsv}
 						hideExport={!budgetLineItemExport}

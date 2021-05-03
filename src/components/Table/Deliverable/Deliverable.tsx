@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -50,9 +50,11 @@ import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
 import { FormatListBulleted } from "@material-ui/icons";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
+	DELIVERABLE_CATEGORY_TABLE_EXPORT,
 	DELIVERABLE_CATEGORY_UNIT_EXPORT,
 	DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT,
 	DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT,
+	DELIVERABLE_UNIT_TABLE_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
@@ -185,14 +187,9 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 								name: deliverableTarget.name,
 								target_value: deliverableTarget.target_value,
 								description: deliverableTarget.description,
-								deliverableCategory:
-									deliverableTarget.deliverable_category_unit
-										?.deliverable_category_org?.id,
-								deliverableUnit:
-									deliverableTarget.deliverable_category_unit
-										?.deliverable_units_org?.id,
-								deliverable_category_unit:
-									deliverableTarget.deliverable_category_unit.id,
+								deliverable_category_org:
+									deliverableTarget?.deliverable_category_org?.id,
+								deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
 								project: deliverableTarget.project.id,
 							});
 							handleMenuClose();
@@ -227,14 +224,9 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 								name: deliverableTarget.name,
 								target_value: deliverableTarget.target_value,
 								description: deliverableTarget.description,
-								deliverableCategory:
-									deliverableTarget.deliverable_category_unit
-										?.deliverable_category_org?.id,
-								deliverableUnit:
-									deliverableTarget.deliverable_category_unit
-										?.deliverable_units_org?.id,
-								deliverable_category_unit:
-									deliverableTarget.deliverable_category_unit.id,
+								deliverable_category_org:
+									deliverableTarget?.deliverable_category_org?.id,
+								deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
 								project: deliverableTarget.project.id,
 							});
 							handleMenuClose();
@@ -436,9 +428,7 @@ export default function DeliverablesTable() {
 					filter.target_value = filterList.target_value;
 				}
 				if (filterList.deliverable_category_org.length) {
-					filter.deliverable_category_unit = {
-						deliverable_category_org: filterList.deliverable_category_org as string[],
-					};
+					filter.deliverable_category_org = filterList.deliverable_category_org as string[];
 				}
 				return filter;
 			});
@@ -452,6 +442,7 @@ export default function DeliverablesTable() {
 		countQueryLoading,
 		queryLoading,
 		queryRefetch: refetchDeliverableTargetProject,
+		countRefetch: refetchDeliverableTargetProjectCount,
 	} = pagination({
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
@@ -459,6 +450,14 @@ export default function DeliverablesTable() {
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	const refetchDeliverableTargetProjectTable = useCallback(
+		() =>
+			refetchDeliverableTargetProjectCount?.().then(() =>
+				refetchDeliverableTargetProject?.()
+			),
+		[refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]
+	);
 
 	const [rows, setRows] = useState<any>([]);
 	const limit = 10;
@@ -483,7 +482,6 @@ export default function DeliverablesTable() {
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
-
 	useEffect(() => {
 		if (
 			deliverableTargetData &&
@@ -500,70 +498,58 @@ export default function DeliverablesTable() {
 				row.collaspeTable = (
 					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 				);
-
-				if (deliverableTargetList[i].deliverable_category_unit) {
-					let column = [
-						<TableCell component="td" scope="row" key={deliverableTargetList[i]?.id}>
-							{page * limit + i + 1}
-						</TableCell>,
-						<TableCell
-							key={
-								deliverableTargetList[i].name + `${deliverableTargetList[i]?.id}-1`
-							}
-						>
-							{deliverableTargetList[i].name}
-						</TableCell>,
-						<TableCell
-							key={
-								deliverableTargetList[i].deliverable_category_unit
-									?.deliverable_category_org?.name +
-								`${deliverableTargetList[i]?.id}-2`
-							}
-						>
-							{
-								deliverableTargetList[i].deliverable_category_unit
-									?.deliverable_category_org?.name
-							}
-						</TableCell>,
-						<TableCell
-							key={
-								deliverableTargetList[i].target_value +
-								`${deliverableTargetList[i]?.id}-3`
-							}
-						>
-							{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i].deliverable_category_unit?.deliverable_units_org?.name}
+				let column = [
+					<TableCell component="td" scope="row" key={deliverableTargetList[i]?.id}>
+						{page * limit + i + 1}
+					</TableCell>,
+					<TableCell
+						key={deliverableTargetList[i].name + `${deliverableTargetList[i]?.id}-1`}
+					>
+						{deliverableTargetList[i].name}
+					</TableCell>,
+					<TableCell
+						key={
+							deliverableTargetList[i]?.deliverable_category_org?.name +
+							`${deliverableTargetList[i]?.id}-2`
+						}
+					>
+						{deliverableTargetList[i]?.deliverable_category_org?.name}
+					</TableCell>,
+					<TableCell
+						key={
+							deliverableTargetList[i].target_value +
+							`${deliverableTargetList[i]?.id}-3`
+						}
+					>
+						{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i]?.deliverable_unit_org?.name}
 							`}
-						</TableCell>,
-					];
+					</TableCell>,
+				];
 
-					// Columsn
-					column.push(
-						<DeliverableTargetAchievementAndProgress
-							key={Math.random()}
-							deliverableTargetId={deliverableTargetList[i].id}
-							deliverableTargetValue={deliverableTargetList[i].target_value}
-							deliverableTargetUnit={
-								deliverableTargetList[i].deliverable_category_unit
-									?.deliverable_units_org?.name
-							}
-						/>
-					);
+				// Columsn
+				column.push(
+					<DeliverableTargetAchievementAndProgress
+						key={Math.random()}
+						deliverableTargetId={deliverableTargetList[i].id}
+						deliverableTargetValue={deliverableTargetList[i].target_value}
+						deliverableTargetUnit={deliverableTargetList[i]?.deliverable_unit_org?.name}
+					/>
+				);
 
-					// Action Columns
-					column.push(
-						<EditDeliverableTargetIcon
-							key={Math.random()}
-							deliverableTarget={deliverableTargetList[i]}
-						/>
-					);
+				// Action Columns
+				column.push(
+					<EditDeliverableTargetIcon
+						key={Math.random()}
+						deliverableTarget={deliverableTargetList[i]}
+					/>
+				);
 
-					const filteredDeliverableTableColumns = filterTableHeadingsAndRows(column, {
-						[tableColumn.category]: !deliverableCategoryFindAccess,
-					});
+				const filteredDeliverableTableColumns = filterTableHeadingsAndRows(column, {
+					[tableColumn.category]: !deliverableCategoryFindAccess,
+				});
 
-					row.column = filteredDeliverableTableColumns;
-					array.push(row);
-				}
+				row.column = filteredDeliverableTableColumns;
+				array.push(row);
 			}
 
 			setRows(array);
@@ -646,7 +632,7 @@ export default function DeliverablesTable() {
 								tableName="Deliverable"
 								tableExportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
 								tableImportUrl={`${DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-								onImportTableSuccess={() => refetchDeliverableTargetProject?.()}
+								onImportTableSuccess={refetchDeliverableTargetProjectTable}
 								importButtonOnly={importButtonOnly}
 								hideExport={!deliverableExportAccess}
 								hideImport={!deliverableImportFromCsvAccess}
@@ -657,13 +643,26 @@ export default function DeliverablesTable() {
 										style={{ marginRight: theme.spacing(1) }}
 										onClick={() =>
 											exportTable({
-												tableName: "Deliverable category unit",
+												tableName: "Deliverable category",
 												jwt: jwt as string,
-												tableExportUrl: `${DELIVERABLE_CATEGORY_UNIT_EXPORT}`,
+												tableExportUrl: `${DELIVERABLE_CATEGORY_TABLE_EXPORT}`,
 											})
 										}
 									>
-										Deliverable Category Unit Export
+										Deliverable Category
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Deliverable unit",
+												jwt: jwt as string,
+												tableExportUrl: `${DELIVERABLE_UNIT_TABLE_EXPORT}`,
+											})
+										}
+									>
+										Deliverable Unit
 									</Button>
 									<Button
 										variant="outlined"

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import DeliverableCategoryTableContainer from "./DeliverableCategoryTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -24,7 +24,7 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 
 //insert genrics in pagination
 function DeliverableCategoryTableGraphql({
-	collapsableTable = true,
+	collapsableTable = false,
 	rowId: delivarableUnitId,
 	tableFilterList,
 }: {
@@ -100,78 +100,68 @@ function DeliverableCategoryTableGraphql({
 		queryLoading: deliverableCategoryLoading,
 		countQueryLoading: deliverableCategoryCountLoading,
 		queryRefetch: refetchDeliverableCategory,
+		countRefetch: refetchDeliverableCategoryCount,
 	} = pagination({
 		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 		countFilter: queryFilter,
 		query: GET_DELIVERABLE_ORG_CATEGORY,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
-		fireRequest: Boolean(dashboardData && collapsableTable),
+		fireRequest: Boolean(dashboardData),
 	});
 
-	let {
-		changePage: changeDeliverableCategoryUnitPage,
-		count: deliverableCategoryUnitCount,
-		queryData: deliverableCategoryUnitList,
-		queryLoading: deliverableCategoryUnitLoading,
-		countQueryLoading: deliverableCategoryUnitCountLoading,
-		queryRefetch: refetchDeliverableCategoryUnit,
-	} = pagination({
-		countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-		countFilter: nestedTableQueryFilter,
-		query: GET_CATEGORY_UNIT,
-		queryFilter: nestedTableQueryFilter,
-		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-		fireRequest: Boolean(delivarableUnitId && !collapsableTable),
-	});
+	// let {
+	// 	changePage: changeDeliverableCategoryUnitPage,
+	// 	count: deliverableCategoryUnitCount,
+	// 	queryData: deliverableCategoryUnitList,
+	// 	queryLoading: deliverableCategoryUnitLoading,
+	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
+	// 	queryRefetch: refetchDeliverableCategoryUnit,
+	// 	countRefetch: refetchDeliverableCategoryUnitCount,
+	// } = pagination({
+	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
+	// 	countFilter: nestedTableQueryFilter,
+	// 	query: GET_CATEGORY_UNIT,
+	// 	queryFilter: nestedTableQueryFilter,
+	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
+	// 	fireRequest: Boolean(delivarableUnitId && !collapsableTable),
+	// });
 
-	const reftechDeliverableCategoryAndUnitTable = () => {
-		refetchDeliverableCategory?.();
-		refetchDeliverableCategoryUnit?.();
-	};
+	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
+		refetchDeliverableCategoryCount?.().then(() => refetchDeliverableCategory?.());
+		// refetchDeliverableCategoryUnitCount?.().then(() => refetchDeliverableCategoryUnit?.());
+	}, [
+		refetchDeliverableCategoryCount,
+		refetchDeliverableCategory,
+		// refetchDeliverableCategoryUnitCount,
+		// refetchDeliverableCategoryUnit,
+	]);
 
-	const deliverableCategoryUnitListMemoized = useMemo(
-		() =>
-			deliverableCategoryUnitList?.deliverableCategoryUnitList
-				?.filter(
-					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-						element.status
-				)
-				.map(
-					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-						element?.deliverable_category_org
-				),
-		[deliverableCategoryUnitList]
-	);
+	// const deliverableCategoryUnitListMemoized = useMemo(
+	// 	() =>
+	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
+	// 			?.filter(
+	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+	// 					element.status
+	// 			)
+	// 			.map(
+	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+	// 					element?.deliverable_category_org
+	// 			),
+	// 	[deliverableCategoryUnitList]
+	// );
 
 	return (
 		<DeliverableCategoryTableContainer
-			deliverableCategoryList={
-				deliverableCategoryList?.deliverableCategory ||
-				deliverableCategoryUnitListMemoized ||
-				[]
-			}
+			deliverableCategoryList={deliverableCategoryList?.deliverableCategory || []}
 			collapsableTable={collapsableTable}
-			changePage={
-				dashboardData && collapsableTable
-					? changeDeliverableCategoryPage
-					: changeDeliverableCategoryUnitPage
-			}
-			loading={
-				deliverableCategoryLoading ||
-				deliverableCategoryCountLoading ||
-				deliverableCategoryUnitLoading ||
-				deliverableCategoryUnitCountLoading
-			}
-			count={
-				dashboardData && collapsableTable
-					? deliverableCategoryCount
-					: deliverableCategoryUnitCount
-			}
-			order={collapsableTable ? order : nestedTableOrder}
-			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
-			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
-			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
+			changePage={changeDeliverableCategoryPage}
+			loading={deliverableCategoryLoading || deliverableCategoryCountLoading}
+			count={deliverableCategoryCount}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 			filterList={nestedTableFilterList}
 			setFilterList={setNestedTableFilterList}
 			removeFilterListElements={removeNestedFilterListElements}

@@ -7,7 +7,7 @@
 			"testId": "deliverableFormNameInput",
 			"label": "Name",
 			"required": true,
-			"size": 12
+			"size": 6
 		},
 		{
 			"name": "code",
@@ -15,7 +15,7 @@
 			"dataTestId": "deliverableFormCode",
 			"testId": "deliverableFormCodeInput",
 			"label": "Code",
-			"size": 12
+			"size": 6
 		},
 		{
 			"name": "description",
@@ -51,8 +51,8 @@
 			"type": "number"
 		},
 		{
-			"name": "deliverableCategory",
-			"id": "deliverableCategory",
+			"name": "deliverable_category_org",
+			"id": "deliverable_category_org",
 			"dataTestId": "deliverableTargetCategory",
 			"testId": "deliverableTargetCategoryInput",
 			"label": "Deliverable Category",
@@ -61,16 +61,14 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"getInputValue": {},
 			"required": true,
 			"addNew": true,
 			"addNewClick": {},
 			"size": 6
 		},
-
 		{
-			"name": "deliverableUnit",
-			"id": "deliverableUnit",
+			"name": "deliverable_unit_org",
+			"id": "deliverable_unit_org",
 			"dataTestId": "deliverableTargetUnit",
 			"testId": "deliverableTargetUnitInput",
 			"label": "Deliverable Unit",
@@ -138,24 +136,7 @@
 			"testId": "deliverableUnitNameInput",
 			"label": "Name",
 			"required": true,
-			"size": 12
-		},
-		{
-			"name": "deliverableCategory",
-			"id": "deliverableCategory",
-			"dataTestId": "deliverableUnitCategory",
-			"testId": "deliverableUnitCategoryInput",
-			"label": "Deliverable Category",
-			"required": true,
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"addNew": true,
-			"addNewClick": {},
-			"size": 6,
-			"multiple": true
+			"size": 6
 		},
 		{
 			"name": "code",

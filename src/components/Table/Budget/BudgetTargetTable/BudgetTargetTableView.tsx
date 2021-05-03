@@ -63,9 +63,7 @@ interface IBudgetTargetTableViewProps {
 	budgetCategoryHash: { [key: string]: string };
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
-	refetchBudgetTargetTable:
-		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
-		| undefined;
+	refetchBudgetTargetTable: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
 }
 
 enum tableHeader {
@@ -169,8 +167,8 @@ const createChipArray = ({
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
 		return chipArray({
-			elementList: [filterListObjectKeyValuePair[1]],
 			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			elementList: [filterListObjectKeyValuePair[1]],
 			removeChip: (index: number) => {
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
@@ -410,7 +408,7 @@ function BudgetTargetView({
 									exportTable({
 										tableName: "Donor",
 										jwt: jwt as string,
-										tableExportUrl: `${DONOR_EXPORT}`,
+										tableExportUrl: `${DONOR_EXPORT}/${dashboardData?.project?.id}`,
 									})
 								}
 							>

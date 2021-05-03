@@ -139,31 +139,31 @@ function DeliverableCategoryView({
 }) {
 	useEffect(() => {
 		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu.push("Edit Deliverable Category");
+			deliverableCategoryTableEditMenu[0] = "Edit Deliverable Category";
 		}
 	}, [deliverableCategoryEditAccess]);
 
 	useEffect(() => {
 		if (deliverableCategoryDeleteAccess) {
-			deliverableCategoryTableEditMenu.push("Delete Deliverble Category");
+			deliverableCategoryTableEditMenu[1] = "Delete Deliverble Category";
 		}
 	}, [deliverableCategoryDeleteAccess]);
 
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						code: "",
-						name: "",
-						description: "",
-					}}
-					inputFields={deliverableCategoryInputFields}
-					setFilterList={setFilterList}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					code: "",
+	// 					name: "",
+	// 					description: "",
+	// 				}}
+	// 				inputFields={deliverableCategoryInputFields}
+	// 				setFilterList={setFilterList}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 
 	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -211,27 +211,6 @@ function DeliverableCategoryView({
 						tableExportUrl={DELIVERABLE_CATEGORY_TABLE_EXPORT}
 						tableImportUrl={DELIVERABLE_CATEGORY_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableCategoryTableImportSuccess}
-						additionalMenuItems={[
-							{
-								children: (
-									<MenuItem
-										onClick={() =>
-											exportTable({
-												tableName: "Deliverable Category Unit Table",
-												jwt: jwt as string,
-												tableExportUrl: DELIVERABLE_CATEGORY_UNIT_EXPORT,
-											})
-										}
-									>
-										<FormattedMessage
-											defaultMessage="Export Deliverable Category Unit Table"
-											id="export_table"
-											description="export table as csv"
-										/>
-									</MenuItem>
-								),
-							},
-						]}
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableCategoryImportFromCsvAccess}
 						hideExport={!deliverableCategoryExportAccess}
@@ -267,11 +246,11 @@ function DeliverableCategoryView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{(rowData: { id: string }) => (
+				{/* {(rowData: { id: string }) => (
 					<>
 						<DeliverableUnitTable rowId={rowData.id} collapsableTable={false} />
 					</>
-				)}
+				)} */}
 			</CommonTable>
 		</>
 	);

@@ -41,6 +41,8 @@ import Project from "../Project/Project";
 import { PROJECT_ACTIONS } from "../Project/constants";
 import { IGET_WORKSPACES_BY_ORG } from "../../models/workspace/query";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
+import { PROJECT_ACTIONS as USER_PROJECT_ACTIONS } from "../../utils/access/modules/project/actions";
 
 let menuList: { children: JSX.Element }[] = [];
 
@@ -122,21 +124,32 @@ export default function SideBar({ children }: { children?: Function }) {
 		MODULE_CODES.WORKSPACE,
 		WORKSPACE_USER_ACCESS_ACTIONS.CREATE_WORKSPACE
 	);
+	const organizationEditAccess = userHasAccess(
+		MODULE_CODES.ORGANIZATION,
+		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
+	);
+	const projectCreateAccess = userHasAccess(
+		MODULE_CODES.PEOJECT,
+		USER_PROJECT_ACTIONS.CREATE_PROJECT
+	);
+
+	useEffect(() => {
+		if (organizationEditAccess) {
+			menuList[0] = {
+				children: (
+					<MenuItem component={Link} to="/settings/organization">
+						{editOrganization}
+					</MenuItem>
+				),
+			};
+		}
+	}, [organizationEditAccess]);
 
 	useEffect(() => {
 		if (workspaceCreateAccess) {
-			menuList = [
-				{
-					children: (
-						<MenuItem component={Link} to="/settings/organization">
-							{editOrganization}
-						</MenuItem>
-					),
-				},
-				{
-					children: <MenuItem onClick={openWorkspaceComponent}>{addWorkspace}</MenuItem>,
-				},
-			];
+			menuList[1] = {
+				children: <MenuItem onClick={openWorkspaceComponent}>{addWorkspace}</MenuItem>,
+			};
 		}
 	}, [workspaceCreateAccess]);
 
@@ -227,22 +240,26 @@ export default function SideBar({ children }: { children?: Function }) {
 					}}
 					ref={addProjectMenuRef}
 				>
-					<Button
-						onClick={() => setOpenProjectDialog(true)}
-						style={{ width: "100%", color: theme.palette.background.paper }}
-					>
-						<FormattedMessage
-							id={`addProject`}
-							defaultMessage={`Add New Project`}
-							description={`This text will be shown on  add project button`}
-						/>
-					</Button>
-					<Button
-						onClick={() => setOpenAddProjectMenu((open) => !open)}
-						style={{ color: theme.palette.background.paper }}
-					>
-						<ArrowDropDownIcon />
-					</Button>
+					{projectCreateAccess && (
+						<Button
+							onClick={() => setOpenProjectDialog(true)}
+							style={{ width: "100%", color: theme.palette.background.paper }}
+						>
+							<FormattedMessage
+								id={`addProject`}
+								defaultMessage={`Add New Project`}
+								description={`This text will be shown on  add project button`}
+							/>
+						</Button>
+					)}
+					{workspaceCreateAccess && (
+						<Button
+							onClick={() => setOpenAddProjectMenu((open) => !open)}
+							style={{ color: theme.palette.background.paper }}
+						>
+							<ArrowDropDownIcon />
+						</Button>
+					)}
 				</ButtonGroup>
 				<Popper
 					open={openAddProjectMenu}

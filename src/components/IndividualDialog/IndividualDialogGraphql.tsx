@@ -29,6 +29,7 @@ type IAddressFormGraphqlProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
 			dialogType?: IndividualDialogType;
+			deleteIndividual?: boolean;
 	  }
 	| {
 			open: boolean;
@@ -36,6 +37,7 @@ type IAddressFormGraphqlProps =
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IIndividual;
+			deleteIndividual?: boolean;
 	  };
 
 function IndividualDialogGraphql(props: IAddressFormGraphqlProps) {
@@ -88,6 +90,7 @@ function IndividualDialogGraphql(props: IAddressFormGraphqlProps) {
 			updateIndividual={updateIndividual}
 			deleteIndividualProject={deleteIndividualProject}
 			dialogType={dialogType}
+			deleteIndividual={props.deleteIndividual}
 		/>
 	);
 }

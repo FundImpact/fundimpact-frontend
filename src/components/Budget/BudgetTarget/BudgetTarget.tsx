@@ -273,13 +273,15 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	}, [getCurrency, dashboardData]);
 
 	useEffect(() => {
-		getOrganizationDonors({
-			variables: {
-				filter: {
-					organization: dashboardData?.organization?.id,
+		if (dashboardData?.organization?.id) {
+			getOrganizationDonors({
+				variables: {
+					filter: {
+						organization: dashboardData?.organization?.id,
+					},
 				},
-			},
-		});
+			});
+		}
 	}, [getOrganizationDonors]);
 
 	useEffect(() => {

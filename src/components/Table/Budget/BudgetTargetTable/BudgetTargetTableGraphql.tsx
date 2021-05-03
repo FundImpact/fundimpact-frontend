@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BudgetTargetTableContainer from "./BudgetTargetTableContainer";
 import pagination from "../../../../hooks/pagination";
 import {
@@ -12,6 +12,8 @@ import { GET_ORG_DONOR } from "../../../../graphql/donor";
 import { useLazyQuery } from "@apollo/client";
 import { GET_CURRENCY_LIST } from "../../../../graphql";
 import { removeFilterListObjectElements } from "../../../../utils/filterList";
+import { IGetProjectDonor } from "../../../../models/project/project";
+import { GET_PROJ_DONORS } from "../../../../graphql/project";
 
 let donorHash = {};
 let budgetCategoryHash = {};
@@ -29,6 +31,9 @@ const mapIdToName = (
 	);
 };
 
+const getDonors = (projectDonors: IGetProjectDonor | undefined) =>
+	projectDonors?.projectDonors?.map((projectDonor) => projectDonor?.donor);
+
 const getDefaultFilterList = () => ({
 	name: "",
 	code: "",
@@ -44,11 +49,16 @@ function BudgetTargetTableGraphql() {
 	const dashboardData = useDashBoardData();
 	const currentProject = dashboardData?.project;
 
-	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
-		onCompleted: (data) => {
-			donorHash = mapIdToName(data.orgDonors, donorHash);
-		},
-	});
+	let [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(
+		GET_PROJ_DONORS,
+		{
+			onCompleted: (projectDonors) =>
+				(donorHash = mapIdToName(
+					getDonors(projectDonors) as { name: string; id: string }[],
+					donorHash
+				)),
+		}
+	);
 
 	let [getBudgetCategory, { data: budgetCategory }] = useLazyQuery(
 		GET_ORGANIZATION_BUDGET_CATEGORY,
@@ -60,6 +70,18 @@ function BudgetTargetTableGraphql() {
 	);
 
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
+
+	useEffect(() => {
+		if (dashboardData?.project) {
+			getProjectDonors({
+				variables: {
+					filter: {
+						project: dashboardData?.project?.id,
+					},
+				},
+			});
+		}
+	}, [getProjectDonors, dashboardData]);
 
 	useEffect(() => {
 		if (dashboardData) {
@@ -110,7 +132,8 @@ function BudgetTargetTableGraphql() {
 		changePage,
 		queryLoading,
 		countQueryLoading,
-		queryRefetch: refetchBudgetTargetTable,
+		queryRefetch: refetchBudgetTargetList,
+		countRefetch: refetchBudgetTargetTableCount,
 	} = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
@@ -120,17 +143,10 @@ function BudgetTargetTableGraphql() {
 		fireRequest: Boolean(currentProject),
 	});
 
-	useEffect(() => {
-		if (dashboardData?.organization) {
-			getOrganizationDonors({
-				variables: {
-					filter: {
-						organization: dashboardData?.organization?.id,
-					},
-				},
-			});
-		}
-	}, [dashboardData, getOrganizationDonors]);
+	const refetchBudgetTargetTable = useCallback(
+		() => refetchBudgetTargetTableCount?.().then(() => refetchBudgetTargetList?.()),
+		[refetchBudgetTargetTableCount, refetchBudgetTargetList]
+	);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -144,7 +160,8 @@ function BudgetTargetTableGraphql() {
 		}
 	}, [getBudgetCategory, dashboardData]);
 
-	budgetTargetInputFields[2].optionsArray = donors?.orgDonors || [];
+	(budgetTargetInputFields[2].optionsArray as { id: string; name: string }[]) =
+		getDonors(projectDonors) || [];
 	budgetTargetInputFields[3].optionsArray = budgetCategory?.orgBudgetCategory || [];
 
 	return (

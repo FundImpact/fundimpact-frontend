@@ -17,56 +17,55 @@ export const CREATE_IMPACT_TRACKLINE = gql`
 					short_name
 					description
 				}
-				impact_category_unit {
+				impact_category_org {
 					id
-					impact_category_org {
+					name
+					shortname
+					code
+					description
+					deleted
+					organization {
 						id
 						name
-						shortname
-						code
-						description
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
-					impact_units_org {
+				}
+				impact_units_org {
+					id
+					name
+					description
+					code
+					target_unit
+					prefix_label
+					suffix_label
+					deleted
+					organization {
 						id
 						name
-						description
-						code
-						target_unit
-						prefix_label
-						suffix_label
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
 				}
@@ -124,59 +123,55 @@ export const UPDATE_IMPACT_TRACKLINE = gql`
 					short_name
 					description
 				}
-				impact_category_unit {
+				impact_category_org {
 					id
-					status
-					impact_category_org {
+					name
+					shortname
+					code
+					description
+					deleted
+					organization {
 						id
 						name
-						shortname
-						code
-						description
-						deleted
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
-					impact_units_org {
+				}
+				impact_units_org {
+					id
+					name
+					description
+					code
+					target_unit
+					prefix_label
+					suffix_label
+					deleted
+					organization {
 						id
 						name
-						description
-						code
-						target_unit
-						prefix_label
-						suffix_label
-						deleted
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
 				}
@@ -241,59 +236,55 @@ export const GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET = gql`
 					short_name
 					description
 				}
-				impact_category_unit {
+				impact_category_org {
 					id
-					status
-					impact_category_org {
+					name
+					shortname
+					code
+					description
+					deleted
+					organization {
 						id
 						name
-						shortname
-						code
-						description
-						deleted
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
-					impact_units_org {
+				}
+				impact_units_org {
+					id
+					name
+					description
+					code
+					target_unit
+					prefix_label
+					suffix_label
+					deleted
+					organization {
 						id
 						name
-						description
-						code
-						target_unit
-						prefix_label
-						suffix_label
-						deleted
-						organization {
+						account {
 							id
 							name
-							account {
-								id
-								name
-								description
-								account_no
-							}
-							short_name
-							legal_name
 							description
-							organization_registration_type {
-								id
-								reg_type
-							}
+							account_no
+						}
+						short_name
+						legal_name
+						description
+						organization_registration_type {
+							id
+							reg_type
 						}
 					}
 				}

@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -51,7 +51,8 @@ import { useDialogDispatch } from "../../../contexts/DialogContext";
 import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
-	IMPACT_CATEGORY_UNIT_EXPORT,
+	IMPACT_CATEGORY_TABLE_EXPORT,
+	IMPACT_UNIT_TABLE_EXPORT,
 	IMPACT_TARGET_PROJECTS_TABLE_EXPORT,
 	IMPACT_TARGET_PROJECTS_TABLE_IMPORT,
 	SUSTAINABLE_DEVELOPMENT_GOALS_EXPORT,
@@ -190,10 +191,8 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 								name: impactTarget.name,
 								target_value: impactTarget.target_value,
 								description: impactTarget.description,
-								impactCategory:
-									impactTarget.impact_category_unit?.impact_category_org.id,
-								impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
-								impact_category_unit: impactTarget.impact_category_unit.id,
+								impact_category_org: impactTarget?.impact_category_org?.id,
+								impact_units_org: impactTarget?.impact_units_org?.id,
 								sustainable_development_goal:
 									impactTarget.sustainable_development_goal?.id,
 								project: impactTarget.project.id,
@@ -216,10 +215,8 @@ function EditImpactTargetIcon({ impactTarget }: { impactTarget: any }) {
 								name: impactTarget.name,
 								target_value: impactTarget.target_value,
 								description: impactTarget.description,
-								impactCategory:
-									impactTarget.impact_category_unit?.impact_category_org.id,
-								impactUnit: impactTarget.impact_category_unit?.impact_units_org.id,
-								impact_category_unit: impactTarget.impact_category_unit.id,
+								impact_category_org: impactTarget?.impact_category_org?.id,
+								impact_units_org: impactTarget?.impact_units_org?.id,
 								sustainable_development_goal:
 									impactTarget.sustainable_development_goal?.id,
 								project: impactTarget.project.id,
@@ -473,9 +470,7 @@ export default function ImpactsTable() {
 					filter.sustainable_development_goal = filterList.sustainable_development_goal;
 				}
 				if (filterList.impact_category_org.length) {
-					filter.impact_category_unit = {
-						impact_category_org: filterList.impact_category_org as string[],
-					};
+					filter.impact_category_org = filterList?.impact_category_org as string[];
 				}
 				return filter;
 			});
@@ -488,7 +483,8 @@ export default function ImpactsTable() {
 		changePage,
 		countQueryLoading,
 		queryLoading,
-		queryRefetch: refetchImpactTargetProject,
+		queryRefetch: refetchImpactTargetProjectList,
+		countRefetch: refetchImpactTargetProjectCount,
 	} = pagination({
 		query: GET_IMPACT_TARGET_BY_PROJECT,
 		countQuery: GET_IMPACT_TARGETS_COUNT,
@@ -496,6 +492,12 @@ export default function ImpactsTable() {
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	const refetchImpactTargetProjectTable = useCallback(
+		() => refetchImpactTargetProjectCount?.().then(() => refetchImpactTargetProjectList?.()),
+		[refetchImpactTargetProjectCount, refetchImpactTargetProjectList]
+	);
+
 	const limit = 10;
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -523,82 +525,68 @@ export default function ImpactsTable() {
 					<ImpactTrackLineTable impactTargetId={impactTargetProjectList[i].id} />
 				); // row collaspeTable for impact
 
-				if (impactTargetProjectList[i].impact_category_unit) {
-					let column = [
-						<TableCell component="td" scope="row" key={impactTargetProjectList[i]?.id}>
-							{impactPage * limit + i + 1}
-						</TableCell>,
-						<TableCell
-							key={
-								impactTargetProjectList[i]?.name +
-								`${impactTargetProjectList[i]?.id}-1`
-							}
-						>
-							{impactTargetProjectList[i].name}
-						</TableCell>,
-						<TableCell
-							key={
-								impactTargetProjectList[i]?.impact_category_unit.impact_category_org
-									.name + `${impactTargetProjectList[i]?.id}-2`
-							}
-						>
-							{
-								impactTargetProjectList[i].impact_category_unit.impact_category_org
-									.name
-							}
-						</TableCell>,
-						<TableCell
-							key={
-								impactTargetProjectList[i]?.target_value +
-								`${impactTargetProjectList[i]?.id}-3`
-							}
-						>{`${impactTargetProjectList[i].target_value} ${impactTargetProjectList[i].impact_category_unit.impact_units_org.name}`}</TableCell>,
-					];
-					column.push(
-						<ImpactTargetAchievementAndProgress
-							key={Math.random()}
-							impactTargetId={impactTargetProjectList[i].id}
-							impactTargetValue={impactTargetProjectList[i].target_value}
-							impactTargetUnit={
-								impactTargetProjectList[i].impact_category_unit.impact_units_org
-									.name
-							}
-						/>
-					);
-					column.push(
-						<TableCell
-							key={impactTargetProjectList[i]?.sustainable_development_goal?.id}
-						>
-							{impactTargetProjectList[i]?.sustainable_development_goal?.name ? (
-								<Avatar
-									alt="SD"
-									src={
-										impactTargetProjectList[i]?.sustainable_development_goal
-											?.icon
-									}
-								/>
-							) : (
-								"-"
-							)}
-							{}
-						</TableCell>
-					);
+				let column = [
+					<TableCell component="td" scope="row" key={impactTargetProjectList[i]?.id}>
+						{impactPage * limit + i + 1}
+					</TableCell>,
+					<TableCell
+						key={
+							impactTargetProjectList[i]?.name + `${impactTargetProjectList[i]?.id}-1`
+						}
+					>
+						{impactTargetProjectList[i]?.name}
+					</TableCell>,
+					<TableCell
+						key={
+							impactTargetProjectList[i]?.impact_category_org?.name +
+							`${impactTargetProjectList[i]?.id}-2`
+						}
+					>
+						{impactTargetProjectList[i]?.impact_category_org?.name}
+					</TableCell>,
+					<TableCell
+						key={
+							impactTargetProjectList[i]?.target_value +
+							`${impactTargetProjectList[i]?.id}-3`
+						}
+					>{`${impactTargetProjectList[i]?.target_value} ${impactTargetProjectList[i]?.impact_units_org?.name}`}</TableCell>,
+				];
+				column.push(
+					<ImpactTargetAchievementAndProgress
+						key={Math.random()}
+						impactTargetId={impactTargetProjectList[i].id}
+						impactTargetValue={impactTargetProjectList[i]?.target_value}
+						impactTargetUnit={impactTargetProjectList[i]?.impact_units_org?.name}
+					/>
+				);
+				column.push(
+					<TableCell key={impactTargetProjectList[i]?.sustainable_development_goal?.id}>
+						{impactTargetProjectList[i]?.sustainable_development_goal?.name ? (
+							<Avatar
+								alt="SD"
+								src={impactTargetProjectList[i]?.sustainable_development_goal?.icon}
+							/>
+						) : (
+							"-"
+						)}
+						{}
+					</TableCell>
+				);
 
-					column.push(
-						<EditImpactTargetIcon
-							key={Math.random()}
-							impactTarget={impactTargetProjectList[i]}
-						/>
-					);
+				column.push(
+					<EditImpactTargetIcon
+						key={Math.random()}
+						impactTarget={impactTargetProjectList[i]}
+					/>
+				);
 
-					const filteredImpactTableColumns = filterTableHeadingsAndRows(column, {
-						[tableColumn.category]: !impactCategoryFindAccess,
-						[tableColumn.sdg]: !sdgFindAccess,
-					});
+				const filteredImpactTableColumns = filterTableHeadingsAndRows(column, {
+					[tableColumn.category]: !impactCategoryFindAccess,
+					[tableColumn.sdg]: !sdgFindAccess,
+				});
 
-					row.column = filteredImpactTableColumns;
-					array.push(row);
-				}
+				row.column = filteredImpactTableColumns;
+				array.push(row);
 			}
 			setRows(array);
 		} else {
@@ -686,7 +674,7 @@ export default function ImpactsTable() {
 								tableName="Impact"
 								tableExportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_EXPORT}/${dashboardData?.project?.id}`}
 								tableImportUrl={`${IMPACT_TARGET_PROJECTS_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-								onImportTableSuccess={() => refetchImpactTargetProject?.()}
+								onImportTableSuccess={refetchImpactTargetProjectTable}
 								importButtonOnly={importButtonOnly}
 								hideImport={!impactImportFromCsvAccess}
 								hideExport={!impactExportAccess}
@@ -697,13 +685,26 @@ export default function ImpactsTable() {
 										style={{ marginRight: theme.spacing(1) }}
 										onClick={() =>
 											exportTable({
-												tableName: "Impact category unit",
+												tableName: "Impact category",
 												jwt: jwt as string,
-												tableExportUrl: `${IMPACT_CATEGORY_UNIT_EXPORT}`,
+												tableExportUrl: IMPACT_CATEGORY_TABLE_EXPORT,
 											})
 										}
 									>
-										Impact Category Unit Export
+										Impact Category
+									</Button>
+									<Button
+										variant="outlined"
+										style={{ marginRight: theme.spacing(1) }}
+										onClick={() =>
+											exportTable({
+												tableName: "Impact unit",
+												jwt: jwt as string,
+												tableExportUrl: IMPACT_UNIT_TABLE_EXPORT,
+											})
+										}
+									>
+										Impact Unit
 									</Button>
 									<Button
 										variant="outlined"

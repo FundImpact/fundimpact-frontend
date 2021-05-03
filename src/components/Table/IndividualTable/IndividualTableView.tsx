@@ -3,7 +3,7 @@ import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import CommonTable from "../CommonTable";
 import { IIndividual } from "../../../models/individual";
 import { individualTableOrganizationHeadings, individualTableProjectHeadings } from "../constants";
-import { Grid, Box, Chip, Avatar } from "@material-ui/core";
+import { Grid, Box, Chip, Avatar, Button, useTheme } from "@material-ui/core";
 import IndividualDialog from "../../IndividualDialog";
 import { FORM_ACTIONS, Entity_Name } from "../../../models/constants";
 import ContactListDialog from "../../ContactListDialog";
@@ -11,11 +11,18 @@ import FilterList from "../../FilterList";
 import { individualInputFields } from "./inputFields.json";
 import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
 import ContactDialogGraphql from "../../ContactDialog";
+import ImportExportTableMenu from "../../ImportExportTableMenu";
+import { exportTable } from "../../../utils/importExportTable.utils";
+import { PROJECT_EXPORT } from "../../../utils/endpoints.util";
+import { useAuth } from "../../../contexts/userContext";
+import { INDIVIDUAL_EXPORT, INDIVIDUAL_IMPORT } from "../../../utils/endpoints.util";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 enum dialogType {
 	individual = 0,
-	contact = 1,
-	contactList = 2,
+	delete = 1,
+	contact = 2,
+	contactList = 3,
 }
 
 interface IIndividualTableView {
@@ -44,6 +51,9 @@ interface IIndividualTableView {
 	contactFindAccess: boolean;
 	individualEditAccess: boolean;
 	individualTableType: IndividualTableType;
+	individualExportAccess: boolean;
+	individualImportAccess: boolean;
+	refetchIndividualTable: () => void;
 }
 
 let rows = [
@@ -136,11 +146,17 @@ function IndividualTableView({
 	contactFindAccess,
 	individualEditAccess,
 	individualTableType,
+	individualExportAccess,
+	individualImportAccess,
+	refetchIndividualTable,
 }: IIndividualTableView) {
+	const theme = useTheme();
+	const { jwt } = useAuth();
 	let tableHeadings =
 		individualTableType == IndividualTableType.organization
 			? individualTableOrganizationHeadings
 			: individualTableProjectHeadings;
+	const dashboardData = useDashBoardData();
 
 	tableHeadings[tableHeadings.length - 1].renderComponent = () => (
 		<FilterList
@@ -152,12 +168,17 @@ function IndividualTableView({
 		/>
 	);
 	if (contactFindAccess) {
-		individualEditMenu[2] = "Show Contacts";
+		individualEditMenu[3] = "Show Contacts";
+	} else {
+		individualEditMenu[3] = "";
+	}
+	if (contactCreateAccess) {
+		individualEditMenu[2] = "Add Contact";
 	} else {
 		individualEditMenu[2] = "";
 	}
-	if (contactCreateAccess) {
-		individualEditMenu[1] = "Add Contact";
+	if (individualEditAccess) {
+		individualEditMenu[1] = "Delete Individual";
 	} else {
 		individualEditMenu[1] = "";
 	}
@@ -197,6 +218,59 @@ function IndividualTableView({
 				setOrder={setOrder}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Individual"
+						tableExportUrl={
+							individualTableType == IndividualTableType.organization
+								? INDIVIDUAL_EXPORT
+								: `${INDIVIDUAL_EXPORT}/${dashboardData?.project?.id}`
+						}
+						tableImportUrl={
+							individualTableType == IndividualTableType.organization
+								? INDIVIDUAL_IMPORT
+								: `${INDIVIDUAL_IMPORT}/${dashboardData?.project?.id}`
+						}
+						onImportTableSuccess={refetchIndividualTable}
+						importButtonOnly={importButtonOnly}
+						hideImport={!individualImportAccess}
+						hideExport={!individualExportAccess}
+					>
+						<>
+							{individualTableType == IndividualTableType.organization && (
+								<Button
+									variant="outlined"
+									style={{ marginRight: theme.spacing(1) }}
+									onClick={() =>
+										exportTable({
+											tableName: "Project",
+											jwt: jwt as string,
+											tableExportUrl: `${PROJECT_EXPORT}`,
+										})
+									}
+								>
+									Project Export
+								</Button>
+							)}
+							<Button
+								variant="outlined"
+								style={{ marginRight: theme.spacing(1), float: "right" }}
+								onClick={() =>
+									exportTable({
+										tableName: "Individual Template",
+										jwt: jwt as string,
+										tableExportUrl:
+											individualTableType == IndividualTableType.organization
+												? `${INDIVIDUAL_EXPORT}?header=true`
+												: `${INDIVIDUAL_EXPORT}/${dashboardData?.project?.id}?header=true`,
+									})
+								}
+							>
+								Individual Template
+							</Button>
+						</>
+					</ImportExportTableMenu>
+				)}
 			>
 				<>
 					<IndividualDialog
@@ -209,6 +283,18 @@ function IndividualTableView({
 								? IndividualDialogType.organization
 								: IndividualDialogType.project
 						}
+					/>
+					<IndividualDialog
+						formAction={FORM_ACTIONS.UPDATE}
+						initialValues={initialValues}
+						handleClose={() => toggleDialogs(dialogType.delete, false)}
+						open={openDialogs[dialogType.delete]}
+						dialogType={
+							individualTableType === IndividualTableType.organization
+								? IndividualDialogType.organization
+								: IndividualDialogType.project
+						}
+						deleteIndividual={true}
 					/>
 					<ContactDialogGraphql
 						open={openDialogs[dialogType.contact]}

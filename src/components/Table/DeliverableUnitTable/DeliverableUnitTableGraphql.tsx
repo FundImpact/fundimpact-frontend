@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -23,7 +23,7 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 };
 
 function DeliverableUnitTableGraphql({
-	collapsableTable = true,
+	collapsableTable = false,
 	rowId: deliverableCategoryId,
 	tableFilterList,
 }: {
@@ -99,76 +99,68 @@ function DeliverableUnitTableGraphql({
 		queryLoading: deliverableUnitLoading,
 		countQueryLoading: deliverableUnitCountLoading,
 		queryRefetch: deliverableUnitRefetch,
+		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
 		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 		countFilter: queryFilter,
 		query: GET_DELIVERABLE_UNIT_BY_ORG,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
-		fireRequest: Boolean(dashboardData && collapsableTable),
+		fireRequest: Boolean(dashboardData),
 	});
 
-	let {
-		changePage: changeDeliverableCategoryUnitPage,
-		count: deliverableCategoryUnitCount,
-		queryData: deliverableCategoryUnitList,
-		queryLoading: deliverableCategoryUnitLoading,
-		countQueryLoading: deliverableCategoryUnitCountLoading,
-		queryRefetch: deliverableCategoryUnitRefetch,
-	} = pagination({
-		countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-		countFilter: nestedTableQueryFilter,
-		query: GET_CATEGORY_UNIT,
-		queryFilter: nestedTableQueryFilter,
-		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-		fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	});
+	// let {
+	// 	changePage: changeDeliverableCategoryUnitPage,
+	// 	count: deliverableCategoryUnitCount,
+	// 	queryData: deliverableCategoryUnitList,
+	// 	queryLoading: deliverableCategoryUnitLoading,
+	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
+	// 	queryRefetch: deliverableCategoryUnitRefetch,
+	// 	countRefetch: deliverableCategoryUnitCountRefetch,
+	// } = pagination({
+	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
+	// 	countFilter: nestedTableQueryFilter,
+	// 	query: GET_CATEGORY_UNIT,
+	// 	queryFilter: nestedTableQueryFilter,
+	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
+	// 	fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
+	// });
 
-	const reftechDeliverableCategoryAndUnitTable = () => {
-		deliverableCategoryUnitRefetch?.();
-		deliverableUnitRefetch?.();
-	};
+	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
+		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
+		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
+	}, [
+		// deliverableCategoryUnitCountRefetch,
+		// deliverableCategoryUnitRefetch,
+		deliverableUnitCountRefetch,
+		deliverableUnitRefetch,
+	]);
 
-	const deliverableCategoryUnitListMemoized = useMemo(
-		() =>
-			deliverableCategoryUnitList?.deliverableCategoryUnitList
-				?.filter(
-					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-						element.status
-				)
-				.map(
-					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-						element?.deliverable_units_org
-				),
-		[deliverableCategoryUnitList]
-	);
+	// const deliverableCategoryUnitListMemoized = useMemo(
+	// 	() =>
+	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
+	// 			?.filter(
+	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+	// 					element.status
+	// 			)
+	// 			.map(
+	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+	// 					element?.deliverable_units_org
+	// 			),
+	// 	[deliverableCategoryUnitList]
+	// );
 
 	return (
 		<DeliverableUnitTableContainer
-			deliverableUnitList={
-				deliverableUnitList?.deliverableUnitOrg || deliverableCategoryUnitListMemoized || []
-			}
+			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
-			changePage={
-				dashboardData && collapsableTable
-					? changeDeliverableUnitPage
-					: changeDeliverableCategoryUnitPage
-			}
-			loading={
-				deliverableUnitLoading ||
-				deliverableUnitCountLoading ||
-				deliverableCategoryUnitLoading ||
-				deliverableCategoryUnitCountLoading
-			}
-			count={
-				dashboardData && collapsableTable
-					? deliverableUnitCount
-					: deliverableCategoryUnitCount
-			}
-			order={collapsableTable ? order : nestedTableOrder}
-			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
-			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
-			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
+			changePage={changeDeliverableUnitPage}
+			loading={deliverableUnitLoading || deliverableUnitCountLoading}
+			count={deliverableUnitCount}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 			filterList={nestedTableFilterList}
 			setFilterList={setNestedTableFilterList}
 			removeFilterListElements={removeNestedFilterListElements}

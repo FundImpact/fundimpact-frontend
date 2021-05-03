@@ -76,9 +76,7 @@ function BudgetTargetTableContainer({
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
-	refetchBudgetTargetTable:
-		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
-		| undefined;
+	refetchBudgetTargetTable: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
 }) {
 	const openEditBudgetTargetDialog = false,
 		openReportBudgetLineItemDialog = false,

@@ -137,29 +137,29 @@ function ImpactCategoryTableView({
 }) {
 	useEffect(() => {
 		if (impactCategoryEditAccess) {
-			impactCategoryTableEditMenu.push("Edit Impact Category");
+			impactCategoryTableEditMenu[0] = "Edit Impact Category";
 		}
 	}, [impactCategoryEditAccess]);
 	useEffect(() => {
 		if (impactCategoryDeleteAccess) {
-			impactCategoryTableEditMenu.push("Delete Impact Category");
+			impactCategoryTableEditMenu[1] = "Delete Impact Category";
 		}
 	}, [impactCategoryDeleteAccess]);
-	{
-		(!collapsableTable &&
-			(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-				<FilterList
-					initialValues={{
-						name: "",
-						code: "",
-						description: "",
-					}}
-					setFilterList={setFilterList}
-					inputFields={impactCategoryInputFields}
-				/>
-			))) ||
-			(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	}
+	// {
+	// 	(!collapsableTable &&
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
+	// 			<FilterList
+	// 				initialValues={{
+	// 					name: "",
+	// 					code: "",
+	// 					description: "",
+	// 				}}
+	// 				setFilterList={setFilterList}
+	// 				inputFields={impactCategoryInputFields}
+	// 			/>
+	// 		))) ||
+	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
+	// }
 
 	const onImportImpactCategoryTableSuccess = () => reftechImpactCategoryAndUnitTable();
 	const { jwt } = useAuth();
@@ -209,27 +209,6 @@ function ImpactCategoryTableView({
 						onImportTableSuccess={onImportImpactCategoryTableSuccess}
 						hideImport={!impactCategoryImportFromCsvAccess}
 						hideExport={!impactCategoryExportAccess}
-						additionalMenuItems={[
-							{
-								children: (
-									<MenuItem
-										onClick={() =>
-											exportTable({
-												tableName: "Impact Category Unit Table",
-												jwt: jwt as string,
-												tableExportUrl: IMPACT_CATEGORY_UNIT_EXPORT,
-											})
-										}
-									>
-										<FormattedMessage
-											defaultMessage="Export Impact Category Unit Table"
-											id="export_table"
-											description="export table as csv"
-										/>
-									</MenuItem>
-								),
-							},
-						]}
 					>
 						<Button
 							variant="outlined"
@@ -262,7 +241,7 @@ function ImpactCategoryTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{(rowData: { id: string }) => (
+				{/* {(rowData: { id: string }) => (
 					<>
 						<ImpactUnit
 							tableFilterList={filterList}
@@ -270,7 +249,7 @@ function ImpactCategoryTableView({
 							collapsableTable={false}
 						/>
 					</>
-				)}
+				)} */}
 			</CommonTable>
 		</>
 	);

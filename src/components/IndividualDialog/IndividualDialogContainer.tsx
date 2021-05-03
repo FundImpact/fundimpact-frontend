@@ -27,6 +27,7 @@ import { setSuccessNotification, setErrorNotification } from "../../reducers/not
 import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../graphql/Individual";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IndividualDialogType } from "../../models/individual/constant";
+import DeleteModal from "../DeleteModal";
 
 type IIndividualDialogContainerProps =
 	| {
@@ -66,6 +67,7 @@ type IIndividualDialogContainerProps =
 				FetchResult<IDeleteIndividualProject, Record<string, any>, Record<any, any>>
 			>;
 			dialogType: IndividualDialogType;
+			deleteIndividual?: boolean;
 	  }
 	| {
 			open: boolean;
@@ -105,6 +107,7 @@ type IIndividualDialogContainerProps =
 				FetchResult<IDeleteIndividualProject, Record<string, any>, Record<any, any>>
 			>;
 			dialogType: IndividualDialogType;
+			deleteIndividual?: boolean;
 	  };
 
 interface ISubmitForm {
@@ -592,6 +595,45 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 		defaultMessage: "Add individual",
 		description: `This text will be show on add individual form`,
 	});
+
+	const onDelete = async () => {
+		try {
+			if (props.formAction !== FORM_ACTIONS.UPDATE) {
+				return;
+			}
+			const individualValues = { ...props.initialValues };
+			delete (individualValues as any)["id"];
+			await updateIndividual({
+				variables: {
+					input: {
+						data: {
+							name: individualValues.name,
+							deleted: true,
+						},
+						where: {
+							id: props.initialValues.id,
+						},
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Individual Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			props.handleClose();
+		}
+	};
+
+	if (props.deleteIndividual) {
+		return (
+			<DeleteModal
+				open={props.open}
+				handleClose={props.handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Individual"
+			/>
+		);
+	}
 
 	return (
 		<FormDialog

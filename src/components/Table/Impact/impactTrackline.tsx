@@ -433,6 +433,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		countQueryLoading: countLoading,
 		queryLoading: loading,
 		queryRefetch,
+		countRefetch,
 	} = pagination({
 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 		countQuery: GET_IMPACT_TRACKLINE_COUNT,
@@ -504,7 +505,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								impactTrackingLineitemList[i]?.value +
 								`${impactTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_category_unit?.impact_units_org?.name}`}</TableCell>,
+						>{`${impactTrackingLineitemList[i]?.value} ${impactTrackingLineitemList[i]?.impact_target_project?.impact_units_org?.name}`}</TableCell>,
 						<TableCell key={Math.random() + `${impactTrackingLineitemList[i]?.id}-4`}>
 							{" "}
 							<Box display="flex">
@@ -640,26 +641,26 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						tableName="Impact Lineitem"
 						tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
 						tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
-						onImportTableSuccess={() => queryRefetch?.()}
+						onImportTableSuccess={() => countRefetch?.().then(() => queryRefetch?.())}
 						importButtonOnly={importButtonOnly}
 						hideImport={!impactTracklineCreateFromCsvAccess}
 						hideExport={!impactTracklineExportAccess}
 					>
 						<>
-							<Button
+							{/* <Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}
 								onClick={() =>
 									exportTable({
 										tableName: "Donors",
 										jwt: jwt as string,
-										tableExportUrl: `${DONOR_EXPORT}`,
+										tableExportUrl: `${DONOR_EXPORT}/dashboardData?.project?.id`,
 									})
 								}
 							>
 								Donor
-							</Button>
-							<Button
+							</Button> */}
+							{/* <Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}
 								onClick={() =>
@@ -671,7 +672,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								}
 							>
 								Grant Period
-							</Button>
+							</Button> */}
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}

@@ -28,6 +28,7 @@ import {
 	ICreateProjectDonorVariables,
 } from "../../models/project/project";
 import { GET_PROJ_DONORS } from "../../graphql/project";
+import DeleteModal from "../DeleteModal";
 
 const defaultFormValues: IDONOR = {
 	country: "",
@@ -280,6 +281,39 @@ function Donor(props: IDonorProps) {
 		defaultMessage: "Create New Donor For Organization",
 		description: `This text will be show on create Donor form`,
 	});
+
+	const onDelete = async () => {
+		try {
+			const donorValues = { ...initialValues };
+			delete donorValues["id"];
+			await updateDonor({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+						...donorValues,
+						organization: dashboardData?.organization?.id,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Donor Delete Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			props.handleClose();
+		}
+	};
+
+	if (props.deleteDonor) {
+		return (
+			<DeleteModal
+				open={props.open}
+				handleClose={props.handleClose}
+				onDeleteConformation={onDelete}
+				title="Delete Donor Target"
+			/>
+		);
+	}
 
 	return (
 		<>

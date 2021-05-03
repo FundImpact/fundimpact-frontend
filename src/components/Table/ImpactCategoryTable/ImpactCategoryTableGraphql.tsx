@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import ImpactCategoryTableContainer from "./ImpactCategoryTableContainer";
 import {
 	GET_IMPACT_CATEGORY_BY_ORG,
@@ -24,7 +24,7 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 };
 
 function ImpactCategoryTableGraphql({
-	collapsableTable = true,
+	collapsableTable = false,
 	rowId: impactUnitId,
 	tableFilterList,
 }: {
@@ -102,73 +102,67 @@ function ImpactCategoryTableGraphql({
 		queryLoading: impactCategoryLoading,
 		countQueryLoading: impactCategoryCountLoading,
 		queryRefetch: impactCategoryRefetch,
+		countRefetch: impactCategoryCountRefetch,
 	} = pagination({
 		countQuery: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
 		countFilter: queryFilter,
 		query: GET_IMPACT_CATEGORY_BY_ORG,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
-		fireRequest: Boolean(dashboardData && collapsableTable),
+		fireRequest: Boolean(dashboardData),
 	});
 
-	let {
-		changePage: changeImpactCategoryUnitPage,
-		count: impactCategoryUnitCount,
-		queryData: impactCategoryUnitList,
-		queryLoading: impactCategoryUnitLoading,
-		countQueryLoading: impactCategoryUnitCountLoading,
-		queryRefetch: impactCategoryUnitRefetch,
-	} = pagination({
-		countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
-		countFilter: nestedTableQueryFilter,
-		query: GET_IMPACT_CATEGORY_UNIT,
-		queryFilter: nestedTableQueryFilter,
-		sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-		fireRequest: Boolean(impactUnitId && !collapsableTable),
-	});
+	// let {
+	// 	changePage: changeImpactCategoryUnitPage,
+	// 	count: impactCategoryUnitCount,
+	// 	queryData: impactCategoryUnitList,
+	// 	queryLoading: impactCategoryUnitLoading,
+	// 	countQueryLoading: impactCategoryUnitCountLoading,
+	// 	queryRefetch: impactCategoryUnitRefetch,
+	// 	countRefetch: impactCategoryUnitCountRefetch,
+	// } = pagination({
+	// 	countQuery: GET_IMPACT_CATEGORY_UNIT_COUNT,
+	// 	countFilter: nestedTableQueryFilter,
+	// 	query: GET_IMPACT_CATEGORY_UNIT,
+	// 	queryFilter: nestedTableQueryFilter,
+	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
+	// 	fireRequest: Boolean(impactUnitId && !collapsableTable),
+	// });
 
-	const reftechImpactCategoryAndUnitTable = () => {
-		impactCategoryRefetch?.();
-		impactCategoryUnitRefetch?.();
-	};
+	const reftechImpactCategoryAndUnitTable = useCallback(() => {
+		impactCategoryCountRefetch?.().then(() => impactCategoryRefetch?.());
+		// impactCategoryUnitCountRefetch?.().then(() => impactCategoryUnitRefetch?.());
+	}, [
+		impactCategoryCountRefetch,
+		// impactCategoryUnitCountRefetch,
+		impactCategoryRefetch,
+		// impactCategoryUnitRefetch,
+	]);
 
-	const impactCategoryUnitListMemoized = useMemo(
-		() =>
-			impactCategoryUnitList?.impactCategoryUnitList
-				?.filter(
-					(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) => element.status
-				)
-				.map(
-					(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
-						element?.impact_category_org
-				),
-		[impactCategoryUnitList]
-	);
+	// const impactCategoryUnitListMemoized = useMemo(
+	// 	() =>
+	// 		impactCategoryUnitList?.impactCategoryUnitList
+	// 			?.filter(
+	// 				(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) => element.status
+	// 			)
+	// 			.map(
+	// 				(element: IGetImpactCategoryUnit["impactCategoryUnitList"][0]) =>
+	// 					element?.impact_category_org
+	// 			),
+	// 	[impactCategoryUnitList]
+	// );
 
 	return (
 		<ImpactCategoryTableContainer
-			impactCategoryList={
-				impactCategoryList?.impactCategoryOrgList || impactCategoryUnitListMemoized || []
-			}
+			impactCategoryList={impactCategoryList?.impactCategoryOrgList || []}
 			collapsableTable={collapsableTable}
-			changePage={
-				dashboardData && collapsableTable
-					? changeImpactCategoryPage
-					: changeImpactCategoryUnitPage
-			}
-			loading={
-				impactCategoryLoading ||
-				impactCategoryCountLoading ||
-				impactCategoryUnitLoading ||
-				impactCategoryUnitCountLoading
-			}
-			count={
-				dashboardData && collapsableTable ? impactCategoryCount : impactCategoryUnitCount
-			}
-			order={collapsableTable ? order : nestedTableOrder}
-			setOrder={collapsableTable ? setOrder : setNestedTableOrder}
-			orderBy={collapsableTable ? orderBy : nestedTableOrderBy}
-			setOrderBy={collapsableTable ? setOrderBy : setNestedTableOrderBy}
+			changePage={changeImpactCategoryPage}
+			loading={impactCategoryLoading || impactCategoryCountLoading}
+			count={impactCategoryCount}
+			order={order}
+			setOrder={setOrder}
+			orderBy={orderBy}
+			setOrderBy={setOrderBy}
 			filterList={nestedTableFilterList}
 			setFilterList={setNestedTableFilterList}
 			removeFilterListElements={removeNestedFilterListElements}

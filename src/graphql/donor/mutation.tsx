@@ -17,6 +17,7 @@ export const UPDATE_ORG_DONOR = gql`
 				id
 				name
 			}
+			deleted
 			short_name
 			legal_name
 		}
@@ -34,6 +35,7 @@ export const CREATE_PROJECT_DONOR = gql`
 			donor {
 				id
 				name
+				deleted
 			}
 		}
 	}

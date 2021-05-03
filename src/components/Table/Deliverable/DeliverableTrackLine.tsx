@@ -450,6 +450,7 @@ export default function DeliverablesTrackLineTable({
 		countQueryLoading,
 		queryLoading: loading,
 		queryRefetch,
+		countRefetch,
 	} = pagination({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
@@ -521,7 +522,7 @@ export default function DeliverablesTrackLineTable({
 								deliverableTrackingLineitemList[i]?.value +
 								`${deliverableTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_category_unit?.deliverable_units_org?.name}`}</TableCell>,
+						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_unit_org?.name}`}</TableCell>,
 						<TableCell
 							key={
 								deliverableTrackingLineitemList[i]?.financial_year?.name +
@@ -658,26 +659,26 @@ export default function DeliverablesTrackLineTable({
 						tableName="Deliverable Lineitem"
 						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
 						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
-						onImportTableSuccess={() => queryRefetch?.()}
+						onImportTableSuccess={() => countRefetch?.().then(() => queryRefetch?.())}
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableTracklineImportFromCsvAccess}
 						hideExport={!deliverableTracklineExportAccess}
 					>
 						<>
-							<Button
+							{/* <Button
 								onClick={() =>
 									exportTable({
 										tableName: "Donors",
 										jwt: jwt as string,
-										tableExportUrl: `${DONOR_EXPORT}`,
+										tableExportUrl: `${DONOR_EXPORT}/dashboardData?.project?.id`,
 									})
 								}
 								style={{ marginRight: theme.spacing(1) }}
 								variant="outlined"
 							>
 								Donor
-							</Button>
-							<Button
+							</Button> */}
+							{/* <Button
 								onClick={() =>
 									exportTable({
 										tableName: "Grant Period",
@@ -689,7 +690,7 @@ export default function DeliverablesTrackLineTable({
 								variant="outlined"
 							>
 								Grant Period
-							</Button>
+							</Button> */}
 							<Button
 								onClick={() =>
 									exportTable({

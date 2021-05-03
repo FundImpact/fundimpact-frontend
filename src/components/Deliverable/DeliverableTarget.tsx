@@ -36,6 +36,7 @@ import Deliverable from "./Deliverable";
 import DeliverableUnit from "./DeliverableUnit";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
+import { GET_DELIVERABLE_UNIT_BY_ORG } from "../../graphql/Deliverable/unit";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -43,23 +44,22 @@ function getInitialValues(props: DeliverableTargetProps) {
 		name: "",
 		description: "",
 		target_value: 0,
-		deliverableCategory: "",
-		deliverableUnit: "",
-		deliverable_category_unit: -1,
+		deliverable_unit_org: "",
+		deliverable_category_org: "",
 		project: props.project,
 	};
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	const [getUnitsByCategory, { data: unitsBycategory }] = useLazyQuery(GET_CATEGORY_UNIT); // for fetching units by category
+	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
 
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
 
-	const [currentCategory, setcurrentCategory] = useState<any>();
-	const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
+	// const [currentCategory, setcurrentCategory] = useState<any>();
+	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
 
 	const [createDeliverableTarget, { loading: createDeliverableTargetLoading }] = useMutation(
 		CREATE_DELIVERABLE_TARGET
@@ -80,11 +80,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const [openDeliverableUnitDialog, setOpenDeliverableUnitDialog] = useState<boolean>();
 	deliverableTargetForm[3].addNewClick = () => setOpenDeliverableUnitDialog(true);
 
-	const createDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
+	const createDeliverableTargetHelper = async (deliverableTarget: IDeliverableTarget) => {
 		try {
 			let createInputTarget = {
-				...deliverbaleTarget,
-				deliverable_category_unit: deliverableCategoryUnitId,
+				...deliverableTarget,
+				// deliverable_category_unit: deliverableCategoryUnitId,
 			};
 			delete (createInputTarget as any).id;
 			await createDeliverableTarget({
@@ -173,21 +173,21 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					},
 				],
 			});
-			deliverableTargetForm[3].optionsArray = []; // set empty units after creation
-			setcurrentCategory("");
+			// setcurrentCategory("");
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target created successfully !")
 			);
-			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Target creation Failed !"));
+			notificationDispatch(setErrorNotification(error.message));
+		} finally {
+			onCancel();
 		}
 	};
 
-	const updateDeliverableTargetHelper = async (deliverableCategoryUnitId: string) => {
+	const updateDeliverableTargetHelper = async (deliverableTarget: IDeliverableTarget) => {
 		let createInputTarget: any = {
-			...deliverbaleTarget,
-			deliverable_category_unit: deliverableCategoryUnitId,
+			...deliverableTarget,
+			// deliverable_category_unit: deliverableCategoryUnitId,
 		};
 		let deliverableId = createInputTarget.id;
 		delete (createInputTarget as any).id;
@@ -223,97 +223,89 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					},
 				],
 			});
-			deliverableTargetForm[3].optionsArray = []; // set empty units after creation
 			notificationDispatch(
 				setSuccessNotification("Deliverable Target updated successfully !")
 			);
-			setcurrentCategory("");
+			// setcurrentCategory("");
 			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
 		}
 	};
 	//  fetching category_unit id and on completion creating deliverable target
-	const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
-		onCompleted(data) {
-			if (!data?.deliverableCategoryUnitList) return;
-			if (!data.deliverableCategoryUnitList.length) {
-				notificationDispatch(setErrorNotification("Unit not match with category !"));
-				return;
-			}
+	// const [getCategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT, {
+	// 	onCompleted(data) {
+	// 		if (!data?.deliverableCategoryUnitList) return;
+	// 		if (!data.deliverableCategoryUnitList.length) {
+	// 			notificationDispatch(setErrorNotification("Unit not match with category !"));
+	// 			return;
+	// 		}
 
-			if (props.type === DELIVERABLE_ACTIONS.CREATE)
-				createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);
-			//deliverable_category_unit id
-			else updateDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);
-		},
-		onError(err) {
-			notificationDispatch(setErrorNotification("Unit not match with category !"));
-		},
-		fetchPolicy: "network-only",
-	});
+	// 		if (props.type === DELIVERABLE_ACTIONS.CREATE)
+	// 			createDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);
+	// 		//deliverable_category_unit id
+	// 		else updateDeliverableTargetHelper(data.deliverableCategoryUnitList[0].id);
+	// 	},
+	// 	onError(err) {
+	// 		notificationDispatch(setErrorNotification("Unit not match with category !"));
+	// 	},
+	// 	fetchPolicy: "network-only",
+	// });
 
-	useEffect(() => {
-		if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
-			setcurrentCategory(props.data?.deliverableCategory);
-		}
-	}, [props.type]);
+	// useEffect(() => {
+	// 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+	// 		setcurrentCategory(props.data?.deliverableCategory);
+	// 	}
+	// }, [props.type]);
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
 			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
-			deliverableTargetForm[2].getInputValue = setcurrentCategory;
+			// deliverableTargetForm[2].getInputValue = setcurrentCategory;
 		}
 	}, [deliverableCategories]);
 
+	useEffect(() => {
+		if (unitsByOrg) {
+			deliverableTargetForm[3].optionsArray = unitsByOrg.deliverableUnitOrg;
+			// deliverableTargetForm[2].getInputValue = setcurrentCategory;
+		}
+	}, [unitsByOrg]);
+
 	// handling category change
 	useEffect(() => {
-		if (currentCategory) {
-			getUnitsByCategory({
-				variables: { filter: { deliverable_category_org: currentCategory } },
+		if (dashboardData?.organization?.id) {
+			getUnitsByOrg({
+				variables: { filter: { organization: dashboardData?.organization?.id } },
 			});
 		}
-	}, [currentCategory, getUnitsByCategory]);
-
-	// updating units field with fetched units list
-	deliverableTargetForm[3].optionsArray = React.useMemo(() => {
-		if (unitsBycategory) {
-			let arr: any = [];
-			unitsBycategory.deliverableCategoryUnitList.forEach(
-				(elem: { deliverable_units_org: { id: string; name: string } }) => {
-					arr.push({
-						id: elem.deliverable_units_org.id,
-						name: elem.deliverable_units_org.name,
-					});
-				}
-			);
-			return arr;
-		}
-	}, [unitsBycategory]);
+	}, [dashboardData, getUnitsByOrg]);
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
-		setDeliverableTarget({
+		await createDeliverableTargetHelper({
 			id: value.id,
 			name: value.name,
 			target_value: Number(value.target_value),
 			description: value.description,
 			project: value.project,
-			deliverable_category_unit: -1,
+			deliverable_category_org: value?.deliverable_category_org,
+			deliverable_unit_org: value?.deliverable_unit_org,
 		});
 		// fetching deliverable_category_unit before creating deliverable Target
-		getCategoryUnit({
-			variables: {
-				filter: {
-					deliverable_category_org: value.deliverableCategory,
-					deliverable_units_org: value.deliverableUnit,
-				},
-			},
-		});
+		// getCategoryUnit({
+		// 	variables: {
+		// 		filter: {
+		// 			deliverable_category_org: value.deliverableCategory,
+		// 			deliverable_units_org: value.deliverableUnit,
+		// 		},
+		// 	},
+		// });
 	};
 
 	const onUpdate = async (value: IDeliverableTarget) => {
-		onCreate(value);
+		// onCreate(value);
+		await updateDeliverableTargetHelper(value);
 	};
 
 	const validate = (values: IDeliverableTarget) => {
@@ -328,11 +320,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			if (!values.target_value) {
 				errors.target_value = "Target value is required";
 			}
-			if (!values.deliverableCategory) {
-				errors.deliverableCategory = "Deliverable Category is required";
+			if (!values.deliverable_category_org) {
+				errors.deliverable_category_org = "Deliverable Category is required";
 			}
-			if (!values.deliverableUnit) {
-				errors.deliverableUnit = "Deliverable Unit is required";
+			if (!values.deliverable_unit_org) {
+				errors.deliverable_unit_org = "Deliverable Unit is required";
 			}
 		}
 
@@ -354,8 +346,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		try {
 			const deliverableTargetValues = { ...initialValues };
 			delete deliverableTargetValues["id"];
-			delete deliverableTargetValues["deliverableCategory"];
-			delete deliverableTargetValues["deliverableUnit"];
 			await updateDeliverableTarget({
 				variables: {
 					id: initialValues?.id,

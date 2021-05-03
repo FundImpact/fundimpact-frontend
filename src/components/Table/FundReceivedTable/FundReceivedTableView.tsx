@@ -131,7 +131,7 @@ function FundReceivedTableView({
 	removeFilterListElements,
 	donorHash,
 	currency,
-	fundReceivedRefetch,
+	fundReceivedTableRefetch,
 }: {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
 	loading: boolean;
@@ -146,10 +146,10 @@ function FundReceivedTableView({
 		IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null
 	>;
 	toggleDialogs: (index: number, dialogNewOpenStatus: boolean) => void;
-	initialValues: IFundReceivedForm;
 	filterList: {
 		[key: string]: string | string[];
 	};
+	initialValues: IFundReceivedForm;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
 			[key: string]: string | string[];
@@ -159,15 +159,12 @@ function FundReceivedTableView({
 	inputFields: any[];
 	donorHash: { [key: string]: string };
 	currency: string;
-	fundReceivedRefetch:
-		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
-		| undefined;
+	fundReceivedTableRefetch: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
 }) {
 	const intl = useIntl();
 	const dashboardData = useDashBoardData();
 	fundReceivedTableHeadings[2].label = `Amount ${currency && "(" + currency + ")"}`;
 
-	const onImportFundReceivedTableSuccess = () => fundReceivedRefetch?.();
 	const theme = useTheme();
 	const { jwt } = useAuth();
 
@@ -247,7 +244,7 @@ function FundReceivedTableView({
 						tableName="Fund Received"
 						tableExportUrl={`${FUND_RECEIPT_TABLE_EXPORT}/${dashboardData?.project?.id}`}
 						tableImportUrl={`${FUND_RECEIPT_TABLE_IMPORT}/${dashboardData?.project?.id}`}
-						onImportTableSuccess={onImportFundReceivedTableSuccess}
+						onImportTableSuccess={fundReceivedTableRefetch}
 						importButtonOnly={importButtonOnly}
 						hideImport={!fundReceiptImportFromCsvAccess}
 						hideExport={!fundReceiptExportAccess}
@@ -260,7 +257,7 @@ function FundReceivedTableView({
 									exportTable({
 										tableName: "Donors",
 										jwt: jwt as string,
-										tableExportUrl: `${DONOR_EXPORT}`,
+										tableExportUrl: `${DONOR_EXPORT}/${dashboardData?.project?.id}`,
 									})
 								}
 							>
