@@ -97,15 +97,15 @@ const FormDetailsCalculate = React.memo(
 			? [
 					{
 						label: impactCategoryLabel,
-						value: fetchedImpactTarget.impact_category_unit.impact_category_org.name,
+						value: fetchedImpactTarget?.impact_category_org.name,
 					},
 					{
 						label: impactTotalTargetLabel,
-						value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+						value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget?.impact_units_org?.name}`,
 					},
 					{
 						label: impactAchievedTargetLabel,
-						value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget.impact_category_unit.impact_units_org.name}`,
+						value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget?.impact_units_org?.name}`,
 					},
 			  ]
 			: [];

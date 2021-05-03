@@ -15,8 +15,8 @@ import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
 	deliverableUnit: IDeliverableUnitData | null,
-	organization: string | number,
-	deliverableCategory: string[]
+	organization: string | number
+	// deliverableCategory: string[]
 ): IDeliverableUnit => {
 	return {
 		code: deliverableUnit?.code || "",
@@ -26,7 +26,7 @@ const getInitialValues = (
 		prefix_label: deliverableUnit?.prefix_label || "",
 		suffix_label: deliverableUnit?.suffix_label || "",
 		unit_type: deliverableUnit?.unit_type || "",
-		deliverableCategory,
+		// deliverableCategory,
 		organization,
 	};
 };
@@ -140,8 +140,7 @@ function DeliverableUnitTableContainer({
 			selectedDeliverableUnit={selectedDeliverableUnit}
 			initialValues={getInitialValues(
 				selectedDeliverableUnit.current,
-				dashboardData?.organization?.id || "",
-				deliverableCategoryMemoized || []
+				dashboardData?.organization?.id || ""
 			)}
 			deliverableUnitList={deliverableUnitList}
 			collapsableTable={collapsableTable}

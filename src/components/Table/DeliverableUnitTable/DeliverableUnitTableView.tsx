@@ -223,42 +223,8 @@ function DeliverableUnitTableView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableUnitImportFromCsvAccess}
 						hideExport={!deliverableUnitExportAccess}
-						additionalMenuItems={[
-							{
-								children: (
-									<MenuItem
-										onClick={() =>
-											exportTable({
-												tableName: "Deliverable Category Unit Table",
-												jwt: jwt as string,
-												tableExportUrl: DELIVERABLE_CATEGORY_UNIT_EXPORT,
-											})
-										}
-									>
-										<FormattedMessage
-											defaultMessage="Export Deliverable Category Unit Table"
-											id="export_table"
-											description="export table as csv"
-										/>
-									</MenuItem>
-								),
-							},
-						]}
 					>
 						<>
-							<Button
-								variant="outlined"
-								style={{ marginRight: theme.spacing(1) }}
-								onClick={() =>
-									exportTable({
-										tableName: "Deliverable Category",
-										jwt: jwt as string,
-										tableExportUrl: `${DELIVERABLE_CATEGORY_TABLE_EXPORT}`,
-									})
-								}
-							>
-								Deliverable Category Export
-							</Button>
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1), float: "right" }}
@@ -293,9 +259,9 @@ function DeliverableUnitTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{(rowData: { id: string }) => (
+				{/* {(rowData: { id: string }) => (
 					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />
-				)}
+				)} */}
 			</CommonTable>
 		</>
 	);

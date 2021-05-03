@@ -8,6 +8,7 @@ import {
 	GET_ALL_IMPACT_AMOUNT_SPEND,
 	GET_ALL_IMPACT_TARGET_AMOUNT,
 	GET_IMPACT_CATEGORY_BY_ORG,
+	GET_IMPACT_UNIT_BY_ORG,
 } from "../../graphql/Impact/query";
 import {
 	CREATE_IMPACT_TARGET,
@@ -46,9 +47,8 @@ function getInitialValues(props: ImpactTargetProps) {
 		name: "",
 		description: "",
 		target_value: "",
-		impactCategory: "",
-		impactUnit: "",
-		impact_category_unit: "",
+		impact_category_org: "",
+		impact_units_org: "",
 		sustainable_development_goal: "",
 		project: props.project,
 	};
@@ -61,11 +61,13 @@ function ImpactTarget(props: ImpactTargetProps) {
 	});
 	const { data: sdgList } = useQuery(GET_SDG);
 
-	const [currCategoryId, setCurrentCategoryId] = React.useState<number | string>();
+	// const [currCategoryId, setCurrentCategoryId] = React.useState<number | string>();
 
-	const [getUnitsByCategory, { data: unitByCategory }] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT); // for fetching units by category
+	const [getUnitsByOrg, { data: unitByOrg }] = useLazyQuery(GET_IMPACT_UNIT_BY_ORG, {
+		fetchPolicy: "cache-and-network",
+	}); // for fetching units by category
 
-	const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
+	// const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
 	const [createImpactTarget, { loading: impactLoading }] = useMutation(CREATE_IMPACT_TARGET);
 
 	const [updateImpactTarget, { loading: updateImpactTargetLoading }] = useMutation(
@@ -84,31 +86,30 @@ function ImpactTarget(props: ImpactTargetProps) {
 	const [openImpactUnitDialog, setOpenImpactUnitDialog] = useState<boolean>();
 	impactTargetForm[3].addNewClick = () => setOpenImpactUnitDialog(true);
 
-	const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
-		onCompleted(data) {
-			if (data.impactCategoryUnitList && data.impactCategoryUnitList.length) {
-				if (props.type === IMPACT_ACTIONS.CREATE)
-					createImpactTargetHelper(data.impactCategoryUnitList[0].id);
-				else updateImpactTargetHelper(data.impactCategoryUnitList[0].id);
-			}
-		},
-		onError() {
-			notificationDispatch(setErrorNotification("No units found for category!"));
-		},
-		fetchPolicy: "network-only",
-	});
+	// const [getUnitsAndCategory] = useLazyQuery(GET_IMPACT_CATEGORY_UNIT, {
+	// 	onCompleted(data) {
+	// 		if (data.impactCategoryUnitList && data.impactCategoryUnitList.length) {
+	// 			if (props.type === IMPACT_ACTIONS.CREATE)
+	// 				onCreate(data.impactCategoryUnitList[0].id);
+	// 			else onUpdate(data.impactCategoryUnitList[0].id);
+	// 		}
+	// 	},
+	// 	onError() {
+	// 		notificationDispatch(setErrorNotification("No units found for category!"));
+	// 	},
+	// 	fetchPolicy: "network-only",
+	// });
 
-	useEffect(() => {
-		let impactTargetprops = props;
-		if (impactTargetprops.type === IMPACT_ACTIONS.UPDATE) {
-			setCurrentCategoryId(impactTargetprops.data?.impactCategory);
-		}
-	}, [props]);
+	// useEffect(() => {
+	// 	let impactTargetprops = props;
+	// 	if (impactTargetprops.type === IMPACT_ACTIONS.UPDATE) {
+	// 		setCurrentCategoryId(impactTargetprops.data?.impactCategory);
+	// 	}
+	// }, [props]);
 
-	const updateImpactTargetHelper = async (impactCategoryUnitId: string) => {
+	const onUpdate = async (impactTarget: IImpactTarget) => {
 		let createInputTarget: any = {
 			...impactTarget,
-			impact_category_unit: impactCategoryUnitId,
 		};
 		let impactId = createInputTarget.id;
 		delete (createInputTarget as any).id;
@@ -155,23 +156,20 @@ function ImpactTarget(props: ImpactTargetProps) {
 					},
 				],
 			});
-			impactTargetForm[3].optionsArray = []; // set empty units after creation
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
-			setCurrentCategoryId("");
-			onCancel();
+			notificationDispatch(setSuccessNotification("Impact Target updated successfully !"));
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Target Updation Failed !"));
+			notificationDispatch(setErrorNotification(error.message));
+		} finally {
+			onCancel();
 		}
 	};
 
-	const createImpactTargetHelper = async (impactCategoryUnitId: string) => {
+	const onCreate = async (impactTarget: IImpactTarget) => {
 		try {
-			let createInputTarget: any = {
+			let createInputTarget = {
 				...impactTarget,
-				impact_category_unit: impactCategoryUnitId,
 			};
+			createInputTarget.target_value = Number(createInputTarget.target_value);
 			delete createInputTarget.id;
 			createImpactTarget({
 				variables: {
@@ -277,21 +275,25 @@ function ImpactTarget(props: ImpactTargetProps) {
 					},
 				],
 			});
-			impactTargetForm[3].optionsArray = []; // set empty units after creation
 			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
-			setCurrentCategoryId("");
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Impact Target creation Failed !"));
+			notificationDispatch(setErrorNotification(error.message));
+		} finally {
+			onCancel();
 		}
 	};
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (categories) {
 			impactTargetForm[2].optionsArray = categories.impactCategoryOrgList;
-			impactTargetForm[2].getInputValue = setCurrentCategoryId;
 		}
 	}, [categories]);
+	useEffect(() => {
+		if (unitByOrg) {
+			impactTargetForm[3].optionsArray = unitByOrg.impactUnitsOrgList;
+		}
+	}, [unitByOrg]);
 
 	// updating sdg field with fetched sdg list
 	useEffect(() => {
@@ -302,57 +304,15 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 	// handling category change
 	useEffect(() => {
-		if (currCategoryId) {
-			getUnitsByCategory({
-				variables: { filter: { impact_category_org: currCategoryId } },
+		if (dashboardData?.organization?.id) {
+			getUnitsByOrg({
+				variables: { filter: { organization: dashboardData?.organization?.id } },
 			});
 		}
-	}, [currCategoryId, getUnitsByCategory]);
-
-	// updating units field with fetched units list
-	impactTargetForm[3].optionsArray = React.useMemo(() => {
-		if (unitByCategory) {
-			let arr: any = [];
-			unitByCategory.impactCategoryUnitList.forEach(
-				(elem: { impact_units_org: { id: number; name: string } }) => {
-					arr.push({
-						id: elem.impact_units_org.id,
-						name: elem.impact_units_org.name,
-					});
-				}
-			);
-
-			return arr;
-		}
-	}, [unitByCategory]);
+	}, [dashboardData, getUnitsByOrg]);
 
 	let initialValues: IImpactTarget = getInitialValues(props);
 
-	const onCreate = (value: IImpactTarget) => {
-		// fetch impact_category_unit_id
-		setImpactTarget({
-			id: value?.id,
-			name: value.name,
-			target_value: Number(value.target_value),
-			description: value.description,
-			project: value.project,
-			impact_category_unit: -1,
-			sustainable_development_goal: value.sustainable_development_goal,
-		});
-		// Query call for fetching impact_categroy_unit_id
-		getUnitsAndCategory({
-			variables: {
-				filter: {
-					impact_category_org: value.impactCategory,
-					impact_units_org: value.impactUnit,
-				},
-			},
-		});
-	};
-
-	const onUpdate = (value: IImpactTarget) => {
-		onCreate(value);
-	};
 	const validate = (values: IImpactTarget) => {
 		let errors: Partial<any> = {};
 
@@ -365,13 +325,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 		if (!values.target_value) {
 			errors.target_value = "Target value is required here";
 		}
-		if (!values.impactCategory) {
-			errors.deliverableCategory = "Category is required here";
+		if (!values.impact_category_org) {
+			errors.impact_category_org = "Category is required here";
 		}
-		if (!values.impactUnit) {
-			errors.deliverableUnit = "Unit is required here";
+		if (!values.impact_units_org) {
+			errors.impact_units_org = "Unit is required here";
 		}
-
 		return errors;
 	};
 
@@ -379,8 +338,6 @@ function ImpactTarget(props: ImpactTargetProps) {
 		try {
 			const impactTargetValues = { ...initialValues };
 			delete impactTargetValues["id"];
-			delete impactTargetValues["impactCategory"];
-			delete impactTargetValues["impactUnit"];
 			await updateImpactTarget({
 				variables: {
 					id: initialValues?.id,
@@ -462,10 +419,10 @@ function ImpactTarget(props: ImpactTargetProps) {
 					{...{
 						initialValues,
 						validate,
-						onCreate,
+						onCreate: onCreate,
 						onCancel,
 						formAction,
-						onUpdate,
+						onUpdate: onUpdate,
 						inputFields: impactTargetForm,
 					}}
 				/>

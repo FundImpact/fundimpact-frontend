@@ -209,27 +209,6 @@ function ImpactCategoryTableView({
 						onImportTableSuccess={onImportImpactCategoryTableSuccess}
 						hideImport={!impactCategoryImportFromCsvAccess}
 						hideExport={!impactCategoryExportAccess}
-						additionalMenuItems={[
-							{
-								children: (
-									<MenuItem
-										onClick={() =>
-											exportTable({
-												tableName: "Impact Category Unit Table",
-												jwt: jwt as string,
-												tableExportUrl: IMPACT_CATEGORY_UNIT_EXPORT,
-											})
-										}
-									>
-										<FormattedMessage
-											defaultMessage="Export Impact Category Unit Table"
-											id="export_table"
-											description="export table as csv"
-										/>
-									</MenuItem>
-								),
-							},
-						]}
 					>
 						<Button
 							variant="outlined"
@@ -262,7 +241,7 @@ function ImpactCategoryTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{(rowData: { id: string }) => (
+				{/* {(rowData: { id: string }) => (
 					<>
 						<ImpactUnit
 							tableFilterList={filterList}
@@ -270,7 +249,7 @@ function ImpactCategoryTableView({
 							collapsableTable={false}
 						/>
 					</>
-				)}
+				)} */}
 			</CommonTable>
 		</>
 	);
