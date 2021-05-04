@@ -167,7 +167,7 @@ function BudgetCategory({
 			notificationDispatch(setSuccessNotification("Budget Category Creation Success"));
 			handleClose();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget Category Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		}
 	};

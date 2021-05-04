@@ -213,7 +213,7 @@ function Donor(props: IDonorProps) {
 			}
 			notificationDispatch(setSuccessNotification("Donor Creation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Donor Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
 		}
@@ -246,7 +246,7 @@ function Donor(props: IDonorProps) {
 			});
 			notificationDispatch(setSuccessNotification("Donor Updation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Donor Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
 		}

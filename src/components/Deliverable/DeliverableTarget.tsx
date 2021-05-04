@@ -229,7 +229,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			// setcurrentCategory("");
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
+			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
 	//  fetching category_unit id and on completion creating deliverable target

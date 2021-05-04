@@ -439,7 +439,7 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 			notificationDispatch(setSuccessNotification("Deliverable Unit updation created !"));
 			onCancel();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Deliverable Unit updation Failed !"));
+			notificationDispatch(setErrorNotification(err?.message));
 			onCancel();
 		}
 	};

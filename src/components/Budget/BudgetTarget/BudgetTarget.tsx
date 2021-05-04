@@ -433,7 +433,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			notificationDispatch(setSuccessNotification("Budget Target Creation Success"));
 			closeBudgetTargetProjectDialog();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget Target Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			closeBudgetTargetProjectDialog();
 		}
 	};
@@ -488,7 +488,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 			closeBudgetTargetProjectDialog();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget Target Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			closeBudgetTargetProjectDialog();
 		}
 	};

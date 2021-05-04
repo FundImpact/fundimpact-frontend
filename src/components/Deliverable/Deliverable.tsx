@@ -127,7 +127,7 @@ function Deliverable(props: DeliverableProps) {
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
+			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
 
@@ -145,7 +145,7 @@ function Deliverable(props: DeliverableProps) {
 			notificationDispatch(setSuccessNotification("Deliverable category updated !"));
 			onCancel();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Deliverable category updation Failed !"));
+			notificationDispatch(setErrorNotification(err?.message));
 			onCancel();
 		}
 	};

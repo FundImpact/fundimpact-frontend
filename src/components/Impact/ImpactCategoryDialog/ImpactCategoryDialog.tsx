@@ -150,7 +150,7 @@ function ImpactCategoryDialog({
 			notificationDispatch(setSuccessNotification("Impact Category Creation Success"));
 			handleClose();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Impact Category Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		}
 	};
@@ -170,7 +170,7 @@ function ImpactCategoryDialog({
 			notificationDispatch(setSuccessNotification("Impact Category Updation Success"));
 			handleClose();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Impact Category Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		}
 	};

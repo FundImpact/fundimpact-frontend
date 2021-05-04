@@ -320,8 +320,8 @@ function ImpactUnitDialog({
 			// 		handleClose();
 			// 	}
 			// },
-			onError() {
-				notificationDispatch(setErrorNotification("Impact Unit Creation Failure"));
+			onError(err) {
+				notificationDispatch(setErrorNotification(err?.message));
 				handleClose();
 			},
 		}

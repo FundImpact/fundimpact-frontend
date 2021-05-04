@@ -346,8 +346,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				setSuccessNotification("Deliverable Trackline created successfully!")
 			);
 		},
-		onError(data) {
-			notificationDispatch(setErrorNotification("Deliverable Trackline creation Failed !"));
+		onError(err) {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 	});
 	const [
@@ -380,8 +380,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 			handleNext();
 		},
-		onError(data) {
-			notificationDispatch(setErrorNotification("Deliverable Trackline Updation Failed !"));
+		onError(err) {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 	});
 	const [deleteDeliverableTrackLine, { loading: deletingDeliverableTrackline }] = useMutation(

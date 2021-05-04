@@ -496,7 +496,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget Line Item Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			closeDialog();
 		}
@@ -567,7 +567,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			});
 			notificationDispatch(setSuccessNotification("Budget  Line Item Updation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget  Line Item Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			closeDialog();
 		}
