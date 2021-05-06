@@ -6,6 +6,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import { GET_CURRENCY_LIST } from "../../../graphql";
 import {
+	GET_BUDGET_CATEGORY_PROJECT_COUNT,
 	GET_BUDGET_TARGET_PROJECT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	GET_PROJECT_BUDGET_TARGETS_COUNT,
@@ -518,6 +519,15 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 					{
 						query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_BUDGET_CATEGORY_PROJECT_COUNT,
+						variables: {
+							filter: {
+								budget_category_organization:
+									budgetTargetValues?.budget_category_organization,
+							},
+						},
 					},
 				],
 			});
