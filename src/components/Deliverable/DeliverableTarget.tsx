@@ -373,6 +373,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
+					{
+						query: GET_DELIVERABLE_TARGETS_COUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Target Delete Success"));

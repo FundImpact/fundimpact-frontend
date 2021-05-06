@@ -645,6 +645,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 							filter: { project: DashBoardData?.project?.id },
 						},
 					},
+					{
+						query: GET_IMPACT_TRACKLINE_COUNT,
+						variables: {
+							filter: { impact_target_project: initialValues?.impact_target_project },
+						},
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Line Item Delete Success"));

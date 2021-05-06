@@ -369,6 +369,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 							filter: { project: dashboardData?.project?.id },
 						},
 					},
+					{
+						query: GET_IMPACT_TARGETS_COUNT,
+						variables: {
+							filter: { project: dashboardData?.project?.id },
+						},
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Target Delete Success"));

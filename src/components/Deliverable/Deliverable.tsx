@@ -162,6 +162,16 @@ function Deliverable(props: DeliverableProps) {
 						...deliverableCategoryValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Category Delete Success"));
 		} catch (err) {

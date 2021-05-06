@@ -7,6 +7,32 @@ import {
 } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
 import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+import { useRefetchOnBudgetTargetImport } from "../../../../hooks/budget";
+
+interface IBUDGET_TARGET_TABLE_CONTAINER {
+	budgetTargetList: IBudgetTargetProjectResponse[];
+	changePage: (prev?: boolean) => void;
+	count: number;
+	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	inputFields: any[];
+	donorHash: { [key: string]: string };
+	budgetCategoryHash: { [key: string]: string };
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	currency: string;
+	refetchBudgetTargetTable: () => void;
+}
 
 function getBudgetTargetInitialValues(
 	budgetTarget: IBudgetTargetProjectResponse | null
@@ -54,30 +80,7 @@ function BudgetTargetTableContainer({
 	removeFilterListElements,
 	currency,
 	refetchBudgetTargetTable,
-}: {
-	budgetTargetList: IBudgetTargetProjectResponse[];
-	changePage: (prev?: boolean) => void;
-	count: number;
-	loading: boolean;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	inputFields: any[];
-	donorHash: { [key: string]: string };
-	budgetCategoryHash: { [key: string]: string };
-	filterList: {
-		[key: string]: string | string[];
-	};
-	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string | string[];
-		}>
-	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-	currency: string;
-	refetchBudgetTargetTable: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
-}) {
+}: IBUDGET_TARGET_TABLE_CONTAINER) {
 	const openEditBudgetTargetDialog = false,
 		openReportBudgetLineItemDialog = false,
 		openDeleteBudgetTargetDialog = false;

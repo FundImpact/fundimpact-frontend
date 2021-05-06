@@ -683,6 +683,15 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							filter: { project: DashBoardData?.project?.id },
 						},
 					},
+					{
+						query: GET_DELIVERABLE_TRACKLINE_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project:
+									initialValues?.deliverable_target_project,
+							},
+						},
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Line Item Delete Success"));

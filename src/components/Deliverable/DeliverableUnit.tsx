@@ -468,6 +468,16 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 						...deliverableUnitValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Unit Delete Success"));
 		} catch (err) {

@@ -654,6 +654,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						query: GET_PROJECT_AMOUNT_SPEND,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
+					{
+						query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+						variables: {
+							filter: {
+								budget_targets_project: initialValues?.budget_targets_project,
+							},
+						},
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Delete Success"));

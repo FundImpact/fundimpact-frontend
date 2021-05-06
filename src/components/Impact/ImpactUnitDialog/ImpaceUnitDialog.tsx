@@ -492,6 +492,16 @@ function ImpactUnitDialog({
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_UNIT_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Unit Delete Success"));
 		} catch (err) {

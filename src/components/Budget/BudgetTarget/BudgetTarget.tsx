@@ -515,6 +515,10 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 						query: GET_PROJECT_AMOUNT_SPEND,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
+					{
+						query: GET_PROJECT_BUDGET_TARGETS_COUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Target Delete Success"));

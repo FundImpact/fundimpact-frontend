@@ -295,6 +295,14 @@ function Donor(props: IDonorProps) {
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DONOR_COUNT,
+						variables: {
+							filter: { organization: dashboardData?.organization?.id },
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Donor Delete Success"));
 		} catch (err) {

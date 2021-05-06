@@ -44,6 +44,7 @@ function BudgetLineItemTableContainer({
 	budgetTargetId,
 	donorCountryId,
 	countRefetch,
+	refetchOnBudgetLineItemImport,
 }: {
 	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
 	changePage: (prev?: boolean) => void;
@@ -84,6 +85,7 @@ function BudgetLineItemTableContainer({
 					| undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
+	refetchOnBudgetLineItemImport: () => void;
 }) {
 	const editBudgetLineItem = false,
 		deleteBudgetLineItem = false;
@@ -126,6 +128,7 @@ function BudgetLineItemTableContainer({
 			budgetTargetId={budgetTargetId}
 			donorCountryId={donorCountryId}
 			countRefetch={countRefetch}
+			refetchOnBudgetLineItemImport={refetchOnBudgetLineItemImport}
 		/>
 	);
 }

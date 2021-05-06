@@ -187,6 +187,16 @@ function ImpactCategoryDialog({
 						...impactCategoryValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Category Delete Success"));
 		} catch (err) {

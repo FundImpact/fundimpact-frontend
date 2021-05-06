@@ -28,6 +28,7 @@ import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../graphql/Individual
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IndividualDialogType } from "../../models/individual/constant";
 import DeleteModal from "../DeleteModal";
+import { IDashboardDataContext } from "../../models";
 
 type IIndividualDialogContainerProps =
 	| {
@@ -133,6 +134,17 @@ interface IAssociateIndividualWithProject {
 	projects: string[];
 	individualId: string;
 }
+
+const getIndividualCountQueryFilter = ({
+	dialogType,
+	dashboardData,
+}: {
+	dialogType: IndividualDialogType;
+	dashboardData?: IDashboardDataContext;
+}) =>
+	dialogType === IndividualDialogType.organization
+		? { organization: dashboardData?.organization?.id, deleted: false }
+		: { t4d_project_individuals: { project: dashboardData?.project?.id }, deleted: false };
 
 const getInitialFormValues = (individual?: IIndividual): IIndividualForm => {
 	if (individual) {
@@ -615,6 +627,26 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_INDIVIDUALS_COUNT,
+						variables: {
+							filter: getIndividualCountQueryFilter({
+								dialogType: IndividualDialogType.project,
+								dashboardData,
+							}),
+						},
+					},
+					{
+						query: GET_INDIVIDUALS_COUNT,
+						variables: {
+							filter: getIndividualCountQueryFilter({
+								dialogType: IndividualDialogType.organization,
+								dashboardData,
+							}),
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Individual Delete Success"));
 		} catch (err) {

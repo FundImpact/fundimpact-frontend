@@ -217,6 +217,16 @@ function BudgetCategory({
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_ORG_BUDGET_CATEGORY_COUNT,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Delete Success"));
 		} catch (err) {
