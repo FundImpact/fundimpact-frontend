@@ -11,6 +11,7 @@ import {
 } from "../../../graphql/Deliverable/categoryUnit";
 import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
+import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -46,6 +47,10 @@ function DeliverableCategoryTableGraphql({
 		code: "",
 		description: "",
 	});
+
+	const {
+		refetchDeliverableCategoryOnDeliverableCategoryImport,
+	} = useRefetchDeliverableMastersOnDeliverableMasterImport();
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
 		setNestedTableFilterList((nestedTableFilterListObject) => {
@@ -128,13 +133,13 @@ function DeliverableCategoryTableGraphql({
 	// });
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
+		refetchDeliverableCategoryOnDeliverableCategoryImport();
 		refetchDeliverableCategoryCount?.().then(() => refetchDeliverableCategory?.());
 		// refetchDeliverableCategoryUnitCount?.().then(() => refetchDeliverableCategoryUnit?.());
 	}, [
 		refetchDeliverableCategoryCount,
 		refetchDeliverableCategory,
-		// refetchDeliverableCategoryUnitCount,
-		// refetchDeliverableCategoryUnit,
+		refetchDeliverableCategoryOnDeliverableCategoryImport,
 	]);
 
 	// const deliverableCategoryUnitListMemoized = useMemo(

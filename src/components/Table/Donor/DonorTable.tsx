@@ -40,6 +40,7 @@ import ImportExportTableMenu from "../../ImportExportTableMenu";
 import { COUNTRY_EXPORT, DONOR_EXPORT, DONOR_IMPORT } from "../../../utils/endpoints.util";
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
+import { useApolloClient } from "@apollo/client";
 
 enum tableHeader {
 	name = 1,
@@ -201,7 +202,18 @@ function DonorTable({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
+	const apolloClient = useApolloClient();
+
 	const refetchDonorTable = useCallback(() => {
+		apolloClient.query({
+			query: GET_ORG_DONOR,
+			variables: {
+				filter: {
+					organization: dashboardData?.organization?.id,
+				},
+			},
+			fetchPolicy: "network-only",
+		});
 		refetchDonorCount?.().then(() => refetchDonorsList?.());
 	}, [refetchDonorCount, refetchDonorsList]);
 

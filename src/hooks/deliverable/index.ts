@@ -1,9 +1,11 @@
-import { useApolloClient } from "@apollo/client";
+import { DocumentNode, useApolloClient } from "@apollo/client";
 import { useDashBoardData } from "../../contexts/dashboardContext";
+import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import {
 	GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
 } from "../../graphql/Deliverable/target";
+import { GET_DELIVERABLE_UNIT_BY_ORG } from "../../graphql/Deliverable/unit";
 import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
@@ -50,4 +52,34 @@ const useRefetchOnDeliverableLineItemImport = (deliverableTargetProject: string)
 	return { refetchOnDeliverableLineItemImport };
 };
 
-export { useRefetchOnDeliverableTargetImport, useRefetchOnDeliverableLineItemImport };
+const useRefetchDeliverableMastersOnDeliverableMasterImport = () => {
+	const apolloClient = useApolloClient();
+	const dashboardData = useDashBoardData();
+	const refetchMaster = (query: DocumentNode) => {
+		apolloClient.query({
+			query,
+			variables: {
+				filter: {
+					organization: dashboardData?.organization?.id,
+				},
+			},
+			fetchPolicy: "network-only",
+		});
+	};
+	const refetchDeliverableCategoryOnDeliverableCategoryImport = () => {
+		refetchMaster(GET_DELIVERABLE_ORG_CATEGORY);
+	};
+	const refetchDeliverableUnitOnDeliverableUnitImport = () => {
+		refetchMaster(GET_DELIVERABLE_UNIT_BY_ORG);
+	};
+	return {
+		refetchDeliverableCategoryOnDeliverableCategoryImport,
+		refetchDeliverableUnitOnDeliverableUnitImport,
+	};
+};
+
+export {
+	useRefetchOnDeliverableTargetImport,
+	useRefetchOnDeliverableLineItemImport,
+	useRefetchDeliverableMastersOnDeliverableMasterImport,
+};
