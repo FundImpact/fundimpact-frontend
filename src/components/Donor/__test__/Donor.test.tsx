@@ -91,10 +91,10 @@ const mocks = [
 let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
 
 beforeAll(() => {
-	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
-		!msg.includes(
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((message) => {
+		!message.includes(
 			"isInitialValid has been deprecated and will be removed in future versions of Formik."
-		) && console.warn(msg);
+		) && console.warn(message);
 	});
 });
 

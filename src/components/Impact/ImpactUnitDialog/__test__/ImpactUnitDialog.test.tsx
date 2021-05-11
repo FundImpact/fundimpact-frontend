@@ -50,6 +50,16 @@ const initialValues: any = {
 
 let creationOccured = false;
 
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
+});
+
 const mocks = [
 	{
 		request: {
@@ -78,16 +88,6 @@ const mocks = [
 		result: { data: { impactUnitsOrgList: impactUnitMock } },
 	},
 ];
-
-let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
-
-beforeAll(() => {
-	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
-		!msg.includes(
-			"isInitialValid has been deprecated and will be removed in future versions of Formik."
-		) && console.warn(msg);
-	});
-});
 
 afterAll(() => {
 	consoleWarnSpy?.mockRestore();
