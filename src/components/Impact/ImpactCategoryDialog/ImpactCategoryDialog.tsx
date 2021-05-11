@@ -211,8 +211,8 @@ function ImpactCategoryDialog({
 	if (dialogType === DIALOG_TYPE.DELETE) {
 		return (
 			<DeleteModal
-				open={open}
 				handleClose={handleClose}
+				open={open}
 				onDeleteConformation={onDelete}
 				title="Delete Impact Category"
 			/>

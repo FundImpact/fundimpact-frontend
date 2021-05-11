@@ -185,14 +185,6 @@ const mocks = [
 
 let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
 
-beforeAll(() => {
-	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
-		!msg.includes(
-			"isInitialValid has been deprecated and will be removed in future versions of Formik."
-		) && console.warn(msg);
-	});
-});
-
 afterAll(() => {
 	consoleWarnSpy?.mockRestore();
 });
@@ -216,6 +208,14 @@ beforeEach(async () => {
 		}
 	);
 	await wait();
+});
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
 });
 
 const inputIds = [...budgetTargetFormInputFields];

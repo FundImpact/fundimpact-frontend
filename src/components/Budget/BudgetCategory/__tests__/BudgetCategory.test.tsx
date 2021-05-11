@@ -77,10 +77,6 @@ beforeAll(() => {
 	});
 });
 
-afterAll(() => {
-	consoleWarnSpy?.mockRestore();
-});
-
 beforeEach(async () => {
 	dialog = renderApollo(
 		<DashboardProvider defaultState={{ organization: orgDetails }}>
@@ -98,6 +94,10 @@ beforeEach(async () => {
 		}
 	);
 	await wait();
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
 });
 
 let inputIds = budgetCategoryFormInputFields;
