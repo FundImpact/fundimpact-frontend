@@ -167,7 +167,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 					try {
 						const data = await store.readQuery<IGET_DONOR>({
@@ -193,7 +193,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 				},
 			});

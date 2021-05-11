@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { act, fireEvent } from "@testing-library/react";
+import { act, fireEvent, wait } from "@testing-library/react";
 import React from "react";
 
 import { DashboardProvider } from "../../../contexts/dashboardContext";
@@ -15,9 +15,29 @@ import { renderApollo } from "../../../utils/test.util";
 import { organizationDetail } from "../../../utils/testMock.json";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import DeliverableTarget from "../DeliverableTarget";
-import { deliverableCategoryMock, deliverableCategoryUnitListMock, projectsMock } from "./testHelp";
+import {
+	deliverableCategoryMock,
+	deliverableCategoryUnitListMock,
+	projectsMock,
+	deliverableUnitMock,
+} from "./testHelp";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
+import { GET_DELIVERABLE_UNIT_BY_ORG } from "../../../graphql/Deliverable/unit";
+
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
 
 let createDeliverableTargetMutation = false;
 const mocks = [
@@ -34,6 +54,13 @@ const mocks = [
 			variables: { filter: { organization: "13" } },
 		},
 		result: { data: { deliverableCategory: deliverableCategoryMock } },
+	},
+	{
+		request: {
+			query: GET_DELIVERABLE_UNIT_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { deliverableUnitOrg: deliverableUnitMock } },
 	},
 	{
 		request: {
@@ -68,7 +95,8 @@ const mocks = [
 					name: "DeliverableTarget",
 					description: "note",
 					target_value: 5000,
-					deliverable_category_unit: "1",
+					deliverable_category_org: "1",
+					deliverable_unit_org: "1",
 					project: 2,
 				},
 			},
@@ -88,27 +116,26 @@ const mocks = [
 let handleClose = jest.fn();
 let deliverableTarget: any;
 
-beforeEach(() => {
-	act(() => {
-		deliverableTarget = renderApollo(
-			<DashboardProvider
-				defaultState={{ organization: organizationDetail, project: projectsMock }}
-			>
-				<NotificationProvider>
-					<DeliverableTarget
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-						project={1}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				resolvers: {},
-			}
-		);
-	});
+beforeEach(async () => {
+	deliverableTarget = renderApollo(
+		<DashboardProvider
+			defaultState={{ organization: organizationDetail, project: projectsMock }}
+		>
+			<NotificationProvider>
+				<DeliverableTarget
+					type={DELIVERABLE_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+					project={1}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			resolvers: {},
+		}
+	);
+	await wait();
 });
 
 describe("Deliverable Target Form", () => {
@@ -160,29 +187,30 @@ describe("Deliverable Target Form", () => {
 
 		let value = "";
 
-		act(() => {
-			fireEvent.change(deliverableTargetName, { target: { value } });
-		});
-		expect(deliverableTargetName.value).toBe(value);
-
-		act(() => {
-			fireEvent.change(deliverableTargetTargetValue, { target: { value } });
-		});
-		expect(deliverableTargetTargetValue.value).toBe(value);
-
-		act(() => {
-			fireEvent.change(deliverableTargetCategory, { target: { value } });
-		});
-		expect(deliverableTargetCategory.value).toBe(value);
-
-		act(() => {
-			fireEvent.change(deliverableTargetUnit, { target: { value } });
+		fireEvent.change(deliverableTargetName, { target: { value } });
+		await wait(() => {
+			expect(deliverableTargetName.value).toBe(value);
 		});
 
-		expect(deliverableTargetUnit.value).toBe(value);
+		fireEvent.change(deliverableTargetTargetValue, { target: { value } });
+		await wait(() => {
+			expect(deliverableTargetTargetValue.value).toBe(value);
+		});
+
+		fireEvent.change(deliverableTargetCategory, { target: { value } });
+		await wait(() => {
+			expect(deliverableTargetCategory.value).toBe(value);
+		});
+
+		fireEvent.change(deliverableTargetUnit, { target: { value } });
+		await wait(() => {
+			expect(deliverableTargetUnit.value).toBe(value);
+		});
 
 		let deliverableTargetSubmit = await deliverableTarget.findByTestId(`createSaveButton`);
-		expect(deliverableTargetSubmit).toBeDisabled();
+		await wait(() => {
+			expect(deliverableTargetSubmit).toBeDisabled();
+		});
 	});
 
 	// test("Deliverable Target GraphQL Call on submit button", async () => {

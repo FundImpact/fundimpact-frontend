@@ -1,6 +1,6 @@
 import React from "react";
 import ImpactTrackline from "../impactTrackLine";
-import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
+import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { IMPACT_ACTIONS } from "../constants";
 import {
@@ -34,6 +34,7 @@ import {
 import { GET_ALL_IMPACT_AMOUNT_SPEND } from "../../../graphql/Impact/query";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
+
 let createimpactTracklineFormMutation = false;
 const mocks = [
 	{
@@ -175,27 +176,26 @@ const mocks = [
 let handleClose = jest.fn();
 let impactTracklineForm: RenderResult<typeof queries>;
 
-beforeEach(() => {
-	act(() => {
-		impactTracklineForm = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectMock, organization: organizationDetail }}
-			>
-				<NotificationProvider>
-					<ImpactTrackline
-						type={IMPACT_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-						impactTarget={"14"}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	impactTracklineForm = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectMock, organization: organizationDetail }}
+		>
+			<NotificationProvider>
+				<ImpactTrackline
+					type={IMPACT_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+					impactTarget={"14"}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Impact Trackline Form", () => {
@@ -209,28 +209,25 @@ describe("Impact Trackline Form", () => {
 	});
 
 	test(`Submit Button enabels if all required field have values and Impact Trackline mutaion call`, async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
 		for (let i = 0; i < impactTracklineTestFields.length; i++) {
 			let formField = impactTracklineTestFields[i];
 			if (formField.value) {
 				let impactTracklineTestFieldsField = impactTracklineForm.getByTestId(
 					formField.testId
 				) as HTMLInputElement;
-				act(() => {
-					fireEvent.change(impactTracklineTestFieldsField, {
-						target: { value: formField.value },
-					});
+				fireEvent.change(impactTracklineTestFieldsField, {
+					target: { value: formField.value },
 				});
 
-				expect(impactTracklineTestFieldsField.value).toBe(formField.value);
+				await wait(() => {
+					expect(impactTracklineTestFieldsField.value).toBe(formField.value);
+				});
 			}
 		}
 
 		let impactTracklineFormSubmit = await impactTracklineForm.findByTestId(`createSaveButton`);
 		expect(impactTracklineFormSubmit).toBeEnabled();
-		act(() => {
-			fireEvent.click(impactTracklineFormSubmit);
-		});
+		fireEvent.click(impactTracklineFormSubmit);
 
 		new Promise((resolve) => setTimeout(resolve, 500))
 			.then(() => {

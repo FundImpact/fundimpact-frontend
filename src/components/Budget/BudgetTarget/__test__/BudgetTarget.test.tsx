@@ -183,26 +183,39 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		dialog = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<BudgetTarget
-						formAction={FORM_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
 	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
+
+beforeEach(async () => {
+	dialog = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<BudgetTarget
+					formAction={FORM_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 const inputIds = [...budgetTargetFormInputFields];
@@ -250,6 +263,8 @@ describe("Budget Target Dialog tests", () => {
 			reactElement: dialog,
 			intialFormValue,
 		});
-		expect(creationOccured).toBe(true);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });

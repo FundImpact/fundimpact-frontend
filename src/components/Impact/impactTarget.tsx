@@ -65,9 +65,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 	// const [currCategoryId, setCurrentCategoryId] = React.useState<number | string>();
 
-	const [getUnitsByOrg, { data: unitByOrg }] = useLazyQuery(GET_IMPACT_UNIT_BY_ORG, {
-		fetchPolicy: "cache-and-network",
-	}); // for fetching units by category
+	const [getUnitsByOrg, { data: unitByOrg }] = useLazyQuery(GET_IMPACT_UNIT_BY_ORG); // for fetching units by category
 
 	// const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
 	const [createImpactTarget, { loading: impactLoading }] = useMutation(CREATE_IMPACT_TARGET);

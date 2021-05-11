@@ -52,7 +52,7 @@
 		"build": "react-scripts build",
 		"buildCI": "CI= react-scripts build",
 		"testCI": "CI=true react-scripts test",
-		"test": "react-scripts test --coverage=true --testPathIgnorePatterns=src/components/*",
+		"test": "react-scripts test --coverage=true",
 		"eject": "react-scripts eject",
 		"extract": "formatjs extract",
 		"compile": "formatjs compile",

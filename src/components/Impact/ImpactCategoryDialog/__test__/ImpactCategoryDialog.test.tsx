@@ -1,6 +1,6 @@
 import React from "react";
 import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import { act, fireEvent, wait } from "@testing-library/react";
+import { fireEvent, wait } from "@testing-library/react";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
@@ -49,51 +49,60 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		dialog = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetail }}>
-				<NotificationProvider>
-					<ImpactCategoryDialog
-						formAction={FORM_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-						organization="13"
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-				resolvers: {},
-			}
-		);
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
 	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
+
+beforeEach(async () => {
+	dialog = renderApollo(
+		<DashboardProvider defaultState={{ organization: organizationDetail }}>
+			<NotificationProvider>
+				<ImpactCategoryDialog
+					formAction={FORM_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+					organization="13"
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+			resolvers: {},
+		}
+	);
+	await wait();
 });
 
 const inputIds = impactCategoeyDialogFields;
 
 describe("Imact category dialog tests", () => {
 	test("Mock response", async () => {
-		await new Promise((resolve) => setTimeout(resolve, 2000));
 		for (let i = 0; i < inputIds.length; i++) {
-			let fieldName = (await dialog.findByTestId(inputIds[i].id)) as HTMLInputElement;
+			let fieldName = dialog.getByTestId(inputIds[i].id) as HTMLInputElement;
 			let value = initialValues[inputIds[i].key];
-			await act(async () => {
-				await fireEvent.change(fieldName, { target: { value } });
+			fireEvent.change(fieldName, { target: { value } });
+			await wait(() => {
+				expect(fieldName.value).toBe(value);
 			});
-			await expect(fieldName.value).toBe(value);
 		}
-
-		await act(async () => {
-			let saveButton = await dialog.getByTestId("createSaveButton");
+		let saveButton = dialog.getByTestId("createSaveButton");
+		await wait(() => {
 			expect(saveButton).toBeEnabled();
-			fireEvent.click(saveButton);
-			await wait();
 		});
-
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-
-		expect(creationOccured).toBe(true);
+		fireEvent.click(saveButton);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });

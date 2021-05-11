@@ -1,5 +1,6 @@
 import React from "react";
 import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../../graphql";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { organizationDetails, projectDetails } from "../../../utils/testMock.json";
 import { NotificationProvider } from "../../../contexts/notificationContext";
 import { act } from "react-dom/test-utils";
@@ -7,7 +8,7 @@ import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { FORM_ACTIONS } from "../../../models/constants";
 import Donor from "../Donor";
-import { mockCountryList, mockCurrencyList } from "../../../utils/testMock.json";
+import { mockCountryList, mockCurrencyList, mockOrgDonor } from "../../../utils/testMock.json";
 import { IDONOR } from "../../../models/donor/";
 import { CREATE_ORG_DONOR } from "../../../graphql/donor/mutation";
 import { addDonorForm } from "../inputField.json";
@@ -87,22 +88,35 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		dialog = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<Donor formAction={FORM_ACTIONS.CREATE} open={true} handleClose={handleClose} />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
 	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
+
+beforeEach(async () => {
+	dialog = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<Donor formAction={FORM_ACTIONS.CREATE} open={true} handleClose={handleClose} />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 const inputIds = [...addDonorForm];
@@ -150,6 +164,8 @@ describe("Donor Dialog tests", () => {
 			reactElement: dialog,
 			intialFormValue,
 		});
-		expect(creationOccured).toBe(true);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });

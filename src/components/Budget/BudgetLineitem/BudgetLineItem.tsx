@@ -250,7 +250,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
 	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
-	console.log(`financialYearOrg`, financialYearOrg);
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();

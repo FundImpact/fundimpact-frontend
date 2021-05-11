@@ -133,7 +133,7 @@ function BudgetCategory({
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 
 					try {
@@ -160,7 +160,7 @@ function BudgetCategory({
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 				},
 			});

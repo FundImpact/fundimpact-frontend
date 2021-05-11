@@ -34,6 +34,7 @@ import BudgetCategoryTable from "../BudgetCategoryTableGraphql";
 import { budgetCategoryHeading } from "../../constants";
 import { mockUserRoles } from "../../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../../graphql/User/query";
+import { wait } from "@testing-library/react";
 
 let table: any;
 
@@ -231,22 +232,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		table = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<BudgetCategoryTable />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	table = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<BudgetCategoryTable />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Budget Category Table tests", () => {

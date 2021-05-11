@@ -92,6 +92,7 @@ const projDonorsMock = [
 		donor: {
 			id: "23",
 			name: "wer",
+			deleted: false,
 		},
 	},
 ];

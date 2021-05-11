@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent } from "@testing-library/react";
+import { waitForElement, fireEvent, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
@@ -27,6 +27,7 @@ const mocks = [
 			variables: {
 				filter: {
 					organization: organizationDetails.id,
+					deleted: false,
 				},
 			},
 		},
@@ -47,6 +48,7 @@ const mocks = [
 			variables: {
 				filter: {
 					organization: organizationDetails.id,
+					deleted: false,
 				},
 				limit: mockIndividualListCount.t4DIndividualsConnection.aggregate.count,
 				start: 0,
@@ -72,22 +74,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		table = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<IndividualTable />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	table = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<IndividualTable />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Individual Table tests", () => {
