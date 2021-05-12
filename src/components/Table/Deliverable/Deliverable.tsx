@@ -59,6 +59,7 @@ import {
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
 
 enum tableHeaders {
 	name = 2,
@@ -435,6 +436,8 @@ export default function DeliverablesTable() {
 		}
 	}, [filterList, dashboardData]);
 
+	const { refetchOnDeliverableTargetImport } = useRefetchOnDeliverableTargetImport();
+
 	let {
 		count,
 		queryData: deliverableTargetData,
@@ -451,13 +454,10 @@ export default function DeliverablesTable() {
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
-	const refetchDeliverableTargetProjectTable = useCallback(
-		() =>
-			refetchDeliverableTargetProjectCount?.().then(() =>
-				refetchDeliverableTargetProject?.()
-			),
-		[refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]
-	);
+	const refetchDeliverableTargetProjectTable = useCallback(() => {
+		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
+		refetchOnDeliverableTargetImport();
+	}, [refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]);
 
 	const [rows, setRows] = useState<any>([]);
 	const limit = 10;

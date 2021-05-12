@@ -12,6 +12,7 @@ import {
 import { IImpactCategoryData, IImpactUnitData } from "../../../models/impact/impact";
 import pagination from "../../../hooks/pagination";
 import { IGetImpactCategoryUnit } from "../../../models/impact/query";
+import { useRefetchImpactMastersOnImpactMasterImport } from "../../../hooks/impact";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterList: { [key: string]: string } = {};
@@ -46,6 +47,10 @@ function ImpactCategoryTableGraphql({
 		code: "",
 		description: "",
 	});
+
+	const {
+		refetchImpactCategoryOnImpactCategoryImport,
+	} = useRefetchImpactMastersOnImpactMasterImport();
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
@@ -130,12 +135,14 @@ function ImpactCategoryTableGraphql({
 	// });
 
 	const reftechImpactCategoryAndUnitTable = useCallback(() => {
+		refetchImpactCategoryOnImpactCategoryImport();
 		impactCategoryCountRefetch?.().then(() => impactCategoryRefetch?.());
 		// impactCategoryUnitCountRefetch?.().then(() => impactCategoryUnitRefetch?.());
 	}, [
 		impactCategoryCountRefetch,
 		// impactCategoryUnitCountRefetch,
 		impactCategoryRefetch,
+		refetchImpactCategoryOnImpactCategoryImport,
 		// impactCategoryUnitRefetch,
 	]);
 

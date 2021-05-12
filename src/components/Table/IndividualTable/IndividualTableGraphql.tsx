@@ -9,6 +9,9 @@ import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { IndividualTableType } from "../../../models/individual/constant";
 import { IDashboardDataContext } from "../../../models";
+import useLazyQueryCustom from "../../../hooks/useQueryCustom";
+import { useNotificationDispatch } from "../../../contexts/notificationContext";
+import { setErrorNotification } from "../../../reducers/notificationReducer";
 
 const getDefaultFilterList = () => ({
 	name: "",
@@ -22,9 +25,9 @@ const getQueryFilter = ({
 	dashboardData: IDashboardDataContext;
 }) => {
 	if (individualTableType == IndividualTableType.organization) {
-		return { organization: dashboardData?.organization?.id };
+		return { organization: dashboardData?.organization?.id, deleted: false };
 	}
-	return { t4d_project_individuals: { project: dashboardData?.project?.id } };
+	return { t4d_project_individuals: { project: dashboardData?.project?.id }, deleted: false };
 };
 
 function IndividualCategoryTableGraphql({
@@ -41,7 +44,6 @@ function IndividualCategoryTableGraphql({
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
 	}>(getDefaultFilterList());
-
 	useEffect(() => {
 		if (dashboardData) {
 			setQueryFilter(getQueryFilter({ individualTableType, dashboardData }));
@@ -80,7 +82,7 @@ function IndividualCategoryTableGraphql({
 		countQuery: GET_INDIVIDUALS_COUNT,
 		countFilter: queryFilter,
 		query: GET_INDIVIDUALS,
-		queryFilter,
+		queryFilter: queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		retrieveContFromCountQueryResponse: "t4DIndividualsConnection,aggregate,count",
 		fireRequest: Boolean(dashboardData),

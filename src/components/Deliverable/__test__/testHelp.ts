@@ -10,42 +10,15 @@ export const DeliverableTargetMock = [
 		name: "Test Deliverable Target",
 		description: "This is a sample deliverable",
 		target_value: 50000,
-		deliverable_category_unit: {
-			id: "15",
-			deliverable_category_org: {
-				id: "8",
-				name: "JUKEBOX",
-				code: "JB",
-				description: "Deliverable Category description",
-				organization: {
-					id: "2",
-					name: "TSERIES",
-
-					account: {
-						id: "2",
-						name: "rahul@gmail.com",
-						description: null,
-						account_no: "a8c1e362-405f-4572-a849-eb8094ffa550",
-					},
-					short_name: "TS",
-					legal_name: "",
-					description: null,
-					organization_registration_type: {
-						id: "1",
-						reg_type: "Trusts",
-					},
-				},
-			},
-			deliverable_units_org: {
-				id: "8",
-				name: "unit",
-				description: "This is a sample deliverable",
-				code: "BB",
-				unit_type: "BB",
-				prefix_label: "XX",
-				suffix_label: "YY",
-			},
+		deliverable_category_org: {
+			id: "8",
+			name: "JUKEBOX",
 		},
+		deliverable_unit_org: {
+			id: "8",
+			name: "unit",
+		},
+		deleted: false,
 		project: {
 			id: "2",
 			name: "Project1ssssss",
@@ -63,6 +36,7 @@ export const DeliverableTracklineByTargetMock = [
 		value: 25000,
 		note: "this is a note",
 		reporting_date: "2020-08-25T00:00:00.000Z",
+		deleted: false,
 		deliverable_target_project: DeliverableTargetMock,
 		project: {
 			id: "2",
@@ -108,6 +82,7 @@ export const deliverableCategoryMock = [
 		name: "new Cat",
 		description: "xxxxx",
 		code: "xxx",
+		deleted: false,
 		organization: {
 			id: "2",
 			name: "TSERIES",
@@ -132,6 +107,7 @@ export const deliverableCategoryMock = [
 		name: "MyCategory",
 		description: "xxxxxxxx",
 		code: "xx",
+		deleted: false,
 		organization: {
 			id: "2",
 			name: "TSERIES",
@@ -262,6 +238,7 @@ export const deliverableUnitMock = [
 		unit_type: "scalar",
 		prefix_label: "pre edu",
 		suffix_label: "suf edu",
+		deleted: false,
 	},
 	{
 		id: "2",
@@ -271,5 +248,6 @@ export const deliverableUnitMock = [
 		unit_type: "scalar 2",
 		prefix_label: "pre edu 2",
 		suffix_label: "suf edu 2",
+		deleted: false,
 	},
 ];

@@ -1,5 +1,5 @@
 import React from "react";
-import { waitForElement, fireEvent, RenderResult } from "@testing-library/react";
+import { waitForElement, fireEvent, RenderResult, wait } from "@testing-library/react";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { renderApollo } from "../../../../utils/test.util";
 import { act } from "react-dom/test-utils";
@@ -38,12 +38,12 @@ let intialFormValue = {
 let mockProjectDonors = [
 	{
 		id: "18",
-		donor: { id: "1", name: "donor 1" },
+		donor: { id: "1", name: "donor 1", deleted: false },
 		project: { id: "3", name: "my project" },
 	},
 	{
 		id: "2",
-		donor: { id: "2", name: "donor 2" },
+		donor: { id: "2", name: "donor 2", deleted: false },
 		project: { id: "3", name: "my project" },
 	},
 ];
@@ -58,6 +58,7 @@ let mockOrganizationDonor = [
 		},
 		legal_name: "vikram legal 001",
 		short_name: "vikram short 100",
+		deleted: false,
 	},
 ];
 
@@ -178,22 +179,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		table = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<FundReceivedTable />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	table = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<FundReceivedTable />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Fund Received Table tests", () => {

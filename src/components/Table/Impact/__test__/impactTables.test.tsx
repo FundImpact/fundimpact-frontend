@@ -1,6 +1,6 @@
 import React from "react";
 import { renderApollo } from "../../../../utils/test.util";
-import { waitForElement, act, fireEvent } from "@testing-library/react";
+import { waitForElement, act, fireEvent, wait } from "@testing-library/react";
 import ImpactTable from "../Impacts";
 import {
 	GET_IMPACT_TARGET_BY_PROJECT,
@@ -136,24 +136,23 @@ const mocks = [
 
 let impactTable: any;
 
-beforeEach(() => {
-	act(() => {
-		impactTable = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectMock, organization: organizationDetail }}
-			>
-				<NotificationProvider>
-					<DialogProvider>
-						<ImpactTable />
-					</DialogProvider>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				resolvers: {},
-			}
-		);
-	});
+beforeEach(async () => {
+	impactTable = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectMock, organization: organizationDetail }}
+		>
+			<NotificationProvider>
+				<DialogProvider>
+					<ImpactTable />
+				</DialogProvider>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			resolvers: {},
+		}
+	);
+	await wait();
 });
 jest.setTimeout(30000);
 describe("Impact Table and impact trackline table Graphql Calls and data listing", () => {
@@ -200,26 +199,24 @@ describe("Impact Table and impact trackline table Graphql Calls and data listing
 	test("Filter List Input Elements test", async () => {
 		let filterButton = await impactTable.findByTestId(`filter-button`);
 		expect(filterButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(filterButton);
-		});
+		fireEvent.click(filterButton);
 
 		let nameField = (await impactTable.findByTestId(
 			"createImpactTargetNameInput"
 		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		await wait(() => {
+			expect(nameField.value).toBe(intialFormValue.name);
 		});
-		await expect(nameField.value).toBe(intialFormValue.name);
 
 		let amountField = (await impactTable.findByTestId(
 			"createImpactTotalTargetAmountInput"
 		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(amountField, {
-				target: { value: intialFormValue.target_value },
-			});
+		fireEvent.change(amountField, {
+			target: { value: intialFormValue.target_value },
 		});
-		await expect(amountField.value).toBe(intialFormValue.target_value);
+		await wait(() => {
+			expect(amountField.value).toBe(intialFormValue.target_value);
+		});
 	});
 });

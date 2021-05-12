@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
+import {
+	GET_DELIVERABLE_CATEGORY_PROJECT_COUNT,
+	GET_DELIVERABLE_ORG_CATEGORY,
+} from "../../graphql/Deliverable/category";
 import { GET_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_TARGET,
@@ -36,7 +39,10 @@ import Deliverable from "./Deliverable";
 import DeliverableUnit from "./DeliverableUnit";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
-import { GET_DELIVERABLE_UNIT_BY_ORG } from "../../graphql/Deliverable/unit";
+import {
+	GET_DELIVERABLE_UNIT_BY_ORG,
+	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
+} from "../../graphql/Deliverable/unit";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -229,7 +235,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			// setcurrentCategory("");
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable Target Updation Failed !"));
+			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
 	//  fetching category_unit id and on completion creating deliverable target
@@ -372,6 +378,27 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					{
 						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_DELIVERABLE_TARGETS_COUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_DELIVERABLE_CATEGORY_PROJECT_COUNT,
+						variables: {
+							filter: {
+								deliverable_category_org:
+									deliverableTargetValues?.deliverable_category_org,
+							},
+						},
+					},
+					{
+						query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
+						variables: {
+							filter: {
+								deliverable_unit_org: deliverableTargetValues?.deliverable_unit_org,
+							},
+						},
 					},
 				],
 			});

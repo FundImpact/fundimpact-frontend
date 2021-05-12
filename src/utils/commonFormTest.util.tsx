@@ -1,5 +1,6 @@
 import { RenderResult } from "@testing-library/react";
 import { IInputField, ISelectField } from "../models/index";
+import userEvent from "@testing-library/user-event";
 
 export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 	const checkElementHaveCorrectValue = async ({
@@ -11,11 +12,11 @@ export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 		reactElement: RenderResult;
 		value: string | number;
 	}) => {
-		let fieldName = (await reactElement.findByTestId(inputElement.testId)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(fieldName, { target: { value } });
+		let fieldName = reactElement.getByTestId(inputElement.testId) as HTMLInputElement;
+		fireEvent.change(fieldName, { target: { value } });
+		await wait(() => {
+			expect(fieldName.value).toBe(value);
 		});
-		await expect(fieldName.value).toBe(value);
 	};
 
 	const checkSubmitButtonIsEnabled = async <T extends { [key: string]: any }>({
@@ -34,10 +35,9 @@ export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 				value: intialFormValue[inputFields[i].name],
 			});
 		}
-		await act(async () => {
-			let saveButton = await reactElement.getByTestId("createSaveButton");
-			expect(saveButton).toBeEnabled();
-		});
+
+		let saveButton = reactElement.getByTestId("createSaveButton");
+		expect(saveButton).toBeEnabled();
 	};
 
 	const requiredFieldTestForInputElement = async <T extends { [key: string]: any }>({
@@ -67,13 +67,13 @@ export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 			});
 		}
 		if (inputElement.required) {
-			await act(async () => {
-				let saveButton = await reactElement.getByTestId("createSaveButton");
+			let saveButton = await reactElement.getByTestId("createSaveButton");
+			await wait(async () => {
 				expect(saveButton).not.toBeEnabled();
 			});
 		} else {
-			await act(async () => {
-				let saveButton = await reactElement.getByTestId("createSaveButton");
+			let saveButton = await reactElement.getByTestId("createSaveButton");
+			await wait(async () => {
 				expect(saveButton).toBeEnabled();
 			});
 		}
@@ -93,12 +93,8 @@ export const commonFormTestUtil = (fireEvent: any, wait: any, act: any) => {
 			reactElement,
 			intialFormValue,
 		});
-		await act(async () => {
-			let saveButton = await reactElement.getByTestId("createSaveButton");
-			fireEvent.click(saveButton);
-			await wait();
-		});
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+		let saveButton = reactElement.getByTestId("createSaveButton");
+		fireEvent.click(saveButton);
 	};
 
 	return {

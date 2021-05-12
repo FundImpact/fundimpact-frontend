@@ -1,12 +1,11 @@
 import React from "react";
 import DeliverableForm from "../Deliverable";
-import { act, fireEvent, queries, wait, RenderResult } from "@testing-library/react";
+import { fireEvent, queries, wait, RenderResult } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import { renderApollo } from "../../../utils/test.util";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../contexts/notificationContext";
-import { organizationDetail } from "../../../utils/testMock.json";
 import {
 	CREATE_DELIVERABLE_CATEGORY,
 	GET_DELIVERABLE_ORG_CATEGORY,
@@ -15,6 +14,20 @@ import { deliverableCategoryMock } from "./testHelp";
 import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 let deliverableMutation = false;
+
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
 
 const mocks = [
 	{
@@ -49,35 +62,27 @@ const mocks = [
 	},
 ];
 
-// const intialFormValue: IDeliverable = {
-// 	name: "",
-// 	code: "",
-// 	description: "",
-// 	organization: 2,
-// };
-
 let handleClose = jest.fn();
 let deliverableForm: RenderResult<typeof queries>;
 
-beforeEach(() => {
-	act(() => {
-		deliverableForm = renderApollo(
-			<DashboardProvider>
-				<NotificationProvider>
-					<DeliverableForm
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-						organization={"13"}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				resolvers: {},
-			}
-		);
-	});
+beforeEach(async () => {
+	deliverableForm = renderApollo(
+		<DashboardProvider>
+			<NotificationProvider>
+				<DeliverableForm
+					type={DELIVERABLE_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+					organization={"13"}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			resolvers: {},
+		}
+	);
+	await wait();
 });
 
 describe("Create Deliverable Form", () => {
@@ -99,50 +104,36 @@ describe("Create Deliverable Form", () => {
 		expect(deliverableSubmit).toBeInTheDocument();
 	});
 
-	// test("should have initial values", () => {
-	// 	let deliverableName = deliverableForm.getByTestId(
-	// 		"deliverableFormNameInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableName.value).toBe(intialFormValue.name);
-
-	// 	let deliverableCode = deliverableForm.getByTestId(
-	// 		"deliverableFormCodeInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableCode.value).toBe(intialFormValue.code);
-
-	// 	let deliverableDescription = deliverableForm.getByTestId(
-	// 		"deliverableFormDescriptionInput"
-	// 	) as HTMLInputElement;
-	// 	expect(deliverableDescription.value).toBe(intialFormValue.description);
-	// });
-
 	test("Submit Button should be disabled if name field is empty", async () => {
 		let deliverableName = deliverableForm.getByTestId(
 			"deliverableFormNameInput"
 		) as HTMLInputElement;
 		let value = "";
-		act(() => {
-			fireEvent.change(deliverableName, { target: { value } });
+		fireEvent.change(deliverableName, { target: { value } });
+		await wait(() => {
+			expect(deliverableName.value).toBe(value);
 		});
-		expect(deliverableName.value).toBe(value);
-		let deliverableSubmit = await deliverableForm.findByTestId(`createSaveButton`);
-		expect(deliverableSubmit).toBeDisabled();
+		let deliverableSubmit = deliverableForm.getByTestId(`createSaveButton`);
+		await wait(() => {
+			expect(deliverableSubmit).toBeDisabled();
+		});
 	});
 	test("Deliverable Categoty GraphQL Call on submit button", async () => {
 		let deliverableCategoryName = deliverableForm.getByTestId(
 			"deliverableFormNameInput"
 		) as HTMLInputElement;
 		let value = "SONG";
-		act(() => {
-			fireEvent.change(deliverableCategoryName, { target: { value } });
+		fireEvent.change(deliverableCategoryName, { target: { value } });
+		await wait(() => {
+			expect(deliverableCategoryName).toHaveValue(value);
 		});
-		expect(deliverableCategoryName.value).toBe(value);
-		let deliverableCategorySubmit = await deliverableForm.findByTestId(`createSaveButton`);
-		expect(deliverableCategorySubmit).toBeEnabled();
-		act(() => {
-			fireEvent.click(deliverableCategorySubmit);
+		let deliverableCategorySubmit = deliverableForm.getByTestId(`createSaveButton`);
+		await wait(() => {
+			expect(deliverableCategorySubmit).toBeEnabled();
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
-		expect(deliverableMutation).toBe(true);
+		fireEvent.click(deliverableCategorySubmit);
+		await wait(() => {
+			expect(deliverableMutation).toBe(true);
+		});
 	});
 });

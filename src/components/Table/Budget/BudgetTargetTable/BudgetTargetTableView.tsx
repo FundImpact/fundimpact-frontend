@@ -63,7 +63,7 @@ interface IBudgetTargetTableViewProps {
 	budgetCategoryHash: { [key: string]: string };
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
-	refetchBudgetTargetTable: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
+	refetchBudgetTargetTable: () => void;
 }
 
 enum tableHeader {

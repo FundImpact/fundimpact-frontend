@@ -1,9 +1,9 @@
 import React from "react";
 import { waitForElement } from "@testing-library/react";
+import { wait } from "@testing-library/dom";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../../../graphql/donor";
 import { renderApollo } from "../../../../utils/test.util";
-import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
 import {
 	projectDetails,
@@ -87,22 +87,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		table = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<DonorTable />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	table = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<DonorTable />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Donor Table tests", () => {

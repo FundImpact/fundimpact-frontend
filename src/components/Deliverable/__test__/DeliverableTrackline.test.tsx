@@ -1,6 +1,6 @@
 import React from "react";
 import DeliverableTrackline from "../DeliverableTrackline";
-import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
+import { act, fireEvent, queries, RenderResult, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import {
@@ -30,6 +30,21 @@ import { mockUserRoles } from "../../../utils/testMockUserRoles.json";
 import { GET_USER_ROLES } from "../../../graphql/User/query";
 import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../../graphql/project";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
+
+// let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+// beforeAll(() => {
+// 	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+// 		!msg.includes(
+// 			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+// 		) && console.warn(msg);
+// 	});
+// });
+
+// afterAll(() => {
+// 	consoleWarnSpy?.mockRestore();
+// });
+
 let createDeliverableTracklineMutation = false;
 const mocks = [
 	{
@@ -179,68 +194,65 @@ const mocks = [
 		},
 	},
 ];
+
 let handleClose = jest.fn();
 let deliverableTrackline: RenderResult<typeof queries>;
 
-beforeEach(() => {
-	act(() => {
-		deliverableTrackline = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectsMock, organization: organizationDetail }}
-			>
-				<NotificationProvider>
-					<DeliverableTrackline
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-						deliverableTarget={"1"}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	deliverableTrackline = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectsMock, organization: organizationDetail }}
+		>
+			<NotificationProvider>
+				<DeliverableTrackline
+					type={DELIVERABLE_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+					deliverableTarget={"1"}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
-describe("Deliverable Trackline Form", () => {
+describe("Deliverable Trackline Form", async () => {
 	deliverableTracklineForm.forEach((formField) => {
-		test(`should have ${formField.name} field`, () => {
+		test(`should have ${formField.name} field`, async () => {
 			let deliverableTracklineFormField = deliverableTrackline.getByTestId(
 				formField.dataTestId
 			);
-			expect(deliverableTracklineFormField).toBeInTheDocument();
+			await wait(() => {
+				expect(deliverableTracklineFormField).toBeInTheDocument();
+			});
 		});
 	});
 
 	test(`Submit Button enabels if all required field is have values and Deliverable Trackline mutaion call`, async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for response
 		for (let i = 0; i < deliverableTracklineForm.length; i++) {
 			let formField = deliverableTracklineForm[i];
 			if (formField.value) {
 				let deliverableTracklineFormField = deliverableTrackline.getByTestId(
 					formField.testId
 				) as HTMLInputElement;
-				act(() => {
-					fireEvent.change(deliverableTracklineFormField, {
-						target: { value: formField.value },
-					});
+				fireEvent.change(deliverableTracklineFormField, {
+					target: { value: formField.value },
 				});
-
-				expect(deliverableTracklineFormField.value).toBe(formField.value);
+				await wait(() => {
+					expect(deliverableTracklineFormField.value).toBe(formField.value);
+				});
 			}
 		}
 
-		let deliverableTracklineSubmit = await deliverableTrackline.findByTestId(
-			`createSaveButton`
-		);
-		expect(deliverableTracklineSubmit).toBeEnabled();
-		act(async () => {
-			fireEvent.click(deliverableTracklineSubmit);
+		let deliverableTracklineSubmit = deliverableTrackline.getByTestId(`createSaveButton`);
+		await wait(() => {
+			expect(deliverableTracklineSubmit).toBeEnabled();
 		});
-
+		fireEvent.click(deliverableTracklineSubmit);
 		new Promise((resolve) => setTimeout(resolve, 500))
 			.then(() => {
 				expect(createDeliverableTracklineMutation).toBe(true);

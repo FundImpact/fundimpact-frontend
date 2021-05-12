@@ -6,6 +6,7 @@ import {
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 } from "../../../graphql/Budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { useRefetchBudgetCategoryOnBudgetCategoryImport } from "../../../hooks/budget";
 
 function BudgetCategoryTableGraphql({
 	tableFilterList,
@@ -16,7 +17,9 @@ function BudgetCategoryTableGraphql({
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
-
+	const {
+		refetchBudgetCategoryOnBudgetCategoryImport,
+	} = useRefetchBudgetCategoryOnBudgetCategoryImport();
 	useEffect(() => {
 		setQueryFilter({
 			organization: dashboardData?.organization?.id,
@@ -52,10 +55,10 @@ function BudgetCategoryTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
-	const budgetCategoryTableRefetch = useCallback(
-		() => countRefetch?.().then(() => queryRefetch?.()),
-		[countRefetch, queryRefetch]
-	);
+	const budgetCategoryTableRefetch = useCallback(() => {
+		countRefetch?.().then(() => queryRefetch?.());
+		refetchBudgetCategoryOnBudgetCategoryImport();
+	}, [countRefetch, queryRefetch]);
 
 	return (
 		<BudgetCategoryTableContainer

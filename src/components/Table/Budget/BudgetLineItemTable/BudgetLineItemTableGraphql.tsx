@@ -11,6 +11,7 @@ import { budgetLineItemInputFields } from "./inputFields.json";
 import { GET_ANNUAL_YEAR_LIST, GET_FINANCIAL_YEARS, GET_CURRENCY_LIST } from "../../../../graphql";
 import { useLazyQuery } from "@apollo/client";
 import { removeFilterListObjectElements } from "../../../../utils/filterList";
+import { useRefetchOnBudgetLineItemImport } from "../../../../hooks/budget";
 
 //make input field hidden
 let grantPeriodHash = {};
@@ -54,6 +55,8 @@ function BudgetLineItemTableGraphql({
 		fy_donor: [],
 		reporting_date: "",
 	});
+
+	const { refetchOnBudgetLineItemImport } = useRefetchOnBudgetLineItemImport(budgetTargetId);
 
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
@@ -225,6 +228,7 @@ function BudgetLineItemTableGraphql({
 			budgetTargetId={budgetTargetId}
 			donorCountryId={donor?.country?.id}
 			countRefetch={countRefetch}
+			refetchOnBudgetLineItemImport={refetchOnBudgetLineItemImport}
 		/>
 	);
 }

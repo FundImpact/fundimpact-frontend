@@ -17,6 +17,7 @@ import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { fundReceiptInputFields } from "./inputFields.json";
 import { GET_PROJECT_DONORS, GET_CURRENCY_LIST } from "../../../graphql";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { useRefetchOnFundReceivedImport } from "../../../hooks/fundReceived";
 
 let donorHash = {};
 
@@ -140,10 +141,12 @@ function FundReceivedTableGraphql() {
 		fireRequest: Boolean(dashboardData && dashboardData?.project),
 	});
 
-	const fundReceivedTableRefetch = useCallback(
-		() => fundReceivedListCountRefetch?.().then(() => fundReceivedListRefetch?.()),
-		[fundReceivedListCountRefetch, fundReceivedListRefetch]
-	);
+	const { refetchOnFundReceivedImport } = useRefetchOnFundReceivedImport();
+
+	const fundReceivedTableRefetch = useCallback(() => {
+		fundReceivedListCountRefetch?.().then(() => fundReceivedListRefetch?.());
+		refetchOnFundReceivedImport();
+	}, [fundReceivedListCountRefetch, fundReceivedListRefetch]);
 
 	return (
 		<FundReceivedTableContainer

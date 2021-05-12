@@ -5,6 +5,30 @@ import { getTodaysDate } from "../../../utils";
 import { IFundReceivedForm } from "../../../models/fundReceived";
 import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
+interface IFUND_RECEIVED_TABLE_CONTAINER {
+	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
+	loading: boolean;
+	changePage: (prev?: boolean) => void;
+	count: number;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	inputFields: any[];
+	donorHash: { [key: string]: string };
+	currency: string;
+	fundReceivedTableRefetch: () => void;
+}
+
 const getInitialValues = (
 	fundReceipt: IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null
 ): IFundReceivedForm => {
@@ -32,29 +56,7 @@ function FundReceivedTableContainer({
 	donorHash,
 	currency,
 	fundReceivedTableRefetch,
-}: {
-	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
-	loading: boolean;
-	changePage: (prev?: boolean) => void;
-	count: number;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	filterList: {
-		[key: string]: string | string[];
-	};
-	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string | string[];
-		}>
-	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-	inputFields: any[];
-	donorHash: { [key: string]: string };
-	currency: string;
-	fundReceivedTableRefetch: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
-}) {
+}: IFUND_RECEIVED_TABLE_CONTAINER) {
 	const openEditFundReceiptDialog = false,
 		openDeleteFundReceiptDialog = false;
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([

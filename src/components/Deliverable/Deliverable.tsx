@@ -120,14 +120,14 @@ function Deliverable(props: DeliverableProps) {
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			onCancel();
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Deliverable category creation Failed !"));
+			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
 
@@ -145,7 +145,7 @@ function Deliverable(props: DeliverableProps) {
 			notificationDispatch(setSuccessNotification("Deliverable category updated !"));
 			onCancel();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Deliverable category updation Failed !"));
+			notificationDispatch(setErrorNotification(err?.message));
 			onCancel();
 		}
 	};
@@ -162,6 +162,16 @@ function Deliverable(props: DeliverableProps) {
 						...deliverableCategoryValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Category Delete Success"));
 		} catch (err) {

@@ -98,22 +98,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		dialog = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<AddRoleForm open={true} handleClose={handleClose} />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	dialog = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<AddRoleForm open={true} handleClose={handleClose} />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 const inputIds = [...addRoleForm];
@@ -172,6 +171,8 @@ describe("Add Role Form tests", () => {
 			reactElement: dialog,
 			intialFormValue,
 		});
-		expect(creationOccured).toBe(true);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });

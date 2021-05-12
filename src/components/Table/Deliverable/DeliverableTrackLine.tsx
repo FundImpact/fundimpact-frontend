@@ -58,6 +58,7 @@ import {
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { useRefetchOnDeliverableLineItemImport } from "../../../hooks/deliverable";
 
 enum tableHeaders {
 	date = 1,
@@ -460,6 +461,9 @@ export default function DeliverablesTrackLineTable({
 	});
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
+	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(
+		deliverableTargetId
+	);
 
 	const financialYearFindAccess = userHasAccess(
 		MODULE_CODES.FINANCIAL_YEAR,
@@ -659,7 +663,10 @@ export default function DeliverablesTrackLineTable({
 						tableName="Deliverable Lineitem"
 						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
 						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
-						onImportTableSuccess={() => countRefetch?.().then(() => queryRefetch?.())}
+						onImportTableSuccess={() => {
+							countRefetch?.().then(() => queryRefetch?.());
+							refetchOnDeliverableLineItemImport();
+						}}
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableTracklineImportFromCsvAccess}
 						hideExport={!deliverableTracklineExportAccess}

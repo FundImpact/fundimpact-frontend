@@ -62,8 +62,8 @@ function UserForm(props: UserProps) {
 			}
 			notificationDispatch(setSuccessNotification("Profile updated successfully !"));
 		},
-		onError() {
-			notificationDispatch(setErrorNotification("Profile updation Failed !"));
+		onError(err) {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 	});
 	let title = (

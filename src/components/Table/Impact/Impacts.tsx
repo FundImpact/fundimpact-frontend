@@ -60,6 +60,7 @@ import {
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { useRefetchOnImpactTargetImport } from "../../../hooks/impact";
 
 enum tableHeaders {
 	name = 2,
@@ -493,10 +494,12 @@ export default function ImpactsTable() {
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
-	const refetchImpactTargetProjectTable = useCallback(
-		() => refetchImpactTargetProjectCount?.().then(() => refetchImpactTargetProjectList?.()),
-		[refetchImpactTargetProjectCount, refetchImpactTargetProjectList]
-	);
+	const { refetchOnImpactTargetImport } = useRefetchOnImpactTargetImport();
+
+	const refetchImpactTargetProjectTable = useCallback(() => {
+		refetchImpactTargetProjectCount?.().then(() => refetchImpactTargetProjectList?.());
+		refetchOnImpactTargetImport();
+	}, [refetchImpactTargetProjectCount, refetchImpactTargetProjectList]);
 
 	const limit = 10;
 	const handleChangePage = (

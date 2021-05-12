@@ -14,6 +14,7 @@ import { GET_CURRENCY_LIST } from "../../../../graphql";
 import { removeFilterListObjectElements } from "../../../../utils/filterList";
 import { IGetProjectDonor } from "../../../../models/project/project";
 import { GET_PROJ_DONORS } from "../../../../graphql/project";
+import { useRefetchOnBudgetTargetImport } from "../../../../hooks/budget";
 
 let donorHash = {};
 let budgetCategoryHash = {};
@@ -48,7 +49,7 @@ function BudgetTargetTableGraphql() {
 	const [queryFilter, setQueryFilter] = useState({});
 	const dashboardData = useDashBoardData();
 	const currentProject = dashboardData?.project;
-
+	const { refetchOnBudgetTargetImport } = useRefetchOnBudgetTargetImport();
 	let [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(
 		GET_PROJ_DONORS,
 		{
@@ -143,10 +144,10 @@ function BudgetTargetTableGraphql() {
 		fireRequest: Boolean(currentProject),
 	});
 
-	const refetchBudgetTargetTable = useCallback(
-		() => refetchBudgetTargetTableCount?.().then(() => refetchBudgetTargetList?.()),
-		[refetchBudgetTargetTableCount, refetchBudgetTargetList]
-	);
+	const refetchBudgetTargetTable = useCallback(() => {
+		refetchBudgetTargetTableCount?.().then(() => refetchBudgetTargetList?.());
+		refetchOnBudgetTargetImport();
+	}, [refetchBudgetTargetTableCount, refetchBudgetTargetList]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {

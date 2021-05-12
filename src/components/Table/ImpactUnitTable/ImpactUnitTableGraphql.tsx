@@ -11,6 +11,7 @@ import {
 } from "../../../graphql/Impact/categoryUnit";
 import pagination from "../../../hooks/pagination";
 import { IGetImpactCategoryUnit } from "../../../models/impact/query";
+import { useRefetchImpactMastersOnImpactMasterImport } from "../../../hooks/impact";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterList: { [key: string]: string } = {};
@@ -45,6 +46,8 @@ function ImpactUnitTableGraphql({
 	});
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
+
+	const { refetchImpactUnitOnImpactUnitImport } = useRefetchImpactMastersOnImpactMasterImport();
 
 	const removeNestedFilterListElements = (key: string, index?: number) => {
 		setNestedTableFilterList((nestedFilterListObject) => {
@@ -127,11 +130,13 @@ function ImpactUnitTableGraphql({
 	// });
 
 	const reftechImpactCategoryAndUnitTable = useCallback(() => {
+		refetchImpactUnitOnImpactUnitImport();
 		impactUnitCountRefetch?.().then(() => impactUnitRefetch?.());
 		// impactCategoryUnitCountRefetch?.().then(() => impactCategoryUnitRefetch?.());
 	}, [
 		impactUnitCountRefetch,
 		impactUnitRefetch,
+		refetchImpactUnitOnImpactUnitImport,
 		// impactCategoryUnitCountRefetch,
 		// impactCategoryUnitRefetch,
 	]);

@@ -1,6 +1,6 @@
 import React from "react";
 import { renderApollo } from "../../../../utils/test.util";
-import { waitForElement, act, fireEvent } from "@testing-library/react";
+import { waitForElement, act, fireEvent, wait } from "@testing-library/react";
 import DeliverableTable from "../Deliverable";
 import {
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
@@ -133,27 +133,25 @@ const mocks = [
 
 let deliverableTable: any;
 
-beforeEach(() => {
-	act(() => {
-		deliverableTable = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectsMock, organization: organizationDetail }}
-			>
-				<NotificationProvider>
-					<DialogProvider>
-						<DeliverableTable />
-					</DialogProvider>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				resolvers: {},
-			}
-		);
-	});
+beforeEach(async () => {
+	deliverableTable = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectsMock, organization: organizationDetail }}
+		>
+			<NotificationProvider>
+				<DialogProvider>
+					<DeliverableTable />
+				</DialogProvider>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			resolvers: {},
+		}
+	);
+	await wait();
 });
 
-jest.setTimeout(30000);
 describe("Deliverable Table and Deliverable trackline table Graphql Calls and data listing", () => {
 	test("Table Headings for Deliverable Table", async () => {
 		const { getAllByText } = deliverableTable;
@@ -171,11 +169,9 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 	});
 
 	test("Table Headings and Data listing of Deliverable trackline table", async () => {
-		let collaspeButton = await deliverableTable.findByTestId(`collaspeButton${0}`);
+		let collaspeButton = deliverableTable.getByTestId(`collaspeButton${0}`);
 		expect(collaspeButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(collaspeButton);
-		});
+		fireEvent.click(collaspeButton);
 		const { getByText, getAllByText, findAllByText } = deliverableTable;
 
 		for (let i = 0; i < deliverableAndimpactTracklineHeading.length; i++) {
@@ -191,33 +187,28 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 	});
 
 	test("Filter List test", async () => {
-		let filterButton = await deliverableTable.findByTestId(`filter-button`);
+		let filterButton = deliverableTable.getByTestId(`filter-button`);
 		expect(filterButton).toBeInTheDocument();
 	});
 
 	test("Filter List Input Elements test", async () => {
-		let filterButton = await deliverableTable.findByTestId(`filter-button`);
+		let filterButton = deliverableTable.getByTestId(`filter-button`);
 		expect(filterButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(filterButton);
-		});
+		fireEvent.click(filterButton);
 
-		let nameField = (await deliverableTable.findByTestId(
+		let nameField = deliverableTable.getByTestId(
 			"createDeliverableTargetNameInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
-		});
-		await expect(nameField.value).toBe(intialFormValue.name);
+		) as HTMLInputElement;
+		fireEvent.change(nameField, { target: { value: intialFormValue.name } });
 
-		let amountField = (await deliverableTable.findByTestId(
+		expect(nameField.value).toBe(intialFormValue.name);
+
+		let amountField = deliverableTable.getByTestId(
 			"createDeliverableTotalTargetAmountInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(amountField, {
-				target: { value: intialFormValue.target_value },
-			});
+		) as HTMLInputElement;
+		fireEvent.change(amountField, {
+			target: { value: intialFormValue.target_value },
 		});
-		await expect(amountField.value).toBe(intialFormValue.target_value);
+		expect(amountField.value).toBe(intialFormValue.target_value);
 	});
 });

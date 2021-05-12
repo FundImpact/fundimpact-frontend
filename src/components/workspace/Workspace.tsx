@@ -105,8 +105,8 @@ function Workspace(props: WorkspaceProps) {
 			notificationDispatch(setSuccessNotification("Workspace created successfully !"));
 			props.close();
 		},
-		onError: () => {
-			notificationDispatch(setErrorNotification("Workspace creation Failed !"));
+		onError: (err) => {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 		update: (cache, option) => {
 			updateOrganisationWorkspaceList({
@@ -153,8 +153,8 @@ function Workspace(props: WorkspaceProps) {
 			notificationDispatch(setSuccessNotification("Workspace updated successfully !"));
 			props.close();
 		},
-		onError: () => {
-			notificationDispatch(setErrorNotification("Workspace updation Failed !"));
+		onError: (err) => {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 		update: (cache, option) => {
 			updateOrganisationWorkspaceList({

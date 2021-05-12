@@ -444,6 +444,10 @@ function FundReceivedContainer({
 						query: GET_PROJECT_AMOUNT_RECEIVED,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
+					{
+						query: GET_FUND_RECEIPT_PROJECT_LIST_COUNT,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Fund Receipt Delete Success"));

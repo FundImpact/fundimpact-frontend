@@ -26,8 +26,8 @@ function PasswordReset(props: ResetPasswordProps) {
 			notificationDispatch(setSuccessNotification("Password updated successfully !"));
 			onCancel();
 		},
-		onError() {
-			notificationDispatch(setErrorNotification("Password updation Failed !"));
+		onError(err) {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 	});
 	const onUpdate = (value: IPassword) => {

@@ -61,6 +61,16 @@ const intialFormValue: IBudgetTrackingLineitemForm = {
 	grant_periods_project: "1",
 };
 
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
+});
+
 const mocks = [
 	{
 		request: {
@@ -347,26 +357,29 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		dialog = renderApollo(
-			<NotificationProvider>
-				<DashboardProvider
-					defaultState={{ project: projectDetails, organization: organizationDetails }}
-				>
-					<BudgetLineitem
-						formAction={FORM_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-					/>
-				</DashboardProvider>
-			</NotificationProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
+
+beforeEach(async () => {
+	dialog = renderApollo(
+		<NotificationProvider>
+			<DashboardProvider
+				defaultState={{ project: projectDetails, organization: organizationDetails }}
+			>
+				<BudgetLineitem
+					formAction={FORM_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+				/>
+			</DashboardProvider>
+		</NotificationProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 const inputIds = [...budgetLineitemFormInputFields];
@@ -393,24 +406,24 @@ describe("Budget Line Item Dialog tests", () => {
 	});
 
 	test("running test to check value of grant period is equal to value provided", async () => {
-		let budgetTargetField = (await dialog.findByTestId(
+		let budgetTargetField = dialog.getByTestId(
 			"createBudgetLineitemBudgetTargetsOption"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(budgetTargetField, {
-				target: { value: intialFormValue.budget_targets_project },
-			});
+		) as HTMLInputElement;
+		fireEvent.change(budgetTargetField, {
+			target: { value: intialFormValue.budget_targets_project },
 		});
-		await expect(budgetTargetField.value).toBe(intialFormValue.budget_targets_project);
-		let grantPeriodField = (await dialog.findByTestId(
+		await wait(() => {
+			expect(budgetTargetField.value).toBe(intialFormValue.budget_targets_project);
+		});
+		let grantPeriodField = dialog.getByTestId(
 			"createBudgetLineitemGrantPeriodProjectOption"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(grantPeriodField, {
-				target: { value: intialFormValue.grant_periods_project },
-			});
+		) as HTMLInputElement;
+		fireEvent.change(grantPeriodField, {
+			target: { value: intialFormValue.grant_periods_project },
 		});
-		await expect(grantPeriodField.value).toBe(intialFormValue.grant_periods_project);
+		await wait(() => {
+			expect(grantPeriodField.value).toBe(intialFormValue.grant_periods_project);
+		});
 	});
 
 	//Inorder to check value of grant period we have to provide value of budgetTarget
@@ -442,6 +455,8 @@ describe("Budget Line Item Dialog tests", () => {
 			reactElement: dialog,
 			intialFormValue,
 		});
-		expect(creationOccured).toBe(true);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });
