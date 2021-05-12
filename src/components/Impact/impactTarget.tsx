@@ -9,6 +9,7 @@ import {
 	GET_ALL_IMPACT_TARGET_AMOUNT,
 	GET_IMPACT_CATEGORY_BY_ORG,
 	GET_IMPACT_UNIT_BY_ORG,
+	GET_IMPACT_UNIT_PROJECT_COUNT,
 } from "../../graphql/Impact/query";
 import {
 	CREATE_IMPACT_TARGET,
@@ -37,6 +38,7 @@ import { FORM_ACTIONS } from "../Forms/constant";
 import ImpactUnitDialog from "./ImpactUnitDialog/ImpaceUnitDialog";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
+import { GET_IMPACT_CATEGORY_PROJECT_COUNT } from "../../graphql/Impact/category";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -63,9 +65,14 @@ function ImpactTarget(props: ImpactTargetProps) {
 
 	// const [currCategoryId, setCurrentCategoryId] = React.useState<number | string>();
 
-	const [getUnitsByOrg, { data: unitByOrg }] = useLazyQuery(GET_IMPACT_UNIT_BY_ORG, {
-		fetchPolicy: "cache-and-network",
-	}); // for fetching units by category
+	const [getUnitsByOrg, { data: unitByOrg }] = useLazyQuery(
+		GET_IMPACT_UNIT_BY_ORG,
+		process.env.NODE_ENV !== "test"
+			? {
+					fetchPolicy: "cache-and-network",
+			  }
+			: {}
+	); // for fetching units by category
 
 	// const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
 	const [createImpactTarget, { loading: impactLoading }] = useMutation(CREATE_IMPACT_TARGET);
@@ -367,6 +374,26 @@ function ImpactTarget(props: ImpactTargetProps) {
 						query: GET_ALL_IMPACT_AMOUNT_SPEND,
 						variables: {
 							filter: { project: dashboardData?.project?.id },
+						},
+					},
+					{
+						query: GET_IMPACT_TARGETS_COUNT,
+						variables: {
+							filter: { project: dashboardData?.project?.id },
+						},
+					},
+					{
+						query: GET_IMPACT_CATEGORY_PROJECT_COUNT,
+						variables: {
+							filter: {
+								impact_category_org: impactTargetValues?.impact_category_org,
+							},
+						},
+					},
+					{
+						query: GET_IMPACT_UNIT_PROJECT_COUNT,
+						variables: {
+							filter: { impact_unit_org: impactTargetValues?.impact_units_org },
 						},
 					},
 				],

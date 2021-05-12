@@ -307,8 +307,8 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 
 			notificationDispatch(setSuccessNotification("Impact Trackline created successfully!"));
 		},
-		onError(data) {
-			notificationDispatch(setErrorNotification("Impact Trackline creation Failed !"));
+		onError(err) {
+			notificationDispatch(setErrorNotification(err?.message));
 		},
 	});
 
@@ -340,7 +340,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				handleNext();
 			},
 			onError(err) {
-				notificationDispatch(setErrorNotification("Impact Trackline Updation Failed !"));
+				notificationDispatch(setErrorNotification(err?.message));
 			},
 		}
 	);
@@ -643,6 +643,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 						query: GET_ALL_IMPACT_AMOUNT_SPEND,
 						variables: {
 							filter: { project: DashBoardData?.project?.id },
+						},
+					},
+					{
+						query: GET_IMPACT_TRACKLINE_COUNT,
+						variables: {
+							filter: { impact_target_project: initialValues?.impact_target_project },
 						},
 					},
 				],

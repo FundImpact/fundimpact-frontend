@@ -23,6 +23,36 @@ import { useAuth } from "../../../contexts/userContext";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { FUND_RECEIPT_ACTIONS } from "../../../utils/access/modules/fundReceipt/actions";
 
+interface IFUND_RECEIVED_TABLE_VIEW {
+	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
+	loading: boolean;
+	changePage: (prev?: boolean) => void;
+	count: number;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	openDialogs: boolean[];
+	selectedFundReceipt: React.MutableRefObject<
+		IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null
+	>;
+	toggleDialogs: (index: number, dialogNewOpenStatus: boolean) => void;
+	filterList: {
+		[key: string]: string | string[];
+	};
+	initialValues: IFundReceivedForm;
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	inputFields: any[];
+	donorHash: { [key: string]: string };
+	currency: string;
+	fundReceivedTableRefetch: () => void;
+}
+
 //add access
 const rows = [
 	{
@@ -132,35 +162,7 @@ function FundReceivedTableView({
 	donorHash,
 	currency,
 	fundReceivedTableRefetch,
-}: {
-	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];
-	loading: boolean;
-	changePage: (prev?: boolean) => void;
-	count: number;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	openDialogs: boolean[];
-	selectedFundReceipt: React.MutableRefObject<
-		IGet_Fund_Receipt_List["fundReceiptProjectList"][0] | null
-	>;
-	toggleDialogs: (index: number, dialogNewOpenStatus: boolean) => void;
-	filterList: {
-		[key: string]: string | string[];
-	};
-	initialValues: IFundReceivedForm;
-	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string | string[];
-		}>
-	>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-	inputFields: any[];
-	donorHash: { [key: string]: string };
-	currency: string;
-	fundReceivedTableRefetch: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
-}) {
+}: IFUND_RECEIVED_TABLE_VIEW) {
 	const intl = useIntl();
 	const dashboardData = useDashBoardData();
 	fundReceivedTableHeadings[2].label = `Amount ${currency && "(" + currency + ")"}`;

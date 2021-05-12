@@ -61,7 +61,7 @@ function BudgetCategoryTableView({
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	budgetCategoryTableRefetch: () => Promise<ApolloQueryResult<any> | undefined> | undefined;
+	budgetCategoryTableRefetch: () => void;
 }) {
 	const budgetCategoryEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,

@@ -37,6 +37,53 @@ import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../../models/constants";
 
+interface IBUDGET_LINE_ITEM_VIEW {
+	toggleDialogs: (index: number, val: boolean) => void;
+	openDialogs: boolean[];
+	selectedBudgetLineItem: React.MutableRefObject<IBUDGET_LINE_ITEM_RESPONSE | null>;
+	initialValues: IBudgetTrackingLineitem;
+	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
+	changePage: (prev?: boolean) => void;
+	count: number;
+	loading: boolean;
+	order: "asc" | "desc";
+	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	orderBy: string;
+	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	removeFilterListElements: (key: string, index?: number | undefined) => void;
+	filterList: {
+		[key: string]: string | string[];
+	};
+	setFilterList: React.Dispatch<
+		React.SetStateAction<{
+			[key: string]: string | string[];
+		}>
+	>;
+	refetchOnBudgetLineItemImport: () => void;
+	budgetTargetId: string;
+	inputFields: any[];
+	grantPeriodHash: { [key: string]: string };
+	annualYearHash: { [key: string]: string };
+	financialYearDonorHash: { [key: string]: string };
+	financialYearOrgHash: { [key: string]: string };
+	currency: string;
+	donorCountryId: string;
+	refetchOnSuccess:
+		| ((
+				variables?: Partial<Record<string, any>> | undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+	countRefetch:
+		| ((
+				variables?:
+					| Partial<{
+							filter: any;
+					  }>
+					| undefined
+		  ) => Promise<ApolloQueryResult<any>>)
+		| undefined;
+}
+
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
 const yearTags = {
@@ -262,51 +309,8 @@ function BudgetLineItemTableView({
 	budgetTargetId,
 	donorCountryId,
 	countRefetch,
-}: {
-	toggleDialogs: (index: number, val: boolean) => void;
-	openDialogs: boolean[];
-	selectedBudgetLineItem: React.MutableRefObject<IBUDGET_LINE_ITEM_RESPONSE | null>;
-	initialValues: IBudgetTrackingLineitem;
-	budgetLineitemList: IBUDGET_LINE_ITEM_RESPONSE[];
-	changePage: (prev?: boolean) => void;
-	count: number;
-	loading: boolean;
-	order: "asc" | "desc";
-	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	orderBy: string;
-	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-	filterList: {
-		[key: string]: string | string[];
-	};
-	setFilterList: React.Dispatch<
-		React.SetStateAction<{
-			[key: string]: string | string[];
-		}>
-	>;
-	budgetTargetId: string;
-	inputFields: any[];
-	grantPeriodHash: { [key: string]: string };
-	annualYearHash: { [key: string]: string };
-	financialYearDonorHash: { [key: string]: string };
-	financialYearOrgHash: { [key: string]: string };
-	currency: string;
-	donorCountryId: string;
-	refetchOnSuccess:
-		| ((
-				variables?: Partial<Record<string, any>> | undefined
-		  ) => Promise<ApolloQueryResult<any>>)
-		| undefined;
-	countRefetch:
-		| ((
-				variables?:
-					| Partial<{
-							filter: any;
-					  }>
-					| undefined
-		  ) => Promise<ApolloQueryResult<any>>)
-		| undefined;
-}) {
+	refetchOnBudgetLineItemImport,
+}: IBUDGET_LINE_ITEM_VIEW) {
 	const currencyFindAccess = userHasAccess(MODULE_CODES.CURRENCY, CURRENCY_ACTION.FIND_CURRENCY);
 	currencyFindAccess && (tableHeadings[3].label = getNewAmountHeaderOfTable(currency));
 
@@ -449,9 +453,10 @@ function BudgetLineItemTableView({
 						tableName="Budget Lineitem"
 						tableExportUrl={`${BUDGET_LINE_ITEM_TABLE_EXPORT}/${budgetTargetId}`}
 						tableImportUrl={`${BUDGET_LINE_ITEM_TABLE_IMPORT}/${budgetTargetId}`}
-						onImportTableSuccess={() =>
-							countRefetch?.().then(() => refetchOnSuccess?.())
-						}
+						onImportTableSuccess={() => {
+							countRefetch?.().then(() => refetchOnSuccess?.());
+							refetchOnBudgetLineItemImport();
+						}}
 						importButtonOnly={importButtonOnly}
 						hideImport={!budgetLineItemImportFromCsv}
 						hideExport={!budgetLineItemExport}

@@ -1,5 +1,6 @@
 import React from "react";
 import { waitForElement, fireEvent } from "@testing-library/react";
+import { wait } from "@testing-library/dom";
 import { DashboardProvider } from "../../../../../contexts/dashboardContext";
 import {
 	GET_BUDGET_TARGET_PROJECT,
@@ -254,22 +255,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		table = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<BudgetLineItemTable budgetTargetId="1" currency="INR" />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	table = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<BudgetLineItemTable budgetTargetId="1" currency="INR" />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Budget Line Item Table tests", () => {
@@ -281,7 +281,7 @@ describe("Budget Line Item Table tests", () => {
 	}
 
 	test("Filter List test", async () => {
-		let filterButton = await table.findByTestId(`filter-button`);
+		let filterButton = table.getByTestId(`filter-button`);
 		expect(filterButton).toBeInTheDocument();
 	});
 
@@ -312,36 +312,34 @@ describe("Budget Line Item Table tests", () => {
 	});
 
 	test("Filter List Input Elements test", async () => {
-		let buttonElement = await table.findByTestId(`filter-button`);
-		expect(buttonElement).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(buttonElement);
+		let buttonElement = table.getByTestId(`filter-button`);
+		await wait(() => {
+			expect(buttonElement).toBeInTheDocument();
 		});
+		fireEvent.click(buttonElement);
 
-		let nameField = (await table.findByTestId(
+		let nameField = table.getByTestId(
 			"createBudgetTargetLineItemNameInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		) as HTMLInputElement;
+		fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		await wait(() => {
+			expect(nameField.value).toBe(intialFormValue.name);
 		});
-		await expect(nameField.value).toBe(intialFormValue.name);
 
-		let amountField = (await table.findByTestId(
-			"createBudgetLineItemAmountInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(amountField, {
-				target: { value: intialFormValue.amount },
-			});
+		let amountField = table.getByTestId("createBudgetLineItemAmountInput") as HTMLInputElement;
+		fireEvent.change(amountField, {
+			target: { value: intialFormValue.amount },
 		});
-		await expect(amountField.value).toBe(intialFormValue.amount);
+		await wait(() => {
+			expect(amountField.value).toBe(intialFormValue.amount);
+		});
 
-		let dateField = (await table.findByTestId("createReporingDateInput")) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(dateField, {
-				target: { value: intialFormValue.reporting_date },
-			});
+		let dateField = table.getByTestId("createReporingDateInput") as HTMLInputElement;
+		fireEvent.change(dateField, {
+			target: { value: intialFormValue.reporting_date },
 		});
-		await expect(dateField.value).toBe(intialFormValue.reporting_date);
+		await wait(() => {
+			expect(dateField.value).toBe(intialFormValue.reporting_date);
+		});
 	});
 });

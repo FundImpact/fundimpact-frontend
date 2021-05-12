@@ -201,8 +201,7 @@ function Project(props: ProjectProps) {
 	});
 
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
-		onError: (err) =>
-			notificationDispatch(setErrorNotification("Error Occured While Fetching Donors")),
+		onError: (err) => notificationDispatch(setErrorNotification(err?.message)),
 	});
 
 	let mappedDonors: any = [];
@@ -242,7 +241,7 @@ function Project(props: ProjectProps) {
 				},
 			});
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Donor creation Failed !"));
+			notificationDispatch(setErrorNotification(err?.message));
 		}
 	};
 
@@ -317,7 +316,7 @@ function Project(props: ProjectProps) {
 				});
 			});
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Project creation Failed !"));
+			notificationDispatch(setErrorNotification(error?.message));
 		} finally {
 			// props.handleClose();
 		}
@@ -370,7 +369,7 @@ function Project(props: ProjectProps) {
 				});
 			});
 		} catch (error) {
-			notificationDispatch(setErrorNotification("Project creation Failed !"));
+			notificationDispatch(setErrorNotification(error?.message));
 		} finally {
 			// props.handleClose();
 		}

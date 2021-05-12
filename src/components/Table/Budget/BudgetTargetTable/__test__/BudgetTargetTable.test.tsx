@@ -13,7 +13,6 @@ import {
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 } from "../../../../../graphql/Budget";
 import { renderApollo } from "../../../../../utils/test.util";
-import { act } from "react-dom/test-utils";
 import { NotificationProvider } from "../../../../../contexts/notificationContext";
 import {
 	projectDetails,
@@ -320,6 +319,33 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_PROJECT_BUDGET_TARGETS_COUNT,
+			variables: {
+				filter: { project: 3, name: "budget target name", total_target_amount: "100" },
+			},
+		},
+		result: {
+			data: mockBudgetTargetCount,
+		},
+	},
+	{
+		request: {
+			query: GET_BUDGET_TARGET_PROJECT,
+			variables: {
+				filter: { project: 3, name: "budget target name", total_target_amount: "100" },
+				limit: 10,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: {
+			data: {
+				projectBudgetTargets: mockOrgBudgetTargetProject,
+			},
+		},
+	},
+	{
+		request: {
 			query: GET_ORG_DONOR,
 			variables: {
 				filter: {
@@ -391,22 +417,21 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		table = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<BudgetTargetTable />
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	table = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<BudgetTargetTable />
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 describe("Budget Target Table tests", () => {
@@ -454,11 +479,10 @@ describe("Budget Target Table tests", () => {
 	});
 
 	test("Table Headings and Data listing of Budget trackline table", async () => {
-		let collaspeButton = await table.findByTestId(`collaspeButton-${1}`);
+		let collaspeButton = table.getByTestId(`collaspeButton-${1}`);
 		expect(collaspeButton).toBeInTheDocument();
-		act(async () => {
-			await fireEvent.click(collaspeButton);
-		});
+
+		fireEvent.click(collaspeButton);
 		budgetLineItemTableHeading[3].label += `(${mockOrgHomeCurrency[0].currency.code})`;
 
 		for (let i = 0; i < budgetLineItemTableHeading.length; i++) {
@@ -495,33 +519,31 @@ describe("Budget Target Table tests", () => {
 	});
 
 	test("Filter List Input Elements test", async () => {
-		let filterButton = await table.findByTestId(`filter-button`);
-		expect(filterButton).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(filterButton);
+		let filterButton = table.getByTestId(`filter-button`);
+		await wait(() => {
+			expect(filterButton).toBeInTheDocument();
+		});
+		fireEvent.click(filterButton);
+
+		let nameField = table.getByTestId("createBudgetTargetNameInput") as HTMLInputElement;
+		fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		await wait(() => {
+			expect(nameField.value).toBe(intialFormValue.name);
 		});
 
-		let nameField = (await table.findByTestId(
-			"createBudgetTargetNameInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(nameField, { target: { value: intialFormValue.name } });
-		});
-		await expect(nameField.value).toBe(intialFormValue.name);
-
-		let targetAmountField = (await table.findByTestId(
+		let targetAmountField = table.getByTestId(
 			"createBudgetTotalTargetAmountInput"
-		)) as HTMLInputElement;
-		await act(async () => {
-			await fireEvent.change(targetAmountField, {
-				target: { value: intialFormValue.total_target_amount },
-			});
-		});
-		await expect(targetAmountField.value).toBe(intialFormValue.total_target_amount);
+		) as HTMLInputElement;
 
-		let filterSubmitButton = await table.findByTestId("filterSubmitButton");
-		await act(async () => {
-			await filterSubmitButton.click();
+		fireEvent.change(targetAmountField, {
+			target: { value: intialFormValue.total_target_amount },
 		});
+		await wait(() => {
+			expect(targetAmountField.value).toBe(intialFormValue.total_target_amount);
+		});
+
+		let filterSubmitButton = table.getByTestId("filterSubmitButton");
+		filterSubmitButton.click();
+		await wait(() => {});
 	});
 });

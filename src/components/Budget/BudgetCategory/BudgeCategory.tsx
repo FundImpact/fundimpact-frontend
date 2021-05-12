@@ -133,7 +133,7 @@ function BudgetCategory({
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 
 					try {
@@ -160,14 +160,14 @@ function BudgetCategory({
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Creation Success"));
 			handleClose();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Budget Category Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		}
 	};
@@ -217,6 +217,16 @@ function BudgetCategory({
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_ORG_BUDGET_CATEGORY_COUNT,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Delete Success"));
 		} catch (err) {

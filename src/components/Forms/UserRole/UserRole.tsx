@@ -369,7 +369,7 @@ function UserRoleForm(props: UserRoleProps) {
 				onCancel();
 			},
 			onError(err) {
-				notificationDispatch(setErrorNotification("Inviting User Failed !"));
+				notificationDispatch(setErrorNotification(err.message));
 			},
 		}
 	);

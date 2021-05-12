@@ -58,6 +58,7 @@ import {
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { useRefetchOnImpactLineItemImport } from "../../../hooks/impact";
 
 enum tableHeaders {
 	date = 1,
@@ -444,6 +445,8 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
+	const { refetchOnImpactLineItemImport } = useRefetchOnImpactLineItemImport(impactTargetId);
+
 	const financialYearFindAccess = userHasAccess(
 		MODULE_CODES.FINANCIAL_YEAR,
 		FINANCIAL_YEAR_ACTIONS.FIND_FINANCIAL_YEAR
@@ -641,7 +644,10 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						tableName="Impact Lineitem"
 						tableExportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${impactTargetId}`}
 						tableImportUrl={`${IMPACT_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${impactTargetId}`}
-						onImportTableSuccess={() => countRefetch?.().then(() => queryRefetch?.())}
+						onImportTableSuccess={() => {
+							countRefetch?.().then(() => queryRefetch?.());
+							refetchOnImpactLineItemImport();
+						}}
 						importButtonOnly={importButtonOnly}
 						hideImport={!impactTracklineCreateFromCsvAccess}
 						hideExport={!impactTracklineExportAccess}

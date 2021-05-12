@@ -30,6 +30,20 @@ import {
 import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
 
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
+
 const handleClose = jest.fn();
 
 let dialog: RenderResult;
@@ -55,18 +69,19 @@ let mockOrganizationDonor = [
 		},
 		legal_name: "vikram legal 001",
 		short_name: "vikram short 100",
+		deleted: false,
 	},
 ];
 
 let mockProjectDonors = [
 	{
 		id: "18",
-		donor: { id: "1", name: "donor 1" },
+		donor: { id: "1", name: "donor 1", deleted: false },
 		project: { id: "3", name: "my project" },
 	},
 	{
 		id: "2",
-		donor: { id: "2", name: "donor 2" },
+		donor: { id: "2", name: "donor 2", deleted: false },
 		project: { id: "3", name: "my project" },
 	},
 ];
@@ -202,26 +217,25 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		dialog = renderApollo(
-			<DashboardProvider
-				defaultState={{ project: projectDetails, organization: organizationDetails }}
-			>
-				<NotificationProvider>
-					<FundReceived
-						formAction={FORM_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	dialog = renderApollo(
+		<DashboardProvider
+			defaultState={{ project: projectDetails, organization: organizationDetails }}
+		>
+			<NotificationProvider>
+				<FundReceived
+					formAction={FORM_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 const inputIds = [...fundReceivedForm];
@@ -269,6 +283,8 @@ describe("Fund Received Dialog tests", () => {
 			reactElement: dialog,
 			intialFormValue,
 		});
-		expect(creationOccured).toBe(true);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });

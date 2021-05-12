@@ -320,8 +320,8 @@ function ImpactUnitDialog({
 			// 		handleClose();
 			// 	}
 			// },
-			onError() {
-				notificationDispatch(setErrorNotification("Impact Unit Creation Failure"));
+			onError(err) {
+				notificationDispatch(setErrorNotification(err?.message));
 				handleClose();
 			},
 		}
@@ -469,7 +469,12 @@ function ImpactUnitDialog({
 			// 	impactCategoryUnitList: impactCategoryUnitList?.impactCategoryUnitList || [],
 			// 	submittedImpactCategory,
 			// });
-		} catch (err) {}
+			notificationDispatch(setSuccessNotification("Impact Unit Update Success"));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			handleClose();
+		}
 	};
 
 	const onDelete = async () => {
@@ -487,6 +492,16 @@ function ImpactUnitDialog({
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_UNIT_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Unit Delete Success"));
 		} catch (err) {

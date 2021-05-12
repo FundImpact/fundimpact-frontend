@@ -15,6 +15,20 @@ import IndividualDialog from "..";
 import { CREATE_INDIVIDUAL } from "../../../graphql/Individual/mutation";
 import { GET_PROJECTS } from "../../../graphql";
 
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
+	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
+});
+
 const handleClose = jest.fn();
 
 let contactForm: RenderResult;
@@ -74,24 +88,23 @@ const mocks = [
 	},
 ];
 
-beforeEach(() => {
-	act(() => {
-		contactForm = renderApollo(
-			<DashboardProvider defaultState={{ organization: orgDetails }}>
-				<NotificationProvider>
-					<IndividualDialog
-						open={true}
-						formAction={FORM_ACTIONS.CREATE}
-						handleClose={handleClose}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				addTypename: false,
-			}
-		);
-	});
+beforeEach(async () => {
+	contactForm = renderApollo(
+		<DashboardProvider defaultState={{ organization: orgDetails }}>
+			<NotificationProvider>
+				<IndividualDialog
+					open={true}
+					formAction={FORM_ACTIONS.CREATE}
+					handleClose={handleClose}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			addTypename: false,
+		}
+	);
+	await wait();
 });
 
 let inputIds = [individualFormFields[0]];
@@ -139,6 +152,8 @@ describe("Individual Dialog tests", () => {
 			reactElement: contactForm,
 			intialFormValue,
 		});
-		expect(creationOccured).toBe(true);
+		await wait(() => {
+			expect(creationOccured).toBe(true);
+		});
 	});
 });

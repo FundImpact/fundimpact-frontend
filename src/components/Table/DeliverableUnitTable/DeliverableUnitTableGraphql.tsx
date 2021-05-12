@@ -11,6 +11,7 @@ import {
 } from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
+import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -45,6 +46,10 @@ function DeliverableUnitTableGraphql({
 		code: "",
 		description: "",
 	});
+
+	const {
+		refetchDeliverableUnitOnDeliverableUnitImport,
+	} = useRefetchDeliverableMastersOnDeliverableMasterImport();
 
 	useEffect(() => {
 		setQueryFilter({
@@ -129,11 +134,13 @@ function DeliverableUnitTableGraphql({
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
+		refetchDeliverableUnitOnDeliverableUnitImport();
 	}, [
 		// deliverableCategoryUnitCountRefetch,
 		// deliverableCategoryUnitRefetch,
 		deliverableUnitCountRefetch,
 		deliverableUnitRefetch,
+		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
 	// const deliverableCategoryUnitListMemoized = useMemo(

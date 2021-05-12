@@ -1,8 +1,7 @@
 import React from "react";
 import DeliverableUnit from "../DeliverableUnit";
-import { act, fireEvent, queries, RenderResult } from "@testing-library/react";
+import { fireEvent, queries, RenderResult, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { IDeliverableUnit } from "../../../models/deliverable/deliverableUnit";
 import { DELIVERABLE_ACTIONS } from "../constants";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
 import { renderApollo } from "../../../utils/test.util";
@@ -43,25 +42,38 @@ const mocks = [
 let handleClose = jest.fn();
 let deliverableUnit: RenderResult<typeof queries>;
 
-beforeEach(() => {
-	act(() => {
-		deliverableUnit = renderApollo(
-			<DashboardProvider defaultState={{ organization: organizationDetail }}>
-				<NotificationProvider>
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={true}
-						handleClose={handleClose}
-						organization={2}
-					/>
-				</NotificationProvider>
-			</DashboardProvider>,
-			{
-				mocks,
-				resolvers: {},
-			}
-		);
+beforeEach(async () => {
+	deliverableUnit = renderApollo(
+		<DashboardProvider defaultState={{ organization: organizationDetail }}>
+			<NotificationProvider>
+				<DeliverableUnit
+					type={DELIVERABLE_ACTIONS.CREATE}
+					open={true}
+					handleClose={handleClose}
+					organization={2}
+				/>
+			</NotificationProvider>
+		</DashboardProvider>,
+		{
+			mocks,
+			resolvers: {},
+		}
+	);
+	await wait();
+});
+
+let consoleWarnSpy: undefined | jest.SpyInstance<void, [message?: any, ...optionalParams: any[]]>;
+
+beforeAll(() => {
+	consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation((msg) => {
+		!msg.includes(
+			"isInitialValid has been deprecated and will be removed in future versions of Formik."
+		) && console.warn(msg);
 	});
+});
+
+afterAll(() => {
+	consoleWarnSpy?.mockRestore();
 });
 
 describe("Deliverable Target Form", () => {
@@ -79,10 +91,10 @@ describe("Deliverable Target Form", () => {
 	// 	expect(deliverableUnitUnitType).toBeInTheDocument();
 	// });
 
-	test("should have a category field", () => {
-		let deliverableUnitCategory = deliverableUnit.getByTestId("deliverableUnitCategory");
-		expect(deliverableUnitCategory).toBeInTheDocument();
-	});
+	// test("should have a category field", () => {
+	// 	let deliverableUnitCategory = deliverableUnit.getByTestId("deliverableUnitCategory");
+	// 	expect(deliverableUnitCategory).toBeInTheDocument();
+	// });
 
 	// test("should have a prefix label field", () => {
 	// 	let deliverableUnitprefixLabel = deliverableUnit.getByTestId("deliverableUnitPrefixLabel");
@@ -149,9 +161,9 @@ describe("Deliverable Target Form", () => {
 		// 	"deliverableUnitUnitTypeInput"
 		// ) as HTMLInputElement;
 
-		let deliverableUnitCategory = deliverableUnit.getByTestId(
-			"deliverableUnitCategoryInput"
-		) as HTMLInputElement;
+		// let deliverableUnitCategory = deliverableUnit.getByTestId(
+		// 	"deliverableUnitCategoryInput"
+		// ) as HTMLInputElement;
 
 		// let deliverableUnitprefixLabel = deliverableUnit.getByTestId(
 		// 	"deliverableUnitPrefixLabelInput"
@@ -163,10 +175,10 @@ describe("Deliverable Target Form", () => {
 
 		let value = "";
 
-		act(() => {
-			fireEvent.change(deliverableUnitName, { target: { value } });
+		fireEvent.change(deliverableUnitName, { target: { value } });
+		await wait(() => {
+			expect(deliverableUnitName.value).toBe(value);
 		});
-		expect(deliverableUnitName.value).toBe(value);
 
 		// act(() => {
 		// 	fireEvent.change(deliverableUnitUnitType, { target: { value } });
@@ -183,7 +195,9 @@ describe("Deliverable Target Form", () => {
 		// });
 		// expect(deliverableUnitsuffixLabel.value).toBe(value);
 
-		let deliverableUnitSubmit = await deliverableUnit.findByTestId(`createSaveButton`);
-		expect(deliverableUnitSubmit).toBeDisabled();
+		let deliverableUnitSubmit = await deliverableUnit.getByTestId(`createSaveButton`);
+		await wait(() => {
+			expect(deliverableUnitSubmit).toBeDisabled();
+		});
 	});
 });

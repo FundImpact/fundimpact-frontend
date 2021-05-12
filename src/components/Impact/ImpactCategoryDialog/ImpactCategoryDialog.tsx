@@ -143,14 +143,14 @@ function ImpactCategoryDialog({
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Impact Category Creation Success"));
 			handleClose();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Impact Category Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		}
 	};
@@ -170,7 +170,7 @@ function ImpactCategoryDialog({
 			notificationDispatch(setSuccessNotification("Impact Category Updation Success"));
 			handleClose();
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Impact Category Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		}
 	};
@@ -187,6 +187,16 @@ function ImpactCategoryDialog({
 						...impactCategoryValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_IMPACT_CATEGORY_COUNT_BY_ORG,
+						variables: {
+							filter: {
+								organization: dashboardData?.organization?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Category Delete Success"));
 		} catch (err) {
@@ -201,8 +211,8 @@ function ImpactCategoryDialog({
 	if (dialogType === DIALOG_TYPE.DELETE) {
 		return (
 			<DeleteModal
-				open={open}
 				handleClose={handleClose}
+				open={open}
 				onDeleteConformation={onDelete}
 				title="Delete Impact Category"
 			/>

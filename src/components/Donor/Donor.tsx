@@ -167,7 +167,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 					try {
 						const data = await store.readQuery<IGET_DONOR>({
@@ -193,7 +193,7 @@ function Donor(props: IDonorProps) {
 							},
 						});
 					} catch (err) {
-						console.error(err);
+						// console.error(err);
 					}
 				},
 			});
@@ -213,7 +213,7 @@ function Donor(props: IDonorProps) {
 			}
 			notificationDispatch(setSuccessNotification("Donor Creation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Donor Creation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
 		}
@@ -246,7 +246,7 @@ function Donor(props: IDonorProps) {
 			});
 			notificationDispatch(setSuccessNotification("Donor Updation Success"));
 		} catch (err) {
-			notificationDispatch(setErrorNotification("Donor Updation Failure"));
+			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
 		}
@@ -295,6 +295,14 @@ function Donor(props: IDonorProps) {
 						organization: dashboardData?.organization?.id,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DONOR_COUNT,
+						variables: {
+							filter: { organization: dashboardData?.organization?.id },
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Donor Delete Success"));
 		} catch (err) {
