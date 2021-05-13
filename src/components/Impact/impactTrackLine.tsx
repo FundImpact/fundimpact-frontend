@@ -50,6 +50,7 @@ import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../Project/Project";
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
+import { useDocumentTableDataRefetch } from "../../hooks/document";
 
 function getInitialValues(props: ImpactTargetLineProps) {
 	if (props.type === IMPACT_ACTIONS.UPDATE) return { ...props.data };
@@ -286,6 +287,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 	const intl = useIntl();
 
 	let formDetails = currentTargetId && <FormDetailsCalculate currentTargetId={currentTargetId} />;
+	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
 
 	const [createImpactTrackline, { loading }] = useMutation(CREATE_IMPACT_TRACKLINE, {
 		onCompleted(data) {
@@ -293,7 +295,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				related_id: data.createImpactTrackingLineitemInput.id,
 				related_type: "impact_tracking_lineitem",
 				field: "attachments",
-			});
+			}).then(() => refetchDocuments());
 
 			setImpactDonorForm(
 				<ImpacTracklineDonorYearTags
@@ -751,11 +753,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={filesArray}
 					setFilesArray={setFilesArray}
-					parentOnSuccessCall={
-						props.type === IMPACT_ACTIONS.UPDATE && props.reftechOnSuccess
-							? props.reftechOnSuccess
-							: undefined
-					}
+					parentOnSuccessCall={() => {
+						if (props.type === IMPACT_ACTIONS.UPDATE) {
+							props?.reftechOnSuccess?.();
+							refetchDocuments();
+						}
+					}}
 					uploadApiConfig={{
 						ref: "impact-tracking-lineitem",
 						refId:

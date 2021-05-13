@@ -39,7 +39,7 @@ const MultilingualProvider = ({ children }: { children: React.ReactNode | React.
 	}, [user]);
 
 	return (
-		<IntlProvider messages={messages} locale={locale} defaultLocale="en">
+		<IntlProvider messages={messages} locale={locale} defaultLocale="en" onError={() => {}}>
 			{children}
 		</IntlProvider>
 	);
