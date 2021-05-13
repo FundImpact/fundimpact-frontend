@@ -43,6 +43,7 @@ import { Grid, Box, Typography, useTheme } from "@material-ui/core";
 import AmountSpent from "../../Table/Budget/BudgetTargetTable/AmountSpent";
 import { GET_PROJECT_AMOUNT_SPEND } from "../../../graphql/project";
 import DeleteModal from "../../DeleteModal";
+import { useDocumentTableDataRefetch } from "../../../hooks/document";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -224,6 +225,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [success, budgetTrackingRefetch, props, setSuccess]);
 
+	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
+
 	const [createProjectBudgetTracking, { loading: creatingLineItem }] = useMutation(
 		CREATE_PROJECT_BUDGET_TRACKING,
 		{
@@ -232,7 +235,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					related_id: data.createProjBudgetTracking.id,
 					related_type: "budget_tracking_lineitem",
 					field: "attachments",
-				});
+				}).then(() => refetchDocuments());
 			},
 		}
 	);
@@ -729,11 +732,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						handleClose={() => setOpenAttachFiles(false)}
 						filesArray={filesArray}
 						setFilesArray={setFilesArray}
-						parentOnSuccessCall={
-							props.formAction === FORM_ACTIONS.UPDATE && props.refetchOnSuccess
-								? props.refetchOnSuccess
-								: undefined
-						}
+						parentOnSuccessCall={() => {
+							if (props.formAction === FORM_ACTIONS.UPDATE) {
+								props?.refetchOnSuccess?.();
+								refetchDocuments();
+							}
+						}}
 						uploadApiConfig={{
 							ref: "budget-tracking-lineitem",
 							refId:

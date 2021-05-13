@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { Box, Grid, IconButton, TableCell, TablePagination } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import FilterListContainer from "../../FilterList";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { createChipArray } from "../../commons";
+import { GET_ATTACHMENT_IN_PROJECT_DELIVERABLE_IMPACT_BUDGET_BY_PROJECT } from "../../../graphql/project";
 
 export default function ProjectDocumentsTable() {
 	const [projectDocumentPage, setProjectDocumentPage] = React.useState(0);
@@ -45,66 +46,64 @@ export default function ProjectDocumentsTable() {
 		setProjectDocumentPage(newPage);
 	};
 
-	const { data, loading } = useQuery(GET_PROJECT_DOCUMENTS, {
-		variables: {
-			filter: { id: dashBoardData?.project?.id },
-		},
-	});
+	const [getAttachmentsInProjectBudgetDeliverableAndImpact, { data, loading }] = useLazyQuery(
+		GET_ATTACHMENT_IN_PROJECT_DELIVERABLE_IMPACT_BUDGET_BY_PROJECT
+	);
+
+	useEffect(() => {
+		if (dashBoardData?.project?.id) {
+			getAttachmentsInProjectBudgetDeliverableAndImpact({
+				variables: {
+					project: dashBoardData?.project?.id,
+				},
+			});
+		}
+	}, [dashBoardData]);
+
 	const valueExistInFilterList = Object.values(filterList).filter((elem) => {
 		if (elem) return elem;
 	}).length;
+
 	useEffect(() => {
-		let arr: any = [];
-		data?.orgProject?.map(
-			(project: { id: string; name: string; attachments: Attachments[] }) => {
-				let projectAttachment = project.attachments;
+		let arr: any = [],
+			attachments = data?.attachmentsInProjectBudgetDeliverableAndImpact || [];
+		if (valueExistInFilterList)
+			attachments = data?.attachmentsInProjectBudgetDeliverableAndImpact?.filter(
+				(obj: any) => obj.name == filterList?.name || obj.ext == filterList?.ext
+			);
 
-				if (valueExistInFilterList)
-					projectAttachment = projectAttachment.filter((obj: any) => {
-						return obj.name == filterList?.name || obj.ext == filterList?.ext;
-					});
-
-				projectAttachment?.map((projectDocument: Attachments, index: number) => {
-					let row = [
-						<TableCell key={index}>
-							{" "}
-							{projectDocumentPage * limit + index + 1}
-						</TableCell>,
-						<TableCell key={`${index}-name`}>{projectDocument.name}</TableCell>,
-						<TableCell key={`${index}-1`}>{`${projectDocument.size}Kb`}</TableCell>,
-						<TableCell key={`${index}-caption`}>
-							{projectDocument.caption || "-"}
-						</TableCell>,
-						<TableCell key={`${index}-2`}>{projectDocument.ext}</TableCell>,
-						<TableCell key={`${index}-3`}>
-							{getTodaysDate(new Date(projectDocument.created_at))}
-						</TableCell>,
-						<TableCell key={`${index}-4`}>
-							<IconButton
-								onClick={() => {
-									var win = window.open(projectDocument.url, "_blank");
-									win?.focus();
-								}}
-							>
-								{isValidImage(projectDocument.ext) ? (
-									<VisibilityIcon />
-								) : (
-									<GetAppIcon />
-								)}
-							</IconButton>
-						</TableCell>,
-						<TableCell key={`${index}-5`}>
-							<IconButton disabled>
-								<MoreVertIcon />
-							</IconButton>
-						</TableCell>,
-					];
-					arr.push(row);
-				});
-				setRows(arr);
-			},
-			[]
-		);
+		attachments?.map((projectDocument: any, index: number) => {
+			let row = [
+				<TableCell key={index}> {projectDocumentPage * limit + index + 1}</TableCell>,
+				<TableCell key={`${index}-name`}>{projectDocument.name}</TableCell>,
+				<TableCell key={`${index}-1`}>{`${projectDocument.size}Kb`}</TableCell>,
+				<TableCell key={`${index}-caption`}>{projectDocument.caption || "-"}</TableCell>,
+				<TableCell key={`${index}-related_type`}>
+					{projectDocument?.related_type || "-"}
+				</TableCell>,
+				<TableCell key={`${index}-2`}>{projectDocument.ext}</TableCell>,
+				<TableCell key={`${index}-3`}>
+					{getTodaysDate(new Date(projectDocument.created_at))}
+				</TableCell>,
+				<TableCell key={`${index}-4`}>
+					<IconButton
+						onClick={() => {
+							var win = window.open(projectDocument.url, "_blank");
+							win?.focus();
+						}}
+					>
+						{isValidImage(projectDocument.ext) ? <VisibilityIcon /> : <GetAppIcon />}
+					</IconButton>
+				</TableCell>,
+				<TableCell key={`${index}-5`}>
+					<IconButton disabled>
+						<MoreVertIcon />
+					</IconButton>
+				</TableCell>,
+			];
+			arr.push(row);
+		});
+		setRows(arr);
 	}, [data, filterList]);
 
 	const intl = useIntl();

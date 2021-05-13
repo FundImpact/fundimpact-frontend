@@ -48,6 +48,7 @@ import { updateProjectDonorCache } from "../Project/Project";
 import Donor from "../Donor";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
+import { useDocumentTableDataRefetch } from "../../hooks/document";
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -325,6 +326,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			handleNext();
 		}
 	}, [success, props, setSuccess, currentTargetId, donorForm]);
+	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
 
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
@@ -341,6 +343,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				related_id: data.createDeliverableTrackingLineitemDetail.id,
 				related_type: "deliverable_tracking_lineitem",
 				field: "attachments",
+			}).then(() => {
+				refetchDocuments();
 			});
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline created successfully!")
@@ -784,11 +788,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={filesArray}
 					setFilesArray={setFilesArray}
-					parentOnSuccessCall={
-						props.type === DELIVERABLE_ACTIONS.UPDATE && props.reftechOnSuccess
-							? props.reftechOnSuccess
-							: undefined
-					}
+					parentOnSuccessCall={() => {
+						if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+							props?.reftechOnSuccess?.();
+							refetchDocuments();
+						}
+					}}
 					uploadApiConfig={{
 						ref: "deliverable-tracking-lineitem",
 						refId:
