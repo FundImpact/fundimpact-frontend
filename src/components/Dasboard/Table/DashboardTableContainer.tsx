@@ -49,6 +49,12 @@ import IndividualDialog from "../../IndividualDialog";
 import { IndividualTableType, IndividualDialogType } from "../../../models/individual/constant";
 import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";
 import { useDialogData } from "../../../contexts/DialogContext";
+import AttachFileForm from "../../Forms/AttachFiles";
+import { AttachFile } from "../../../models/AttachFile";
+import { useDocumentTableDataRefetch } from "../../../hooks/document";
+import { GET_PROJECT_BY_ID } from "../../../graphql/project";
+import { useLazyQuery } from "@apollo/client";
+import { IGetProjectById } from "../../../models/project/project";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -142,6 +148,9 @@ const getTabToShow = (
 export default function DashboardTableContainer() {
 	const intl = useIntl();
 	const dashboardData = useDashBoardData();
+	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>([]);
+
+	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: true });
 
 	const budgetTargetCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
@@ -535,7 +544,36 @@ export default function DashboardTableContainer() {
 				description: `This text will be show on tab for documents`,
 			}),
 			table: <ProjectDocumentsTable />,
-			createButtons: [],
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "addDocument",
+						defaultMessage: "Add Document",
+						description: `This text will be show on Add Button for Document`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<AttachFileForm
+							open={open}
+							handleClose={() => {
+								handleClose();
+								setProjectFilesArray([]);
+							}}
+							filesArray={projectFilesArray}
+							setFilesArray={setProjectFilesArray}
+							uploadApiConfig={{
+								ref: "project",
+								refId: dashboardData?.project?.id?.toString() || "",
+								field: "attachments",
+								path: `org-${dashboardData?.organization?.id}/project-${dashboardData?.project?.id}/project`,
+							}}
+							parentOnSuccessCall={() => {
+								refetchDocuments();
+							}}
+						/>
+					),
+					createButtonAccess: projectEditAccess,
+				},
+			],
 			tabVisibility: projectFindAccess || projectEditAccess,
 			tableVisibility: projectFindAccess,
 		},

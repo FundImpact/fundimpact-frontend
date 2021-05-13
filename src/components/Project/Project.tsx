@@ -31,6 +31,7 @@ import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
 import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import Donor from "../Donor";
 import { FORM_ACTIONS } from "../Forms/constant";
+import { useDocumentTableDataRefetch } from "../../hooks/document";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -175,10 +176,12 @@ function Project(props: ProjectProps) {
 				});
 			}
 			setSuccess(false);
+			setProjectFilesArray([]);
 		}
 	}, [success]);
 
 	if (success) props.handleClose();
+	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
 
 	const [createNewproject, { loading: createLoading }] = useMutation(CREATE_PROJECT, {
 		onCompleted(data) {
@@ -188,7 +191,9 @@ function Project(props: ProjectProps) {
 				related_id: data.createOrgProject.id,
 				related_type: "projects",
 				field: "attachments",
-			});
+			})
+				.then(() => refetchDocuments(data.createOrgProject.id))
+				.catch((err) => notificationDispatch(setErrorNotification(err?.message)));
 		},
 	});
 	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation<
@@ -444,11 +449,20 @@ function Project(props: ProjectProps) {
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={projectFilesArray}
 					setFilesArray={setProjectFilesArray}
-					uploadApiConfig={{
-						ref: "project",
-						refId: dashboardData?.project?.id?.toString() || "",
-						field: "attachments",
-						path: `org-${dashboardData?.organization?.id}/project-${dashboardData?.project?.id}/project`,
+					{...(props.type == PROJECT_ACTIONS.UPDATE
+						? {
+								uploadApiConfig: {
+									ref: "project",
+									refId: dashboardData?.project?.id?.toString() || "",
+									field: "attachments",
+									path: `org-${dashboardData?.organization?.id}/project-${dashboardData?.project?.id}/project`,
+								},
+						  }
+						: {})}
+					parentOnSuccessCall={() => {
+						if (props.type == PROJECT_ACTIONS.UPDATE) {
+							refetchDocuments();
+						}
 					}}
 				/>
 			)}

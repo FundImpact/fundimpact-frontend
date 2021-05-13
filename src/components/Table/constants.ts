@@ -16,6 +16,7 @@ export const documentsHeadings: ITableHeadings[] = [
 	{ label: "File" },
 	{ label: "Size" },
 	{ label: "Caption" },
+	{ label: "Table" },
 	{ label: "Type" },
 	{ label: "Date" },
 	{ label: "View" },

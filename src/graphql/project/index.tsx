@@ -113,3 +113,19 @@ export const GET_IMPACT_TARGET_SDG_COUNT = gql`
 		impactTargetSdgCount(where: $filter)
 	}
 `;
+
+export const GET_ATTACHMENT_IN_PROJECT_DELIVERABLE_IMPACT_BUDGET_BY_PROJECT = gql`
+	query getAttachmentsInProjectBudgetDeliverableAndImpact($project: ID!) {
+		attachmentsInProjectBudgetDeliverableAndImpact(project: $project) {
+			id
+			name
+			size
+			caption
+			url
+			ext
+			created_at
+			related_type
+			related_id
+		}
+	}
+`;
