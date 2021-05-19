@@ -94,6 +94,7 @@ const projDonorsMock = [
 			name: "wer",
 			deleted: false,
 		},
+		deleted: false,
 	},
 ];
 const mocks = [

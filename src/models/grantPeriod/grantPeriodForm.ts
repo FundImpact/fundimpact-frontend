@@ -23,6 +23,9 @@ export type GrantPeriodFormProps = {
 	onSubmit: (
 		value: IGrantPeriod
 	) => Promise<FetchResult<any, Record<string, any>, Record<string, any>> | undefined>;
+	setSelectedDonor: React.Dispatch<React.SetStateAction<string>>;
+	setCreateProjectDonorCheckboxVal: React.Dispatch<React.SetStateAction<boolean>>;
+	showCreateProjectDonorCheckbox: boolean;
 	allDonors: (
 		| {
 				id: string;

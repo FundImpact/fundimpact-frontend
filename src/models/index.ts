@@ -120,6 +120,7 @@ export interface IInputFields {
 	autoCompleteGroupBy?: <T>(option: T) => string;
 	addNew?: boolean;
 	addNewClick?: (() => void) | null;
+	helperText?: string | React.ReactNode;
 }
 
 export interface ISelectField {

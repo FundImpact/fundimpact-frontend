@@ -8,8 +8,13 @@ export interface IGet_Fund_Receipt_List {
 		project_donor: {
 			id: string;
 			donor: { id: string; name: string };
+			project: { id: string; name: string };
 		};
 		deleted: boolean;
+		project: string | number;
+		donor: {
+			id: string;
+		};
 	}[];
 }
 

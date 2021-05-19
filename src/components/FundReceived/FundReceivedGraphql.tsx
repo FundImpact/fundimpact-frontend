@@ -36,14 +36,15 @@ const getInitialFormValues = ({
 	if (formAction == FORM_ACTIONS.UPDATE && initialValues) {
 		return {
 			...initialValues,
-			project_donor: initialValues.project_donor + `-${DonorType.project}`,
+			project_donor: initialValues.project_donor,
 		};
 	}
 	return {
 		amount: "",
-		project_donor:
-			projectDonors.length === 1 ? projectDonors[0].id + `-${DonorType.project}` : "",
+		project_donor: "",
 		reporting_date: getTodaysDate(),
+		project: "",
+		donor: "",
 	};
 };
 
@@ -65,7 +66,7 @@ const updateProjectDonorCache = ({
 				query: GET_PROJ_DONORS,
 				data: {
 					projectDonors: [
-						projecttDonorCreated.createProjDonor,
+						{ ...projecttDonorCreated?.createProjDonor, deleted: false },
 						...cachedProjectDonors.projectDonors,
 					],
 				},

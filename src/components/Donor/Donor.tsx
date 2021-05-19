@@ -66,7 +66,7 @@ const updateProjectDonorCache = ({
 				variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
 				data: {
 					projectDonors: [
-						projectDonorCreated.createProjDonor,
+						{ ...projectDonorCreated?.createProjDonor, deleted: false },
 						...cachedProjectDonors.projectDonors,
 					],
 				},

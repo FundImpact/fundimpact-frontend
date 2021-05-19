@@ -21,11 +21,11 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 	return forward(operation);
 });
 
-const removeDeletedBudgetCategoryOrganizations: FieldReadFunction<any, any> = (
-	budgetCategoryOrganizations,
+const removeDeletedElements: FieldReadFunction<any, any> = (
+	arrayFromWhichElementsHaveToBeDeleted,
 	{ readField }
 ) =>
-	budgetCategoryOrganizations?.filter(
+	arrayFromWhichElementsHaveToBeDeleted?.filter(
 		({ __ref }: { __ref: string }) => !readField("deleted", { __ref })
 	);
 
@@ -62,13 +62,13 @@ export const client = new ApolloClient({
 			Query: {
 				fields: {
 					orgBudgetCategory: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					impactCategoryOrgList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					impactUnitsOrgList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					impactCategoryUnitList: {
 						read: removeImpactCategoryUnitList,
@@ -77,49 +77,49 @@ export const client = new ApolloClient({
 						read: removeDeliverableCategoryUnitList,
 					},
 					deliverableCategory: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					deliverableUnitOrg: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					projBudgetTrackings: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					projectBudgetTargets: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					deliverableTargetList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					deliverableTrackingLineitemList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					impactTrackingLineitemList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					impactTargetProjectList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					fundReceiptProjectList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					grantPeriodsProjectList: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					deliverable_category_org: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					deliverable_units_org: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 					orgDonors: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
-					projectDonors: {
-						read: removeDeletedProjectDonors,
-					},
+					// projectDonors: {
+					// 	read: removeDeletedElements,
+					// },
 					t4DIndividuals: {
-						read: removeDeletedBudgetCategoryOrganizations,
+						read: removeDeletedElements,
 					},
 				},
 			},

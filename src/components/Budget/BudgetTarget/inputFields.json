@@ -60,7 +60,9 @@
 			"required": true,
 			"addNewClick": {},
 			"addNew": true,
-			"inputType": "select"
+			"inputType": "select",
+			"getInputValue": {},
+			"helperText": ""
 		}
 	]
 }

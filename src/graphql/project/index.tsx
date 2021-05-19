@@ -74,6 +74,7 @@ export const GET_PROJ_DONORS = gql`
 				name
 				deleted
 			}
+			deleted
 		}
 	}
 `;

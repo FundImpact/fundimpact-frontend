@@ -59,7 +59,9 @@ function ProjectEditButton({
 	const [projectDetails, setProjectDetails] = useState<any>();
 	useEffect(() => {
 		if (projDonors) {
-			let donorIds = projDonors?.projectDonors?.map((donors: any) => donors?.donor?.id);
+			let donorIds = projDonors?.projectDonors
+				?.filter((projectDonor: any) => !projectDonor?.deleted)
+				.map((donors: any) => donors?.donor?.id);
 
 			setProjectDetails({
 				id: project.id,

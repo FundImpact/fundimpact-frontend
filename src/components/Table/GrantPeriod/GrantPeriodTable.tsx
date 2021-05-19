@@ -491,16 +491,18 @@ export default function GrantPeriodTable() {
 						/>
 						<ImportExportTableMenuHoc refetchGrantPeriods={refetchGrantPeriods} />
 					</SimpleTable>
-					<GrantPeriodDialog
-						open={!!grantPeriodToEdit}
-						onClose={() => {
-							setGrantPeriodDialog(null);
-							setDeleteGrantPeriod(false);
-						}}
-						action={FORM_ACTIONS.UPDATE}
-						initialValues={(grantPeriodToEdit as any) as IGrantPeriod}
-						dialogType={deleteGrantPeriod ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
-					/>
+					{grantPeriodToEdit && (
+						<GrantPeriodDialog
+							open={!!grantPeriodToEdit}
+							onClose={() => {
+								setGrantPeriodDialog(null);
+								setDeleteGrantPeriod(false);
+							}}
+							action={FORM_ACTIONS.UPDATE}
+							initialValues={(grantPeriodToEdit as any) as IGrantPeriod}
+							dialogType={deleteGrantPeriod ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
+						/>
+					)}
 				</>
 			) : (
 				<Box

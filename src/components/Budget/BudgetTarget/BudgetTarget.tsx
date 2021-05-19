@@ -50,6 +50,8 @@ import { CREATE_PROJECT_DONOR } from "../../../graphql/donor/mutation";
 import { FormikProps } from "formik";
 import DeleteModal from "../../DeleteModal";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { useProjectDonorSelectInput } from "../../../hooks/project";
+import { Checkbox, FormControlLabel } from "@material-ui/core";
 
 enum donorType {
 	project = "PROJECT'S DONOR",
@@ -60,101 +62,86 @@ interface IBudgetTargetSubmittedValues extends Omit<IBudgetTargetForm, "donor"> 
 	donor: { id: string; name: string; type: donorType };
 }
 
-const getDonors = ({
-	orgDonors,
-	projectDonors,
-}: {
-	orgDonors: IGET_DONOR["orgDonors"];
-	projectDonors: IGetProjectDonor["projectDonors"];
-}) => {
-	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
-		acc[projDonor.donor.id] = true;
-		return acc;
-	}, {});
-	let donorArr = [];
-	projectDonors.length &&
-		donorArr.push(
-			{
-				groupName: (
-					<FormattedMessage
-						defaultMessage="PROJECT'S DONOR"
-						id="selectInputProjectDonor"
-						description="This text will be heading of project donor"
-					/>
-				),
-			},
-			...projectDonors
-				.filter((donor) => donor)
-				.map((projDonor) => ({
-					name: projDonor?.donor?.name,
-					id: projDonor?.donor?.id,
-				}))
-		);
+// const getDonors = ({
+// 	orgDonors,
+// 	projectDonors,
+// }: {
+// 	orgDonors: IGET_DONOR["orgDonors"];
+// 	projectDonors: IGetProjectDonor["projectDonors"];
+// }) => {
+// 	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
+// 		acc[projDonor.donor.id] = true;
+// 		return acc;
+// 	}, {});
+// 	let donorArr = [];
+// 	projectDonors.length &&
+// 		donorArr.push(
+// 			{
+// 				groupName: (
+// 					<FormattedMessage
+// 						defaultMessage="PROJECT'S DONOR"
+// 						id="selectInputProjectDonor"
+// 						description="This text will be heading of project donor"
+// 					/>
+// 				),
+// 			},
+// 			...projectDonors
+// 				.filter((donor) => donor)
+// 				.map((projDonor) => ({
+// 					name: projDonor?.donor?.name,
+// 					id: projDonor?.donor?.id,
+// 				}))
+// 		);
 
-	let filteredOrgDonor = orgDonors
-		.filter((donor) => !projectDonorIdHash[donor.id])
-		.map((donor) => ({ id: donor?.id, name: donor?.name }));
+// 	let filteredOrgDonor = orgDonors
+// 		.filter((donor) => !projectDonorIdHash[donor.id])
+// 		.map((donor) => ({ id: donor?.id, name: donor?.name }));
 
-	filteredOrgDonor.length &&
-		donorArr.push(
-			{
-				groupName: (
-					<FormattedMessage
-						id="selectInputAllDonor"
-						defaultMessage="ALL DONORS"
-						description="This text will be heading of all donor"
-					/>
-				),
-			},
-			...filteredOrgDonor
-		);
+// 	filteredOrgDonor.length &&
+// 		donorArr.push(
+// 			{
+// 				groupName: (
+// 					<FormattedMessage
+// 						id="selectInputAllDonor"
+// 						defaultMessage="ALL DONORS"
+// 						description="This text will be heading of all donor"
+// 					/>
+// 				),
+// 			},
+// 			...filteredOrgDonor
+// 		);
 
-	return donorArr;
-};
+// 	return donorArr;
+// };
 
-const checkDonorType = ({
-	projectDonors,
-	donorId,
-}: {
-	projectDonors: IGetProjectDonor["projectDonors"];
-	donorId: string;
-}) => {
-	for (let i = 0; i < projectDonors.length; i++) {
-		if (projectDonors[i].donor.id === donorId) {
-			return donorType.project;
-		}
-	}
-	return donorType.organization;
-};
-
-const updateProjectDonorCache = ({
-	projecttDonorCreated,
-	apolloClient,
-}: {
-	apolloClient: ApolloClient<object>;
-	projecttDonorCreated: ICreateProjectDonor;
-}) => {
-	try {
-		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
-			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
-			query: GET_PROJ_DONORS,
-		});
-		if (cachedProjectDonors) {
-			apolloClient.writeQuery<IGetProjectDonor>({
-				query: GET_PROJ_DONORS,
-				data: {
-					projectDonors: [
-						projecttDonorCreated.createProjDonor,
-						...cachedProjectDonors.projectDonors,
-					],
-				},
-				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
-			});
-		}
-	} catch (err) {
-		console.error(err);
-	}
-};
+// const updateProjectDonorCache = ({
+// 	projecttDonorCreated,
+// 	apolloClient,
+// }: {
+// 	apolloClient: ApolloClient<object>;
+// 	projecttDonorCreated: ICreateProjectDonor;
+// }) => {
+// 	try {
+// 		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
+// 			variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+// 			query: GET_PROJ_DONORS,
+// 		});
+// 		if (cachedProjectDonors) {
+// 			apolloClient.writeQuery<IGetProjectDonor>({
+// 				query: GET_PROJ_DONORS,
+// 				data: {
+// 					projectDonors: [
+// 						{ ...projecttDonorCreated?.createProjDonor, deleted: false },
+// 						...cachedProjectDonors.projectDonors,
+// 					],
+// 				},
+// 				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
+// 			});
+// 		}
+// 	} catch (err) {
+// 		console.error(err);
+// 	}
+// };
 
 const validate = (values: IBudgetTargetForm) => {
 	let errors: Partial<IBudgetTargetForm> = {};
@@ -232,18 +219,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		GET_ORGANIZATION_BUDGET_CATEGORY
 	);
 
-	const [createProjectDonor, { loading: creatingProjectDonors }] = useMutation<
-		ICreateProjectDonor,
-		ICreateProjectDonorVariables
-	>(CREATE_PROJECT_DONOR, {
-		onCompleted: (data) => {
-			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
-		},
-	});
-
 	const intl = useIntl();
 
-	let [getOrganizationDonors, { data: orgDonors }] = useLazyQuery<IGET_DONOR>(GET_ORG_DONOR);
+	// let [getOrganizationDonors, { data: orgDonors }] = useLazyQuery<IGET_DONOR>(GET_ORG_DONOR);
 	let budgetTargetTitle = intl.formatMessage({
 		id: "budgetTargetFormTitle",
 		defaultMessage: "Budget Target",
@@ -261,6 +239,19 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		defaultMessage: "Update Budget Target Of Project",
 		description: `This text will be show on update Budget target form for subtitle`,
 	});
+
+	const {
+		createProjectDonor,
+		selectedDonorInputOptionArray,
+		setSelectedDonor,
+		showCreateProjectDonorCheckbox,
+		creatingProjectDonors,
+		setCreateProjectDonorCheckboxVal,
+	} = useProjectDonorSelectInput({
+		formAction: props.formAction,
+		initialDonorId: initialValues.donor,
+	});
+
 	useEffect(() => {
 		if (dashboardData) {
 			getCurrency({
@@ -273,17 +264,17 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		}
 	}, [getCurrency, dashboardData]);
 
-	useEffect(() => {
-		if (dashboardData?.organization?.id) {
-			getOrganizationDonors({
-				variables: {
-					filter: {
-						organization: dashboardData?.organization?.id,
-					},
-				},
-			});
-		}
-	}, [getOrganizationDonors]);
+	// useEffect(() => {
+	// 	if (dashboardData?.organization?.id) {
+	// 		getOrganizationDonors({
+	// 			variables: {
+	// 				filter: {
+	// 					organization: dashboardData?.organization?.id,
+	// 				},
+	// 			},
+	// 		});
+	// 	}
+	// }, [getOrganizationDonors]);
 
 	useEffect(() => {
 		if (dashboardData?.organization) {
@@ -313,13 +304,25 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 		budgetTargetFormInputFields[1].endAdornment = currency.currencyList[0].code;
 	}
 
-	(budgetTargetFormInputFields[4].optionsArray as any) = getDonors({
-		projectDonors: projectDonors?.projectDonors || [],
-		orgDonors: orgDonors?.orgDonors || [],
-	});
-
-	// (budgetTargetFormInputFields[4]
-	// 	.autoCompleteGroupBy as unknown) = getDonorGroupHeadingInBudgetTargetForm;
+	(budgetTargetFormInputFields[4].optionsArray as any) = selectedDonorInputOptionArray;
+	budgetTargetFormInputFields[4].getInputValue = (donorId: string) => {
+		setSelectedDonor(donorId);
+	};
+	(budgetTargetFormInputFields[4].helperText as any) = showCreateProjectDonorCheckbox && (
+		<FormControlLabel
+			control={
+				<Checkbox
+					onChange={(e) => {
+						e.persist();
+						setCreateProjectDonorCheckboxVal(e?.target?.checked);
+					}}
+					size="small"
+					inputProps={{ "aria-label": "make selected donor project donor" }}
+				/>
+			}
+			label="Make org donor project donor"
+		/>
+	);
 
 	useEffect(() => {
 		if (budgetCategory) {
@@ -329,20 +332,17 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	const onCreate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {
-			let donorTypeSelected = checkDonorType({
-				projectDonors: projectDonors?.projectDonors || [],
-				donorId: valuesSubmitted.donor,
-			});
-			if (donorTypeSelected === donorType.organization) {
-				let createdProjectDonor = await createProjectDonor({
-					variables: {
-						input: {
-							donor: valuesSubmitted.donor,
-							project: `${dashboardData?.project?.id}` || "",
-						},
-					},
-				});
-			}
+			// if (donorTypeSelected === donorType.organization) {
+			// 	let createdProjectDonor = await createProjectDonor({
+			// 		variables: {
+			// 			input: {
+			// 				donor: valuesSubmitted.donor,
+			// 				project: `${dashboardData?.project?.id}` || "",
+			// 			},
+			// 		},
+			// 	});
+			// }
+			await createProjectDonor();
 
 			let values = removeEmptyKeys<IBudgetTargetForm>({
 				objectToCheck: { ...valuesSubmitted },
@@ -441,21 +441,21 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	const onUpdate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {
-			let donorSelected = checkDonorType({
-				projectDonors: projectDonors?.projectDonors || [],
-				donorId: valuesSubmitted.donor,
-			});
-			if (donorSelected === donorType.organization) {
-				let createdProjectDonor = await createProjectDonor({
-					variables: {
-						input: {
-							donor: valuesSubmitted.donor,
-							project: `${dashboardData?.project?.id}` || "",
-						},
-					},
-				});
-			}
-
+			// let donorSelected = checkDonorType({
+			// 	projectDonors: projectDonors?.projectDonors || [],
+			// 	donorId: valuesSubmitted.donor,
+			// });
+			// if (donorSelected === donorType.organization) {
+			// 	let createdProjectDonor = await createProjectDonor({
+			// 		variables: {
+			// 			input: {
+			// 				donor: valuesSubmitted.donor,
+			// 				project: `${dashboardData?.project?.id}` || "",
+			// 			},
+			// 		},
+			// 	});
+			// }
+			await createProjectDonor();
 			let values = removeEmptyKeys<IBudgetTargetForm>({
 				objectToCheck: { ...valuesSubmitted },
 				keysToRemainUnchecked: {

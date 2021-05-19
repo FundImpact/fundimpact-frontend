@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ORG_DONOR } from "../../graphql/donor";
-import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { AttachFile } from "../../models/AttachFile";
@@ -15,6 +15,7 @@ import {
 	ICreateProjectDonorVariables,
 	IGetProjectDonor,
 	ICreateProject,
+	IUpdateProjectDonorVariables,
 } from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -62,7 +63,7 @@ export const updateProjectDonorCache = ({
 				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
 				data: {
 					projectDonors: [
-						projecttDonorCreated.createProjDonor,
+						{ ...projecttDonorCreated?.createProjDonor, deleted: false },
 						...cachedProjectDonors.projectDonors,
 					],
 				},
@@ -125,6 +126,11 @@ const updateCachedProject = async ({
 		console.error(err);
 	}
 };
+
+const getProjectDonorForGivenDonorId = (
+	projectDonors: IGetProjectDonor["projectDonors"],
+	donorId: string
+) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id == donorId);
 
 function Project(props: ProjectProps) {
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
@@ -217,7 +223,7 @@ function Project(props: ProjectProps) {
 		let donorList: any = [];
 		donors?.orgDonors?.forEach((fetchedDonor: any) => {
 			const isInDonorList = mappedDonors.includes(fetchedDonor?.id);
-			if (isInDonorList) donorList.push({ ...fetchedDonor, disabled: true });
+			if (isInDonorList) donorList.push({ ...fetchedDonor });
 			else donorList.push(fetchedDonor);
 		});
 		projectForm[4].optionsArray = donorList;
@@ -235,16 +241,62 @@ function Project(props: ProjectProps) {
 		}
 	}, [dashboardData]);
 
-	const createDonors = async ({ projectId, donorId }: { projectId: string; donorId: string }) => {
-		try {
-			await createProjectDonor({
+	const [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(
+		GET_PROJ_DONORS
+	);
+
+	const [updateProjectDonor, { loading: updatingProjectDonors }] = useMutation<
+		ICreateProjectDonor,
+		IUpdateProjectDonorVariables
+	>(UPDATE_PROJECT_DONOR);
+
+	const projectId = dashboardData?.project?.id;
+
+	useEffect(() => {
+		if (projectId) {
+			getProjectDonors({
 				variables: {
-					input: {
+					filter: {
 						project: projectId,
-						donor: donorId,
 					},
 				},
 			});
+		}
+	}, [getProjectDonors, projectId]);
+
+	const createOrUpdateProjectDonors = async ({
+		projectId,
+		donorId,
+	}: {
+		projectId: string;
+		donorId: string;
+	}) => {
+		try {
+			const projectDonorForGivenDonorId = getProjectDonorForGivenDonorId(
+				projectDonors?.projectDonors || [],
+				donorId
+			);
+			if (projectDonorForGivenDonorId) {
+				await updateProjectDonor({
+					variables: {
+						id: projectDonorForGivenDonorId.id,
+						input: {
+							deleted: !projectDonorForGivenDonorId?.deleted,
+							donor: projectDonorForGivenDonorId?.donor?.id,
+							project: projectDonorForGivenDonorId?.project?.id,
+						},
+					},
+				});
+			} else {
+				await createProjectDonor({
+					variables: {
+						input: {
+							project: projectId,
+							donor: donorId,
+						},
+					},
+				});
+			}
 		} catch (err) {
 			notificationDispatch(setErrorNotification(err?.message));
 		}
@@ -315,7 +367,7 @@ function Project(props: ProjectProps) {
 				}));
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
 			selectDonors.forEach(async (donorId) => {
-				await createDonors({
+				await createOrUpdateProjectDonors({
 					projectId: createdProject.data.createOrgProject.id,
 					donorId,
 				});
@@ -351,6 +403,8 @@ function Project(props: ProjectProps) {
 			let newDonors = formData?.donor?.filter(function (el: string) {
 				return !mappedDonors.includes(el);
 			});
+			let removedDonors =
+				mappedDonors?.filter((donor: string) => !formData?.donor?.includes(donor)) || [];
 			delete formData.id;
 			delete formData.donor;
 			delete formData.attachments;
@@ -367,8 +421,8 @@ function Project(props: ProjectProps) {
 					workspaceId: value.workspace,
 				});
 			}
-			newDonors.forEach(async (donorId: string) => {
-				await createDonors({
+			[...newDonors, ...removedDonors].forEach(async (donorId: string) => {
+				await createOrUpdateProjectDonors({
 					projectId: updatedResponse?.data.updateOrgProject.id,
 					donorId,
 				});
