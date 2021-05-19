@@ -115,6 +115,9 @@ export const client = new ApolloClient({
 					orgDonors: {
 						read: removeDeletedElements,
 					},
+					orgProject: {
+						read: removeDeletedElements,
+					},
 					// projectDonors: {
 					// 	read: removeDeletedElements,
 					// },

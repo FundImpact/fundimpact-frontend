@@ -36,6 +36,7 @@ function CommonInputForm({
 	updateButtonName = "Update",
 	children,
 	getFormikInstance,
+	additionalButtons,
 }: ICommonForm) {
 	const classes = useStyles();
 	const validateInitialValue = (initialValue: any) => {
@@ -165,6 +166,7 @@ function CommonInputForm({
 											? createButtonName
 											: updateButtonName}
 									</Button>
+									{additionalButtons}
 									<Button
 										className={classes.cancelButton}
 										onClick={onCancel ? onCancel : formik.handleReset}

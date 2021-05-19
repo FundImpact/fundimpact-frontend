@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation, useApolloClient, ApolloClient } from "@apollo/client";
+import { useLazyQuery, useMutation, useApolloClient, ApolloClient, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
@@ -33,6 +33,8 @@ import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import Donor from "../Donor";
 import { FORM_ACTIONS } from "../Forms/constant";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
+import { Button, useTheme } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -211,6 +213,8 @@ function Project(props: ProjectProps) {
 		},
 	});
 
+	const { data: orgProjects } = useQuery(GET_PROJECTS);
+	const theme = useTheme();
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onError: (err) => notificationDispatch(setErrorNotification(err?.message)),
 	});
@@ -393,6 +397,20 @@ function Project(props: ProjectProps) {
 		}
 	);
 
+	const deleteProject = async () => {
+		try {
+			await updateProject({
+				variables: {
+					id: dashboardData?.project?.id,
+					input: { deleted: true, name: dashboardData?.project?.name },
+				},
+			});
+			dashboardDispatch(setProject(orgProjects?.orgProject?.[0]));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err?.message));
+		}
+	};
+
 	const onUpdate = async (value: IPROJECT_FORM) => {
 		// updateProject({ variables: { payload: value, projectID: 4 } });
 
@@ -489,6 +507,18 @@ function Project(props: ProjectProps) {
 							formAction,
 							onUpdate,
 							inputFields: projectForm,
+							additionalButtons: props.type == PROJECT_ACTIONS.UPDATE && (
+								<Button
+									startIcon={<DeleteIcon />}
+									style={{
+										background: theme.palette.error.main,
+										marginRight: theme.spacing(2),
+									}}
+									onClick={() => deleteProject()}
+								>
+									Delete
+								</Button>
+							),
 						}}
 					/>
 				</>

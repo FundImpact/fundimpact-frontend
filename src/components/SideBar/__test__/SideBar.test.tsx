@@ -2,7 +2,7 @@ import React from "react";
 import { renderApollo } from "../../../utils/test.util";
 import { waitForElement } from "@testing-library/react";
 import SideBar from "../SideBar";
-import { GET_ORGANISATIONS, GET_COUNTRY_LIST } from "../../../graphql";
+import { GET_ORGANISATIONS, GET_COUNTRY_LIST, GET_PROJECTS } from "../../../graphql";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
@@ -69,6 +69,7 @@ const ProjectMockOne = [
 		description: "",
 		attachments: [],
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+		deleted: false,
 	},
 ];
 const ProjectMockTwo = [
@@ -79,6 +80,7 @@ const ProjectMockTwo = [
 		description: "",
 		attachments: [],
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
+		deleted: false,
 	},
 ];
 
@@ -112,6 +114,23 @@ const mocks = [
 			variables: { filter: { organization: "13" } },
 		},
 		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS,
+		},
+		result: {
+			data: {
+				orgProject: [
+					{
+						id: "1",
+						name: "ARTISTAAN",
+						workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+						deleted: false,
+					},
+				],
+			},
+		},
 	},
 	{
 		request: {

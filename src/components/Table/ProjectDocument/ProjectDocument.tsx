@@ -96,9 +96,9 @@ export default function ProjectDocumentsTable() {
 					</IconButton>
 				</TableCell>,
 				<TableCell key={`${index}-5`}>
-					<IconButton disabled>
+					{/* <IconButton disabled>
 						<MoreVertIcon />
-					</IconButton>
+					</IconButton> */}
 				</TableCell>,
 			];
 			arr.push(row);
