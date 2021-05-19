@@ -432,25 +432,29 @@ function BudgetTargetView({
 				)}
 			>
 				<>
-					<BudgetTarget
-						open={openDialogs[0]}
-						handleClose={() => toggleDialogs(0, false)}
-						formAction={FORM_ACTIONS.UPDATE}
-						initialValues={initialValues}
-					/>
+					{openDialogs[0] && (
+						<BudgetTarget
+							open={openDialogs[0]}
+							handleClose={() => toggleDialogs(0, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+						/>
+					)}
 					<BudgetLineitem
 						open={openDialogs[1]}
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
 					/>
-					<BudgetTarget
-						open={openDialogs[2]}
-						handleClose={() => toggleDialogs(2, false)}
-						formAction={FORM_ACTIONS.UPDATE}
-						initialValues={initialValues}
-						dialogType={DIALOG_TYPE.DELETE}
-					/>
+					{openDialogs[2] && (
+						<BudgetTarget
+							open={openDialogs[2]}
+							handleClose={() => toggleDialogs(2, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+							dialogType={DIALOG_TYPE.DELETE}
+						/>
+					)}
 				</>
 				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (
 					<>

@@ -68,6 +68,15 @@ export interface ICreateProjectDonorVariables {
 	};
 }
 
+export interface IUpdateProjectDonorVariables {
+	id: string;
+	input: {
+		project: string;
+		donor: string;
+		deleted: boolean;
+	};
+}
+
 export interface IGetProjectDonor {
 	projectDonors: IProjectDonor[];
 }
@@ -82,6 +91,7 @@ export interface IProjectDonor {
 		id: string;
 		name: string;
 	};
+	deleted: boolean;
 }
 export interface ICreateProject {
 	createOrgProject: {

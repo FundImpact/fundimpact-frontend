@@ -138,6 +138,7 @@ function CommonInputForm({
 												addNewClick={
 													element.addNewClick ? element.addNewClick : null
 												}
+												helperText={element?.helperText || ""}
 											/>
 										</Grid>
 									)

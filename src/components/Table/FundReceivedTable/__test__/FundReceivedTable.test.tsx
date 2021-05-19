@@ -40,11 +40,13 @@ let mockProjectDonors = [
 		id: "18",
 		donor: { id: "1", name: "donor 1", deleted: false },
 		project: { id: "3", name: "my project" },
+		deleted: false,
 	},
 	{
 		id: "2",
 		donor: { id: "2", name: "donor 2", deleted: false },
 		project: { id: "3", name: "my project" },
+		deleted: false,
 	},
 ];
 

@@ -35,7 +35,9 @@
 			"required": true,
 			"size": 12,
 			"addNewClick": {},
-			"addNew": true
+			"addNew": true,
+			"getInputValue": {},
+			"helperText": ""
 		}
 	]
 }

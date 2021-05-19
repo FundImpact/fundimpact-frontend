@@ -36,7 +36,15 @@ const getInitialValues = (
 		amount: `${fundReceipt?.amount}` || "",
 		reporting_date: getTodaysDate(fundReceipt?.reporting_date || undefined),
 		id: fundReceipt?.id || "",
-		project_donor: fundReceipt?.project_donor?.id || "",
+		project_donor: fundReceipt?.donor?.id || "",
+		donor:
+			(fundReceipt?.donor?.id
+				? fundReceipt?.donor?.id
+				: fundReceipt?.project_donor?.donor?.id) || "",
+		project:
+			(fundReceipt?.project
+				? fundReceipt?.project
+				: fundReceipt?.project_donor?.project?.id) || "",
 	};
 };
 

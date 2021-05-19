@@ -66,7 +66,9 @@ function ProjectEditButton({
 	const [openUpdateForm, setOpenUpdateForm] = useState<boolean>(false);
 	useEffect(() => {
 		if (projDonors) {
-			let donorIds = projDonors?.projectDonors?.map((donors: any) => donors?.donor?.id);
+			let donorIds = projDonors?.projectDonors
+				?.filter((projectDonor: any) => !projectDonor?.deleted)
+				.map((donors: any) => donors?.donor?.id);
 
 			setProjectDetails({
 				id: project.id,

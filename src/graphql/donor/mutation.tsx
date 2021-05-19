@@ -37,6 +37,25 @@ export const CREATE_PROJECT_DONOR = gql`
 				name
 				deleted
 			}
+			deleted
+		}
+	}
+`;
+
+export const UPDATE_PROJECT_DONOR = gql`
+	mutation updateProjDonor($id: ID!, $input: ProjectDonorInput!) {
+		updateProjDonor(input: $input, id: $id) {
+			id
+			project {
+				id
+				name
+			}
+			donor {
+				id
+				name
+				deleted
+			}
+			deleted
 		}
 	}
 `;
