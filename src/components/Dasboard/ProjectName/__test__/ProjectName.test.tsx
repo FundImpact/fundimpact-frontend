@@ -22,6 +22,7 @@ const getProjectMock = {
 		name: "my workspace",
 	},
 	attachments: [],
+	deleted: false,
 };
 
 const ProjectMockData = [
@@ -29,6 +30,7 @@ const ProjectMockData = [
 		id: "1",
 		name: "ARTISTAAN",
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+		deleted: false,
 	},
 ];
 
