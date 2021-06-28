@@ -1,6 +1,8 @@
 const { REACT_APP_BASEURL } = process.env;
 
 export const LOGIN_API = `${REACT_APP_BASEURL}auth/local`;
+export const FORGOT_PASSWORD_API = `${REACT_APP_BASEURL}auth/forgot-password`;
+
 // export const LOGIN_API = `https://dev.fundimpact.org/auth/local`;
 export const SIGNUP_API = `${REACT_APP_BASEURL}auth/local/register`;
 export const ORGANISATION_TYPES_API = `${REACT_APP_BASEURL}organisation-registration-types`;

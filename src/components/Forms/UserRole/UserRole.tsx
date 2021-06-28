@@ -556,6 +556,7 @@ function UserRoleForm(props: UserRoleProps) {
 					inputFields={userRoleForm}
 					onCancel={onCancel}
 				>
+					{/*
 					<Box maxHeight="300px" overflow="auto">
 						{filterRoles(userRoles?.roles || [])?.map(
 							(role: {
@@ -580,6 +581,7 @@ function UserRoleForm(props: UserRoleProps) {
 							)
 						)}
 					</Box>
+							*/}
 				</CommonForm>
 			</FormDialog>
 		</React.Fragment>
