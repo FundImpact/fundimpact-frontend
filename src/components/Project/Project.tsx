@@ -33,8 +33,9 @@ import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import Donor from "../Donor";
 import { FORM_ACTIONS } from "../Forms/constant";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
-import { Button, useTheme } from "@material-ui/core";
+import { Box, Button, Typography, useTheme } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import FIDialog from "../Dialog/Dialog";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -151,6 +152,9 @@ function Project(props: ProjectProps) {
 	);
 
 	const apolloClient = useApolloClient();
+
+	const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
+	const [isConfirmedDelete, setIsConfirmedDelete] = useState(false);
 
 	const [workspaceSelected, setWorkspaceSelected] = useState(
 		props.type === PROJECT_ACTIONS.UPDATE ? props.data.workspace || "" : ""
@@ -474,8 +478,48 @@ function Project(props: ProjectProps) {
 	// let uploadingFileMessage = CommonUploadingFilesMessage();
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.type);
+
+	let deleteDialogChildren = (
+		<Box m={1} ml={2}>
+			<Button
+				startIcon={<DeleteIcon />}
+				style={{
+					background: theme.palette.error.main,
+					marginRight: theme.spacing(2),
+				}}
+				onClick={() => deleteProject()}
+			>
+				{intl.formatMessage({
+					id: "projectDeleteConfirm",
+					defaultMessage: "Confirm",
+					description: `Project delete alert dialog confirm button.`,
+				})}
+			</Button>
+			<Button
+				style={{
+					marginRight: theme.spacing(2),
+				}}
+				onClick={() => setIsOpenDeleteDialog(false)}
+			>
+				{intl.formatMessage({
+					id: "projectDeleteCancel",
+					defaultMessage: "Cancel",
+					description: `Project delete alert dialog Cancel button.`,
+				})}
+			</Button>
+		</Box>
+	);
+
 	return (
 		<>
+			{isOpenDeleteDialog && (
+				<FIDialog
+					open={isOpenDeleteDialog}
+					handleClose={() => setIsOpenDeleteDialog(false)}
+					header={"Are you sure you want to delete ?"}
+					children={deleteDialogChildren}
+				/>
+			)}
 			<Donor
 				open={openDonorDialog}
 				formAction={FORM_ACTIONS.CREATE}
@@ -514,7 +558,7 @@ function Project(props: ProjectProps) {
 										background: theme.palette.error.main,
 										marginRight: theme.spacing(2),
 									}}
-									onClick={() => deleteProject()}
+									onClick={() => setIsOpenDeleteDialog(true)}
 								>
 									Delete
 								</Button>

@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
-import { Grid } from "@material-ui/core";
+import { Grid, Box, Typography } from "@material-ui/core";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
@@ -15,15 +15,17 @@ import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 // import { PieDataFormat } from "../../../../models/charts/pie/datatypes";
 // import { DoughnutChart } from "../../../Charts";
-// import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
-	// fundTextIcon: {
-	// 	marginRight: theme.spacing(1),
-	// },
+	fundTextIcon: {
+		height: "12px",
+		marginRight: theme.spacing(1),
+		marginTop: theme.spacing(1),
+	},
 }));
 
 export default function FundStatus() {
@@ -52,6 +54,13 @@ export default function FundStatus() {
 		defaultMessage: "Fund Status",
 		description: `This text will be show on dashboard fund status card for fund status bullet chart on hover`,
 	});
+
+	const totalLabel = intl.formatMessage({
+		id: "FundStatusTotalTitle",
+		defaultMessage: "Total",
+		description: `This text will be show on dashboard fund status card for total bullet chart`,
+	});
+
 	const createFundDetails = (
 		amountApproved: number,
 		amountSpend: number,
@@ -61,19 +70,25 @@ export default function FundStatus() {
 		const FUNDS_APPROVED: IFunds = {
 			name: approvedLabel,
 			amountToShow: undefined,
-			color: theme.palette.grey[200],
+			color: theme.palette.error.dark,
 		};
 
 		const FUNDS_SPENT: IFunds = {
 			name: spendLabel,
 			amountToShow: undefined,
-			color: theme.palette.primary.main,
+			color: theme.palette.success.main,
 		};
 
 		const FUNDS_RECEIVED: IFunds = {
 			name: receivedLabel,
 			amountToShow: undefined,
-			color: theme.palette.secondary.main,
+			color: theme.palette.grey[200],
+		};
+
+		const TOTAL_FUNDS: IFunds = {
+			name: totalLabel,
+			amountToShow: undefined,
+			color: theme.palette.info.main,
 		};
 
 		// let pieData = {
@@ -97,6 +112,8 @@ export default function FundStatus() {
 				{ name: receivedLabel, y: amountReceived },
 			],
 		};
+
+		let totalAmount = amountApproved + amountSpend + amountReceived;
 		let details = [
 			{
 				...FUNDS_APPROVED,
@@ -119,6 +136,12 @@ export default function FundStatus() {
 				amountToShow:
 					amountSpend > 999 ? (amountSpend / 1000).toFixed(1) + "K" : amountSpend + "",
 				originalAmount: amountSpend,
+			},
+			{
+				...TOTAL_FUNDS,
+				amountToShow:
+					totalAmount > 999 ? (totalAmount / 1000).toFixed(1) + "K" : totalAmount + "",
+				originalAmount: totalAmount,
 			},
 		];
 
@@ -196,40 +219,39 @@ export default function FundStatus() {
 				padding={{
 					left: 50, // Adjusted to accommodate labels
 					right: 50,
-					bottom: 90,
+					bottom: 115,
 				}}
 				primarySegmentedMeasureData={chartData?.primarySegmentedMeasureData}
-				height={100}
+				height={33}
 				themeColor={ChartThemeColor.green}
 				qualitativeRangeData={chartData?.qualitativeRangeData}
 			/>
-			{/* <Grid container spacing={0} direction="row">
-				<Grid item xs={6} container={true} alignContent="center">
-					{FUND_DETAILS.map((fund, index) => (
-						<React.Fragment key={fund.name}>
-							<Box m={0} width="100%" display="inline">
+			<Grid container spacing={0} direction="row">
+				{FUND_DETAILS?.map((fund, index) => (
+					<Grid item xs={6} container={true} alignContent="center" key={fund.name}>
+						<Box m={0} ml={2} width="100%" display="inline">
+							<Box display="flex">
+								<FiberManualRecordIcon
+									className={classes.fundTextIcon}
+									style={{ color: fund.color }}
+								/>
 								<Box display="flex">
-									<FiberManualRecordIcon
-										className={classes.fundTextIcon}
-										style={{ color: fund.color }}
-									/>
-									<Box display="flex">
-										<Box mr={1}>
-											<Typography variant="subtitle1">
-												{fund.amountToShow}
-											</Typography>
-										</Box>
-										<Typography variant="subtitle1">{fund.name}</Typography>
+									<Box mr={1}>
+										<Typography variant="subtitle1">
+											{fund.amountToShow}
+										</Typography>
 									</Box>
+									<Typography variant="subtitle1">{fund.name}</Typography>
 								</Box>
 							</Box>
-						</React.Fragment>
-					))}
-				</Grid>
-				<Grid item xs={6}>
+						</Box>
+					</Grid>
+				))}
+
+				{/* <Grid item xs={6}>
 					<DoughnutChart data={chartData} />
-				</Grid>
-			</Grid> */}
+				</Grid>*/}
+			</Grid>
 		</Grid>
 	);
 }
