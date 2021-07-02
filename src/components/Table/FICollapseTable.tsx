@@ -85,6 +85,7 @@ export default function CollapsibleTable({
 	setOrder,
 	orderBy,
 	setOrderBy,
+	totalConfig,
 	showNestedTable = true,
 	tableActionButton,
 }: {
@@ -95,6 +96,12 @@ export default function CollapsibleTable({
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
+	totalConfig?: {
+		toShow: {
+			label: string;
+			value: number;
+		}[];
+	};
 	showNestedTable?: boolean;
 	tableActionButton?: ({
 		importButtonOnly,
@@ -128,6 +135,22 @@ export default function CollapsibleTable({
 		<TableContainer component={Paper} className={classes.tableContainer}>
 			{rows.length && (
 				<Table aria-label="collapsible table">
+					{totalConfig && (
+						<caption>
+							<Box p={1} m={1} align="center" display="flex">
+								{totalConfig?.toShow.map((elem) => (
+									<Box mr={1} display="flex">
+										<Box mr={1}>
+											<Typography variant="subtitle1">
+												{`${elem.label} - `}
+											</Typography>
+										</Box>
+										<Typography variant="subtitle1">{elem.value}</Typography>
+									</Box>
+								))}
+							</Box>
+						</caption>
+					)}
 					<TableHead>
 						<TableRow key={1} color="primary">
 							{rows &&

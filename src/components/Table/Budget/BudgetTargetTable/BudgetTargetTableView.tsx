@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -32,12 +32,14 @@ import {
 } from "../../../../utils/endpoints.util";
 import ImportExportTableMenu from "../../../ImportExportTableMenu";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+import { ApolloQueryResult, OperationVariables, useLazyQuery } from "@apollo/client";
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
+import { GET_BUDGET_TRACKINGS_SPEND_AMOUNT } from "../../../../graphql/Budget";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
+	totalSpendAmount?: number;
 	openDialogs: boolean[];
 	selectedBudgetTarget: React.MutableRefObject<IBudgetTargetProjectResponse | null>;
 	initialValues: IBudgetTargetForm;
@@ -49,6 +51,7 @@ interface IBudgetTargetTableViewProps {
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+	setLimit?: React.Dispatch<React.SetStateAction<number>>;
 	budgetLineItemInitialValues: IBudgetTrackingLineitemForm;
 	inputFields: any[];
 	filterList: {
@@ -222,7 +225,9 @@ function BudgetTargetView({
 	count,
 	order,
 	setOrder,
+	setLimit,
 	orderBy,
+	totalSpendAmount,
 	setOrderBy,
 	budgetLineItemInitialValues,
 	inputFields,
@@ -355,6 +360,10 @@ function BudgetTargetView({
 	const theme = useTheme();
 	const { jwt } = useAuth();
 
+	let totalBudgetTargetAmount =
+		budgegtTargetList.reduce((prev: any, cur) => prev + Number(cur.total_target_amount), 0) ||
+		0;
+
 	return (
 		<>
 			<Grid container>
@@ -386,7 +395,20 @@ function BudgetTargetView({
 				loading={loading}
 				count={count}
 				order={order}
+				totalConfig={{
+					toShow: [
+						{
+							label: "Target Total",
+							value: totalBudgetTargetAmount,
+						},
+						{
+							label: "Expenditure Total",
+							value: totalSpendAmount,
+						},
+					],
+				}}
 				setOrder={setOrder}
+				setLimit={setLimit}
 				orderBy={orderBy}
 				setOrderBy={setOrderBy}
 				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (

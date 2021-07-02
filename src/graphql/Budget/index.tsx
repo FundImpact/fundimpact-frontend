@@ -134,3 +134,12 @@ export const GET_BUDGET_CATEGORY_PROJECT_COUNT = gql`
 		projectCountBudgetCatByOrg(where: $filter)
 	}
 `;
+
+export const GET_BUDGET_TRACKINGS_SPEND_AMOUNT = gql`
+	query getProjBudgetTrackingsByProject($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		projBudgetTrackings(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			amount
+		}
+	}
+`;

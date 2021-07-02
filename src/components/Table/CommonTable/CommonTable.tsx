@@ -137,6 +137,8 @@ function CommonTable<T extends { id: string }>({
 	loading,
 	order,
 	setOrder,
+	setLimit,
+	totalConfig,
 	orderBy,
 	setOrderBy,
 	setOpenAttachFiles,
@@ -216,6 +218,22 @@ function CommonTable<T extends { id: string }>({
 			{/* childrenArray[0]  is the dialog we want in the table*/}
 			{childrenArray[0]}
 			<Table className={classes.table} aria-label="simple table">
+				{totalConfig && (
+					<caption>
+						<Box p={1} m={1} align="center" display="flex">
+							{totalConfig?.toShow.map((elem) => (
+								<Box mr={1} display="flex">
+									<Box mr={1}>
+										<Typography variant="subtitle1">
+											{`${elem.label} - `}
+										</Typography>
+									</Box>
+									<Typography variant="subtitle1">{elem.value}</Typography>
+								</Box>
+							))}
+						</Box>
+					</caption>
+				)}
 				<TableHead>
 					<TableRow color="primary">
 						{valuesList.length

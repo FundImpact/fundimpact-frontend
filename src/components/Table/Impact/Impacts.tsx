@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
 	Avatar,
 	IconButton,
@@ -61,6 +61,7 @@ import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
 import { useRefetchOnImpactTargetImport } from "../../../hooks/impact";
+import { GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET } from "../../../graphql/Impact/trackline";
 
 enum tableHeaders {
 	name = 2,
@@ -638,6 +639,52 @@ export default function ImpactsTable() {
 		</>
 	);
 
+	const [totalImpactAchievement, setTotalImpactAchievement] = useState(0);
+
+	const apolloClient = useApolloClient();
+
+	let totalImpactTargetAmount =
+		impactTargets?.impactTargetProjectList?.reduce(
+			(
+				prev: number,
+				cur: {
+					target_value: string;
+				}
+			) => prev + Number(cur.target_value),
+			0
+		) || 0;
+
+	useEffect(() => {
+		const getImpactLineItem = async (impactTargetIds: string[]) => {
+			try {
+				let data: any = await apolloClient.query({
+					query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
+					variables: { filter: { impact_target_project: impactTargetIds } },
+				});
+				setTotalImpactAchievement(
+					data?.data?.impactTrackingLineitemList?.reduce(
+						(
+							prev: number,
+							cur: {
+								value: string;
+							}
+						) => prev + Number(cur.value),
+						0
+					)
+				);
+			} catch (error) {
+				setTotalImpactAchievement(0);
+			}
+		};
+		if (impactTargets?.impactTargetProjectList?.length > 0) {
+			let impactTargetIds =
+				impactTargets?.impactTargetProjectList?.map((elem: any) => elem.id) || [];
+			getImpactLineItem(impactTargetIds);
+		} else {
+			setTotalImpactAchievement(0);
+		}
+	}, [impactTargets]);
+
 	return (
 		<>
 			{queryLoading || countQueryLoading ? (
@@ -663,6 +710,18 @@ export default function ImpactsTable() {
 						setOrderBy={setOrderBy}
 						rows={rows}
 						pagination={impactTablePagination}
+						totalConfig={{
+							toShow: [
+								{
+									label: "Target Total",
+									value: totalImpactTargetAmount,
+								},
+								{
+									label: "Acheivement Total",
+									value: totalImpactAchievement,
+								},
+							],
+						}}
 						tableHeading={getTableHeadingByImpactTracklineAccess(
 							filteredImpactHeadings,
 							impactTracklineFindAccess

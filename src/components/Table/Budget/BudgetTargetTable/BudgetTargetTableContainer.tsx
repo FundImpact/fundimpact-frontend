@@ -17,6 +17,7 @@ interface IBUDGET_TARGET_TABLE_CONTAINER {
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
+	totalSpendAmount?: number;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	inputFields: any[];
 	donorHash: { [key: string]: string };
@@ -29,6 +30,7 @@ interface IBUDGET_TARGET_TABLE_CONTAINER {
 			[key: string]: string | string[];
 		}>
 	>;
+	setLimit?: React.Dispatch<React.SetStateAction<number>>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	currency: string;
 	refetchBudgetTargetTable: () => void;
@@ -71,11 +73,13 @@ function BudgetTargetTableContainer({
 	order,
 	setOrder,
 	orderBy,
+	setLimit,
 	setOrderBy,
 	inputFields,
 	donorHash,
 	budgetCategoryHash,
 	filterList,
+	totalSpendAmount,
 	setFilterList,
 	removeFilterListElements,
 	currency,
@@ -114,6 +118,8 @@ function BudgetTargetTableContainer({
 			budgetLineItemInitialValues={getBudgetLineItemInitialValues(
 				(selectedBudgetTarget.current && selectedBudgetTarget.current.id) || ""
 			)}
+			totalSpendAmount={totalSpendAmount}
+			setLimit={setLimit}
 			inputFields={inputFields}
 			filterList={filterList}
 			setFilterList={setFilterList}

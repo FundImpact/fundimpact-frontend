@@ -189,7 +189,11 @@ export interface ICommonTable<T> {
 	count?: number;
 	loading?: boolean;
 	order?: "asc" | "desc";
+	totalConfig?: {
+		toShow: { label: string; value: any }[];
+	};
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+	setLimit?: React.Dispatch<React.SetStateAction<number>>;
 	orderBy?: string;
 	setOrderBy?: React.Dispatch<React.SetStateAction<string>>;
 	setOpenAttachFiles?: React.Dispatch<React.SetStateAction<any>>;

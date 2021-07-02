@@ -119,7 +119,12 @@ function Pagination({
 		},
 		[apolloClient, countQueryLoading, getQueryData, limit, query, queryFilter, sort]
 	);
-
+	/*
+	useEffect(() => {
+		console.log("herecount",limit)
+		changePage()
+	},[limit])
+*/
 	useEffect(() => {
 		if (countData) {
 			startingValue.current = start;

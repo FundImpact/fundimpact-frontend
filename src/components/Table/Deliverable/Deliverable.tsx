@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
 	IconButton,
 	Menu,
@@ -60,6 +60,7 @@ import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
+import { GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET } from "../../../graphql/Deliverable/trackline";
 
 enum tableHeaders {
 	name = 2,
@@ -593,6 +594,53 @@ export default function DeliverablesTable() {
 			/>
 		</>
 	);
+
+	const [totalAchievementAmount, setTotalAchievementAmount] = useState(0);
+
+	const apolloClient = useApolloClient();
+
+	let totalDeliverableTargetAmount =
+		deliverableTargetData?.deliverableTargetList?.reduce(
+			(
+				prev: number,
+				cur: {
+					target_value: string;
+				}
+			) => prev + Number(cur.target_value),
+			0
+		) || 0;
+
+	useEffect(() => {
+		const getDeliverableLineitem = async (deliverableTargetListIds: string[]) => {
+			try {
+				let data: any = await apolloClient.query({
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: { filter: { deliverable_target_project: deliverableTargetListIds } },
+				});
+				setTotalAchievementAmount(
+					data?.data?.deliverableTrackingLineitemList?.reduce(
+						(
+							prev: number,
+							cur: {
+								value: string;
+							}
+						) => prev + Number(cur.value),
+						0
+					)
+				);
+			} catch (error) {
+				setTotalAchievementAmount(0);
+			}
+		};
+		if (deliverableTargetData?.deliverableTargetList?.length > 0) {
+			let deliverableTargetListIds =
+				deliverableTargetData.deliverableTargetList?.map((elem: any) => elem.id) || [];
+			getDeliverableLineitem(deliverableTargetListIds);
+		} else {
+			setTotalAchievementAmount(0);
+		}
+	}, [deliverableTargetData]);
+
 	return (
 		<>
 			{countQueryLoading || queryLoading ? (
@@ -620,6 +668,18 @@ export default function DeliverablesTable() {
 							filteredDeliverableHeadings,
 							deliverableTracklineFindAccess
 						)}
+						totalConfig={{
+							toShow: [
+								{
+									label: "Target Total",
+									value: totalDeliverableTargetAmount,
+								},
+								{
+									label: "Acheivement Total",
+									value: totalAchievementAmount,
+								},
+							],
+						}}
 						rows={rows}
 						pagination={deliverableTablePagination}
 						showNestedTable={deliverableTracklineFindAccess}
