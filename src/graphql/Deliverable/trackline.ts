@@ -367,6 +367,45 @@ export const UPDATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 	}
 `;
 
+export const GET_DELIVERABLE_TRANCHE = gql`
+	query deliverableLinitemFyDonorList($filter: JSON) {
+		deliverableLinitemFyDonorList(where: $filter) {
+			id
+			project_donor {
+				id
+				project {
+					id
+				}
+				donor {
+					id
+					name
+					short_name
+					country {
+						id
+						name
+					}
+				}
+			}
+			financial_year {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+				description
+				short_name
+				start_date
+				end_date
+				project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
 export const GET_DELIVERABLE_LINEITEM_FYDONOR = gql`
 	query deliverableLinitemFyDonorList($filter: JSON) {
 		deliverableLinitemFyDonorList(where: $filter) {

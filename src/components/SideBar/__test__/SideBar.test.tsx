@@ -50,14 +50,14 @@ const WSMock = [
 		name: "INSTAGRAM",
 		short_name: "INSTA",
 		description: "Instagram desc",
-		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organization", id: "13", name: "TSERIES" },
 	},
 	{
 		id: "13",
 		name: "FACEBOOK",
 		short_name: "FB",
 		description: "Facebook desc",
-		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organization", id: "13", name: "TSERIES" },
 	},
 ];
 
@@ -101,12 +101,34 @@ const projDonorsMock = [
 ];
 const mocks = [
 	{
-		request: { query: GET_ORGANISATIONS, variables: { id: "13" } },
-		result: {
-			data: {
-				organization: OrgMock,
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: {
+				sort: "name:ASC",
+				filter: { organization: "13" },
 			},
 		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: {
+				sort: "name:ASC",
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: {
+				sort: "name:ASC",
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { orgWorkspaces: WSMock } },
 	},
 	{
 		request: {
@@ -114,6 +136,14 @@ const mocks = [
 			variables: { filter: { organization: "13" } },
 		},
 		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: { query: GET_ORGANISATIONS, variables: { id: "13" } },
+		result: {
+			data: {
+				organization: OrgMock,
+			},
+		},
 	},
 	{
 		request: {
@@ -142,6 +172,20 @@ const mocks = [
 			},
 		},
 		result: { data: mockUserRoles },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { sort: "name:ASC", filter: { workspace: "5" } },
+		},
+		result: { data: { orgProject: ProjectMockOne } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { sort: "name:ASC", filter: { workspace: "13" } },
+		},
+		result: { data: { orgProject: ProjectMockOne } },
 	},
 	{
 		request: {
@@ -204,7 +248,7 @@ const mocks = [
 		},
 	},
 ];
-
+jest.setTimeout(30000);
 beforeEach(() => {
 	act(() => {
 		sidebar = renderApollo(
@@ -230,7 +274,6 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 		await waitForElement(() => sidebar.getByText(/TSERIES/i));
 		await waitForElement(() => sidebar.getByText(/INSTAGRAM/i));
 		await waitForElement(() => sidebar.getByText(/FACEBOOK/i));
-		await waitForElement(() => sidebar.getByText(/ARTISTAAN/i));
-		await waitForElement(() => sidebar.getByText(/KALAMKAAR/i));
+		await waitForElement(() => sidebar.getAllByText(/ARTISTAAN/i));
 	});
 });

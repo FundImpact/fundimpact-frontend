@@ -33,8 +33,8 @@ export const GET_ORGANISATIONS = gql`
 
 // TODO: The fields for workspaces must match with the Create Workspace Mutation
 export const GET_WORKSPACES_BY_ORG = gql`
-	query getWorkspacesByOrganisation($filter: JSON) {
-		orgWorkspaces(where: $filter) {
+	query getWorkspacesByOrganisation($sort: String, $filter: JSON) {
+		orgWorkspaces(sort: $sort, where: $filter) {
 			id
 			name
 			short_name
@@ -59,8 +59,8 @@ export const GET_WORKSPACES = gql`
 `;
 
 export const GET_PROJECTS_BY_WORKSPACE = gql`
-	query getProjectsByWorkspace($filter: JSON) {
-		orgProject(where: $filter) {
+	query getProjectsByWorkspace($sort: String, $filter: JSON) {
+		orgProject(sort: $sort, where: $filter) {
 			id
 			name
 			short_name
