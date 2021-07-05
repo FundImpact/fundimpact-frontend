@@ -69,22 +69,28 @@ export default function SideBar({ children }: { children?: Function }) {
 	const [openProjectDialog, setOpenProjectDialog] = React.useState<boolean>(false);
 
 	const [getWorkspaceList, { data: workspaceList }] = useLazyQuery<IGET_WORKSPACES_BY_ORG>(
-		GET_WORKSPACES_BY_ORG
+		GET_WORKSPACES_BY_ORG,
+		{
+			fetchPolicy: "network-only",
+		}
 	);
 	const addProjectMenuRef = React.useRef(null);
 	const [openAddProjectMenu, setOpenAddProjectMenu] = useState<boolean>(false);
+	const [sort, setSort] = useState<"ASC" | "DESC">("ASC");
 
 	useEffect(() => {
 		if (dashboardData) {
 			getWorkspaceList({
 				variables: {
+					sort: `name:${sort}`,
 					filter: {
 						organization: dashboardData?.organization?.id,
 					},
 				},
 			});
 		}
-	}, [dashboardData]);
+	}, [dashboardData, sort]);
+
 	useEffect(() => {
 		if (user) {
 			getOrganization({
@@ -135,7 +141,7 @@ export default function SideBar({ children }: { children?: Function }) {
 
 	useEffect(() => {
 		if (organizationEditAccess) {
-			menuList[0] = {
+			menuList[menuList.length] = {
 				children: (
 					<MenuItem component={Link} to="/settings/organization">
 						{editOrganization}
@@ -147,7 +153,7 @@ export default function SideBar({ children }: { children?: Function }) {
 
 	useEffect(() => {
 		if (workspaceCreateAccess) {
-			menuList[1] = {
+			menuList[menuList.length] = {
 				children: <MenuItem onClick={openWorkspaceComponent}>{addWorkspace}</MenuItem>,
 			};
 		}
@@ -207,7 +213,20 @@ export default function SideBar({ children }: { children?: Function }) {
 									handleClose={handleClose}
 									id={`organizationMenu`}
 									anchorEl={anchorEl}
-									menuList={menuList}
+									menuList={[
+										...menuList,
+										{
+											children: (
+												<MenuItem
+													onClick={() =>
+														setSort(sort === "ASC" ? "DESC" : "ASC")
+													}
+												>
+													{sort === "ASC" ? "Sort DESC" : "Sort ASC"}
+												</MenuItem>
+											),
+										},
+									]}
 								/>
 							)}
 						</Box>
@@ -215,7 +234,10 @@ export default function SideBar({ children }: { children?: Function }) {
 					<Divider />
 
 					{dashboardData?.organization?.id && (
-						<WorkspaceList organizationId={dashboardData?.organization?.id} />
+						<WorkspaceList
+							organizationId={dashboardData?.organization?.id}
+							sort={sort}
+						/>
 					)}
 
 					<List></List>

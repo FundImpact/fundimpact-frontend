@@ -49,12 +49,25 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export default function WorkspaceList({ organizationId }: { organizationId: IOrganisation["id"] }) {
+export default function WorkspaceList({
+	organizationId,
+	sort,
+}: {
+	organizationId: IOrganisation["id"];
+	sort?: "ASC" | "DESC";
+}) {
 	const apolloClient = useApolloClient();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<any>([]);
-	const filter: { variables: { filter: { organization: IOrganisation["id"] } } } = {
-		variables: { filter: { organization: organizationId } },
+	const filter: {
+		variables: { sort: string; filter: { organization: IOrganisation["id"] } };
+		fetchPolicy: "network-only";
+	} = {
+		variables: {
+			sort: `name:${sort}`,
+			filter: { organization: organizationId },
+		},
+		fetchPolicy: "network-only",
 	};
 	const [projectDialogOpen, setProjectDialogOpen] = useState<boolean>(false);
 	const [editWorkspace, seteditWorkspace] = useState<IWorkspace | null>(null);
@@ -120,6 +133,8 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 		array[index] = null;
 		setAnchorEl(array);
 	};
+
+	const [projectSort, setProjectSort] = useState<"ASC" | "DESC">("ASC");
 
 	if (!cachedWorkspaces || !cachedWorkspaces.orgWorkspaces)
 		return <WorkspaceListSkeleton></WorkspaceListSkeleton>;
@@ -195,6 +210,19 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 															/>
 														</MenuItem>
 													)}
+													<MenuItem
+														onClick={() =>
+															setProjectSort(
+																projectSort === "ASC"
+																	? "DESC"
+																	: "ASC"
+															)
+														}
+													>
+														{projectSort === "ASC"
+															? "Sort DESC"
+															: "Sort ASC"}
+													</MenuItem>
 												</SimpleMenu>
 											</Box>
 										</Box>
@@ -204,6 +232,7 @@ export default function WorkspaceList({ organizationId }: { organizationId: IOrg
 											workspaceId={workspace.id}
 											workspaces={cachedWorkspaces?.orgWorkspaces}
 											projectIndex={index}
+											sort={projectSort}
 										/>
 									)}
 									<Divider />
