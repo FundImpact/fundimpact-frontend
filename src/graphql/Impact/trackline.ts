@@ -461,6 +461,10 @@ export const GET_IMPACT_TRANCHE = gql`
 					deleted
 				}
 			}
+			financial_year {
+				id
+				name
+			}
 			grant_periods_project {
 				id
 				name

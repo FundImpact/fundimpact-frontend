@@ -386,6 +386,10 @@ export const GET_DELIVERABLE_TRANCHE = gql`
 					}
 				}
 			}
+			financial_year {
+				id
+				name
+			}
 			grant_periods_project {
 				id
 				name
