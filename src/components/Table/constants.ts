@@ -49,6 +49,7 @@ export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [
 	{ label: "Note", keyMapping: "note" },
 	{ label: "Achieved", keyMapping: "value" },
 	{ label: "Year" },
+	{ label: "Tranche" },
 	{ label: "" }, //edit icon
 ];
 
@@ -60,6 +61,7 @@ export const budgetTargetTableHeading: ITableHeadings[] = [
 	{ label: "Donor" },
 	{ label: "Total Amount", keyMapping: "total_target_amount" },
 	{ label: "Spent" },
+	{ label: "Balance" },
 	{ label: "Progress %" },
 	{ label: "" },
 ];

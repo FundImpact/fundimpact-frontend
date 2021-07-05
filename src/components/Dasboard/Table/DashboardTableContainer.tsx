@@ -290,13 +290,14 @@ export default function DashboardTableContainer() {
 						defaultMessage: "Create Budget Target",
 						description: `This text will be show on Add Button for create Budget Target`,
 					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetTarget
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-						/>
-					),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) =>
+						open && (
+							<BudgetTarget
+								formAction={FORM_ACTIONS.CREATE}
+								open={open}
+								handleClose={handleClose}
+							/>
+						),
 					createButtonAccess: budgetTargetCreateAccess,
 				},
 				// { text: "Report Fund Receipt" },
@@ -497,13 +498,14 @@ export default function DashboardTableContainer() {
 						defaultMessage: "Report Fund Received",
 						description: `This text will be show on Add Button for Report Fund Received`,
 					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<FundReceived
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-						/>
-					),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) =>
+						open && (
+							<FundReceived
+								formAction={FORM_ACTIONS.CREATE}
+								open={open}
+								handleClose={handleClose}
+							/>
+						),
 					createButtonAccess: fundReceiptCreateAccess,
 				},
 			],
@@ -524,13 +526,14 @@ export default function DashboardTableContainer() {
 						defaultMessage: "Create Grant Period",
 						description: `This text will be show on Add Button for Create Grant Period`,
 					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<GrantPeriodDialog
-							open={open}
-							onClose={handleClose}
-							action={FORM_ACTIONS.CREATE}
-						/>
-					),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) =>
+						open && (
+							<GrantPeriodDialog
+								open={open}
+								onClose={handleClose}
+								action={FORM_ACTIONS.CREATE}
+							/>
+						),
 					createButtonAccess: grantPeriodCreateAccess,
 				},
 			],

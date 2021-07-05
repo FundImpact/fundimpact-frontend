@@ -66,7 +66,9 @@ function ProjectEditButton({
 	const [openUpdateForm, setOpenUpdateForm] = useState<boolean>(false);
 	useEffect(() => {
 		if (projDonors) {
-			let donorIds = projDonors?.projectDonors?.map((donors: any) => donors?.donor?.id);
+			let donorIds = projDonors?.projectDonors
+				?.filter((projectDonor: any) => !projectDonor?.deleted)
+				.map((donors: any) => donors?.donor?.id);
 
 			setProjectDetails({
 				id: project.id,
@@ -108,15 +110,17 @@ export default function ProjectList({
 	workspaceId,
 	projectIndex,
 	workspaces,
+	sort,
 }: {
 	workspaceId: any;
 	projectIndex: number;
 	workspaces: any;
+	sort?: string;
 }) {
 	const classes = useStyles();
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
-	const filter: any = { variables: { filter: { workspace: workspaceId } } };
+	const filter: any = { variables: { sort: `name:${sort}`, filter: { workspace: workspaceId } } };
 	const [openFormDialog, setOpenFormDialog] = React.useState<boolean>();
 	const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
 	let { pathname } = useLocation();

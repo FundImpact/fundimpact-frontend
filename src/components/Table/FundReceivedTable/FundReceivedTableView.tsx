@@ -283,19 +283,23 @@ function FundReceivedTableView({
 				)}
 			>
 				<>
-					<FundReceived
-						formAction={FORM_ACTIONS.UPDATE}
-						open={openDialogs[0]}
-						handleClose={() => toggleDialogs(0, false)}
-						initialValues={initialValues}
-					/>
-					<FundReceived
-						formAction={FORM_ACTIONS.UPDATE}
-						open={openDialogs[1]}
-						handleClose={() => toggleDialogs(1, false)}
-						initialValues={initialValues}
-						dialogType={DIALOG_TYPE.DELETE}
-					/>
+					{openDialogs[0] && (
+						<FundReceived
+							formAction={FORM_ACTIONS.UPDATE}
+							open={openDialogs[0]}
+							handleClose={() => toggleDialogs(0, false)}
+							initialValues={initialValues}
+						/>
+					)}
+					{openDialogs[1] && (
+						<FundReceived
+							formAction={FORM_ACTIONS.UPDATE}
+							open={openDialogs[1]}
+							handleClose={() => toggleDialogs(1, false)}
+							initialValues={initialValues}
+							dialogType={DIALOG_TYPE.DELETE}
+						/>
+					)}
 				</>
 			</CommonTable>
 		</>

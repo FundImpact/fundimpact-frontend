@@ -12,6 +12,8 @@ import {
 	Box,
 	Typography,
 	ListSubheader,
+	Checkbox,
+	FormControlLabel,
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
@@ -207,6 +209,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 										value={formik.values["donor"]}
 										onChange={(event) => {
 											formik.handleChange(event);
+											props.setSelectedDonor(event?.target?.value as string);
 										}}
 									>
 										{props.allDonors.map(
@@ -246,6 +249,28 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 											</Box>
 										</MenuItem>
 									</Select>
+									{props.showCreateProjectDonorCheckbox && (
+										<Typography variant="body1">
+											<FormControlLabel
+												control={
+													<Checkbox
+														onChange={(e) => {
+															e.persist();
+															props.setCreateProjectDonorCheckboxVal(
+																e?.target?.checked
+															);
+														}}
+														size="small"
+														inputProps={{
+															"aria-label":
+																"make selected donor project donor",
+														}}
+													/>
+												}
+												label="Make org donor project donor"
+											/>
+										</Typography>
+									)}
 								</Grid>
 
 								<Grid item xs={12} md={12}>

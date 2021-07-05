@@ -2,7 +2,7 @@ import React from "react";
 import { renderApollo } from "../../../utils/test.util";
 import { waitForElement } from "@testing-library/react";
 import SideBar from "../SideBar";
-import { GET_ORGANISATIONS, GET_COUNTRY_LIST } from "../../../graphql";
+import { GET_ORGANISATIONS, GET_COUNTRY_LIST, GET_PROJECTS } from "../../../graphql";
 import { GET_WORKSPACES_BY_ORG } from "../../../graphql/index";
 import { GET_PROJECTS_BY_WORKSPACE } from "../../../graphql/index";
 import { DashboardProvider } from "../../../contexts/dashboardContext";
@@ -50,14 +50,14 @@ const WSMock = [
 		name: "INSTAGRAM",
 		short_name: "INSTA",
 		description: "Instagram desc",
-		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organization", id: "13", name: "TSERIES" },
 	},
 	{
 		id: "13",
 		name: "FACEBOOK",
 		short_name: "FB",
 		description: "Facebook desc",
-		organization: { __typename: "Organisation", id: "13", name: "TSERIES" },
+		organization: { __typename: "Organization", id: "13", name: "TSERIES" },
 	},
 ];
 
@@ -69,6 +69,7 @@ const ProjectMockOne = [
 		description: "",
 		attachments: [],
 		workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+		deleted: false,
 	},
 ];
 const ProjectMockTwo = [
@@ -79,6 +80,7 @@ const ProjectMockTwo = [
 		description: "",
 		attachments: [],
 		workspace: { __typename: "Workspace", id: "13", name: "FACEBOOK" },
+		deleted: false,
 	},
 ];
 
@@ -94,9 +96,47 @@ const projDonorsMock = [
 			name: "wer",
 			deleted: false,
 		},
+		deleted: false,
 	},
 ];
 const mocks = [
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: {
+				sort: "name:ASC",
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: {
+				sort: "name:ASC",
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: {
+				sort: "name:ASC",
+				filter: { organization: "13" },
+			},
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
+	{
+		request: {
+			query: GET_WORKSPACES_BY_ORG,
+			variables: { filter: { organization: "13" } },
+		},
+		result: { data: { orgWorkspaces: WSMock } },
+	},
 	{
 		request: { query: GET_ORGANISATIONS, variables: { id: "13" } },
 		result: {
@@ -107,10 +147,20 @@ const mocks = [
 	},
 	{
 		request: {
-			query: GET_WORKSPACES_BY_ORG,
-			variables: { filter: { organization: "13" } },
+			query: GET_PROJECTS,
 		},
-		result: { data: { orgWorkspaces: WSMock } },
+		result: {
+			data: {
+				orgProject: [
+					{
+						id: "1",
+						name: "ARTISTAAN",
+						workspace: { __typename: "Workspace", id: "5", name: "INSTAGRAM" },
+						deleted: false,
+					},
+				],
+			},
+		},
 	},
 	{
 		request: {
@@ -122,6 +172,20 @@ const mocks = [
 			},
 		},
 		result: { data: mockUserRoles },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { sort: "name:ASC", filter: { workspace: "5" } },
+		},
+		result: { data: { orgProject: ProjectMockOne } },
+	},
+	{
+		request: {
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: { sort: "name:ASC", filter: { workspace: "13" } },
+		},
+		result: { data: { orgProject: ProjectMockOne } },
 	},
 	{
 		request: {
@@ -184,7 +248,7 @@ const mocks = [
 		},
 	},
 ];
-
+jest.setTimeout(30000);
 beforeEach(() => {
 	act(() => {
 		sidebar = renderApollo(
@@ -210,7 +274,6 @@ describe("SideBar Component Graphql Calls and data listing", () => {
 		await waitForElement(() => sidebar.getByText(/TSERIES/i));
 		await waitForElement(() => sidebar.getByText(/INSTAGRAM/i));
 		await waitForElement(() => sidebar.getByText(/FACEBOOK/i));
-		await waitForElement(() => sidebar.getByText(/ARTISTAAN/i));
-		await waitForElement(() => sidebar.getByText(/KALAMKAAR/i));
+		await waitForElement(() => sidebar.getAllByText(/ARTISTAAN/i));
 	});
 });

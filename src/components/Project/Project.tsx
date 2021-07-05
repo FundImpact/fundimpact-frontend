@@ -1,10 +1,10 @@
-import { useLazyQuery, useMutation, useApolloClient, ApolloClient } from "@apollo/client";
+import { useLazyQuery, useMutation, useApolloClient, ApolloClient, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData, useDashboardDispatch } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { GET_ORG_DONOR } from "../../graphql/donor";
-import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { CREATE_PROJECT, GET_PROJ_DONORS, UPDATE_PROJECT } from "../../graphql/project";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
 import { AttachFile } from "../../models/AttachFile";
@@ -15,6 +15,7 @@ import {
 	ICreateProjectDonorVariables,
 	IGetProjectDonor,
 	ICreateProject,
+	IUpdateProjectDonorVariables,
 } from "../../models/project/project";
 import { IPROJECT_FORM } from "../../models/project/projectForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -32,6 +33,9 @@ import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import Donor from "../Donor";
 import { FORM_ACTIONS } from "../Forms/constant";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
+import { Box, Button, Typography, useTheme } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import FIDialog from "../Dialog/Dialog";
 
 function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 	if (props.type === PROJECT_ACTIONS.UPDATE) return { ...props.data };
@@ -62,7 +66,7 @@ export const updateProjectDonorCache = ({
 				variables: { filter: { project: projecttDonorCreated.createProjDonor.project.id } },
 				data: {
 					projectDonors: [
-						projecttDonorCreated.createProjDonor,
+						{ ...projecttDonorCreated?.createProjDonor, deleted: false },
 						...cachedProjectDonors.projectDonors,
 					],
 				},
@@ -126,6 +130,11 @@ const updateCachedProject = async ({
 	}
 };
 
+const getProjectDonorForGivenDonorId = (
+	projectDonors: IGetProjectDonor["projectDonors"],
+	donorId: string
+) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id == donorId);
+
 function Project(props: ProjectProps) {
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 	const DashBoardData = useDashBoardData();
@@ -143,6 +152,9 @@ function Project(props: ProjectProps) {
 	);
 
 	const apolloClient = useApolloClient();
+
+	const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
+	const [isConfirmedDelete, setIsConfirmedDelete] = useState(false);
 
 	const [workspaceSelected, setWorkspaceSelected] = useState(
 		props.type === PROJECT_ACTIONS.UPDATE ? props.data.workspace || "" : ""
@@ -205,6 +217,8 @@ function Project(props: ProjectProps) {
 		},
 	});
 
+	const { data: orgProjects } = useQuery(GET_PROJECTS);
+	const theme = useTheme();
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onError: (err) => notificationDispatch(setErrorNotification(err?.message)),
 	});
@@ -217,7 +231,7 @@ function Project(props: ProjectProps) {
 		let donorList: any = [];
 		donors?.orgDonors?.forEach((fetchedDonor: any) => {
 			const isInDonorList = mappedDonors.includes(fetchedDonor?.id);
-			if (isInDonorList) donorList.push({ ...fetchedDonor, disabled: true });
+			if (isInDonorList) donorList.push({ ...fetchedDonor });
 			else donorList.push(fetchedDonor);
 		});
 		projectForm[4].optionsArray = donorList;
@@ -235,16 +249,62 @@ function Project(props: ProjectProps) {
 		}
 	}, [dashboardData]);
 
-	const createDonors = async ({ projectId, donorId }: { projectId: string; donorId: string }) => {
-		try {
-			await createProjectDonor({
+	const [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(
+		GET_PROJ_DONORS
+	);
+
+	const [updateProjectDonor, { loading: updatingProjectDonors }] = useMutation<
+		ICreateProjectDonor,
+		IUpdateProjectDonorVariables
+	>(UPDATE_PROJECT_DONOR);
+
+	const projectId = dashboardData?.project?.id;
+
+	useEffect(() => {
+		if (projectId) {
+			getProjectDonors({
 				variables: {
-					input: {
+					filter: {
 						project: projectId,
-						donor: donorId,
 					},
 				},
 			});
+		}
+	}, [getProjectDonors, projectId]);
+
+	const createOrUpdateProjectDonors = async ({
+		projectId,
+		donorId,
+	}: {
+		projectId: string;
+		donorId: string;
+	}) => {
+		try {
+			const projectDonorForGivenDonorId = getProjectDonorForGivenDonorId(
+				projectDonors?.projectDonors || [],
+				donorId
+			);
+			if (projectDonorForGivenDonorId) {
+				await updateProjectDonor({
+					variables: {
+						id: projectDonorForGivenDonorId.id,
+						input: {
+							deleted: !projectDonorForGivenDonorId?.deleted,
+							donor: projectDonorForGivenDonorId?.donor?.id,
+							project: projectDonorForGivenDonorId?.project?.id,
+						},
+					},
+				});
+			} else {
+				await createProjectDonor({
+					variables: {
+						input: {
+							project: projectId,
+							donor: donorId,
+						},
+					},
+				});
+			}
 		} catch (err) {
 			notificationDispatch(setErrorNotification(err?.message));
 		}
@@ -315,7 +375,7 @@ function Project(props: ProjectProps) {
 				}));
 			notificationDispatch(setSuccessNotification("Project Successfully created !"));
 			selectDonors.forEach(async (donorId) => {
-				await createDonors({
+				await createOrUpdateProjectDonors({
 					projectId: createdProject.data.createOrgProject.id,
 					donorId,
 				});
@@ -341,6 +401,20 @@ function Project(props: ProjectProps) {
 		}
 	);
 
+	const deleteProject = async () => {
+		try {
+			await updateProject({
+				variables: {
+					id: dashboardData?.project?.id,
+					input: { deleted: true, name: dashboardData?.project?.name },
+				},
+			});
+			dashboardDispatch(setProject(orgProjects?.orgProject?.[0]));
+		} catch (err) {
+			notificationDispatch(setErrorNotification(err?.message));
+		}
+	};
+
 	const onUpdate = async (value: IPROJECT_FORM) => {
 		// updateProject({ variables: { payload: value, projectID: 4 } });
 
@@ -351,6 +425,8 @@ function Project(props: ProjectProps) {
 			let newDonors = formData?.donor?.filter(function (el: string) {
 				return !mappedDonors.includes(el);
 			});
+			let removedDonors =
+				mappedDonors?.filter((donor: string) => !formData?.donor?.includes(donor)) || [];
 			delete formData.id;
 			delete formData.donor;
 			delete formData.attachments;
@@ -367,8 +443,8 @@ function Project(props: ProjectProps) {
 					workspaceId: value.workspace,
 				});
 			}
-			newDonors.forEach(async (donorId: string) => {
-				await createDonors({
+			[...newDonors, ...removedDonors].forEach(async (donorId: string) => {
+				await createOrUpdateProjectDonors({
 					projectId: updatedResponse?.data.updateOrgProject.id,
 					donorId,
 				});
@@ -402,8 +478,48 @@ function Project(props: ProjectProps) {
 	// let uploadingFileMessage = CommonUploadingFilesMessage();
 	const intl = useIntl();
 	let { newOrEdit } = CommonFormTitleFormattedMessage(props.type);
+
+	let deleteDialogChildren = (
+		<Box m={1} ml={2}>
+			<Button
+				startIcon={<DeleteIcon />}
+				style={{
+					background: theme.palette.error.main,
+					marginRight: theme.spacing(2),
+				}}
+				onClick={() => deleteProject()}
+			>
+				{intl.formatMessage({
+					id: "projectDeleteConfirm",
+					defaultMessage: "Confirm",
+					description: `Project delete alert dialog confirm button.`,
+				})}
+			</Button>
+			<Button
+				style={{
+					marginRight: theme.spacing(2),
+				}}
+				onClick={() => setIsOpenDeleteDialog(false)}
+			>
+				{intl.formatMessage({
+					id: "projectDeleteCancel",
+					defaultMessage: "Cancel",
+					description: `Project delete alert dialog Cancel button.`,
+				})}
+			</Button>
+		</Box>
+	);
+
 	return (
 		<>
+			{isOpenDeleteDialog && (
+				<FIDialog
+					open={isOpenDeleteDialog}
+					handleClose={() => setIsOpenDeleteDialog(false)}
+					header={"Are you sure you want to delete ?"}
+					children={deleteDialogChildren}
+				/>
+			)}
 			<Donor
 				open={openDonorDialog}
 				formAction={FORM_ACTIONS.CREATE}
@@ -435,6 +551,18 @@ function Project(props: ProjectProps) {
 							formAction,
 							onUpdate,
 							inputFields: projectForm,
+							additionalButtons: props.type == PROJECT_ACTIONS.UPDATE && (
+								<Button
+									startIcon={<DeleteIcon />}
+									style={{
+										background: theme.palette.error.main,
+										marginRight: theme.spacing(2),
+									}}
+									onClick={() => setIsOpenDeleteDialog(true)}
+								>
+									Delete
+								</Button>
+							),
 						}}
 					/>
 				</>

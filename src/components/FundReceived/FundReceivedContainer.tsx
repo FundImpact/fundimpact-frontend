@@ -30,6 +30,8 @@ import {
 } from "../../models/project/project";
 import { DonorType } from "../../models/fundReceived/conatsnt";
 import DeleteModal from "../DeleteModal";
+import { useProjectDonorSelectInput } from "../../hooks/project";
+import { Checkbox, FormControlLabel } from "@material-ui/core";
 
 interface IFundReceivedContainerProps {
 	formAction: FORM_ACTIONS;
@@ -73,11 +75,8 @@ interface IFormSubmitProps {
 			| undefined
 	) => Promise<FetchResult<IUpdateFundReceipt, Record<string, any>, Record<string, any>>>;
 	initialFormValues: IFundReceivedForm;
-	createProjectDonor: (
-		options?:
-			| MutationFunctionOptions<ICreateProjectDonor, ICreateProjectDonorVariables>
-			| undefined
-	) => Promise<FetchResult<ICreateProjectDonor, Record<string, any>, Record<string, any>>>;
+	createProjectDonor: () => Promise<string | undefined>;
+	projectDonors: IGetProjectDonor["projectDonors"];
 }
 
 interface IUpdateFundReceiptProps {
@@ -115,57 +114,57 @@ const validate = (values: IFundReceivedForm) => {
 	return errors;
 };
 
-const getDonors = ({
-	projectDonors,
-	orgDonors,
-}: {
-	projectDonors: IGetProjectDonor["projectDonors"];
-	orgDonors: IGET_DONOR["orgDonors"];
-}) => {
-	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
-		acc[projDonor.donor.id] = true;
-		return acc;
-	}, {});
-	let donorArr = [];
-	projectDonors.length &&
-		donorArr.push(
-			{
-				groupName: (
-					<FormattedMessage
-						id="selectInputProjectDonor"
-						defaultMessage="PROJECT'S DONOR"
-						description="This text will be heading of project donor"
-					/>
-				),
-			},
-			...projectDonors
-				.filter((donor) => donor)
-				.map((projDonor) => ({
-					id: projDonor.id + `-${DonorType.project}`,
-					name: projDonor.donor.name,
-				}))
-		);
+// const getDonors = ({
+// 	projectDonors,
+// 	orgDonors,
+// }: {
+// 	projectDonors: IGetProjectDonor["projectDonors"];
+// 	orgDonors: IGET_DONOR["orgDonors"];
+// }) => {
+// 	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
+// 		acc[projDonor.donor.id] = true;
+// 		return acc;
+// 	}, {});
+// 	let donorArr = [];
+// 	projectDonors.length &&
+// 		donorArr.push(
+// 			{
+// 				groupName: (
+// 					<FormattedMessage
+// 						id="selectInputProjectDonor"
+// 						defaultMessage="PROJECT'S DONOR"
+// 						description="This text will be heading of project donor"
+// 					/>
+// 				),
+// 			},
+// 			...projectDonors
+// 				.filter((donor) => donor)
+// 				.map((projDonor) => ({
+// 					id: projDonor.id + `-${DonorType.project}`,
+// 					name: projDonor.donor.name,
+// 				}))
+// 		);
 
-	let filteredOrgDonor = orgDonors
-		.filter((donor) => !projectDonorIdHash[donor.id])
-		.map((donor) => ({ id: donor.id + `-${DonorType.organization}`, name: donor.name }));
+// 	let filteredOrgDonor = orgDonors
+// 		.filter((donor) => !projectDonorIdHash[donor.id])
+// 		.map((donor) => ({ id: donor.id + `-${DonorType.organization}`, name: donor.name }));
 
-	filteredOrgDonor.length &&
-		donorArr.push(
-			{
-				groupName: (
-					<FormattedMessage
-						id="selectInputAllDonor"
-						defaultMessage="ALL DONORS"
-						description="This text will be heading of all donor"
-					/>
-				),
-			},
-			...filteredOrgDonor
-		);
+// 	filteredOrgDonor.length &&
+// 		donorArr.push(
+// 			{
+// 				groupName: (
+// 					<FormattedMessage
+// 						id="selectInputAllDonor"
+// 						defaultMessage="ALL DONORS"
+// 						description="This text will be heading of all donor"
+// 					/>
+// 				),
+// 			},
+// 			...filteredOrgDonor
+// 		);
 
-	return donorArr;
-};
+// 	return donorArr;
+// };
 
 const updateFundReceiptProjectTotalAmount = ({
 	store,
@@ -278,6 +277,11 @@ const getChangeInFundReceiptAmount = (
 	fundReceiptToUpdate: IFundReceivedForm
 ) => updatedFundReceipt.amount - +fundReceiptToUpdate.amount;
 
+// const getDonorIdForGivenProjectDonor = (
+// 	projectDonors: IGetProjectDonor["projectDonors"],
+// 	projectDonorId: string
+// ) => projectDonors.find((projectDonor) => projectDonor.id == projectDonorId)?.donor.id;
+
 const updateProjectFundReceipt = async ({
 	valuesSubmitted,
 	updateFundReceipt,
@@ -293,6 +297,8 @@ const updateProjectFundReceipt = async ({
 				amount: parseInt(valuesSubmitted.amount),
 				project_donor: valuesSubmitted.project_donor,
 				reporting_date: valuesSubmitted.reporting_date,
+				project: valuesSubmitted.project,
+				donor: valuesSubmitted?.donor,
 			},
 		},
 		update: (store, { data }) => {
@@ -326,35 +332,44 @@ const onFormSubmit = async ({
 	updateFundReceipt,
 	initialFormValues,
 	createProjectDonor,
+	projectDonors,
 }: IFormSubmitProps) => {
 	try {
-		let projectDonorId = valuesSubmitted.project_donor.split("-")[0];
-		let donorSelected = valuesSubmitted.project_donor.split("-")[1];
-
-		if (donorSelected === DonorType.organization) {
-			let createdProjectDonor = await createProjectDonor({
-				variables: {
-					input: {
-						donor: valuesSubmitted.project_donor.split("-")[0],
-						project: `${project}` || "",
-					},
-				},
-			});
-			if (createdProjectDonor.data) {
-				projectDonorId = createdProjectDonor.data.createProjDonor.id;
-			}
-		}
+		// if (donorSelected === DonorType.organization) {
+		// 	let createdProjectDonor = await createProjectDonor({
+		// 		variables: {
+		// 			input: {
+		// 				donor: valuesSubmitted.project_donor.split("-")[0],
+		// 				project: `${project}` || "",
+		// 			},
+		// 		},
+		// 	});
+		// 	if (createdProjectDonor.data) {
+		// 		projectDonorId = createdProjectDonor.data.createProjDonor.id;
+		// 	}
+		// }
+		const projectDonorId = await createProjectDonor();
 
 		formAction == FORM_ACTIONS.CREATE &&
 			(await createProjectFundReceipt({
-				valuesSubmitted: { ...valuesSubmitted, project_donor: projectDonorId },
+				valuesSubmitted: {
+					...valuesSubmitted,
+					project_donor: projectDonorId || "",
+					project,
+					donor: valuesSubmitted.project_donor as string,
+				},
 				createFundReceipt,
 				project,
 			}));
 
 		formAction == FORM_ACTIONS.UPDATE &&
 			(await updateProjectFundReceipt({
-				valuesSubmitted: { ...valuesSubmitted, project_donor: projectDonorId },
+				valuesSubmitted: {
+					...valuesSubmitted,
+					project_donor: projectDonorId || "",
+					donor: valuesSubmitted.project_donor as string,
+					project,
+				},
 				updateFundReceipt,
 				project,
 				fundReceiptToUpdate: initialFormValues,
@@ -376,15 +391,42 @@ function FundReceivedContainer({
 	initialValues,
 	updateFundReceipt,
 	orgDonors,
-	createProjectDonor,
 	dialogType,
 }: IFundReceivedContainerProps) {
 	const dashboardData = useDashBoardData();
 	const intl = useIntl();
-	(fundReceivedForm[2].optionsArray as any) = getDonors({
-		projectDonors: projectDonors,
-		orgDonors: orgDonors,
+
+	const {
+		createProjectDonor,
+		selectedDonorInputOptionArray,
+		setSelectedDonor,
+		showCreateProjectDonorCheckbox,
+		creatingProjectDonors,
+		setCreateProjectDonorCheckboxVal,
+	} = useProjectDonorSelectInput({
+		formAction,
+		initialDonorId: `${initialValues.donor}`,
 	});
+
+	(fundReceivedForm[2].optionsArray as any) = selectedDonorInputOptionArray;
+	fundReceivedForm[2].getInputValue = (donorId: string) => {
+		setSelectedDonor(donorId);
+	};
+	(fundReceivedForm[2].helperText as any) = showCreateProjectDonorCheckbox && (
+		<FormControlLabel
+			control={
+				<Checkbox
+					onChange={(e) => {
+						e.persist();
+						setCreateProjectDonorCheckboxVal(e?.target?.checked);
+					}}
+					size="small"
+					inputProps={{ "aria-label": "make selected donor project donor" }}
+				/>
+			}
+			label="Make org donor project donor"
+		/>
+	);
 	const notificationDispatch = useNotificationDispatch();
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
 	const submitForm = useCallback(
@@ -398,6 +440,7 @@ function FundReceivedContainer({
 				updateFundReceipt,
 				initialFormValues: initialValues,
 				createProjectDonor,
+				projectDonors,
 			});
 			handleClose();
 		},
@@ -481,7 +524,7 @@ function FundReceivedContainer({
 			<FormDialog
 				handleClose={handleClose}
 				open={open}
-				loading={loading}
+				loading={loading || creatingProjectDonors}
 				title={intl.formatMessage({
 					id: "fundReceivedFormTitle",
 					defaultMessage: "Report Fund Received",

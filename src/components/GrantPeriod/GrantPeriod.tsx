@@ -24,116 +24,117 @@ import { GET_PROJ_DONORS } from "../../graphql/project";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import DeleteModal from "../DeleteModal";
+import { useProjectDonorSelectInput } from "../../hooks/project";
 
-const getDonors = ({
-	projectDonors,
-	orgDonors,
-}: {
-	projectDonors: IGetProjectDonor["projectDonors"];
-	orgDonors: IGET_DONOR["orgDonors"];
-}) => {
-	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
-		acc[projDonor.donor.id] = true;
-		return acc;
-	}, {});
-	let donorArr = [];
-	projectDonors.length &&
-		donorArr.push(
-			{
-				groupName: (
-					<FormattedMessage
-						description="This text will be heading of project donor"
-						defaultMessage="PROJECT'S DONOR"
-						id="selectInputProjectDonor"
-					/>
-				),
-			},
-			...projectDonors
-				.filter((donor) => donor)
-				.map((projDonor) => ({
-					id: projDonor.donor.id,
-					name: projDonor.donor.name,
-				}))
-		);
+// const getDonors = ({
+// 	projectDonors,
+// 	orgDonors,
+// }: {
+// 	projectDonors: IGetProjectDonor["projectDonors"];
+// 	orgDonors: IGET_DONOR["orgDonors"];
+// }) => {
+// 	let projectDonorIdHash = projectDonors.reduce((acc: { [key: string]: boolean }, projDonor) => {
+// 		acc[projDonor.donor.id] = true;
+// 		return acc;
+// 	}, {});
+// 	let donorArr = [];
+// 	projectDonors.length &&
+// 		donorArr.push(
+// 			{
+// 				groupName: (
+// 					<FormattedMessage
+// 						description="This text will be heading of project donor"
+// 						defaultMessage="PROJECT'S DONOR"
+// 						id="selectInputProjectDonor"
+// 					/>
+// 				),
+// 			},
+// 			...projectDonors
+// 				.filter((donor) => donor)
+// 				.map((projDonor) => ({
+// 					id: projDonor.donor.id,
+// 					name: projDonor.donor.name,
+// 				}))
+// 		);
 
-	let filteredOrgDonor = orgDonors
-		.filter((donor) => !projectDonorIdHash[donor.id])
-		.map((donor) => ({ id: donor.id, name: donor.name }));
+// 	let filteredOrgDonor = orgDonors
+// 		.filter((donor) => !projectDonorIdHash[donor.id])
+// 		.map((donor) => ({ id: donor.id, name: donor.name }));
 
-	filteredOrgDonor.length &&
-		donorArr.push(
-			{
-				groupName: (
-					<FormattedMessage
-						description="This text will be heading of all donor"
-						defaultMessage="ALL DONORS"
-						id="selectInputAllDonor"
-					/>
-				),
-			},
-			...filteredOrgDonor
-		);
+// 	filteredOrgDonor.length &&
+// 		donorArr.push(
+// 			{
+// 				groupName: (
+// 					<FormattedMessage
+// 						description="This text will be heading of all donor"
+// 						defaultMessage="ALL DONORS"
+// 						id="selectInputAllDonor"
+// 					/>
+// 				),
+// 			},
+// 			...filteredOrgDonor
+// 		);
 
-	return donorArr;
-};
+// 	return donorArr;
+// };
 
-const checkDonorType = ({
-	projectDonors,
-	donorId,
-}: {
-	projectDonors: IGetProjectDonor["projectDonors"];
-	donorId: string;
-}) => {
-	for (let i = 0; i < projectDonors.length; i++) {
-		if (projectDonors[i].donor.id === donorId) {
-			return DonorType.project;
-		}
-	}
-	return DonorType.organization;
-};
+// const checkDonorType = ({
+// 	projectDonors,
+// 	donorId,
+// }: {
+// 	projectDonors: IGetProjectDonor["projectDonors"];
+// 	donorId: string;
+// }) => {
+// 	for (let i = 0; i < projectDonors.length; i++) {
+// 		if (projectDonors[i].donor.id === donorId) {
+// 			return DonorType.project;
+// 		}
+// 	}
+// 	return DonorType.organization;
+// };
 
-const updateProjectDonorCache = ({
-	apolloClient,
-	projectDonorCreated,
-}: {
-	apolloClient: ApolloClient<object>;
-	projectDonorCreated: ICreateProjectDonor;
-}) => {
-	try {
-		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
-			variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
-			query: GET_PROJ_DONORS,
-		});
-		if (cachedProjectDonors) {
-			apolloClient.writeQuery<IGetProjectDonor>({
-				variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
-				query: GET_PROJ_DONORS,
-				data: {
-					projectDonors: [
-						projectDonorCreated.createProjDonor,
-						...cachedProjectDonors.projectDonors,
-					],
-				},
-			});
-		}
-	} catch (err) {
-		console.error(err);
-	}
-};
+// const updateProjectDonorCache = ({
+// 	apolloClient,
+// 	projectDonorCreated,
+// }: {
+// 	apolloClient: ApolloClient<object>;
+// 	projectDonorCreated: ICreateProjectDonor;
+// }) => {
+// 	try {
+// 		let cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>({
+// 			variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
+// 			query: GET_PROJ_DONORS,
+// 		});
+// 		if (cachedProjectDonors) {
+// 			apolloClient.writeQuery<IGetProjectDonor>({
+// 				variables: { filter: { project: projectDonorCreated.createProjDonor.project.id } },
+// 				query: GET_PROJ_DONORS,
+// 				data: {
+// 					projectDonors: [
+// 						{ ...projectDonorCreated.createProjDonor, deleted: false },
+// 						...cachedProjectDonors.projectDonors,
+// 					],
+// 				},
+// 			});
+// 		}
+// 	} catch (err) {
+// 		console.error(err);
+// 	}
+// };
 
 function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: GrantPeriodDialogProps) {
 	const dashboardData = useDashBoardData();
 	const apolloClient = useApolloClient();
 	const cache = apolloClient.cache;
 
-	const [createProjectDonor] = useMutation<ICreateProjectDonor, ICreateProjectDonorVariables>(
-		CREATE_PROJECT_DONOR,
-		{
-			onCompleted: (data) => {
-				updateProjectDonorCache({ apolloClient, projectDonorCreated: data });
-			},
-		}
-	);
+	// const [createProjectDonor] = useMutation<ICreateProjectDonor, ICreateProjectDonorVariables>(
+	// 	CREATE_PROJECT_DONOR,
+	// 	{
+	// 		onCompleted: (data) => {
+	// 			updateProjectDonorCache({ apolloClient, projectDonorCreated: data });
+	// 		},
+	// 	}
+	// );
 
 	const [getProjectDonors, { data: donorList }] = useLazyQuery(GET_PROJ_DONORS);
 	let [getOrganizationDonors, { data: orgDonors }] = useLazyQuery<IGET_DONOR>(GET_ORG_DONOR);
@@ -162,10 +163,10 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 		}
 	}, [getProjectDonors]);
 
-	const allDonors = getDonors({
-		orgDonors: orgDonors?.orgDonors || [],
-		projectDonors: donorList?.projectDonors || [],
-	});
+	// const allDonors = getDonors({
+	// 	orgDonors: orgDonors?.orgDonors || [],
+	// 	projectDonors: donorList?.projectDonors || [],
+	// });
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -258,20 +259,21 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 	});
 
 	const onSubmit = async (value: IGrantPeriod) => {
-		let donorTypeSelected = checkDonorType({
-			projectDonors: donorList?.projectDonors || [],
-			donorId: value?.donor || "",
-		});
-		if (donorTypeSelected === DonorType.organization) {
-			let createdProjectDonor = await createProjectDonor({
-				variables: {
-					input: {
-						donor: value?.donor || "",
-						project: `${dashboardData?.project?.id}` || "",
-					},
-				},
-			});
-		}
+		// let donorTypeSelected = checkDonorType({
+		// 	projectDonors: donorList?.projectDonors || [],
+		// 	donorId: value?.donor || "",
+		// });
+		// if (donorTypeSelected === DonorType.organization) {
+		// let createdProjectDonor = await createProjectDonor({
+		// 	variables: {
+		// 		input: {
+		// 			donor: value?.donor || "",
+		// 			project: `${dashboardData?.project?.id}` || "",
+		// 		},
+		// 	},
+		// });
+		// }
+		await createProjectDonor();
 
 		if (action === FORM_ACTIONS.CREATE)
 			return createGrantPeriod({
@@ -332,6 +334,18 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 		description: `This text will be show on Grant Period form for subtitle`,
 	});
 
+	const {
+		createProjectDonor,
+		setSelectedDonor,
+		setCreateProjectDonorCheckboxVal,
+		selectedDonorInputOptionArray,
+		showCreateProjectDonorCheckbox,
+		creatingProjectDonors,
+	} = useProjectDonorSelectInput({
+		formAction: action,
+		initialDonorId: defaultValues.donor || "",
+	});
+
 	const onDelete = async () => {
 		try {
 			const grantPeriodValues = { ...defaultValues };
@@ -369,7 +383,7 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 		<div>
 			<FormDialog
 				open={open}
-				loading={loading || updating}
+				loading={loading || updating || creatingProjectDonors}
 				title={
 					newOrEdit +
 					" " +
@@ -393,7 +407,10 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 						action={FORM_ACTIONS.CREATE}
 						onCancel={onCancel}
 						onSubmit={onSubmit}
-						allDonors={allDonors}
+						allDonors={selectedDonorInputOptionArray}
+						setSelectedDonor={setSelectedDonor}
+						setCreateProjectDonorCheckboxVal={setCreateProjectDonorCheckboxVal}
+						showCreateProjectDonorCheckbox={showCreateProjectDonorCheckbox}
 					/>
 				) : (
 					<GranPeriodForm
@@ -401,7 +418,10 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 						onCancel={onCancel}
 						onSubmit={onSubmit}
 						initialValues={defaultValues}
-						allDonors={allDonors}
+						allDonors={selectedDonorInputOptionArray}
+						setSelectedDonor={setSelectedDonor}
+						setCreateProjectDonorCheckboxVal={setCreateProjectDonorCheckboxVal}
+						showCreateProjectDonorCheckbox={showCreateProjectDonorCheckbox}
 					/>
 				)}
 			</FormDialog>

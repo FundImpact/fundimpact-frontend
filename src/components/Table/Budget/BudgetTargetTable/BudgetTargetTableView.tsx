@@ -72,8 +72,9 @@ enum tableHeader {
 	donor = 4,
 	totalAmout = 5,
 	spent = 6,
-	progress = 7,
-	filterList = 8,
+	Balance = 7,
+	progress = 8,
+	filterList = 9,
 }
 
 enum tableRow {
@@ -82,7 +83,8 @@ enum tableRow {
 	donor = 2,
 	totalAmount = 3,
 	spent = 4,
-	progress = 5,
+	Balance = 5,
+	progress = 6,
 }
 
 const rows = [
@@ -96,6 +98,16 @@ const rows = [
 			<AmountSpent budgetTargetId={budgetTarget.id}>
 				{(amount: number) => {
 					return <span>{amount}</span>;
+				}}
+			</AmountSpent>
+		),
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
+			<AmountSpent budgetTargetId={budgetTarget.id}>
+				{(amount: number) => {
+					return <span>{parseInt(budgetTarget.total_target_amount) - amount || 0}</span>;
 				}}
 			</AmountSpent>
 		),
@@ -432,25 +444,29 @@ function BudgetTargetView({
 				)}
 			>
 				<>
-					<BudgetTarget
-						open={openDialogs[0]}
-						handleClose={() => toggleDialogs(0, false)}
-						formAction={FORM_ACTIONS.UPDATE}
-						initialValues={initialValues}
-					/>
+					{openDialogs[0] && (
+						<BudgetTarget
+							open={openDialogs[0]}
+							handleClose={() => toggleDialogs(0, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+						/>
+					)}
 					<BudgetLineitem
 						open={openDialogs[1]}
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
 					/>
-					<BudgetTarget
-						open={openDialogs[2]}
-						handleClose={() => toggleDialogs(2, false)}
-						formAction={FORM_ACTIONS.UPDATE}
-						initialValues={initialValues}
-						dialogType={DIALOG_TYPE.DELETE}
-					/>
+					{openDialogs[2] && (
+						<BudgetTarget
+							open={openDialogs[2]}
+							handleClose={() => toggleDialogs(2, false)}
+							formAction={FORM_ACTIONS.UPDATE}
+							initialValues={initialValues}
+							dialogType={DIALOG_TYPE.DELETE}
+						/>
+					)}
 				</>
 				{(rowData: IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]) => (
 					<>

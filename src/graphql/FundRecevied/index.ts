@@ -19,6 +19,16 @@ export const GET_FUND_RECEIPT_PROJECT_LIST = gql`
 					name
 					deleted
 				}
+				project {
+					id
+					name
+				}
+			}
+			project {
+				id
+			}
+			donor {
+				id
 			}
 		}
 	}

@@ -6,6 +6,8 @@ export interface IFundReceived {
 	project_donor: string;
 	reporting_date: string;
 	deleted?: boolean;
+	project: string | number;
+	donor: string | number;
 }
 
 export interface IFundReceivedForm extends Omit<IFundReceived, "amount"> {

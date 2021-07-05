@@ -43,7 +43,7 @@ import DeliverableTarget from "./DeliverableTarget";
 import { IGetProjectDonor, IProjectDonor } from "../../models/project/project";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { IGET_DONOR } from "../../models/donor/query";
-import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../Project/Project";
 import Donor from "../Donor";
 import { DIALOG_TYPE } from "../../models/constants";
@@ -301,16 +301,41 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			},
 		}
 	);
+	const [updateProjectDonor, { loading: updatingProjectDonorsLoading }] = useMutation(
+		UPDATE_PROJECT_DONOR
+	);
+
+	const getProjectDonorIdForGivenDonorId = (
+		projectDonors: IGetProjectDonor["projectDonors"] | undefined,
+		donorId: any
+	) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id == donorId)?.id;
 
 	const createProjectDonorHelper = (value: any) => {
-		createProjectDonor({
-			variables: {
-				input: {
-					project: DashBoardData?.project?.id,
-					donor: value.id,
+		const projectDonorIdForGivenDonor = getProjectDonorIdForGivenDonorId(
+			cachedProjectDonors?.projectDonors,
+			value.id
+		);
+		if (projectDonorIdForGivenDonor) {
+			updateProjectDonor({
+				variables: {
+					id: projectDonorIdForGivenDonor,
+					input: {
+						project: DashBoardData?.project?.id,
+						donor: value.id,
+						deleted: false,
+					},
 				},
-			},
-		});
+			});
+		} else {
+			createProjectDonor({
+				variables: {
+					input: {
+						project: DashBoardData?.project?.id,
+						donor: value.id,
+					},
+				},
+			});
+		}
 	};
 
 	deliverableTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
@@ -409,24 +434,26 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	deliverableTragetLineForm[3].optionsArray = useMemo(() => {
 		let donorsArray: any = [];
 		if (cachedProjectDonors)
-			cachedProjectDonors.projectDonors.forEach((elem: IProjectDonor) => {
-				if (
-					props.type === DELIVERABLE_ACTIONS.UPDATE &&
-					props.alreadyMappedDonorsIds?.includes(elem.donor.id)
-				)
-					donorsArray.push({
-						...elem,
-						id: elem.donor.id,
-						name: elem.donor.name,
-						disabled: true,
-					});
-				else
-					donorsArray.push({
-						...elem,
-						id: elem.donor.id,
-						name: elem.donor.name,
-					});
-			});
+			cachedProjectDonors?.projectDonors
+				.filter((projectDonor) => !projectDonor?.deleted)
+				.forEach((elem: IProjectDonor) => {
+					if (
+						props.type === DELIVERABLE_ACTIONS.UPDATE &&
+						props.alreadyMappedDonorsIds?.includes(elem.donor.id)
+					)
+						donorsArray.push({
+							...elem,
+							id: elem.donor.id,
+							name: elem.donor.name,
+							disabled: true,
+						});
+					else
+						donorsArray.push({
+							...elem,
+							id: elem.donor.id,
+							name: elem.donor.name,
+						});
+				});
 		return donorsArray;
 	}, [cachedProjectDonors, props]);
 
@@ -436,7 +463,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
 				let projectDonorNotContainsOrgDonor = true;
 				cachedProjectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
-					if (orgDonor.id === projectDonor.donor.id) {
+					if (orgDonor.id === projectDonor.donor.id && !projectDonor.deleted) {
 						projectDonorNotContainsOrgDonor = false;
 						return false;
 					}

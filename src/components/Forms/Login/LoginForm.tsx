@@ -25,6 +25,7 @@ export interface Props {
 	initialValues: ILoginForm;
 	clearErrors: (event: React.FormEvent<HTMLElement>) => void;
 	validate: (values: ILoginForm) => void | object | Promise<FormikErrors<ILoginForm>>;
+	clickedForgetPass: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
+function LoginForm({ onSubmit, initialValues, clearErrors, validate, clickedForgetPass }: Props) {
 	const classes = useStyles();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const theme = useTheme();
@@ -92,47 +93,49 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							data-testid="email"
 							variant="outlined"
 						/>
-						<FormControl variant="outlined" className={classes.passowrdTextField}>
-							<InputLabel required htmlFor="outlined-adornment-password">
-								<FormattedMessage
-									id="passowrdLabel"
-									defaultMessage="Password"
-									description="This text will be label of password input field"
+						{!clickedForgetPass && (
+							<FormControl variant="outlined" className={classes.passowrdTextField}>
+								<InputLabel required htmlFor="outlined-adornment-password">
+									<FormattedMessage
+										id="passowrdLabel"
+										defaultMessage="Password"
+										description="This text will be label of password input field"
+									/>
+								</InputLabel>
+								<OutlinedInput
+									value={formik.values.password}
+									error={!!formik.errors.password && !!formik.touched.password}
+									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
+									label={passwordPlaceholder}
+									required
+									name="password"
+									type={showPassword ? "text" : "password"}
+									data-testid="password"
+									endAdornment={
+										<InputAdornment position="end">
+											<IconButton
+												aria-label="toggle password visibility"
+												onClick={() => {
+													setShowPassword(!showPassword);
+												}}
+												onMouseDown={(e) => {
+													e.preventDefault();
+												}}
+												edge="end"
+												style={{ marginTop: theme.spacing(0) }}
+											>
+												{showPassword ? <Visibility /> : <VisibilityOff />}
+											</IconButton>
+										</InputAdornment>
+									}
+									labelWidth={70}
 								/>
-							</InputLabel>
-							<OutlinedInput
-								value={formik.values.password}
-								error={!!formik.errors.password && !!formik.touched.password}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								label={passwordPlaceholder}
-								required
-								name="password"
-								type={showPassword ? "text" : "password"}
-								data-testid="password"
-								endAdornment={
-									<InputAdornment position="end">
-										<IconButton
-											aria-label="toggle password visibility"
-											onClick={() => {
-												setShowPassword(!showPassword);
-											}}
-											onMouseDown={(e) => {
-												e.preventDefault();
-											}}
-											edge="end"
-											style={{ marginTop: theme.spacing(0) }}
-										>
-											{showPassword ? <Visibility /> : <VisibilityOff />}
-										</IconButton>
-									</InputAdornment>
-								}
-								labelWidth={70}
-							/>
-							<FormHelperText error>
-								{formik.touched.password && formik.errors.password}
-							</FormHelperText>
-						</FormControl>
+								<FormHelperText error>
+									{formik.touched.password && formik.errors.password}
+								</FormHelperText>
+							</FormControl>
+						)}
 						<Button
 							disabled={!formik.isValid}
 							type="submit"
@@ -140,7 +143,19 @@ function LoginForm({ onSubmit, initialValues, clearErrors, validate }: Props) {
 							variant="contained"
 							color="primary"
 						>
-							Submit
+							{!clickedForgetPass ? (
+								<FormattedMessage
+									defaultMessage="Login"
+									id="login_button"
+									description="login button"
+								/>
+							) : (
+								<FormattedMessage
+									defaultMessage="Submit"
+									id="forgot_password_submit"
+									description="Submit Button"
+								/>
+							)}
 						</Button>
 					</Form>
 				);

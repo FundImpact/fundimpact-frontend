@@ -33,6 +33,7 @@ export const UPDATE_PROJECT = gql`
 				ext
 				created_at
 			}
+			deleted
 		}
 	}
 `;
@@ -57,6 +58,7 @@ export const GET_PROJECT_BY_ID = gql`
 				ext
 				created_at
 			}
+			deleted
 		}
 	}
 `;
@@ -74,6 +76,7 @@ export const GET_PROJ_DONORS = gql`
 				name
 				deleted
 			}
+			deleted
 		}
 	}
 `;

@@ -70,6 +70,7 @@ const InputFields = ({
 	secondOptionsLabel,
 	customMenuOnClick,
 	textNextToButton,
+	helperText,
 }: IInputFields) => {
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
@@ -145,136 +146,141 @@ const InputFields = ({
 			};
 		}
 		return (
-			<FormControl variant="outlined" className={classes.formControl}>
-				<InputLabel required={required} id={inputLabelId}>
-					{label}
-				</InputLabel>
+			<>
+				<FormControl variant="outlined" className={classes.formControl}>
+					<InputLabel required={required} id={inputLabelId}>
+						{label}
+					</InputLabel>
 
-				<Select
-					labelId={selectLabelId}
-					id={selectId}
-					error={!!formik.errors[name] && !!formik.touched[name]}
-					value={formik.values[name]}
-					multiple={multiSelect || multiple}
-					onChange={onChange}
-					required={required}
-					onBlur={formik.handleBlur}
-					label={label}
-					name={name}
-					renderValue={renderValue}
-					data-testid={dataTestId}
-					inputProps={{
-						"data-testid": testId,
-					}}
-					disabled={disabled}
-				>
-					{optionsLabel && (
-						<ListSubheader disableSticky={true}>{optionsLabel}</ListSubheader>
-					)}
-					{!optionsArray?.length && (
-						<MenuItem value="">
-							<em>
-								<FormattedMessage
-									id="noContextAvailable"
-									defaultMessage="No (context) available"
-									description="This text will be displayed as select field for no context available"
-								/>
-							</em>
-						</MenuItem>
-					)}
-					{multiSelect &&
-						optionsArray &&
-						optionsArray.map((elem: any, index: number) => (
-							<MenuItem
-								key={index}
-								value={multiSelect ? elem : elem.id}
-								disabled={elem.disabled}
-							>
-								{multiSelect ? (
-									<Checkbox
-										color="primary"
-										checked={elemName.indexOf(elem.id) > -1}
-										disabled={elem.disabled}
+					<Select
+						labelId={selectLabelId}
+						id={selectId}
+						error={!!formik.errors[name] && !!formik.touched[name]}
+						value={formik.values[name]}
+						multiple={multiSelect || multiple}
+						onChange={onChange}
+						required={required}
+						onBlur={formik.handleBlur}
+						label={label}
+						name={name}
+						renderValue={renderValue}
+						data-testid={dataTestId}
+						inputProps={{
+							"data-testid": testId,
+						}}
+						disabled={disabled}
+					>
+						{optionsLabel && (
+							<ListSubheader disableSticky={true}>{optionsLabel}</ListSubheader>
+						)}
+						{!optionsArray?.length && (
+							<MenuItem value="">
+								<em>
+									<FormattedMessage
+										id="noContextAvailable"
+										defaultMessage="No (context) available"
+										description="This text will be displayed as select field for no context available"
 									/>
-								) : null}
-								{elem.name}
+								</em>
 							</MenuItem>
-						))}
-					{!multiple &&
-						!multiSelect &&
-						optionsArray?.map(
-							(
-								elem: { id: string; name: string; groupName?: string },
-								index: number
-							) =>
-								elem.groupName ? (
-									<ListSubheader>{elem.groupName}</ListSubheader>
-								) : (
-									<MenuItem key={index} value={elem.id}>
-										{elem.name}
+						)}
+						{multiSelect &&
+							optionsArray &&
+							optionsArray.map((elem: any, index: number) => (
+								<MenuItem
+									key={index}
+									value={multiSelect ? elem : elem.id}
+									disabled={elem.disabled}
+								>
+									{multiSelect ? (
+										<Checkbox
+											color="primary"
+											checked={elemName.indexOf(elem.id) > -1}
+											disabled={elem.disabled}
+										/>
+									) : null}
+									{elem.name}
+								</MenuItem>
+							))}
+						{!multiple &&
+							!multiSelect &&
+							optionsArray?.map(
+								(
+									elem: { id: string; name: string; groupName?: string },
+									index: number
+								) =>
+									elem.groupName ? (
+										<ListSubheader>{elem.groupName}</ListSubheader>
+									) : (
+										<MenuItem key={index} value={elem.id}>
+											{elem.name}
+										</MenuItem>
+									)
+							)}
+						{multiple &&
+							optionsArray?.map(
+								(
+									elem: { id: string; name: string; disabled?: boolean },
+									index: number
+								) => (
+									<MenuItem key={index} value={elem.id} disabled={elem.disabled}>
+										<Checkbox
+											color="primary"
+											checked={formik.values[name].indexOf(elem.id) > -1}
+											disabled={elem.disabled}
+										/>
+										<ListItemText primary={elem.name} />
 									</MenuItem>
 								)
+							)}
+						{secondOptionsLabel && (
+							<ListSubheader disableSticky={true}>{secondOptionsLabel}</ListSubheader>
 						)}
-					{multiple &&
-						optionsArray?.map(
-							(
-								elem: { id: string; name: string; disabled?: boolean },
-								index: number
-							) => (
-								<MenuItem key={index} value={elem.id} disabled={elem.disabled}>
-									<Checkbox
-										color="primary"
-										checked={formik.values[name].indexOf(elem.id) > -1}
-										disabled={elem.disabled}
-									/>
-									<ListItemText primary={elem.name} />
-								</MenuItem>
-							)
-						)}
-					{secondOptionsLabel && (
-						<ListSubheader disableSticky={true}>{secondOptionsLabel}</ListSubheader>
-					)}
-					{multiSelect &&
-						secondOptionsArray &&
-						secondOptionsArray.map((element: any, index: number) => (
-							<MenuItem
-								key={index}
-								value={multiSelect ? element : element.id}
-								disabled={element.disabled}
-								onClick={(e) =>
-									customMenuOnClick ? customMenuOnClick(element) : null
-								}
-							>
-								{multiSelect ? (
-									<Checkbox
-										color="primary"
-										checked={elemName.indexOf(element.id) > -1}
-										disabled={element.disabled}
-									/>
-								) : null}
-								<Typography>{element.name}</Typography>
-							</MenuItem>
-						))}
-
-					{addNew && addNewClick && (
-						<MenuItem onClick={addNewClick} selected={false} value="">
-							<Box display="flex">
-								<AddCircleIcon />
-								<Box ml={1}>
-									<Typography>
-										<FormattedMessage
-											id="addNewSelectField"
-											defaultMessage="Add new"
-											description="This text will be displayed as select field for select Field"
+						{multiSelect &&
+							secondOptionsArray &&
+							secondOptionsArray.map((element: any, index: number) => (
+								<MenuItem
+									key={index}
+									value={multiSelect ? element : element.id}
+									disabled={element.disabled}
+									onClick={(e) =>
+										customMenuOnClick ? customMenuOnClick(element) : null
+									}
+								>
+									{multiSelect ? (
+										<Checkbox
+											color="primary"
+											checked={elemName.indexOf(element.id) > -1}
+											disabled={element.disabled}
 										/>
-									</Typography>
+									) : null}
+									<Typography>{element.name}</Typography>
+								</MenuItem>
+							))}
+
+						{addNew && addNewClick && (
+							<MenuItem onClick={addNewClick} selected={false} value="">
+								<Box display="flex">
+									<AddCircleIcon />
+									<Box ml={1}>
+										<Typography>
+											<FormattedMessage
+												id="addNewSelectField"
+												defaultMessage="Add new"
+												description="This text will be displayed as select field for select Field"
+											/>
+										</Typography>
+									</Box>
 								</Box>
-							</Box>
-						</MenuItem>
-					)}
-				</Select>
-				<FormHelperText error>{formik.touched[name] && formik.errors[name]}</FormHelperText>
-			</FormControl>
+							</MenuItem>
+						)}
+					</Select>
+					<FormHelperText error>
+						{formik.touched[name] && formik.errors[name]}
+					</FormHelperText>
+				</FormControl>
+				{helperText && <Typography variant="body1">{helperText}</Typography>}
+			</>
 		);
 	}
 	if (inputType == "autocomplete") {

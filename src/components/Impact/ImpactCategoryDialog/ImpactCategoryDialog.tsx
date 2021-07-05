@@ -177,7 +177,7 @@ function ImpactCategoryDialog({
 
 	const onDelete = async () => {
 		try {
-			const impactCategoryValues = { ...initialValues };
+			const impactCategoryValues: any = { ...initialValues };
 			delete impactCategoryValues["id"];
 			await updateImpactCategory({
 				variables: {

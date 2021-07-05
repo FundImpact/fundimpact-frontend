@@ -2,16 +2,26 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { IUserSignUp } from "../../models";
 
-export const usePostFetch = <T>({ body = null, url }: { body: any; url: string }) => {
+export const usePostFetch = <T>({
+	body = null,
+	url,
+	initiateRequest = true,
+}: {
+	body: any;
+	url: string;
+	initiateRequest?: boolean;
+}) => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string>();
 	const [data, setData] = useState<T>();
 	const [payload, setPayload] = useState(body);
 
 	useEffect(() => {
-		intiatePostRequest(payload, url, setLoading, setData, setError);
-		setError("");
-	}, [payload, url]);
+		if (initiateRequest) {
+			intiatePostRequest(payload, url, setLoading, setData, setError);
+			setError("");
+		}
+	}, [payload, url, initiateRequest]);
 
 	return { error, loading, data, setPayload };
 };

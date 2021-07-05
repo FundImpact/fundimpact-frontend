@@ -11,6 +11,12 @@ export const CREATE_FUND_RECEIPT = gql`
 					name
 				}
 			}
+			project {
+				id
+			}
+			donor {
+				id
+			}
 		}
 	}
 `;
@@ -27,6 +33,12 @@ export const UPDATE_FUND_RECEIPT = gql`
 					name
 					deleted
 				}
+			}
+			project {
+				id
+			}
+			donor {
+				id
 			}
 		}
 	}

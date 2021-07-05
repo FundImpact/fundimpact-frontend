@@ -72,12 +72,14 @@
 		{
 			"id": "1",
 			"donor": { "id": "1", "name": "donor 1", "deleted": false },
-			"project": { "id": "3", "name": "my project" }
+			"project": { "id": "3", "name": "my project" },
+			"deleted": false
 		},
 		{
 			"id": "2",
 			"donor": { "id": "2", "name": "donor 2", "deleted": false },
-			"project": { "id": "3", "name": "my project" }
+			"project": { "id": "3", "name": "my project" },
+			"deleted": false
 		}
 	],
 	"mockAnnualYearList": [
@@ -207,7 +209,8 @@
 			"project": {
 				"id": "2",
 				"name": "Project1ssssss"
-			}
+			},
+			"deleted": false
 		}
 	],
 	"annualYearListMock": [
@@ -371,7 +374,17 @@
 					"id": "13",
 					"name": "ASGAR",
 					"deleted": false
+				},
+				"project": {
+					"id": "1",
+					"name": "my project"
 				}
+			},
+			"project": {
+				"id": "1"
+			},
+			"donor": {
+				"id": "13"
 			},
 			"deleted": false
 		},
@@ -385,7 +398,17 @@
 					"id": "13",
 					"name": "ASGAR",
 					"deleted": false
+				},
+				"project": {
+					"id": "1",
+					"name": "my project"
 				}
+			},
+			"project": {
+				"id": "1"
+			},
+			"donor": {
+				"id": "13"
 			},
 			"deleted": false
 		}

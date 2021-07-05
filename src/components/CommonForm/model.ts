@@ -20,4 +20,5 @@ export interface ICommonForm {
 	updateButtonName?: string;
 	children?: React.ReactNode;
 	getFormikInstance?: (formik: FormikProps<any>) => void;
+	additionalButtons?: React.ReactNode;
 }
