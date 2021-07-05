@@ -442,6 +442,41 @@ export const UPDATE_IMPACT_LINEITEM_FYDONOR = gql`
 	}
 `;
 
+export const GET_IMPACT_TRANCHE = gql`
+	query impactLinitemFyDonorList($filter: JSON) {
+		impactLinitemFyDonorList(where: $filter) {
+			id
+			project_donor {
+				id
+				project {
+					id
+				}
+				donor {
+					id
+					name
+					country {
+						id
+						name
+					}
+					deleted
+				}
+			}
+			grant_periods_project {
+				id
+				name
+				description
+				short_name
+				start_date
+				end_date
+				project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
 export const GET_IMPACT_LINEITEM_FYDONOR = gql`
 	query impactLinitemFyDonorList($filter: JSON) {
 		impactLinitemFyDonorList(where: $filter) {

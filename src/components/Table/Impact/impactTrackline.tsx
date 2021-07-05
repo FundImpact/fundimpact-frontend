@@ -16,7 +16,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 
 import {
-	GET_IMPACT_LINEITEM_FYDONOR,
+	GET_IMPACT_TRANCHE,
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 	GET_IMPACT_TRACKLINE_COUNT,
 } from "../../../graphql/Impact/trackline";
@@ -117,7 +117,7 @@ function EditImpactTargetLineIcon({
 	>([]);
 	const notificationDispatch = useNotificationDispatch();
 
-	const { data } = useQuery(GET_IMPACT_LINEITEM_FYDONOR, {
+	const { data } = useQuery(GET_IMPACT_TRANCHE, {
 		variables: { filter: { impact_tracking_lineitem: impactTargetLine.id } },
 	});
 	useEffect(() => {
@@ -350,6 +350,30 @@ const createChipArray = ({
 	return null;
 };
 
+const ImpactTranche = ({ impactTracklineId }: { impactTracklineId: string }) => {
+	const { data } = useQuery(GET_IMPACT_TRANCHE, {
+		variables: { filter: { impact_tracking_lineitem: impactTracklineId } },
+	});
+
+	return (
+		<TableCell>
+			<Box display="flex">
+				{data?.impactLinitemFyDonorList.map((tranche: any) => (
+					<Box mr={1}>
+						<Chip
+							label={`${tranche?.grant_periods_project?.name || "-"} - ${
+								tranche?.project_donor?.donor?.name || "-"
+							}`}
+							size="small"
+							color="primary"
+						/>
+					</Box>
+				))}
+			</Box>
+		</TableCell>
+	);
+};
+
 export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetId: string }) {
 	// const { loading, data } = useQuery(GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET, {
 	// 	variables: { filter: { impact_target_project: impactTargetId } },
@@ -541,6 +565,9 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 								)}
 							</Box>
 						</TableCell>,
+						<ImpactTranche
+							impactTracklineId={impactTrackingLineitemList[i].id || ""}
+						/>,
 					];
 					row.push(
 						<EditImpactTargetLineIcon

@@ -16,7 +16,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 
 import {
-	GET_DELIVERABLE_LINEITEM_FYDONOR,
+	GET_DELIVERABLE_TRANCHE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
 } from "../../../graphql/Deliverable/trackline";
@@ -96,8 +96,31 @@ const chipArray = ({
 	));
 };
 
+const DeliverableTranche = ({ TracklineId }: { TracklineId: string }) => {
+	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
+		variables: { filter: { deliverable_tracking_lineitem: TracklineId } },
+	});
+	return (
+		<TableCell>
+			<Box display="flex">
+				{data?.deliverableLinitemFyDonorList.map((elem: any) => (
+					<Box mr={1}>
+						<Chip
+							label={`${elem?.grant_periods_project?.name || "-"} - ${
+								elem?.project_donor?.donor?.name || "-"
+							}`}
+							size="small"
+							color="primary"
+						/>
+					</Box>
+				))}
+			</Box>
+		</TableCell>
+	);
+};
+
 // import {
-// 	GET_DELIVERABLE_LINEITEM_FYDONOR,
+// 	GET_DELIVERABLE_TRANCHE,
 // 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 // } from "../../../graphql/Deliverable/trackline";
 function EditDeliverableTrackLineIcon({
@@ -122,12 +145,11 @@ function EditDeliverableTrackLineIcon({
 	>([]);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 
-	const { data } = useQuery(GET_DELIVERABLE_LINEITEM_FYDONOR, {
+	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
 		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
 	});
 
 	const dashBoardData = useDashBoardData();
-
 	useEffect(() => {
 		let deliverableTracklineMapValueObj: any = {};
 		let donors: any = [];
@@ -564,6 +586,9 @@ export default function DeliverablesTrackLineTable({
 								)}
 							</Box>
 						</TableCell>,
+						<DeliverableTranche
+							TracklineId={deliverableTrackingLineitemList[i]?.id || ""}
+						/>,
 					];
 					row.push(
 						<EditDeliverableTrackLineIcon
