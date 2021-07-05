@@ -2,6 +2,7 @@ import { useLazyQuery, useMutation, ApolloClient, useApolloClient } from "@apoll
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import {
 	GET_BUDGET_TARGET_PROJECT,
+	GET_BUDGET_TRACKINGS_SPEND_AMOUNT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 } from "../../graphql/Budget";
@@ -23,6 +24,19 @@ const useRefetchOnBudgetTargetImport = () => {
 		});
 	};
 	return { refetchOnBudgetTargetImport };
+};
+
+const useRefetchOnExpenditureCreate = () => {
+	const apolloClient = useApolloClient();
+	const refetchOnExpenditureCreate = (budgetTargetListIds: string[]) => {
+		console.log("here", budgetTargetListIds);
+		apolloClient.query({
+			query: GET_BUDGET_TRACKINGS_SPEND_AMOUNT,
+			variables: { filter: { budget_targets_project: budgetTargetListIds } },
+			fetchPolicy: "network-only",
+		});
+	};
+	return { refetchOnExpenditureCreate };
 };
 
 const useRefetchOnBudgetLineItemImport = (budgetTargetsProject: string) => {
@@ -64,4 +78,5 @@ export {
 	useRefetchOnBudgetTargetImport,
 	useRefetchOnBudgetLineItemImport,
 	useRefetchBudgetCategoryOnBudgetCategoryImport,
+	useRefetchOnExpenditureCreate,
 };

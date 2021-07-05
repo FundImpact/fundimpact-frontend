@@ -56,6 +56,7 @@ export type IBudgetLineitemProps =
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetTrackingLineitem;
 			dialogType?: DIALOG_TYPE;
+			renderTotalAgain?: () => void;
 			refetchOnSuccess:
 				| ((
 						variables?: Partial<Record<string, any>> | undefined
@@ -66,6 +67,7 @@ export type IBudgetLineitemProps =
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
+			renderTotalAgain?: () => void;
 			initialValues?: IBudgetTrackingLineitemForm;
 			dialogType?: DIALOG_TYPE;
 	  };

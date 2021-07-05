@@ -171,6 +171,7 @@ function BudgetTargetTableGraphql() {
 	const apolloClient = useApolloClient();
 	const [totalSpendAmount, setTotalSpendAmount] = useState(0);
 
+	const [shouldTotalRenderAgain, setShouldTotalRenderAgain] = useState(false);
 	useEffect(() => {
 		const getProjectBudgetTrackingSpend = async (budgetTargetListIds: string[]) => {
 			try {
@@ -185,6 +186,7 @@ function BudgetTargetTableGraphql() {
 					)
 				);
 			} catch (error) {
+				console.log(error);
 				setTotalSpendAmount(0);
 			}
 		};
@@ -195,7 +197,7 @@ function BudgetTargetTableGraphql() {
 		} else {
 			setTotalSpendAmount(0);
 		}
-	}, [budgetTargetList]);
+	}, [budgetTargetList, shouldTotalRenderAgain]);
 
 	return (
 		<BudgetTargetTableContainer
@@ -206,6 +208,7 @@ function BudgetTargetTableGraphql() {
 			order={order}
 			totalSpendAmount={totalSpendAmount}
 			setLimit={setLimit}
+			renderTotalAgain={() => setShouldTotalRenderAgain(!shouldTotalRenderAgain)}
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}

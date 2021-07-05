@@ -17,6 +17,7 @@ interface IBUDGET_TARGET_TABLE_CONTAINER {
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
+	renderTotalAgain?: () => void;
 	totalSpendAmount?: number;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	inputFields: any[];
@@ -79,6 +80,7 @@ function BudgetTargetTableContainer({
 	donorHash,
 	budgetCategoryHash,
 	filterList,
+	renderTotalAgain,
 	totalSpendAmount,
 	setFilterList,
 	removeFilterListElements,
@@ -118,6 +120,7 @@ function BudgetTargetTableContainer({
 			budgetLineItemInitialValues={getBudgetLineItemInitialValues(
 				(selectedBudgetTarget.current && selectedBudgetTarget.current.id) || ""
 			)}
+			renderTotalAgain={renderTotalAgain}
 			totalSpendAmount={totalSpendAmount}
 			setLimit={setLimit}
 			inputFields={inputFields}

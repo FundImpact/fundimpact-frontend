@@ -36,6 +36,7 @@ import { ApolloQueryResult, OperationVariables, useLazyQuery } from "@apollo/cli
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
 import { GET_BUDGET_TRACKINGS_SPEND_AMOUNT } from "../../../../graphql/Budget";
+import { useRefetchOnExpenditureCreate } from "../../../../hooks/budget";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -46,6 +47,7 @@ interface IBudgetTargetTableViewProps {
 	budgegtTargetList: IBudgetTargetProjectResponse[];
 	changePage: (prev?: boolean) => void;
 	count: number;
+	renderTotalAgain?: () => void;
 	loading: boolean;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -227,6 +229,7 @@ function BudgetTargetView({
 	setOrder,
 	setLimit,
 	orderBy,
+	renderTotalAgain,
 	totalSpendAmount,
 	setOrderBy,
 	budgetLineItemInitialValues,
@@ -476,7 +479,10 @@ function BudgetTargetView({
 					)}
 					<BudgetLineitem
 						open={openDialogs[1]}
-						handleClose={() => toggleDialogs(1, false)}
+						handleClose={() => {
+							toggleDialogs(1, false);
+						}}
+						renderTotalAgain={renderTotalAgain}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
 					/>

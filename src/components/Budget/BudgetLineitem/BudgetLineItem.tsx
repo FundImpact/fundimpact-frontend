@@ -202,7 +202,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	// const [openBudgetTargetDialog, setOpenBudgetTargetDialog] = useState<boolean>(false);
 	const [openGrantPeriodDialog, setOpenGrantPeriodDialog] = useState<boolean>(false);
 
-	const { handleClose } = props;
+	const { handleClose, renderTotalAgain } = props;
 
 	const closeDialog = useCallback(() => {
 		budgetLineitemFormInputFields[5].hidden = false;
@@ -216,7 +216,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	useEffect(() => {
 		if (success) {
 			if (props.formAction === FORM_ACTIONS.CREATE) {
-				budgetTrackingRefetch();
+				if (renderTotalAgain) budgetTrackingRefetch();
 			} else if (props.formAction === FORM_ACTIONS.UPDATE && props.refetchOnSuccess) {
 				props.refetchOnSuccess();
 			}
@@ -235,7 +235,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					related_id: data.createProjBudgetTracking.id,
 					related_type: "budget_tracking_lineitem",
 					field: "attachments",
-				}).then(() => refetchDocuments());
+				}).then(() => {
+					refetchDocuments();
+				});
+				closeDialog();
 			},
 		}
 	);
@@ -499,8 +502,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));
 		} catch (err) {
 			notificationDispatch(setErrorNotification(err?.message));
-		} finally {
-			closeDialog();
 		}
 	};
 
@@ -570,7 +571,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			notificationDispatch(setSuccessNotification("Budget  Line Item Updation Success"));
 		} catch (err) {
 			notificationDispatch(setErrorNotification(err?.message));
-		} finally {
 			closeDialog();
 		}
 	};
