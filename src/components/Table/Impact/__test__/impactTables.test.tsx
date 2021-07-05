@@ -11,6 +11,7 @@ import {
 	GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 	GET_IMPACT_TRACKLINE_COUNT,
 	GET_IMPACT_LINEITEM_FYDONOR,
+	GET_IMPACT_TRANCHE,
 } from "../../../../graphql/Impact/trackline";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
@@ -39,6 +40,13 @@ let intialFormValue = {
 };
 
 const mocks = [
+	{
+		request: {
+			query: GET_IMPACT_TRANCHE,
+			variables: { filter: { impact_tracking_lineitem: "8" } },
+		},
+		result: { data: { impactLinitemFyDonorList: [] } },
+	},
 	{
 		request: {
 			query: GET_IMPACT_TARGET_BY_PROJECT,

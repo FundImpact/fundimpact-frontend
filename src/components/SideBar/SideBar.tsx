@@ -71,6 +71,9 @@ export default function SideBar({ children }: { children?: Function }) {
 	const [getWorkspaceList, { data: workspaceList }] = useLazyQuery<IGET_WORKSPACES_BY_ORG>(
 		GET_WORKSPACES_BY_ORG,
 		{
+			onError: (err) => {
+				console.log(err);
+			},
 			fetchPolicy: "network-only",
 		}
 	);
@@ -80,14 +83,18 @@ export default function SideBar({ children }: { children?: Function }) {
 
 	useEffect(() => {
 		if (dashboardData) {
-			getWorkspaceList({
-				variables: {
-					sort: `name:${sort}`,
-					filter: {
-						organization: dashboardData?.organization?.id,
+			try {
+				getWorkspaceList({
+					variables: {
+						sort: `name:${sort}`,
+						filter: {
+							organization: dashboardData?.organization?.id,
+						},
 					},
-				},
-			});
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	}, [dashboardData, sort]);
 

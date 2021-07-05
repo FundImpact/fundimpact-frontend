@@ -11,6 +11,7 @@ import {
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
 	GET_DELIVERABLE_LINEITEM_FYDONOR,
+	GET_DELIVERABLE_TRANCHE,
 } from "../../../../graphql/Deliverable/trackline";
 import { DashboardProvider } from "../../../../contexts/dashboardContext";
 import { NotificationProvider } from "../../../../contexts/notificationContext";
@@ -37,6 +38,13 @@ let intialFormValue = {
 };
 
 const mocks = [
+	{
+		request: {
+			query: GET_DELIVERABLE_TRANCHE,
+			variables: { filter: { deliverable_tracking_lineitem: "2" } },
+		},
+		result: { data: { deliverableLinitemFyDonorList: [] } },
+	},
 	{
 		request: {
 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
