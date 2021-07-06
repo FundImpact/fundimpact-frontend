@@ -55,11 +55,13 @@ export default function FundStatus() {
 		description: `This text will be show on dashboard fund status card for fund status bullet chart on hover`,
 	});
 
+	/*
 	const totalLabel = intl.formatMessage({
 		id: "FundStatusTotalTitle",
 		defaultMessage: "Total",
 		description: `This text will be show on dashboard fund status card for total bullet chart`,
 	});
+ */
 
 	const createFundDetails = (
 		amountApproved: number,
@@ -85,11 +87,11 @@ export default function FundStatus() {
 			color: theme.palette.grey[200],
 		};
 
-		const TOTAL_FUNDS: IFunds = {
+		/* const TOTAL_FUNDS: IFunds = {
 			name: totalLabel,
 			amountToShow: undefined,
 			color: theme.palette.info.main,
-		};
+		}; */
 
 		// let pieData = {
 		// 	labels: ["Approved", "Spend", "Received"],
@@ -104,6 +106,7 @@ export default function FundStatus() {
 		// 		},
 		// 	],
 		// };
+
 		let BulletChartConfig = {
 			comparativeErrorMeasureData: [{ name: approvedLabel, y: amountApproved }],
 			primarySegmentedMeasureData: [{ name: spendLabel, y: amountSpend }],
@@ -113,7 +116,7 @@ export default function FundStatus() {
 			],
 		};
 
-		let totalAmount = amountApproved + amountSpend + amountReceived;
+		/*let totalAmount = amountApproved + amountSpend + amountReceived; */
 		let details = [
 			{
 				...FUNDS_APPROVED,
@@ -136,12 +139,6 @@ export default function FundStatus() {
 				amountToShow:
 					amountSpend > 999 ? (amountSpend / 1000).toFixed(1) + "K" : amountSpend + "",
 				originalAmount: amountSpend,
-			},
-			{
-				...TOTAL_FUNDS,
-				amountToShow:
-					totalAmount > 999 ? (totalAmount / 1000).toFixed(1) + "K" : totalAmount + "",
-				originalAmount: totalAmount,
 			},
 		];
 
