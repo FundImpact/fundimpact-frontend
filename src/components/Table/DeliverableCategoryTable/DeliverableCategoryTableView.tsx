@@ -194,6 +194,7 @@ function DeliverableCategoryView({
 				}
 				valuesList={deliverableCategoryList}
 				rows={rows}
+				openAllRows={false}
 				selectedRow={selectedDeliverableCategory}
 				toggleDialogs={toggleDialogs}
 				editMenuName={deliverableCategoryTableEditMenu}

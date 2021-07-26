@@ -179,6 +179,7 @@ export type ICommonTableRow = {
 export interface ICommonTable<T> {
 	tableHeadings: ITableHeadings[];
 	rows: ICommonTableRow[];
+	openAllRows: boolean;
 	selectedRow: MutableRefObject<T | null>;
 	children: ReactNode | [ReactNode, () => ReactNode];
 	valuesList: T[];

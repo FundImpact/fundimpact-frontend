@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -35,6 +35,7 @@ import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
+import ExpandAllRows from "../../../Expand/expand";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -350,6 +351,13 @@ function BudgetTargetView({
 		</>
 	);
 
+	const [openAllRows, setOpenAllRows] = useState(false);
+	filteredTableHeadings[0].renderComponent = () => (
+		<>
+			<ExpandAllRows open={openAllRows} setOpen={setOpenAllRows} />
+		</>
+	);
+
 	const onImportBudgetTargetTableSuccess = () => refetchBudgetTargetTable?.();
 
 	const theme = useTheme();
@@ -378,6 +386,7 @@ function BudgetTargetView({
 				)}
 				valuesList={budgegtTargetList}
 				rows={filteredRows}
+				openAllRows={openAllRows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}
 				editMenuName={budgetTargetTableEditMenu}

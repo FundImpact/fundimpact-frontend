@@ -230,6 +230,7 @@ function FundReceivedTableView({
 				tableHeadings={fundReceivedTableHeadings}
 				valuesList={fundReceiptList}
 				rows={rows}
+				openAllRows={false}
 				selectedRow={selectedFundReceipt}
 				toggleDialogs={toggleDialogs}
 				editMenuName={editMenu}

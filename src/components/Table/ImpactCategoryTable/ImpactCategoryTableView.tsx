@@ -189,6 +189,7 @@ function ImpactCategoryTableView({
 				}
 				valuesList={impactCategoryList}
 				rows={rows}
+				openAllRows={false}
 				selectedRow={selectedImpactCategory}
 				toggleDialogs={toggleDialogs}
 				editMenuName={impactCategoryTableEditMenu}

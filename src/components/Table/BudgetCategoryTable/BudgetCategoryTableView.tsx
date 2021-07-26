@@ -1,6 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import CommonTable from "../CommonTable";
-import { budgetCategoryHeading as tableHeadings } from "../constants";
+import {
+	deliverableHeadings,
+	budgetCategoryHeading,
+	budgetCategoryHeading as tableHeadings,
+} from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import { IBudgetCategory } from "../../../models/budget";
 import BudgetCategory from "../../Budget/BudgetCategory";
@@ -16,7 +20,8 @@ import { ApolloQueryResult, OperationVariables, useApolloClient } from "@apollo/
 import { Button, useTheme } from "@material-ui/core";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-
+import ExpandAllRows from "../../Expand/expand";
+import { ITableHeadings } from "../../../models";
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
@@ -104,6 +109,7 @@ function BudgetCategoryTableView({
 			tableHeadings={tableHeadings}
 			valuesList={budgetCategoryList}
 			rows={rows}
+			openAllRows={false}
 			selectedRow={selectedBudgetCategory}
 			toggleDialogs={toggleDialogs}
 			editMenuName={budgetCategoryTableEditMenu}

@@ -197,6 +197,7 @@ function ImpactUnitTableView({
 				}
 				valuesList={impactUnitList}
 				rows={rows}
+				openAllRows={false}
 				selectedRow={selectedImpactUnit}
 				toggleDialogs={toggleDialogs}
 				editMenuName={impactUnitTableEditMenu}

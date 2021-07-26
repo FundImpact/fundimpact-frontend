@@ -436,6 +436,7 @@ function BudgetLineItemTableView({
 				tableHeadings={filteredTableHeadings}
 				valuesList={budgetLineitemList}
 				rows={filteredTableRows}
+				openAllRows={false}
 				selectedRow={selectedBudgetLineItem}
 				toggleDialogs={toggleDialogs}
 				editMenuName={budgetLineItemTableEditMenu}

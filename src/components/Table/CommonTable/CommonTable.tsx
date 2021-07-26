@@ -50,11 +50,13 @@ const styledTable = makeStyles((theme: Theme) =>
 function CommonTableRow<T extends { id: string }>({
 	rowData,
 	serialNo,
+	openAllRows,
 	rows,
 	children,
 	collapsableTable = false,
 }: {
 	rowData: T;
+	openAllRows: boolean;
 	serialNo: number;
 	rows: ICommonTableRow[];
 	children: any; //change
@@ -63,6 +65,10 @@ function CommonTableRow<T extends { id: string }>({
 	const [openRow, setOpenRow] = useState(false);
 	const childrenArray = React.Children.toArray(children);
 	const intl = useIntl();
+
+	useEffect(() => {
+		setOpenRow(openAllRows);
+	}, [openAllRows]);
 
 	return (
 		<>
@@ -126,6 +132,7 @@ const removeNullElementsFromMenuList = (element: { children: JSX.Element | null 
 function CommonTable<T extends { id: string }>({
 	tableHeadings,
 	rows,
+	openAllRows,
 	selectedRow,
 	children,
 	valuesList,
@@ -278,6 +285,7 @@ function CommonTable<T extends { id: string }>({
 								collapsableTable={collapsableTable}
 								rowData={rowData}
 								rows={rows}
+								openAllRows={openAllRows}
 								serialNo={page * defaultRows + index + 1}
 							>
 								<TableCell>

@@ -12,7 +12,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableFooter from "@material-ui/core/TableFooter";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { ITableHeadings } from "../../models";
 
@@ -41,9 +41,14 @@ function Row(props: {
 	row: { collaspeTable: React.ReactNode; column: React.ReactNode[] };
 	index: number;
 	showNestedTable?: boolean;
+	openRow: boolean;
 }) {
-	const { row, index, showNestedTable = true } = props;
+	const { row, index, showNestedTable = true, openRow } = props;
 	const [open, setOpen] = React.useState(false);
+
+	useEffect(() => {
+		setOpen(openRow);
+	}, [openRow]);
 
 	return (
 		<React.Fragment>
@@ -80,6 +85,7 @@ function Row(props: {
 export default function CollapsibleTable({
 	tableHeading,
 	rows,
+	openRow,
 	pagination,
 	order,
 	setOrder,
@@ -90,6 +96,7 @@ export default function CollapsibleTable({
 }: {
 	tableHeading: ITableHeadings[];
 	rows: { collaspeTable: React.ReactNode; column: React.ReactNode[] }[];
+	openRow: boolean;
 	pagination?: React.ReactNode;
 	order?: "asc" | "desc";
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -190,6 +197,7 @@ export default function CollapsibleTable({
 								index={index}
 								row={row}
 								showNestedTable={showNestedTable}
+								openRow={openRow}
 							/>
 						))}
 					</TableBody>

@@ -207,6 +207,7 @@ function IndividualTableView({
 				tableHeadings={tableHeadings}
 				valuesList={individualList}
 				rows={tableRows}
+				openAllRows={false}
 				selectedRow={selectedIndividual}
 				toggleDialogs={toggleDialogs}
 				editMenuName={individualEditMenu}

@@ -203,6 +203,7 @@ function DeliverableUnitTableView({
 				}
 				valuesList={deliverableUnitList}
 				rows={rows}
+				openAllRows={false}
 				selectedRow={selectedDeliverableUnit}
 				toggleDialogs={toggleDialogs}
 				editMenuName={deliverableUnitTableEditMenu}

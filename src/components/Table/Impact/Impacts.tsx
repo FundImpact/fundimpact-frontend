@@ -62,6 +62,8 @@ import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
 import { useRefetchOnImpactTargetImport } from "../../../hooks/impact";
 
+import ExpandAllRows from "../../Expand/expand";
+
 enum tableHeaders {
 	name = 2,
 	category = 3,
@@ -637,7 +639,12 @@ export default function ImpactsTable() {
 			/>
 		</>
 	);
-
+	const [openRows, setOpenRows] = useState(false);
+	filteredImpactHeadings[0].renderComponent = () => (
+		<>
+			<ExpandAllRows open={openRows} setOpen={setOpenRows} />
+		</>
+	);
 	return (
 		<>
 			{queryLoading || countQueryLoading ? (
@@ -662,6 +669,7 @@ export default function ImpactsTable() {
 						setOrder={setOrder}
 						setOrderBy={setOrderBy}
 						rows={rows}
+						openRow={openRows}
 						pagination={impactTablePagination}
 						tableHeading={getTableHeadingByImpactTracklineAccess(
 							filteredImpactHeadings,

@@ -60,6 +60,7 @@ import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
+import ExpandAllRows from "../../Expand/expand";
 
 enum tableHeaders {
 	name = 2,
@@ -593,6 +594,14 @@ export default function DeliverablesTable() {
 			/>
 		</>
 	);
+
+	const [openRows, setOpenRows] = useState(false);
+	filteredDeliverableHeadings[0].renderComponent = () => (
+		<>
+			<ExpandAllRows open={openRows} setOpen={setOpenRows} />
+		</>
+	);
+
 	return (
 		<>
 			{countQueryLoading || queryLoading ? (
@@ -621,6 +630,7 @@ export default function DeliverablesTable() {
 							deliverableTracklineFindAccess
 						)}
 						rows={rows}
+						openRow={openRows}
 						pagination={deliverableTablePagination}
 						showNestedTable={deliverableTracklineFindAccess}
 						tableActionButton={({
