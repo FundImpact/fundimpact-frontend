@@ -98,6 +98,8 @@ function DeliverableCategoryTableGraphql({
 		}
 	}, [nestedTableFilterList, delivarableUnitId]);
 
+	const [limit, setLimit] = useState(10);
+
 	let {
 		changePage: changeDeliverableCategoryPage,
 		count: deliverableCategoryCount,
@@ -110,6 +112,7 @@ function DeliverableCategoryTableGraphql({
 		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 		countFilter: queryFilter,
 		query: GET_DELIVERABLE_ORG_CATEGORY,
+		limit: limit,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
@@ -163,6 +166,8 @@ function DeliverableCategoryTableGraphql({
 			changePage={changeDeliverableCategoryPage}
 			loading={deliverableCategoryLoading || deliverableCategoryCountLoading}
 			count={deliverableCategoryCount}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

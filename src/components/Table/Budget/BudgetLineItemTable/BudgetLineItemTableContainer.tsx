@@ -27,6 +27,8 @@ function BudgetLineItemTableContainer({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -50,6 +52,8 @@ function BudgetLineItemTableContainer({
 	changePage: (prev?: boolean) => void;
 	count: number;
 	loading: boolean;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
@@ -111,6 +115,8 @@ function BudgetLineItemTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

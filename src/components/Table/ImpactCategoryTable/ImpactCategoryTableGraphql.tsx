@@ -100,6 +100,8 @@ function ImpactCategoryTableGraphql({
 		});
 	};
 
+	const [limit, setLimit] = useState(10);
+
 	let {
 		changePage: changeImpactCategoryPage,
 		count: impactCategoryCount,
@@ -113,6 +115,7 @@ function ImpactCategoryTableGraphql({
 		countFilter: queryFilter,
 		query: GET_IMPACT_CATEGORY_BY_ORG,
 		queryFilter,
+		limit: limit,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
@@ -166,6 +169,8 @@ function ImpactCategoryTableGraphql({
 			changePage={changeImpactCategoryPage}
 			loading={impactCategoryLoading || impactCategoryCountLoading}
 			count={impactCategoryCount}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

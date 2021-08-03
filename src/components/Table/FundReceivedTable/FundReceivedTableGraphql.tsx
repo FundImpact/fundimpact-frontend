@@ -124,6 +124,7 @@ function FundReceivedTableGraphql() {
 		}
 	}, [filterList, dashboardData]);
 
+	const [limit, setLimit] = useState(10);
 	let {
 		changePage,
 		count,
@@ -137,6 +138,7 @@ function FundReceivedTableGraphql() {
 		countFilter: queryFilter,
 		query: GET_FUND_RECEIPT_PROJECT_LIST,
 		queryFilter,
+		limit: limit,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData && dashboardData?.project),
 	});
@@ -154,6 +156,8 @@ function FundReceivedTableGraphql() {
 			loading={queryLoading || countQueryLoading}
 			changePage={changePage}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

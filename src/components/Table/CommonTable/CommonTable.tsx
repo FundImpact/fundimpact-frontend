@@ -124,8 +124,6 @@ function CommonTableRow<T extends { id: string }>({
 	);
 }
 
-const defaultRows = 10;
-
 const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) =>
 	element.children;
 
@@ -141,6 +139,8 @@ function CommonTable<T extends { id: string }>({
 	collapsableTable = false,
 	changePage,
 	count,
+	limit,
+	setLimit,
 	loading,
 	order,
 	setOrder,
@@ -153,6 +153,7 @@ function CommonTable<T extends { id: string }>({
 	const [page, setPage] = useState<number>(0);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+	const [defaultRows, setDefaultRows] = useState(limit || 5);
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -323,10 +324,10 @@ function CommonTable<T extends { id: string }>({
 					<TableFooter>
 						<TableRow>
 							<TablePagination
-								rowsPerPageOptions={[]}
+								rowsPerPageOptions={[5, 10, "All"]}
 								colSpan={getTablePaginationColSpan()}
 								count={count}
-								rowsPerPage={count > defaultRows ? defaultRows : count}
+								rowsPerPage={limit || 5}
 								page={page}
 								SelectProps={{
 									inputProps: { "aria-label": "rows per page" },
@@ -343,7 +344,34 @@ function CommonTable<T extends { id: string }>({
 									}
 									setPage(newPage);
 								}}
-								onChangeRowsPerPage={() => {}}
+								onChangeRowsPerPage={(event: any) => {
+									console.log("value-" + event.target.value);
+									// console.log("limit-"+limit);
+									// console.log("defaultrows"+defaultRows);
+									if (event.target.value == "All") {
+										if (setLimit) {
+											console.log(1);
+											setDefaultRows(count);
+											setLimit(count);
+										}
+									} else if (event.target.value == 5) {
+										if (setLimit) {
+											console.log(2);
+											setDefaultRows(5);
+											setLimit(5);
+										}
+									} else if (event.target.value == 10) {
+										if (setLimit) {
+											console.log(3);
+											setDefaultRows(10);
+											setLimit(10);
+										}
+									}
+									setPage(0);
+									console.log(typeof event.target.value);
+									console.log("limit-" + limit);
+									console.log("defaultrows" + defaultRows);
+								}}
 								style={{ paddingRight: "40px" }}
 							/>
 						</TableRow>

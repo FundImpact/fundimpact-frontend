@@ -70,6 +70,7 @@ function IndividualCategoryTableGraphql({
 			removeFilterListObjectElements({ filterListObject, key, index })
 		);
 
+	const [limit, setLimit] = useState(10);
 	let {
 		changePage,
 		count,
@@ -82,6 +83,7 @@ function IndividualCategoryTableGraphql({
 		countQuery: GET_INDIVIDUALS_COUNT,
 		countFilter: queryFilter,
 		query: GET_INDIVIDUALS,
+		limit: limit,
 		queryFilter: queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		retrieveContFromCountQueryResponse: "t4DIndividualsConnection,aggregate,count",
@@ -96,6 +98,8 @@ function IndividualCategoryTableGraphql({
 		<IndividualTableContainer
 			individualList={individualList?.t4DIndividuals || []}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
 			order={order}

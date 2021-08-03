@@ -465,7 +465,7 @@ export default function DeliverablesTrackLineTable({
 		}
 		setTracklinePage(newPage);
 	};
-
+	const [limit, setLimit] = useState(10);
 	let {
 		count,
 		queryData: deliverableTracklineData,
@@ -478,10 +478,11 @@ export default function DeliverablesTrackLineTable({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
 		countFilter: queryFilter,
+		limit: limit,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-	const limit = 10;
+	// const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(
 		deliverableTargetId
@@ -614,15 +615,27 @@ export default function DeliverablesTrackLineTable({
 		[annualYearFindAccess, financialYearFindAccess]
 	);
 
+	const handleChangeRowsPerPage = (event: any) => {
+		console.log(count);
+		if (event.target.value == "All") {
+			setLimit(count);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setTracklinePage(0);
+	};
+
 	let deliverableTracklineTablePagination = (
 		<TablePagination
-			rowsPerPageOptions={[]}
+			rowsPerPageOptions={[5, 10, "All"]}
 			colSpan={9}
 			count={count}
 			rowsPerPage={count > limit ? limit : count}
 			page={TracklinePage}
 			onChangePage={handleDeliverableLineChangePage}
-			onChangeRowsPerPage={() => {}}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 			style={{ paddingRight: "40px" }}
 		/>
 	);

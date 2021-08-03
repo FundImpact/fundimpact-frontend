@@ -96,6 +96,7 @@ function DeliverableUnitTableGraphql({
 			);
 		}
 	}, [nestedTableFilterList, deliverableCategoryId]);
+	const [limit, setLimit] = useState(10);
 
 	let {
 		changePage: changeDeliverableUnitPage,
@@ -108,6 +109,7 @@ function DeliverableUnitTableGraphql({
 	} = pagination({
 		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 		countFilter: queryFilter,
+		limit: limit,
 		query: GET_DELIVERABLE_UNIT_BY_ORG,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
@@ -164,6 +166,8 @@ function DeliverableUnitTableGraphql({
 			changePage={changeDeliverableUnitPage}
 			loading={deliverableUnitLoading || deliverableUnitCountLoading}
 			count={deliverableUnitCount}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

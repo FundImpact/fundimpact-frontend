@@ -19,6 +19,7 @@ import FilterListContainer from "../../FilterList";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { createChipArray } from "../../commons";
 import { GET_ATTACHMENT_IN_PROJECT_DELIVERABLE_IMPACT_BUDGET_BY_PROJECT } from "../../../graphql/project";
+import { clearNotification } from "../../../reducers/notificationReducer";
 
 export default function ProjectDocumentsTable() {
 	const [projectDocumentPage, setProjectDocumentPage] = React.useState(0);
@@ -39,7 +40,7 @@ export default function ProjectDocumentsTable() {
 
 	const dashBoardData = useDashBoardData();
 
-	const limit = 10;
+	const [limit, setLimit] = useState(10);
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
 	const handleChangePage = (event: unknown, newPage: number) => {
@@ -119,6 +120,17 @@ export default function ProjectDocumentsTable() {
 		/>
 	);
 
+	const handleChangeRowsPerPage = (event: any) => {
+		if (event.target.value == "All") {
+			setLimit(rows.length);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setProjectDocumentPage(0);
+	};
+
 	let projectDocumentPagination = (
 		<TablePagination
 			colSpan={9}
@@ -127,8 +139,8 @@ export default function ProjectDocumentsTable() {
 			page={projectDocumentPage}
 			onChangePage={handleChangePage}
 			style={{ paddingRight: "40px" }}
-			rowsPerPageOptions={[]}
-			onChangeRowsPerPage={() => {}}
+			rowsPerPageOptions={[5, 10, "All"]}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 		/>
 	);
 	return (

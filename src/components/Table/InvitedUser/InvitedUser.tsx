@@ -266,7 +266,8 @@ export default function InvitedUserTable({
 		}
 		setInvitedUserPage(newPage);
 	};
-	const limit = 10;
+	const [limit, setLimit] = useState(10);
+
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
 			removeFilterListObjectElements({ filterListObject, key, index })
@@ -312,15 +313,26 @@ export default function InvitedUserTable({
 		setRows(row);
 	}, [invitedUserList]);
 
+	const handleChangeRowsPerPage = (event: any) => {
+		if (event.target.value == "All") {
+			setLimit(count);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setInvitedUserPage(0);
+	};
+
 	let invitedUserTablePagination = (
 		<TablePagination
-			rowsPerPageOptions={[]}
+			rowsPerPageOptions={[5, 10, "All"]}
 			colSpan={9}
 			count={count}
 			rowsPerPage={count > limit ? limit : count}
 			page={invitedUserPage}
 			onChangePage={handleInvitedUserLineChangePage}
-			onChangeRowsPerPage={() => {}}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 			style={{ paddingRight: "40px" }}
 		/>
 	);

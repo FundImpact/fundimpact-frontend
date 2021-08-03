@@ -95,6 +95,7 @@ function ImpactUnitTableGraphql({
 		}
 	}, [nestedTableFilterList, impactCategoryId]);
 
+	const [limit, setLimit] = useState(10);
 	let {
 		changePage: changeImpactUnitPage,
 		count: impactUnitCount,
@@ -108,6 +109,7 @@ function ImpactUnitTableGraphql({
 		countFilter: queryFilter,
 		query: GET_IMPACT_UNIT_BY_ORG,
 		queryFilter,
+		limit: limit,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
@@ -161,6 +163,8 @@ function ImpactUnitTableGraphql({
 			changePage={changeImpactUnitPage}
 			loading={impactUnitLoading || impactUnitCountLoading}
 			count={impactUnitCount}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

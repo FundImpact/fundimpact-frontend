@@ -127,6 +127,7 @@ function BudgetTargetTableGraphql() {
 		}
 	}, [filterList, currentProject]);
 
+	const [limit, setLimit] = useState(10);
 	let {
 		count,
 		queryData: budgetTargetList,
@@ -139,6 +140,7 @@ function BudgetTargetTableGraphql() {
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
 		countFilter: queryFilter,
+		limit: limit,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(currentProject),
@@ -171,6 +173,8 @@ function BudgetTargetTableGraphql() {
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

@@ -480,6 +480,7 @@ export default function ImpactsTable() {
 		}
 	}, [filterList, dashboardData]);
 
+	const [limit, setLimit] = useState(10);
 	let {
 		count,
 		queryData: impactTargets,
@@ -492,6 +493,7 @@ export default function ImpactsTable() {
 		query: GET_IMPACT_TARGET_BY_PROJECT,
 		countQuery: GET_IMPACT_TARGETS_COUNT,
 		countFilter: queryFilter,
+		limit: limit,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
@@ -503,7 +505,7 @@ export default function ImpactsTable() {
 		refetchOnImpactTargetImport();
 	}, [refetchImpactTargetProjectCount, refetchImpactTargetProjectList]);
 
-	const limit = 10;
+	//const limit = 10;
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
 		newPage: number
@@ -609,15 +611,27 @@ export default function ImpactsTable() {
 		[impactCategoryFindAccess, impactAchievedFindAccess, sdgFindAccess]
 	);
 
+	const handleChangeRowsPerPage = (event: any) => {
+		console.log(count);
+		if (event.target.value == "All") {
+			setLimit(count);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setImpactPage(0);
+	};
+
 	let impactTablePagination = (
 		<TablePagination
-			rowsPerPageOptions={[]}
+			rowsPerPageOptions={[5, 10, "All"]}
 			colSpan={9}
 			count={count}
 			rowsPerPage={count > limit ? limit : count}
 			page={impactPage}
 			onChangePage={handleChangePage}
-			onChangeRowsPerPage={() => {}}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 			style={{ paddingRight: "40px" }}
 		/>
 	);

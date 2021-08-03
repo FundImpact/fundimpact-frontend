@@ -39,6 +39,8 @@ function BudgetCategoryTableGraphql({
 		});
 	}, [tableFilterList, dashboardData]);
 
+	const [limit, setLimit] = useState(10);
+
 	let {
 		changePage,
 		count,
@@ -51,6 +53,7 @@ function BudgetCategoryTableGraphql({
 		countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
 		countFilter: queryFilter,
 		query: GET_ORGANIZATION_BUDGET_CATEGORY,
+		limit: limit,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
@@ -67,6 +70,8 @@ function BudgetCategoryTableGraphql({
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

@@ -98,6 +98,7 @@ function BudgetLineItemTableGraphql({
 		}
 	}, [getCurrency, dashboardData]);
 
+	const [limit, setLimit] = useState(10);
 	let {
 		count,
 		queryData: budgetLineitemList,
@@ -111,6 +112,7 @@ function BudgetLineItemTableGraphql({
 		countQuery: GET_PROJ_BUDGET_TRACINGS_COUNT,
 		countFilter: queryFilter,
 		queryFilter: queryFilter,
+		limit: limit,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
@@ -212,6 +214,8 @@ function BudgetLineItemTableGraphql({
 			loading={queryLoading || countQueryLoading}
 			count={count}
 			order={order}
+			limit={limit}
+			setLimit={setLimit}
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}

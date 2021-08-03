@@ -188,6 +188,8 @@ export interface ICommonTable<T> {
 	collapsableTable?: boolean;
 	changePage?: (prev?: boolean) => void;
 	count?: number;
+	limit?: number;
+	setLimit?: React.Dispatch<React.SetStateAction<number>>;
 	loading?: boolean;
 	order?: "asc" | "desc";
 	setOrder?: React.Dispatch<React.SetStateAction<"asc" | "desc">>;

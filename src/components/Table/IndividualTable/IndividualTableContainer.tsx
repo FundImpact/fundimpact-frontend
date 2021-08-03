@@ -9,6 +9,8 @@ import { IndividualTableType } from "../../../models/individual/constant";
 
 interface IIndividualTableContainer {
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	changePage: (prev?: boolean | undefined) => void;
 	loading: boolean;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
@@ -42,6 +44,8 @@ function IndividualTableContainer({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	orderBy,
 	setOrder,
@@ -87,6 +91,8 @@ function IndividualTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

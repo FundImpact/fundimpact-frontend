@@ -48,7 +48,7 @@ export default function DocumentsTable({
 		setDocumentPage(newPage);
 	};
 
-	const limit = 10;
+	const [limit, setLimit] = useState(10);
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
 	// const { data, loading } = useQuery(GET_ORGANISATIONS_DOCUMENTS);
@@ -109,6 +109,17 @@ export default function DocumentsTable({
 
 	const intl = useIntl();
 
+	const handleChangeRowsPerPage = (event: any) => {
+		if (event.target.value == "All") {
+			setLimit(rows.length);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setDocumentPage(0);
+	};
+
 	let documentPagination = (
 		<TablePagination
 			colSpan={9}
@@ -117,8 +128,8 @@ export default function DocumentsTable({
 			page={documentPage}
 			onChangePage={handleDocumentChangePage}
 			style={{ paddingRight: "40px" }}
-			rowsPerPageOptions={[]}
-			onChangeRowsPerPage={() => {}}
+			rowsPerPageOptions={[5, 10, "All"]}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 		/>
 	);
 

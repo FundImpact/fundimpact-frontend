@@ -438,7 +438,7 @@ export default function DeliverablesTable() {
 	}, [filterList, dashboardData]);
 
 	const { refetchOnDeliverableTargetImport } = useRefetchOnDeliverableTargetImport();
-
+	const [limit, setLimit] = useState(10);
 	let {
 		count,
 		queryData: deliverableTargetData,
@@ -452,6 +452,7 @@ export default function DeliverablesTable() {
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
 		countFilter: queryFilter,
 		queryFilter,
+		limit: limit,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
@@ -461,7 +462,6 @@ export default function DeliverablesTable() {
 	}, [refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]);
 
 	const [rows, setRows] = useState<any>([]);
-	const limit = 10;
 
 	const deliverableCategoryFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
@@ -568,15 +568,26 @@ export default function DeliverablesTable() {
 		[deliverableCategoryFindAccess, deliverableAchievedFindAccess]
 	);
 
+	const handleChangeRowsPerPage = (event: any) => {
+		if (event.target.value == "All") {
+			setLimit(count);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setPage(0);
+	};
+
 	let deliverableTablePagination = (
 		<TablePagination
-			rowsPerPageOptions={[]}
+			rowsPerPageOptions={[5, 10, "All"]}
 			colSpan={9}
 			count={count}
 			rowsPerPage={count > limit ? limit : count}
 			page={page}
 			onChangePage={handleChangePage}
-			onChangeRowsPerPage={() => {}}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 			style={{ paddingRight: "40px" }}
 		/>
 	);

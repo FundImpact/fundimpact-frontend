@@ -10,6 +10,8 @@ interface IFUND_RECEIVED_TABLE_CONTAINER {
 	loading: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
@@ -53,6 +55,8 @@ function FundReceivedTableContainer({
 	loading,
 	changePage,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -90,6 +94,8 @@ function FundReceivedTableContainer({
 			loading={loading}
 			changePage={changePage}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

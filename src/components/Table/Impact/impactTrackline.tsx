@@ -450,7 +450,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		}
 		setImpactTracklinePage(newPage);
 	};
-
+	const [limit, setLimit] = useState(10);
 	let {
 		count,
 		queryData: impactTracklineData,
@@ -463,10 +463,11 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		query: GET_IMPACT_TRACKLINE_BY_IMPACT_TARGET,
 		countQuery: GET_IMPACT_TRACKLINE_COUNT,
 		countFilter: queryFilter,
+		limit: limit,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-	const limit = 10;
+	//const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 
 	const { refetchOnImpactLineItemImport } = useRefetchOnImpactLineItemImport(impactTargetId);
@@ -593,15 +594,27 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		[annualYearFindAccess, financialYearFindAccess]
 	);
 
+	const handleChangeRowsPerPage = (event: any) => {
+		console.log(count);
+		if (event.target.value == "All") {
+			setLimit(count);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setImpactTracklinePage(0);
+	};
+
 	let tablePagination = (
 		<TablePagination
-			rowsPerPageOptions={[]}
+			rowsPerPageOptions={[5, 10, "All"]}
 			colSpan={9}
 			count={count}
 			rowsPerPage={count > limit ? limit : count}
 			page={impactTracklinePage}
 			onChangePage={handleImpactLineChangePage}
-			onChangeRowsPerPage={() => {}}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
 			style={{ paddingRight: "40px" }}
 		/>
 	);

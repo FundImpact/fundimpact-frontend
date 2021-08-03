@@ -26,6 +26,8 @@ function DeliverableCategoryTableContainer({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -39,6 +41,8 @@ function DeliverableCategoryTableContainer({
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	deliverableCategoryList: IDeliverableCategoryData[];
@@ -107,6 +111,8 @@ function DeliverableCategoryTableContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

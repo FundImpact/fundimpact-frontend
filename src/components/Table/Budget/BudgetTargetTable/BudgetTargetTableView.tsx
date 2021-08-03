@@ -45,6 +45,8 @@ interface IBudgetTargetTableViewProps {
 	budgegtTargetList: IBudgetTargetProjectResponse[];
 	changePage: (prev?: boolean) => void;
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	loading: boolean;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -221,6 +223,8 @@ function BudgetTargetView({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -394,6 +398,8 @@ function BudgetTargetView({
 				changePage={changePage}
 				loading={loading}
 				count={count}
+				limit={limit}
+				setLimit={setLimit}
 				order={order}
 				setOrder={setOrder}
 				orderBy={orderBy}

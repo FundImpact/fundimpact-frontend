@@ -101,6 +101,8 @@ function DeliverableUnitTableView({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -130,6 +132,8 @@ function DeliverableUnitTableView({
 	order: "asc" | "desc";
 	loading: boolean;
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	changePage: (prev?: boolean) => void;
 	collapsableTable: boolean;
 	deliverableUnitList: IDeliverableUnitData[];
@@ -211,6 +215,8 @@ function DeliverableUnitTableView({
 				changePage={changePage}
 				loading={loading}
 				count={count}
+				limit={limit}
+				setLimit={setLimit}
 				order={order}
 				setOrder={setOrder}
 				orderBy={orderBy}

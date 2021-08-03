@@ -32,6 +32,8 @@ function ImpactUnitContainer({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -43,6 +45,8 @@ function ImpactUnitContainer({
 }: {
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -136,6 +140,8 @@ function ImpactUnitContainer({
 			changePage={changePage}
 			loading={loading}
 			count={count}
+			limit={limit}
+			setLimit={setLimit}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

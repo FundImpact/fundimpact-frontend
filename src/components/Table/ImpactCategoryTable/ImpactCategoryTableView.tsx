@@ -92,6 +92,8 @@ function ImpactCategoryTableView({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -116,6 +118,8 @@ function ImpactCategoryTableView({
 	changePage: (prev?: boolean) => void;
 	selectedImpactCategory: React.MutableRefObject<IImpactCategoryData | null>;
 	count: number;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	loading: boolean;
 	toggleDialogs: (index: number, val: boolean) => void;
 	setFilterList: React.Dispatch<
@@ -197,6 +201,8 @@ function ImpactCategoryTableView({
 				changePage={changePage}
 				loading={loading}
 				count={count}
+				limit={limit}
+				setLimit={setLimit}
 				order={order}
 				setOrder={setOrder}
 				orderBy={orderBy}

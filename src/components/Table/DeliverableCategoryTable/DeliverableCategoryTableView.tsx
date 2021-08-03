@@ -93,6 +93,8 @@ function DeliverableCategoryView({
 	changePage,
 	loading,
 	count,
+	limit,
+	setLimit,
 	order,
 	setOrder,
 	orderBy,
@@ -121,6 +123,8 @@ function DeliverableCategoryView({
 	changePage: (prev?: boolean) => void;
 	deliverableCategoryList: IDeliverableCategoryData[];
 	loading: boolean;
+	limit: number;
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 	orderBy: string;
@@ -202,6 +206,8 @@ function DeliverableCategoryView({
 				changePage={changePage}
 				loading={loading}
 				count={count}
+				limit={limit}
+				setLimit={setLimit}
 				order={order}
 				setOrder={setOrder}
 				orderBy={orderBy}

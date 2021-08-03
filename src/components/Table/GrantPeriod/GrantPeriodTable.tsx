@@ -11,6 +11,7 @@ import {
 	makeStyles,
 	MenuItem,
 	Paper,
+	TablePagination,
 	Table,
 	TableBody,
 	TableCell,
@@ -26,11 +27,12 @@ import {
 	Button,
 } from "@material-ui/core";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import TableFooter from "@material-ui/core/TableFooter";
 import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { FETCH_GRANT_PERIODS } from "../../../graphql/grantPeriod/query";
+import { FETCH_GRANT_PERIODS, FETCH_GRANT_PERIODS_COUNT } from "../../../graphql/grantPeriod/query";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IGrantPeriod } from "../../../models/grantPeriod/grantPeriodForm";
 import { resolveJSON } from "../../../utils/jsonUtils";
@@ -74,6 +76,9 @@ const styledTable = makeStyles((theme: Theme) =>
 interface ISImpleTableProps {
 	headers: { label: string; key: string }[];
 	data: { [key: string]: string | number }[];
+	pagination?: React.ReactNode;
+	limit: number;
+	grantPeriodPage: number;
 	editGrantPeriod: (value: any) => void;
 	children: React.ReactNode;
 	deleteGrantPeriod: React.Dispatch<React.SetStateAction<boolean>>;
@@ -111,6 +116,9 @@ const chipArr = ({
 function SimpleTable({
 	headers,
 	data,
+	pagination,
+	limit,
+	grantPeriodPage,
 	editGrantPeriod,
 	children,
 	deleteGrantPeriod,
@@ -157,7 +165,10 @@ function SimpleTable({
 				<TableBody className={tableStyles.tbody}>
 					{data.map((row, index) => (
 						<TableRow key={index}>
-							<TableCell key={index}> {index + 1} </TableCell>
+							<TableCell key={index}>
+								{" "}
+								{grantPeriodPage * limit + index + 1}{" "}
+							</TableCell>
 							{headers.map((header, index) => (
 								<TableCell key={header.label}>
 									{resolveJSON(row, header.key)}
@@ -220,6 +231,9 @@ function SimpleTable({
 						</TableRow>
 					))}
 				</TableBody>
+				<TableFooter>
+					<TableRow>{pagination}</TableRow>
+				</TableFooter>
 			</Table>
 		</TableContainer>
 	);
@@ -351,6 +365,8 @@ export default function GrantPeriodTable() {
 	const apolloClient = useApolloClient();
 	const [deleteGrantPeriod, setDeleteGrantPeriod] = useState<boolean>(false);
 	const [queryFilter, setQueryFilter] = useState({});
+	const [grantPeriodPage, setGrantPeriodPage] = useState(0);
+
 	let [getProjectGrantPeriods, { loading, data, refetch: refetchGrantPeriods }] = useLazyQuery(
 		FETCH_GRANT_PERIODS,
 		{
@@ -358,11 +374,20 @@ export default function GrantPeriodTable() {
 		}
 	);
 
+	let [
+		getProjectGrantPeriodsCount,
+		{ loading: countLoading, data: countData, refetch: refetchGrantPeriodsCount },
+	] = useLazyQuery(FETCH_GRANT_PERIODS_COUNT, {
+		notifyOnNetworkStatusChange: true,
+	});
+
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onCompleted: (data) => {
 			donorHash = mapIdToName(data.orgDonors, donorHash);
 		},
 	});
+
+	const [limit, setLimit] = useState(10);
 
 	const dashboardData = useDashBoardData();
 	const [filterList, setFilterList] = useState<{
@@ -404,6 +429,7 @@ export default function GrantPeriodTable() {
 	}, [filterList]);
 
 	let filter = { project: dashboardData?.project?.id };
+
 	try {
 		data = apolloClient.readQuery(
 			{
@@ -419,17 +445,45 @@ export default function GrantPeriodTable() {
 		if (!dashboardData?.project?.id) return;
 		filter = { ...filter, project: dashboardData?.project?.id };
 		console.log(`fecthing new list for project`, dashboardData?.project?.id, { ...filter });
-		getProjectGrantPeriods({
-			variables: { filter: queryFilter },
-		});
-	}, [dashboardData?.project?.id, getProjectGrantPeriods, queryFilter]);
+		if (limit == -1) {
+			getProjectGrantPeriodsCount({
+				variables: {
+					start: grantPeriodPage * limit,
+					filter: queryFilter,
+				},
+			});
+
+			getProjectGrantPeriods({
+				variables: {
+					start: grantPeriodPage * limit,
+					filter: queryFilter,
+				},
+			});
+		} else {
+			getProjectGrantPeriodsCount({
+				variables: {
+					limit: limit,
+					start: grantPeriodPage * limit,
+					filter: queryFilter,
+				},
+			});
+
+			getProjectGrantPeriods({
+				variables: {
+					limit: limit,
+					start: grantPeriodPage * limit,
+					filter: queryFilter,
+				},
+			});
+		}
+	}, [dashboardData?.project?.id, getProjectGrantPeriods, queryFilter, limit, grantPeriodPage]);
 
 	useEffect(() => {
 		if (!data) {
 			return;
 		}
 
-		console.log(`grantPeriods`, data.grantPeriodsProjectList);
+		console.log(`grantPeriods`, data.grantPeriodsProjects);
 	}, [data]);
 	const [grantPeriodToEdit, setGrantPeriodDialog] = useState<IGrantPeriod | null>(null);
 
@@ -449,6 +503,36 @@ export default function GrantPeriodTable() {
 
 	if (loading) return <TableSkeleton />;
 
+	const handleChangePage = (event: unknown, newPage: number) => {
+		console.log(newPage);
+		setGrantPeriodPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (event: any) => {
+		console.log(data);
+		if (event.target.value == "All") {
+			setLimit(-1);
+		} else if (event.target.value == 5) {
+			setLimit(5);
+		} else if (event.target.value == 10) {
+			setLimit(10);
+		}
+		setGrantPeriodPage(0);
+	};
+
+	let grantPeriodPagination = (
+		<TablePagination
+			colSpan={9}
+			count={countData?.grantPeriodsProjectsConnection?.aggregate?.count}
+			rowsPerPage={limit}
+			page={grantPeriodPage}
+			onChangePage={handleChangePage}
+			style={{ paddingRight: "40px" }}
+			rowsPerPageOptions={[5, 10, "All"]}
+			onChangeRowsPerPage={handleChangeRowsPerPage}
+		/>
+	);
+
 	return (
 		<>
 			<Grid container>
@@ -463,11 +547,14 @@ export default function GrantPeriodTable() {
 					</Box>
 				</Grid>
 			</Grid>
-			{data?.grantPeriodsProjectList?.length ? (
+			{data?.grantPeriodsProjects?.length ? (
 				<>
 					<SimpleTable
 						headers={headers}
-						data={data?.grantPeriodsProjectList}
+						data={data?.grantPeriodsProjects}
+						pagination={grantPeriodPagination}
+						limit={limit}
+						grantPeriodPage={grantPeriodPage}
 						editGrantPeriod={(grantPeriodToEdit) => {
 							const newObj: IGrantPeriod = {
 								...grantPeriodToEdit,

@@ -442,7 +442,7 @@ function DonorTable({
 					<TableFooter>
 						<TableRow>
 							<TablePagination
-								rowsPerPageOptions={[]}
+								rowsPerPageOptions={[5, 10, "All"]}
 								colSpan={8}
 								count={count}
 								rowsPerPage={count > 10 ? 10 : count}
