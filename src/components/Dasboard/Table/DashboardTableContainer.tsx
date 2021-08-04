@@ -22,6 +22,7 @@ import ImpactUnitDialog from "../../Impact/ImpactUnitDialog";
 import Snackbar from "../../Snackbar/Snackbar";
 import BudgetTargetTable from "../../Table/Budget/BudgetTargetTable";
 import DeliverablesTable from "../../Table/Deliverable/Deliverable";
+import DeliverableSubTargetTablee from "../../Table/Deliverable/DeliverableSubTargetTablee";
 import GrantPeriodTable from "../../Table/GrantPeriod/GrantPeriodTable";
 import ImpactsTable from "../../Table/Impact/Impacts";
 import { useIntl } from "react-intl";
@@ -403,6 +404,17 @@ export default function DashboardTableContainer() {
 				deliverableCategoryCreateAccess ||
 				deliverableTracklineCreateAccess,
 			tableVisibility: deliverableTargetFindAccess,
+		},
+		{
+			label: intl.formatMessage({
+				id: "deliverableTabHeading",
+				defaultMessage: "Deliverable SubTarget Table",
+				description: `This text will be show on tab for Deliverables`,
+			}),
+			table: <DeliverableSubTargetTablee deliverableTargetId="" />,
+			createButtons: [],
+			tabVisibility: true,
+			tableVisibility: true,
 		},
 		{
 			label: intl.formatMessage({
