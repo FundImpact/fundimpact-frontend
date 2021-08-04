@@ -61,7 +61,6 @@ export default function SubTable({
 }) {
 	const classes = useStyles();
 	const tableStyles = styledTable();
-	console.log("subtable" + " " + rows.length);
 	return (
 		<>
 			{!rows.length ? (

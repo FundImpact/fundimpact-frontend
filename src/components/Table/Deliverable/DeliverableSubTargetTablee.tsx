@@ -508,10 +508,9 @@ export default function DeliverableSubTargetTablee({
 	);
 
 	useEffect(() => {
-		if (deliverableTracklineData?.deliverableTrackingLineitemList?.length) {
-			console.log("if");
-			let deliverableTrackingLineitemList =
-				deliverableTracklineData.deliverableTrackingLineitemList;
+		console.log(deliverableTracklineData);
+		if (deliverableTracklineData?.deliverableSubTargets?.length) {
+			let deliverableTrackingLineitemList = deliverableTracklineData.deliverableSubTargets;
 			let arr = [];
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
@@ -523,13 +522,8 @@ export default function DeliverableSubTargetTablee({
 						>
 							{TracklinePage * limit + i + 1}
 						</TableCell>,
-						<TableCell
-							key={
-								getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date) +
-								`${deliverableTrackingLineitemList[i]?.id}-1`
-							}
-						>
-							{getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
+						<TableCell key={deliverableTrackingLineitemList[i]?.annual_year?.name}>
+							{deliverableTrackingLineitemList[i]?.annual_year?.name}
 						</TableCell>,
 						<TableCell
 							key={
@@ -537,39 +531,43 @@ export default function DeliverableSubTargetTablee({
 								`${deliverableTrackingLineitemList[i]?.id}-2`
 							}
 						>
-							{deliverableTrackingLineitemList[i]?.note
-								? deliverableTrackingLineitemList[i]?.note
+							{deliverableTrackingLineitemList[i]?.deliverable_target_project?.name
+								? deliverableTrackingLineitemList[i]?.deliverable_target_project
+										?.name
 								: "-"}
 						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.value +
+								deliverableTrackingLineitemList[i]?.financial_year_donor?.name +
 								`${deliverableTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_unit_org?.name}`}</TableCell>,
+						>
+							{deliverableTrackingLineitemList[i]?.financial_year_donor?.name}
+						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.financial_year?.name +
+								deliverableTrackingLineitemList[i]?.financial_year_org?.name +
 								+`${deliverableTrackingLineitemList[i]?.id}-4`
 							}
 						>
 							<Box display="flex">
-								{financialYearFindAccess && (
+								{
 									<Box mr={1}>
 										<Chip
 											avatar={<Avatar>FY</Avatar>}
 											label={
-												deliverableTrackingLineitemList[i]?.financial_year
+												deliverableTrackingLineitemList[i]
+													?.financial_year_org
 													? deliverableTrackingLineitemList[i]
-															?.financial_year?.name
+															?.financial_year_org?.name
 													: "-"
 											}
 											size="small"
 											color="primary"
 										/>
 									</Box>
-								)}
-								{annualYearFindAccess && (
+								}
+								{/* {annualYearFindAccess && (
 									<Chip
 										avatar={<Avatar>AY</Avatar>}
 										label={
@@ -581,12 +579,25 @@ export default function DeliverableSubTargetTablee({
 										size="small"
 										color="primary"
 									/>
-								)}
+								)} */}
 							</Box>
 						</TableCell>,
-						// <DeliverableTranche
-						// 	TracklineId={deliverableTrackingLineitemList[i]?.id || ""}
-						// />,
+						<TableCell
+							key={
+								deliverableTrackingLineitemList[i]?.grant_periods_project?.name +
+								`${deliverableTrackingLineitemList[i]?.id}-3`
+							}
+						>
+							{deliverableTrackingLineitemList[i]?.grant_periods_project?.name}
+						</TableCell>,
+						<TableCell
+							key={
+								deliverableTrackingLineitemList[i]?.project?.name +
+								`${deliverableTrackingLineitemList[i]?.id}-3`
+							}
+						>
+							{deliverableTrackingLineitemList[i]?.project?.name}
+						</TableCell>,
 					];
 					row.push(
 						<EditDeliverableTrackLineIcon
@@ -603,6 +614,23 @@ export default function DeliverableSubTargetTablee({
 			setRows([]);
 		}
 	}, [deliverableTracklineData, annualYearFindAccess, financialYearFindAccess, TracklinePage]);
+
+	interface ITableHeadings {
+		label: string;
+		keyMapping?: string;
+		renderComponent?: () => React.ReactNode;
+	}
+
+	const deliverableSubTableHeading: ITableHeadings[] = [
+		{ label: "#" },
+		{ label: "Annual_year" },
+		{ label: "deliverable_target_projects" },
+		{ label: "financial_year_donor" },
+		{ label: "financial_year_org" },
+		{ label: "grant period projects" },
+		{ label: "project" },
+		{ label: "" }, //edit icon
+	];
 
 	const filteredDeliverableTracklineTableHeadings = useMemo(
 		() =>
@@ -663,9 +691,8 @@ export default function DeliverableSubTargetTablee({
 					</Box>
 				</Grid>
 			</Grid>
-			<button>test</button>
 			<SubTable
-				tableHeading={filteredDeliverableTracklineTableHeadings}
+				tableHeading={deliverableSubTableHeading}
 				rows={rows}
 				pagination={deliverableTracklineTablePagination}
 				order={order}

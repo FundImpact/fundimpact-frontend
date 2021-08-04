@@ -411,7 +411,7 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Deliverable SubTarget Table",
 				description: `This text will be show on tab for Deliverables`,
 			}),
-			table: <DeliverableSubTargetTablee deliverableTargetId="" />,
+			table: <DeliverableSubTargetTablee deliverableTargetId="161" />,
 			createButtons: [],
 			tabVisibility: true,
 			tableVisibility: true,

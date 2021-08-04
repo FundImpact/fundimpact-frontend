@@ -28,6 +28,10 @@ export const GET_DELIVERABLE_SUBTARGETS = gql`
 				id
 				name
 			}
+			financial_year_donor {
+				id
+				name
+			}
 			grant_periods_project {
 				id
 				name
