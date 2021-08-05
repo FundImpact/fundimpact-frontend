@@ -14,21 +14,14 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
-import {
-	GET_DELIVERABLE_TRANCHE,
-	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-	GET_DELIVERABLE_TRACKLINE_COUNT,
-} from "../../../graphql/Deliverable/trackline";
 import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
-import { deliverableTracklineInputFields } from "./inputFields.json";
+import { budgetSubTargetForm } from "./inputFields.json";
 import FilterList from "../../FilterList";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
@@ -70,6 +63,12 @@ import {
 import { ISubTarget } from "../../../models/common/subtarget";
 import SubTarget from "../../Forms/SubTargetForm";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import BudgetLineItemTable from "../Budget/BudgetLineItemTable";
+import FIDialog from "../../Dialog/Dialog";
+import DeliverablesTrackLineTable from "../Deliverable/DeliverableTrackLine";
+import ImpactTrackLineTable from "../Impact/impactTrackline";
+import { YearTagPayload } from "../../../models/yearTags";
+import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 
 enum tableHeaders {
 	date = 1,
@@ -143,6 +142,7 @@ function EditSubTarget({
 	subTarget,
 	refetch,
 	tableType,
+	donorId,
 }: {
 	subTarget: any;
 	refetch:
@@ -151,6 +151,7 @@ function EditSubTarget({
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
 	tableType: "deliverable" | "impact" | "budget";
+	donorId?: string;
 }) {
 	const notificationDispatch = useNotificationDispatch();
 	const [tracklineDonors, setTracklineDonors] = useState<
@@ -335,7 +336,8 @@ const mapIdToName = (
 	);
 };
 
-let financialYearHash: { [key: string]: string } = {};
+let financialYearOrgHash: { [key: string]: string } = {};
+let financialYearDonorHash: { [key: string]: string } = {};
 let annualYearHash: { [key: string]: string } = {};
 
 const createChipArray = ({
@@ -355,10 +357,19 @@ const createChipArray = ({
 		});
 	}
 	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
-		if (filterListObjectKeyValuePair[0] === "financial_year") {
+		if (filterListObjectKeyValuePair[0] === "financial_year_org") {
 			return chipArray({
-				arr: filterListObjectKeyValuePair[1].map((ele) => financialYearHash[ele]),
-				name: "fy",
+				arr: filterListObjectKeyValuePair[1].map((ele) => financialYearOrgHash[ele]),
+				name: "fd",
+				removeChip: (index: number) => {
+					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+				},
+			});
+		}
+		if (filterListObjectKeyValuePair[0] === "financial_year_donor") {
+			return chipArray({
+				arr: filterListObjectKeyValuePair[1].map((ele) => financialYearDonorHash[ele]),
+				name: "fo",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
 				},
@@ -377,12 +388,50 @@ const createChipArray = ({
 	return null;
 };
 
-export default function SubTargetTable({
+const LineItemTableButton = ({
 	targetId,
 	tableType,
+	donor,
 }: {
 	targetId: string;
 	tableType: "deliverable" | "impact" | "budget";
+	donor?: any;
+}) => {
+	const [openLineItemTable, setOpenLineItemTable] = useState(false);
+	return (
+		<>
+			<IconButton onClick={() => setOpenLineItemTable(true)}>
+				<VisibilityIcon />
+			</IconButton>
+			{openLineItemTable && (
+				<FIDialog
+					{...{
+						open: openLineItemTable,
+						handleClose: () => setOpenLineItemTable(false),
+						header: tableType === "budget" ? "Expenditures" : "Achievements",
+					}}
+				>
+					{tableType === "budget" && (
+						<BudgetLineItemTable budgetTargetId={targetId} donor={donor} />
+					)}
+					{tableType === "deliverable" && (
+						<DeliverablesTrackLineTable deliverableTargetId={targetId} />
+					)}
+					{tableType === "impact" && <ImpactTrackLineTable impactTargetId={targetId} />}
+				</FIDialog>
+			)}
+		</>
+	);
+};
+
+export default function SubTargetTable({
+	targetId,
+	tableType,
+	donor,
+}: {
+	targetId: string;
+	tableType: "deliverable" | "impact" | "budget";
+	donor?: any;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -390,21 +439,49 @@ export default function SubTargetTable({
 	const [filterList, setFilterList] = useState<{
 		[key: string]: string | string[];
 	}>({
-		reporting_date: "",
-		note: "",
-		value: "",
+		timeperiod_start: "",
+		timeperiod_end: "",
+		target_value: "",
+		donor: [],
+		financial_year_org: [],
+		financial_year_donor: [],
+		grant_periods_project: [],
 		annual_year: [],
-		financial_year: [],
 	});
 	const [queryFilter, setQueryFilter] = useState({});
 
 	const dashBoardData = useDashBoardData();
 
-	const { data: getAnnualYears } = useQuery(GET_ANNUAL_YEARS);
-
-	const { data: impactFyData } = useQuery(GET_FINANCIAL_YEARS, {
-		variables: { filter: { country: dashBoardData?.organization?.country?.id } },
+	const [yearTagsLists, setYearTagsLists] = useState<{
+		annualYear: any;
+		financialYear: any;
+	}>({
+		annualYear: [],
+		financialYear: [],
 	});
+	const { data: yearTags } = useQuery(GET_YEARTAGS, {
+		onError: (err) => {
+			console.log("err", err);
+		},
+	});
+
+	useEffect(() => {
+		let yearTagsListsObj: {
+			annualYear: YearTagPayload[];
+			financialYear: YearTagPayload[];
+		} = {
+			annualYear: [],
+			financialYear: [],
+		};
+		yearTags?.yearTags?.forEach((elem: YearTagPayload) => {
+			if (elem.type === "annual") {
+				yearTagsListsObj.annualYear.push(elem);
+			} else if (elem.type === "financial") {
+				yearTagsListsObj.financialYear.push(elem);
+			}
+		});
+		setYearTagsLists(yearTagsListsObj);
+	}, [yearTags]);
 
 	const getSubTargetFindQuery = () =>
 		tableType === "budget"
@@ -430,18 +507,20 @@ export default function SubTargetTable({
 		);
 
 	useEffect(() => {
-		if (getAnnualYears) {
-			deliverableTracklineInputFields[3].optionsArray = getAnnualYears.annualYears;
-			annualYearHash = mapIdToName(getAnnualYears.annualYears, annualYearHash);
+		if (yearTagsLists?.annualYear?.length) {
+			budgetSubTargetForm[6].optionsArray = yearTagsLists?.annualYear;
+			annualYearHash = mapIdToName(yearTagsLists?.annualYear, annualYearHash);
 		}
-	}, [getAnnualYears]);
-
-	useEffect(() => {
-		if (impactFyData) {
-			deliverableTracklineInputFields[4].optionsArray = impactFyData.financialYearList;
-			financialYearHash = mapIdToName(impactFyData.financialYearList, financialYearHash);
+		if (yearTagsLists?.financialYear?.length) {
+			budgetSubTargetForm[4].optionsArray = yearTagsLists?.financialYear;
+			financialYearDonorHash = mapIdToName(
+				yearTagsLists?.financialYear,
+				financialYearDonorHash
+			);
+			budgetSubTargetForm[5].optionsArray = yearTagsLists?.financialYear;
+			financialYearOrgHash = mapIdToName(yearTagsLists?.financialYear, financialYearOrgHash);
 		}
-	}, [impactFyData]);
+	}, [yearTagsLists]);
 
 	useEffect(() => {
 		setQueryFilter({
@@ -453,6 +532,9 @@ export default function SubTargetTable({
 		if (filterList) {
 			let newFilterListObject: { [key: string]: string | string[] } = {};
 			for (let key in filterList) {
+				if (filterList[key] && !Array.isArray(filterList[key])) {
+					newFilterListObject[key] = filterList[key];
+				}
 				if (filterList[key] && filterList[key].length) {
 					newFilterListObject[key] = filterList[key];
 				}
@@ -514,11 +596,19 @@ export default function SubTargetTable({
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_EXPORT
 	);
+	const getListObjectKey = () =>
+		tableType === "budget"
+			? "budgetSubTargets"
+			: tableType === "deliverable"
+			? "deliverableSubTargets"
+			: tableType === "impact"
+			? "deliverableSubTargets"
+			: "budgetSubTargets";
 
 	useEffect(() => {
 		console.log(subTargetData);
-		if (subTargetData?.deliverableSubTargets?.length) {
-			let subTargetList = subTargetData.deliverableSubTargets;
+		if (subTargetData?.[getListObjectKey()]?.length) {
+			let subTargetList = subTargetData[getListObjectKey()];
 			let arr = [];
 			for (let i = 0; i < subTargetList.length; i++) {
 				if (subTargetList[i]) {
@@ -555,7 +645,7 @@ export default function SubTargetTable({
 						<TableCell
 							key={
 								subTargetList[i]?.financial_year_donor?.name +
-								`${subTargetList[i]?.id}-3`
+								`${subTargetList[i]?.id}-2`
 							}
 						>
 							{subTargetList[i]?.financial_year_donor?.name}
@@ -576,7 +666,7 @@ export default function SubTargetTable({
 						<TableCell
 							key={
 								subTargetList[i]?.grant_periods_project?.name +
-								`${subTargetList[i]?.id}-3`
+								`${subTargetList[i]?.id}-4`
 							}
 						>
 							{subTargetList[i]?.grant_periods_project?.name}
@@ -584,10 +674,16 @@ export default function SubTargetTable({
 						<TableCell
 							key={
 								subTargetList[i]?.grant_periods_project?.name +
-								`${subTargetList[i]?.id}-4`
+								`${subTargetList[i]?.id}-5`
 							}
 						>
-							<VisibilityIcon />
+							<LineItemTableButton
+								{...{
+									tableType,
+									donor,
+									targetId,
+								}}
+							/>
 						</TableCell>,
 					];
 					row.push(
@@ -615,14 +711,14 @@ export default function SubTargetTable({
 
 	const subTargetTableHeadings: ITableHeadings[] = [
 		{ label: "#" },
-		{ label: "Target" },
-		{ label: "Time Start" },
-		{ label: "Time End" },
-		{ label: "Annual year" },
-		{ label: "financial year donor" },
-		{ label: "financial year org" },
-		{ label: "Donor" },
-		{ label: "grant period projects" },
+		{ label: "Target", keyMapping: "target_value" },
+		{ label: "Time Start", keyMapping: "timeperiod_start" },
+		{ label: "Time End", keyMapping: "timeperiod_end" },
+		{ label: "Annual year", keyMapping: "annual_year" },
+		{ label: "financial year donor", keyMapping: "financial_year_donor" },
+		{ label: "financial year org", keyMapping: "financial_year_org" },
+		{ label: "Donor", keyMapping: "donor" },
+		{ label: "grant period projects", keyMapping: "grant_periods_project" },
 		{ label: "Line Items" },
 		{ label: "" }, //edit icon
 	];
@@ -651,20 +747,21 @@ export default function SubTargetTable({
 	const theme = useTheme();
 	const { jwt } = useAuth();
 
-	filteredDeliverableTracklineTableHeadings[
-		filteredDeliverableTracklineTableHeadings.length - 1
-	].renderComponent = () => (
+	subTargetTableHeadings[subTargetTableHeadings.length - 1].renderComponent = () => (
 		<>
 			<FilterList
 				initialValues={{
-					reporting_date: "",
-					note: "",
-					value: "",
+					timeperiod_start: "",
+					timeperiod_end: "",
+					target_value: "",
+					donor: [],
+					financial_year_org: [],
+					financial_year_donor: [],
+					grant_periods_project: [],
 					annual_year: [],
-					financial_year: [],
 				}}
 				setFilterList={setFilterList}
-				inputFields={deliverableTracklineInputFields}
+				inputFields={budgetSubTargetForm}
 			/>
 		</>
 	);

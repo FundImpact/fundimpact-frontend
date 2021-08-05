@@ -35,6 +35,8 @@ import { useDashBoardData } from "../../../../contexts/dashboardContext";
 import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
+import SubTargetTable from "../../SubTarget";
+import SubTarget from "../../../Forms/SubTargetForm";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -328,7 +330,8 @@ function BudgetTargetView({
 			budgetTargetTableEditMenu[0] = "Edit Budget Target";
 		}
 		if (budgetTargetLineItemCreateAccess) {
-			budgetTargetTableEditMenu[1] = "Report Expenditure";
+			// budgetTargetTableEditMenu[1] = "Report Expenditure";
+			budgetTargetTableEditMenu[1] = "Add Sub Target";
 		}
 		if (budgetTargetDeleteAccess) {
 			budgetTargetTableEditMenu[2] = "Delete Budget Target";
@@ -452,12 +455,21 @@ function BudgetTargetView({
 							initialValues={initialValues}
 						/>
 					)}
-					<BudgetLineitem
+					{/* <BudgetLineitem
 						open={openDialogs[1]}
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
-					/>
+					/> */}
+					{openDialogs[1] && (
+						<SubTarget
+							open={openDialogs[1]}
+							handleClose={() => toggleDialogs(1, false)}
+							formAction={FORM_ACTIONS.CREATE}
+							target={initialValues?.id || ""}
+							formType="budget"
+						/>
+					)}
 					{openDialogs[2] && (
 						<BudgetTarget
 							open={openDialogs[2]}
@@ -488,11 +500,17 @@ function BudgetTargetView({
 								</Box>
 							</Grid>
 						</Grid>
+
 						{budgetTargetLineItemFindAccess && (
-							<BudgetLineItemTable
-								budgetTargetId={rowData.id}
+							<SubTargetTable
+								targetId={rowData.id}
+								tableType="budget"
 								donor={rowData.donor}
 							/>
+							// <BudgetLineItemTable
+							// 	budgetTargetId={rowData.id}
+							// 	donor={rowData.donor}
+							// />
 						)}
 					</>
 				)}

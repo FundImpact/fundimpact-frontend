@@ -301,33 +301,24 @@ function SubTarget(props: SubTargetFormProps) {
 						},
 					},
 					{
-						query: GET_DELIVERABLE_SUB_TARGETS_COUNT,
+						query: getCountSubTargetQuery(),
 						variables: {
-							filter: {
-								deliverable_target_project:
-									subTargetValues.deliverable_target_project,
-							},
+							filter: queryFilter,
 						},
 					},
 					{
-						query: GET_DELIVERABLE_SUB_TARGETS,
+						query: getFetchSubTargetQuery(),
 						variables: {
-							filter: {
-								deliverable_target_project:
-									subTargetValues.deliverable_target_project,
-							},
+							filter: queryFilter,
 							limit: 10,
 							start: 0,
 							sort: "created_at:DESC",
 						},
 					},
 					{
-						query: GET_DELIVERABLE_SUB_TARGETS_COUNT,
+						query: getCountSubTargetQuery(),
 						variables: {
-							filter: {
-								deliverable_target_project:
-									subTargetValues.deliverable_target_project,
-							},
+							filter: queryFilter,
 							limit: 10,
 							start: 0,
 							sort: "created_at:DESC",
