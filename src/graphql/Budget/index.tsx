@@ -134,3 +134,54 @@ export const GET_BUDGET_CATEGORY_PROJECT_COUNT = gql`
 		projectCountBudgetCatByOrg(where: $filter)
 	}
 `;
+
+export const GET_BUDGET_SUB_TARGETS = gql`
+	query budgetSubTargets($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		budgetSubTargets(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			created_at
+			updated_at
+			project {
+				id
+				name
+			}
+			budget_targets_project {
+				id
+				name
+			}
+			target_value
+			timeperiod_end
+			timeperiod_start
+			donor {
+				id
+				name
+			}
+			financial_year_org {
+				id
+				name
+			}
+			financial_year_donor {
+				id
+				name
+			}
+			annual_year {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+			}
+		}
+	}
+`;
+
+export const GET_BUDGET_SUB_TARGETS_COUNT = gql`
+	query budgetSubTargetsConnection($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		budgetSubTargetsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;

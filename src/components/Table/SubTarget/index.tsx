@@ -14,7 +14,6 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
-
 import {
 	GET_DELIVERABLE_TRANCHE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
@@ -27,7 +26,6 @@ import FullScreenLoader from "../../commons/GlobalLoader";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
 import { deliverableAndimpactTracklineHeading } from "../constants";
-import SubTable from "./SubTable";
 import { FormattedMessage, useIntl } from "react-intl";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { deliverableTracklineInputFields } from "./inputFields.json";
@@ -57,13 +55,21 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { useRefetchOnDeliverableLineItemImport } from "../../../hooks/deliverable";
-
 import {
-	GET_DELIVERABLE_SUBTARGETS,
-	GET_DELIVERABLE_SUBTARGETS_COUNT,
-} from "./DelieverableSubTargetQueries";
+	GET_DELIVERABLE_SUB_TARGETS,
+	GET_DELIVERABLE_SUB_TARGETS_COUNT,
+} from "../../../graphql/Deliverable/subTarget";
+import FITable from "../FITable";
+import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_SUB_TARGETS_COUNT } from "../../../graphql/Budget";
+import {
+	GET_IMPACT_SUB_TARGETS,
+	GET_IMPACT_SUB_TARGETS_COUNT,
+} from "../../../graphql/Impact/subTarget";
+import { ISubTarget } from "../../../models/common/subtarget";
+import SubTarget from "../../Forms/SubTargetForm";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 enum tableHeaders {
 	date = 1,
@@ -124,18 +130,28 @@ const chipArray = ({
 // 	);
 // };
 
-function EditDeliverableTrackLineIcon({
-	deliverableTrackline,
+const getTargetId = (tableType: "deliverable" | "impact" | "budget") =>
+	tableType === "budget"
+		? "budget_targets_project"
+		: tableType === "deliverable"
+		? "deliverable_target_project"
+		: tableType === "impact"
+		? "impact_target_project"
+		: "";
+
+function EditSubTarget({
+	subTarget,
 	refetch,
+	tableType,
 }: {
-	deliverableTrackline: any;
+	subTarget: any;
 	refetch:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
+	tableType: "deliverable" | "impact" | "budget";
 }) {
-	const [tracklineDonorsMapValues, setTracklineDonorsMapValues] = useState<any>({});
 	const notificationDispatch = useNotificationDispatch();
 	const [tracklineDonors, setTracklineDonors] = useState<
 		{
@@ -146,37 +162,14 @@ function EditDeliverableTrackLineIcon({
 	>([]);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 
-	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
-		variables: { filter: { deliverable_tracking_lineitem: deliverableTrackline.id } },
-	});
+	// const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
+	// 	variables: { filter: { deliverable_tracking_lineitem: subTarget.id } },
+	// });
 
 	const dashBoardData = useDashBoardData();
-	useEffect(() => {
-		let deliverableTracklineMapValueObj: any = {};
-		let donors: any = [];
-		data?.deliverableLinitemFyDonorList?.forEach((elem: any) => {
-			deliverableTracklineMapValueObj[`${elem.project_donor.id}mapValues`] = {
-				id: elem.id,
-				financial_year: elem.financial_year?.id,
-				grant_periods_project: elem.grant_periods_project?.id,
-				deliverable_tracking_lineitem: elem.deliverable_tracking_lineitem?.id,
-				project_donor: elem.project_donor?.id,
-			};
-			donors.push({
-				id: elem.project_donor?.donor.id,
-				name: elem.project_donor?.donor?.name,
-				donor: elem.project_donor?.donor,
-			});
-		});
-		setTracklineDonors(donors);
-		setTracklineDonorsMapValues(deliverableTracklineMapValueObj);
-	}, [data]);
 
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-	const [
-		deliverableTracklineData,
-		setDeliverableTracklineData,
-	] = useState<IDeliverableTargetLine | null>();
+	const [subTargetData, setsubTargetData] = useState<ISubTarget | null>();
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
 	};
@@ -184,18 +177,16 @@ function EditDeliverableTrackLineIcon({
 		setMenuAnchor(event.currentTarget);
 	};
 
-	const deliverableTracklineEditAccess = userHasAccess(
+	const subTargetAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.UPDATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
-	const deliverableTracklineDeleteAccess = userHasAccess(
+	const subTargetDeleteAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELETE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
 
-	const [deliverableTracklineFileArray, setDeliverableTracklineFileArray] = useState<
-		AttachFile[]
-	>([]);
+	const [subTargetFileArray, setSubTargetFileArray] = useState<AttachFile[]>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
 
 	return (
@@ -203,10 +194,7 @@ function EditDeliverableTrackLineIcon({
 			<TableCell>
 				<IconButton
 					style={{
-						visibility:
-							deliverableTracklineEditAccess || deliverableTracklineDeleteAccess
-								? "visible"
-								: "hidden",
+						visibility: subTargetAccess || subTargetDeleteAccess ? "visible" : "hidden",
 					}}
 					aria-label="delete"
 					onClick={handleMenuClick}
@@ -221,48 +209,50 @@ function EditDeliverableTrackLineIcon({
 				anchorEl={menuAnchor}
 				id="deliverable-trackline-simple-menu"
 			>
-				{deliverableTracklineEditAccess && (
+				{subTargetAccess && (
 					<MenuItem
 						onClick={() => {
-							setDeliverableTracklineData({
-								id: deliverableTrackline?.id,
-								deliverable_target_project:
-									deliverableTrackline.deliverable_target_project?.id,
-								annual_year: deliverableTrackline.annual_year?.id,
-								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
-								value: deliverableTrackline?.value,
-								note: deliverableTrackline?.note,
-								financial_year: deliverableTrackline.financial_year?.id,
-								donors: tracklineDonors,
-								donorMapValues: tracklineDonorsMapValues,
-								attachments: deliverableTrackline.attachments,
+							setsubTargetData({
+								id: subTarget?.id,
+								[getTargetId(tableType)]: subTarget?.[getTargetId(tableType)]?.id,
+								timeperiod_start: getTodaysDate(subTarget?.timeperiod_start),
+								timeperiod_end: getTodaysDate(subTarget?.timeperiod_end),
+								target_value: subTarget?.target_value,
+								donor: subTarget?.donor?.id,
+								financial_year_org: subTarget.financial_year_org?.id,
+								financial_year_donor: subTarget.financial_year_donor?.id,
+								grant_periods_project: subTarget.grant_periods_project?.id,
+								annual_year: subTarget.annual_year?.id,
+								project: subTarget.project?.id,
 							});
-
 							handleMenuClose();
 						}}
 					>
 						<FormattedMessage
 							id="editAchievementMenu"
-							defaultMessage="Edit Achievement"
+							defaultMessage="Edit Sub Target"
 							description="This text will be show on deliverable or impact target table for edit achievement menu"
 						/>
 					</MenuItem>
 				)}
-				{deliverableTracklineDeleteAccess && (
+				{/* {subTargetDeleteAccess && (
 					<MenuItem
 						onClick={() => {
-							setDeliverableTracklineData({
-								id: deliverableTrackline?.id,
-								deliverable_target_project:
-									deliverableTrackline.deliverable_target_project?.id,
-								annual_year: deliverableTrackline.annual_year?.id,
-								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
-								value: deliverableTrackline?.value,
-								note: deliverableTrackline?.note,
-								financial_year: deliverableTrackline.financial_year?.id,
-								donors: tracklineDonors,
-								donorMapValues: tracklineDonorsMapValues,
-								attachments: deliverableTrackline.attachments,
+							setsubTargetData({
+								id: subTarget?.id,
+								[getTargetId(tableType)]: subTarget?.[getTargetId(tableType)]?.id,
+								timeperiod_start: getTodaysDate(
+									subTarget?.timeperiod_start
+								),
+								timeperiod_end: getTodaysDate(
+									subTarget?.timeperiod_end
+								),
+                                financial_year_donor: subTarget.financial_year_donor?.id,
+                                grant_periods_project: subTarget.grant_periods_project?.id,
+								annual_year: subTarget.annual_year?.id,
+                                project: subTarget.project?.id,
+								target_value: subTarget?.target_value,
+								financial_year_org: subTarget.financial_year_org?.id,
 							});
 							setOpenDeleteDeliverableLineItem(true);
 							handleMenuClose();
@@ -274,11 +264,11 @@ function EditDeliverableTrackLineIcon({
 							description="This text will be show on deliverable or impact target table for edit achievement menu"
 						/>
 					</MenuItem>
-				)}
-				{deliverableTracklineEditAccess && (
+				)} */}
+				{subTargetAccess && (
 					<MenuItem
 						onClick={() => {
-							setDeliverableTracklineFileArray(deliverableTrackline?.attachments);
+							setSubTargetFileArray(subTarget?.attachments);
 							setOpenAttachFiles(true);
 							handleMenuClose();
 						}}
@@ -291,40 +281,39 @@ function EditDeliverableTrackLineIcon({
 					</MenuItem>
 				)}
 			</Menu>
-			{deliverableTracklineData && (
-				<DeliverableTrackline
-					open={deliverableTracklineData !== null}
+			{subTargetData && (
+				<SubTarget
+					open={subTargetData !== null}
 					handleClose={() => {
-						setDeliverableTracklineData(null);
+						setsubTargetData(null);
 						setOpenDeleteDeliverableLineItem(false);
 					}}
-					type={DELIVERABLE_ACTIONS.UPDATE}
-					data={deliverableTracklineData}
-					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
-					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
+					formAction={FORM_ACTIONS.UPDATE}
+					formType={tableType}
+					data={subTargetData}
 					reftechOnSuccess={refetch}
 					dialogType={
 						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
 					}
 				/>
 			)}
-			{openAttachFiles && deliverableTracklineFileArray && (
+			{openAttachFiles && subTargetFileArray && (
 				<AttachFileForm
 					{...{
 						open: openAttachFiles,
 						handleClose: () => setOpenAttachFiles(false),
-						filesArray: deliverableTracklineFileArray,
-						setFilesArray: setDeliverableTracklineFileArray,
+						filesArray: subTargetFileArray,
+						setFilesArray: setSubTargetFileArray,
 						// parentOnSave: attachFileOnSave,
 						uploadApiConfig: {
 							ref: "deliverable-tracking-lineitem",
-							refId: deliverableTrackline?.id,
+							refId: subTarget?.id,
 							field: "attachments",
 							path: `org-${dashBoardData?.organization?.id}/project-${dashBoardData?.project?.id}/deliverable-tracking-lineitem`,
 						},
 						parentOnSuccessCall: () => {
 							if (refetch) refetch();
-							setDeliverableTracklineFileArray([]);
+							setSubTargetFileArray([]);
 						},
 					}}
 				/>
@@ -388,10 +377,12 @@ const createChipArray = ({
 	return null;
 };
 
-export default function DeliverableSubTargetTablee({
-	deliverableTargetId,
+export default function SubTargetTable({
+	targetId,
+	tableType,
 }: {
-	deliverableTargetId: string;
+	targetId: string;
+	tableType: "deliverable" | "impact" | "budget";
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -415,6 +406,24 @@ export default function DeliverableSubTargetTablee({
 		variables: { filter: { country: dashBoardData?.organization?.country?.id } },
 	});
 
+	const getSubTargetFindQuery = () =>
+		tableType === "budget"
+			? GET_BUDGET_SUB_TARGETS
+			: tableType === "deliverable"
+			? GET_DELIVERABLE_SUB_TARGETS
+			: tableType === "impact"
+			? GET_IMPACT_SUB_TARGETS
+			: GET_DELIVERABLE_SUB_TARGETS;
+
+	const getSubTargetCountQuery = () =>
+		tableType === "budget"
+			? GET_BUDGET_SUB_TARGETS_COUNT
+			: tableType === "deliverable"
+			? GET_DELIVERABLE_SUB_TARGETS_COUNT
+			: tableType === "impact"
+			? GET_IMPACT_SUB_TARGETS_COUNT
+			: GET_DELIVERABLE_SUB_TARGETS_COUNT;
+
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
 			removeFilterListObjectElements({ filterListObject, key, index })
@@ -436,9 +445,9 @@ export default function DeliverableSubTargetTablee({
 
 	useEffect(() => {
 		setQueryFilter({
-			deliverable_target_project: deliverableTargetId,
+			[getTargetId(tableType)]: targetId,
 		});
-	}, [deliverableTargetId]);
+	}, [targetId]);
 
 	useEffect(() => {
 		if (filterList) {
@@ -449,11 +458,11 @@ export default function DeliverableSubTargetTablee({
 				}
 			}
 			setQueryFilter({
-				deliverable_target_project: deliverableTargetId,
+				[getTargetId(tableType)]: targetId,
 				...newFilterListObject,
 			});
 		}
-	}, [filterList, deliverableTargetId]);
+	}, [filterList, targetId]);
 
 	const handleDeliverableLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -469,24 +478,23 @@ export default function DeliverableSubTargetTablee({
 
 	let {
 		count,
-		queryData: deliverableTracklineData,
+		queryData: subTargetData,
 		changePage,
 		countQueryLoading,
 		queryLoading: loading,
 		queryRefetch,
 		countRefetch,
 	} = pagination({
-		query: GET_DELIVERABLE_SUBTARGETS,
-		countQuery: GET_DELIVERABLE_SUBTARGETS_COUNT,
+		query: getSubTargetFindQuery(),
+		countQuery: getSubTargetCountQuery(),
 		countFilter: queryFilter,
 		queryFilter,
+		aggregateCount: true,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 	const limit = 10;
-	const [rows, setRows] = useState<React.ReactNode[]>([]);
-	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(
-		deliverableTargetId
-	);
+	const [rows, setRows] = useState<any>([]);
+	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(targetId);
 
 	const financialYearFindAccess = userHasAccess(
 		MODULE_CODES.FINANCIAL_YEAR,
@@ -508,102 +516,86 @@ export default function DeliverableSubTargetTablee({
 	);
 
 	useEffect(() => {
-		console.log(deliverableTracklineData);
-		if (deliverableTracklineData?.deliverableSubTargets?.length) {
-			let deliverableTrackingLineitemList = deliverableTracklineData.deliverableSubTargets;
+		console.log(subTargetData);
+		if (subTargetData?.deliverableSubTargets?.length) {
+			let subTargetList = subTargetData.deliverableSubTargets;
 			let arr = [];
-			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
-				if (deliverableTrackingLineitemList[i]) {
+			for (let i = 0; i < subTargetList.length; i++) {
+				if (subTargetList[i]) {
 					let row = [
-						<TableCell
-							component="td"
-							scope="row"
-							key={deliverableTrackingLineitemList[i]?.id}
-						>
+						<TableCell component="td" scope="row" key={subTargetList[i]?.id}>
 							{TracklinePage * limit + i + 1}
 						</TableCell>,
-						<TableCell key={deliverableTrackingLineitemList[i]?.annual_year?.name}>
-							{deliverableTrackingLineitemList[i]?.annual_year?.name}
+						<TableCell
+							key={subTargetList[i]?.target_value + `${subTargetList[i]?.id}-1`}
+						>
+							{subTargetList[i]?.target_value}
 						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.note +
-								`${deliverableTrackingLineitemList[i]?.id}-2`
+								getTodaysDate(subTargetList[i]?.timeperiod_start) +
+								`${subTargetList[i]?.id}-1`
 							}
 						>
-							{deliverableTrackingLineitemList[i]?.deliverable_target_project?.name
-								? deliverableTrackingLineitemList[i]?.deliverable_target_project
-										?.name
-								: "-"}
+							{getTodaysDate(subTargetList[i]?.timeperiod_start)}
 						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.financial_year_donor?.name +
-								`${deliverableTrackingLineitemList[i]?.id}-3`
+								getTodaysDate(subTargetList[i]?.timeperiod_end) +
+								`${subTargetList[i]?.id}-1`
 							}
 						>
-							{deliverableTrackingLineitemList[i]?.financial_year_donor?.name}
+							{getTodaysDate(subTargetList[i]?.timeperiod_end)}
+						</TableCell>,
+						<TableCell
+							key={subTargetList[i]?.annual_year?.name + `${subTargetList[i]?.id}-2`}
+						>
+							{subTargetList[i]?.annual_year?.name}
 						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.financial_year_org?.name +
-								+`${deliverableTrackingLineitemList[i]?.id}-4`
+								subTargetList[i]?.financial_year_donor?.name +
+								`${subTargetList[i]?.id}-3`
 							}
 						>
-							<Box display="flex">
-								{
-									<Box mr={1}>
-										<Chip
-											avatar={<Avatar>FY</Avatar>}
-											label={
-												deliverableTrackingLineitemList[i]
-													?.financial_year_org
-													? deliverableTrackingLineitemList[i]
-															?.financial_year_org?.name
-													: "-"
-											}
-											size="small"
-											color="primary"
-										/>
-									</Box>
-								}
-								{/* {annualYearFindAccess && (
-									<Chip
-										avatar={<Avatar>AY</Avatar>}
-										label={
-											deliverableTrackingLineitemList[i]?.annual_year
-												? deliverableTrackingLineitemList[i]?.annual_year
-														?.name
-												: "-"
-										}
-										size="small"
-										color="primary"
-									/>
-								)} */}
-							</Box>
+							{subTargetList[i]?.financial_year_donor?.name}
 						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.grant_periods_project?.name +
-								`${deliverableTrackingLineitemList[i]?.id}-3`
+								subTargetList[i]?.financial_year_org?.name +
+								`${subTargetList[i]?.id}-3`
 							}
 						>
-							{deliverableTrackingLineitemList[i]?.grant_periods_project?.name}
+							{subTargetList[i]?.financial_year_org?.name}
+						</TableCell>,
+						<TableCell
+							key={subTargetList[i]?.donor?.name + `${subTargetList[i]?.id}-3`}
+						>
+							{subTargetList[i]?.donor?.name}
 						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.project?.name +
-								`${deliverableTrackingLineitemList[i]?.id}-3`
+								subTargetList[i]?.grant_periods_project?.name +
+								`${subTargetList[i]?.id}-3`
 							}
 						>
-							{deliverableTrackingLineitemList[i]?.project?.name}
+							{subTargetList[i]?.grant_periods_project?.name}
+						</TableCell>,
+						<TableCell
+							key={
+								subTargetList[i]?.grant_periods_project?.name +
+								`${subTargetList[i]?.id}-4`
+							}
+						>
+							<VisibilityIcon />
 						</TableCell>,
 					];
 					row.push(
-						<EditDeliverableTrackLineIcon
-							key={deliverableTrackingLineitemList[i]}
-							deliverableTrackline={deliverableTrackingLineitemList[i]}
+						<EditSubTarget
+							key={subTargetList[i]}
+							subTarget={subTargetList[i]}
 							refetch={queryRefetch}
+							tableType={tableType}
 						/>
 					);
 					arr.push(row);
@@ -613,7 +605,7 @@ export default function DeliverableSubTargetTablee({
 		} else {
 			setRows([]);
 		}
-	}, [deliverableTracklineData, annualYearFindAccess, financialYearFindAccess, TracklinePage]);
+	}, [subTargetData, annualYearFindAccess, financialYearFindAccess, TracklinePage]);
 
 	interface ITableHeadings {
 		label: string;
@@ -621,14 +613,17 @@ export default function DeliverableSubTargetTablee({
 		renderComponent?: () => React.ReactNode;
 	}
 
-	const deliverableSubTableHeading: ITableHeadings[] = [
+	const subTargetTableHeadings: ITableHeadings[] = [
 		{ label: "#" },
-		{ label: "Annual_year" },
-		{ label: "deliverable_target_projects" },
-		{ label: "financial_year_donor" },
-		{ label: "financial_year_org" },
+		{ label: "Target" },
+		{ label: "Time Start" },
+		{ label: "Time End" },
+		{ label: "Annual year" },
+		{ label: "financial year donor" },
+		{ label: "financial year org" },
+		{ label: "Donor" },
 		{ label: "grant period projects" },
-		{ label: "project" },
+		{ label: "Line Items" },
 		{ label: "" }, //edit icon
 	];
 
@@ -643,7 +638,6 @@ export default function DeliverableSubTargetTablee({
 	let deliverableTracklineTablePagination = (
 		<TablePagination
 			rowsPerPageOptions={[]}
-			colSpan={9}
 			count={count}
 			rowsPerPage={count > limit ? limit : count}
 			page={TracklinePage}
@@ -691,8 +685,8 @@ export default function DeliverableSubTargetTablee({
 					</Box>
 				</Grid>
 			</Grid>
-			<SubTable
-				tableHeading={deliverableSubTableHeading}
+			<FITable
+				tableHeading={subTargetTableHeadings}
 				rows={rows}
 				pagination={deliverableTracklineTablePagination}
 				order={order}
@@ -700,20 +694,20 @@ export default function DeliverableSubTargetTablee({
 				setOrder={setOrder}
 				setOrderBy={setOrderBy}
 				noRowHeading={intl.formatMessage({
-					id: `noAchievementsReported`,
-					defaultMessage: `No Achievements Reported`,
+					id: `noSubTargetHeading`,
+					defaultMessage: `No Sub Targets Found`,
 					description: `This text will be shown if no target found for table`,
 				})}
 				rowHeading={intl.formatMessage({
-					id: `AchievementsHeading`,
-					defaultMessage: `Achievements`,
+					id: `subTargetHeading`,
+					defaultMessage: `Sub Targets`,
 					description: `This text will be shown for description of table`,
 				})}
 				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
 					<ImportExportTableMenu
 						tableName="Deliverable Lineitem"
-						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}`}
-						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${deliverableTargetId}`}
+						tableExportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${targetId}`}
+						tableImportUrl={`${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT}/${targetId}`}
 						onImportTableSuccess={() => {
 							countRefetch?.().then(() => queryRefetch?.());
 							refetchOnDeliverableLineItemImport();
@@ -723,19 +717,6 @@ export default function DeliverableSubTargetTablee({
 						hideExport={!deliverableTracklineExportAccess}
 					>
 						<>
-							<Button
-								onClick={() =>
-									exportTable({
-										tableName: "Annual Year",
-										jwt: jwt as string,
-										tableExportUrl: ANNUAL_YEAR_EXPORT,
-									})
-								}
-								style={{ marginRight: theme.spacing(1) }}
-								variant="outlined"
-							>
-								Annual Year
-							</Button>
 							<Button
 								variant="outlined"
 								style={{ marginRight: theme.spacing(1) }}
@@ -752,15 +733,28 @@ export default function DeliverableSubTargetTablee({
 							<Button
 								onClick={() =>
 									exportTable({
+										tableName: "Annual Year",
+										jwt: jwt as string,
+										tableExportUrl: ANNUAL_YEAR_EXPORT,
+									})
+								}
+								style={{ marginRight: theme.spacing(1) }}
+								variant="outlined"
+							>
+								Annual Year
+							</Button>
+							<Button
+								onClick={() =>
+									exportTable({
 										tableName: "Deliverable Trackline Template",
 										jwt: jwt as string,
-										tableExportUrl: `${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${deliverableTargetId}?header=true`,
+										tableExportUrl: `${DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT}/${targetId}?header=true`,
 									})
 								}
 								style={{ marginRight: theme.spacing(1), float: "right" }}
 								variant="outlined"
 							>
-								Deliverable Trackline Template
+								Sub Target Template
 							</Button>
 						</>
 					</ImportExportTableMenu>

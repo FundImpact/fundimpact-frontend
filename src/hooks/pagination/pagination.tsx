@@ -35,6 +35,7 @@ function Pagination({
 	countQuery,
 	countFilter,
 	fireRequest = true,
+	aggregateCount,
 	retrieveContFromCountQueryResponse = "",
 }: {
 	limit?: number;
@@ -45,6 +46,7 @@ function Pagination({
 	countQuery: any;
 	countFilter: any;
 	fireRequest?: boolean;
+	aggregateCount?: boolean;
 	retrieveContFromCountQueryResponse?: string;
 }) {
 	const startingValue = React.useRef<number>(start);
@@ -122,8 +124,10 @@ function Pagination({
 
 	useEffect(() => {
 		if (countData) {
+			let countD: any = Object.values(countData)[0];
 			startingValue.current = start;
 			count.current =
+				(aggregateCount && (countD?.aggregate?.count as any)) ||
 				(retrieveContFromCountQueryResponse &&
 					getValueFromObject(countData, retrieveContFromCountQueryResponse.split(","))) ||
 				(Object.values(countData)[0] as number);

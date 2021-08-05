@@ -8,8 +8,8 @@ export type ISubTarget = {
 	impact_target_project?: number | string;
 	project: number | string;
 	target_value: number;
-	timeperiod_start_date: Date;
-	timeperiod_end_date: Date;
+	timeperiod_start: Date | string;
+	timeperiod_end: Date | string;
 	financial_year_org?: number | string;
 	financial_year_donor?: number | string;
 	annual_year?: number | string;
@@ -26,10 +26,11 @@ export type SubTargetFormProps = {
 } & (
 	| {
 			formAction: FORM_ACTIONS.CREATE;
+			target?: string | number;
 	  }
 	| {
 			formAction: FORM_ACTIONS.UPDATE;
 			data: ISubTarget;
-			alreadyMappedDonorsIds: string[];
+			reftechOnSuccess: any;
 	  }
 );

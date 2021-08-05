@@ -58,8 +58,10 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE } from "../../../models/constants";
+import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
+import SubTargetTable from "../SubTarget";
+import SubTarget from "../../Forms/SubTargetForm";
 
 enum tableHeaders {
 	name = 2,
@@ -142,14 +144,15 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 		if (targetLineDialog)
 			dialogDispatch(
 				setOpenDialog(
-					<DeliverableTrackLine
+					<SubTarget
 						open={targetLineDialog}
 						handleClose={() => {
 							setTargetLineDialog(false);
 							dialogDispatch(setCloseDialog());
 						}}
-						type={DELIVERABLE_ACTIONS.CREATE}
-						deliverableTarget={deliverableTarget.id}
+						formAction={FORM_ACTIONS.CREATE}
+						formType="deliverable"
+						target={deliverableTarget.id}
 					/>
 				)
 			);
@@ -203,7 +206,22 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						/>
 					</MenuItem>
 				)}
+				{/* Change This to Deliverable Sub Target Access */}
 				{deliverableTracklineCreateAccess && (
+					<MenuItem
+						onClick={() => {
+							setTargetLineDialog(true);
+							handleMenuClose();
+						}}
+					>
+						<FormattedMessage
+							id="addSubTarget"
+							defaultMessage="Add Sub Target"
+							description="This text will be show on deliverable or impact target table for add Subtarget menu"
+						/>
+					</MenuItem>
+				)}
+				{/* {deliverableTracklineCreateAccess && (
 					<MenuItem
 						onClick={() => {
 							setTargetLineDialog(true);
@@ -216,7 +234,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							description="This text will be show on deliverable or impact target table for report achievement menu"
 						/>
 					</MenuItem>
-				)}
+				)} */}
 				{deliverableTragetDeleteAccess && (
 					<MenuItem
 						onClick={() => {
@@ -496,7 +514,11 @@ export default function DeliverablesTable() {
 					column: [],
 				};
 				row.collaspeTable = (
-					<DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
+					// <DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
+					<SubTargetTable
+						targetId={deliverableTargetList[i].id}
+						tableType="deliverable"
+					/>
 				);
 				let column = [
 					<TableCell component="td" scope="row" key={deliverableTargetList[i]?.id}>

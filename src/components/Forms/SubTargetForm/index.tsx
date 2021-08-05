@@ -28,26 +28,34 @@ import { IGET_DONOR } from "../../../models/donor/query";
 import { GET_GRANT_PERIOD } from "../../../graphql";
 import { ISubTarget, SubTargetFormProps } from "../../../models/common/subtarget";
 import { GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/Impact/target";
-import { GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
+import {
+	GET_BUDGET_SUB_TARGETS,
+	GET_BUDGET_SUB_TARGETS_COUNT,
+	GET_BUDGET_TARGET_PROJECT,
+} from "../../../graphql/Budget";
 import {
 	CREATE_BUDGET_SUB_TARGET,
 	UPDATE_BUDGET_SUB_TARGET,
 } from "../../../graphql/Budget/mutation";
 import {
 	CREATE_DELIVERABLE_SUB_TARGET,
+	GET_DELIVERABLE_SUB_TARGETS,
+	GET_DELIVERABLE_SUB_TARGETS_COUNT,
 	UPDATE_DELIVERABLE_SUB_TARGET,
 } from "../../../graphql/Deliverable/subTarget";
 import {
 	CREATE_IMPACT_SUB_TARGET,
+	GET_IMPACT_SUB_TARGETS,
+	GET_IMPACT_SUB_TARGETS_COUNT,
 	UPDATE_IMPACT_SUB_TARGET,
 } from "../../../graphql/Impact/subTarget";
 
 function getInitialValues(props: SubTargetFormProps) {
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		budget_targets_project: undefined,
-		deliverable_target_project: undefined,
-		impact_target_project: undefined,
+		budget_targets_project: props?.target,
+		deliverable_target_project: props?.target,
+		impact_target_project: props?.target,
 		project: null,
 		target_value: 0,
 		timeperiod_start: null,
@@ -95,6 +103,24 @@ function SubTarget(props: SubTargetFormProps) {
 			? UPDATE_IMPACT_SUB_TARGET
 			: UPDATE_BUDGET_SUB_TARGET;
 
+	const getFetchSubTargetQuery = () =>
+		props.formType === "budget"
+			? GET_BUDGET_SUB_TARGETS
+			: props.formType === "deliverable"
+			? GET_DELIVERABLE_SUB_TARGETS
+			: props.formType === "impact"
+			? GET_IMPACT_SUB_TARGETS
+			: GET_BUDGET_SUB_TARGETS;
+
+	const getCountSubTargetQuery = () =>
+		props.formType === "budget"
+			? GET_BUDGET_SUB_TARGETS_COUNT
+			: props.formType === "deliverable"
+			? GET_DELIVERABLE_SUB_TARGETS_COUNT
+			: props.formType === "impact"
+			? GET_IMPACT_SUB_TARGETS_COUNT
+			: GET_IMPACT_SUB_TARGETS_COUNT;
+
 	const [createSubTarget, { loading: createSubTargetLoading }] = useMutation(
 		getCreateSubTargetQuery()
 	);
@@ -111,7 +137,7 @@ function SubTarget(props: SubTargetFormProps) {
 			? "deliverable_target_project"
 			: props.formType === "impact"
 			? "impact_target_project"
-			: "";
+			: "budget_targets_project";
 
 	const getTargetOptions = () =>
 		props.formType === "budget"
@@ -125,7 +151,7 @@ function SubTarget(props: SubTargetFormProps) {
 	budgetSubTargetFormList[0].name = getTargetId();
 	budgetSubTargetFormList[0].optionsArray = getTargetOptions();
 
-	const [currentDonor, setCurrentDonor] = useState<null | string>(null);
+	const [currentDonor, setCurrentDonor] = useState<null | string | number>(null);
 
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
 		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
@@ -210,22 +236,11 @@ function SubTarget(props: SubTargetFormProps) {
 			cachedProjectDonors?.projectDonors
 				.filter((projectDonor) => !projectDonor?.deleted)
 				.forEach((elem: IProjectDonor) => {
-					if (
-						props.formAction === FORM_ACTIONS.UPDATE &&
-						props.alreadyMappedDonorsIds?.includes(elem.donor.id)
-					)
-						donorsArray.push({
-							...elem,
-							id: elem.donor.id,
-							name: elem.donor.name,
-							disabled: true,
-						});
-					else
-						donorsArray.push({
-							...elem,
-							id: elem.donor.id,
-							name: elem.donor.name,
-						});
+					donorsArray.push({
+						...elem,
+						id: elem.donor.id,
+						name: elem.donor.name,
+					});
 				});
 		return donorsArray;
 	}, [cachedProjectDonors, props]);
@@ -249,22 +264,76 @@ function SubTarget(props: SubTargetFormProps) {
 		return organizationMinusProjectDonors;
 	}, [cachedProjectDonors, cachedOrganizationDonors]);
 
+	useMemo(() => {
+		if (props.formAction === FORM_ACTIONS.UPDATE) {
+			if (props?.data?.donor) {
+				setCurrentDonor(props?.data?.donor || "");
+			}
+		}
+	}, [props.formAction]);
+
 	budgetSubTargetFormList[4].getInputValue = (donorId: string) => {
 		setCurrentDonor(donorId);
 	};
 	budgetSubTargetFormList[5].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[6].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[7].optionsArray = lists.annualYear;
-	budgetSubTargetFormList[8].optionsArray = grantPeriods?.grantPeriodsProjectList;
+	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+		grantPeriods,
+	]);
 
 	const createSubTargetHelper = async (subTargetValues: ISubTarget) => {
 		try {
+			let queryFilter = {
+				[getTargetId()]: subTargetValues[getTargetId()],
+			};
 			await createSubTarget({
 				variables: {
 					input: {
 						data: subTargetValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: getFetchSubTargetQuery(),
+						variables: {
+							filter: queryFilter,
+						},
+					},
+					{
+						query: GET_DELIVERABLE_SUB_TARGETS_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project:
+									subTargetValues.deliverable_target_project,
+							},
+						},
+					},
+					{
+						query: GET_DELIVERABLE_SUB_TARGETS,
+						variables: {
+							filter: {
+								deliverable_target_project:
+									subTargetValues.deliverable_target_project,
+							},
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+					},
+					{
+						query: GET_DELIVERABLE_SUB_TARGETS_COUNT,
+						variables: {
+							filter: {
+								deliverable_target_project:
+									subTargetValues.deliverable_target_project,
+							},
+							limit: 10,
+							start: 0,
+							sort: "created_at:DESC",
+						},
+					},
+				],
 			});
 			// setcurrentCategory("");
 			notificationDispatch(setSuccessNotification("Sub Target created successfully !"));
@@ -277,14 +346,14 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const updateSubTargetHelper = async (subTargetValues: ISubTarget) => {
 		let subTargetId = subTargetValues.id;
-		delete (subTargetId as any).id;
+		delete (subTargetValues as any).id;
 		try {
 			await updateSubTarget({
 				variables: {
-					where: {
-						id: subTargetId,
-					},
 					input: {
+						where: {
+							id: subTargetId,
+						},
 						data: subTargetValues,
 					},
 				},

@@ -60,7 +60,7 @@ function Row(props: {
 						</IconButton>
 					</TableCell>
 				)}
-				{row.column.map((col) => {
+				{row?.column?.map((col) => {
 					return col;
 				})}
 			</TableRow>

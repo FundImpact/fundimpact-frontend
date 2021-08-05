@@ -14,6 +14,10 @@ export const GET_DELIVERABLE_SUB_TARGETS = gql`
 				id
 				name
 			}
+			donor {
+				id
+				name
+			}
 			target_value
 			timeperiod_end
 			timeperiod_start
@@ -21,7 +25,10 @@ export const GET_DELIVERABLE_SUB_TARGETS = gql`
 				id
 				name
 			}
-
+			financial_year_donor {
+				id
+				name
+			}
 			annual_year {
 				id
 				name
@@ -100,6 +107,16 @@ export const UPDATE_DELIVERABLE_SUB_TARGET = gql`
 					id
 					name
 				}
+			}
+		}
+	}
+`;
+
+export const GET_DELIVERABLE_SUB_TARGETS_COUNT = gql`
+	query deliverableSubTargetsConnection($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		deliverableSubTargetsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
 			}
 		}
 	}
