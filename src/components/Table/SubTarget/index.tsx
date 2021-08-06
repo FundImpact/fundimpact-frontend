@@ -18,7 +18,7 @@ import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
-import { deliverableAndimpactTracklineHeading } from "../constants";
+import { deliverableAndimpactTracklineHeading, subTargetTableHeadings } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
 import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { budgetSubTargetForm } from "./inputFields.json";
@@ -708,20 +708,6 @@ export default function SubTargetTable({
 		keyMapping?: string;
 		renderComponent?: () => React.ReactNode;
 	}
-
-	const subTargetTableHeadings: ITableHeadings[] = [
-		{ label: "#" },
-		{ label: "Target", keyMapping: "target_value" },
-		{ label: "Time Start", keyMapping: "timeperiod_start" },
-		{ label: "Time End", keyMapping: "timeperiod_end" },
-		{ label: "Annual year", keyMapping: "annual_year" },
-		{ label: "financial year donor", keyMapping: "financial_year_donor" },
-		{ label: "financial year org", keyMapping: "financial_year_org" },
-		{ label: "Donor", keyMapping: "donor" },
-		{ label: "grant period projects", keyMapping: "grant_periods_project" },
-		{ label: "Line Items" },
-		{ label: "" }, //edit icon
-	];
 
 	const filteredDeliverableTracklineTableHeadings = useMemo(
 		() =>

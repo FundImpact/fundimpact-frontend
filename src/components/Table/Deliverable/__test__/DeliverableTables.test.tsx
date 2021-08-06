@@ -176,6 +176,10 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 		await waitForElement(() => getByText(/50.00 %/i)); // calculated percentage of target
 	});
 
+	{
+		/* LineItem Has been Removed && Sub Target table has its own test file */
+	}
+
 	// test("Table Headings and Data listing of Deliverable trackline table", async () => {
 	// 	let collaspeButton = deliverableTable.getByTestId(`collaspeButton${0}`);
 	// 	expect(collaspeButton).toBeInTheDocument();
@@ -194,29 +198,29 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 	// 	await waitForElement(() => getAllByText(/2015/));
 	// });
 
-	// test("Filter List test", async () => {
-	// 	let filterButton = deliverableTable.getByTestId(`filter-button`);
-	// 	expect(filterButton).toBeInTheDocument();
-	// });
+	test("Filter List test", async () => {
+		let filterButton = deliverableTable.getByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+	});
 
-	// test("Filter List Input Elements test", async () => {
-	// 	let filterButton = deliverableTable.getByTestId(`filter-button`);
-	// 	expect(filterButton).toBeInTheDocument();
-	// 	fireEvent.click(filterButton);
+	test("Filter List Input Elements test", async () => {
+		let filterButton = deliverableTable.getByTestId(`filter-button`);
+		expect(filterButton).toBeInTheDocument();
+		fireEvent.click(filterButton);
 
-	// 	let nameField = deliverableTable.getByTestId(
-	// 		"createDeliverableTargetNameInput"
-	// 	) as HTMLInputElement;
-	// 	fireEvent.change(nameField, { target: { value: intialFormValue.name } });
+		let nameField = deliverableTable.getByTestId(
+			"createDeliverableTargetNameInput"
+		) as HTMLInputElement;
+		fireEvent.change(nameField, { target: { value: intialFormValue.name } });
 
-	// 	expect(nameField.value).toBe(intialFormValue.name);
+		expect(nameField.value).toBe(intialFormValue.name);
 
-	// 	let amountField = deliverableTable.getByTestId(
-	// 		"createDeliverableTotalTargetAmountInput"
-	// 	) as HTMLInputElement;
-	// 	fireEvent.change(amountField, {
-	// 		target: { value: intialFormValue.target_value },
-	// 	});
-	// 	expect(amountField.value).toBe(intialFormValue.target_value);
-	// });
+		let amountField = deliverableTable.getByTestId(
+			"createDeliverableTotalTargetAmountInput"
+		) as HTMLInputElement;
+		fireEvent.change(amountField, {
+			target: { value: intialFormValue.target_value },
+		});
+		expect(amountField.value).toBe(intialFormValue.target_value);
+	});
 });
