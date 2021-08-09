@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
 	TableContainer,
 	Table,
@@ -84,8 +84,10 @@ const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
 const ImportExportTableMenuHoc = ({
 	importButtonOnly,
 	refetchDonorTable,
+	printRef,
 }: {
 	importButtonOnly?: boolean;
+	printRef?: any;
 	refetchDonorTable: () => void;
 }) => {
 	const theme = useTheme();
@@ -102,6 +104,7 @@ const ImportExportTableMenuHoc = ({
 			hideExport={!donorExportAccess}
 			hideImport={!donorImportAccess}
 			importButtonOnly={importButtonOnly}
+			printRef={printRef}
 		>
 			<>
 				<Button
@@ -230,6 +233,7 @@ function DonorTable({
 		setAnchorEl(null);
 	};
 
+	const printRef = useRef(null);
 	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
 
 	const menuList = [
@@ -328,148 +332,157 @@ function DonorTable({
 	}
 
 	return (
-		<TableContainer component={Paper}>
-			<Donor
-				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenDonorEditDialog(false)}
-				initialValues={getInitialValues(selectedDonor.current)}
-				open={openDonorEditDialog}
-			/>
-			<Donor
-				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenDeleteDonorDialog(false)}
-				initialValues={getInitialValues(selectedDonor.current)}
-				open={openDeleteDonorDialog}
-				deleteDonor={true}
-			/>
-			<ContactDialog
-				entity_id={selectedDonor.current?.id || ""}
-				entity_name={Entity_Name.donor}
-				formAction={FORM_ACTIONS.CREATE}
-				open={openContactAddDialog}
-				handleClose={() => setOpenContactAddDialog(false)}
-			/>
-			<ContactListDialog
-				entity_id={selectedDonor.current?.id || ""}
-				entity_name={Entity_Name.donor}
-				open={openContactListDialog}
-				handleClose={() => setOpenContactListDialog(false)}
-			/>
-			<Table className={classes.table} aria-label="simple table">
-				<TableHead>
-					<TableRow color="primary">
-						{donorList?.orgDonors?.length
-							? filteredTableHeadings.map(
-									(
-										heading: { label: string; keyMapping?: string },
-										index: number
-									) => (
-										<TableCell
-											className={tableStyles.th}
-											key={index}
-											align="left"
-										>
-											{heading.label}
-											{heading.keyMapping && (
-												<TableSortLabel
-													active={orderBy === heading.keyMapping}
-													onClick={() => {
-														if (orderBy === heading.keyMapping) {
-															setOrder &&
-																setOrder(
-																	order === "asc" ? "desc" : "asc"
-																);
-														} else {
-															setOrderBy &&
-																setOrderBy(
-																	heading.keyMapping || ""
-																);
-														}
-													}}
-													direction={order}
-												></TableSortLabel>
-											)}
+		<div ref={printRef}>
+			<TableContainer component={Paper}>
+				<Donor
+					formAction={FORM_ACTIONS.UPDATE}
+					handleClose={() => setOpenDonorEditDialog(false)}
+					initialValues={getInitialValues(selectedDonor.current)}
+					open={openDonorEditDialog}
+				/>
+				<Donor
+					formAction={FORM_ACTIONS.UPDATE}
+					handleClose={() => setOpenDeleteDonorDialog(false)}
+					initialValues={getInitialValues(selectedDonor.current)}
+					open={openDeleteDonorDialog}
+					deleteDonor={true}
+				/>
+				<ContactDialog
+					entity_id={selectedDonor.current?.id || ""}
+					entity_name={Entity_Name.donor}
+					formAction={FORM_ACTIONS.CREATE}
+					open={openContactAddDialog}
+					handleClose={() => setOpenContactAddDialog(false)}
+				/>
+				<ContactListDialog
+					entity_id={selectedDonor.current?.id || ""}
+					entity_name={Entity_Name.donor}
+					open={openContactListDialog}
+					handleClose={() => setOpenContactListDialog(false)}
+				/>
+				<Table className={classes.table} aria-label="simple table">
+					<TableHead>
+						<TableRow color="primary">
+							{donorList?.orgDonors?.length
+								? filteredTableHeadings.map(
+										(
+											heading: { label: string; keyMapping?: string },
+											index: number
+										) => (
+											<TableCell
+												className={tableStyles.th}
+												key={index}
+												align="left"
+											>
+												{heading.label}
+												{heading.keyMapping && (
+													<TableSortLabel
+														active={orderBy === heading.keyMapping}
+														onClick={() => {
+															if (orderBy === heading.keyMapping) {
+																setOrder &&
+																	setOrder(
+																		order === "asc"
+																			? "desc"
+																			: "asc"
+																	);
+															} else {
+																setOrderBy &&
+																	setOrderBy(
+																		heading.keyMapping || ""
+																	);
+															}
+														}}
+														direction={order}
+													></TableSortLabel>
+												)}
+											</TableCell>
+										)
+								  )
+								: null}
+							<TableCell className={tableStyles.th} align="left">
+								<ImportExportTableMenuHoc
+									refetchDonorTable={refetchDonorTable}
+									printRef={printRef}
+								/>
+							</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody className={tableStyles.tbody}>
+						{donorList?.orgDonors?.map((donor: IDONOR_RESPONSE, index: number) => (
+							<TableRow key={donor.id}>
+								<TableCell component="td" scope="row">
+									{page * 10 + index + 1}
+								</TableCell>
+								{keyNames.map((keyName: string, i: number) => {
+									return (
+										<TableCell key={i} align="left">
+											{getValueFromObject(donor, keyName.split(","))}
 										</TableCell>
-									)
-							  )
-							: null}
-						<TableCell className={tableStyles.th} align="left">
-							<ImportExportTableMenuHoc refetchDonorTable={refetchDonorTable} />
-						</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody className={tableStyles.tbody}>
-					{donorList?.orgDonors?.map((donor: IDONOR_RESPONSE, index: number) => (
-						<TableRow key={donor.id}>
-							<TableCell component="td" scope="row">
-								{page * 10 + index + 1}
-							</TableCell>
-							{keyNames.map((keyName: string, i: number) => {
-								return (
-									<TableCell key={i} align="left">
-										{getValueFromObject(donor, keyName.split(","))}
-									</TableCell>
-								);
-							})}
-							<TableCell>
-								<IconButton
-									aria-haspopup="true"
-									onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-										selectedDonor.current = donor;
-										handleClick(event);
+									);
+								})}
+								<TableCell>
+									<IconButton
+										aria-haspopup="true"
+										onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+											selectedDonor.current = donor;
+											handleClick(event);
+										}}
+										style={{
+											visibility: donorEditAccess ? "visible" : "hidden",
+										}}
+									>
+										<MoreVertIcon />
+									</IconButton>
+									{donorEditAccess && (
+										<SimpleMenu
+											handleClose={handleClose}
+											id={`organizationMenu-${donor.id}`}
+											anchorEl={
+												selectedDonor?.current?.id === donor.id
+													? anchorEl
+													: null
+											}
+											menuList={menuList}
+										/>
+									)}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+					{donorList?.orgDonors?.length ? (
+						<TableFooter>
+							<TableRow>
+								<TablePagination
+									rowsPerPageOptions={[]}
+									colSpan={8}
+									count={count}
+									rowsPerPage={count > 10 ? 10 : count}
+									page={page}
+									SelectProps={{
+										inputProps: { "aria-label": "rows per page" },
+										native: true,
 									}}
-									style={{ visibility: donorEditAccess ? "visible" : "hidden" }}
-								>
-									<MoreVertIcon />
-								</IconButton>
-								{donorEditAccess && (
-									<SimpleMenu
-										handleClose={handleClose}
-										id={`organizationMenu-${donor.id}`}
-										anchorEl={
-											selectedDonor?.current?.id === donor.id
-												? anchorEl
-												: null
+									onChangePage={(
+										event: React.MouseEvent<HTMLButtonElement> | null,
+										newPage: number
+									) => {
+										if (newPage > page) {
+											changePage();
+										} else {
+											changePage(true);
 										}
-										menuList={menuList}
-									/>
-								)}
-							</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-				{donorList?.orgDonors?.length ? (
-					<TableFooter>
-						<TableRow>
-							<TablePagination
-								rowsPerPageOptions={[]}
-								colSpan={8}
-								count={count}
-								rowsPerPage={count > 10 ? 10 : count}
-								page={page}
-								SelectProps={{
-									inputProps: { "aria-label": "rows per page" },
-									native: true,
-								}}
-								onChangePage={(
-									event: React.MouseEvent<HTMLButtonElement> | null,
-									newPage: number
-								) => {
-									if (newPage > page) {
-										changePage();
-									} else {
-										changePage(true);
-									}
-									setPage(newPage);
-								}}
-								onChangeRowsPerPage={() => {}}
-								style={{ paddingRight: "40px" }}
-							/>
-						</TableRow>
-					</TableFooter>
-				) : null}
-			</Table>
-		</TableContainer>
+										setPage(newPage);
+									}}
+									onChangeRowsPerPage={() => {}}
+									style={{ paddingRight: "40px" }}
+								/>
+							</TableRow>
+						</TableFooter>
+					) : null}
+				</Table>
+			</TableContainer>
+		</div>
 	);
 }
 

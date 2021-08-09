@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { IGet_Fund_Receipt_List } from "../../../models/fundReceived/query";
 import CommonTable from "../CommonTable";
 import { fundReceivedTableHeadings } from "../../Table/constants";
@@ -209,9 +209,10 @@ function FundReceivedTableView({
 	if (fundReceiptDeleteAccess) {
 		editMenu.push("Delete Fund Receipt");
 	}
+	const printRef = useRef(null);
 
 	return (
-		<>
+		<div ref={printRef}>
 			<Grid container>
 				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
@@ -250,6 +251,7 @@ function FundReceivedTableView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!fundReceiptImportFromCsvAccess}
 						hideExport={!fundReceiptExportAccess}
+						printRef={printRef}
 					>
 						<>
 							<Button
@@ -302,7 +304,7 @@ function FundReceivedTableView({
 					)}
 				</>
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

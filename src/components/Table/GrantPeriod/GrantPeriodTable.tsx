@@ -26,7 +26,7 @@ import {
 	Button,
 } from "@material-ui/core";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -279,8 +279,10 @@ const createChipArray = ({
 const ImportExportTableMenuHoc = ({
 	importButtonOnly,
 	refetchGrantPeriods,
+	printRef,
 }: {
 	importButtonOnly?: boolean;
+	printRef?: any;
 	refetchGrantPeriods:
 		| ((variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<any>>)
 		| undefined;
@@ -298,6 +300,7 @@ const ImportExportTableMenuHoc = ({
 		MODULE_CODES.GRANT_PERIOD,
 		GRANT_PERIOD_ACTIONS.GRANT_PERIOD_EXPORT
 	);
+
 	return (
 		<ImportExportTableMenu
 			tableName="Grant Period"
@@ -307,6 +310,7 @@ const ImportExportTableMenuHoc = ({
 			importButtonOnly={importButtonOnly}
 			hideExport={!grantPeriodExportAccess}
 			hideImport={!grantPeriodImportFromCsvAccess}
+			printRef={printRef}
 		>
 			<>
 				<Button
@@ -447,10 +451,13 @@ export default function GrantPeriodTable() {
 
 	grantPeriodInputFields[3].optionsArray = donors?.orgDonors || [];
 
+	const printRef = useRef(null);
+
 	if (loading) return <TableSkeleton />;
+	console.log("hi:");
 
 	return (
-		<>
+		<div ref={printRef}>
 			<Grid container>
 				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
@@ -489,7 +496,10 @@ export default function GrantPeriodTable() {
 							setFilterList={setFilterList}
 							inputFields={grantPeriodInputFields}
 						/>
-						<ImportExportTableMenuHoc refetchGrantPeriods={refetchGrantPeriods} />
+						<ImportExportTableMenuHoc
+							refetchGrantPeriods={refetchGrantPeriods}
+							printRef={printRef}
+						/>
 					</SimpleTable>
 					{grantPeriodToEdit && (
 						<GrantPeriodDialog
@@ -525,7 +535,7 @@ export default function GrantPeriodTable() {
 					/>
 				</Box>
 			)}
-		</>
+		</div>
 	);
 
 	// return <SimpleTable headers={headers} data={data?.grantPeriodsProjectList} />;

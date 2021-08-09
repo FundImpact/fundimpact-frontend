@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import CommonTable from "../CommonTable";
 import { budgetCategoryHeading as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
@@ -98,65 +98,69 @@ function BudgetCategoryTableView({
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
+	const printRef = useRef(null);
 
 	return (
-		<CommonTable
-			tableHeadings={tableHeadings}
-			valuesList={budgetCategoryList}
-			rows={rows}
-			selectedRow={selectedBudgetCategory}
-			toggleDialogs={toggleDialogs}
-			editMenuName={budgetCategoryTableEditMenu}
-			collapsableTable={collapsableTable}
-			changePage={changePage}
-			loading={loading}
-			count={count}
-			order={order}
-			setOrder={setOrder}
-			orderBy={orderBy}
-			setOrderBy={setOrderBy}
-			tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
-				<ImportExportTableMenu
-					tableName="Budget Category"
-					tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
-					tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
-					onImportTableSuccess={onImportTableSuccess}
-					importButtonOnly={importButtonOnly}
-					hideImport={!budgetCategoryImportFromCsvAccess}
-					hideExport={!budgetCategoryExportAccess}
-				>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1), float: "right" }}
-						onClick={() =>
-							exportTable({
-								tableName: "Budget Category Template",
-								jwt: jwt as string,
-								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
-							})
-						}
+		<div ref={printRef}>
+			<CommonTable
+				tableHeadings={tableHeadings}
+				valuesList={budgetCategoryList}
+				rows={rows}
+				selectedRow={selectedBudgetCategory}
+				toggleDialogs={toggleDialogs}
+				editMenuName={budgetCategoryTableEditMenu}
+				collapsableTable={collapsableTable}
+				changePage={changePage}
+				loading={loading}
+				count={count}
+				order={order}
+				setOrder={setOrder}
+				orderBy={orderBy}
+				setOrderBy={setOrderBy}
+				tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+					<ImportExportTableMenu
+						tableName="Budget Category"
+						tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
+						tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
+						onImportTableSuccess={onImportTableSuccess}
+						importButtonOnly={importButtonOnly}
+						hideImport={!budgetCategoryImportFromCsvAccess}
+						hideExport={!budgetCategoryExportAccess}
+						printRef={printRef}
 					>
-						Budget Category Template
-					</Button>
-				</ImportExportTableMenu>
-			)}
-		>
-			<>
-				<BudgetCategory
-					formAction={FORM_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(0, false)}
-					open={openDialogs[0]}
-					initialValues={initialValues}
-				/>
-				<BudgetCategory
-					formAction={FORM_ACTIONS.UPDATE}
-					handleClose={() => toggleDialogs(1, false)}
-					open={openDialogs[1]}
-					initialValues={initialValues}
-					dialogType={DIALOG_TYPE.DELETE}
-				/>
-			</>
-		</CommonTable>
+						<Button
+							variant="outlined"
+							style={{ marginRight: theme.spacing(1), float: "right" }}
+							onClick={() =>
+								exportTable({
+									tableName: "Budget Category Template",
+									jwt: jwt as string,
+									tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
+								})
+							}
+						>
+							Budget Category Template
+						</Button>
+					</ImportExportTableMenu>
+				)}
+			>
+				<>
+					<BudgetCategory
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						initialValues={initialValues}
+					/>
+					<BudgetCategory
+						formAction={FORM_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						initialValues={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+				</>
+			</CommonTable>
+		</div>
 	);
 }
 

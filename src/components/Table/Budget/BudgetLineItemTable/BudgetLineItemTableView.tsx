@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import CommonTable from "../../CommonTable";
 import BudgetLineitem from "../../../Budget/BudgetLineitem";
 import { FORM_ACTIONS } from "../../../Forms/constant";
@@ -414,8 +414,9 @@ function BudgetLineItemTableView({
 	const notificationDispatch = useNotificationDispatch();
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState(false);
+	const printRef = useRef(null);
 	return (
-		<>
+		<div ref={printRef}>
 			<Grid container>
 				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
@@ -460,6 +461,7 @@ function BudgetLineItemTableView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!budgetLineItemImportFromCsv}
 						hideExport={!budgetLineItemExport}
+						printRef={printRef}
 					>
 						<>
 							<Button
@@ -580,7 +582,7 @@ function BudgetLineItemTableView({
 					)}
 				</>
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

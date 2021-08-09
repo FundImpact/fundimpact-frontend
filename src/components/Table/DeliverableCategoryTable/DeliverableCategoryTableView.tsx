@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import CommonTable from "../CommonTable";
 import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 import Deliverable from "../../Deliverable/Deliverable";
@@ -169,9 +169,9 @@ function DeliverableCategoryView({
 
 	const { jwt } = useAuth();
 	const theme = useTheme();
-
+	const printRef = useRef(null);
 	return (
-		<>
+		<div ref={printRef}>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={12}>
@@ -214,6 +214,7 @@ function DeliverableCategoryView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableCategoryImportFromCsvAccess}
 						hideExport={!deliverableCategoryExportAccess}
+						printRef={printRef}
 					>
 						<Button
 							variant="outlined"
@@ -252,7 +253,7 @@ function DeliverableCategoryView({
 					</>
 				)} */}
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

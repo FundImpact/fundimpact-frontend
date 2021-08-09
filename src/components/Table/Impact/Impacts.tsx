@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
@@ -638,8 +638,10 @@ export default function ImpactsTable() {
 		</>
 	);
 
+	const printRef = useRef(null);
+
 	return (
-		<>
+		<div ref={printRef}>
 			{queryLoading || countQueryLoading ? (
 				<TableSkeleton />
 			) : (
@@ -681,6 +683,7 @@ export default function ImpactsTable() {
 								importButtonOnly={importButtonOnly}
 								hideImport={!impactImportFromCsvAccess}
 								hideExport={!impactExportAccess}
+								printRef={printRef}
 							>
 								<>
 									<Button
@@ -741,6 +744,6 @@ export default function ImpactsTable() {
 					/>
 				</>
 			)}
-		</>
+		</div>
 	);
 }

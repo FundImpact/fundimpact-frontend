@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import CommonTable from "../CommonTable";
 import {
 	IDeliverableUnitData,
@@ -178,9 +178,10 @@ function DeliverableUnitTableView({
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
+	const printRef = useRef(null);
 
 	return (
-		<>
+		<div ref={printRef}>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid xs={12} item>
@@ -223,6 +224,7 @@ function DeliverableUnitTableView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableUnitImportFromCsvAccess}
 						hideExport={!deliverableUnitExportAccess}
+						printRef={printRef}
 					>
 						<>
 							<Button
@@ -263,7 +265,7 @@ function DeliverableUnitTableView({
 					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />
 				)} */}
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

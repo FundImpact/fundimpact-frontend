@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import CommonTable from "../CommonTable";
 import { IIndividual } from "../../../models/individual";
@@ -189,8 +189,9 @@ function IndividualTableView({
 	}
 
 	let tableRows = getTableRows(individualTableType);
+	const printRef = useRef(null);
 	return (
-		<>
+		<div ref={printRef}>
 			<Grid container>
 				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
@@ -235,6 +236,7 @@ function IndividualTableView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!individualImportAccess}
 						hideExport={!individualExportAccess}
+						printRef={printRef}
 					>
 						<>
 							{individualTableType == IndividualTableType.organization && (
@@ -311,7 +313,7 @@ function IndividualTableView({
 					/>
 				</>
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

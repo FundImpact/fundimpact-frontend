@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import CommonTable from "../CommonTable";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IImpactUnitData } from "../../../models/impact/impact";
@@ -172,9 +172,10 @@ function ImpactUnitTableView({
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
+	const printRef = useRef(null);
 
 	return (
-		<>
+		<div ref={printRef}>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={12}>
@@ -217,6 +218,7 @@ function ImpactUnitTableView({
 						onImportTableSuccess={onImportUnitTableSuccess}
 						hideImport={!impactUnitImportFromCsvAccess}
 						hideExport={!impactUnitExportAccess}
+						printRef={printRef}
 					>
 						<>
 							<Button
@@ -263,7 +265,7 @@ function ImpactUnitTableView({
 					</>
 				)} */}
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

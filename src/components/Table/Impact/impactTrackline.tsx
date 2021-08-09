@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import {
 	GET_IMPACT_TRANCHE,
@@ -640,8 +640,10 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 		</>
 	);
 
+	const printRef = useRef(null);
+
 	return (
-		<>
+		<div ref={printRef}>
 			{countLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<Grid container>
@@ -678,6 +680,7 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 						importButtonOnly={importButtonOnly}
 						hideImport={!impactTracklineCreateFromCsvAccess}
 						hideExport={!impactTracklineExportAccess}
+						printRef={printRef}
 					>
 						<>
 							{/* <Button
@@ -749,6 +752,6 @@ export default function ImpactTrackLineTable({ impactTargetId }: { impactTargetI
 					</ImportExportTableMenu>
 				)}
 			/>
-		</>
+		</div>
 	);
 }

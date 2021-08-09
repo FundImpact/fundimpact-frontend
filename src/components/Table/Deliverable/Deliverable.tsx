@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -593,8 +593,9 @@ export default function DeliverablesTable() {
 			/>
 		</>
 	);
+	const printRef = useRef(null);
 	return (
-		<>
+		<div ref={printRef}>
 			{countQueryLoading || queryLoading ? (
 				<TableSkeleton />
 			) : (
@@ -636,6 +637,7 @@ export default function DeliverablesTable() {
 								importButtonOnly={importButtonOnly}
 								hideExport={!deliverableExportAccess}
 								hideImport={!deliverableImportFromCsvAccess}
+								printRef={printRef}
 							>
 								<>
 									<Button
@@ -683,6 +685,6 @@ export default function DeliverablesTable() {
 					/>
 				</>
 			)}
-		</>
+		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import CommonTable from "../../CommonTable";
 import { budgetTargetTableHeading as tableHeadings } from "../../constants";
 import BudgetTarget from "../../../Budget/BudgetTarget";
@@ -354,9 +354,10 @@ function BudgetTargetView({
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
+	const printRef = useRef(null);
 
 	return (
-		<>
+		<div ref={printRef}>
 			<Grid container>
 				<Grid item xs={12}>
 					<Box display="flex" flexWrap="wrap">
@@ -398,6 +399,7 @@ function BudgetTargetView({
 						importButtonOnly={importButtonOnly}
 						hideImport={!budgetTargetCreateFromCsvAccess}
 						hideExport={!budgetTargetExportTable}
+						printRef={printRef}
 					>
 						<>
 							<Button
@@ -497,7 +499,7 @@ function BudgetTargetView({
 					</>
 				)}
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 

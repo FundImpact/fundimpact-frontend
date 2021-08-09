@@ -18,6 +18,7 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { FormattedMessage } from "react-intl";
 import { exportTable } from "../../utils/importExportTable.utils";
+import ReactToPrint from "react-to-print";
 
 const ImportExportTableMenu = ({
 	tableName,
@@ -29,6 +30,7 @@ const ImportExportTableMenu = ({
 	importButtonOnly,
 	hideExport,
 	hideImport,
+	printRef,
 }: {
 	tableName: string;
 	tableExportUrl: string;
@@ -41,6 +43,7 @@ const ImportExportTableMenu = ({
 	importButtonOnly?: boolean;
 	hideImport?: boolean;
 	hideExport?: boolean;
+	printRef?: any;
 }) => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>(false);
@@ -116,8 +119,25 @@ const ImportExportTableMenu = ({
 		});
 	}
 
+	menuList.push({
+		children: (
+			<ReactToPrint
+				trigger={() => (
+					<MenuItem>
+						<FormattedMessage
+							defaultMessage="Print Table"
+							id="print_table"
+							description="print table as csv"
+						/>
+					</MenuItem>
+				)}
+				content={() => printRef?.current}
+			/>
+		),
+	});
+
 	return (
-		<>
+		<div>
 			{importButtonOnly
 				? !hideImport && (
 						<Button onClick={() => setOpenAttachFiles(true)}>
@@ -162,7 +182,7 @@ const ImportExportTableMenu = ({
 					{children}
 				</AttachFileForm>
 			)}
-		</>
+		</div>
 	);
 };
 export default ImportExportTableMenu;

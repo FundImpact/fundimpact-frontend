@@ -13,7 +13,7 @@ import {
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import {
 	GET_DELIVERABLE_TRANCHE,
@@ -196,7 +196,6 @@ function EditDeliverableTrackLineIcon({
 		AttachFile[]
 	>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
-
 	return (
 		<>
 			<TableCell>
@@ -649,8 +648,9 @@ export default function DeliverablesTrackLineTable({
 		</>
 	);
 
+	const printRef = useRef(null);
 	return (
-		<>
+		<div ref={printRef}>
 			{countQueryLoading ? <FullScreenLoader /> : null}
 			{loading ? <FullScreenLoader /> : null}
 			<Grid container>
@@ -695,6 +695,7 @@ export default function DeliverablesTrackLineTable({
 						importButtonOnly={importButtonOnly}
 						hideImport={!deliverableTracklineImportFromCsvAccess}
 						hideExport={!deliverableTracklineExportAccess}
+						printRef={printRef}
 					>
 						<>
 							{/* <Button
@@ -766,6 +767,6 @@ export default function DeliverablesTrackLineTable({
 					</ImportExportTableMenu>
 				)}
 			/>
-		</>
+		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import CommonTable from "../CommonTable";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
@@ -165,8 +165,10 @@ function ImpactCategoryTableView({
 	const { jwt } = useAuth();
 	const theme = useTheme();
 
+	const printRef = useRef(null);
+
 	return (
-		<>
+		<div ref={printRef}>
 			{!collapsableTable && (
 				<Grid container>
 					<Grid item xs={12}>
@@ -209,6 +211,7 @@ function ImpactCategoryTableView({
 						onImportTableSuccess={onImportImpactCategoryTableSuccess}
 						hideImport={!impactCategoryImportFromCsvAccess}
 						hideExport={!impactCategoryExportAccess}
+						printRef={printRef}
 					>
 						<Button
 							variant="outlined"
@@ -251,7 +254,7 @@ function ImpactCategoryTableView({
 					</>
 				)} */}
 			</CommonTable>
-		</>
+		</div>
 	);
 }
 
