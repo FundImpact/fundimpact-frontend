@@ -1,7 +1,6 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
 import { AttachFile } from "../AttachFile";
-1;
 import { DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTargetLine {

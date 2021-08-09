@@ -33,7 +33,7 @@ import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from 
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
 import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
-import { CircularPercentage } from "../../commons";
+import { chipArray, CircularPercentage } from "../../commons";
 import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import { setSuccessNotification } from "../../../reducers/notificationReducer";
@@ -76,58 +76,6 @@ enum tableHeaders {
 	achieved = 3,
 	year = 4,
 }
-
-const chipArray = ({
-	arr,
-	name,
-	removeChip,
-}: {
-	removeChip: (index: number) => void;
-	name: string;
-	arr: string[];
-}) => {
-	return arr.map((element, index) => (
-		<Box key={index} m={1}>
-			<Chip
-				label={element}
-				avatar={
-					<Avatar
-						style={{
-							width: "30px",
-							height: "30px",
-						}}
-					>
-						<span>{name}</span>
-					</Avatar>
-				}
-				onDelete={() => removeChip(index)}
-			/>
-		</Box>
-	));
-};
-
-// const DeliverableTranche = ({ TracklineId }: { TracklineId: string }) => {
-// 	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
-// 		variables: { filter: { deliverable_tracking_lineitem: TracklineId } },
-// 	});
-// 	return (
-// 		<TableCell>
-// 			<Box display="flex">
-// 				{data?.deliverableLinitemFyDonorList.map((elem: any) => (
-// 					<Box mr={1}>
-// 						<Chip
-// 							label={`${elem?.grant_periods_project?.name || "-"} - ${
-// 								elem?.project_donor?.donor?.name || "-"
-// 							}`}
-// 							size="small"
-// 							color="primary"
-// 						/>
-// 					</Box>
-// 				))}
-// 			</Box>
-// 		</TableCell>
-// 	);
-// };
 
 const getTargetId = (tableType: "deliverable" | "impact" | "budget") =>
 	tableType === "budget"
@@ -349,17 +297,17 @@ const createChipArray = ({
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] === "string") {
 		return chipArray({
+			list: [filterListObjectKeyValuePair[1]],
 			name: filterListObjectKeyValuePair[0].slice(0, 4),
 			removeChip: (index: number) => {
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
-			arr: [filterListObjectKeyValuePair[1]],
 		});
 	}
 	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
 		if (filterListObjectKeyValuePair[0] === "financial_year_org") {
 			return chipArray({
-				arr: filterListObjectKeyValuePair[1].map((ele) => financialYearOrgHash[ele]),
+				list: filterListObjectKeyValuePair[1].map((ele) => financialYearOrgHash[ele]),
 				name: "fd",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
@@ -368,7 +316,7 @@ const createChipArray = ({
 		}
 		if (filterListObjectKeyValuePair[0] === "financial_year_donor") {
 			return chipArray({
-				arr: filterListObjectKeyValuePair[1].map((ele) => financialYearDonorHash[ele]),
+				list: filterListObjectKeyValuePair[1].map((ele) => financialYearDonorHash[ele]),
 				name: "fo",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
@@ -377,7 +325,7 @@ const createChipArray = ({
 		}
 		if (filterListObjectKeyValuePair[0] === "annual_year") {
 			return chipArray({
-				arr: filterListObjectKeyValuePair[1].map((ele) => annualYearHash[ele]),
+				list: filterListObjectKeyValuePair[1].map((ele) => annualYearHash[ele]),
 				name: "ay",
 				removeChip: (index: number) => {
 					removeFilterListElements(filterListObjectKeyValuePair[0], index);

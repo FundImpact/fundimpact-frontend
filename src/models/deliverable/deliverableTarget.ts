@@ -1,5 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
-import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
+import { DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTarget {
 	id?: number;

@@ -1,4 +1,4 @@
-import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -17,8 +17,6 @@ import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedM
 import { GET_PROJ_DONORS } from "../../../graphql/project";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
-import { DIALOG_TYPE } from "../../../models/constants";
-import DeleteModal from "../../DeleteModal";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 import { YearTagPayload } from "../../../models/yearTags";
@@ -119,7 +117,7 @@ function SubTarget(props: SubTargetFormProps) {
 			? GET_DELIVERABLE_SUB_TARGETS_COUNT
 			: props.formType === "impact"
 			? GET_IMPACT_SUB_TARGETS_COUNT
-			: GET_IMPACT_SUB_TARGETS_COUNT;
+			: GET_BUDGET_SUB_TARGETS_COUNT;
 
 	const [createSubTarget, { loading: createSubTargetLoading }] = useMutation(
 		getCreateSubTargetQuery()
@@ -246,7 +244,7 @@ function SubTarget(props: SubTargetFormProps) {
 	}, [cachedProjectDonors, props]);
 
 	budgetSubTargetFormList[4]["secondOptionsArray"] = useMemo(() => {
-		let organizationMinusProjectDonors: any = [];
+		let organizationDonorsAfterRemovingProjectDonors: any = [];
 		if (cachedProjectDonors && cachedOrganizationDonors)
 			cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
 				let projectDonorNotContainsOrgDonor = true;
@@ -257,11 +255,11 @@ function SubTarget(props: SubTargetFormProps) {
 					}
 				});
 				if (projectDonorNotContainsOrgDonor)
-					organizationMinusProjectDonors.push({
+					organizationDonorsAfterRemovingProjectDonors.push({
 						...orgDonor,
 					});
 			});
-		return organizationMinusProjectDonors;
+		return organizationDonorsAfterRemovingProjectDonors;
 	}, [cachedProjectDonors, cachedOrganizationDonors]);
 
 	useMemo(() => {
@@ -358,7 +356,8 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let initialValues: any = getInitialValues(props);
 
-	const checkAndDeleteValuesToDelete = (value: ISubTarget) => {
+	const checkValuesToDelete = (value: ISubTarget) => {
+		let values = { ...value };
 		if (props.formType === "budget") {
 			delete value?.deliverable_target_project;
 			delete value?.impact_target_project;
@@ -371,16 +370,16 @@ function SubTarget(props: SubTargetFormProps) {
 			delete value?.budget_targets_project;
 			delete value?.deliverable_target_project;
 		}
-		return value;
+		return values;
 	};
 
 	const onCreate = async (value: ISubTarget) => {
-		value = checkAndDeleteValuesToDelete(value);
+		value = checkValuesToDelete(value);
 		await createSubTargetHelper({ ...value, project: dashboardData?.project?.id || "" });
 	};
 
 	const onUpdate = async (value: any) => {
-		value = checkAndDeleteValuesToDelete(value);
+		value = checkValuesToDelete(value);
 		await updateSubTargetHelper({ ...value });
 	};
 
@@ -403,37 +402,6 @@ function SubTarget(props: SubTargetFormProps) {
 		return errors;
 	};
 	const intl = useIntl();
-	// const onDelete = async () => {
-	// 	try {
-	// 		const deliverableTargetValues = { ...initialValues };
-	// 		delete deliverableTargetValues["id"];
-	// 		await updateDeliverableTarget({
-	// 			variables: {
-	// 				id: initialValues?.id,
-	// 				input: {
-	// 					deleted: true,
-	// 					...deliverableTargetValues,
-	// 				},
-	// 			},
-	// 		});
-	// 		notificationDispatch(setSuccessNotification("Deliverable Target Delete Success"));
-	// 	} catch (err) {
-	// 		notificationDispatch(setErrorNotification(err.message));
-	// 	} finally {
-	// 		onCancel();
-	// 	}
-	// };
-
-	// if (props.dialogType === DIALOG_TYPE.DELETE) {
-	// 	return (
-	// 		<DeleteModal
-	// 			handleClose={onCancel}
-	// 			open={props.open}
-	// 			title="Delete Deliverable Target"
-	// 			onDeleteConformation={onDelete}
-	// 		/>
-	// 	);
-	// }
 
 	let budgetSubTargetTitle = intl.formatMessage({
 		id: "budgetSubTargetFormListTitle",
@@ -468,12 +436,16 @@ function SubTarget(props: SubTargetFormProps) {
 		<React.Fragment>
 			<FormDialog
 				title={currentTitle}
-				subtitle={intl.formatMessage({
-					id: "budgetSubTargetFormListSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on deliverable target form for subtitle`,
-				})}
+				subtitle={
+					newOrEdit +
+					" " +
+					intl.formatMessage({
+						id: "budgetSubTargetFormListSubtitle",
+						defaultMessage:
+							"Physical addresses of your organisation like headquarter branch etc",
+						description: `This text will be show on deliverable target form for subtitle`,
+					})
+				}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}
