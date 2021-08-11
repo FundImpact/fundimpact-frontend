@@ -358,23 +358,17 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const checkValuesToDelete = (value: ISubTarget) => {
 		let values = { ...value };
-		let obj = {
-			a: value?.deliverable_target_project,
-			b: value?.impact_target_project,
-			c: value?.budget_targets_project,
-		};
-
 		if (props.formType === "budget") {
-			delete obj.a;
-			delete obj.b;
+			delete value["deliverable_target_project"];
+			delete value["impact_target_project"];
 		}
 		if (props.formType === "deliverable") {
-			delete obj.c;
-			delete obj.b;
+			delete value["budget_targets_project"];
+			delete value["impact_target_project"];
 		}
 		if (props.formType === "impact") {
-			delete obj.c;
-			delete obj.a;
+			delete value["budget_targets_project"];
+			delete value["deliverable_target_project"];
 		}
 		return values;
 	};
