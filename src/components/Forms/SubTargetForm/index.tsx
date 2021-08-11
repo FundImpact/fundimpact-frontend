@@ -83,23 +83,43 @@ function SubTarget(props: SubTargetFormProps) {
 		variables: { filter: { project: dashboardData?.project?.id } },
 		skip: props.formType != "budget",
 	});
-	const getCreateSubTargetQuery = () =>
-		props.formType === "budget"
-			? CREATE_BUDGET_SUB_TARGET
-			: props.formType === "deliverable"
-			? CREATE_DELIVERABLE_SUB_TARGET
-			: props.formType === "impact"
-			? CREATE_IMPACT_SUB_TARGET
-			: CREATE_BUDGET_SUB_TARGET;
 
-	const getUpdateSubTargetQuery = () =>
-		props.formType === "budget"
-			? UPDATE_BUDGET_SUB_TARGET
-			: props.formType === "deliverable"
-			? UPDATE_DELIVERABLE_SUB_TARGET
-			: props.formType === "impact"
-			? UPDATE_IMPACT_SUB_TARGET
-			: UPDATE_BUDGET_SUB_TARGET;
+	const type = {
+		BUDGET: "budget",
+		DELIVERABLE: "deliverable",
+		IMPACT: "impact",
+	};
+	const getCreateSubTargetQuery = () => {
+		if (props.formType === type.BUDGET) {
+			return CREATE_BUDGET_SUB_TARGET;
+		} else if (props.formType === type.DELIVERABLE) {
+			return CREATE_DELIVERABLE_SUB_TARGET;
+		} else if (props.formType === type.IMPACT) {
+			return CREATE_IMPACT_SUB_TARGET;
+		} else {
+			return CREATE_BUDGET_SUB_TARGET;
+		}
+	};
+
+	const getUpdateSubTargetQuery = () => {
+		if (props.formType === type.BUDGET) {
+			return UPDATE_BUDGET_SUB_TARGET;
+		} else if (props.formType === type.DELIVERABLE) {
+			return UPDATE_DELIVERABLE_SUB_TARGET;
+		} else if (props.formType === type.IMPACT) {
+			return UPDATE_IMPACT_SUB_TARGET;
+		} else {
+			return UPDATE_BUDGET_SUB_TARGET;
+		}
+	};
+	// const getUpdateSubTargetQuery = () =>
+	// 	props.formType === "budget"
+	// 		? UPDATE_BUDGET_SUB_TARGET
+	// 		: props.formType === "deliverable"
+	// 		? UPDATE_DELIVERABLE_SUB_TARGET
+	// 		: props.formType === "impact"
+	// 		? UPDATE_IMPACT_SUB_TARGET
+	// 		: UPDATE_BUDGET_SUB_TARGET;
 
 	const getFetchSubTargetQuery = () =>
 		props.formType === "budget"
