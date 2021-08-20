@@ -1,10 +1,8 @@
 import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React, { useEffect } from "react";
-
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationData } from "../../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../../models/constants";
-import BudgetCategory from "../../Budget/BudgetCategory";
 import BudgetLineitem from "../../Budget/BudgetLineitem";
 import BudgetTarget from "../../Budget/BudgetTarget";
 import AddButton from "../../Dasboard/AddButton";
@@ -28,7 +26,6 @@ import { useIntl } from "react-intl";
 import { CreateButton } from "../../../models/addButton";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { BUDGET_TARGET_ACTIONS } from "../../../utils/access/modules/budgetTarget/actions";
-import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/budgetTargetLineItem/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
@@ -52,9 +49,7 @@ import { useDialogData } from "../../../contexts/DialogContext";
 import AttachFileForm from "../../Forms/AttachFiles";
 import { AttachFile } from "../../../models/AttachFile";
 import { useDocumentTableDataRefetch } from "../../../hooks/document";
-import { GET_PROJECT_BY_ID } from "../../../graphql/project";
-import { useLazyQuery } from "@apollo/client";
-import { IGetProjectById } from "../../../models/project/project";
+import SubTarget from "../../Forms/SubTargetForm";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -316,6 +311,22 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "reportBudgetSpend",
+						defaultMessage: "Create Sub Target",
+						description: `This text will be show on budgets Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"budget"}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
@@ -344,6 +355,22 @@ export default function DashboardTableContainer() {
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "createDeliverableSubTarget",
+						defaultMessage: "Create Deliverable Sub Target",
+						description: `This text will be show on deliverable Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"deliverable"}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -424,6 +451,22 @@ export default function DashboardTableContainer() {
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
+						/>
+					),
+					createButtonAccess: impactTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "createImpactSubTarget",
+						defaultMessage: "Create Impact Sub Target",
+						description: `This text will be show on impact Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"impact"}
 						/>
 					),
 					createButtonAccess: impactTargetCreateAccess,

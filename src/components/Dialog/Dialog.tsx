@@ -40,7 +40,12 @@ export default function FIDialog({
 	const classes = useStyles();
 	return (
 		<div>
-			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="form-dialog-title"
+				maxWidth="lg"
+			>
 				<MuiDialogTitle disableTypography className={classes.closeButton}>
 					<Box flexGrow={1}>
 						{header && (

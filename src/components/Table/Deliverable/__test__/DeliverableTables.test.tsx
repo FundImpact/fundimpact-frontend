@@ -176,23 +176,27 @@ describe("Deliverable Table and Deliverable trackline table Graphql Calls and da
 		await waitForElement(() => getByText(/50.00 %/i)); // calculated percentage of target
 	});
 
-	test("Table Headings and Data listing of Deliverable trackline table", async () => {
-		let collaspeButton = deliverableTable.getByTestId(`collaspeButton${0}`);
-		expect(collaspeButton).toBeInTheDocument();
-		fireEvent.click(collaspeButton);
-		const { getByText, getAllByText, findAllByText } = deliverableTable;
+	{
+		/* LineItem Has been Removed && Sub Target table has its own test file */
+	}
 
-		for (let i = 0; i < deliverableAndimpactTracklineHeading.length; i++) {
-			await waitForElement(() =>
-				findAllByText(deliverableAndimpactTracklineHeading[i].label)
-			);
-		}
-		await waitForElement(() => getByText(/2020-08-25/i)); // date of target trackline
-		await waitForElement(() => getByText(/this is a note/i)); // Note of target trackline
-		await waitForElement(() => getAllByText(/25000 unit/)); // Target Value of target trackline
-		await waitForElement(() => getAllByText(/FY 2019-20/));
-		await waitForElement(() => getAllByText(/2015/));
-	});
+	// test("Table Headings and Data listing of Deliverable trackline table", async () => {
+	// 	let collaspeButton = deliverableTable.getByTestId(`collaspeButton${0}`);
+	// 	expect(collaspeButton).toBeInTheDocument();
+	// 	fireEvent.click(collaspeButton);
+	// 	const { getByText, getAllByText, findAllByText } = deliverableTable;
+
+	// 	for (let i = 0; i < deliverableAndimpactTracklineHeading.length; i++) {
+	// 		await waitForElement(() =>
+	// 			findAllByText(deliverableAndimpactTracklineHeading[i].label)
+	// 		);
+	// 	}
+	// 	await waitForElement(() => getByText(/2020-08-25/i)); // date of target trackline
+	// 	await waitForElement(() => getByText(/this is a note/i)); // Note of target trackline
+	// 	await waitForElement(() => getAllByText(/25000 unit/)); // Target Value of target trackline
+	// 	await waitForElement(() => getAllByText(/FY 2019-20/));
+	// 	await waitForElement(() => getAllByText(/2015/));
+	// });
 
 	test("Filter List test", async () => {
 		let filterButton = deliverableTable.getByTestId(`filter-button`);

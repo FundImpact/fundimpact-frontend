@@ -7,6 +7,8 @@ import {
 	GET_PROJECT_BUDGET_TARGETS_COUNT,
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
 	GET_PROJECT_BUDGET_TARCKING,
+	GET_BUDGET_SUB_TARGETS_COUNT,
+	GET_BUDGET_SUB_TARGETS,
 } from "../../../../../graphql/Budget";
 import {
 	GET_BUDGET_TARGET_PROJECT,
@@ -23,6 +25,7 @@ import {
 	mockAnnualYearList,
 	mockOrgBudgetTargetProject,
 	mockGrantPeriodsProjectList,
+	mockYearTagsList,
 	mockFinancialYears,
 	mockBudgetTargetAmountSum,
 	mockBudgetTargetCount,
@@ -31,7 +34,9 @@ import {
 	mockCurrencyList,
 	mockOrgDonor,
 	mockProjectDonors,
+	mockBudgetSubTargetsConnection,
 	mockCountryList,
+	mockBudgetSubTargetData,
 } from "../../../../../utils/testMock.json";
 import { GET_PROJ_DONORS } from "../../../../../graphql/project";
 import {
@@ -42,11 +47,16 @@ import {
 	GET_COUNTRY_LIST,
 } from "../../../../../graphql";
 import BudgetTargetTable from "../BudgetTargetTableGraphql";
-import { budgetTargetTableHeading, budgetLineItemTableHeading } from "../../../constants";
+import {
+	budgetTargetTableHeading,
+	budgetLineItemTableHeading,
+	subTargetTableHeadings,
+} from "../../../constants";
 import { getTodaysDate } from "../../../../../utils";
 import { GET_ORG_DONOR } from "../../../../../graphql/donor";
 import { GET_USER_ROLES } from "../../../../../graphql/User/query";
 import { mockUserRoles } from "../../../../../utils/testMockUserRoles.json";
+import { GET_YEARTAGS } from "../../../../../graphql/yearTags/query";
 
 let table: RenderResult;
 
@@ -276,6 +286,18 @@ const mocks = [
 	},
 	{
 		request: {
+			query: GET_YEARTAGS,
+			variables: {},
+		},
+		result: {
+			data: {
+				yearTags: mockYearTagsList,
+			},
+		},
+	},
+
+	{
+		request: {
 			query: GET_FINANCIAL_YEARS,
 			variables: {
 				filter: {
@@ -415,6 +437,29 @@ const mocks = [
 			data: mockBudgetTargetAmountSum,
 		},
 	},
+	{
+		request: {
+			query: GET_BUDGET_SUB_TARGETS_COUNT,
+			variables: { filter: { budget_targets_project: "3" } },
+		},
+		result: {
+			data: mockBudgetSubTargetsConnection,
+		},
+	},
+	{
+		request: {
+			query: GET_BUDGET_SUB_TARGETS,
+			variables: {
+				filter: { budget_targets_project: "3" },
+				limit: 10,
+				start: 0,
+				sort: "created_at:DESC",
+			},
+		},
+		result: {
+			data: mockBudgetSubTargetData,
+		},
+	},
 ];
 
 beforeEach(async () => {
@@ -478,40 +523,44 @@ describe("Budget Target Table tests", () => {
 		);
 	});
 
-	test("Table Headings and Data listing of Budget trackline table", async () => {
-		let collaspeButton = table.getByTestId(`collaspeButton-${1}`);
-		expect(collaspeButton).toBeInTheDocument();
+	{
+		/* LineItem Has been Removed && Sub Target table has its own test file */
+	}
 
-		fireEvent.click(collaspeButton);
-		budgetLineItemTableHeading[3].label += `(${mockOrgHomeCurrency[0].currency.code})`;
+	// test("Table Headings and Data listing of Budget trackline table", async () => {
+	// 	let collaspeButton = table.getByTestId(`collaspeButton-${1}`);
+	// 	expect(collaspeButton).toBeInTheDocument();
 
-		for (let i = 0; i < budgetLineItemTableHeading.length; i++) {
-			await waitForElement(() => table.findAllByText(budgetLineItemTableHeading[i].label));
-		}
+	// 	fireEvent.click(collaspeButton);
+	// 	// budgetLineItemTableHeading[3].label += `(${mockOrgHomeCurrency[0].currency.code})`;
 
-		await waitForElement(() =>
-			table.getAllByText(
-				new RegExp("" + mockBudgetLineItem[0].grant_periods_project.name, "i")
-			)
-		);
-		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_org.name, "i"))
-		);
-		await waitForElement(() =>
-			table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_donor.name, "i"))
-		);
-		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockBudgetLineItem[0].note, "i"))
-		);
-		await waitForElement(() =>
-			table.getByText(
-				new RegExp("" + getTodaysDate(mockBudgetLineItem[0].reporting_date, true), "i")
-			)
-		);
-		await waitForElement(() =>
-			table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
-		);
-	});
+	// 	for (let i = 0; i < subTargetTableHeadings.length; i++) {
+	// 		await waitForElement(() => table.getAllByText(subTargetTableHeadings[i].label));
+	// 	}
+
+	// 	await waitForElement(() =>
+	// 		table.getAllByText(
+	// 			new RegExp("" + mockBudgetLineItem[0].grant_periods_project.name, "i")
+	// 		)
+	// 	);
+	// 	await waitForElement(() =>
+	// 		table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_org.name, "i"))
+	// 	);
+	// 	await waitForElement(() =>
+	// 		table.getAllByText(new RegExp("" + mockBudgetLineItem[0].fy_donor.name, "i"))
+	// 	);
+	// 	await waitForElement(() =>
+	// 		table.getByText(new RegExp("" + mockBudgetLineItem[0].note, "i"))
+	// 	);
+	// 	await waitForElement(() =>
+	// 		table.getAllByText(
+	// 			new RegExp("" + getTodaysDate(mockBudgetLineItem[0].reporting_date, true), "i")
+	// 		)
+	// 	);
+	// 	await waitForElement(() =>
+	// 		table.getByText(new RegExp("" + mockBudgetLineItem[0].amount, "i"))
+	// 	);
+	// });
 
 	test("Filter List test", async () => {
 		let filterButton = await table.findByTestId(`filter-button`);

@@ -112,3 +112,81 @@ export const UPDATE_ORG_BUDGET_CATEGORY = gql`
 		}
 	}
 `;
+
+export const CREATE_BUDGET_SUB_TARGET = gql`
+	mutation createBudgetSubTarget($input: createBudgetSubTargetInput!) {
+		createBudgetSubTarget(input: $input) {
+			budgetSubTarget {
+				id
+				created_at
+				updated_at
+				project {
+					id
+					name
+				}
+				budget_targets_project {
+					id
+					name
+				}
+				target_value
+				timeperiod_end
+				timeperiod_start
+				financial_year_org {
+					id
+					name
+				}
+				financial_year_donor {
+					id
+					name
+				}
+				annual_year {
+					id
+					name
+				}
+				grant_periods_project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const UPDATE_BUDGET_SUB_TARGET = gql`
+	mutation updateBudgetSubTarget($input: updateBudgetSubTargetInput!) {
+		updateBudgetSubTarget(input: $input) {
+			budgetSubTarget {
+				id
+				created_at
+				updated_at
+				project {
+					id
+					name
+				}
+				budget_targets_project {
+					id
+					name
+				}
+				target_value
+				timeperiod_end
+				timeperiod_start
+				financial_year_org {
+					id
+					name
+				}
+				financial_year_donor {
+					id
+					name
+				}
+				annual_year {
+					id
+					name
+				}
+				grant_periods_project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;

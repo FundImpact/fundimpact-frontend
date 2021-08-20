@@ -65,10 +65,23 @@ export const budgetTargetTableHeading: ITableHeadings[] = [
 	{ label: "Progress %" },
 	{ label: "" },
 ];
+export const subTargetTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Target", keyMapping: "target_value" },
+	{ label: "Time Start", keyMapping: "timeperiod_start" },
+	{ label: "Time End", keyMapping: "timeperiod_end" },
+	{ label: "Annual year", keyMapping: "annual_year" },
+	{ label: "financial year donor", keyMapping: "financial_year_donor" },
+	{ label: "financial year org", keyMapping: "financial_year_org" },
+	{ label: "Donor", keyMapping: "donor" },
+	{ label: "grant period projects", keyMapping: "grant_periods_project" },
+	{ label: "Line Items" },
+	{ label: "" }, //edit icon
+];
 
 export const budgetLineItemTableHeading: ITableHeadings[] = [
 	{ label: "#" },
-	{ label: "Date", keyMapping: "reporting_date" },
+	{ label: "Report Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
 	{ label: "Amount", keyMapping: "amount" },
 	{ label: "Grant Period" },
