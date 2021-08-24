@@ -1,8 +1,6 @@
 import { ApolloQueryResult, useQuery } from "@apollo/client";
 import {
-	Avatar,
 	Box,
-	Chip,
 	IconButton,
 	Menu,
 	MenuItem,
@@ -15,12 +13,10 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 import pagination from "../../../hooks/pagination/pagination";
-import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
-import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
+import { getTodaysDate } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { deliverableAndimpactTracklineHeading, subTargetTableHeadings } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
-import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { budgetSubTargetForm } from "./inputFields.json";
 import FilterList from "../../FilterList";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -32,19 +28,14 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/ac
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
-import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
-import { chipArray, CircularPercentage } from "../../commons";
-import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+import { chipArray } from "../../commons";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	ANNUAL_YEAR_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT,
-	DONOR_EXPORT,
 	FINANCIAL_YEAR_EXPORT,
-	GRANT_PERIOD_TABLE_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
@@ -101,20 +92,7 @@ function EditSubTarget({
 	tableType: "deliverable" | "impact" | "budget";
 	donorId?: string;
 }) {
-	const notificationDispatch = useNotificationDispatch();
-	const [tracklineDonors, setTracklineDonors] = useState<
-		{
-			id: string;
-			name: string;
-			donor: { id: string; name: string; country: { id: string; name: string } };
-		}[]
-	>([]);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
-
-	// const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
-	// 	variables: { filter: { deliverable_tracking_lineitem: subTarget.id } },
-	// });
-
 	const dashBoardData = useDashBoardData();
 
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -656,14 +634,6 @@ export default function SubTargetTable({
 		keyMapping?: string;
 		renderComponent?: () => React.ReactNode;
 	}
-
-	const filteredDeliverableTracklineTableHeadings = useMemo(
-		() =>
-			filterTableHeadingsAndRows(deliverableAndimpactTracklineHeading, {
-				[tableHeaders.year]: !annualYearFindAccess && !financialYearFindAccess,
-			}),
-		[annualYearFindAccess, financialYearFindAccess]
-	);
 
 	let deliverableTracklineTablePagination = (
 		<TablePagination

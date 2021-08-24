@@ -324,7 +324,6 @@ function SubTarget(props: SubTargetFormProps) {
 					},
 				],
 			});
-			// setcurrentCategory("");
 			notificationDispatch(setSuccessNotification("Sub Target created successfully !"));
 		} catch (error) {
 			notificationDispatch(setErrorNotification(error.message));
