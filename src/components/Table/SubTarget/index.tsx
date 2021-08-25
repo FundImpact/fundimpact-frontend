@@ -15,12 +15,10 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 import pagination from "../../../hooks/pagination/pagination";
-import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
 import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { deliverableAndimpactTracklineHeading, subTargetTableHeadings } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
-import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../../graphql";
 import { budgetSubTargetForm } from "./inputFields.json";
 import FilterList from "../../FilterList";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -32,11 +30,8 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/ac
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
-import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
-import { chipArray, CircularPercentage } from "../../commons";
-import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+import { chipArray } from "../../commons";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	ANNUAL_YEAR_EXPORT,
@@ -69,6 +64,8 @@ import DeliverablesTrackLineTable from "../Deliverable/DeliverableTrackLine";
 import ImpactTrackLineTable from "../Impact/impactTrackline";
 import { YearTagPayload } from "../../../models/yearTags";
 import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
+import BudgetLineitem from "../../Budget/BudgetLineitem";
+import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 
 enum tableHeaders {
 	date = 1,
@@ -137,7 +134,20 @@ function EditSubTarget({
 
 	const [subTargetFileArray, setSubTargetFileArray] = useState<AttachFile[]>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
+	const [openForm, setOpenForm] = useState(false);
 
+	const initialValues1: IBudgetTrackingLineitemForm = {
+		amount: "",
+		note: "",
+		budget_sub_target: (subTarget?.id as any) || "",
+		annual_year: "",
+		reporting_date: getTodaysDate(),
+		financial_year_org: "",
+		financial_year_donor: "",
+		timeperiod_start: "",
+		timeperiod_end: "",
+		attachments: [],
+	};
 	return (
 		<>
 			<TableCell>
@@ -217,6 +227,30 @@ function EditSubTarget({
 				{subTargetAccess && (
 					<MenuItem
 						onClick={() => {
+							setOpenForm(true);
+							handleMenuClose();
+						}}
+					>
+						<>
+							{tableType === "budget" ? (
+								<FormattedMessage
+									id="reportLineItem"
+									defaultMessage="Report Line Item"
+									description="Report Line Item"
+								/>
+							) : (
+								<FormattedMessage
+									id="reportAchievements"
+									defaultMessage="Report Achievements"
+									description="Report Achievements"
+								/>
+							)}
+						</>
+					</MenuItem>
+				)}
+				{subTargetAccess && (
+					<MenuItem
+						onClick={() => {
 							setSubTargetFileArray(subTarget?.attachments);
 							setOpenAttachFiles(true);
 							handleMenuClose();
@@ -265,6 +299,15 @@ function EditSubTarget({
 							setSubTargetFileArray([]);
 						},
 					}}
+				/>
+			)}
+			{openForm && tableType === "budget" && (
+				<BudgetLineitem
+					formAction={FORM_ACTIONS.CREATE}
+					open={openForm}
+					targetId={subTargetData?.id}
+					initialValues={initialValues1}
+					handleClose={() => setOpenForm(!openForm)}
 				/>
 			)}
 		</>
@@ -340,10 +383,12 @@ const LineItemTableButton = ({
 	targetId,
 	tableType,
 	donor,
+	subTargetId,
 }: {
 	targetId: string;
 	tableType: "deliverable" | "impact" | "budget";
 	donor?: any;
+	subTargetId?: string;
 }) => {
 	const [openLineItemTable, setOpenLineItemTable] = useState(false);
 	return (
@@ -360,7 +405,11 @@ const LineItemTableButton = ({
 					}}
 				>
 					{tableType === "budget" && (
-						<BudgetLineItemTable budgetTargetId={targetId} donor={donor} />
+						<BudgetLineItemTable
+							budgetTargetId={targetId}
+							donor={donor}
+							subTargetId={subTargetId}
+						/>
 					)}
 					{tableType === "deliverable" && (
 						<DeliverablesTrackLineTable deliverableTargetId={targetId} />
@@ -554,7 +603,6 @@ export default function SubTargetTable({
 			: "budgetSubTargets";
 
 	useEffect(() => {
-		console.log(subTargetData);
 		if (subTargetData?.[getListObjectKey()]?.length) {
 			let subTargetList = subTargetData[getListObjectKey()];
 			let arr = [];
@@ -575,49 +623,89 @@ export default function SubTargetTable({
 								`${subTargetList[i]?.id}-1`
 							}
 						>
-							{getTodaysDate(subTargetList[i]?.timeperiod_start)}
+							<div>
+								{require("moment")(
+									getTodaysDate(subTargetList[i]?.timeperiod_start)
+								).format("MMM d, YY") +
+									" - " +
+									require("moment")(
+										getTodaysDate(subTargetList[i]?.timeperiod_end)
+									).format("MMM d, YY")}
+							</div>
 						</TableCell>,
-						<TableCell
-							key={
-								getTodaysDate(subTargetList[i]?.timeperiod_end) +
-								`${subTargetList[i]?.id}-1`
-							}
-						>
-							{getTodaysDate(subTargetList[i]?.timeperiod_end)}
-						</TableCell>,
-						<TableCell
-							key={subTargetList[i]?.annual_year?.name + `${subTargetList[i]?.id}-2`}
-						>
-							{subTargetList[i]?.annual_year?.name}
-						</TableCell>,
+
 						<TableCell
 							key={
 								subTargetList[i]?.financial_year_donor?.name +
 								`${subTargetList[i]?.id}-2`
 							}
 						>
-							{subTargetList[i]?.financial_year_donor?.name}
-						</TableCell>,
-						<TableCell
-							key={
-								subTargetList[i]?.financial_year_org?.name +
-								`${subTargetList[i]?.id}-3`
-							}
-						>
-							{subTargetList[i]?.financial_year_org?.name}
+							<Box display="flex">
+								<Box mr={1}>
+									<Chip
+										avatar={
+											<Avatar
+												style={{
+													width: "30px",
+													height: "30px",
+												}}
+											>
+												<span>{"FYO"}</span>
+											</Avatar>
+										}
+										label={subTargetList[i]?.financial_year_org?.name}
+										size="small"
+										color="primary"
+									/>
+								</Box>
+								<Box mr={1}>
+									<Chip
+										avatar={
+											<Avatar
+												style={{
+													width: "30px",
+													height: "30px",
+												}}
+											>
+												<span>{"FYD"}</span>
+											</Avatar>
+										}
+										label={subTargetList[i]?.financial_year_donor?.name}
+										size="small"
+										color="primary"
+									/>
+								</Box>
+								<Box mr={1}>
+									<Chip
+										avatar={
+											<Avatar
+												style={{
+													width: "30px",
+													height: "30px",
+												}}
+											>
+												<span>{"AY"}</span>
+											</Avatar>
+										}
+										label={subTargetList[i]?.annual_year?.name}
+										size="small"
+										color="primary"
+									/>
+								</Box>
+							</Box>
 						</TableCell>,
 						<TableCell
 							key={subTargetList[i]?.donor?.name + `${subTargetList[i]?.id}-3`}
 						>
-							{subTargetList[i]?.donor?.name}
-						</TableCell>,
-						<TableCell
-							key={
-								subTargetList[i]?.grant_periods_project?.name +
-								`${subTargetList[i]?.id}-4`
-							}
-						>
-							{subTargetList[i]?.grant_periods_project?.name}
+							<Chip
+								label={
+									subTargetList[i]?.donor?.name +
+									" - " +
+									subTargetList[i]?.grant_periods_project?.name
+								}
+								size="small"
+								color="primary"
+							/>
 						</TableCell>,
 						<TableCell
 							key={
@@ -630,6 +718,7 @@ export default function SubTargetTable({
 									tableType,
 									donor,
 									targetId,
+									subTargetId: subTargetList[i]?.id,
 								}}
 							/>
 						</TableCell>,

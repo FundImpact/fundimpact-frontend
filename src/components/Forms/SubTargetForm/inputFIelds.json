@@ -51,7 +51,7 @@
 			"name": "donor",
 			"id": "donor",
 			"label": "Select Donors",
-			"size": 6,
+			"size": 12,
 			"dataTestId": "budgetSubTargetDonor",
 			"testId": "budgetSubTargetDonorInput",
 			"optionsLabel": "Project's Donors",
@@ -82,6 +82,22 @@
 			"size": 6
 		},
 		{
+			"name": "grant_periods_project",
+			"id": "grant_periods_project",
+			"dataTestId": "budgetSubTargetGrantPeriod",
+			"testId": "budgetSubTargetGrantPeriodInput",
+			"label": "Grant Period",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": true,
+			"addNewClick": {},
+			"size": 6
+		},
+		{
 			"name": "financial_year_org",
 			"id": "financial_year_org",
 			"dataTestId": "budgetSubTargetOrgFinancialYear",
@@ -108,22 +124,6 @@
 			"inputType": "select",
 			"required": true,
 			"size": 6
-		},
-		{
-			"name": "grant_periods_project",
-			"id": "grant_periods_project",
-			"dataTestId": "budgetSubTargetGrantPeriod",
-			"testId": "budgetSubTargetGrantPeriodInput",
-			"label": "Grant Period",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true,
-			"addNew": true,
-			"addNewClick": {},
-			"size": 12
 		}
 	]
 }

@@ -87,8 +87,8 @@ interface IBUDGET_LINE_ITEM_VIEW {
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
 const yearTags = {
-	FYO: "fy_org,name",
-	FYD: "fy_donor,name",
+	FYO: "financial_year_org,name",
+	FYD: "financial_year_donor,name",
 	AY: "annual_year,name",
 };
 
@@ -147,6 +147,17 @@ const BudgetLineitemYearTags: React.SFC<{ budgetLineItem: IBUDGET_LINE_ITEM_RESP
 	);
 };
 
+const TimePeriod = ({ budgetLineItem }: { budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE }) => {
+	let timeperiod_start: any = budgetLineItem?.timeperiod_start;
+	let timeperiod_end: any = budgetLineItem?.timeperiod_end;
+	return (
+		<div>
+			{require("moment")(getTodaysDate(timeperiod_start)).format("MMM d, YY") +
+				" - " +
+				require("moment")(getTodaysDate(timeperiod_end)).format("MMM d, YY")}
+		</div>
+	);
+};
 const rows = [
 	{
 		valueAccessKey: "",
@@ -156,11 +167,16 @@ const rows = [
 	},
 	{ valueAccessKey: "note" },
 	{ valueAccessKey: "amount" },
-	{ valueAccessKey: "grant_periods_project,name" },
 	{
 		valueAccessKey: "",
 		renderComponent: (budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE) => {
 			return <BudgetLineitemYearTags budgetLineItem={budgetLineItem} />;
+		},
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE) => {
+			return <TimePeriod budgetLineItem={budgetLineItem} />;
 		},
 	},
 ];
