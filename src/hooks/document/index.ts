@@ -20,7 +20,6 @@ const reftechDocumentsTableData = (
 	dashboardData: IDashboardDataContext | undefined,
 	projectId?: String
 ) => {
-	debugger;
 	if (dashboardData?.project?.id) {
 		apolloClient.query({
 			query: GET_ATTACHMENT_IN_PROJECT_DELIVERABLE_IMPACT_BUDGET_BY_PROJECT,

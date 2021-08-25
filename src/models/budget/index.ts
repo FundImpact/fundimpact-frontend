@@ -16,12 +16,17 @@ export interface IBudgetTrackingLineitem {
 	id?: string;
 	amount: number;
 	note: string;
-	budget_targets_project: string;
+	budget_targets_project?: string;
+	budget_sub_target?: string;
 	annual_year: string;
 	reporting_date: string;
-	fy_donor: string;
-	fy_org: string;
-	grant_periods_project: string;
+	fy_donor?: string;
+	fy_org?: string;
+	financial_year_org: string;
+	financial_year_donor: string;
+	grant_periods_project?: string;
+	timeperiod_start: string;
+	timeperiod_end: string;
 	attachments?: AttachFile[];
 }
 
@@ -66,6 +71,7 @@ export type IBudgetLineitemProps =
 			open: boolean;
 			handleClose: () => void;
 			formAction: FORM_ACTIONS.CREATE;
+			targetId?: string | number;
 			initialValues?: IBudgetTrackingLineitemForm;
 			dialogType?: DIALOG_TYPE;
 	  };

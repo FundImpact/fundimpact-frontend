@@ -11,13 +11,18 @@ const getInitialValues = (
 	return {
 		amount: budgetLineItem?.amount || 0,
 		note: budgetLineItem?.note || "",
-		budget_targets_project: budgetLineItem?.budget_targets_project?.id || "",
+		budget_targets_project: "",
+		budget_sub_target: budgetLineItem?.budget_sub_target?.id || "",
 		annual_year: budgetLineItem?.annual_year?.id || "",
 		reporting_date: getTodaysDate(budgetLineItem?.reporting_date || undefined),
+		timeperiod_start: budgetLineItem?.timeperiod_start || "",
+		timeperiod_end: budgetLineItem?.timeperiod_end || "",
 		id: budgetLineItem?.id || "",
 		grant_periods_project: budgetLineItem?.grant_periods_project?.id || "",
 		fy_org: budgetLineItem?.fy_org?.id || "",
 		fy_donor: budgetLineItem?.fy_donor?.id || "",
+		financial_year_org: budgetLineItem?.financial_year_org?.id || "",
+		financial_year_donor: budgetLineItem?.financial_year_donor?.id || "",
 		attachments: budgetLineItem?.attachments || [],
 	};
 };

@@ -28,11 +28,22 @@ export interface IBUDGET_LINE_ITEM_RESPONSE {
 	budget_targets_project: {
 		id: string;
 	};
+	budget_sub_target: {
+		id: string;
+	};
 	annual_year: {
 		id: string;
 	};
 	reporting_date: Date;
-	fy_org: {
+	fy_org?: {
+		id: string;
+		name: string;
+	};
+	financial_year_org: {
+		id: string;
+		name: string;
+	};
+	financial_year_donor: {
 		id: string;
 		name: string;
 	};
@@ -40,10 +51,12 @@ export interface IBUDGET_LINE_ITEM_RESPONSE {
 		id: string;
 		name: string;
 	};
-	fy_donor: {
+	fy_donor?: {
 		id: string;
 		name: string;
 	};
+	timeperiod_start: string;
+	timeperiod_end: string;
 	attachments: AttachFile[];
 }
 

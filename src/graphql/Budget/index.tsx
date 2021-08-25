@@ -24,13 +24,17 @@ export const GET_GRANT_PERIODS_PROJECT_LIST = gql`
 `;
 
 export const GET_PROJECT_BUDGET_TARCKING = gql`
-	query getProjBudgetTrackingsByProject($sort: String, $limit: Int, $start: Int, $filter: JSON) {
-		projBudgetTrackings(sort: $sort, limit: $limit, start: $start, where: $filter) {
+	query budgetTrackingLineitems($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		budgetTrackingLineitems(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
 			budget_targets_project {
 				id
 				name
 				deleted
+			}
+			budget_sub_target {
+				id
+				target_value
 			}
 			amount
 			note
@@ -43,6 +47,14 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				id
 				name
 			}
+			financial_year_donor {
+				id
+				name
+			}
+			financial_year_org {
+				id
+				name
+			}
 			grant_periods_project {
 				id
 				name
@@ -51,6 +63,8 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				id
 				name
 			}
+			timeperiod_start
+			timeperiod_end
 			attachments {
 				id
 				name
@@ -106,8 +120,22 @@ export const GET_PROJECT_BUDGET_TARGETS_COUNT = gql`
 `;
 
 export const GET_PROJ_BUDGET_TRACINGS_COUNT = gql`
-	query getProjBudgetTrackingsCount($filter: JSON) {
-		projBudgetTrackingsCount(where: $filter)
+	query budgetTrackingLineitemsConnection(
+		$sort: String
+		$limit: Int
+		$start: Int
+		$filter: JSON
+	) {
+		budgetTrackingLineitemsConnection(
+			sort: $sort
+			limit: $limit
+			start: $start
+			where: $filter
+		) {
+			aggregate {
+				count
+			}
+		}
 	}
 `;
 

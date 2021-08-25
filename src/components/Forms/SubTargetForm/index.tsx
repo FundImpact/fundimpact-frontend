@@ -83,6 +83,7 @@ function SubTarget(props: SubTargetFormProps) {
 		variables: { filter: { project: dashboardData?.project?.id } },
 		skip: props.formType != "budget",
 	});
+
 	const getCreateSubTargetQuery = () =>
 		props.formType === "budget"
 			? CREATE_BUDGET_SUB_TARGET
@@ -274,9 +275,9 @@ function SubTarget(props: SubTargetFormProps) {
 		setCurrentDonor(donorId);
 	};
 	budgetSubTargetFormList[5].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[6].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[7].optionsArray = lists.annualYear;
-	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[8].optionsArray = lists.annualYear;
+	budgetSubTargetFormList[6].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
 
@@ -358,16 +359,16 @@ function SubTarget(props: SubTargetFormProps) {
 	const checkValuesToDelete = (value: ISubTarget) => {
 		let values = { ...value };
 		if (props.formType === "budget") {
-			delete value?.deliverable_target_project;
-			delete value?.impact_target_project;
+			delete values["deliverable_target_project"];
+			delete values["impact_target_project"];
 		}
 		if (props.formType === "deliverable") {
-			delete value?.budget_targets_project;
-			delete value?.impact_target_project;
+			delete values["budget_targets_project"];
+			delete values["impact_target_project"];
 		}
 		if (props.formType === "impact") {
-			delete value?.budget_targets_project;
-			delete value?.deliverable_target_project;
+			delete values["budget_targets_project"];
+			delete values["deliverable_target_project"];
 		}
 		return values;
 	};

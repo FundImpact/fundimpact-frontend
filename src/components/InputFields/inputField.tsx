@@ -206,14 +206,19 @@ const InputFields = ({
 							!multiSelect &&
 							optionsArray?.map(
 								(
-									elem: { id: string; name: string; groupName?: string },
+									elem: {
+										id: string;
+										name: string;
+										groupName?: string;
+										target_value?: string;
+									},
 									index: number
 								) =>
 									elem.groupName ? (
 										<ListSubheader>{elem.groupName}</ListSubheader>
 									) : (
 										<MenuItem key={index} value={elem.id}>
-											{elem.name}
+											{elem.name || elem.target_value}
 										</MenuItem>
 									)
 							)}
