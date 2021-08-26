@@ -13,6 +13,7 @@ import {
 } from "../../../graphql/Budget";
 import {
 	CREATE_PROJECT_BUDGET_TARGET,
+	CREATE_PROJECT_WITH_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
 import {
@@ -196,8 +197,30 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const [openBudgetCategoryDialog, setOpenBudgetCategoryDialog] = useState<boolean>(false);
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
 
+	const [createProjectWithBudgetTarget] = useMutation(CREATE_PROJECT_WITH_BUDGET_TARGET);
+
 	const [createProjectBudgetTarget, { loading: creatingProjectBudgetTarget }] = useMutation(
-		CREATE_PROJECT_BUDGET_TARGET
+		CREATE_PROJECT_BUDGET_TARGET,
+		{
+			onCompleted: async (data) => {
+				if (data?.createProjectBudgetTarget) {
+					try {
+						await createProjectWithBudgetTarget({
+							variables: {
+								input: {
+									data: {
+										project: dashboardData?.project?.id,
+										budget_targets_project: data?.createProjectBudgetTarget?.id,
+									},
+								},
+							},
+						});
+					} catch (error) {
+						notificationDispatch(setErrorNotification(error?.message));
+					}
+				}
+			},
+		}
 	);
 
 	let [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(

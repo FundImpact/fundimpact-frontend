@@ -190,3 +190,23 @@ export const UPDATE_BUDGET_SUB_TARGET = gql`
 		}
 	}
 `;
+
+export const CREATE_PROJECT_WITH_BUDGET_TARGET = gql`
+	mutation createProjectWithBudgetTarget($input: createProjectWithBudgetTargetInput!) {
+		createProjectWithBudgetTarget(input: $input) {
+			projectWithBudgetTarget {
+				id
+				created_at
+				updated_at
+				project {
+					id
+					name
+				}
+				budget_targets_project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;

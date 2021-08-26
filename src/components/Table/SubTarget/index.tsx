@@ -8,14 +8,16 @@ import {
 	TablePagination,
 	Grid,
 	Button,
+	Chip,
+	Avatar,
 	useTheme,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 import pagination from "../../../hooks/pagination/pagination";
-import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
+import { getTodaysDate } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
-import { deliverableAndimpactTracklineHeading, subTargetTableHeadings } from "../constants";
+import { subTargetTableHeadings } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
 import { budgetSubTargetForm } from "./inputFields.json";
 import FilterList from "../../FilterList";
@@ -25,11 +27,9 @@ import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/mo
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { FINANCIAL_YEAR_ACTIONS } from "../../../utils/access/modules/financialYear/actions";
 import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/actions";
-import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
 import { chipArray } from "../../commons";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	ANNUAL_YEAR_EXPORT,
@@ -606,7 +606,7 @@ export default function SubTargetTable({
 								`${subTargetList[i]?.id}-1`
 							}
 						>
-							<div>
+							<Box display="flex">
 								{require("moment")(
 									getTodaysDate(subTargetList[i]?.timeperiod_start)
 								).format("MMM d, YY") +
@@ -614,7 +614,7 @@ export default function SubTargetTable({
 									require("moment")(
 										getTodaysDate(subTargetList[i]?.timeperiod_end)
 									).format("MMM d, YY")}
-							</div>
+							</Box>
 						</TableCell>,
 
 						<TableCell
@@ -633,7 +633,7 @@ export default function SubTargetTable({
 													height: "30px",
 												}}
 											>
-												<span>{"FYO"}</span>
+												<span>{"FY"}</span>
 											</Avatar>
 										}
 										label={subTargetList[i]?.financial_year_org?.name}

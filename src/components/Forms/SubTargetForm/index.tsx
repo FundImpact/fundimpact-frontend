@@ -435,17 +435,13 @@ function SubTarget(props: SubTargetFormProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={currentTitle}
-				subtitle={
-					newOrEdit +
-					" " +
-					intl.formatMessage({
-						id: "budgetSubTargetFormListSubtitle",
-						defaultMessage:
-							"Physical addresses of your organisation like headquarter branch etc",
-						description: `This text will be show on deliverable target form for subtitle`,
-					})
-				}
+				title={newOrEdit + " " + currentTitle}
+				subtitle={intl.formatMessage({
+					id: "budgetSubTargetFormListSubtitle",
+					defaultMessage:
+						"You can create sub-targets to track your budget across time period, geography etc",
+					description: `This text will be show on deliverable target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}
