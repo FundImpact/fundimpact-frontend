@@ -84,8 +84,7 @@
 			"testId": "budgetSubTargetTimePeriodStartInput",
 			"label": "Start",
 			"type": "date",
-			"size": 6,
-			"required": true
+			"size": 6
 		},
 		{
 			"name": "timeperiod_end",
@@ -94,8 +93,7 @@
 			"testId": "budgetSubTargetTimePeriodEndInput",
 			"label": "End",
 			"type": "date",
-			"size": 6,
-			"required": true
+			"size": 6
 		}
 	]
 }

@@ -94,6 +94,12 @@ export const GET_BUDGET_TARGET_PROJECT = gql`
 				name
 				id
 			}
+			project_with_budget_targets {
+				project {
+					id
+					name
+				}
+			}
 			budget_category_organization {
 				id
 				name

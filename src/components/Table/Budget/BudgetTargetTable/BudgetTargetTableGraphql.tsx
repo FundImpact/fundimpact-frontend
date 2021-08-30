@@ -107,7 +107,9 @@ function BudgetTargetTableGraphql() {
 
 	useEffect(() => {
 		setQueryFilter({
-			project: currentProject?.id,
+			project_with_budget_targets: {
+				project: currentProject?.id,
+			},
 		});
 		setFilterList(getDefaultFilterList());
 	}, [currentProject, setFilterList, setQueryFilter]);
@@ -121,7 +123,9 @@ function BudgetTargetTableGraphql() {
 				}
 			}
 			setQueryFilter({
-				project: currentProject?.id,
+				project_with_budget_targets: {
+					project: currentProject?.id,
+				},
 				...newFilterListObject,
 			});
 		}
@@ -138,6 +142,7 @@ function BudgetTargetTableGraphql() {
 	} = pagination({
 		query: GET_BUDGET_TARGET_PROJECT,
 		countQuery: GET_PROJECT_BUDGET_TARGETS_COUNT,
+		customFetchPolicy: "network-only",
 		countFilter: queryFilter,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,

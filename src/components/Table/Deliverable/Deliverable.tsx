@@ -427,7 +427,9 @@ export default function DeliverablesTable() {
 
 	useEffect(() => {
 		setQueryFilter({
-			project: dashboardData?.project?.id,
+			project_with_deliverable_targets: {
+				project: dashboardData?.project?.id,
+			},
 		});
 		setFilterList(getDefaultFilterList());
 	}, [dashboardData, setFilterList, setQueryFilter]);
@@ -435,10 +437,19 @@ export default function DeliverablesTable() {
 	useEffect(() => {
 		if (filterList) {
 			setQueryFilter(() => {
-				let filter: {
-					[key: string]: string | string[] | number | { [keyName: string]: string[] };
-				} = {
-					project: dashboardData?.project?.id || "",
+				let filter:
+					| {
+							[key: string]:
+								| string
+								| string[]
+								| number
+								| undefined
+								| { [keyName: string]: string[] };
+					  }
+					| any = {
+					project_with_deliverable_targets: {
+						project: dashboardData?.project?.id,
+					},
 				};
 				if (filterList.name) {
 					filter.name = filterList.name;
@@ -468,6 +479,7 @@ export default function DeliverablesTable() {
 		query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 		countQuery: GET_DELIVERABLE_TARGETS_COUNT,
 		countFilter: queryFilter,
+		customFetchPolicy: "network-only",
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});

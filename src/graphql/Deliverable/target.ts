@@ -65,6 +65,12 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			description
 			target_value
 			deleted
+			project_with_deliverable_targets {
+				project {
+					id
+					name
+				}
+			}
 			project {
 				id
 				name

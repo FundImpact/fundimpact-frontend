@@ -505,8 +505,9 @@ export default function SubTargetTable({
 	useEffect(() => {
 		setQueryFilter({
 			[getTargetId(tableType)]: targetId,
+			project: dashBoardData?.project?.id,
 		});
-	}, [targetId]);
+	}, [targetId, dashBoardData?.project]);
 
 	useEffect(() => {
 		if (filterList) {
@@ -521,10 +522,11 @@ export default function SubTargetTable({
 			}
 			setQueryFilter({
 				[getTargetId(tableType)]: targetId,
+				project: dashBoardData?.project?.id,
 				...newFilterListObject,
 			});
 		}
-	}, [filterList, targetId]);
+	}, [filterList, targetId, dashBoardData?.project]);
 
 	const handleDeliverableLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,

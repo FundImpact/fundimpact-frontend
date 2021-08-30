@@ -383,7 +383,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 						});
@@ -392,7 +394,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 							data: {
@@ -408,7 +412,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -423,7 +429,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -438,7 +446,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 							data: {

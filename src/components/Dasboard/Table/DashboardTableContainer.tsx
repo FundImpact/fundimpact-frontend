@@ -50,6 +50,7 @@ import AttachFileForm from "../../Forms/AttachFiles";
 import { AttachFile } from "../../../models/AttachFile";
 import { useDocumentTableDataRefetch } from "../../../hooks/document";
 import SubTarget from "../../Forms/SubTargetForm";
+import ProjectTargets from "../../Forms/ProjectTargets";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -150,6 +151,11 @@ export default function DashboardTableContainer() {
 	const budgetTargetCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
 		BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET
+	);
+
+	const budgetTargetEditAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET
 	);
 
 	const budgetTargetFindAccess = userHasAccess(
@@ -327,12 +333,29 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectBudgetTargets",
+						defaultMessage: "Manage Budget Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Budget targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"budget"}
+						/>
+					),
+					createButtonAccess: budgetTargetEditAccess,
+				},
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
 				// budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
-				budgetTargetLineItemCreateAccess,
+				budgetTargetLineItemCreateAccess ||
+				budgetTargetEditAccess,
 			tableVisibility: budgetTargetFindAccess,
 		},
 		{
@@ -421,6 +444,22 @@ export default function DashboardTableContainer() {
 						/>
 					),
 					createButtonAccess: deliverableTracklineCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectDeliverableTargets",
+						defaultMessage: "Manage Deliverable Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Deliverable targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"deliverable"}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
 			],
 			tabVisibility:

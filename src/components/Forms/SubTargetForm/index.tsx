@@ -70,7 +70,13 @@ function SubTarget(props: SubTargetFormProps) {
 	const dashboardData = useDashBoardData();
 
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
-		variables: { filter: { project: dashboardData?.project?.id } },
+		variables: {
+			filter: {
+				project_with_deliverable_targets: {
+					project: dashboardData?.project?.id,
+				},
+			},
+		},
 		skip: props.formType != "deliverable",
 	});
 
@@ -80,7 +86,13 @@ function SubTarget(props: SubTargetFormProps) {
 	});
 
 	const { data: budgetTargets } = useQuery(GET_BUDGET_TARGET_PROJECT, {
-		variables: { filter: { project: dashboardData?.project?.id } },
+		variables: {
+			filter: {
+				project_with_budget_targets: {
+					project: dashboardData?.project?.id,
+				},
+			},
+		},
 		skip: props.formType != "budget",
 	});
 

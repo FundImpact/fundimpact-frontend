@@ -1,0 +1,32 @@
+{
+	"projectTargetsForm": [
+		{
+			"name": "target",
+			"label": "Choose Target",
+			"size": 12,
+			"testId": "projectTargetTarget",
+			"dataTestId": "projectTargetTargetInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"getInputValue": {},
+			"addNewClick": {}
+		},
+		{
+			"name": "projects",
+			"label": "Choose Projects",
+			"size": 12,
+			"testId": "projectTargetProjects",
+			"dataTestId": "projectTargetProjectsInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"multiple": true,
+			"addNewClick": {}
+		}
+	]
+}

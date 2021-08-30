@@ -47,3 +47,6 @@ export const COUNTRY_EXPORT = `${REACT_APP_BASEURL}countries/export-table`;
 export const PROJECT_EXPORT = `${REACT_APP_BASEURL}projects/export-table`;
 export const INDIVIDUAL_EXPORT = `${REACT_APP_BASEURL}t-4-d-individuals/export-table`;
 export const INDIVIDUAL_IMPORT = `${REACT_APP_BASEURL}t-4-d-individuals/import-table`;
+
+// Manage Project Targets
+export const MANAGE_PROJECT_TARGETS = `${REACT_APP_BASEURL}projects/manage-project-target`;
