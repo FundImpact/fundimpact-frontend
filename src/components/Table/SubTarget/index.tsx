@@ -71,6 +71,8 @@ import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 import BudgetLineitem from "../../Budget/BudgetLineitem";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import { GET_DELIVERABLE_TRACKLINE_COUNT } from "../../../graphql/Deliverable/trackline";
+import DeliverableTrackLine from "../../../components/Deliverable/DeliverableTrackline";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 
 enum tableHeaders {
 	date = 1,
@@ -136,6 +138,7 @@ function EditSubTarget({
 	const [subTargetFileArray, setSubTargetFileArray] = useState<AttachFile[]>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
 	const [openForm, setOpenForm] = useState(false);
+	const [openDeliverableForm, setOpenDeliverableForm] = useState(false);
 
 	const initialValues1: IBudgetTrackingLineitemForm = {
 		amount: "",
@@ -149,6 +152,7 @@ function EditSubTarget({
 		timeperiod_end: "",
 		attachments: [],
 	};
+
 	return (
 		<>
 			<TableCell>
@@ -229,6 +233,7 @@ function EditSubTarget({
 					<MenuItem
 						onClick={() => {
 							setOpenForm(true);
+							setOpenDeliverableForm(true);
 							handleMenuClose();
 						}}
 					>
@@ -309,6 +314,14 @@ function EditSubTarget({
 					targetId={subTargetData?.id}
 					initialValues={initialValues1}
 					handleClose={() => setOpenForm(!openForm)}
+				/>
+			)}
+			{openDeliverableForm && tableType === "deliverable" && (
+				<DeliverableTrackLine
+					open={openDeliverableForm}
+					type={DELIVERABLE_ACTIONS.CREATE}
+					deliverableSubTargetId={subTarget?.id}
+					handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
 				/>
 			)}
 		</>
@@ -462,7 +475,10 @@ const LineItemTableButton = ({
 						/>
 					)}
 					{tableType === "deliverable" && (
-						<DeliverablesTrackLineTable deliverableTargetId={targetId} />
+						<DeliverablesTrackLineTable
+							deliverableTargetId={targetId}
+							subTargetId={subTargetId}
+						/>
 					)}
 					{tableType === "impact" && <ImpactTrackLineTable impactTargetId={targetId} />}
 				</FIDialog>

@@ -49,13 +49,22 @@ import Donor from "../Donor";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
+import { GET_YEARTAGS } from "../../graphql/yearTags/query";
+import { YearTagPayload } from "../../models/yearTags";
+import { GET_DELIVERABLE_SUB_TARGETS } from "../../graphql/Deliverable/subTarget";
+
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
-		deliverable_target_project: props.deliverableTarget,
+		deliverable_target_project: undefined,
+		deliverable_sub_target: props?.deliverableSubTargetId,
+		timeperiod_start: "",
+		timeperiod_end: "",
 		annual_year: "",
 		value: 0,
 		financial_year: "",
+		financial_year_org: "",
+		financial_year_donor: "",
 		reporting_date: getTodaysDate(),
 		note: "",
 		donors: [],
@@ -70,9 +79,9 @@ const FormDetailsCalculate = React.memo(
 			},
 			fetchPolicy: getFetchPolicy(),
 		});
-		const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
-			variables: { filter: { deliverableTargetProject: currentTargetId } },
-		});
+		// const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+		// 	variables: { filter: { deliverableTargetProject: currentTargetId } },
+		// });
 
 		// let deliverableTargetResponse: any;
 		const intl = useIntl();
@@ -108,12 +117,12 @@ const FormDetailsCalculate = React.memo(
 							fetchedDeliverableTarget?.deliverable_unit_org?.name || ""
 						}`,
 					},
-					{
-						label: deliverableAchievedTargetLabel,
-						value: `${achivedValue?.deliverableTrackingTotalValue} ${
-							fetchedDeliverableTarget?.deliverable_unit_org?.name || ""
-						}`,
-					},
+					// {
+					// 	label: deliverableAchievedTargetLabel,
+					// 	value: `${achivedValue?.deliverableTrackingTotalValue} ${
+					// 		fetchedDeliverableTarget?.deliverable_unit_org?.name || ""
+					// 	}`,
+					// },
 			  ]
 			: [];
 		return (
@@ -172,6 +181,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const apolloClient = useApolloClient();
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
+
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
 	const { data: annualYears } = useQuery(GET_ANNUAL_YEARS);
 	const intl = useIntl();
@@ -233,12 +243,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			: []
 	);
 
-	if (filesArray.length) deliverableTragetLineForm[7].label = "View Files";
-	else deliverableTragetLineForm[7].label = "Attach Files";
+	if (filesArray.length) deliverableTragetLineForm[9].label = "View Files";
+	else deliverableTragetLineForm[9].label = "Attach Files";
 
 	if (filesArray.length)
-		deliverableTragetLineForm[7].textNextToButton = `${filesArray.length} files attached`;
-	else deliverableTragetLineForm[7].textNextToButton = ``;
+		deliverableTragetLineForm[9].textNextToButton = `${filesArray.length} files attached`;
+	else deliverableTragetLineForm[9].textNextToButton = ``;
 
 	const [currentTargetId, setCurrentTargetId] = React.useState<string | number | undefined>(
 		props.deliverableTarget ? props.deliverableTarget : ""
@@ -274,7 +284,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
 		description: `This text will be show on deliverable Achievement form for subtitle`,
 	});
-	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_SUB_TARGETS, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 	let {
@@ -287,11 +297,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const [openDeliverableTargetDialog, setOpenDeliverableTargetDialog] = React.useState<boolean>();
 	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
 
-	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
-	deliverableTragetLineForm[3].addNewClick = () => setOpenDonorDialog(true);
+	// const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
+	// deliverableTragetLineForm[5].addNewClick = () => setOpenDonorDialog(true);
 
 	/* Open Attach File Form*/
-	deliverableTragetLineForm[7].onClick = () => setOpenAttachFiles(true);
+	deliverableTragetLineForm[9].onClick = () => setOpenAttachFiles(true);
 
 	const [createProjectDonor, { loading: creatingProjectDonorsLoading }] = useMutation(
 		CREATE_PROJECT_DONOR,
@@ -305,6 +315,37 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		UPDATE_PROJECT_DONOR
 	);
 
+	const [lists, setList] = useState<{
+		annualYear: any;
+		financialYear: any;
+	}>({
+		annualYear: [],
+		financialYear: [],
+	});
+
+	const { data: yearTags } = useQuery(GET_YEARTAGS, {
+		onError: (err) => {
+			console.log("err", err);
+		},
+	});
+
+	useEffect(() => {
+		let yearTagsLists: {
+			annualYear: any;
+			financialYear: any;
+		} = {
+			annualYear: [],
+			financialYear: [],
+		};
+		yearTags?.yearTags?.forEach((elem: YearTagPayload) => {
+			if (elem.type === "annual") {
+				yearTagsLists.annualYear.push(elem);
+			} else if (elem.type === "financial") {
+				yearTagsLists.financialYear.push(elem);
+			}
+		});
+		setList(yearTagsLists);
+	}, [yearTags]);
 	const getProjectDonorIdForGivenDonorId = (
 		projectDonors: IGetProjectDonor["projectDonors"] | undefined,
 		donorId: any
@@ -338,7 +379,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	};
 
-	deliverableTragetLineForm[3].customMenuOnClick = createProjectDonorHelper;
+	// deliverableTragetLineForm[5].customMenuOnClick = createProjectDonorHelper;
 
 	React.useEffect(() => {
 		if (success && donorForm) {
@@ -419,74 +460,80 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
-		if (annualYears) {
-			deliverableTragetLineForm[4].optionsArray = annualYears.annualYears;
+		if (lists?.annualYear) {
+			deliverableTragetLineForm[5].optionsArray = lists.annualYear; //annualYears.annualYears;
 		}
-	}, [annualYears]);
+	}, [lists]);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
 		if (deliverableTargets) {
-			deliverableTragetLineForm[0].optionsArray = deliverableTargets.deliverableTargetList;
+			deliverableTragetLineForm[0].optionsArray = deliverableTargets.deliverableSubTargets;
 		}
 	}, [deliverableTargets]);
 
-	deliverableTragetLineForm[3].optionsArray = useMemo(() => {
-		let donorsArray: any = [];
-		if (cachedProjectDonors)
-			cachedProjectDonors?.projectDonors
-				.filter((projectDonor) => !projectDonor?.deleted)
-				.forEach((elem: IProjectDonor) => {
-					if (
-						props.type === DELIVERABLE_ACTIONS.UPDATE &&
-						props.alreadyMappedDonorsIds?.includes(elem.donor.id)
-					)
-						donorsArray.push({
-							...elem,
-							id: elem.donor.id,
-							name: elem.donor.name,
-							disabled: true,
-						});
-					else
-						donorsArray.push({
-							...elem,
-							id: elem.donor.id,
-							name: elem.donor.name,
-						});
-				});
-		return donorsArray;
-	}, [cachedProjectDonors, props]);
+	// deliverableTragetLineForm[5].optionsArray = useMemo(() => {
+	// 	let donorsArray: any = [];
+	// 	if (cachedProjectDonors)
+	// 		cachedProjectDonors?.projectDonors
+	// 			.filter((projectDonor) => !projectDonor?.deleted)
+	// 			.forEach((elem: IProjectDonor) => {
+	// 				if (
+	// 					props.type === DELIVERABLE_ACTIONS.UPDATE &&
+	// 					props.alreadyMappedDonorsIds?.includes(elem.donor.id)
+	// 				)
+	// 					donorsArray.push({
+	// 						...elem,
+	// 						id: elem.donor.id,
+	// 						name: elem.donor.name,
+	// 						disabled: true,
+	// 					});
+	// 				else
+	// 					donorsArray.push({
+	// 						...elem,
+	// 						id: elem.donor.id,
+	// 						name: elem.donor.name,
+	// 					});
+	// 			});
+	// 	return donorsArray;
+	// }, [cachedProjectDonors, props]);
 
-	deliverableTragetLineForm[3].secondOptionsArray = useMemo(() => {
-		let organizationMinusProjectDonors: any = [];
-		if (cachedProjectDonors && cachedOrganizationDonors)
-			cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
-				let projectDonorNotContainsOrgDonor = true;
-				cachedProjectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
-					if (orgDonor.id === projectDonor.donor.id && !projectDonor.deleted) {
-						projectDonorNotContainsOrgDonor = false;
-						return false;
-					}
-				});
-				if (projectDonorNotContainsOrgDonor)
-					organizationMinusProjectDonors.push({
-						...orgDonor,
-					});
-			});
-		return organizationMinusProjectDonors;
-	}, [cachedProjectDonors, cachedOrganizationDonors]);
+	// deliverableTragetLineForm[5].secondOptionsArray = useMemo(() => {
+	// 	let organizationMinusProjectDonors: any = [];
+	// 	if (cachedProjectDonors && cachedOrganizationDonors)
+	// 		cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
+	// 			let projectDonorNotContainsOrgDonor = true;
+	// 			cachedProjectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
+	// 				if (orgDonor.id === projectDonor.donor.id && !projectDonor.deleted) {
+	// 					projectDonorNotContainsOrgDonor = false;
+	// 					return false;
+	// 				}
+	// 			});
+	// 			if (projectDonorNotContainsOrgDonor)
+	// 				organizationMinusProjectDonors.push({
+	// 					...orgDonor,
+	// 				});
+	// 		});
+	// 	return organizationMinusProjectDonors;
+	// }, [cachedProjectDonors, cachedOrganizationDonors]);
 
 	// updating financial year field with fetched financial year list
 	useEffect(() => {
-		if (fyData) {
-			deliverableTragetLineForm[5].optionsArray = fyData.financialYearList;
+		if (lists?.financialYear) {
+			deliverableTragetLineForm[6].optionsArray = lists.financialYear; //fyData.financialYearList;
 		}
-	}, [fyData]);
+	}, [lists]);
+	useEffect(() => {
+		if (lists?.financialYear) {
+			deliverableTragetLineForm[7].optionsArray = lists.financialYear; //fyData.financialYearList;
+		}
+	}, [lists]);
 
 	const onCreate = (value: IDeliverableTargetLine) => {
 		value.reporting_date = new Date(value.reporting_date);
 		// setSelectedDeliverableTarget(value.deliverable_target_project);
 		// setCreateDeliverableTracklineFyId(value.financial_year);
+
 		let input = { ...value };
 		delete (input as any).donors;
 		if (!input.annual_year) delete (input as any).annual_year;
@@ -511,7 +558,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						query: GET_DELIVERABLE_TRACKLINE_COUNT,
 						variables: {
 							filter: {
-								deliverable_target_project: value.deliverable_target_project,
+								deliverable_sub_target: value.deliverable_sub_target,
 							},
 						},
 					});
@@ -519,7 +566,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						query: GET_DELIVERABLE_TRACKLINE_COUNT,
 						variables: {
 							filter: {
-								deliverable_target_project: value.deliverable_target_project,
+								deliverable_sub_target: value.deliverable_sub_target,
 							},
 						},
 						data: {
@@ -535,7 +582,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 						variables: {
 							filter: {
-								deliverable_target_project: value.deliverable_target_project,
+								deliverable_sub_target: value.deliverable_sub_target,
 							},
 							limit: limit > 10 ? 10 : limit,
 							start: 0,
@@ -549,7 +596,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 						variables: {
 							filter: {
-								deliverable_target_project: value.deliverable_target_project,
+								deliverable_target_project: value.deliverable_sub_target,
 							},
 							limit: limit > 10 ? 10 : limit,
 							start: 0,
@@ -564,6 +611,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					});
 				} catch (err) {
 					console.error(err);
+				} finally {
+					props.handleClose();
 				}
 			},
 			refetchQueries: [
@@ -571,16 +620,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 				// 	variables: {
 				// 		filter: {
-				// 			deliverable_target_project: value.deliverable_target_project,
+				// 			deliverable_sub_target: value.deliverable_sub_target,
 				// 		},
 				// 	},
 				// },
-				{
-					query: GET_ACHIEVED_VALLUE_BY_TARGET,
-					variables: {
-						filter: { deliverableTargetProject: value.deliverable_target_project },
-					},
-				},
+				// {
+				// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+				// 	variables: {
+				// 		filter: { deliverableTargetProject: value.deliverable_target_project },
+				// 	},
+				// },
 				{
 					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 					variables: {
@@ -590,7 +639,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			],
 		});
 	};
-
 	const onUpdate = (value: IDeliverableTargetLine) => {
 		let DeliverableTargetLineId = value.id;
 		delete (value as any).id;
@@ -617,42 +665,42 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				input,
 			},
 			refetchQueries: [
-				// {
-				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-				// 	variables: {
-				// 		filter: {
-				// 			deliverable_target_project: value.deliverable_target_project,
-				// 		},
-				// 	},
-				// },
-				// {
-				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-				// 	variables: {
-				// 		limit: 10,
-				// 		start: 0,
-				// 		sort: "created_at:DESC",
-				// 		filter: {
-				// 			deliverable_target_project: value.deliverable_target_project,
-				// 		},
-				// 	},
-				// },
-				// {
-				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-				// 	variables: {
-				// 		limit: 10,
-				// 		start: 0,
-				// 		sort: "created_at:DESC",
-				// 		filter: {
-				// 			deliverable_target_project: value.deliverable_target_project,
-				// 		},
-				// 	},
-				// },
 				{
-					query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 					variables: {
-						filter: { deliverableTargetProject: value.deliverable_target_project },
+						filter: {
+							// deliverable_sub_target : value?.deliverable_sub_target,
+						},
 					},
 				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						limit: 10,
+						start: 0,
+						sort: "created_at:DESC",
+						filter: {
+							// deliverable_sub_target : value?.deliverable_sub_target,
+						},
+					},
+				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						limit: 10,
+						start: 0,
+						sort: "created_at:DESC",
+						filter: {
+							// deliverable_sub_target: value?.deliverable_sub_target,
+						},
+					},
+				},
+				// {
+				// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+				// 	variables: {
+				// 		filter: { deliverable_sub_target: value.deliverable_sub_target },
+				// 	},
+				// },
 				{
 					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 					variables: {
@@ -661,11 +709,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				},
 			],
 		});
+		props.handleClose();
 	};
 	const validate = (values: IDeliverableTargetLine) => {
 		let errors: Partial<IDeliverableTargetLine> = {};
-		if (!values.deliverable_target_project) {
-			errors.deliverable_target_project = "Target is required";
+		if (!values.deliverable_sub_target) {
+			errors.deliverable_sub_target = "Sub Target is required";
 		}
 		if (!values.reporting_date) {
 			errors.reporting_date = "Date is required";
@@ -700,14 +749,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					},
 				},
 				refetchQueries: [
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: {
-								deliverableTargetProject: initialValues?.deliverable_target_project,
-							},
-						},
-					},
+					// {
+					// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					// 	variables: {
+					// 		filter: {
+					// 			deliverableTargetProject: initialValues?.deliverable_target_project,
+					// 		},
+					// 	},
+					// },
 					{
 						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 						variables: {
@@ -718,8 +767,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						query: GET_DELIVERABLE_TRACKLINE_COUNT,
 						variables: {
 							filter: {
-								deliverable_target_project:
-									initialValues?.deliverable_target_project,
+								deliverable_sub_target: initialValues?.deliverable_sub_target,
 							},
 						},
 					},
@@ -733,19 +781,19 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	};
 
-	let basicForm = (
-		<CommonForm
-			{...{
-				initialValues,
-				validate,
-				onCreate,
-				onCancel,
-				formAction,
-				onUpdate,
-				inputFields: deliverableTragetLineForm,
-			}}
-		/>
-	);
+	// let basicForm = (
+	// 	<CommonForm
+	// 		{...{
+	// 			props.initialValues,
+	// 			validate,
+	// 			onCreate,
+	// 			onCancel,
+	// 			formAction,
+	// 			onUpdate,
+	// 			inputFields: deliverableTragetLineForm,
+	// 		}}
+	// 	/>
+	// );
 	let formDetails = currentTargetId && <FormDetailsCalculate currentTargetId={currentTargetId} />;
 
 	if (props.dialogType === DIALOG_TYPE.DELETE) {
@@ -772,16 +820,27 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				formDetails={formDetails}
 			>
 				<>
-					<DeliverableStepper
-						stepperHelpers={{
+					{/* <DeliverableStepper
+						stepperHelpers={{ ̰
 							activeStep,
 							setActiveStep,
 							handleNext,
 							handleBack,
-							handleReset,
+							handleReset, 
 						}}
-						basicForm={basicForm}
+						basicForm={basicForm}  
 						donorForm={donorForm}
+					/> */}
+					<CommonForm
+						{...{
+							initialValues,
+							validate,
+							onCreate,
+							onCancel,
+							formAction,
+							onUpdate,
+							inputFields: deliverableTragetLineForm,
+						}}
 					/>
 					{openDeliverableTargetDialog && (
 						<DeliverableTarget
@@ -791,13 +850,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 							project={DashBoardData?.project?.id}
 						/>
 					)}
-					{openDonorDialog && (
+					{/* {openDonorDialog && (
 						<Donor
 							open={openDonorDialog}
 							formAction={FORM_ACTIONS.CREATE}
 							handleClose={() => setOpenDonorDialog(false)}
 						/>
-					)}
+					)} */}
 				</>
 			</FormDialog>
 
