@@ -11,6 +11,10 @@ import {
 	Chip,
 	Avatar,
 	useTheme,
+	makeStyles,
+	Theme,
+	Badge,
+	Typography,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
@@ -46,7 +50,11 @@ import {
 	GET_DELIVERABLE_SUB_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/subTarget";
 import FITable from "../FITable";
-import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_SUB_TARGETS_COUNT } from "../../../graphql/Budget";
+import {
+	GET_BUDGET_SUB_TARGETS,
+	GET_BUDGET_SUB_TARGETS_COUNT,
+	GET_PROJ_BUDGET_TRACINGS_COUNT,
+} from "../../../graphql/Budget";
 import {
 	GET_IMPACT_SUB_TARGETS,
 	GET_IMPACT_SUB_TARGETS_COUNT,
@@ -62,6 +70,7 @@ import { YearTagPayload } from "../../../models/yearTags";
 import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 import BudgetLineitem from "../../Budget/BudgetLineitem";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
+import { GET_DELIVERABLE_TRACKLINE_COUNT } from "../../../graphql/Deliverable/trackline";
 
 enum tableHeaders {
 	date = 1,
@@ -77,6 +86,15 @@ const getTargetId = (tableType: "deliverable" | "impact" | "budget") =>
 		? "deliverable_target_project"
 		: tableType === "impact"
 		? "impact_target_project"
+		: "";
+
+const getSubTargetId = (tableType: "deliverable" | "impact" | "budget") =>
+	tableType === "budget"
+		? "budget_sub_target"
+		: tableType === "deliverable"
+		? "deliverable_sub_target"
+		: tableType === "impact"
+		? "impact_sub_target"
 		: "";
 
 function EditSubTarget({
@@ -362,6 +380,22 @@ const createChipArray = ({
 	return null;
 };
 
+const useStyles = makeStyles((theme: Theme) => ({
+	primary: {
+		backgroundColor: theme.palette.primary.main,
+		width: theme.spacing(4),
+		height: theme.spacing(4),
+	},
+	lineitemCountBadge: {
+		backgroundColor: theme.palette.secondary.main,
+		width: theme.spacing(2),
+		height: theme.spacing(2),
+	},
+	eyeIcon: {
+		color: theme.palette.common.white,
+	},
+}));
+
 const LineItemTableButton = ({
 	targetId,
 	tableType,
@@ -374,11 +408,44 @@ const LineItemTableButton = ({
 	subTargetId?: string;
 }) => {
 	const [openLineItemTable, setOpenLineItemTable] = useState(false);
+	const classes = useStyles();
+
+	const getLineitemCountQuery = () =>
+		tableType === "budget"
+			? GET_PROJ_BUDGET_TRACINGS_COUNT
+			: tableType === "deliverable"
+			? GET_DELIVERABLE_TRACKLINE_COUNT
+			: tableType === "impact"
+			? GET_DELIVERABLE_TRACKLINE_COUNT
+			: GET_PROJ_BUDGET_TRACINGS_COUNT;
+
+	const { data } = useQuery(getLineitemCountQuery(), {
+		variables: {
+			filter: {
+				[getSubTargetId(tableType)]: subTargetId,
+			},
+		},
+	});
+	let countD: any;
+	if (data) countD = Object.values(data)[0];
+
 	return (
 		<>
-			<IconButton onClick={() => setOpenLineItemTable(true)}>
-				<VisibilityIcon />
-			</IconButton>
+			<Badge
+				overlap="circle"
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "right",
+				}}
+				badgeContent={countD?.aggregate?.count || 0}
+				color="secondary"
+			>
+				<Avatar className={classes.primary}>
+					<IconButton onClick={() => setOpenLineItemTable(true)}>
+						<VisibilityIcon className={classes.eyeIcon} />
+					</IconButton>
+				</Avatar>
+			</Badge>
 			{openLineItemTable && (
 				<FIDialog
 					{...{

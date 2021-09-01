@@ -298,7 +298,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	/* Open Attach File Form*/
 	budgetLineitemFormInputFields[9].onClick = () => setOpenAttachFiles(true);
 
-	if (filesArray.length) budgetLineitemFormInputFields[10].label = "View Files";
+	if (filesArray.length) budgetLineitemFormInputFields[9].label = "View Files";
 	else budgetLineitemFormInputFields[9].label = "Attach Files";
 
 	if (filesArray.length)
@@ -559,6 +559,14 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 									budget_targets_project: currentBudgetTarget,
 									project: dashboardData?.project?.id,
 								},
+							},
+						},
+					},
+					{
+						query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+						variables: {
+							filter: {
+								budget_sub_target: valuesSubmitted.budget_sub_target,
 							},
 						},
 					},
