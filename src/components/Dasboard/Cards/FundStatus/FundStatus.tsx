@@ -191,7 +191,6 @@ export default function FundStatus() {
 		setFUND_DETAILS(undefined);
 
 		if (projectId === undefined || projectId === null) return;
-
 		GetProjectTotalBudget({ variables: { filter: { project: projectId } } });
 		GetProjectTotalSpend({ variables: { filter: { project: projectId } } });
 		GetProjectTotalReceived({ variables: { filter: { project: projectId } } });

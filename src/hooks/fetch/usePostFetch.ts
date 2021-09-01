@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useAuth } from "../../contexts/userContext";
 
 import { IUserSignUp } from "../../models";
 
@@ -15,10 +16,11 @@ export const usePostFetch = <T>({
 	const [error, setError] = useState<string>();
 	const [data, setData] = useState<T>();
 	const [payload, setPayload] = useState(body);
+	const { jwt } = useAuth();
 
 	useEffect(() => {
 		if (initiateRequest) {
-			intiatePostRequest(payload, url, setLoading, setData, setError);
+			intiatePostRequest(payload, url, setLoading, setData, setError, jwt);
 			setError("");
 		}
 	}, [payload, url, initiateRequest]);
@@ -31,7 +33,8 @@ const intiatePostRequest = async (
 	url: string,
 	setLoading: Dispatch<SetStateAction<any>>,
 	setData: Dispatch<SetStateAction<any>>,
-	setError: Dispatch<SetStateAction<any>>
+	setError: Dispatch<SetStateAction<any>>,
+	jwt: undefined | string
 ) => {
 	if (!payload) {
 		return;
@@ -39,7 +42,7 @@ const intiatePostRequest = async (
 	setLoading(true);
 	try {
 		if (!url) return setData(null);
-		let response: any = await sendPostRequest(url, payload);
+		let response: any = await sendPostRequest(url, payload, jwt);
 		setLoading(false);
 
 		if (response.statusCode && response.statusCode !== 200) {
@@ -58,10 +61,15 @@ const intiatePostRequest = async (
 	}
 };
 
-const sendPostRequest = async (url: string, payload: IUserSignUp) => {
+const sendPostRequest = async (url: string, payload: IUserSignUp, jwt?: string) => {
 	const headers = new Headers({
 		"Content-Type": "application/json; charset=utf-8",
 	});
+
+	if (jwt) {
+		headers.append("Authorization", `Bearer ${jwt}`);
+	}
+
 	let response: any = await fetch(`${url}`, {
 		method: "POST",
 		headers,
@@ -76,9 +84,9 @@ export const setResponseError = (
 	setError: Dispatch<SetStateAction<string | null>>
 ) => {
 	const message =
-		response.message[0] && response.message[0].messages[0]
-			? response.message[0].messages[0].message
-			: "Failed to create user";
+		response?.message?.[0] && response?.message?.[0]?.messages?.[0]
+			? response?.message?.[0]?.messages[0]?.message
+			: "Internal Server Error 500";
 	setData(null);
 	setError(`${message}`);
 };

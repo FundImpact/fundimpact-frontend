@@ -22,18 +22,28 @@
 			"required": true
 		},
 		{
-			"name": "note",
-			"id": "note",
-			"dataTestId": "createBudgetLineitemNote",
-			"testId": "createBudgetLineitemNoteInput",
-			"label": "Note",
-			"size": 12,
-			"rows": 2,
-			"multiline": true
+			"name": "timeperiod_start",
+			"id": "timeperiod_start",
+			"dataTestId": "budgetSubTargetTimePeriodStart",
+			"testId": "budgetSubTargetTimePeriodStartInput",
+			"label": "Start",
+			"type": "date",
+			"size": 6,
+			"required": true
 		},
 		{
-			"name": "budget_targets_project",
-			"label": "Choose Budget Target",
+			"name": "timeperiod_end",
+			"id": "timeperiod_end",
+			"dataTestId": "budgetSubTargetTimePeriodEnd",
+			"testId": "budgetSubTargetTimePeriodEndInput",
+			"label": "End",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "budget_sub_target",
+			"label": "Choose Budget SubTarget",
 			"size": 6,
 			"testId": "createBudgetLineitemBudgetTargetsOption",
 			"dataTestId": "createBudgetLineitemBudgetTargets",
@@ -60,7 +70,7 @@
 			"displayName": "annual year"
 		},
 		{
-			"name": "fy_donor",
+			"name": "financial_year_donor",
 			"label": "Choose Donor Financial year",
 			"size": 6,
 			"testId": "createBudgetLineitemFinancialYearDonorOption",
@@ -74,7 +84,7 @@
 			"displayName": "donor financial year"
 		},
 		{
-			"name": "fy_org",
+			"name": "financial_year_org",
 			"label": "Choose Organization Financial Year",
 			"size": 6,
 			"testId": "createBudgetLineitemFinancialYearOrgOption",
@@ -87,19 +97,14 @@
 			"displayName": "organization financial year"
 		},
 		{
-			"name": "grant_periods_project",
-			"label": "Choose Grant Period",
+			"name": "note",
+			"id": "note",
+			"dataTestId": "createBudgetLineitemNote",
+			"testId": "createBudgetLineitemNoteInput",
+			"label": "Note",
 			"size": 12,
-			"testId": "createBudgetLineitemGrantPeriodProjectOption",
-			"dataTestId": "createBudgetLineitemGrantPeriodProject",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-2",
-			"inputType": "select",
-			"displayName": "grant period",
-			"addNewClick": {},
-			"addNew": true
+			"rows": 2,
+			"multiline": true
 		},
 		{
 			"name": "attachfiles",

@@ -12,6 +12,10 @@ export const GET_FUND_RECEIPT_PROJECT_LIST = gql`
 			amount
 			reporting_date
 			deleted
+			grant_periods_project {
+				id
+				name
+			}
 			project_donor {
 				id
 				donor {

@@ -14,7 +14,11 @@ import { FORM_ACTIONS } from "../constant";
 import { budgetSubTargetForm } from "./inputFIelds.json";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
+import {
+	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
+	GET_PROJECT_BUDGET_AMOUNT,
+	GET_PROJ_DONORS,
+} from "../../../graphql/project";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
@@ -70,7 +74,13 @@ function SubTarget(props: SubTargetFormProps) {
 	const dashboardData = useDashBoardData();
 
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
-		variables: { filter: { project: dashboardData?.project?.id } },
+		variables: {
+			filter: {
+				project_with_deliverable_targets: {
+					project: dashboardData?.project?.id,
+				},
+			},
+		},
 		skip: props.formType != "deliverable",
 	});
 
@@ -80,7 +90,13 @@ function SubTarget(props: SubTargetFormProps) {
 	});
 
 	const { data: budgetTargets } = useQuery(GET_BUDGET_TARGET_PROJECT, {
-		variables: { filter: { project: dashboardData?.project?.id } },
+		variables: {
+			filter: {
+				project_with_budget_targets: {
+					project: dashboardData?.project?.id,
+				},
+			},
+		},
 		skip: props.formType != "budget",
 	});
 
@@ -119,6 +135,15 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "impact"
 			? GET_IMPACT_SUB_TARGETS_COUNT
 			: GET_BUDGET_SUB_TARGETS_COUNT;
+
+	const getProjectCardQueryRefetch = () =>
+		props.formType === "budget"
+			? GET_PROJECT_BUDGET_AMOUNT
+			: props.formType === "deliverable"
+			? GET_ALL_DELIVERABLES_TARGET_AMOUNT
+			: props.formType === "impact"
+			? GET_ALL_DELIVERABLES_TARGET_AMOUNT
+			: GET_PROJECT_BUDGET_AMOUNT;
 
 	const [createSubTarget, { loading: createSubTargetLoading }] = useMutation(
 		getCreateSubTargetQuery()
@@ -275,9 +300,9 @@ function SubTarget(props: SubTargetFormProps) {
 		setCurrentDonor(donorId);
 	};
 	budgetSubTargetFormList[5].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[6].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[7].optionsArray = lists.annualYear;
-	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[8].optionsArray = lists.annualYear;
+	budgetSubTargetFormList[6].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
 
@@ -285,6 +310,7 @@ function SubTarget(props: SubTargetFormProps) {
 		try {
 			let queryFilter = {
 				[getTargetId()]: subTargetValues[getTargetId()],
+				project: dashboardData?.project?.id,
 			};
 			await createSubTarget({
 				variables: {
@@ -300,6 +326,14 @@ function SubTarget(props: SubTargetFormProps) {
 						},
 					},
 					{
+						query: getFetchSubTargetQuery(),
+						variables: {
+							filter: {
+								project: dashboardData?.project?.id,
+							},
+						},
+					},
+					{
 						query: getCountSubTargetQuery(),
 						variables: {
 							filter: queryFilter,
@@ -318,14 +352,18 @@ function SubTarget(props: SubTargetFormProps) {
 						query: getCountSubTargetQuery(),
 						variables: {
 							filter: queryFilter,
-							limit: 10,
-							start: 0,
-							sort: "created_at:DESC",
 						},
+					},
+					{
+						query: getProjectCardQueryRefetch(),
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: getProjectCardQueryRefetch(),
+						variables: { filter: { project: dashboardData?.project?.id } },
 					},
 				],
 			});
-			// setcurrentCategory("");
 			notificationDispatch(setSuccessNotification("Sub Target created successfully !"));
 		} catch (error) {
 			notificationDispatch(setErrorNotification(error.message));
@@ -337,6 +375,10 @@ function SubTarget(props: SubTargetFormProps) {
 	const updateSubTargetHelper = async (subTargetValues: ISubTarget) => {
 		let subTargetId = subTargetValues.id;
 		delete (subTargetValues as any).id;
+		let queryFilter = {
+			[getTargetId()]: subTargetValues[getTargetId()],
+			project: dashboardData?.project?.id,
+		};
 		try {
 			await updateSubTarget({
 				variables: {
@@ -347,6 +389,26 @@ function SubTarget(props: SubTargetFormProps) {
 						data: subTargetValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: getProjectCardQueryRefetch(),
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: getCountSubTargetQuery(),
+						variables: {
+							filter: queryFilter,
+						},
+					},
+					{
+						query: getFetchSubTargetQuery(),
+						variables: {
+							filter: {
+								project: dashboardData?.project?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Sub Target updated successfully !"));
 			onCancel();
@@ -360,16 +422,16 @@ function SubTarget(props: SubTargetFormProps) {
 	const checkValuesToDelete = (value: ISubTarget) => {
 		let values = { ...value };
 		if (props.formType === "budget") {
-			delete value["deliverable_target_project"];
-			delete value["impact_target_project"];
+			delete values["deliverable_target_project"];
+			delete values["impact_target_project"];
 		}
 		if (props.formType === "deliverable") {
-			delete value["budget_targets_project"];
-			delete value["impact_target_project"];
+			delete values["budget_targets_project"];
+			delete values["impact_target_project"];
 		}
 		if (props.formType === "impact") {
-			delete value["budget_targets_project"];
-			delete value["deliverable_target_project"];
+			delete values["budget_targets_project"];
+			delete values["deliverable_target_project"];
 		}
 		return values;
 	};
@@ -436,17 +498,13 @@ function SubTarget(props: SubTargetFormProps) {
 	return (
 		<React.Fragment>
 			<FormDialog
-				title={currentTitle}
-				subtitle={
-					newOrEdit +
-					" " +
-					intl.formatMessage({
-						id: "budgetSubTargetFormListSubtitle",
-						defaultMessage:
-							"Physical addresses of your organisation like headquarter branch etc",
-						description: `This text will be show on deliverable target form for subtitle`,
-					})
-				}
+				title={newOrEdit + " " + currentTitle}
+				subtitle={intl.formatMessage({
+					id: "budgetSubTargetFormListSubtitle",
+					defaultMessage:
+						"You can create sub-targets to track your budget across time period, geography etc",
+					description: `This text will be show on deliverable target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

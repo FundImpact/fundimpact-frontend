@@ -37,6 +37,7 @@ function Pagination({
 	fireRequest = true,
 	aggregateCount,
 	retrieveContFromCountQueryResponse = "",
+	customFetchPolicy,
 }: {
 	limit?: number;
 	start?: number;
@@ -48,6 +49,7 @@ function Pagination({
 	fireRequest?: boolean;
 	aggregateCount?: boolean;
 	retrieveContFromCountQueryResponse?: string;
+	customFetchPolicy?: "network-only";
 }) {
 	const startingValue = React.useRef<number>(start);
 	const count = React.useRef<number>(0);
@@ -67,13 +69,14 @@ function Pagination({
 		variables: {
 			filter: countFilter,
 		},
+		fetchPolicy: "network-only",
 	});
 
 	let [
 		getQueryData,
 		{ data: queryData, loading: queryLoading, error: queryError, refetch: queryRefetch },
 	] = useLazyQuery(query, {
-		fetchPolicy: getFetchPolicy(),
+		fetchPolicy: customFetchPolicy ? customFetchPolicy : getFetchPolicy(),
 	});
 
 	useEffect(() => {

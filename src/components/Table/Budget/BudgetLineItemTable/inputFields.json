@@ -76,6 +76,24 @@
 			"label": "Date",
 			"size": 6,
 			"type": "date"
+		},
+		{
+			"name": "timeperiod_start",
+			"id": "timeperiod_start",
+			"dataTestId": "budgetSubTargetTimePeriodStart",
+			"testId": "budgetSubTargetTimePeriodStartInput",
+			"label": "Start",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "timeperiod_end",
+			"id": "timeperiod_end",
+			"dataTestId": "budgetSubTargetTimePeriodEnd",
+			"testId": "budgetSubTargetTimePeriodEndInput",
+			"label": "End",
+			"type": "date",
+			"size": 6
 		}
 	]
 }

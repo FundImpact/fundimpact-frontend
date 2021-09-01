@@ -13,12 +13,22 @@ const useRefetchOnBudgetTargetImport = () => {
 	const refetchOnBudgetTargetImport = () => {
 		apolloClient.query({
 			query: GET_PROJECT_BUDGET_AMOUNT,
-			variables: { filter: { project: dashboardData?.project?.id } },
+			variables: {
+				filter: {
+					project: dashboardData?.project?.id,
+				},
+			},
 			fetchPolicy: "network-only",
 		});
 		apolloClient.query({
 			query: GET_BUDGET_TARGET_PROJECT,
-			variables: { filter: { project: dashboardData?.project?.id } },
+			variables: {
+				filter: {
+					project_with_budget_targets: {
+						project: dashboardData?.project?.id,
+					},
+				},
+			},
 			fetchPolicy: "network-only",
 		});
 	};

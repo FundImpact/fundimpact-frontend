@@ -67,14 +67,10 @@ export const budgetTargetTableHeading: ITableHeadings[] = [
 ];
 export const subTargetTableHeadings: ITableHeadings[] = [
 	{ label: "#" },
-	{ label: "Target", keyMapping: "target_value" },
-	{ label: "Time Start", keyMapping: "timeperiod_start" },
-	{ label: "Time End", keyMapping: "timeperiod_end" },
-	{ label: "Annual year", keyMapping: "annual_year" },
-	{ label: "financial year donor", keyMapping: "financial_year_donor" },
-	{ label: "financial year org", keyMapping: "financial_year_org" },
-	{ label: "Donor", keyMapping: "donor" },
-	{ label: "grant period projects", keyMapping: "grant_periods_project" },
+	{ label: "Sub Target", keyMapping: "target_value" },
+	{ label: "Time Period", keyMapping: "timeperiod_start" },
+	{ label: "Years", keyMapping: "financial_year_donor" },
+	{ label: "Tranche", keyMapping: "donor" },
 	{ label: "Line Items" },
 	{ label: "" }, //edit icon
 ];
@@ -84,8 +80,8 @@ export const budgetLineItemTableHeading: ITableHeadings[] = [
 	{ label: "Report Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
 	{ label: "Amount", keyMapping: "amount" },
-	{ label: "Grant Period" },
 	{ label: "Year" },
+	{ label: "TimePeriod " },
 	{ label: "" },
 ];
 

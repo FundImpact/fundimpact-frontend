@@ -33,11 +33,27 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"required": true,
-			"size": 12,
+			"size": 6,
 			"addNewClick": {},
 			"addNew": true,
 			"getInputValue": {},
 			"helperText": ""
+		},
+		{
+			"name": "grant_periods_project",
+			"id": "grant_periods_project",
+			"dataTestId": "fundReceivedGrantPeriod",
+			"testId": "fundReceivedGrantPeriodInput",
+			"label": "Grant Period",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": true,
+			"addNewClick": {},
+			"size": 6
 		}
 	]
 }

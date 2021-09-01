@@ -24,6 +24,7 @@ function Login(props: { intialFormValue?: ILoginForm }) {
 	const [error, setError] = useState<string>();
 	const [clickedForgetPass, setClickedForgetPass] = useState(false);
 	const [initiateRequest, setInitiateRequest] = useState(false);
+
 	let { data, loading, error: apiError, setPayload } = usePostFetch<any>({
 		url: !clickedForgetPass ? LOGIN_API : FORGOT_PASSWORD_API,
 		body: null,

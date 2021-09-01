@@ -43,6 +43,7 @@ import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 } from "../../graphql/Deliverable/unit";
+import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -67,8 +68,33 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// const [currentCategory, setcurrentCategory] = useState<any>();
 	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
 
+	const [createProjectWithDeliverableTarget] = useMutation(
+		CREATE_PROJECT_WITH_DELIVERABLE_TARGET
+	);
+
 	const [createDeliverableTarget, { loading: createDeliverableTargetLoading }] = useMutation(
-		CREATE_DELIVERABLE_TARGET
+		CREATE_DELIVERABLE_TARGET,
+		{
+			onCompleted: async (data) => {
+				if (data?.createDeliverableTarget) {
+					try {
+						await createProjectWithDeliverableTarget({
+							variables: {
+								input: {
+									data: {
+										project: dashboardData?.project?.id,
+										deliverable_target_project:
+											data?.createDeliverableTarget?.id,
+									},
+								},
+							},
+						});
+					} catch (error) {
+						notificationDispatch(setErrorNotification(error?.message));
+					}
+				}
+			},
+		}
 	);
 
 	const [updateDeliverableTarget, { loading: updateDeliverableTargetLoading }] = useMutation(
@@ -103,7 +129,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							query: GET_DELIVERABLE_TARGETS_COUNT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_deliverable_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 						});
@@ -112,7 +140,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							query: GET_DELIVERABLE_TARGETS_COUNT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_deliverable_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 							data: {
@@ -128,7 +158,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_deliverable_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -142,7 +174,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_deliverable_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -157,7 +191,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_deliverable_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 							data: {
@@ -171,11 +207,21 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				refetchQueries: [
 					{
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: { filter: { project: props.project } },
+						variables: {
+							filter: {
+								project_with_deliverable_targets: {
+									project: props.project,
+								},
+							},
+						},
 					},
 					{
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
-						variables: { filter: { project: props.project } },
+						variables: {
+							filter: {
+								project: props.project,
+							},
+						},
 					},
 				],
 			});
@@ -210,12 +256,22 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							limit: 10,
 							start: 0,
 							sort: "created_at:DESC",
-							filter: { project: props.project },
+							filter: {
+								project_with_deliverable_targets: {
+									project: props.project,
+								},
+							},
 						},
 					},
 					{
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: { filter: { project: props.project } },
+						variables: {
+							filter: {
+								project_with_deliverable_targets: {
+									project: props.project,
+								},
+							},
+						},
 					},
 					{
 						query: GET_ACHIEVED_VALLUE_BY_TARGET,
@@ -225,7 +281,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					},
 					{
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
-						variables: { filter: { project: props.project } },
+						variables: {
+							filter: {
+								project: props.project,
+							},
+						},
 					},
 				],
 			});

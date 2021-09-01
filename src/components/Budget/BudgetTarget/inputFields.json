@@ -6,7 +6,7 @@
 			"dataTestId": "createBudgetTargetName",
 			"testId": "createBudgetTargetNameInput",
 			"label": "Name",
-			"size": 6,
+			"size": 12,
 			"required": true
 		},
 		{
@@ -18,7 +18,7 @@
 			"size": 6,
 			"type": "number",
 			"endAdornment": "",
-			"required": true
+			"hidden": true
 		},
 		{
 			"name": "description",

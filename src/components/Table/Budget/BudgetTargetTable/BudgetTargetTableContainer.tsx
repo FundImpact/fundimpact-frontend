@@ -6,8 +6,6 @@ import {
 	IBudgetTrackingLineitemForm,
 } from "../../../../models/budget/budgetForm";
 import { getTodaysDate } from "../../../../utils";
-import { ApolloQueryResult, OperationVariables } from "@apollo/client";
-import { useRefetchOnBudgetTargetImport } from "../../../../hooks/budget";
 
 interface IBUDGET_TARGET_TABLE_CONTAINER {
 	budgetTargetList: IBudgetTargetProjectResponse[];
@@ -59,6 +57,10 @@ const getBudgetLineItemInitialValues = (
 		grant_periods_project: "",
 		fy_org: "",
 		fy_donor: "",
+		financial_year_org: "",
+		financial_year_donor: "",
+		timeperiod_start: "",
+		timeperiod_end: "",
 		attachments: [],
 	};
 };

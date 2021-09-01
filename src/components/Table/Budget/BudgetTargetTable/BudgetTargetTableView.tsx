@@ -93,12 +93,11 @@ const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "budget_category_organization,name" },
 	{ valueAccessKey: "donor,name" },
-	{ valueAccessKey: "total_target_amount" },
 	{
 		valueAccessKey: "",
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
-				{(amount: number) => {
+				{(amount: number, spent: number) => {
 					return <span>{amount}</span>;
 				}}
 			</AmountSpent>
@@ -108,8 +107,8 @@ const rows = [
 		valueAccessKey: "",
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
-				{(amount: number) => {
-					return <span>{parseInt(budgetTarget.total_target_amount) - amount || 0}</span>;
+				{(amount: number, spent: number) => {
+					return <span>{spent}</span>;
 				}}
 			</AmountSpent>
 		),
@@ -118,14 +117,18 @@ const rows = [
 		valueAccessKey: "",
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
-				{(amount: number) => {
-					return (
-						<span>
-							{((amount * 100) / parseInt(budgetTarget.total_target_amount)).toFixed(
-								2
-							)}
-						</span>
-					);
+				{(amount: number, spent: number) => {
+					return <span>{amount - spent || 0}</span>;
+				}}
+			</AmountSpent>
+		),
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
+			<AmountSpent budgetTargetId={budgetTarget.id}>
+				{(amount: number, spent: number) => {
+					return <span>{((spent * 100) / amount).toFixed(2)}</span>;
 				}}
 			</AmountSpent>
 		),
