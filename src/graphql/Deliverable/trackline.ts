@@ -7,11 +7,15 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 			value
 			note
 			reporting_date
+			deliverable_sub_target {
+				id
+			}
 			deliverable_target_project {
 				id
 				name
 				description
 				target_value
+
 				deliverable_category_org {
 					id
 					name
@@ -26,7 +30,7 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 							description
 							account_no
 						}
-						short_name
+
 						legal_name
 						description
 						organization_registration_type {
@@ -47,21 +51,23 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 				project {
 					id
 					name
-					short_name
+
 					description
 				}
 			}
 			annual_year {
 				id
 				name
-				short_name
 				start_date
 				end_date
+			}
+			financial_year_org {
+				id
 			}
 			financial_year {
 				id
 				name
-				short_name
+
 				start_date
 				end_date
 				country {
@@ -69,11 +75,13 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 					name
 				}
 			}
+			timeperiod_start
+			timeperiod_end
 			grant_periods_project {
 				id
 				name
 				description
-				short_name
+
 				start_date
 				end_date
 				project {
@@ -96,6 +104,9 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 			note
 			reporting_date
 			deleted
+			deliverable_sub_target {
+				id
+			}
 			deliverable_target_project {
 				id
 				name
@@ -117,7 +128,7 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 							description
 							account_no
 						}
-						short_name
+
 						legal_name
 						description
 						organization_registration_type {
@@ -139,21 +150,23 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 				project {
 					id
 					name
-					short_name
+
 					description
 				}
 			}
 			annual_year {
 				id
 				name
-				short_name
 				start_date
 				end_date
+			}
+			financial_year_org {
+				id
 			}
 			financial_year {
 				id
 				name
-				short_name
+
 				start_date
 				end_date
 				country {
@@ -161,11 +174,13 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 					name
 				}
 			}
+			timeperiod_start
+			timeperiod_end
 			grant_periods_project {
 				id
 				name
 				description
-				short_name
+
 				start_date
 				end_date
 				project {
@@ -178,58 +193,38 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 `;
 
 export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
-	query getDeliverableTrackingLineitemListByTarget(
-		$sort: String
-		$limit: Int
-		$start: Int
-		$filter: JSON
-	) {
-		deliverableTrackingLineitemList(sort: $sort, limit: $limit, start: $start, where: $filter) {
+	query deliverableTrackingLineitems($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		deliverableTrackingLineitems(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
-			value
-			note
-			reporting_date
-			deleted
 			deliverable_target_project {
 				id
 				name
-				description
-				target_value
-				deliverable_unit_org {
-					id
-					name
-				}
 				deleted
 			}
-			annual_year {
+			deliverable_sub_target {
 				id
-				name
-				short_name
-				start_date
-				end_date
+				target_value
 			}
-			financial_year {
+			timeperiod_start
+			timeperiod_end
+			value
+			note
+			reporting_date
+			annual_year {
+				name
+				id
+			}
+			financial_year_org {
 				id
 				name
-				short_name
-				start_date
-				end_date
-				country {
-					id
-					name
-				}
 			}
 			grant_periods_project {
 				id
 				name
-				description
-				short_name
-				start_date
-				end_date
-				project {
-					id
-					name
-				}
+			}
+			financial_year_donor {
+				id
+				name
 			}
 			attachments {
 				id
@@ -240,6 +235,7 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 				ext
 				created_at
 			}
+			deleted
 		}
 	}
 `;
@@ -282,7 +278,7 @@ export const CREATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 				id
 				name
 				description
-				short_name
+
 				start_date
 				end_date
 				project {
@@ -293,7 +289,7 @@ export const CREATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 			financial_year {
 				id
 				name
-				short_name
+
 				start_date
 				end_date
 				country {
@@ -345,7 +341,7 @@ export const UPDATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 				id
 				name
 				description
-				short_name
+
 				start_date
 				end_date
 				project {
@@ -356,7 +352,7 @@ export const UPDATE_DELIVERABLE_LINEITEM_FYDONOR = gql`
 			financial_year {
 				id
 				name
-				short_name
+
 				start_date
 				end_date
 				country {
@@ -379,7 +375,7 @@ export const GET_DELIVERABLE_TRANCHE = gql`
 				donor {
 					id
 					name
-					short_name
+
 					country {
 						id
 						name
@@ -394,7 +390,7 @@ export const GET_DELIVERABLE_TRANCHE = gql`
 				id
 				name
 				description
-				short_name
+
 				start_date
 				end_date
 				project {
@@ -445,7 +441,7 @@ export const GET_DELIVERABLE_LINEITEM_FYDONOR = gql`
 				id
 				name
 				description
-				short_name
+
 				start_date
 				end_date
 				project {
@@ -456,7 +452,6 @@ export const GET_DELIVERABLE_LINEITEM_FYDONOR = gql`
 			financial_year {
 				id
 				name
-				short_name
 				start_date
 				end_date
 				country {
@@ -468,7 +463,21 @@ export const GET_DELIVERABLE_LINEITEM_FYDONOR = gql`
 `;
 
 export const GET_DELIVERABLE_TRACKLINE_COUNT = gql`
-	query getDeliverableTrackingLineitemListCountByTarget($filter: JSON) {
-		deliverableTrackingLineitemCount(where: $filter)
+	query deliverableTrackingLineitemsConnection(
+		$sort: String
+		$limit: Int
+		$start: Int
+		$filter: JSON
+	) {
+		deliverableTrackingLineitemsConnection(
+			sort: $sort
+			limit: $limit
+			start: $start
+			where: $filter
+		) {
+			aggregate {
+				count
+			}
+		}
 	}
 `;

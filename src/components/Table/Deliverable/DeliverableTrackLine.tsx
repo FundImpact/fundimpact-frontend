@@ -225,13 +225,18 @@ function EditDeliverableTrackLineIcon({
 						onClick={() => {
 							setDeliverableTracklineData({
 								id: deliverableTrackline?.id,
-								deliverable_target_project:
-									deliverableTrackline.deliverable_target_project?.id,
-								annual_year: deliverableTrackline.annual_year?.id,
+								deliverable_sub_target:
+									deliverableTrackline?.deliverable_sub_target?.id,
+								timeperiod_start: deliverableTrackline?.timeperiod_start,
+								timeperiod_end: deliverableTrackline?.timeperiod_end,
+								annual_year: deliverableTrackline?.annual_year?.id,
 								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
 								value: deliverableTrackline?.value,
 								note: deliverableTrackline?.note,
 								financial_year: deliverableTrackline.financial_year?.id,
+								financial_year_org: deliverableTrackline?.financial_year_org?.id,
+								financial_year_donor:
+									deliverableTrackline?.financial_year_donor?.id,
 								donors: tracklineDonors,
 								donorMapValues: tracklineDonorsMapValues,
 								attachments: deliverableTrackline.attachments,
@@ -252,13 +257,18 @@ function EditDeliverableTrackLineIcon({
 						onClick={() => {
 							setDeliverableTracklineData({
 								id: deliverableTrackline?.id,
-								deliverable_target_project:
-									deliverableTrackline.deliverable_target_project?.id,
-								annual_year: deliverableTrackline.annual_year?.id,
+								deliverable_sub_target:
+									deliverableTrackline.deliverable_sub_target?.id,
+								timeperiod_start: deliverableTrackline?.timeperiod_start,
+								timeperiod_end: deliverableTrackline?.timeperiod_end,
+								annual_year: deliverableTrackline?.annual_year?.id,
 								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
 								value: deliverableTrackline?.value,
 								note: deliverableTrackline?.note,
 								financial_year: deliverableTrackline.financial_year?.id,
+								financial_year_org: deliverableTrackline?.financial_year_org?.id,
+								financial_year_donor:
+									deliverableTrackline?.financial_year_donor?.id,
 								donors: tracklineDonors,
 								donorMapValues: tracklineDonorsMapValues,
 								attachments: deliverableTrackline.attachments,
@@ -299,7 +309,7 @@ function EditDeliverableTrackLineIcon({
 					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
-					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
+					deliverableTarget={deliverableTrackline?.deliverable_sub_target}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}
 					dialogType={
@@ -389,8 +399,10 @@ const createChipArray = ({
 
 export default function DeliverablesTrackLineTable({
 	deliverableTargetId,
+	subTargetId,
 }: {
 	deliverableTargetId: string;
+	subTargetId?: string;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -435,9 +447,9 @@ export default function DeliverablesTrackLineTable({
 
 	useEffect(() => {
 		setQueryFilter({
-			deliverable_target_project: deliverableTargetId,
+			deliverable_sub_target: subTargetId,
 		});
-	}, [deliverableTargetId]);
+	}, [subTargetId]);
 
 	useEffect(() => {
 		if (filterList) {
@@ -448,11 +460,11 @@ export default function DeliverablesTrackLineTable({
 				}
 			}
 			setQueryFilter({
-				deliverable_target_project: deliverableTargetId,
+				deliverable_sub_target: subTargetId,
 				...newFilterListObject,
 			});
 		}
-	}, [filterList, deliverableTargetId]);
+	}, [filterList, subTargetId]);
 
 	const handleDeliverableLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -478,9 +490,11 @@ export default function DeliverablesTrackLineTable({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
 		countFilter: queryFilter,
+		aggregateCount: true,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(
@@ -509,11 +523,11 @@ export default function DeliverablesTrackLineTable({
 	useEffect(() => {
 		if (
 			deliverableTracklineData &&
-			deliverableTracklineData.deliverableTrackingLineitemList &&
-			deliverableTracklineData.deliverableTrackingLineitemList.length
+			deliverableTracklineData.deliverableTrackingLineitems &&
+			deliverableTracklineData.deliverableTrackingLineitems.length
 		) {
 			let deliverableTrackingLineitemList =
-				deliverableTracklineData.deliverableTrackingLineitemList;
+				deliverableTracklineData.deliverableTrackingLineitems;
 			let arr = [];
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
@@ -531,7 +545,9 @@ export default function DeliverablesTrackLineTable({
 								`${deliverableTrackingLineitemList[i]?.id}-1`
 							}
 						>
-							{getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
+							{require("moment")(
+								getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)
+							).format(" MMM D , YY")}
 						</TableCell>,
 						<TableCell
 							key={
@@ -548,10 +564,10 @@ export default function DeliverablesTrackLineTable({
 								deliverableTrackingLineitemList[i]?.value +
 								`${deliverableTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_unit_org?.name}`}</TableCell>,
+						>{`${deliverableTrackingLineitemList[i]?.value}`}</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.financial_year?.name +
+								deliverableTrackingLineitemList[i]?.financial_year_org?.name +
 								+`${deliverableTrackingLineitemList[i]?.id}-4`
 							}
 						>
@@ -559,11 +575,12 @@ export default function DeliverablesTrackLineTable({
 								{financialYearFindAccess && (
 									<Box mr={1}>
 										<Chip
-											avatar={<Avatar>FY</Avatar>}
+											avatar={<Avatar>FYO</Avatar>}
 											label={
-												deliverableTrackingLineitemList[i]?.financial_year
+												deliverableTrackingLineitemList[i]
+													?.financial_year_org
 													? deliverableTrackingLineitemList[i]
-															?.financial_year?.name
+															?.financial_year_org?.name
 													: "-"
 											}
 											size="small"
@@ -571,6 +588,19 @@ export default function DeliverablesTrackLineTable({
 										/>
 									</Box>
 								)}
+								<Box mr={1}>
+									<Chip
+										avatar={<Avatar>FYD</Avatar>}
+										label={
+											deliverableTrackingLineitemList[i]?.financial_year_donor
+												? deliverableTrackingLineitemList[i]
+														?.financial_year_donor?.name
+												: "-"
+										}
+										size="small"
+										color="primary"
+									/>
+								</Box>
 								{annualYearFindAccess && (
 									<Chip
 										avatar={<Avatar>AY</Avatar>}
@@ -586,9 +616,26 @@ export default function DeliverablesTrackLineTable({
 								)}
 							</Box>
 						</TableCell>,
-						<DeliverableTranche
-							TracklineId={deliverableTrackingLineitemList[i]?.id || ""}
-						/>,
+						<TableCell
+							key={
+								deliverableTrackingLineitemList[i]?.timeperiod_start +
+								+`${deliverableTrackingLineitemList[i]?.id}-4`
+							}
+						>
+							<div>
+								{require("moment")(
+									getTodaysDate(
+										deliverableTrackingLineitemList[i]?.timeperiod_start
+									)
+								).format("MMM D, YY") +
+									" - " +
+									require("moment")(
+										getTodaysDate(
+											deliverableTrackingLineitemList[i]?.timeperiod_end
+										)
+									).format("MMM D, YY")}
+							</div>
+						</TableCell>,
 					];
 					row.push(
 						<EditDeliverableTrackLineIcon

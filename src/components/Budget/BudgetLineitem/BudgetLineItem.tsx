@@ -422,7 +422,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, [budgetTargets]);
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
-		console.log(valuesSubmitted);
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
 		setSubmittedBudgetTarget(valuesSubmitted.budget_targets_project);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({

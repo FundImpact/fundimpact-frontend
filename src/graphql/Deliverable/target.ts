@@ -109,7 +109,7 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 
 export const GET_ACHIEVED_VALLUE_BY_TARGET = gql`
 	query getDeliverableTrackingTotalValueByProject($filter: JSON) {
-		deliverableTrackingTotalValue(where: $filter)
+		deliverableTargetCount(where: $filter)
 	}
 `;
 

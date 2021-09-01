@@ -70,8 +70,8 @@
 			"multiple": true
 		},
 		{
-			"name": "financial_year",
-			"label": "Choose Financial Year",
+			"name": "financial_year_org",
+			"label": "Choose Financial Year org",
 			"size": 12,
 			"testId": "createFinancialYearOption",
 			"dataTestId": "createFinancialYear",

@@ -47,9 +47,9 @@ export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [
 	{ label: "#" },
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
-	{ label: "Achieved", keyMapping: "value" },
+	{ label: "Value", keyMapping: "value" },
 	{ label: "Year" },
-	{ label: "Tranche" },
+	{ label: "TimePeriod" },
 	{ label: "" }, //edit icon
 ];
 

@@ -207,7 +207,6 @@ function BudgetLineItemTableGraphql({
 	if (financialYearDonor) {
 		budgetLineItemInputFields[5].optionsArray = financialYearDonor?.financialYearList || [];
 	}
-	console.log(budgetLineitemList);
 	return (
 		<BudgetLineItemTableContainer
 			budgetLineitemList={budgetLineitemList?.budgetTrackingLineitems || []}

@@ -5,10 +5,15 @@ import { DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTargetLine {
 	id?: number;
-	deliverable_target_project: number | string | undefined;
+	deliverable_target_project?: number | string | undefined;
+	deliverable_sub_target?: number | string | undefined;
 	annual_year: string;
 	value: number | string;
 	financial_year: string;
+	financial_year_org: string;
+	financial_year_donor: string;
+	timeperiod_start: Date | string;
+	timeperiod_end: Date | string;
 	reporting_date: Date | string;
 	donors?:
 		| {
@@ -25,6 +30,7 @@ export interface IDeliverableTargetLine {
 export type DeliverableTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
+	deliverableSubTargetId?: number | undefined;
 	deliverableTarget?: number | string | undefined;
 	reftechOnSuccess?: (
 		variables?: Partial<Record<string, any>> | undefined
@@ -32,10 +38,10 @@ export type DeliverableTargetLineProps = {
 	dialogType?: DIALOG_TYPE;
 } & (
 	| {
-			type: DELIVERABLE_ACTIONS.CREATE;
+			type?: DELIVERABLE_ACTIONS.CREATE;
 	  }
 	| {
-			type: DELIVERABLE_ACTIONS.UPDATE;
+			type?: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTargetLine;
 			alreadyMappedDonorsIds: string[];
 	  }
