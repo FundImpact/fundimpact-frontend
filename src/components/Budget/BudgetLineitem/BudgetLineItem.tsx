@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
@@ -173,6 +173,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	// 	defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
 	// 	description: `This text will be show on Budget Expenditureform for subtitle`,
 	// });
+	const apolloClient = useApolloClient();
 
 	const [lists, setList] = useState<{
 		annualYear: any;
@@ -282,7 +283,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		UPDATE_PROJECT_BUDGET_TRACKING
 	);
 
-	let [getBudgetTargetProject, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_SUB_TARGETS);
+	let [getBudgetSubTarget, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_SUB_TARGETS);
 
 	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST);
 
@@ -305,7 +306,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	else budgetLineitemFormInputFields[9].textNextToButton = ``;
 	useEffect(() => {
 		if (currentProject) {
-			getBudgetTargetProject({
+			getBudgetSubTarget({
 				variables: {
 					filter: {
 						project: currentProject?.id,
@@ -313,7 +314,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				},
 			});
 		}
-	}, [currentProject, getBudgetTargetProject]);
+	}, [currentProject, getBudgetSubTarget]);
 
 	const validate = useCallback(
 		(values: IBudgetTrackingLineitemForm) => {
@@ -421,8 +422,29 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [budgetTargets]);
 
+	const getBudgetTargetBySubTarget = async (apolloClient: any, budget_sub_target: string) => {
+		let subtarget;
+		try {
+			subtarget = await apolloClient.query({
+				query: GET_BUDGET_SUB_TARGETS,
+				variables: {
+					filter: {
+						id: budget_sub_target,
+					},
+				},
+				fetchPolicy: "network-only",
+			});
+		} catch (error) {
+			console.error(error);
+		}
+		return subtarget?.data?.budgetSubTargets?.[0]?.budget_targets_project?.id || undefined;
+	};
+
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
-		console.log(valuesSubmitted);
+		let currentBudgetTarget = await getBudgetTargetBySubTarget(
+			apolloClient,
+			valuesSubmitted.budget_sub_target || ""
+		);
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
 		setSubmittedBudgetTarget(valuesSubmitted.budget_targets_project);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
@@ -529,6 +551,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						query: GET_PROJECT_AMOUNT_SPEND,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
+					{
+						query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+						variables: {
+							filter: {
+								budget_sub_target: {
+									budget_targets_project: currentBudgetTarget,
+									project: dashboardData?.project?.id,
+								},
+							},
+						},
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));
@@ -541,6 +574,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const onUpdate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
 		try {
+			let currentBudgetTarget = await getBudgetTargetBySubTarget(
+				apolloClient,
+				valuesSubmitted.budget_sub_target || ""
+			);
 			const reporting_date = new Date(valuesSubmitted.reporting_date);
 			let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
 				objectToCheck: valuesSubmitted,
@@ -599,6 +636,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 					{
 						query: GET_PROJECT_AMOUNT_SPEND,
 						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_PROJ_BUDGET_TRACINGS_COUNT,
+						variables: {
+							filter: {
+								budget_sub_target: {
+									budget_targets_project: currentBudgetTarget,
+									project: dashboardData?.project?.id,
+								},
+							},
+						},
 					},
 				],
 			});

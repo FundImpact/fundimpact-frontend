@@ -14,7 +14,11 @@ import { FORM_ACTIONS } from "../constant";
 import { budgetSubTargetForm } from "./inputFIelds.json";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
+import {
+	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
+	GET_PROJECT_BUDGET_AMOUNT,
+	GET_PROJ_DONORS,
+} from "../../../graphql/project";
 import Deliverable from "../../Deliverable/Deliverable";
 import DeliverableUnit from "../../Deliverable/DeliverableUnit";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
@@ -131,6 +135,15 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "impact"
 			? GET_IMPACT_SUB_TARGETS_COUNT
 			: GET_BUDGET_SUB_TARGETS_COUNT;
+
+	const getProjectCardQueryRefetch = () =>
+		props.formType === "budget"
+			? GET_PROJECT_BUDGET_AMOUNT
+			: props.formType === "deliverable"
+			? GET_ALL_DELIVERABLES_TARGET_AMOUNT
+			: props.formType === "impact"
+			? GET_ALL_DELIVERABLES_TARGET_AMOUNT
+			: GET_PROJECT_BUDGET_AMOUNT;
 
 	const [createSubTarget, { loading: createSubTargetLoading }] = useMutation(
 		getCreateSubTargetQuery()
@@ -297,6 +310,7 @@ function SubTarget(props: SubTargetFormProps) {
 		try {
 			let queryFilter = {
 				[getTargetId()]: subTargetValues[getTargetId()],
+				project: dashboardData?.project?.id,
 			};
 			await createSubTarget({
 				variables: {
@@ -312,6 +326,14 @@ function SubTarget(props: SubTargetFormProps) {
 						},
 					},
 					{
+						query: getFetchSubTargetQuery(),
+						variables: {
+							filter: {
+								project: dashboardData?.project?.id,
+							},
+						},
+					},
+					{
 						query: getCountSubTargetQuery(),
 						variables: {
 							filter: queryFilter,
@@ -330,10 +352,15 @@ function SubTarget(props: SubTargetFormProps) {
 						query: getCountSubTargetQuery(),
 						variables: {
 							filter: queryFilter,
-							limit: 10,
-							start: 0,
-							sort: "created_at:DESC",
 						},
+					},
+					{
+						query: getProjectCardQueryRefetch(),
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: getProjectCardQueryRefetch(),
+						variables: { filter: { project: dashboardData?.project?.id } },
 					},
 				],
 			});
@@ -348,6 +375,10 @@ function SubTarget(props: SubTargetFormProps) {
 	const updateSubTargetHelper = async (subTargetValues: ISubTarget) => {
 		let subTargetId = subTargetValues.id;
 		delete (subTargetValues as any).id;
+		let queryFilter = {
+			[getTargetId()]: subTargetValues[getTargetId()],
+			project: dashboardData?.project?.id,
+		};
 		try {
 			await updateSubTarget({
 				variables: {
@@ -358,6 +389,26 @@ function SubTarget(props: SubTargetFormProps) {
 						data: subTargetValues,
 					},
 				},
+				refetchQueries: [
+					{
+						query: getProjectCardQueryRefetch(),
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: getCountSubTargetQuery(),
+						variables: {
+							filter: queryFilter,
+						},
+					},
+					{
+						query: getFetchSubTargetQuery(),
+						variables: {
+							filter: {
+								project: dashboardData?.project?.id,
+							},
+						},
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Sub Target updated successfully !"));
 			onCancel();

@@ -150,9 +150,6 @@ const validate = (values: IBudgetTargetForm) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.total_target_amount) {
-		errors.total_target_amount = "Total target amount is required";
-	}
 	if (!values.budget_category_organization) {
 		errors.budget_category_organization = "Budget Category is required";
 	}
@@ -511,12 +508,6 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							...values,
 						},
 					},
-					refetchQueries: [
-						{
-							query: GET_PROJECT_BUDGET_AMOUNT,
-							variables: { filter: { project: dashboardData?.project?.id } },
-						},
-					],
 				}));
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 

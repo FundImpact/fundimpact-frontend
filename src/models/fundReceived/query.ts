@@ -5,6 +5,10 @@ export interface IGet_Fund_Receipt_List {
 		id: string;
 		amount: number;
 		reporting_date: Date;
+		grant_periods_project?: {
+			id: string;
+			name: string;
+		};
 		project_donor: {
 			id: string;
 			donor: { id: string; name: string };

@@ -139,6 +139,9 @@ export const GET_PROJ_BUDGET_TRACINGS_COUNT = gql`
 			where: $filter
 		) {
 			aggregate {
+				sum {
+					amount
+				}
 				count
 			}
 		}
@@ -214,6 +217,9 @@ export const GET_BUDGET_SUB_TARGETS_COUNT = gql`
 	query budgetSubTargetsConnection($sort: String, $limit: Int, $start: Int, $filter: JSON) {
 		budgetSubTargetsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			aggregate {
+				sum {
+					target_value
+				}
 				count
 			}
 		}

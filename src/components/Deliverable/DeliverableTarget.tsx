@@ -219,9 +219,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 						variables: {
 							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
+								project: props.project,
 							},
 						},
 					},
@@ -285,9 +283,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 						variables: {
 							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
+								project: props.project,
 							},
 						},
 					},

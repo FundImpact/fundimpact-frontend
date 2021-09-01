@@ -62,7 +62,28 @@ const rows = [
 		) => <span>{getTodaysDate(fundReceiptListItem.reporting_date, true)}</span>,
 	},
 	{ valueAccessKey: "amount" },
-	{ valueAccessKey: "project_donor,donor,name" },
+	{
+		valueAccessKey: "",
+		renderComponent: (
+			fundReceiptListItem: IGet_Fund_Receipt_List["fundReceiptProjectList"][0]
+		) => {
+			return (
+				<Box display="flex">
+					{
+						<Box mr={1}>
+							<Chip
+								label={`${
+									fundReceiptListItem?.project_donor?.donor?.name || "-"
+								} - ${fundReceiptListItem?.grant_periods_project?.name || "-"}`}
+								size="small"
+								color="primary"
+							/>
+						</Box>
+					}
+				</Box>
+			);
+		},
+	},
 ];
 
 const chipArray = ({

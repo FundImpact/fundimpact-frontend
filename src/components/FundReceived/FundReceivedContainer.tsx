@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import FormDialog from "../FormDialog";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
 import { useIntl, FormattedMessage } from "react-intl";
@@ -6,7 +6,7 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import CommonForm from "../CommonForm";
 import { IFundReceivedForm } from "../../models/fundReceived";
 import { fundReceivedForm } from "./inputFields.json";
-import { FetchResult, MutationFunctionOptions, ApolloCache } from "@apollo/client";
+import { FetchResult, MutationFunctionOptions, ApolloCache, useQuery } from "@apollo/client";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setSuccessNotification, setErrorNotification } from "../../reducers/notificationReducer";
 import { GET_PROJECT_AMOUNT_RECEIVED } from "../../graphql/project";
@@ -32,6 +32,7 @@ import { DonorType } from "../../models/fundReceived/conatsnt";
 import DeleteModal from "../DeleteModal";
 import { useProjectDonorSelectInput } from "../../hooks/project";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { GET_GRANT_PERIOD } from "../../graphql";
 
 interface IFundReceivedContainerProps {
 	formAction: FORM_ACTIONS;
@@ -409,8 +410,9 @@ function FundReceivedContainer({
 	});
 
 	(fundReceivedForm[2].optionsArray as any) = selectedDonorInputOptionArray;
+
 	fundReceivedForm[2].getInputValue = (donorId: string) => {
-		setSelectedDonor(donorId);
+		setCurrentDonor(donorId);
 	};
 	(fundReceivedForm[2].helperText as any) = showCreateProjectDonorCheckbox && (
 		<FormControlLabel
@@ -429,8 +431,17 @@ function FundReceivedContainer({
 	);
 	const notificationDispatch = useNotificationDispatch();
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
+
+	const [currentDonor, setCurrentDonor] = useState<null | string | number>(null);
+
+	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
+		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
+		skip: !currentDonor || !dashboardData?.project?.id,
+	});
+
 	const submitForm = useCallback(
 		async (valuesSubmitted: IFundReceivedForm) => {
+			console.log("ccc", valuesSubmitted);
 			await onFormSubmit({
 				valuesSubmitted,
 				createFundReceipt,
@@ -454,8 +465,16 @@ function FundReceivedContainer({
 			handleClose,
 		]
 	);
-	fundReceivedForm[2].addNewClick = () => setOpenDonorCreateDialog(true);
 
+	fundReceivedForm[2].getInputValue = (donorId: string) => {
+		setCurrentDonor(donorId);
+		setSelectedDonor(donorId);
+	};
+
+	fundReceivedForm[2].addNewClick = () => setOpenDonorCreateDialog(true);
+	fundReceivedForm[3].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+		grantPeriods,
+	]);
 	const updateFundReceivedSubtitle = intl.formatMessage({
 		id: "FundReceivedUpdateFormSubtitle",
 		defaultMessage: "Update Fund Recevied For Project",
