@@ -43,7 +43,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { useRefetchOnDeliverableLineItemImport } from "../../../hooks/deliverable";
 import {
 	GET_DELIVERABLE_SUB_TARGETS,
@@ -87,7 +87,7 @@ const getTargetId = (tableType: "deliverable" | "impact" | "budget") =>
 		: tableType === "deliverable"
 		? "deliverable_target_project"
 		: tableType === "impact"
-		? "impact_target_project"
+		? "deliverable_target_project"
 		: "";
 
 const getSubTargetId = (tableType: "deliverable" | "impact" | "budget") =>
@@ -96,7 +96,7 @@ const getSubTargetId = (tableType: "deliverable" | "impact" | "budget") =>
 		: tableType === "deliverable"
 		? "deliverable_sub_target"
 		: tableType === "impact"
-		? "impact_sub_target"
+		? "deliverable_sub_target"
 		: "";
 
 function EditSubTarget({
@@ -179,6 +179,7 @@ function EditSubTarget({
 							setsubTargetData({
 								id: subTarget?.id,
 								[getTargetId(tableType)]: subTarget?.[getTargetId(tableType)]?.id,
+								name: subTarget?.name,
 								timeperiod_start: getTodaysDate(subTarget?.timeperiod_start),
 								timeperiod_end: getTodaysDate(subTarget?.timeperiod_end),
 								target_value: subTarget?.target_value,
@@ -316,9 +317,19 @@ function EditSubTarget({
 					handleClose={() => setOpenForm(!openForm)}
 				/>
 			)}
-			{openDeliverableForm && tableType === "deliverable" && (
+			{console.log(
+				tableType,
+				tableType === "deliverable" ? DELIVERABLE_TYPE.DELIVERABLE : DELIVERABLE_TYPE.IMPACT
+			)}
+
+			{openDeliverableForm && (tableType === "deliverable" || tableType === "impact") && (
 				<DeliverableTrackLine
 					open={openDeliverableForm}
+					formType={
+						tableType === "deliverable"
+							? DELIVERABLE_TYPE.DELIVERABLE
+							: DELIVERABLE_TYPE.IMPACT
+					}
 					type={DELIVERABLE_ACTIONS.CREATE}
 					deliverableSubTargetId={subTarget?.id}
 					handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
@@ -480,14 +491,19 @@ const LineItemTableButton = ({
 							subTargetId={subTargetId}
 						/>
 					)}
-					{tableType === "impact" && <ImpactTrackLineTable impactTargetId={targetId} />}
+					{tableType === "impact" && (
+						<DeliverablesTrackLineTable
+							deliverableTargetId={targetId}
+							subTargetId={subTargetId}
+						/>
+					)}
 				</FIDialog>
 			)}
 		</>
 	);
 };
 
-export default function SubTargetTable({
+export default function ({
 	targetId,
 	tableType,
 	donor,
@@ -552,7 +568,7 @@ export default function SubTargetTable({
 			: tableType === "deliverable"
 			? GET_DELIVERABLE_SUB_TARGETS
 			: tableType === "impact"
-			? GET_IMPACT_SUB_TARGETS
+			? GET_DELIVERABLE_SUB_TARGETS
 			: GET_DELIVERABLE_SUB_TARGETS;
 
 	const getSubTargetCountQuery = () =>
@@ -561,7 +577,7 @@ export default function SubTargetTable({
 			: tableType === "deliverable"
 			? GET_DELIVERABLE_SUB_TARGETS_COUNT
 			: tableType === "impact"
-			? GET_IMPACT_SUB_TARGETS_COUNT
+			? GET_DELIVERABLE_SUB_TARGETS_COUNT
 			: GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
 	const removeFilterListElements = (key: string, index?: number) =>
@@ -679,6 +695,9 @@ export default function SubTargetTable({
 					let row = [
 						<TableCell component="td" scope="row" key={subTargetList[i]?.id}>
 							{TracklinePage * limit + i + 1}
+						</TableCell>,
+						<TableCell key={subTargetList[i]?.name + `${subTargetList[i]?.id}-1`}>
+							{subTargetList[i]?.name || "-"}
 						</TableCell>,
 						<TableCell
 							key={subTargetList[i]?.target_value + `${subTargetList[i]?.id}-1`}

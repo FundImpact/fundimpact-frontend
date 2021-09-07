@@ -2,7 +2,7 @@ import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationData } from "../../../contexts/notificationContext";
-import { FORM_ACTIONS } from "../../../models/constants";
+import { DELIVERABLE_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import BudgetLineitem from "../../Budget/BudgetLineitem";
 import BudgetTarget from "../../Budget/BudgetTarget";
 import AddButton from "../../Dasboard/AddButton";
@@ -97,6 +97,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	button: {
 		margin: theme.spacing(1),
+		color: theme.palette.common.white,
+	},
+	tabs: {
+		backgroundColor: theme.palette.primary.main,
+		border: theme.palette.common.black,
+	},
+	tab: {
 		color: theme.palette.common.white,
 	},
 }));
@@ -375,6 +382,7 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
@@ -441,6 +449,7 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
 						/>
 					),
 					createButtonAccess: deliverableTracklineCreateAccess,
@@ -476,7 +485,7 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Impact",
 				description: `This text will be show on tab for Impact`,
 			}),
-			table: <ImpactsTable />,
+			table: <DeliverablesTable type={DELIVERABLE_TYPE.IMPACT} />,
 			createButtons: [
 				{
 					text: intl.formatMessage({
@@ -485,8 +494,9 @@ export default function DashboardTableContainer() {
 						description: `This text will be show on Add Button for Create Impact Target`,
 					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactTarget
-							type={IMPACT_ACTIONS.CREATE}
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.IMPACT}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
@@ -549,10 +559,11 @@ export default function DashboardTableContainer() {
 						description: `This text will be show on Add Button for Report Achievement`,
 					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactTrackLine
+						<DeliverableTrackLine
+							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							type={IMPACT_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.IMPACT}
 						/>
 					),
 					createButtonAccess: impactTracklineCreateAccess,
@@ -769,9 +780,10 @@ export default function DashboardTableContainer() {
 	return (
 		<Box className={classes.root} boxShadow={0}>
 			<Tabs
+				className={classes.tabs}
 				value={value}
-				indicatorColor="primary"
-				textColor="primary"
+				indicatorColor="secondary"
+				textColor="secondary"
 				onChange={handleChange}
 				variant="scrollable"
 				scrollButtons="auto"
@@ -781,7 +793,7 @@ export default function DashboardTableContainer() {
 					(tab, index) =>
 						tab.tabVisibility && (
 							<Tab
-								textColor="secondary"
+								className={classes.tab}
 								key={tab.label}
 								value={index}
 								label={tab.label}

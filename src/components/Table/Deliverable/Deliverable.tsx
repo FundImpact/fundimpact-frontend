@@ -58,10 +58,15 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
 import SubTargetTable from "../SubTarget";
 import SubTarget from "../../Forms/SubTargetForm";
+import { GET_DELIVERABLE_TRACKLINE_COUNT } from "../../../graphql/Deliverable/trackline";
+import { GET_DELIVERABLE_SUB_TARGETS_COUNT } from "../../../graphql/Deliverable/subTarget";
+import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
+import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
+import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
 
 enum tableHeaders {
 	name = 2,
@@ -151,7 +156,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							dialogDispatch(setCloseDialog());
 						}}
 						formAction={FORM_ACTIONS.CREATE}
-						formType="deliverable"
+						formType={deliverableTarget?.type || DELIVERABLE_TYPE.DELIVERABLE}
 						target={deliverableTarget.id}
 					/>
 				)
@@ -259,6 +264,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 					</MenuItem>
 				)}
 			</Menu>
+			{console.log("here", deliverableTarget)}
 			{targetData && (
 				<DeliverableTarget
 					open={targetData !== null}
@@ -267,6 +273,11 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						setOpenDeleteDeliverableTarget(false);
 					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
+					formType={
+						deliverableTarget.type === "deliverable"
+							? DELIVERABLE_TYPE.DELIVERABLE
+							: DELIVERABLE_TYPE.IMPACT
+					}
 					data={targetData}
 					project={deliverableTarget.project.id}
 					dialogType={openDeleteDeliverableTarget ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
@@ -278,27 +289,53 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 
 function DeliverableTargetAchievementAndProgress({
 	deliverableTargetId,
-	deliverableTargetValue,
 	deliverableTargetUnit,
+	project,
 }: {
 	deliverableTargetId: string;
-	deliverableTargetValue: number;
 	deliverableTargetUnit: string;
+	project: string | number;
 }) {
-	const { data } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
-		variables: { filter: { deliverableTargetProject: deliverableTargetId } },
+	const { data } = useQuery(GET_DELIVERABLE_TRACKLINE_COUNT, {
+		variables: {
+			filter: {
+				deliverable_sub_target: {
+					deliverable_target_project: deliverableTargetId,
+					project,
+				},
+			},
+		},
 	});
+
+	const { data: deliverableSubTargetCount } = useQuery(GET_DELIVERABLE_SUB_TARGETS_COUNT, {
+		variables: {
+			filter: {
+				deliverable_target_project: deliverableTargetId,
+				project,
+			},
+		},
+	});
+
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
 
 	useEffect(() => {
-		if (data) {
-			setDeliverableTargetAchieved(data.deliverableTrackingTotalValue);
+		if (data && deliverableSubTargetCount) {
+			let deliverableTargetTotalAmount =
+				deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
+					?.target_value || 0;
+			setDeliverableTargetAchieved(
+				data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
+			);
 			setDeliverableTargetProgess(
-				((data.deliverableTrackingTotalValue / deliverableTargetValue) * 100).toFixed(2)
+				(
+					((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
+						deliverableTargetTotalAmount) *
+					100
+				).toFixed(2)
 			);
 		}
-	}, [data, deliverableTargetValue]);
+	}, [data, deliverableSubTargetCount]);
 
 	const deliverableAchievedFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
@@ -312,12 +349,37 @@ function DeliverableTargetAchievementAndProgress({
 
 	return (
 		<>
+			<TableCell>
+				<Chip
+					icon={<AddOutlinedIcon fontSize="small" />}
+					label={`${
+						deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
+							?.target_value || 0
+					} ${deliverableTargetUnit}`}
+					color="primary"
+					size="small"
+				/>
+			</TableCell>
 			{deliverableAchievedFindAccess && (
-				<TableCell>{`${DeliverableTargetAchieved} ${
-					deliverableUnitFindAccess ? deliverableTargetUnit : ""
-				}`}</TableCell>
+				<TableCell>
+					<Chip
+						icon={<RemoveOutlinedIcon fontSize="small" />}
+						label={`${DeliverableTargetAchieved} ${
+							deliverableUnitFindAccess ? deliverableTargetUnit : ""
+						}`}
+						color="primary"
+						size="small"
+					/>
+				</TableCell>
 			)}
-			<TableCell>{DeliverableTargetProgess} %</TableCell>
+			<TableCell>
+				<Chip
+					icon={<ShowChartOutlinedIcon fontSize="small" />}
+					label={`${DeliverableTargetProgess} %`}
+					color="primary"
+					size="small"
+				/>
+			</TableCell>
 		</>
 	);
 }
@@ -378,7 +440,11 @@ const getDefaultFilterList = () => ({
 	deliverable_category_org: [],
 });
 
-export default function DeliverablesTable() {
+export default function DeliverablesTable({
+	type = DELIVERABLE_TYPE.DELIVERABLE,
+}: {
+	type?: DELIVERABLE_TYPE;
+}) {
 	const dashboardData = useDashBoardData();
 	const [page, setPage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -430,6 +496,7 @@ export default function DeliverablesTable() {
 			project_with_deliverable_targets: {
 				project: dashboardData?.project?.id,
 			},
+			type,
 		});
 		setFilterList(getDefaultFilterList());
 	}, [dashboardData, setFilterList, setQueryFilter]);
@@ -450,6 +517,7 @@ export default function DeliverablesTable() {
 					project_with_deliverable_targets: {
 						project: dashboardData?.project?.id,
 					},
+					type,
 				};
 				if (filterList.name) {
 					filter.name = filterList.name;
@@ -529,7 +597,11 @@ export default function DeliverablesTable() {
 					// <DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 					<SubTargetTable
 						targetId={deliverableTargetList[i].id}
-						tableType="deliverable"
+						tableType={
+							deliverableTargetList[i].type === "deliverable"
+								? DELIVERABLE_TYPE.DELIVERABLE
+								: DELIVERABLE_TYPE.IMPACT
+						}
 					/>
 				);
 				let column = [
@@ -549,15 +621,6 @@ export default function DeliverablesTable() {
 					>
 						{deliverableTargetList[i]?.deliverable_category_org?.name}
 					</TableCell>,
-					<TableCell
-						key={
-							deliverableTargetList[i].target_value +
-							`${deliverableTargetList[i]?.id}-3`
-						}
-					>
-						{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i]?.deliverable_unit_org?.name}
-							`}
-					</TableCell>,
 				];
 
 				// Columsn
@@ -565,8 +628,8 @@ export default function DeliverablesTable() {
 					<DeliverableTargetAchievementAndProgress
 						key={Math.random()}
 						deliverableTargetId={deliverableTargetList[i].id}
-						deliverableTargetValue={deliverableTargetList[i].target_value}
 						deliverableTargetUnit={deliverableTargetList[i]?.deliverable_unit_org?.name}
+						project={dashboardData?.project?.id || ""}
 					/>
 				);
 

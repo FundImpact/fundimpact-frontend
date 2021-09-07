@@ -57,7 +57,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE } from "../../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../../../models/constants";
 import { useRefetchOnDeliverableLineItemImport } from "../../../hooks/deliverable";
 
 enum tableHeaders {
@@ -300,6 +300,10 @@ function EditDeliverableTrackLineIcon({
 					</MenuItem>
 				)}
 			</Menu>
+			{console.log(
+				"type3004",
+				deliverableTracklineData?.deliverable_sub_target?.deliverable_target_project
+			)}
 			{deliverableTracklineData && (
 				<DeliverableTrackline
 					open={deliverableTracklineData !== null}
@@ -309,6 +313,12 @@ function EditDeliverableTrackLineIcon({
 					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
+					formType={
+						deliverableTracklineData?.deliverable_sub_target?.deliverable_target_project
+							?.type === "deliverable"
+							? DELIVERABLE_TYPE.DELIVERABLE
+							: DELIVERABLE_TYPE.IMPACT
+					}
 					deliverableTarget={deliverableTrackline?.deliverable_sub_target}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}

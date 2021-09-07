@@ -1,12 +1,22 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
 import { AttachFile } from "../AttachFile";
-import { DIALOG_TYPE } from "../constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTargetLine {
 	id?: number;
 	deliverable_target_project?: number | string | undefined;
-	deliverable_sub_target?: number | string | undefined;
+	deliverable_sub_target?:
+		| {
+				id?: string;
+				name?: string;
+				deliverable_target_project: {
+					id?: string;
+					name?: string;
+					type: "deliverable" | "impact";
+				};
+		  }
+		| any;
 	annual_year: string;
 	value: number | string;
 	financial_year: string;
@@ -31,6 +41,7 @@ export type DeliverableTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
 	deliverableSubTargetId?: number | undefined;
+	formType: DELIVERABLE_TYPE;
 	deliverableTarget?: number | string | undefined;
 	reftechOnSuccess?: (
 		variables?: Partial<Record<string, any>> | undefined

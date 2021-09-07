@@ -46,7 +46,7 @@ import { IGET_DONOR } from "../../models/donor/query";
 import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../Project/Project";
 import Donor from "../Donor";
-import { DIALOG_TYPE } from "../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
 import { GET_YEARTAGS } from "../../graphql/yearTags/query";
@@ -274,18 +274,41 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		handleReset();
 	};
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
-	let formTitle = intl.formatMessage({
-		id: "deliverableAchievementFormTitle",
-		defaultMessage: "Deliverable Achievement",
-		description: `This text will be show on deliverable Achievement form for title`,
-	});
-	let formSubtitle = intl.formatMessage({
-		id: "deliverableAchievementFormSubtitle",
-		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
-		description: `This text will be show on deliverable Achievement form for subtitle`,
-	});
+	let formTitle =
+		props.formType === "deliverable"
+			? intl.formatMessage({
+					id: "deliverableAchievementFormTitle",
+					defaultMessage: "Deliverable Achievement",
+					description: `This text will be show on deliverable Achievement form for title`,
+			  })
+			: intl.formatMessage({
+					id: "impactAchievementFormTitle",
+					defaultMessage: "Impact Achievement",
+					description: `This text will be show on Impact Achievement form for title`,
+			  });
+	let formSubtitle =
+		props.formType === "deliverable"
+			? intl.formatMessage({
+					id: "deliverableAchievementFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on deliverable Achievement form for subtitle`,
+			  })
+			: intl.formatMessage({
+					id: "impactAchievementFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on Impact Achievement form for subtitle`,
+			  });
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_SUB_TARGETS, {
-		variables: { filter: { project: DashBoardData?.project?.id } },
+		variables: {
+			filter: {
+				project: DashBoardData?.project?.id,
+				deliverable_target_project: {
+					type: props.formType,
+				},
+			},
+		},
 	});
 	let {
 		multiplefileMorph,
@@ -845,6 +868,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					{openDeliverableTargetDialog && (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
 							open={openDeliverableTargetDialog}
 							handleClose={() => setOpenDeliverableTargetDialog(false)}
 							project={DashBoardData?.project?.id}

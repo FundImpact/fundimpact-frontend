@@ -196,14 +196,14 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 	query deliverableTrackingLineitems($sort: String, $limit: Int, $start: Int, $filter: JSON) {
 		deliverableTrackingLineitems(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
-			deliverable_target_project {
-				id
-				name
-				deleted
-			}
 			deliverable_sub_target {
 				id
 				target_value
+				deliverable_target_project {
+					id
+					name
+					type
+				}
 			}
 			timeperiod_start
 			timeperiod_end
@@ -476,6 +476,9 @@ export const GET_DELIVERABLE_TRACKLINE_COUNT = gql`
 			where: $filter
 		) {
 			aggregate {
+				sum {
+					value
+				}
 				count
 			}
 		}

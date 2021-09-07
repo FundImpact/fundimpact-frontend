@@ -46,7 +46,6 @@ import {
 	UPDATE_DELIVERABLE_SUB_TARGET,
 } from "../../../graphql/Deliverable/subTarget";
 import {
-	CREATE_IMPACT_SUB_TARGET,
 	GET_IMPACT_SUB_TARGETS,
 	GET_IMPACT_SUB_TARGETS_COUNT,
 	UPDATE_IMPACT_SUB_TARGET,
@@ -79,14 +78,10 @@ function SubTarget(props: SubTargetFormProps) {
 				project_with_deliverable_targets: {
 					project: dashboardData?.project?.id,
 				},
+				type: props.formType,
 			},
 		},
-		skip: props.formType != "deliverable",
-	});
-
-	const { data: impactTargets } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
-		variables: { filter: { project: dashboardData?.project?.id } },
-		skip: props.formType != "impact",
+		skip: props.formType != "deliverable" && props.formType != "impact",
 	});
 
 	const { data: budgetTargets } = useQuery(GET_BUDGET_TARGET_PROJECT, {
@@ -106,7 +101,7 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "deliverable"
 			? CREATE_DELIVERABLE_SUB_TARGET
 			: props.formType === "impact"
-			? CREATE_IMPACT_SUB_TARGET
+			? CREATE_DELIVERABLE_SUB_TARGET
 			: CREATE_BUDGET_SUB_TARGET;
 
 	const getUpdateSubTargetQuery = () =>
@@ -115,7 +110,7 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "deliverable"
 			? UPDATE_DELIVERABLE_SUB_TARGET
 			: props.formType === "impact"
-			? UPDATE_IMPACT_SUB_TARGET
+			? UPDATE_DELIVERABLE_SUB_TARGET
 			: UPDATE_BUDGET_SUB_TARGET;
 
 	const getFetchSubTargetQuery = () =>
@@ -124,7 +119,7 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "deliverable"
 			? GET_DELIVERABLE_SUB_TARGETS
 			: props.formType === "impact"
-			? GET_IMPACT_SUB_TARGETS
+			? GET_DELIVERABLE_SUB_TARGETS
 			: GET_BUDGET_SUB_TARGETS;
 
 	const getCountSubTargetQuery = () =>
@@ -133,7 +128,7 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "deliverable"
 			? GET_DELIVERABLE_SUB_TARGETS_COUNT
 			: props.formType === "impact"
-			? GET_IMPACT_SUB_TARGETS_COUNT
+			? GET_DELIVERABLE_SUB_TARGETS_COUNT
 			: GET_BUDGET_SUB_TARGETS_COUNT;
 
 	const getProjectCardQueryRefetch = () =>
@@ -160,7 +155,7 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "deliverable"
 			? "deliverable_target_project"
 			: props.formType === "impact"
-			? "impact_target_project"
+			? "deliverable_target_project"
 			: "budget_targets_project";
 
 	const getTargetOptions = () =>
@@ -169,7 +164,7 @@ function SubTarget(props: SubTargetFormProps) {
 			: props.formType === "deliverable"
 			? deliverableTargets?.deliverableTargetList || []
 			: props.formType === "impact"
-			? impactTargets?.impactTargetProjectList || []
+			? deliverableTargets?.deliverableTargetList || []
 			: "";
 
 	budgetSubTargetFormList[0].name = getTargetId();
@@ -221,10 +216,10 @@ function SubTarget(props: SubTargetFormProps) {
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
-	budgetSubTargetFormList[2].addNewClick = () => setOpenDeliverableCategoryDialog(true);
+	budgetSubTargetFormList[3].addNewClick = () => setOpenDeliverableCategoryDialog(true);
 
 	const [openDeliverableUnitDialog, setOpenDeliverableUnitDialog] = useState<boolean>();
-	budgetSubTargetFormList[3].addNewClick = () => setOpenDeliverableUnitDialog(true);
+	budgetSubTargetFormList[4].addNewClick = () => setOpenDeliverableUnitDialog(true);
 
 	const apolloClient = useApolloClient();
 
@@ -254,7 +249,7 @@ function SubTarget(props: SubTargetFormProps) {
 		console.error(error);
 	}
 
-	budgetSubTargetFormList[4].optionsArray = useMemo(() => {
+	budgetSubTargetFormList[5].optionsArray = useMemo(() => {
 		let donorsArray: any = [];
 		if (cachedProjectDonors)
 			cachedProjectDonors?.projectDonors
@@ -269,7 +264,7 @@ function SubTarget(props: SubTargetFormProps) {
 		return donorsArray;
 	}, [cachedProjectDonors, props]);
 
-	budgetSubTargetFormList[4]["secondOptionsArray"] = useMemo(() => {
+	budgetSubTargetFormList[5]["secondOptionsArray"] = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
 		if (cachedProjectDonors && cachedOrganizationDonors)
 			cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
@@ -296,22 +291,36 @@ function SubTarget(props: SubTargetFormProps) {
 		}
 	}, [props.formAction]);
 
-	budgetSubTargetFormList[4].getInputValue = (donorId: string) => {
+	budgetSubTargetFormList[5].getInputValue = (donorId: string) => {
 		setCurrentDonor(donorId);
 	};
-	budgetSubTargetFormList[5].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[8].optionsArray = lists.annualYear;
-	budgetSubTargetFormList[6].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+	budgetSubTargetFormList[6].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[8].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[9].optionsArray = lists.annualYear;
+	budgetSubTargetFormList[7].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
 
 	const createSubTargetHelper = async (subTargetValues: ISubTarget) => {
 		try {
-			let queryFilter = {
-				[getTargetId()]: subTargetValues[getTargetId()],
+			let queryFilter: any = {
+				[getTargetId()]: {
+					id: subTargetValues[getTargetId()],
+				},
 				project: dashboardData?.project?.id,
 			};
+
+			let projectSubTargetsQueryFilter = undefined;
+
+			if (props.formType === "deliverable" || props.formType === "impact") {
+				queryFilter[getTargetId()].type = props.formType;
+				projectSubTargetsQueryFilter = {
+					[getTargetId()]: {
+						type: props.formType,
+					},
+				};
+			}
+
 			await createSubTarget({
 				variables: {
 					input: {
@@ -330,6 +339,7 @@ function SubTarget(props: SubTargetFormProps) {
 						variables: {
 							filter: {
 								project: dashboardData?.project?.id,
+								...projectSubTargetsQueryFilter,
 							},
 						},
 					},
@@ -431,7 +441,7 @@ function SubTarget(props: SubTargetFormProps) {
 		}
 		if (props.formType === "impact") {
 			delete values["budget_targets_project"];
-			delete values["deliverable_target_project"];
+			delete values["impact_target_project"];
 		}
 		return values;
 	};

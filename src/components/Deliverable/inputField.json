@@ -37,25 +37,14 @@
 			"label": "Name",
 			"inputType": "textarea",
 			"required": true,
-			"size": 6
-		},
-		{
-			"name": "target_value",
-			"id": "target_value",
-			"dataTestId": "deliverableTargetTargetValue",
-			"testId": "deliverableTargetTargetValueInput",
-			"label": "Target Value",
-			"required": true,
-			"inputType": "textarea",
-			"size": 6,
-			"type": "number"
+			"size": 12
 		},
 		{
 			"name": "deliverable_category_org",
 			"id": "deliverable_category_org",
 			"dataTestId": "deliverableTargetCategory",
 			"testId": "deliverableTargetCategoryInput",
-			"label": "Deliverable Category",
+			"label": "Category",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -71,7 +60,7 @@
 			"id": "deliverable_unit_org",
 			"dataTestId": "deliverableTargetUnit",
 			"testId": "deliverableTargetUnitInput",
-			"label": "Deliverable Unit",
+			"label": "Unit",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -161,7 +150,7 @@
 		{
 			"name": "deliverable_sub_target",
 			"id": "deliverable_sub_target",
-			"label": "Deliverable Sub Target",
+			"label": "Sub Target",
 			"size": 6,
 			"dataTestId": "deliverableTracklineTarget",
 			"testId": "deliverableTracklineTargetInput",

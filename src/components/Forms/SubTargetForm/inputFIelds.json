@@ -4,7 +4,7 @@
 			"name": "target",
 			"id": "target",
 			"label": "Select Target",
-			"size": 6,
+			"size": 12,
 			"dataTestId": "budgetSubTargetTarget",
 			"testId": "budgetSubTargetTargetInput",
 			"optionsArray": [],
@@ -15,6 +15,16 @@
 			"required": true,
 			"addNew": true,
 			"addNewClick": {}
+		},
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "budgetSubTargetName",
+			"testId": "budgetSubTargetNameInput",
+			"label": "Name",
+			"required": true,
+			"inputType": "textarea",
+			"size": 6
 		},
 		{
 			"name": "target_value",

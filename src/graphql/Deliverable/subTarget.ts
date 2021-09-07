@@ -4,6 +4,7 @@ export const GET_DELIVERABLE_SUB_TARGETS = gql`
 	query deliverableSubTargets($sort: String, $limit: Int, $start: Int, $filter: JSON) {
 		deliverableSubTargets(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
+			name
 			created_at
 			updated_at
 			project {

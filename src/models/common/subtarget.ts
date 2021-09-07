@@ -2,6 +2,7 @@ import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 
 export type ISubTarget = {
 	id?: number;
+	name: string;
 	budget_targets_project?: number | string;
 	target?: number | string;
 	deliverable_target_project?: number | string;

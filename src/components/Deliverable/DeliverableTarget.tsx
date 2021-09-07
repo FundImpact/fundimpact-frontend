@@ -37,13 +37,14 @@ import {
 } from "../../graphql/project";
 import Deliverable from "./Deliverable";
 import DeliverableUnit from "./DeliverableUnit";
-import { DIALOG_TYPE } from "../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 } from "../../graphql/Deliverable/unit";
 import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
+import { GET_DELIVERABLE_SUB_TARGETS } from "../../graphql/Deliverable/subTarget";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -88,6 +89,30 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 									},
 								},
 							},
+							refetchQueries: [
+								{
+									query: GET_DELIVERABLE_TARGETS_COUNT,
+									variables: {
+										filter: {
+											project_with_deliverable_targets: {
+												project: dashboardData?.project?.id,
+											},
+											type: props.formType,
+										},
+									},
+								},
+								{
+									query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+									variables: {
+										filter: {
+											project_with_deliverable_targets: {
+												project: dashboardData?.project?.id,
+											},
+											type: props.formType,
+										},
+									},
+								},
+							],
 						});
 					} catch (error) {
 						notificationDispatch(setErrorNotification(error?.message));
@@ -121,100 +146,95 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			delete (createInputTarget as any).id;
 			await createDeliverableTarget({
 				variables: {
-					input: createInputTarget,
+					input: { ...createInputTarget, type: props.formType },
 				},
-				update: async (store, { data: { createDeliverableTarget: targetCreated } }) => {
-					try {
-						const count = await store.readQuery<{ deliverableTargetCount: number }>({
-							query: GET_DELIVERABLE_TARGETS_COUNT,
-							variables: {
-								filter: {
-									project_with_deliverable_targets: {
-										project: dashboardData?.project?.id,
-									},
-								},
-							},
-						});
+				// update: async (store, { data: { createDeliverableTarget: targetCreated } }) => {
+				// 	try {
+				// 		const count = await store.readQuery<{ deliverableTargetCount: number }>({
+				// 			query: GET_DELIVERABLE_TARGETS_COUNT,
+				// 			variables: {
+				// 				filter: {
+				// 					project_with_deliverable_targets: {
+				// 						project: dashboardData?.project?.id,
+				// 					},
+				// 					type: props.formType,
+				// 				},
+				// 			},
+				// 		});
 
-						store.writeQuery<{ deliverableTargetCount: number }>({
-							query: GET_DELIVERABLE_TARGETS_COUNT,
-							variables: {
-								filter: {
-									project_with_deliverable_targets: {
-										project: dashboardData?.project?.id,
-									},
-								},
-							},
-							data: {
-								deliverableTargetCount: count!.deliverableTargetCount + 1,
-							},
-						});
+				// 		store.writeQuery<{ deliverableTargetCount: number }>({
+				// 			query: GET_DELIVERABLE_TARGETS_COUNT,
+				// 			variables: {
+				// 				filter: {
+				// 					project_with_deliverable_targets: {
+				// 						project: dashboardData?.project?.id,
+				// 					},
+				// 					type: props.formType,
+				// 				},
+				// 			},
+				// 			data: {
+				// 				deliverableTargetCount: count!.deliverableTargetCount + 1,
+				// 			},
+				// 		});
 
-						let limit = 0;
-						if (count) {
-							limit = count.deliverableTargetCount;
-						}
-						const dataRead = await store.readQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
-							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-							variables: {
-								filter: {
-									project_with_deliverable_targets: {
-										project: dashboardData?.project?.id,
-									},
-								},
-								limit: limit > 10 ? 10 : limit,
-								start: 0,
-								sort: "created_at:DESC",
-							},
-						});
-						let deliverableTargets: IDeliverableTargetByProjectResponse[] = dataRead?.deliverableTargetList
-							? dataRead?.deliverableTargetList
-							: [];
-						store.writeQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
-							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-							variables: {
-								filter: {
-									project_with_deliverable_targets: {
-										project: dashboardData?.project?.id,
-									},
-								},
-								limit: limit > 10 ? 10 : limit,
-								start: 0,
-								sort: "created_at:DESC",
-							},
-							data: {
-								deliverableTargetList: [...deliverableTargets, targetCreated],
-							},
-						});
+				// 		let limit = 0;
+				// 		if (count) {
+				// 			limit = count.deliverableTargetCount;
+				// 		}
+				// 		const dataRead = await store.readQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
+				// 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+				// 			variables: {
+				// 				filter: {
+				// 					project_with_deliverable_targets: {
+				// 						project: dashboardData?.project?.id,
+				// 					},
+				// 					type: props.formType,
+				// 				},
+				// 				limit: limit > 10 ? 10 : limit,
+				// 				start: 0,
+				// 				sort: "created_at:DESC",
+				// 			},
+				// 		});
+				// 		let deliverableTargets: IDeliverableTargetByProjectResponse[] = dataRead?.deliverableTargetList
+				// 			? dataRead?.deliverableTargetList
+				// 			: [];
+				// 		store.writeQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
+				// 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+				// 			variables: {
+				// 				filter: {
+				// 					project_with_deliverable_targets: {
+				// 						project: dashboardData?.project?.id,
+				// 					},
+				// 					type: props.formType,
+				// 				},
+				// 				limit: limit > 10 ? 10 : limit,
+				// 				start: 0,
+				// 				sort: "created_at:DESC",
+				// 			},
+				// 			data: {
+				// 				deliverableTargetList: [...deliverableTargets, targetCreated],
+				// 			},
+				// 		});
 
-						store.writeQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
-							query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-							variables: {
-								filter: {
-									project_with_deliverable_targets: {
-										project: dashboardData?.project?.id,
-									},
-								},
-							},
-							data: {
-								deliverableTargetList: [...deliverableTargets, targetCreated],
-							},
-						});
-					} catch (err) {
-						console.error(err);
-					}
-				},
+				// 		store.writeQuery<IGET_DELIVERABLE_TARGET_BY_PROJECT>({
+				// 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+				// 			variables: {
+				// 				filter: {
+				// 					project_with_deliverable_targets: {
+				// 						project: dashboardData?.project?.id,
+				// 					},
+				// 					type: props.formType,
+				// 				},
+				// 			},
+				// 			data: {
+				// 				deliverableTargetList: [...deliverableTargets, targetCreated],
+				// 			},
+				// 		});
+				// 	} catch (err) {
+				// 		console.error(err);
+				// 	}
+				// },
 				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: {
-							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
-							},
-						},
-					},
 					{
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 						variables: {
@@ -226,13 +246,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				],
 			});
 			// setcurrentCategory("");
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target created successfully !")
-			);
+			notificationDispatch(setSuccessNotification("Target created successfully !"));
+			onCancel();
 		} catch (error) {
 			notificationDispatch(setErrorNotification(error.message));
-		} finally {
-			onCancel();
 		}
 	};
 
@@ -260,6 +277,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								project_with_deliverable_targets: {
 									project: props.project,
 								},
+								type: props.formType,
 							},
 						},
 					},
@@ -270,15 +288,16 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								project_with_deliverable_targets: {
 									project: props.project,
 								},
+								type: props.formType,
 							},
 						},
 					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { deliverableTargetProject: deliverableId },
-						},
-					},
+					// {
+					// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					// 	variables: {
+					// 		filter: { deliverableTargetProject: deliverableId },
+					// 	},
+					// },
 					{
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 						variables: {
@@ -289,9 +308,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					},
 				],
 			});
-			notificationDispatch(
-				setSuccessNotification("Deliverable Target updated successfully !")
-			);
+			notificationDispatch(setSuccessNotification("Target updated successfully !"));
 			// setcurrentCategory("");
 			onCancel();
 		} catch (error) {
@@ -326,14 +343,14 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// updating categories field with fetched categories list
 	useEffect(() => {
 		if (deliverableCategories) {
-			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
+			deliverableTargetForm[1].optionsArray = deliverableCategories.deliverableCategory;
 			// deliverableTargetForm[2].getInputValue = setcurrentCategory;
 		}
 	}, [deliverableCategories]);
 
 	useEffect(() => {
 		if (unitsByOrg) {
-			deliverableTargetForm[3].optionsArray = unitsByOrg.deliverableUnitOrg;
+			deliverableTargetForm[2].optionsArray = unitsByOrg.deliverableUnitOrg;
 			// deliverableTargetForm[2].getInputValue = setcurrentCategory;
 		}
 	}, [unitsByOrg]);
@@ -383,9 +400,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			if (!values.project) {
 				errors.project = "Project is required";
 			}
-			if (!values.target_value) {
-				errors.target_value = "Target value is required";
-			}
 			if (!values.deliverable_category_org) {
 				errors.deliverable_category_org = "Deliverable Category is required";
 			}
@@ -400,9 +414,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			}
 			if (!values.project) {
 				errors.project = "Project is required";
-			}
-			if (!values.target_value) {
-				errors.target_value = "Target value is required";
 			}
 		}
 		return errors;
@@ -487,18 +498,33 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				title={
 					newOrEdit +
 					" " +
-					intl.formatMessage({
-						id: "deliverableTargetFormTitle",
-						defaultMessage: "Deliverable Target",
-						description: `This text will be show on deliverable target form for title`,
-					})
+					(props.formType === DELIVERABLE_TYPE.DELIVERABLE
+						? intl.formatMessage({
+								id: "deliverableTargetFormTitle",
+								defaultMessage: "Deliverable Target",
+								description: `This text will be show on deliverable target form for title`,
+						  })
+						: intl.formatMessage({
+								id: "impactTargetFormTitle",
+								defaultMessage: "Impact Target",
+								description: `This text will be show on impact Target form for title`,
+						  }))
 				}
-				subtitle={intl.formatMessage({
-					id: "deliverableTargetFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on deliverable target form for subtitle`,
-				})}
+				subtitle={
+					props.formType === DELIVERABLE_TYPE.DELIVERABLE
+						? intl.formatMessage({
+								id: "deliverableTargetFormSubtitle",
+								defaultMessage:
+									"Physical addresses of your organisation like headquarter branch etc",
+								description: `This text will be show on deliverable target form for subtitle`,
+						  })
+						: intl.formatMessage({
+								id: "impactTargetFormSubtitle",
+								defaultMessage:
+									"Physical addresses of your organization like headquater, branch etc.",
+								description: `This text will be show on impact Target form for subtitle`,
+						  })
+				}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

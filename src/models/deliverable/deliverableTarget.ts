@@ -1,5 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
-import { DIALOG_TYPE } from "../constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../constants";
 
 export interface IDeliverableTarget {
 	id?: number;
@@ -15,6 +15,7 @@ export type DeliverableTargetProps = {
 	open: boolean;
 	handleClose: () => void;
 	project: number | undefined;
+	formType: DELIVERABLE_TYPE;
 	dialogType?: DIALOG_TYPE;
 } & (
 	| {

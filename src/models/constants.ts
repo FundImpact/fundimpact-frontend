@@ -20,5 +20,10 @@ export enum DIALOG_TYPE {
 	DELETE = "DELETE",
 }
 
+export enum DELIVERABLE_TYPE {
+	DELIVERABLE = "deliverable",
+	IMPACT = "impact",
+}
+
 export const primaryColor = "#5567FF";
 export const secondaryColor = "#14BB4C";
