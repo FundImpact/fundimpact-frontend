@@ -6,7 +6,6 @@ export const GET_DELIVERABLE_TARGETS = gql`
 			id
 			name
 			description
-			target_value
 			deleted
 			deliverable_unit_org {
 				id
@@ -32,7 +31,6 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 			id
 			name
 			description
-			target_value
 			deleted
 			project {
 				id
@@ -63,7 +61,6 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			id
 			name
 			description
-			target_value
 			type
 			deleted
 			project_with_deliverable_targets {
@@ -95,7 +92,6 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 			id
 			name
 			description
-			target_value
 			project {
 				id
 				name

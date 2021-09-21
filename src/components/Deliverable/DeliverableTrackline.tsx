@@ -52,6 +52,7 @@ import { useDocumentTableDataRefetch } from "../../hooks/document";
 import { GET_YEARTAGS } from "../../graphql/yearTags/query";
 import { YearTagPayload } from "../../models/yearTags";
 import { GET_DELIVERABLE_SUB_TARGETS } from "../../graphql/Deliverable/subTarget";
+import SubTarget from "../Forms/SubTargetForm";
 
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -281,25 +282,37 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					defaultMessage: "Deliverable Achievement",
 					description: `This text will be show on deliverable Achievement form for title`,
 			  })
-			: intl.formatMessage({
+			: props.formType === "impact"
+			? intl.formatMessage({
 					id: "impactAchievementFormTitle",
 					defaultMessage: "Impact Achievement",
 					description: `This text will be show on Impact Achievement form for title`,
-			  });
-	let formSubtitle =
-		props.formType === "deliverable"
-			? intl.formatMessage({
-					id: "deliverableAchievementFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on deliverable Achievement form for subtitle`,
 			  })
-			: intl.formatMessage({
-					id: "impactAchievementFormSubtitle",
-					defaultMessage:
-						"Physical addresses of your organisation like headquarter branch etc",
-					description: `This text will be show on Impact Achievement form for subtitle`,
-			  });
+			: props.formType === "outcome"
+			? intl.formatMessage({
+					id: "outcomeAchievementFormTitle",
+					defaultMessage: "Outcome Achievement",
+					description: `This text will be show on Outcome Achievement form for title`,
+			  })
+			: props.formType === "output"
+			? intl.formatMessage({
+					id: "outputAchievementFormTitle",
+					defaultMessage: "Output Achievement",
+					description: `This text will be show on output Achievement form for title`,
+			  })
+			: props.formType === "activity"
+			? intl.formatMessage({
+					id: "activityAchievementFormTitle",
+					defaultMessage: "Activity Achievement",
+					description: `This text will be show on Activity Achievement form for title`,
+			  })
+			: "";
+	let formSubtitle = intl.formatMessage({
+		id: "deliverableAchievementFormSubtitle",
+		defaultMessage: "Physical addresses of your organisation like headquarter branch etc",
+		description: `This text will be show on deliverable Achievement form for subtitle`,
+	});
+
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_SUB_TARGETS, {
 		variables: {
 			filter: {
@@ -319,9 +332,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	const [openDeliverableTargetDialog, setOpenDeliverableTargetDialog] = React.useState<boolean>();
 	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
-
-	// const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
-	// deliverableTragetLineForm[5].addNewClick = () => setOpenDonorDialog(true);
 
 	/* Open Attach File Form*/
 	deliverableTragetLineForm[9].onClick = () => setOpenAttachFiles(true);
@@ -552,7 +562,34 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	}, [lists]);
 
-	const onCreate = (value: IDeliverableTargetLine) => {
+	const getDeliverableTargetBySubTarget = async (
+		apolloClient: any,
+		deliverable_sub_target: string
+	) => {
+		let subtarget;
+		try {
+			subtarget = await apolloClient.query({
+				query: GET_DELIVERABLE_SUB_TARGETS,
+				variables: {
+					filter: {
+						id: deliverable_sub_target,
+					},
+				},
+				fetchPolicy: "network-only",
+			});
+		} catch (error) {
+			console.error(error);
+		}
+		return (
+			subtarget?.data?.deliverableSubTargets?.[0]?.deliverable_target_project?.id || undefined
+		);
+	};
+
+	const onCreate = async (value: IDeliverableTargetLine) => {
+		let currentDeliverableTarget = await getDeliverableTargetBySubTarget(
+			apolloClient,
+			value.deliverable_sub_target || ""
+		);
 		value.reporting_date = new Date(value.reporting_date);
 		// setSelectedDeliverableTarget(value.deliverable_target_project);
 		// setCreateDeliverableTracklineFyId(value.financial_year);
@@ -659,10 +696,34 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						filter: { project: DashBoardData?.project?.id },
 					},
 				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_COUNT,
+					variables: {
+						filter: {
+							deliverable_sub_target: {
+								deliverable_target_project: currentDeliverableTarget,
+								project: DashBoardData?.project?.id,
+							},
+						},
+					},
+				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_COUNT,
+					variables: {
+						filter: {
+							deliverable_sub_target: value.deliverable_sub_target,
+						},
+					},
+				},
 			],
 		});
 	};
-	const onUpdate = (value: IDeliverableTargetLine) => {
+	const onUpdate = async (value: IDeliverableTargetLine) => {
+		let currentDeliverableTarget = await getDeliverableTargetBySubTarget(
+			apolloClient,
+			value.deliverable_sub_target || ""
+		);
+
 		let DeliverableTargetLineId = value.id;
 		delete (value as any).id;
 		value.reporting_date = new Date(value.reporting_date);
@@ -728,6 +789,17 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 					variables: {
 						filter: { project: DashBoardData?.project?.id },
+					},
+				},
+				{
+					query: GET_DELIVERABLE_TRACKLINE_COUNT,
+					variables: {
+						filter: {
+							deliverable_sub_target: {
+								deliverable_target_project: currentDeliverableTarget,
+								project: DashBoardData?.project?.id,
+							},
+						},
 					},
 				},
 			],
@@ -866,21 +938,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						}}
 					/>
 					{openDeliverableTargetDialog && (
-						<DeliverableTarget
-							type={DELIVERABLE_ACTIONS.CREATE}
-							formType={DELIVERABLE_TYPE.DELIVERABLE}
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
 							open={openDeliverableTargetDialog}
 							handleClose={() => setOpenDeliverableTargetDialog(false)}
-							project={DashBoardData?.project?.id}
+							formType={props.formType}
 						/>
 					)}
-					{/* {openDonorDialog && (
-						<Donor
-							open={openDonorDialog}
-							formAction={FORM_ACTIONS.CREATE}
-							handleClose={() => setOpenDonorDialog(false)}
-						/>
-					)} */}
 				</>
 			</FormDialog>
 

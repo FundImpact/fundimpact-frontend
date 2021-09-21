@@ -74,6 +74,7 @@
 			"selectId": "demo-mutiple-name",
 			"inputType": "select",
 			"required": true,
+			"addNew": true,
 			"addNewClick": {}
 		},
 		{
@@ -102,6 +103,7 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"required": true,
+			"addNew": true,
 			"addNewClick": {},
 			"size": 6
 		},

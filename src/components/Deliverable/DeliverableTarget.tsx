@@ -1,13 +1,12 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-
+import { v4 as uuidv4 } from "uuid";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import {
 	GET_DELIVERABLE_CATEGORY_PROJECT_COUNT,
 	GET_DELIVERABLE_ORG_CATEGORY,
 } from "../../graphql/Deliverable/category";
-import { GET_CATEGORY_UNIT } from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_TARGET,
 	GET_ACHIEVED_VALLUE_BY_TARGET,
@@ -25,10 +24,6 @@ import FormDialog from "../FormDialog/FormDialog";
 import { FullScreenLoader } from "../Loader/Loader";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import { deliverableTargetForm } from "./inputField.json";
-import {
-	IGET_DELIVERABLE_TARGET_BY_PROJECT,
-	IDeliverableTargetByProjectResponse,
-} from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import {
@@ -44,14 +39,12 @@ import {
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 } from "../../graphql/Deliverable/unit";
 import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
-import { GET_DELIVERABLE_SUB_TARGETS } from "../../graphql/Deliverable/subTarget";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		description: "",
-		target_value: 0,
 		deliverable_unit_org: "",
 		deliverable_category_org: "",
 		project: props.project,
@@ -132,10 +125,20 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
-	deliverableTargetForm[2].addNewClick = () => setOpenDeliverableCategoryDialog(true);
+	deliverableTargetForm[1].addNewClick = () => setOpenDeliverableCategoryDialog(true);
 
 	const [openDeliverableUnitDialog, setOpenDeliverableUnitDialog] = useState<boolean>();
-	deliverableTargetForm[3].addNewClick = () => setOpenDeliverableUnitDialog(true);
+	deliverableTargetForm[2].addNewClick = () => setOpenDeliverableUnitDialog(true);
+
+	deliverableTargetForm[3].getInputValue = (is_qualitative: boolean) => {
+		if (is_qualitative) {
+			deliverableTargetForm[4].hidden = false;
+			deliverableTargetForm[5].hidden = false;
+		} else {
+			deliverableTargetForm[4].hidden = true;
+			deliverableTargetForm[5].hidden = true;
+		}
+	};
 
 	const createDeliverableTargetHelper = async (deliverableTarget: IDeliverableTarget) => {
 		try {
@@ -240,6 +243,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						variables: {
 							filter: {
 								project: props.project,
+								deliverable_target_project: {
+									type: props.formType,
+								},
 							},
 						},
 					},
@@ -303,6 +309,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						variables: {
 							filter: {
 								project: props.project,
+								deliverable_target_project: {
+									type: props.formType,
+								},
 							},
 						},
 					},
@@ -366,14 +375,24 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
+		let options = value?.value_qualitative_option?.split(",");
+		options = options.map((elem: string) => ({ id: uuidv4(), name: elem.trim() }));
+
+		let valueOptions = {
+			options,
+		};
+
 		await createDeliverableTargetHelper({
 			id: value.id,
 			name: value.name,
-			target_value: Number(value.target_value),
 			description: value.description,
 			project: value.project,
 			deliverable_category_org: value?.deliverable_category_org,
 			deliverable_unit_org: value?.deliverable_unit_org,
+			is_qualitative: value.is_qualitative,
+			sub_target_required: !value.is_qualitative,
+			value_calculation: value.value_calculation,
+			value_qualitative_option: valueOptions,
 		});
 		// fetching deliverable_category_unit before creating deliverable Target
 		// getCategoryUnit({
@@ -400,6 +419,14 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			if (!values.project) {
 				errors.project = "Project is required";
 			}
+			if (values.is_qualitative) {
+				if (!values.value_calculation) {
+					errors.value_calculation = "This Field is required";
+				}
+				if (!values.value_qualitative_option) {
+					errors.value_qualitative_option = "Options are required";
+				}
+			}
 			if (!values.deliverable_category_org) {
 				errors.deliverable_category_org = "Deliverable Category is required";
 			}
@@ -414,6 +441,14 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			}
 			if (!values.project) {
 				errors.project = "Project is required";
+			}
+			if (values.is_qualitative) {
+				if (!values.value_calculation) {
+					errors.value_calculation = "This Field is required";
+				}
+				if (!values.value_qualitative_option) {
+					errors.value_qualitative_option = "Options are required";
+				}
 			}
 		}
 		return errors;
@@ -504,27 +539,38 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								defaultMessage: "Deliverable Target",
 								description: `This text will be show on deliverable target form for title`,
 						  })
-						: intl.formatMessage({
+						: props.formType === DELIVERABLE_TYPE.IMPACT
+						? intl.formatMessage({
 								id: "impactTargetFormTitle",
 								defaultMessage: "Impact Target",
 								description: `This text will be show on impact Target form for title`,
-						  }))
-				}
-				subtitle={
-					props.formType === DELIVERABLE_TYPE.DELIVERABLE
+						  })
+						: props.formType === DELIVERABLE_TYPE.OUTCOME
 						? intl.formatMessage({
-								id: "deliverableTargetFormSubtitle",
-								defaultMessage:
-									"Physical addresses of your organisation like headquarter branch etc",
-								description: `This text will be show on deliverable target form for subtitle`,
+								id: "OutcomeTargetFormTitle",
+								defaultMessage: "Outcome Target",
+								description: `This text will be show on Outcome Target form for title`,
 						  })
-						: intl.formatMessage({
-								id: "impactTargetFormSubtitle",
-								defaultMessage:
-									"Physical addresses of your organization like headquater, branch etc.",
-								description: `This text will be show on impact Target form for subtitle`,
+						: props.formType === DELIVERABLE_TYPE.OUTPUT
+						? intl.formatMessage({
+								id: "OutputTargetFormTitle",
+								defaultMessage: "Output Target",
+								description: `This text will be show on Output Target form for title`,
 						  })
+						: props.formType === DELIVERABLE_TYPE.ACTIVITY
+						? intl.formatMessage({
+								id: "ActivityTargetFormTitle",
+								defaultMessage: "Activity Target",
+								description: `This text will be show on Activity Target form for title`,
+						  })
+						: "")
 				}
+				subtitle={intl.formatMessage({
+					id: "deliverableTargetFormSubtitle",
+					defaultMessage:
+						"Physical addresses of your organisation like headquarter branch etc",
+					description: `This text will be show on deliverable target form for subtitle`,
+				})}
 				workspace={dashboardData?.workspace?.name}
 				project={dashboardData?.project?.name}
 				open={formIsOpen}

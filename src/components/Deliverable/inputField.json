@@ -72,6 +72,53 @@
 			"size": 6
 		},
 		{
+			"name": "is_qualitative",
+			"id": "is_qualitative",
+			"dataTestId": "deliverableTargetIsQualitative",
+			"testId": "deliverableTargetIsQualitativeInput",
+			"label": "Is Qualitative",
+			"getInputValue": {},
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "value_calculation",
+			"id": "value_calculation",
+			"dataTestId": "deliverableTargetValueCalculation",
+			"testId": "deliverableTargetValueCalculationInput",
+			"label": "Qualitative Calculations *",
+			"optionsArray": [
+				{
+					"id": "AVG",
+					"name": "Average"
+				},
+				{
+					"id": "SUM",
+					"name": "Add"
+				}
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+
+			"hidden": true,
+			"size": 6
+		},
+		{
+			"name": "value_qualitative_option",
+			"id": "value_qualitative_option",
+			"dataTestId": "deliverableTargetValueQualitativeOptions",
+			"testId": "deliverableTargetValueQualitativeOptionsInput",
+			"label": "Qualitative Options ( Ex: Opt1,Opt2 ) *",
+			"hidden": true,
+			"multiline": true,
+			"rows": 2,
+			"inputType": "textarea",
+			"size": 12
+		},
+		{
 			"name": "description",
 			"id": "description",
 			"dataTestId": "deliverableTargetDescription",

@@ -1,5 +1,6 @@
 import { IInputFields } from "..";
 import { ThemeOptions } from "@material-ui/core";
+import { DELIVERABLE_TYPE } from "../constants";
 
 export interface IOrganisationType {
 	id: string;
@@ -12,6 +13,9 @@ export interface IOrganisation {
 	short_name: string;
 	organization_registration_type: IOrganisationType;
 	country?: { id: string; name: string };
+	deliverable_type?: {
+		types: DELIVERABLE_TYPE[];
+	};
 	account?: {
 		id: string;
 		name: string;

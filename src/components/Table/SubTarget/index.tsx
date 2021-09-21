@@ -81,21 +81,17 @@ enum tableHeaders {
 	year = 4,
 }
 
-const getTargetId = (tableType: "deliverable" | "impact" | "budget") =>
+const getTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
 	tableType === "budget"
 		? "budget_targets_project"
-		: tableType === "deliverable"
-		? "deliverable_target_project"
-		: tableType === "impact"
+		: Object.values(DELIVERABLE_TYPE).includes(tableType)
 		? "deliverable_target_project"
 		: "";
 
-const getSubTargetId = (tableType: "deliverable" | "impact" | "budget") =>
+const getSubTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
 	tableType === "budget"
 		? "budget_sub_target"
-		: tableType === "deliverable"
-		? "deliverable_sub_target"
-		: tableType === "impact"
+		: Object.values(DELIVERABLE_TYPE).includes(tableType)
 		? "deliverable_sub_target"
 		: "";
 
@@ -111,7 +107,7 @@ function EditSubTarget({
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
-	tableType: "deliverable" | "impact" | "budget";
+	tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
@@ -308,7 +304,7 @@ function EditSubTarget({
 					}}
 				/>
 			)}
-			{openForm && tableType === "budget" && (
+			{openForm && tableType === "budget" ? (
 				<BudgetLineitem
 					formAction={FORM_ACTIONS.CREATE}
 					open={openForm}
@@ -316,24 +312,21 @@ function EditSubTarget({
 					initialValues={initialValues1}
 					handleClose={() => setOpenForm(!openForm)}
 				/>
-			)}
-			{console.log(
-				tableType,
-				tableType === "deliverable" ? DELIVERABLE_TYPE.DELIVERABLE : DELIVERABLE_TYPE.IMPACT
-			)}
-
-			{openDeliverableForm && (tableType === "deliverable" || tableType === "impact") && (
-				<DeliverableTrackLine
-					open={openDeliverableForm}
-					formType={
-						tableType === "deliverable"
-							? DELIVERABLE_TYPE.DELIVERABLE
-							: DELIVERABLE_TYPE.IMPACT
-					}
-					type={DELIVERABLE_ACTIONS.CREATE}
-					deliverableSubTargetId={subTarget?.id}
-					handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
-				/>
+			) : (
+				openDeliverableForm &&
+				(tableType === DELIVERABLE_TYPE.DELIVERABLE ||
+					tableType === DELIVERABLE_TYPE.IMPACT ||
+					tableType === DELIVERABLE_TYPE.OUTCOME ||
+					tableType === DELIVERABLE_TYPE.OUTPUT ||
+					tableType === DELIVERABLE_TYPE.ACTIVITY) && (
+					<DeliverableTrackLine
+						open={openDeliverableForm}
+						formType={tableType}
+						type={DELIVERABLE_ACTIONS.CREATE}
+						deliverableSubTargetId={subTarget?.id}
+						handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
+					/>
+				)
 			)}
 		</>
 	);
@@ -427,7 +420,7 @@ const LineItemTableButton = ({
 	subTargetId,
 }: {
 	targetId: string;
-	tableType: "deliverable" | "impact" | "budget";
+	tableType: DELIVERABLE_TYPE | "budget";
 	donor?: any;
 	subTargetId?: string;
 }) => {
@@ -437,9 +430,7 @@ const LineItemTableButton = ({
 	const getLineitemCountQuery = () =>
 		tableType === "budget"
 			? GET_PROJ_BUDGET_TRACINGS_COUNT
-			: tableType === "deliverable"
-			? GET_DELIVERABLE_TRACKLINE_COUNT
-			: tableType === "impact"
+			: Object.values(DELIVERABLE_TYPE).includes(tableType)
 			? GET_DELIVERABLE_TRACKLINE_COUNT
 			: GET_PROJ_BUDGET_TRACINGS_COUNT;
 
@@ -478,25 +469,26 @@ const LineItemTableButton = ({
 						header: tableType === "budget" ? "Expenditures" : "Achievements",
 					}}
 				>
-					{tableType === "budget" && (
+					{tableType === "budget" ? (
 						<BudgetLineItemTable
 							budgetTargetId={targetId}
 							donor={donor}
 							subTargetId={subTargetId}
 						/>
+					) : (
+						Object.values(DELIVERABLE_TYPE).includes(tableType) && (
+							<DeliverablesTrackLineTable
+								deliverableTargetId={targetId}
+								subTargetId={subTargetId}
+							/>
+						)
 					)}
-					{tableType === "deliverable" && (
+					{/* {tableType === "impact" && (
 						<DeliverablesTrackLineTable
 							deliverableTargetId={targetId}
 							subTargetId={subTargetId}
 						/>
-					)}
-					{tableType === "impact" && (
-						<DeliverablesTrackLineTable
-							deliverableTargetId={targetId}
-							subTargetId={subTargetId}
-						/>
-					)}
+					)} */}
 				</FIDialog>
 			)}
 		</>
@@ -509,7 +501,7 @@ export default function ({
 	donor,
 }: {
 	targetId: string;
-	tableType: "deliverable" | "impact" | "budget";
+	tableType: DELIVERABLE_TYPE | "budget";
 	donor?: any;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
@@ -565,18 +557,14 @@ export default function ({
 	const getSubTargetFindQuery = () =>
 		tableType === "budget"
 			? GET_BUDGET_SUB_TARGETS
-			: tableType === "deliverable"
-			? GET_DELIVERABLE_SUB_TARGETS
-			: tableType === "impact"
+			: Object.values(DELIVERABLE_TYPE).includes(tableType)
 			? GET_DELIVERABLE_SUB_TARGETS
 			: GET_DELIVERABLE_SUB_TARGETS;
 
 	const getSubTargetCountQuery = () =>
 		tableType === "budget"
 			? GET_BUDGET_SUB_TARGETS_COUNT
-			: tableType === "deliverable"
-			? GET_DELIVERABLE_SUB_TARGETS_COUNT
-			: tableType === "impact"
+			: Object.values(DELIVERABLE_TYPE).includes(tableType)
 			? GET_DELIVERABLE_SUB_TARGETS_COUNT
 			: GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
@@ -680,9 +668,7 @@ export default function ({
 	const getListObjectKey = () =>
 		tableType === "budget"
 			? "budgetSubTargets"
-			: tableType === "deliverable"
-			? "deliverableSubTargets"
-			: tableType === "impact"
+			: Object.values(DELIVERABLE_TYPE).includes(tableType)
 			? "deliverableSubTargets"
 			: "budgetSubTargets";
 

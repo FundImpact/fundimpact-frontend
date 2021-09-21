@@ -1,4 +1,5 @@
 import { FORM_ACTIONS } from "../../components/Forms/constant";
+import { DELIVERABLE_TYPE } from "../constants";
 
 export interface IProjectTargets {
 	target: string;
@@ -10,5 +11,5 @@ export type ProjectTargetsProps = {
 	handleClose: () => void;
 	type: FORM_ACTIONS.UPDATE;
 	projects?: string[];
-	formType: "budget" | "impact" | "deliverable";
+	formType: DELIVERABLE_TYPE | "budget";
 };

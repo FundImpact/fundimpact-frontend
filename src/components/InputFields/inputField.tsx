@@ -341,7 +341,12 @@ const InputFields = ({
 				control={
 					<Switch
 						checked={formik.values[name]}
-						onChange={formik.handleChange}
+						onChange={(event) => {
+							if (getInputValue) {
+								getInputValue(event.target.checked);
+								formik.handleChange(event);
+							} else formik.handleChange(event);
+						}}
 						onBlur={formik.handleBlur}
 						name={name}
 					/>

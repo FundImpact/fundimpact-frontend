@@ -14,8 +14,6 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 				id
 				name
 				description
-				target_value
-
 				deliverable_category_org {
 					id
 					name
@@ -111,7 +109,6 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 				id
 				name
 				description
-				target_value
 				deleted
 				deliverable_category_org {
 					id

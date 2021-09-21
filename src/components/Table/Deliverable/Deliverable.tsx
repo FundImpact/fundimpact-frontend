@@ -67,7 +67,7 @@ import { GET_DELIVERABLE_SUB_TARGETS_COUNT } from "../../../graphql/Deliverable/
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
-
+import AssessmentIcon from "@material-ui/icons/Assessment";
 enum tableHeaders {
 	name = 2,
 	category = 3,
@@ -194,7 +194,6 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
-								target_value: deliverableTarget.target_value,
 								description: deliverableTarget.description,
 								deliverable_category_org:
 									deliverableTarget?.deliverable_category_org?.id,
@@ -246,7 +245,6 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
-								target_value: deliverableTarget.target_value,
 								description: deliverableTarget.description,
 								deliverable_category_org:
 									deliverableTarget?.deliverable_category_org?.id,
@@ -351,7 +349,7 @@ function DeliverableTargetAchievementAndProgress({
 		<>
 			<TableCell>
 				<Chip
-					icon={<AddOutlinedIcon fontSize="small" />}
+					icon={<AssessmentIcon fontSize="small" />}
 					label={`${
 						deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
 							?.target_value || 0
@@ -363,7 +361,7 @@ function DeliverableTargetAchievementAndProgress({
 			{deliverableAchievedFindAccess && (
 				<TableCell>
 					<Chip
-						icon={<RemoveOutlinedIcon fontSize="small" />}
+						icon={<AddOutlinedIcon fontSize="small" />}
 						label={`${DeliverableTargetAchieved} ${
 							deliverableUnitFindAccess ? deliverableTargetUnit : ""
 						}`}
@@ -554,7 +552,7 @@ export default function DeliverablesTable({
 
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
-		refetchOnDeliverableTargetImport();
+		refetchOnDeliverableTargetImport(type);
 	}, [refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]);
 
 	const [rows, setRows] = useState<any>([]);
@@ -597,11 +595,7 @@ export default function DeliverablesTable({
 					// <DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 					<SubTargetTable
 						targetId={deliverableTargetList[i].id}
-						tableType={
-							deliverableTargetList[i].type === "deliverable"
-								? DELIVERABLE_TYPE.DELIVERABLE
-								: DELIVERABLE_TYPE.IMPACT
-						}
+						tableType={deliverableTargetList[i].type}
 					/>
 				);
 				let column = [

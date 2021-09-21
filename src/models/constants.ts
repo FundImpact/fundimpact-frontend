@@ -23,6 +23,9 @@ export enum DIALOG_TYPE {
 export enum DELIVERABLE_TYPE {
 	DELIVERABLE = "deliverable",
 	IMPACT = "impact",
+	OUTCOME = "outcome",
+	ACTIVITY = "activity",
+	OUTPUT = "output",
 }
 
 export const primaryColor = "#5567FF";

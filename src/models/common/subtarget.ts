@@ -1,4 +1,4 @@
-import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 
 export type ISubTarget = {
 	id?: number;
@@ -22,7 +22,7 @@ export type SubTargetFormProps = {
 	open: boolean;
 	handleClose: () => void;
 	project?: number | undefined;
-	formType: "budget" | "deliverable" | "impact";
+	formType: "budget" | DELIVERABLE_TYPE;
 	dialogType?: DIALOG_TYPE;
 } & (
 	| {

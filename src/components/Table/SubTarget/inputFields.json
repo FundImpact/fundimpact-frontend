@@ -85,21 +85,6 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"size": 6
-		},
-		{
-			"name": "grant_periods_project",
-			"id": "grant_periods_project",
-			"dataTestId": "budgetSubTargetGrantPeriod",
-			"testId": "budgetSubTargetGrantPeriodInput",
-			"label": "Grant Period",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"addNew": true,
-			"addNewClick": {},
-			"size": 12
 		}
 	]
 }

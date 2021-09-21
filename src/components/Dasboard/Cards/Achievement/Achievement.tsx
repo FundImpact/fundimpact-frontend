@@ -121,24 +121,70 @@ export default function Achievement() {
 		GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 	let [GetDeliverableAmountSpend, { data: DeliverableAmountSpend }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_SPEND_AMOUNT
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				console.log("ddss", data);
+			},
+		}
 	);
 
 	let [GetImpactAmountTarget, { data: ImpactAmountTarget }] = useLazyQuery(
-		GET_ALL_IMPACT_TARGET_AMOUNT
+		GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 
 	let [GetImpactAmountSpend, { data: ImpactAmountSpend }] = useLazyQuery(
-		GET_ALL_IMPACT_AMOUNT_SPEND
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				console.log("ddss", data);
+			},
+		}
 	);
 	useEffect(() => {
 		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS });
 		setIMPACT_STATUS({ ...IMPACT_STATUS });
 		if (!projectId) return;
-		GetDeliverableAmountSpend({ variables: { filter: { project: projectId } } });
-		GetDeliverableAmountTarget({ variables: { filter: { project: projectId } } });
-		GetImpactAmountTarget({ variables: { filter: { project: projectId } } });
-		GetImpactAmountSpend({ variables: { filter: { project: projectId } } });
+		GetDeliverableAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "deliverable",
+					},
+				},
+			},
+		});
+		GetDeliverableAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "deliverable",
+					},
+				},
+			},
+		});
+		GetImpactAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "impact",
+					},
+				},
+			},
+		});
+		GetImpactAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "impact",
+					},
+				},
+			},
+		});
 	}, [projectId]);
 	const intl = useIntl();
 	const [DELIVERABLE_STATUS, setDELIVERABLE_STATUS] = useState<IIndicatorProps_PROPS>({

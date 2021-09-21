@@ -300,10 +300,7 @@ function EditDeliverableTrackLineIcon({
 					</MenuItem>
 				)}
 			</Menu>
-			{console.log(
-				"type3004",
-				deliverableTracklineData?.deliverable_sub_target?.deliverable_target_project
-			)}
+
 			{deliverableTracklineData && (
 				<DeliverableTrackline
 					open={deliverableTracklineData !== null}
@@ -314,10 +311,8 @@ function EditDeliverableTrackLineIcon({
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
 					formType={
-						deliverableTracklineData?.deliverable_sub_target?.deliverable_target_project
-							?.type === "deliverable"
-							? DELIVERABLE_TYPE.DELIVERABLE
-							: DELIVERABLE_TYPE.IMPACT
+						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
+							?.type || DELIVERABLE_TYPE.DELIVERABLE
 					}
 					deliverableTarget={deliverableTrackline?.deliverable_sub_target}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
