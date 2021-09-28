@@ -120,7 +120,9 @@ export default function ProjectList({
 	const classes = useStyles();
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
-	const filter: any = { variables: { sort: `name:${sort}`, filter: { workspace: workspaceId } } };
+	const filter: any = {
+		variables: { sort: `name:${sort}`, filter: { workspace: workspaceId } },
+	};
 	const [openFormDialog, setOpenFormDialog] = React.useState<boolean>();
 	const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
 	let { pathname } = useLocation();

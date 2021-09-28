@@ -4,7 +4,7 @@
 			"name": "target",
 			"id": "target",
 			"label": "Select Target",
-			"size": 6,
+			"size": 12,
 			"dataTestId": "budgetSubTargetTarget",
 			"testId": "budgetSubTargetTargetInput",
 			"optionsArray": [],
@@ -17,15 +17,41 @@
 			"addNewClick": {}
 		},
 		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "budgetSubTargetName",
+			"testId": "budgetSubTargetNameInput",
+			"label": "Name",
+			"required": true,
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
 			"name": "target_value",
 			"id": "target_value",
 			"dataTestId": "budgetSubTargetTargetValue",
 			"testId": "budgetSubTargetTargetValueInput",
 			"label": "Target Value",
 			"required": true,
+			"hidden": true,
 			"inputType": "textarea",
 			"size": 6,
 			"type": "number"
+		},
+		{
+			"name": "target_value_qualitative",
+			"id": "target_value_qualitative",
+			"dataTestId": "budgetSubTargetTargetValueQuantitative",
+			"testId": "budgetSubTargetTargetValueQuantitativeInput",
+			"label": "Target Value",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"hidden": true,
+			"size": 6
 		},
 		{
 			"name": "timeperiod_start",
@@ -64,6 +90,7 @@
 			"selectId": "demo-mutiple-name",
 			"inputType": "select",
 			"required": true,
+			"addNew": true,
 			"addNewClick": {}
 		},
 		{
@@ -92,6 +119,7 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"required": true,
+			"addNew": true,
 			"addNewClick": {},
 			"size": 6
 		},

@@ -32,11 +32,14 @@ import {
 } from "../../../../utils/endpoints.util";
 import ImportExportTableMenu from "../../../ImportExportTableMenu";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
 import SubTargetTable from "../../SubTarget";
 import SubTarget from "../../../Forms/SubTargetForm";
+import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
+import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
+import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -98,7 +101,14 @@ const rows = [
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
 				{(amount: number, spent: number) => {
-					return <span>{amount}</span>;
+					return (
+						<Chip
+							icon={<AddOutlinedIcon fontSize="small" />}
+							label={amount}
+							color="primary"
+							size="small"
+						/>
+					);
 				}}
 			</AmountSpent>
 		),
@@ -108,7 +118,14 @@ const rows = [
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
 				{(amount: number, spent: number) => {
-					return <span>{spent}</span>;
+					return (
+						<Chip
+							icon={<RemoveOutlinedIcon fontSize="small" />}
+							label={spent}
+							color="primary"
+							size="small"
+						/>
+					);
 				}}
 			</AmountSpent>
 		),
@@ -118,7 +135,14 @@ const rows = [
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
 				{(amount: number, spent: number) => {
-					return <span>{amount - spent || 0}</span>;
+					return (
+						<Chip
+							icon={<AccountBalanceWalletOutlinedIcon fontSize="small" />}
+							label={amount - spent || 0}
+							color="primary"
+							size="small"
+						/>
+					);
 				}}
 			</AmountSpent>
 		),
@@ -128,7 +152,14 @@ const rows = [
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
 				{(amount: number, spent: number) => {
-					return <span>{((spent * 100) / amount).toFixed(2)}</span>;
+					return (
+						<Chip
+							icon={<ShowChartOutlinedIcon fontSize="small" />}
+							label={((spent * 100) / amount).toFixed(2)}
+							color="primary"
+							size="small"
+						/>
+					);
 				}}
 			</AmountSpent>
 		),

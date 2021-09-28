@@ -176,6 +176,7 @@ export const GET_BUDGET_SUB_TARGETS = gql`
 	query budgetSubTargets($sort: String, $limit: Int, $start: Int, $filter: JSON) {
 		budgetSubTargets(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			id
+			name
 			created_at
 			updated_at
 			project {

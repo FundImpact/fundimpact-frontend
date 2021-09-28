@@ -116,8 +116,8 @@ const AmountSpent = ({
 			{children(
 				oldCachedBudgetSubTargetTotal?.budgetSubTargetsConnection.aggregate.sum
 					.target_value || 0,
-				oldCachedBudgetTargetProjectData?.budgetTrackingLineitemsConnection.aggregate.sum
-					.amount || 0
+				oldCachedBudgetTargetProjectData?.budgetTrackingLineitemsConnection.aggregate?.sum
+					?.amount || 0
 			)}
 		</span>
 	);

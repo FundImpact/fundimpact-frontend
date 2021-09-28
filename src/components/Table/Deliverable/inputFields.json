@@ -9,14 +9,6 @@
 			"size": 6
 		},
 		{
-			"name": "target_value",
-			"id": "deliverableTotalTargetAmount",
-			"dataTestId": "createDeliverableTotalTargetAmount",
-			"testId": "createDeliverableTotalTargetAmountInput",
-			"label": "Target",
-			"size": 6
-		},
-		{
 			"name": "deliverable_category_org",
 			"label": "Choose Deliverable category",
 			"size": 12,
@@ -70,8 +62,8 @@
 			"multiple": true
 		},
 		{
-			"name": "financial_year",
-			"label": "Choose Financial Year",
+			"name": "financial_year_org",
+			"label": "Choose Financial Year org",
 			"size": 12,
 			"testId": "createFinancialYearOption",
 			"dataTestId": "createFinancialYear",

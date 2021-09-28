@@ -138,6 +138,7 @@ const BudgetLineitemYearTags: React.SFC<{ budgetLineItem: IBUDGET_LINE_ITEM_RESP
 								}
 								label={getValueFromObject(budgetLineItem, yearTagValue.split(","))}
 								size="small"
+								color="primary"
 							/>
 						</Box>
 					)

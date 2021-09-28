@@ -169,3 +169,11 @@ export const getFetchPolicy = () =>
 
 export const checkIfUserIsOnStagingDeployment = () =>
 	[STAGING, DEMO1, DEMO, LOCAL].includes(window.location.origin);
+
+export const getOptionFromTargetValueOptions = (
+	options: { id: string; name: string }[],
+	id: string
+) => {
+	let selectedOption = options.find((elem) => elem.id === id);
+	return selectedOption?.name || "-";
+};

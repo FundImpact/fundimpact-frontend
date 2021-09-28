@@ -111,14 +111,27 @@ const updateCachedProject = async ({
 	createdProject: ICreateProject["createOrgProject"];
 }) => {
 	try {
+		console.log("heresss", createdProject, createdProject.workspace.id);
 		let cachedProjects = apolloClient.readQuery<{
 			orgProject: ICreateProject["createOrgProject"][];
-		}>({ query: GET_PROJECTS });
+		}>({
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: {
+				filter: {
+					workspace: createdProject.workspace.id,
+				},
+			},
+		});
 		if (cachedProjects) {
 			apolloClient.writeQuery<{
 				orgProject: ICreateProject["createOrgProject"][];
 			}>({
-				query: GET_PROJECTS,
+				query: GET_PROJECTS_BY_WORKSPACE,
+				variables: {
+					filter: {
+						workspace: createdProject.workspace.id,
+					},
+				},
 				data: { orgProject: [...cachedProjects.orgProject, createdProject] },
 			});
 		} else {
@@ -184,7 +197,7 @@ function Project(props: ProjectProps) {
 			} else {
 				fetchProjectsInWorkspace({
 					apolloClient,
-					workspaceId: dashboardData?.project?.workspace?.id,
+					workspaceId: dashboardData?.workspace?.id,
 				});
 			}
 			setSuccess(false);

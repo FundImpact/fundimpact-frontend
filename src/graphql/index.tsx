@@ -15,6 +15,7 @@ export const GET_ORGANISATIONS = gql`
 				id
 				name
 			}
+			deliverable_type
 			logo {
 				id
 				url

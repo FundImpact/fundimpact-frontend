@@ -40,6 +40,7 @@ import { DELIVERABLE_TARGET_ACTIONS } from "../../../utils/access/modules/delive
 import { DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/deliverableTrackingLineItem/actions";
 import {
 	getFetchPolicy,
+	getOptionFromTargetValueOptions,
 	removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows,
 } from "../../../utils";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
@@ -58,11 +59,22 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
 import SubTargetTable from "../SubTarget";
 import SubTarget from "../../Forms/SubTargetForm";
-
+import {
+	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+	GET_DELIVERABLE_TRACKLINE_COUNT,
+} from "../../../graphql/Deliverable/trackline";
+import {
+	GET_DELIVERABLE_SUB_TARGETS,
+	GET_DELIVERABLE_SUB_TARGETS_COUNT,
+} from "../../../graphql/Deliverable/subTarget";
+import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
+import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
+import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
+import AssessmentIcon from "@material-ui/icons/Assessment";
 enum tableHeaders {
 	name = 2,
 	category = 3,
@@ -151,12 +163,29 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							dialogDispatch(setCloseDialog());
 						}}
 						formAction={FORM_ACTIONS.CREATE}
-						formType="deliverable"
+						formType={deliverableTarget?.type || DELIVERABLE_TYPE.DELIVERABLE}
 						target={deliverableTarget.id}
+						qualitativeParent={deliverableTarget?.is_qualitative || false}
+						targetValueOptions={
+							deliverableTarget?.value_qualitative_option?.options || []
+						}
 					/>
 				)
 			);
 	}, [deliverableTarget, targetLineDialog]);
+
+	let value_qualitative_option_string = "";
+	deliverableTarget?.value_qualitative_option?.options.forEach(
+		(elem: { id: string; name: string }, index: number) => {
+			value_qualitative_option_string =
+				value_qualitative_option_string +
+				`${elem?.name || "-"}${
+					index != deliverableTarget?.value_qualitative_option?.options?.length - 1
+						? ","
+						: ""
+				}`;
+		}
+	);
 
 	return (
 		<>
@@ -189,11 +218,13 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
-								target_value: deliverableTarget.target_value,
 								description: deliverableTarget.description,
 								deliverable_category_org:
 									deliverableTarget?.deliverable_category_org?.id,
 								deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
+								is_qualitative: deliverableTarget?.is_qualitative,
+								value_calculation: deliverableTarget?.value_calculation,
+								value_qualitative_option: value_qualitative_option_string,
 								project: deliverableTarget.project.id,
 							});
 							handleMenuClose();
@@ -213,6 +244,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetLineDialog(true);
 							handleMenuClose();
 						}}
+						disabled={!deliverableTarget?.sub_target_required}
 					>
 						<FormattedMessage
 							id="addSubTarget"
@@ -241,11 +273,13 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
-								target_value: deliverableTarget.target_value,
 								description: deliverableTarget.description,
 								deliverable_category_org:
 									deliverableTarget?.deliverable_category_org?.id,
 								deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
+								is_qualitative: deliverableTarget?.is_qualitative,
+								value_calculation: deliverableTarget?.value_calculation,
+								value_qualitative_option: value_qualitative_option_string,
 								project: deliverableTarget.project.id,
 							});
 							handleMenuClose();
@@ -267,9 +301,13 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						setOpenDeleteDeliverableTarget(false);
 					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
+					formType={deliverableTarget.type}
 					data={targetData}
 					project={deliverableTarget.project.id}
 					dialogType={openDeleteDeliverableTarget ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}
+					value_qualitative_option={
+						deliverableTarget?.value_qualitative_option?.options || []
+					}
 				/>
 			)}
 		</>
@@ -278,27 +316,86 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 
 function DeliverableTargetAchievementAndProgress({
 	deliverableTargetId,
-	deliverableTargetValue,
 	deliverableTargetUnit,
+	project,
+	qualitativeParent,
+	targetValueOptions,
 }: {
 	deliverableTargetId: string;
-	deliverableTargetValue: number;
 	deliverableTargetUnit: string;
+	project: string | number;
+	qualitativeParent?: boolean;
+	targetValueOptions?: { id: string; name: string }[];
 }) {
-	const { data } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
-		variables: { filter: { deliverableTargetProject: deliverableTargetId } },
+	const { data } = useQuery(GET_DELIVERABLE_TRACKLINE_COUNT, {
+		variables: {
+			filter: {
+				deliverable_sub_target: {
+					deliverable_target_project: deliverableTargetId,
+					project,
+				},
+			},
+		},
+		skip: qualitativeParent,
 	});
+
+	const { data: deliverableSubTargetCount } = useQuery(GET_DELIVERABLE_SUB_TARGETS_COUNT, {
+		variables: {
+			filter: {
+				deliverable_target_project: deliverableTargetId,
+				project,
+			},
+		},
+		skip: qualitativeParent,
+	});
+
+	const { data: deliverableSubTargets } = useQuery(GET_DELIVERABLE_SUB_TARGETS, {
+		variables: {
+			filter: {
+				deliverable_target_project: deliverableTargetId,
+				project,
+			},
+			sort: "created_at:DESC",
+		},
+		skip: !qualitativeParent,
+	});
+
+	const { data: deliverableTrackingLineitems } = useQuery(
+		GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+		{
+			variables: {
+				filter: {
+					deliverable_sub_target: {
+						deliverable_target_project: deliverableTargetId,
+						project,
+					},
+				},
+				sort: "created_at:DESC",
+			},
+			skip: !qualitativeParent,
+		}
+	);
+
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
 
 	useEffect(() => {
-		if (data) {
-			setDeliverableTargetAchieved(data.deliverableTrackingTotalValue);
+		if (data && deliverableSubTargetCount) {
+			let deliverableTargetTotalAmount =
+				deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
+					?.target_value || 0;
+			setDeliverableTargetAchieved(
+				data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
+			);
 			setDeliverableTargetProgess(
-				((data.deliverableTrackingTotalValue / deliverableTargetValue) * 100).toFixed(2)
+				(
+					((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
+						deliverableTargetTotalAmount) *
+					100
+				).toFixed(2)
 			);
 		}
-	}, [data, deliverableTargetValue]);
+	}, [data, deliverableSubTargetCount]);
 
 	const deliverableAchievedFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
@@ -312,12 +409,82 @@ function DeliverableTargetAchievementAndProgress({
 
 	return (
 		<>
-			{deliverableAchievedFindAccess && (
-				<TableCell>{`${DeliverableTargetAchieved} ${
-					deliverableUnitFindAccess ? deliverableTargetUnit : ""
-				}`}</TableCell>
+			{qualitativeParent ? (
+				<>
+					<TableCell>
+						<Chip
+							icon={<AssessmentIcon fontSize="small" />}
+							label={
+								deliverableSubTargets?.deliverableSubTargets?.[0]
+									?.target_value_qualitative && targetValueOptions
+									? getOptionFromTargetValueOptions(
+											targetValueOptions,
+											deliverableSubTargets?.deliverableSubTargets?.[0]
+												?.target_value_qualitative
+									  )
+									: "-"
+							}
+							color="primary"
+							size="small"
+						/>
+					</TableCell>
+					{deliverableAchievedFindAccess && (
+						<TableCell>
+							<Chip
+								icon={<AddOutlinedIcon fontSize="small" />}
+								label={
+									deliverableTrackingLineitems?.deliverableTrackingLineitems?.[0]
+										?.value_qualitative && targetValueOptions
+										? getOptionFromTargetValueOptions(
+												targetValueOptions,
+												deliverableTrackingLineitems
+													?.deliverableTrackingLineitems?.[0]
+													?.value_qualitative
+										  )
+										: "-"
+								}
+								color="primary"
+								size="small"
+							/>
+						</TableCell>
+					)}
+					<TableCell>-</TableCell>
+				</>
+			) : (
+				<>
+					<TableCell>
+						<Chip
+							icon={<AssessmentIcon fontSize="small" />}
+							label={`${
+								deliverableSubTargetCount?.deliverableSubTargetsConnection
+									?.aggregate?.sum?.target_value || 0
+							} ${deliverableTargetUnit}`}
+							color="primary"
+							size="small"
+						/>
+					</TableCell>
+					{deliverableAchievedFindAccess && (
+						<TableCell>
+							<Chip
+								icon={<AddOutlinedIcon fontSize="small" />}
+								label={`${DeliverableTargetAchieved} ${
+									deliverableUnitFindAccess ? deliverableTargetUnit : ""
+								}`}
+								color="primary"
+								size="small"
+							/>
+						</TableCell>
+					)}
+					<TableCell>
+						<Chip
+							icon={<ShowChartOutlinedIcon fontSize="small" />}
+							label={`${DeliverableTargetProgess} %`}
+							color="primary"
+							size="small"
+						/>
+					</TableCell>
+				</>
 			)}
-			<TableCell>{DeliverableTargetProgess} %</TableCell>
 		</>
 	);
 }
@@ -344,6 +511,7 @@ const createChipArray = ({
 	filterListObjectKeyValuePair: any;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) => {
+	console.log("filterListObjectKeyValuePair", filterListObjectKeyValuePair);
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
 		return chipArray({
 			list: [filterListObjectKeyValuePair[1]],
@@ -374,19 +542,20 @@ const getTableHeadingByDeliverableTracklineAccess = (
 
 const getDefaultFilterList = () => ({
 	name: "",
-	target_value: "",
 	deliverable_category_org: [],
 });
 
-export default function DeliverablesTable() {
+export default function DeliverablesTable({
+	type = DELIVERABLE_TYPE.DELIVERABLE,
+}: {
+	type?: DELIVERABLE_TYPE;
+}) {
 	const dashboardData = useDashBoardData();
 	const [page, setPage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
-	const [filterList, setFilterList] = useState<{
-		[key: string]: string | string[];
-	}>(getDefaultFilterList());
+	const [filterList, setFilterList] = useState<any>(getDefaultFilterList());
 
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -399,7 +568,7 @@ export default function DeliverablesTable() {
 
 	useEffect(() => {
 		if (deliverableCategories) {
-			deliverableTargetInputFields[2].optionsArray =
+			deliverableTargetInputFields[1].optionsArray =
 				deliverableCategories.deliverableCategory;
 			deliverableCategoryHash = mapIdToName(
 				deliverableCategories.deliverableCategory,
@@ -421,7 +590,7 @@ export default function DeliverablesTable() {
 	};
 
 	const removeFilterListElements = (key: string, index?: number) =>
-		setFilterList((filterListObject) =>
+		setFilterList((filterListObject: any) =>
 			removeFilterListObjectElements({ filterListObject, key, index })
 		);
 
@@ -430,6 +599,7 @@ export default function DeliverablesTable() {
 			project_with_deliverable_targets: {
 				project: dashboardData?.project?.id,
 			},
+			type,
 		});
 		setFilterList(getDefaultFilterList());
 	}, [dashboardData, setFilterList, setQueryFilter]);
@@ -450,14 +620,15 @@ export default function DeliverablesTable() {
 					project_with_deliverable_targets: {
 						project: dashboardData?.project?.id,
 					},
+					type,
 				};
 				if (filterList.name) {
 					filter.name = filterList.name;
 				}
-				if (filterList.target_value) {
-					filter.target_value = filterList.target_value;
-				}
-				if (filterList.deliverable_category_org.length) {
+				// if (filterList.is_qualitative) {
+				// 	filter.is_qualitative = filterList.is_qualitative;
+				// }
+				if (filterList?.deliverable_category_org.length) {
 					filter.deliverable_category_org = filterList.deliverable_category_org as string[];
 				}
 				return filter;
@@ -486,7 +657,7 @@ export default function DeliverablesTable() {
 
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
-		refetchOnDeliverableTargetImport();
+		refetchOnDeliverableTargetImport(type);
 	}, [refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]);
 
 	const [rows, setRows] = useState<any>([]);
@@ -530,7 +701,7 @@ export default function DeliverablesTable() {
 					// <DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 					<SubTargetTable
 						targetId={deliverableTargetList[i].id}
-						tableType="deliverable"
+						tableType={deliverableTargetList[i].type}
 					/>
 				);
 				let column = [
@@ -550,15 +721,6 @@ export default function DeliverablesTable() {
 					>
 						{deliverableTargetList[i]?.deliverable_category_org?.name}
 					</TableCell>,
-					<TableCell
-						key={
-							deliverableTargetList[i].target_value +
-							`${deliverableTargetList[i]?.id}-3`
-						}
-					>
-						{`${deliverableTargetList[i].target_value} ${deliverableTargetList[i]?.deliverable_unit_org?.name}
-							`}
-					</TableCell>,
 				];
 
 				// Columsn
@@ -566,8 +728,12 @@ export default function DeliverablesTable() {
 					<DeliverableTargetAchievementAndProgress
 						key={Math.random()}
 						deliverableTargetId={deliverableTargetList[i].id}
-						deliverableTargetValue={deliverableTargetList[i].target_value}
+						qualitativeParent={deliverableTargetList[i]?.is_qualitative || false}
+						targetValueOptions={
+							deliverableTargetList[i]?.value_qualitative_option?.options || []
+						}
 						deliverableTargetUnit={deliverableTargetList[i]?.deliverable_unit_org?.name}
+						project={dashboardData?.project?.id || ""}
 					/>
 				);
 
@@ -620,7 +786,6 @@ export default function DeliverablesTable() {
 			<FilterList
 				initialValues={{
 					name: "",
-					target_value: "",
 					deliverable_category_org: [],
 				}}
 				setFilterList={setFilterList}
