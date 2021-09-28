@@ -512,6 +512,7 @@ export default function DeliverablesTable() {
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
+
 	useEffect(() => {
 		if (
 			deliverableTargetData &&
