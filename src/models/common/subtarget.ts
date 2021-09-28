@@ -5,10 +5,11 @@ export type ISubTarget = {
 	name: string;
 	budget_targets_project?: number | string;
 	target?: number | string;
-	deliverable_target_project?: number | string;
+	deliverable_target_project?: any;
 	impact_target_project?: number | string;
 	project: number | string;
 	target_value: number;
+	target_value_qualitative: string;
 	timeperiod_start: Date | string;
 	timeperiod_end: Date | string;
 	financial_year_org?: number | string;
@@ -24,6 +25,8 @@ export type SubTargetFormProps = {
 	project?: number | undefined;
 	formType: "budget" | DELIVERABLE_TYPE;
 	dialogType?: DIALOG_TYPE;
+	qualitativeParent?: boolean;
+	targetValueOptions?: { id: string; name: string }[];
 } & (
 	| {
 			formAction: FORM_ACTIONS.CREATE;

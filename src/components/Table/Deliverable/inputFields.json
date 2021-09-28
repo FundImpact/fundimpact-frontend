@@ -9,14 +9,6 @@
 			"size": 6
 		},
 		{
-			"name": "target_value",
-			"id": "deliverableTotalTargetAmount",
-			"dataTestId": "createDeliverableTotalTargetAmount",
-			"testId": "createDeliverableTotalTargetAmountInput",
-			"label": "Target",
-			"size": 6
-		},
-		{
 			"name": "deliverable_category_org",
 			"label": "Choose Deliverable category",
 			"size": 12,

@@ -19,6 +19,7 @@ export interface IDeliverableTargetLine {
 		| any;
 	annual_year: string;
 	value: number | string;
+	value_qualitative?: string;
 	financial_year: string;
 	financial_year_org: string;
 	financial_year_donor: string;
@@ -47,6 +48,8 @@ export type DeliverableTargetLineProps = {
 		variables?: Partial<Record<string, any>> | undefined
 	) => Promise<ApolloQueryResult<any>>;
 	dialogType?: DIALOG_TYPE;
+	qualitativeParent?: boolean;
+	targetValueOptions?: { id: string; name: string }[];
 } & (
 	| {
 			type?: DELIVERABLE_ACTIONS.CREATE;

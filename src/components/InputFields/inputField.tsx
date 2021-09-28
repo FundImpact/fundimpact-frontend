@@ -241,8 +241,7 @@ const InputFields = ({
 						{secondOptionsLabel && (
 							<ListSubheader disableSticky={true}>{secondOptionsLabel}</ListSubheader>
 						)}
-						{multiSelect &&
-							secondOptionsArray &&
+						{secondOptionsArray &&
 							secondOptionsArray.map((element: any, index: number) => (
 								<MenuItem
 									key={index}
@@ -347,6 +346,7 @@ const InputFields = ({
 								formik.handleChange(event);
 							} else formik.handleChange(event);
 						}}
+						disabled={disabled}
 						onBlur={formik.handleBlur}
 						name={name}
 					/>

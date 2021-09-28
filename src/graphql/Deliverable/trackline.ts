@@ -5,6 +5,7 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 		createDeliverableTrackingLineitemDetail(input: $input) {
 			id
 			value
+			value_qualitative
 			note
 			reporting_date
 			deliverable_sub_target {
@@ -14,11 +15,16 @@ export const CREATE_DELIVERABLE_TRACKLINE = gql`
 				id
 				name
 				description
+				is_qualitative
+				sub_target_required
+				value_calculation
+				value_qualitative_option
 				deliverable_category_org {
 					id
 					name
 					code
 					description
+
 					organization {
 						id
 						name
@@ -98,6 +104,7 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 	) {
 		updateDeliverableTrackingLineitemDetail(id: $id, input: $input) {
 			id
+			value_qualitative
 			value
 			note
 			reporting_date
@@ -110,6 +117,10 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 				name
 				description
 				deleted
+				is_qualitative
+				sub_target_required
+				value_calculation
+				value_qualitative_option
 				deliverable_category_org {
 					id
 					name
@@ -196,15 +207,21 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 			deliverable_sub_target {
 				id
 				target_value
+				target_value_qualitative
 				deliverable_target_project {
 					id
 					name
 					type
+					is_qualitative
+					sub_target_required
+					value_calculation
+					value_qualitative_option
 				}
 			}
 			timeperiod_start
 			timeperiod_end
 			value
+			value_qualitative
 			note
 			reporting_date
 			annual_year {
@@ -473,9 +490,6 @@ export const GET_DELIVERABLE_TRACKLINE_COUNT = gql`
 			where: $filter
 		) {
 			aggregate {
-				sum {
-					value
-				}
 				count
 			}
 		}

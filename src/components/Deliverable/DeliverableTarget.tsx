@@ -39,6 +39,7 @@ import {
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 } from "../../graphql/Deliverable/unit";
 import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
+import { FORM_ACTIONS } from "../../models/budget/constants";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -54,7 +55,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
-
+	console.log("svkhb", props);
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
@@ -119,8 +120,22 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		UPDATE_DELIVERABLE_TARGET
 	);
 
+	if (props.type === DELIVERABLE_ACTIONS.UPDATE && props?.data?.is_qualitative) {
+		deliverableTargetForm[4].hidden = false;
+		deliverableTargetForm[5].hidden = false;
+	}
+
+	if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+		deliverableTargetForm[4].disabled = true;
+	} else {
+		deliverableTargetForm[4].disabled = false;
+	}
 	const formIsOpen = props.open;
-	const onCancel = props.handleClose;
+	const onCancel = () => {
+		deliverableTargetForm[3].hidden = true;
+		deliverableTargetForm[5].hidden = true;
+		props.handleClose();
+	};
 	const formAction = props.type;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
@@ -130,12 +145,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const [openDeliverableUnitDialog, setOpenDeliverableUnitDialog] = useState<boolean>();
 	deliverableTargetForm[2].addNewClick = () => setOpenDeliverableUnitDialog(true);
 
-	deliverableTargetForm[3].getInputValue = (is_qualitative: boolean) => {
+	deliverableTargetForm[4].getInputValue = (is_qualitative: boolean) => {
 		if (is_qualitative) {
-			deliverableTargetForm[4].hidden = false;
+			deliverableTargetForm[3].hidden = true;
 			deliverableTargetForm[5].hidden = false;
 		} else {
-			deliverableTargetForm[4].hidden = true;
+			deliverableTargetForm[3].hidden = false;
 			deliverableTargetForm[5].hidden = true;
 		}
 	};
@@ -249,6 +264,18 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							},
 						},
 					},
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: {
+							filter: {
+								project_with_deliverable_targets: {
+									project: props.project,
+								},
+								type: props.formType,
+								sub_target_required: true,
+							},
+						},
+					},
 				],
 			});
 			// setcurrentCategory("");
@@ -260,11 +287,25 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	};
 
 	const updateDeliverableTargetHelper = async (deliverableTarget: IDeliverableTarget) => {
+		console.log("here", deliverableTarget);
+		let options = [];
+		if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+			options = deliverableTarget?.value_qualitative_option?.split(",") || [];
+			// iF NAME EXIST PROVIDING THE SAME ID OTHERWISE A NEW ID
+			options = options.map((elem: string) => ({
+				id:
+					props.value_qualitative_option.find((e) => e.name == elem.trim())?.id ||
+					uuidv4(),
+				name: elem.trim(),
+			}));
+		}
 		let createInputTarget: any = {
 			...deliverableTarget,
+			value_qualitative_option: { options },
 			// deliverable_category_unit: deliverableCategoryUnitId,
 		};
 		let deliverableId = createInputTarget.id;
+
 		delete (createInputTarget as any).id;
 		try {
 			await updateDeliverableTarget({
@@ -284,6 +325,18 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 									project: props.project,
 								},
 								type: props.formType,
+							},
+						},
+					},
+					{
+						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
+						variables: {
+							filter: {
+								project_with_deliverable_targets: {
+									project: props.project,
+								},
+								type: props.formType,
+								sub_target_required: true,
 							},
 						},
 					},
@@ -375,7 +428,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
-		let options = value?.value_qualitative_option?.split(",");
+		let options = value?.value_qualitative_option?.split(",") || [];
 		options = options.map((elem: string) => ({ id: uuidv4(), name: elem.trim() }));
 
 		let valueOptions = {
@@ -390,7 +443,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			deliverable_category_org: value?.deliverable_category_org,
 			deliverable_unit_org: value?.deliverable_unit_org,
 			is_qualitative: value.is_qualitative,
-			sub_target_required: !value.is_qualitative,
+			sub_target_required: true,
 			value_calculation: value.value_calculation,
 			value_qualitative_option: valueOptions,
 		});
@@ -406,7 +459,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	};
 
 	const onUpdate = async (value: IDeliverableTarget) => {
-		// onCreate(value);
 		await updateDeliverableTargetHelper(value);
 	};
 
@@ -420,13 +472,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				errors.project = "Project is required";
 			}
 			if (values.is_qualitative) {
-				if (!values.value_calculation) {
-					errors.value_calculation = "This Field is required";
-				}
 				if (!values.value_qualitative_option) {
 					errors.value_qualitative_option = "Options are required";
 				}
+			} else {
+				if (!values.value_calculation) {
+					errors.value_calculation = "This Field is required";
+				}
 			}
+
 			if (!values.deliverable_category_org) {
 				errors.deliverable_category_org = "Deliverable Category is required";
 			}
@@ -443,11 +497,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				errors.project = "Project is required";
 			}
 			if (values.is_qualitative) {
-				if (!values.value_calculation) {
-					errors.value_calculation = "This Field is required";
-				}
 				if (!values.value_qualitative_option) {
 					errors.value_qualitative_option = "Options are required";
+				}
+			} else {
+				if (!values.value_calculation) {
+					errors.value_calculation = "This Field is required";
 				}
 			}
 		}

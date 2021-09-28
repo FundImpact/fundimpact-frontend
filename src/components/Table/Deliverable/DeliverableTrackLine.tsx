@@ -22,7 +22,11 @@ import {
 } from "../../../graphql/Deliverable/trackline";
 import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
-import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
+import {
+	getOptionFromTargetValueOptions,
+	getTodaysDate,
+	uploadPercentageCalculator,
+} from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
@@ -232,6 +236,7 @@ function EditDeliverableTrackLineIcon({
 								annual_year: deliverableTrackline?.annual_year?.id,
 								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
 								value: deliverableTrackline?.value,
+								value_qualitative: deliverableTrackline?.value_qualitative,
 								note: deliverableTrackline?.note,
 								financial_year: deliverableTrackline.financial_year?.id,
 								financial_year_org: deliverableTrackline?.financial_year_org?.id,
@@ -264,6 +269,7 @@ function EditDeliverableTrackLineIcon({
 								annual_year: deliverableTrackline?.annual_year?.id,
 								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
 								value: deliverableTrackline?.value,
+								value_qualitative: deliverableTrackline?.value_qualitative,
 								note: deliverableTrackline?.note,
 								financial_year: deliverableTrackline.financial_year?.id,
 								financial_year_org: deliverableTrackline?.financial_year_org?.id,
@@ -319,6 +325,14 @@ function EditDeliverableTrackLineIcon({
 					reftechOnSuccess={refetch}
 					dialogType={
 						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
+					qualitativeParent={
+						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
+							?.is_qualitative || false
+					}
+					targetValueOptions={
+						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
+							?.value_qualitative_option?.options || []
 					}
 				/>
 			)}
@@ -534,6 +548,7 @@ export default function DeliverablesTrackLineTable({
 			let deliverableTrackingLineitemList =
 				deliverableTracklineData.deliverableTrackingLineitems;
 			let arr = [];
+
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
 					let row = [
@@ -569,7 +584,17 @@ export default function DeliverablesTrackLineTable({
 								deliverableTrackingLineitemList[i]?.value +
 								`${deliverableTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${deliverableTrackingLineitemList[i]?.value}`}</TableCell>,
+						>
+							{deliverableTrackingLineitemList[i]?.deliverable_sub_target
+								?.deliverable_target_project?.is_qualitative
+								? getOptionFromTargetValueOptions(
+										deliverableTrackingLineitemList[i]?.deliverable_sub_target
+											?.deliverable_target_project.value_qualitative_option
+											?.options || [],
+										deliverableTrackingLineitemList[i]?.value_qualitative
+								  )
+								: deliverableTrackingLineitemList[i]?.value}
+						</TableCell>,
 						<TableCell
 							key={
 								deliverableTrackingLineitemList[i]?.financial_year_org?.name +

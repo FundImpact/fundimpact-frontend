@@ -7,6 +7,10 @@ export const GET_DELIVERABLE_TARGETS = gql`
 			name
 			description
 			deleted
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			deliverable_unit_org {
 				id
 				name
@@ -32,6 +36,10 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 			name
 			description
 			deleted
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			project {
 				id
 				name
@@ -63,6 +71,10 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			description
 			type
 			deleted
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			project_with_deliverable_targets {
 				project {
 					id
@@ -92,6 +104,10 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 			id
 			name
 			description
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			project {
 				id
 				name

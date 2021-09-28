@@ -182,13 +182,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const apolloClient = useApolloClient();
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
-
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
-	const { data: annualYears } = useQuery(GET_ANNUAL_YEARS);
+
 	const intl = useIntl();
-	const { data: fyData } = useQuery(GET_FINANCIAL_YEARS, {
-		variables: { filter: { country: DashBoardData?.organization?.country?.id } },
-	});
 
 	useQuery(GET_PROJ_DONORS, {
 		variables: { filter: { project: DashBoardData?.project?.id } },
@@ -224,7 +220,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		console.error(error);
 	}
 
-	const [activeStep, setActiveStep] = React.useState(0);
 	const [donors, setDonors] = React.useState<
 		{
 			id: string;
@@ -233,7 +228,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}[]
 	>();
 
-	const [donorForm, setDonorForm] = React.useState<React.ReactNode | undefined>();
+	// const [donorForm, setDonorForm] = React.useState<React.ReactNode | undefined>();
 	const [donorFormData, setDonorFormData] = React.useState<any>();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
@@ -257,22 +252,52 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 	deliverableTragetLineForm[0].getInputValue = setCurrentTargetId;
 
-	const handleNext = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
-	};
-	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
-	};
-	const handleReset = () => {
-		setActiveStep(0);
-	};
-
 	const formAction = props.type;
 	const formIsOpen = props.open;
 
+	if (formAction === DELIVERABLE_ACTIONS.UPDATE) {
+		deliverableTragetLineForm[0].hidden = true;
+		deliverableTragetLineForm[1].size = 12;
+		deliverableTragetLineForm[2].size = 12;
+	} else {
+		deliverableTragetLineForm[0].hidden = false;
+		deliverableTragetLineForm[1].size = 6;
+		deliverableTragetLineForm[2].size = 6;
+	}
+
+	const [isQualitativeParentTarrget, setIsQualitativeParentTarget] = useState(
+		props.qualitativeParent || false
+	);
+
+	const [parentTargetValueOptions, setParentTargetValueOptions] = useState<any>(
+		props.targetValueOptions || []
+	);
+
+	deliverableTragetLineForm[2].optionsArray = parentTargetValueOptions;
+	useEffect(() => {
+		if (isQualitativeParentTarrget) {
+			deliverableTragetLineForm[1].hidden = true;
+			deliverableTragetLineForm[2].hidden = false;
+		} else {
+			deliverableTragetLineForm[1].hidden = false;
+			deliverableTragetLineForm[2].hidden = true;
+		}
+	}, [isQualitativeParentTarrget]);
+
+	deliverableTragetLineForm[0].getInputValue = (targetId: string) => {
+		let subTargetOptions = deliverableTargets.deliverableSubTargets;
+		let subTarget = subTargetOptions.find((elem: any) => elem.id === targetId);
+		console.log("target", subTarget);
+		setIsQualitativeParentTarget(
+			subTarget?.deliverable_target_project?.is_qualitative || false
+		);
+		setParentTargetValueOptions(
+			subTarget?.deliverable_target_project?.value_qualitative_option?.options || []
+		);
+	};
+
 	const onCancel = () => {
 		props.handleClose();
-		handleReset();
 	};
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	let formTitle =
@@ -334,7 +359,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	deliverableTragetLineForm[0].addNewClick = () => setOpenDeliverableTargetDialog(true);
 
 	/* Open Attach File Form*/
-	deliverableTragetLineForm[9].onClick = () => setOpenAttachFiles(true);
+	deliverableTragetLineForm[10].onClick = () => setOpenAttachFiles(true);
 
 	const [createProjectDonor, { loading: creatingProjectDonorsLoading }] = useMutation(
 		CREATE_PROJECT_DONOR,
@@ -415,29 +440,28 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// deliverableTragetLineForm[5].customMenuOnClick = createProjectDonorHelper;
 
 	React.useEffect(() => {
-		if (success && donorForm) {
+		if (success) {
 			if (props.type === DELIVERABLE_ACTIONS.CREATE) {
 				fetchDeliverableTracklineByTarget({ apolloClient, currentTargetId });
 			} else if (props.type === DELIVERABLE_ACTIONS.UPDATE && props.reftechOnSuccess) {
 				props.reftechOnSuccess();
 			}
 			setSuccess(false);
-			handleNext();
 		}
-	}, [success, props, setSuccess, currentTargetId, donorForm]);
+	}, [success, props, setSuccess, currentTargetId]);
 	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
 
 	const [createDeliverableTrackline, { loading }] = useMutation(CREATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
-			setDonorForm(
-				<DeliverableTracklineDonorYearTags
-					donors={donors}
-					TracklineId={data.createDeliverableTrackingLineitemDetail.id}
-					TracklineFyId={data.createDeliverableTrackingLineitemDetail.financial_year?.id}
-					onCancel={onCancel}
-					type={FORM_ACTIONS.CREATE}
-				/>
-			);
+			// setDonorForm(
+			// 	<DeliverableTracklineDonorYearTags
+			// 		donors={donors}
+			// 		TracklineId={data.createDeliverableTrackingLineitemDetail.id}
+			// 		TracklineFyId={data.createDeliverableTrackingLineitemDetail.financial_year?.id}
+			// 		onCancel={onCancel}
+			// 		type={FORM_ACTIONS.CREATE}
+			// 	/>
+			// );
 			multiplefileMorph({
 				related_id: data.createDeliverableTrackingLineitemDetail.id,
 				related_type: "deliverable_tracking_lineitem",
@@ -458,30 +482,28 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		{ loading: updateDeliverableTrackLineLoading },
 	] = useMutation(UPDATE_DELIVERABLE_TRACKLINE, {
 		onCompleted(data) {
-			setDonorForm(
-				<DeliverableTracklineDonorYearTags
-					donors={donors}
-					TracklineId={data.updateDeliverableTrackingLineitemDetail.id}
-					TracklineFyId={data.updateDeliverableTrackingLineitemDetail.financial_year?.id}
-					data={Object.keys(donorFormData).length ? donorFormData : {}} // stores dynamic key values with use of donorId
-					onCancel={onCancel}
-					type={
-						Object.keys(donorFormData).length
-							? FORM_ACTIONS.UPDATE
-							: FORM_ACTIONS.CREATE
-					}
-					alreadyMappedDonorsIds={
-						props.type === DELIVERABLE_ACTIONS.UPDATE
-							? props.alreadyMappedDonorsIds
-							: []
-					}
-				/>
-			);
+			// setDonorForm(
+			// 	<DeliverableTracklineDonorYearTags
+			// 		donors={donors}
+			// 		TracklineId={data.updateDeliverableTrackingLineitemDetail.id}
+			// 		TracklineFyId={data.updateDeliverableTrackingLineitemDetail.financial_year?.id}
+			// 		data={Object.keys(donorFormData).length ? donorFormData : {}} // stores dynamic key values with use of donorId
+			// 		onCancel={onCancel}
+			// 		type={
+			// 			Object.keys(donorFormData).length
+			// 				? FORM_ACTIONS.UPDATE
+			// 				: FORM_ACTIONS.CREATE
+			// 		}
+			// 		alreadyMappedDonorsIds={
+			// 			props.type === DELIVERABLE_ACTIONS.UPDATE
+			// 				? props.alreadyMappedDonorsIds
+			// 				: []
+			// 		}
+			// 	/>
+			// );
 			notificationDispatch(
 				setSuccessNotification("Deliverable Trackline Updated successfully!")
 			);
-
-			handleNext();
 		},
 		onError(err) {
 			notificationDispatch(setErrorNotification(err?.message));
@@ -492,11 +514,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	);
 
 	// updating annaul year field with fetched annual year list
-	useEffect(() => {
-		if (lists?.annualYear) {
-			deliverableTragetLineForm[5].optionsArray = lists.annualYear; //annualYears.annualYears;
-		}
-	}, [lists]);
 
 	// updating annaul year field with fetched annual year list
 	useEffect(() => {
@@ -553,12 +570,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// updating financial year field with fetched financial year list
 	useEffect(() => {
 		if (lists?.financialYear) {
-			deliverableTragetLineForm[6].optionsArray = lists.financialYear; //fyData.financialYearList;
-		}
-	}, [lists]);
-	useEffect(() => {
-		if (lists?.financialYear) {
 			deliverableTragetLineForm[7].optionsArray = lists.financialYear; //fyData.financialYearList;
+		}
+		if (lists?.financialYear) {
+			deliverableTragetLineForm[8].optionsArray = lists.financialYear; //fyData.financialYearList;
+		}
+		if (lists?.annualYear) {
+			deliverableTragetLineForm[6].optionsArray = lists.annualYear; //annualYears.annualYears;
 		}
 	}, [lists]);
 
@@ -697,6 +715,18 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					},
 				},
 				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						filter: {
+							deliverable_sub_target: {
+								deliverable_target_project: currentDeliverableTarget,
+								project: DashBoardData?.project?.id,
+							},
+						},
+						sort: "created_at:DESC",
+					},
+				},
+				{
 					query: GET_DELIVERABLE_TRACKLINE_COUNT,
 					variables: {
 						filter: {
@@ -779,6 +809,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						},
 					},
 				},
+
 				// {
 				// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
 				// 	variables: {
@@ -814,12 +845,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (!values.reporting_date) {
 			errors.reporting_date = "Date is required";
 		}
-		if (!values.value) {
-			errors.value = "Value is required";
-		}
 		// if (!values.financial_year) {
 		// 	errors.financial_year = "Financial Year is required";
 		// }
+
+		if (!isQualitativeParentTarrget && !values.value) {
+			errors.value = "Target value is required";
+		}
+		if (isQualitativeParentTarrget && !values.value_qualitative) {
+			errors.value_qualitative = "Target value is required";
+		}
 
 		return errors;
 	};

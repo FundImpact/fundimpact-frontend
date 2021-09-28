@@ -2,7 +2,10 @@ import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/Deliverable/target";
+import {
+	GET_DELIVERABLE_TARGET_BY_PROJECT,
+	UPDATE_DELIVERABLE_TARGET,
+} from "../../../graphql/Deliverable/target";
 import {
 	setErrorNotification,
 	setSuccessNotification,
@@ -19,9 +22,6 @@ import {
 	GET_PROJECT_BUDGET_AMOUNT,
 	GET_PROJ_DONORS,
 } from "../../../graphql/project";
-import Deliverable from "../../Deliverable/Deliverable";
-import DeliverableUnit from "../../Deliverable/DeliverableUnit";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 import { YearTagPayload } from "../../../models/yearTags";
 import { IGetProjectDonor, IProjectDonor } from "../../../models/project/project";
@@ -29,7 +29,6 @@ import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { IGET_DONOR } from "../../../models/donor/query";
 import { GET_GRANT_PERIOD } from "../../../graphql";
 import { ISubTarget, SubTargetFormProps } from "../../../models/common/subtarget";
-import { GET_IMPACT_TARGET_BY_PROJECT } from "../../../graphql/Impact/target";
 import {
 	GET_BUDGET_SUB_TARGETS,
 	GET_BUDGET_SUB_TARGETS_COUNT,
@@ -45,14 +44,13 @@ import {
 	GET_DELIVERABLE_SUB_TARGETS_COUNT,
 	UPDATE_DELIVERABLE_SUB_TARGET,
 } from "../../../graphql/Deliverable/subTarget";
-import {
-	GET_IMPACT_SUB_TARGETS,
-	GET_IMPACT_SUB_TARGETS_COUNT,
-	UPDATE_IMPACT_SUB_TARGET,
-} from "../../../graphql/Impact/subTarget";
 import Donor from "../../Donor";
 import GrantPeriodDialog from "../../GrantPeriod/GrantPeriod";
 import { DELIVERABLE_TYPE } from "../../../models/constants";
+import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
+import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../../graphql/donor/mutation";
+import { updateProjectDonorCache } from "../../Project/Project";
+import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 
 function getInitialValues(props: SubTargetFormProps) {
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
@@ -82,8 +80,10 @@ function SubTarget(props: SubTargetFormProps) {
 					project: dashboardData?.project?.id,
 				},
 				type: props.formType,
+				sub_target_required: true,
 			},
 		},
+		fetchPolicy: "network-only",
 		skip:
 			props.formType != "budget"
 				? !Object.values(DELIVERABLE_TYPE).includes(props.formType)
@@ -100,6 +100,30 @@ function SubTarget(props: SubTargetFormProps) {
 		},
 		skip: props.formType != "budget",
 	});
+
+	if (props.formAction === FORM_ACTIONS.UPDATE) {
+		budgetSubTargetForm[0].hidden = true;
+	} else {
+		budgetSubTargetForm[0].hidden = false;
+	}
+
+	// const [updateDeliverableTarget] = useMutation(UPDATE_DELIVERABLE_TARGET);
+
+	const [isQualitativeParent, setIsQualitativeParent] = useState(
+		props.qualitativeParent || false
+	);
+
+	const [targetValueOptions, setTargetValueOptions] = useState(props.targetValueOptions || []);
+
+	useEffect(() => {
+		if (isQualitativeParent) {
+			budgetSubTargetFormList[2].hidden = true;
+			budgetSubTargetFormList[3].hidden = false;
+		} else {
+			budgetSubTargetFormList[2].hidden = false;
+			budgetSubTargetFormList[3].hidden = true;
+		}
+	}, [isQualitativeParent]);
 
 	const getCreateSubTargetQuery = () =>
 		props.formType === "budget"
@@ -209,13 +233,13 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const apolloClient = useApolloClient();
 
-	let cachedProjectDonors: IGetProjectDonor | null = null;
+	let projectDonors: IGetProjectDonor | null = null;
 
 	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
-	budgetSubTargetFormList[5].addNewClick = () => setOpenDonorDialog(true);
+	budgetSubTargetFormList[6].addNewClick = () => setOpenDonorDialog(true);
 
 	try {
-		cachedProjectDonors = apolloClient.readQuery<IGetProjectDonor>(
+		projectDonors = apolloClient.readQuery<IGetProjectDonor>(
 			{
 				query: GET_PROJ_DONORS,
 				variables: { filter: { project: dashboardData?.project?.id } },
@@ -226,9 +250,9 @@ function SubTarget(props: SubTargetFormProps) {
 		console.error(error);
 	}
 
-	let cachedOrganizationDonors: IGET_DONOR | null = null;
+	let orgDonors: IGET_DONOR | null = null;
 	try {
-		cachedOrganizationDonors = apolloClient.readQuery<IGET_DONOR>(
+		orgDonors = apolloClient.readQuery<IGET_DONOR>(
 			{
 				query: GET_ORG_DONOR,
 				variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -239,30 +263,85 @@ function SubTarget(props: SubTargetFormProps) {
 		console.error(error);
 	}
 
-	budgetSubTargetFormList[5].optionsArray = useMemo(() => {
-		let donorsArray: any = [];
-		if (cachedProjectDonors)
-			cachedProjectDonors?.projectDonors
-				.filter((projectDonor) => !projectDonor?.deleted)
-				.forEach((elem: IProjectDonor) => {
-					donorsArray.push({
-						...elem,
-						id: elem.donor.id,
-						name: elem.donor.name,
-					});
-				});
-		return donorsArray;
-	}, [cachedProjectDonors, props]);
+	// const { data: projectDonors } = useQuery(GET_PROJ_DONORS, {
+	// 	variables: { filter: { project: dashboardData?.project?.id, deleted: false }
 
-	budgetSubTargetFormList[5]["secondOptionsArray"] = useMemo(() => {
+	// },
+	// });
+
+	// const { data: orgDonors } = useQuery(GET_ORG_DONOR, {
+	// 	variables: { filter: { organization: dashboardData?.organization?.id, deleted: false } },
+	// });
+
+	const [createProjectDonor, { loading: creatingProjectDonorsLoading }] = useMutation(
+		CREATE_PROJECT_DONOR,
+		{
+			onCompleted: (data) => {
+				updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
+			},
+		}
+	);
+
+	const [updateProjectDonor, { loading: updatingProjectDonorsLoading }] = useMutation(
+		UPDATE_PROJECT_DONOR
+	);
+
+	const getProjectDonorIdForGivenDonorId = (
+		projectDonors: IGetProjectDonor["projectDonors"] | undefined,
+		donorId: any
+	) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id == donorId)?.id;
+
+	const createProjectDonorHelper = (value: any) => {
+		const projectDonorIdForGivenDonor = getProjectDonorIdForGivenDonorId(
+			projectDonors?.projectDonors,
+			value.id
+		);
+		if (projectDonorIdForGivenDonor) {
+			updateProjectDonor({
+				variables: {
+					id: projectDonorIdForGivenDonor,
+					input: {
+						project: dashboardData?.project?.id,
+						donor: value.id,
+						deleted: false,
+					},
+				},
+			});
+		} else {
+			createProjectDonor({
+				variables: {
+					input: {
+						project: dashboardData?.project?.id,
+						donor: value.id,
+					},
+				},
+			});
+		}
+	};
+	budgetSubTargetFormList[6].customMenuOnClick = createProjectDonorHelper;
+
+	budgetSubTargetFormList[6].optionsArray = useMemo(() => {
+		let donorsArray: any = [];
+		if (projectDonors)
+			projectDonors?.projectDonors.forEach((elem: IProjectDonor) => {
+				donorsArray.push({
+					...elem,
+					id: elem.donor.id,
+					name: elem.donor.name,
+				});
+			});
+		return donorsArray;
+	}, [projectDonors, props]);
+
+	budgetSubTargetFormList[6].secondOptionsArray = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
-		if (cachedProjectDonors && cachedOrganizationDonors)
-			cachedOrganizationDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
+		if (projectDonors && orgDonors) {
+			console.log("orgDonors --- ", projectDonors, orgDonors);
+			orgDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
 				let projectDonorNotContainsOrgDonor = true;
-				cachedProjectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
-					if (orgDonor.id === projectDonor.donor.id && !projectDonor.deleted) {
+				projectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
+					if (orgDonor.id === projectDonor.donor.id) {
 						projectDonorNotContainsOrgDonor = false;
-						return false;
 					}
 				});
 				if (projectDonorNotContainsOrgDonor)
@@ -270,8 +349,9 @@ function SubTarget(props: SubTargetFormProps) {
 						...orgDonor,
 					});
 			});
+		}
 		return organizationDonorsAfterRemovingProjectDonors;
-	}, [cachedProjectDonors, cachedOrganizationDonors]);
+	}, [projectDonors, orgDonors]);
 
 	useMemo(() => {
 		if (props.formAction === FORM_ACTIONS.UPDATE) {
@@ -281,19 +361,36 @@ function SubTarget(props: SubTargetFormProps) {
 		}
 	}, [props.formAction]);
 
-	budgetSubTargetFormList[5].getInputValue = (donorId: string) => {
+	budgetSubTargetFormList[0].getInputValue = (targetId: string) => {
+		if (props.formType === "budget") {
+			return;
+		} else if (Object.values(DELIVERABLE_TYPE).includes(props.formType)) {
+			let targetOptions = getTargetOptions();
+			let target = targetOptions.find((elem: any) => elem.id === targetId);
+			console.log("target", target);
+			setIsQualitativeParent(target?.is_qualitative || false);
+			setTargetValueOptions(target?.value_qualitative_option?.options || []);
+		}
+	};
+
+	budgetSubTargetFormList[3].optionsArray = targetValueOptions;
+
+	budgetSubTargetFormList[6].getInputValue = (donorId: string) => {
 		setCurrentDonor(donorId);
 	};
-	budgetSubTargetFormList[6].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[8].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[9].optionsArray = lists.annualYear;
-	budgetSubTargetFormList[7].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[9].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[10].optionsArray = lists.annualYear;
+	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
 	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState(false);
-	budgetSubTargetFormList[7].addNewClick = () => setOpenGrantPeriodForm(true);
+	budgetSubTargetFormList[8].addNewClick = () => setOpenGrantPeriodForm(true);
 
-	const createSubTargetHelper = async (subTargetValues: ISubTarget) => {
+	const createSubTargetHelper = async (
+		subTargetValues: ISubTarget,
+		updateDeliverableTarget?: () => Promise<void>
+	) => {
 		try {
 			let queryFilter: any = {
 				[getTargetId()]: {
@@ -354,6 +451,16 @@ function SubTarget(props: SubTargetFormProps) {
 						},
 					},
 					{
+						query: getFetchSubTargetQuery(),
+						variables: {
+							filter: {
+								[getTargetId()]: subTargetValues[getTargetId()],
+								project: dashboardData?.project?.id,
+							},
+							sort: "created_at:DESC",
+						},
+					},
+					{
 						query: getCountSubTargetQuery(),
 						variables: {
 							filter: queryFilter,
@@ -379,8 +486,9 @@ function SubTarget(props: SubTargetFormProps) {
 					},
 				],
 			});
+			if (updateDeliverableTarget) await updateDeliverableTarget();
 			notificationDispatch(setSuccessNotification("Sub Target created successfully !"));
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		} finally {
 			onCancel();
@@ -447,7 +555,7 @@ function SubTarget(props: SubTargetFormProps) {
 			});
 			notificationDispatch(setSuccessNotification("Sub Target updated successfully !"));
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
@@ -472,6 +580,32 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const onCreate = async (value: ISubTarget) => {
 		value = checkValuesToDelete(value);
+		// let targetOfCurrentSubTarget: IDeliverableTarget | null = null;
+
+		// if (props.formType != "budget" && Object.values(DELIVERABLE_TYPE).includes(props.formType))
+		// 	targetOfCurrentSubTarget = getTargetOptions().find(
+		// 		(elem: IDeliverableTarget) => elem.id === value.deliverable_target_project
+		// 	);
+
+		// if (
+		// 	targetOfCurrentSubTarget?.is_qualitative &&
+		// 	targetOfCurrentSubTarget?.sub_target_required
+		// ) {
+		// 	const updateDeliverableTargetSubTargetRequired = async () => {
+		// 		await updateDeliverableTarget({
+		// 			variables: {
+		// 				id: targetOfCurrentSubTarget?.id,
+		// 				input: {
+		// 					sub_target_required: false,
+		// 				},
+		// 			},
+		// 		});
+		// 	};
+		// 	await createSubTargetHelper(
+		// 		{ ...value, project: dashboardData?.project?.id || "" },
+		// 		updateDeliverableTargetSubTargetRequired
+		// 	);
+		// } else
 		await createSubTargetHelper({ ...value, project: dashboardData?.project?.id || "" });
 	};
 
@@ -483,7 +617,10 @@ function SubTarget(props: SubTargetFormProps) {
 	const validate = (values: any) => {
 		let errors: Partial<any> = {};
 		if (props.formAction === FORM_ACTIONS.CREATE) {
-			if (!values.target_value) {
+			if (!isQualitativeParent && !values.target_value) {
+				errors.target_value = "Target value is required";
+			}
+			if (isQualitativeParent && !values.target_value_qualitative) {
 				errors.target_value = "Target value is required";
 			}
 		}
@@ -492,7 +629,10 @@ function SubTarget(props: SubTargetFormProps) {
 			if (!values.project) {
 				errors.project = "Project is required";
 			}
-			if (!values.target_value) {
+			if (!isQualitativeParent && !values.target_value) {
+				errors.target_value = "Target value is required";
+			}
+			if (isQualitativeParent && !values.target_value_qualitative) {
 				errors.target_value = "Target value is required";
 			}
 		}
@@ -576,18 +716,21 @@ function SubTarget(props: SubTargetFormProps) {
 						inputFields: budgetSubTargetFormList,
 					}}
 				/>
-				{openDonorDialog && (
-					<Donor
-						open={openDonorDialog}
-						formAction={FORM_ACTIONS.CREATE}
-						handleClose={() => setOpenDonorDialog(false)}
-					/>
-				)}
+
 				{openGrantPeriodForm && (
 					<GrantPeriodDialog
 						open={openGrantPeriodForm}
 						onClose={() => setOpenGrantPeriodForm(false)}
 						action={FORM_ACTIONS.CREATE}
+					/>
+				)}
+				{openDonorDialog && (
+					<Donor
+						open={openDonorDialog}
+						formAction={FORM_ACTIONS.CREATE}
+						handleClose={() => setOpenDonorDialog(false)}
+						dialogType={DONOR_DIALOG_TYPE.PROJECT}
+						projectId={`${dashboardData?.project?.id}`}
 					/>
 				)}
 			</FormDialog>

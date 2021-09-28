@@ -32,5 +32,6 @@ export type DeliverableTargetProps = {
 	| {
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTarget;
+			value_qualitative_option: { id: string; name: string }[];
 	  }
 );

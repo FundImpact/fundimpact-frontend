@@ -33,9 +33,25 @@
 			"testId": "budgetSubTargetTargetValueInput",
 			"label": "Target Value",
 			"required": true,
+			"hidden": true,
 			"inputType": "textarea",
 			"size": 6,
 			"type": "number"
+		},
+		{
+			"name": "target_value_qualitative",
+			"id": "target_value_qualitative",
+			"dataTestId": "budgetSubTargetTargetValueQuantitative",
+			"testId": "budgetSubTargetTargetValueQuantitativeInput",
+			"label": "Target Value",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"hidden": true,
+			"size": 6
 		},
 		{
 			"name": "timeperiod_start",

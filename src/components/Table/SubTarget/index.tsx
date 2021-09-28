@@ -19,7 +19,7 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 import pagination from "../../../hooks/pagination/pagination";
-import { getTodaysDate } from "../../../utils";
+import { getOptionFromTargetValueOptions, getTodaysDate } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { subTargetTableHeadings } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -73,6 +73,7 @@ import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
 import { GET_DELIVERABLE_TRACKLINE_COUNT } from "../../../graphql/Deliverable/trackline";
 import DeliverableTrackLine from "../../../components/Deliverable/DeliverableTrackline";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import { StringifyOptions } from "querystring";
 
 enum tableHeaders {
 	date = 1,
@@ -179,6 +180,7 @@ function EditSubTarget({
 								timeperiod_start: getTodaysDate(subTarget?.timeperiod_start),
 								timeperiod_end: getTodaysDate(subTarget?.timeperiod_end),
 								target_value: subTarget?.target_value,
+								target_value_qualitative: subTarget?.target_value_qualitative,
 								donor: subTarget?.donor?.id,
 								financial_year_org: subTarget.financial_year_org?.id,
 								financial_year_donor: subTarget.financial_year_donor?.id,
@@ -278,6 +280,13 @@ function EditSubTarget({
 					formType={tableType}
 					data={subTargetData}
 					reftechOnSuccess={refetch}
+					qualitativeParent={
+						subTarget?.deliverable_target_project?.is_qualitative || false
+					}
+					targetValueOptions={
+						subTarget?.deliverable_target_project?.value_qualitative_option?.options ||
+						[]
+					}
 					dialogType={
 						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
 					}
@@ -325,6 +334,13 @@ function EditSubTarget({
 						type={DELIVERABLE_ACTIONS.CREATE}
 						deliverableSubTargetId={subTarget?.id}
 						handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
+						qualitativeParent={
+							subTarget?.deliverable_target_project?.is_qualitative || false
+						}
+						targetValueOptions={
+							subTarget?.deliverable_target_project?.value_qualitative_option
+								?.options || []
+						}
 					/>
 				)
 			)}
@@ -575,16 +591,16 @@ export default function ({
 
 	useEffect(() => {
 		if (yearTagsLists?.annualYear?.length) {
-			budgetSubTargetForm[6].optionsArray = yearTagsLists?.annualYear;
+			budgetSubTargetForm[5].optionsArray = yearTagsLists?.annualYear;
 			annualYearHash = mapIdToName(yearTagsLists?.annualYear, annualYearHash);
 		}
 		if (yearTagsLists?.financialYear?.length) {
-			budgetSubTargetForm[4].optionsArray = yearTagsLists?.financialYear;
+			budgetSubTargetForm[3].optionsArray = yearTagsLists?.financialYear;
 			financialYearDonorHash = mapIdToName(
 				yearTagsLists?.financialYear,
 				financialYearDonorHash
 			);
-			budgetSubTargetForm[5].optionsArray = yearTagsLists?.financialYear;
+			budgetSubTargetForm[4].optionsArray = yearTagsLists?.financialYear;
 			financialYearOrgHash = mapIdToName(yearTagsLists?.financialYear, financialYearOrgHash);
 		}
 	}, [yearTagsLists]);
@@ -676,6 +692,7 @@ export default function ({
 		if (subTargetData?.[getListObjectKey()]?.length) {
 			let subTargetList = subTargetData[getListObjectKey()];
 			let arr = [];
+
 			for (let i = 0; i < subTargetList.length; i++) {
 				if (subTargetList[i]) {
 					let row = [
@@ -688,7 +705,13 @@ export default function ({
 						<TableCell
 							key={subTargetList[i]?.target_value + `${subTargetList[i]?.id}-1`}
 						>
-							{subTargetList[i]?.target_value}
+							{subTargetList[i]?.[getTargetId(tableType)]?.is_qualitative
+								? getOptionFromTargetValueOptions(
+										subTargetList[i]?.[getTargetId(tableType)]
+											?.value_qualitative_option?.options || [],
+										subTargetList[i]?.target_value_qualitative
+								  )
+								: subTargetList[i]?.target_value}
 						</TableCell>,
 						<TableCell
 							key={
@@ -842,7 +865,6 @@ export default function ({
 					timeperiod_start: "",
 					timeperiod_end: "",
 					target_value: "",
-					donor: [],
 					financial_year_org: [],
 					financial_year_donor: [],
 					grant_periods_project: [],
