@@ -19,6 +19,7 @@ import { usePostFetch } from "../../../hooks/fetch/usePostFetch";
 import { MANAGE_PROJECT_TARGETS } from "../../../utils/endpoints.util";
 import { useRefetchOnBudgetTargetImport } from "../../../hooks/budget";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
+import { DELIVERABLE_TYPE } from "../../../models/constants";
 
 function ProjectTargets(props: ProjectTargetsProps) {
 	const notificationDispatch = useNotificationDispatch();
@@ -59,7 +60,8 @@ function ProjectTargets(props: ProjectTargetsProps) {
 		if (data) {
 			notificationDispatch(setSuccessNotification("Projects Updated successfully !"));
 			if (formType === "budget") refetchOnBudgetTargetImport();
-			if (formType === "deliverable") refetchOnDeliverableTargetImport();
+			else if (Object.values(DELIVERABLE_TYPE).includes(formType))
+				refetchOnDeliverableTargetImport(formType);
 			onCancel();
 		}
 	}, [data]);
@@ -78,21 +80,24 @@ function ProjectTargets(props: ProjectTargetsProps) {
 				project_with_deliverable_targets: {
 					project: dashboardData?.project?.id,
 				},
+				type: props.formType,
 			},
 		},
-		skip: formType != "deliverable",
+		fetchPolicy: "network-only",
+		skip: formType === "budget",
 	});
 
-	const { data: impactTargets } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
-		variables: {
-			filter: {
-				project_with_impact_targets: {
-					project: dashboardData?.project?.id,
-				},
-			},
-		},
-		skip: formType != "impact",
-	});
+	// const { data: impactTargets } = useQuery(GET_IMPACT_TARGET_BY_PROJECT, {
+	// 	variables: {
+	// 		filter: {
+	// 			project_with_impact_targets: {
+	// 				project: dashboardData?.project?.id,
+	// 			},
+	// 		},
+	// 	},
+	// 	fetchPolicy: "network-only",
+	// 	skip: formType != "impact",
+	// });
 
 	const { data: budgetTargets } = useQuery(GET_BUDGET_TARGET_PROJECT, {
 		variables: {
@@ -102,16 +107,15 @@ function ProjectTargets(props: ProjectTargetsProps) {
 				},
 			},
 		},
+		fetchPolicy: "network-only",
 		skip: formType != "budget",
 	});
 
 	const getTargetOptions = () =>
 		formType === "budget"
 			? budgetTargets?.projectBudgetTargets || []
-			: formType === "deliverable"
+			: Object.values(DELIVERABLE_TYPE).includes(formType)
 			? deliverableTargets?.deliverableTargetList || []
-			: formType === "impact"
-			? impactTargets?.impactTargetProjectList || []
 			: "";
 
 	projectTargetsForm[0].optionsArray = getTargetOptions();
@@ -126,17 +130,16 @@ function ProjectTargets(props: ProjectTargetsProps) {
 			projects = currTarget?.project_with_budget_targets?.map(
 				(elem: { project: { id: string; name: string } }) => elem.project.id
 			);
-		}
-		if (formType === "deliverable") {
+		} else if (Object.values(DELIVERABLE_TYPE).includes(formType)) {
 			projects = currTarget?.project_with_deliverable_targets?.map(
 				(elem: { project: { id: string; name: string } }) => elem.project.id
 			);
 		}
-		if (formType === "impact") {
-			projects = currTarget?.project_with_impact_targets?.map(
-				(elem: { project: { id: string; name: string } }) => elem.project.id
-			);
-		}
+		// if (formType === "impact") {
+		// 	projects = currTarget?.project_with_impact_targets?.map(
+		// 		(elem: { project: { id: string; name: string } }) => elem.project.id
+		// 	);
+		// }
 		setinitialValues({
 			projects,
 			target: currTarget.id,

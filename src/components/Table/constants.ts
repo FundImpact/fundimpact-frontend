@@ -47,9 +47,9 @@ export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [
 	{ label: "#" },
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
-	{ label: "Achieved", keyMapping: "value" },
+	{ label: "Value", keyMapping: "value" },
 	{ label: "Year" },
-	{ label: "Tranche" },
+	{ label: "TimePeriod" },
 	{ label: "" }, //edit icon
 ];
 
@@ -67,7 +67,8 @@ export const budgetTargetTableHeading: ITableHeadings[] = [
 ];
 export const subTargetTableHeadings: ITableHeadings[] = [
 	{ label: "#" },
-	{ label: "Sub Target", keyMapping: "target_value" },
+	{ label: "Sub Target", keyMapping: "name" },
+	{ label: "Target Value", keyMapping: "target_value" },
 	{ label: "Time Period", keyMapping: "timeperiod_start" },
 	{ label: "Years", keyMapping: "financial_year_donor" },
 	{ label: "Tranche", keyMapping: "donor" },

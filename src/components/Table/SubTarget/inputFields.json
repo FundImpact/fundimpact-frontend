@@ -7,8 +7,7 @@
 			"testId": "budgetSubTargetTargetValueInput",
 			"label": "Target Value",
 			"inputType": "textarea",
-			"size": 6,
-			"type": "number"
+			"size": 6
 		},
 		{
 			"name": "timeperiod_start",
@@ -27,25 +26,6 @@
 			"label": "End",
 			"type": "date",
 			"size": 6
-		},
-		{
-			"name": "donor",
-			"id": "donor",
-			"label": "Select Donors",
-			"size": 6,
-			"dataTestId": "budgetSubTargetDonor",
-			"testId": "budgetSubTargetDonorInput",
-			"optionsLabel": "Project's Donors",
-			"optionsArray": [],
-			"secondOptionsArray": [],
-			"secondOptionsLabel": "All Donors",
-			"customMenuOnClick": {},
-			"inputLabelId": "demo-mutiple-name-label",
-			"selectLabelId": "demo-mutiple-name-label",
-			"selectId": "demo-mutiple-name",
-			"inputType": "select",
-			"addNew": true,
-			"addNewClick": {}
 		},
 		{
 			"name": "financial_year_donor",
@@ -85,21 +65,6 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"size": 6
-		},
-		{
-			"name": "grant_periods_project",
-			"id": "grant_periods_project",
-			"dataTestId": "budgetSubTargetGrantPeriod",
-			"testId": "budgetSubTargetGrantPeriodInput",
-			"label": "Grant Period",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"addNew": true,
-			"addNewClick": {},
-			"size": 12
 		}
 	]
 }

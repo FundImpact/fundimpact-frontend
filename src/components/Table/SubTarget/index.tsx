@@ -11,11 +11,15 @@ import {
 	Chip,
 	Avatar,
 	useTheme,
+	makeStyles,
+	Theme,
+	Badge,
+	Typography,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useEffect, useState, useMemo } from "react";
 import pagination from "../../../hooks/pagination/pagination";
-import { getTodaysDate } from "../../../utils";
+import { getOptionFromTargetValueOptions, getTodaysDate } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { subTargetTableHeadings } from "../constants";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -39,14 +43,18 @@ import {
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { useRefetchOnDeliverableLineItemImport } from "../../../hooks/deliverable";
 import {
 	GET_DELIVERABLE_SUB_TARGETS,
 	GET_DELIVERABLE_SUB_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/subTarget";
 import FITable from "../FITable";
-import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_SUB_TARGETS_COUNT } from "../../../graphql/Budget";
+import {
+	GET_BUDGET_SUB_TARGETS,
+	GET_BUDGET_SUB_TARGETS_COUNT,
+	GET_PROJ_BUDGET_TRACINGS_COUNT,
+} from "../../../graphql/Budget";
 import {
 	GET_IMPACT_SUB_TARGETS,
 	GET_IMPACT_SUB_TARGETS_COUNT,
@@ -62,6 +70,10 @@ import { YearTagPayload } from "../../../models/yearTags";
 import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 import BudgetLineitem from "../../Budget/BudgetLineitem";
 import { IBudgetTrackingLineitemForm } from "../../../models/budget/budgetForm";
+import { GET_DELIVERABLE_TRACKLINE_COUNT } from "../../../graphql/Deliverable/trackline";
+import DeliverableTrackLine from "../../../components/Deliverable/DeliverableTrackline";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import { StringifyOptions } from "querystring";
 
 enum tableHeaders {
 	date = 1,
@@ -70,13 +82,18 @@ enum tableHeaders {
 	year = 4,
 }
 
-const getTargetId = (tableType: "deliverable" | "impact" | "budget") =>
+const getTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
 	tableType === "budget"
 		? "budget_targets_project"
-		: tableType === "deliverable"
+		: Object.values(DELIVERABLE_TYPE).includes(tableType)
 		? "deliverable_target_project"
-		: tableType === "impact"
-		? "impact_target_project"
+		: "";
+
+const getSubTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
+	tableType === "budget"
+		? "budget_sub_target"
+		: Object.values(DELIVERABLE_TYPE).includes(tableType)
+		? "deliverable_sub_target"
 		: "";
 
 function EditSubTarget({
@@ -91,7 +108,7 @@ function EditSubTarget({
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
-	tableType: "deliverable" | "impact" | "budget";
+	tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
@@ -118,6 +135,7 @@ function EditSubTarget({
 	const [subTargetFileArray, setSubTargetFileArray] = useState<AttachFile[]>([]);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
 	const [openForm, setOpenForm] = useState(false);
+	const [openDeliverableForm, setOpenDeliverableForm] = useState(false);
 
 	const initialValues1: IBudgetTrackingLineitemForm = {
 		amount: "",
@@ -131,6 +149,7 @@ function EditSubTarget({
 		timeperiod_end: "",
 		attachments: [],
 	};
+
 	return (
 		<>
 			<TableCell>
@@ -157,9 +176,11 @@ function EditSubTarget({
 							setsubTargetData({
 								id: subTarget?.id,
 								[getTargetId(tableType)]: subTarget?.[getTargetId(tableType)]?.id,
+								name: subTarget?.name,
 								timeperiod_start: getTodaysDate(subTarget?.timeperiod_start),
 								timeperiod_end: getTodaysDate(subTarget?.timeperiod_end),
 								target_value: subTarget?.target_value,
+								target_value_qualitative: subTarget?.target_value_qualitative,
 								donor: subTarget?.donor?.id,
 								financial_year_org: subTarget.financial_year_org?.id,
 								financial_year_donor: subTarget.financial_year_donor?.id,
@@ -211,6 +232,7 @@ function EditSubTarget({
 					<MenuItem
 						onClick={() => {
 							setOpenForm(true);
+							setOpenDeliverableForm(true);
 							handleMenuClose();
 						}}
 					>
@@ -258,6 +280,13 @@ function EditSubTarget({
 					formType={tableType}
 					data={subTargetData}
 					reftechOnSuccess={refetch}
+					qualitativeParent={
+						subTarget?.deliverable_target_project?.is_qualitative || false
+					}
+					targetValueOptions={
+						subTarget?.deliverable_target_project?.value_qualitative_option?.options ||
+						[]
+					}
 					dialogType={
 						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
 					}
@@ -284,7 +313,7 @@ function EditSubTarget({
 					}}
 				/>
 			)}
-			{openForm && tableType === "budget" && (
+			{openForm && tableType === "budget" ? (
 				<BudgetLineitem
 					formAction={FORM_ACTIONS.CREATE}
 					open={openForm}
@@ -292,6 +321,28 @@ function EditSubTarget({
 					initialValues={initialValues1}
 					handleClose={() => setOpenForm(!openForm)}
 				/>
+			) : (
+				openDeliverableForm &&
+				(tableType === DELIVERABLE_TYPE.DELIVERABLE ||
+					tableType === DELIVERABLE_TYPE.IMPACT ||
+					tableType === DELIVERABLE_TYPE.OUTCOME ||
+					tableType === DELIVERABLE_TYPE.OUTPUT ||
+					tableType === DELIVERABLE_TYPE.ACTIVITY) && (
+					<DeliverableTrackLine
+						open={openDeliverableForm}
+						formType={tableType}
+						type={DELIVERABLE_ACTIONS.CREATE}
+						deliverableSubTargetId={subTarget?.id}
+						handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
+						qualitativeParent={
+							subTarget?.deliverable_target_project?.is_qualitative || false
+						}
+						targetValueOptions={
+							subTarget?.deliverable_target_project?.value_qualitative_option
+								?.options || []
+						}
+					/>
+				)
 			)}
 		</>
 	);
@@ -362,6 +413,22 @@ const createChipArray = ({
 	return null;
 };
 
+const useStyles = makeStyles((theme: Theme) => ({
+	primary: {
+		backgroundColor: theme.palette.primary.main,
+		width: theme.spacing(4),
+		height: theme.spacing(4),
+	},
+	lineitemCountBadge: {
+		backgroundColor: theme.palette.secondary.main,
+		width: theme.spacing(2),
+		height: theme.spacing(2),
+	},
+	eyeIcon: {
+		color: theme.palette.common.white,
+	},
+}));
+
 const LineItemTableButton = ({
 	targetId,
 	tableType,
@@ -369,16 +436,47 @@ const LineItemTableButton = ({
 	subTargetId,
 }: {
 	targetId: string;
-	tableType: "deliverable" | "impact" | "budget";
+	tableType: DELIVERABLE_TYPE | "budget";
 	donor?: any;
 	subTargetId?: string;
 }) => {
 	const [openLineItemTable, setOpenLineItemTable] = useState(false);
+	const classes = useStyles();
+
+	const getLineitemCountQuery = () =>
+		tableType === "budget"
+			? GET_PROJ_BUDGET_TRACINGS_COUNT
+			: Object.values(DELIVERABLE_TYPE).includes(tableType)
+			? GET_DELIVERABLE_TRACKLINE_COUNT
+			: GET_PROJ_BUDGET_TRACINGS_COUNT;
+
+	const { data } = useQuery(getLineitemCountQuery(), {
+		variables: {
+			filter: {
+				[getSubTargetId(tableType)]: subTargetId,
+			},
+		},
+	});
+	let countD: any;
+	if (data) countD = Object.values(data)[0];
+
 	return (
 		<>
-			<IconButton onClick={() => setOpenLineItemTable(true)}>
-				<VisibilityIcon />
-			</IconButton>
+			<Badge
+				overlap="circle"
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "right",
+				}}
+				badgeContent={countD?.aggregate?.count || 0}
+				color="secondary"
+			>
+				<Avatar className={classes.primary}>
+					<IconButton onClick={() => setOpenLineItemTable(true)}>
+						<VisibilityIcon className={classes.eyeIcon} />
+					</IconButton>
+				</Avatar>
+			</Badge>
 			{openLineItemTable && (
 				<FIDialog
 					{...{
@@ -387,30 +485,39 @@ const LineItemTableButton = ({
 						header: tableType === "budget" ? "Expenditures" : "Achievements",
 					}}
 				>
-					{tableType === "budget" && (
+					{tableType === "budget" ? (
 						<BudgetLineItemTable
 							budgetTargetId={targetId}
 							donor={donor}
 							subTargetId={subTargetId}
 						/>
+					) : (
+						Object.values(DELIVERABLE_TYPE).includes(tableType) && (
+							<DeliverablesTrackLineTable
+								deliverableTargetId={targetId}
+								subTargetId={subTargetId}
+							/>
+						)
 					)}
-					{tableType === "deliverable" && (
-						<DeliverablesTrackLineTable deliverableTargetId={targetId} />
-					)}
-					{tableType === "impact" && <ImpactTrackLineTable impactTargetId={targetId} />}
+					{/* {tableType === "impact" && (
+						<DeliverablesTrackLineTable
+							deliverableTargetId={targetId}
+							subTargetId={subTargetId}
+						/>
+					)} */}
 				</FIDialog>
 			)}
 		</>
 	);
 };
 
-export default function SubTargetTable({
+export default function ({
 	targetId,
 	tableType,
 	donor,
 }: {
 	targetId: string;
-	tableType: "deliverable" | "impact" | "budget";
+	tableType: DELIVERABLE_TYPE | "budget";
 	donor?: any;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
@@ -463,23 +570,25 @@ export default function SubTargetTable({
 		setYearTagsLists(yearTagsListsObj);
 	}, [yearTags]);
 
+	// const getSubTargetFindQuery = () =>
+	// 	tableType === "budget"
+	// 		? GET_BUDGET_SUB_TARGETS
+	// 		: Object.values(DELIVERABLE_TYPE).includes(tableType) && GET_DELIVERABLE_SUB_TARGETS
+	// 		? GET_DELIVERABLE_SUB_TARGETS
+	// 		: GET_DELIVERABLE_SUB_TARGETS;
+
 	const getSubTargetFindQuery = () =>
-		tableType === "budget"
-			? GET_BUDGET_SUB_TARGETS
-			: tableType === "deliverable"
-			? GET_DELIVERABLE_SUB_TARGETS
-			: tableType === "impact"
-			? GET_IMPACT_SUB_TARGETS
-			: GET_DELIVERABLE_SUB_TARGETS;
+		tableType === "budget" ? GET_BUDGET_SUB_TARGETS : GET_DELIVERABLE_SUB_TARGETS;
+
+	// 	const getSubTargetCountQuery = () =>
+	// tableType === "budget"
+	// 	? GET_BUDGET_SUB_TARGETS_COUNT
+	// 	: Object.values(DELIVERABLE_TYPE).includes(tableType)
+	// 	? GET_DELIVERABLE_SUB_TARGETS_COUNT
+	// 	: GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
 	const getSubTargetCountQuery = () =>
-		tableType === "budget"
-			? GET_BUDGET_SUB_TARGETS_COUNT
-			: tableType === "deliverable"
-			? GET_DELIVERABLE_SUB_TARGETS_COUNT
-			: tableType === "impact"
-			? GET_IMPACT_SUB_TARGETS_COUNT
-			: GET_DELIVERABLE_SUB_TARGETS_COUNT;
+		tableType === "budget" ? GET_BUDGET_SUB_TARGETS_COUNT : GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
@@ -488,16 +597,16 @@ export default function SubTargetTable({
 
 	useEffect(() => {
 		if (yearTagsLists?.annualYear?.length) {
-			budgetSubTargetForm[6].optionsArray = yearTagsLists?.annualYear;
+			budgetSubTargetForm[5].optionsArray = yearTagsLists?.annualYear;
 			annualYearHash = mapIdToName(yearTagsLists?.annualYear, annualYearHash);
 		}
 		if (yearTagsLists?.financialYear?.length) {
-			budgetSubTargetForm[4].optionsArray = yearTagsLists?.financialYear;
+			budgetSubTargetForm[3].optionsArray = yearTagsLists?.financialYear;
 			financialYearDonorHash = mapIdToName(
 				yearTagsLists?.financialYear,
 				financialYearDonorHash
 			);
-			budgetSubTargetForm[5].optionsArray = yearTagsLists?.financialYear;
+			budgetSubTargetForm[4].optionsArray = yearTagsLists?.financialYear;
 			financialYearOrgHash = mapIdToName(yearTagsLists?.financialYear, financialYearOrgHash);
 		}
 	}, [yearTagsLists]);
@@ -581,9 +690,7 @@ export default function SubTargetTable({
 	const getListObjectKey = () =>
 		tableType === "budget"
 			? "budgetSubTargets"
-			: tableType === "deliverable"
-			? "deliverableSubTargets"
-			: tableType === "impact"
+			: Object.values(DELIVERABLE_TYPE).includes(tableType)
 			? "deliverableSubTargets"
 			: "budgetSubTargets";
 
@@ -591,16 +698,26 @@ export default function SubTargetTable({
 		if (subTargetData?.[getListObjectKey()]?.length) {
 			let subTargetList = subTargetData[getListObjectKey()];
 			let arr = [];
+
 			for (let i = 0; i < subTargetList.length; i++) {
 				if (subTargetList[i]) {
 					let row = [
 						<TableCell component="td" scope="row" key={subTargetList[i]?.id}>
 							{TracklinePage * limit + i + 1}
 						</TableCell>,
+						<TableCell key={subTargetList[i]?.name + `${subTargetList[i]?.id}-1`}>
+							{subTargetList[i]?.name || "-"}
+						</TableCell>,
 						<TableCell
 							key={subTargetList[i]?.target_value + `${subTargetList[i]?.id}-1`}
 						>
-							{subTargetList[i]?.target_value}
+							{subTargetList[i]?.[getTargetId(tableType)]?.is_qualitative
+								? getOptionFromTargetValueOptions(
+										subTargetList[i]?.[getTargetId(tableType)]
+											?.value_qualitative_option?.options || [],
+										subTargetList[i]?.target_value_qualitative
+								  )
+								: subTargetList[i]?.target_value}
 						</TableCell>,
 						<TableCell
 							key={
@@ -754,7 +871,6 @@ export default function SubTargetTable({
 					timeperiod_start: "",
 					timeperiod_end: "",
 					target_value: "",
-					donor: [],
 					financial_year_org: [],
 					financial_year_donor: [],
 					grant_periods_project: [],

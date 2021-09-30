@@ -37,25 +37,14 @@
 			"label": "Name",
 			"inputType": "textarea",
 			"required": true,
-			"size": 6
-		},
-		{
-			"name": "target_value",
-			"id": "target_value",
-			"dataTestId": "deliverableTargetTargetValue",
-			"testId": "deliverableTargetTargetValueInput",
-			"label": "Target Value",
-			"required": true,
-			"inputType": "textarea",
-			"size": 6,
-			"type": "number"
+			"size": 12
 		},
 		{
 			"name": "deliverable_category_org",
 			"id": "deliverable_category_org",
 			"dataTestId": "deliverableTargetCategory",
 			"testId": "deliverableTargetCategoryInput",
-			"label": "Deliverable Category",
+			"label": "Category",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -71,7 +60,7 @@
 			"id": "deliverable_unit_org",
 			"dataTestId": "deliverableTargetUnit",
 			"testId": "deliverableTargetUnitInput",
-			"label": "Deliverable Unit",
+			"label": "Unit",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -81,6 +70,54 @@
 			"addNew": true,
 			"addNewClick": {},
 			"size": 6
+		},
+		{
+			"name": "value_calculation",
+			"id": "value_calculation",
+			"dataTestId": "deliverableTargetValueCalculation",
+			"testId": "deliverableTargetValueCalculationInput",
+			"label": "Target Value Calculations *",
+			"optionsArray": [
+				{
+					"id": "AVG",
+					"name": "Average"
+				},
+				{
+					"id": "SUM",
+					"name": "Add"
+				}
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+
+			"hidden": false,
+			"size": 6
+		},
+		{
+			"name": "is_qualitative",
+			"id": "is_qualitative",
+			"dataTestId": "deliverableTargetIsQualitative",
+			"testId": "deliverableTargetIsQualitativeInput",
+			"label": "Is Qualitative",
+			"getInputValue": {},
+			"disabled": false,
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "value_qualitative_option",
+			"id": "value_qualitative_option",
+			"dataTestId": "deliverableTargetValueQualitativeOptions",
+			"testId": "deliverableTargetValueQualitativeOptionsInput",
+			"label": "Qualitative Options ( Ex: Opt1,Opt2 ) *",
+			"hidden": true,
+			"multiline": true,
+			"rows": 2,
+			"inputType": "textarea",
+			"size": 12
 		},
 		{
 			"name": "description",
@@ -159,9 +196,9 @@
 	],
 	"deliverableTragetLineForm": [
 		{
-			"name": "deliverable_target_project",
-			"id": "deliverable_target_project",
-			"label": "Deliverable Target",
+			"name": "deliverable_sub_target",
+			"id": "deliverable_sub_target",
+			"label": "Sub Target",
 			"size": 6,
 			"dataTestId": "deliverableTracklineTarget",
 			"testId": "deliverableTracklineTargetInput",
@@ -186,6 +223,41 @@
 			"required": true
 		},
 		{
+			"name": "value_qualitative",
+			"id": "value_qualitative",
+			"dataTestId": "deliverableTracklineValueQuantitative",
+			"testId": "deliverableTracklineValueQuantitativeInput",
+			"label": "Target Value",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"hidden": true,
+			"size": 6
+		},
+		{
+			"name": "timeperiod_start",
+			"id": "timeperiod_start",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "Start Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "timeperiod_end",
+			"id": "timeperiod_end",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "End Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
 			"name": "reporting_date",
 			"id": "reporting_date",
 			"dataTestId": "deliverableTracklineDate",
@@ -195,26 +267,7 @@
 			"size": 6,
 			"required": true
 		},
-		{
-			"name": "donors",
-			"id": "donors",
-			"label": "Select Donors",
-			"size": 6,
-			"dataTestId": "deliverableTracklineDonors",
-			"testId": "deliverableTracklineDonorsInput",
-			"optionsLabel": "Project's Donors",
-			"optionsArray": [],
-			"secondOptionsArray": [],
-			"secondOptionsLabel": "All Donors",
-			"customMenuOnClick": {},
-			"inputLabelId": "demo-mutiple-name-label",
-			"selectLabelId": "demo-mutiple-name-label",
-			"selectId": "demo-mutiple-name",
-			"inputType": "multiSelect",
-			"required": true,
-			"addNew": true,
-			"addNewClick": {}
-		},
+
 		{
 			"name": "annual_year",
 			"id": "annual_year",
@@ -229,9 +282,22 @@
 			"inputType": "select"
 		},
 		{
-			"name": "financial_year",
-			"id": "financial_year",
-			"label": "Financial Year",
+			"name": "financial_year_org",
+			"id": "financial_year_org",
+			"label": "Financial Year Org",
+			"size": 6,
+			"dataTestId": "deliverableTracklineFinancialYear",
+			"testId": "deliverableTracklineFinancialYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_year_donor",
+			"id": "financial_year_donor",
+			"label": "Financial Year Donor",
 			"size": 6,
 			"dataTestId": "deliverableTracklineFinancialYear",
 			"testId": "deliverableTracklineFinancialYearInput",

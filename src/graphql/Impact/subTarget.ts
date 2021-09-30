@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_IMPACT_SUB_TARGET = gql`
+export const CREATE_DELIVERABLE_SUB_TARGETCREATE_IMPACT_SUB_TARGET = gql`
 	mutation createImpactSubTarget($input: createImpactSubTargetInput!) {
 		createImpactSubTarget(input: $input) {
 			impactSubTarget {
