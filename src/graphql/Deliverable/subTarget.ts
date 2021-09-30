@@ -133,6 +133,9 @@ export const GET_DELIVERABLE_SUB_TARGETS_COUNT = gql`
 		deliverableSubTargetsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			aggregate {
 				count
+				sum {
+					target_value
+				}
 			}
 		}
 	}
