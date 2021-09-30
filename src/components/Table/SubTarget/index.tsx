@@ -570,19 +570,25 @@ export default function ({
 		setYearTagsLists(yearTagsListsObj);
 	}, [yearTags]);
 
+	// const getSubTargetFindQuery = () =>
+	// 	tableType === "budget"
+	// 		? GET_BUDGET_SUB_TARGETS
+	// 		: Object.values(DELIVERABLE_TYPE).includes(tableType) && GET_DELIVERABLE_SUB_TARGETS
+	// 		? GET_DELIVERABLE_SUB_TARGETS
+	// 		: GET_DELIVERABLE_SUB_TARGETS;
+
 	const getSubTargetFindQuery = () =>
-		tableType === "budget"
-			? GET_BUDGET_SUB_TARGETS
-			: Object.values(DELIVERABLE_TYPE).includes(tableType)
-			? GET_DELIVERABLE_SUB_TARGETS
-			: GET_DELIVERABLE_SUB_TARGETS;
+		tableType === "budget" ? GET_BUDGET_SUB_TARGETS : GET_DELIVERABLE_SUB_TARGETS;
+
+	// 	const getSubTargetCountQuery = () =>
+	// tableType === "budget"
+	// 	? GET_BUDGET_SUB_TARGETS_COUNT
+	// 	: Object.values(DELIVERABLE_TYPE).includes(tableType)
+	// 	? GET_DELIVERABLE_SUB_TARGETS_COUNT
+	// 	: GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
 	const getSubTargetCountQuery = () =>
-		tableType === "budget"
-			? GET_BUDGET_SUB_TARGETS_COUNT
-			: Object.values(DELIVERABLE_TYPE).includes(tableType)
-			? GET_DELIVERABLE_SUB_TARGETS_COUNT
-			: GET_DELIVERABLE_SUB_TARGETS_COUNT;
+		tableType === "budget" ? GET_BUDGET_SUB_TARGETS_COUNT : GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
 	const removeFilterListElements = (key: string, index?: number) =>
 		setFilterList((filterListObject) =>
