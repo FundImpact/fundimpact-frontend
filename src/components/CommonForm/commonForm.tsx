@@ -44,6 +44,7 @@ function CommonInputForm({
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
 	};
+	let flag = false;
 	return (
 		<Formik
 			initialValues={initialValues}
@@ -160,7 +161,10 @@ function CommonInputForm({
 										color="secondary"
 										type="submit"
 										data-testid="createSaveButton"
-										disabled={!formik.isValid}
+										disabled={!formik.isValid || flag}
+										onClick={() => {
+											flag = true;
+										}}
 									>
 										{formAction === FORM_ACTIONS.CREATE
 											? createButtonName
