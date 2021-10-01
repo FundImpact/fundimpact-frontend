@@ -132,7 +132,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	}
 	const formIsOpen = props.open;
 	const onCancel = () => {
-		deliverableTargetForm[3].hidden = true;
+		// deliverableTargetForm[3].hidden = true;
 		deliverableTargetForm[5].hidden = true;
 		props.handleClose();
 	};
