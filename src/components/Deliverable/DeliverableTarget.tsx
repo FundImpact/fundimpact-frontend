@@ -447,6 +447,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			value_calculation: value.value_calculation,
 			value_qualitative_option: valueOptions,
 		});
+
 		// fetching deliverable_category_unit before creating deliverable Target
 		// getCategoryUnit({
 		// 	variables: {
