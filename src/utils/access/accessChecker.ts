@@ -12,6 +12,7 @@ function UserHasAccess<T extends MODULE_CODES>(moduleName: T, action: actionType
 	const { data: userControllerActionHash } = userRoles();
 	// console.log("userControllerActionHash", userControllerActionHash, moduleName + "-" + action);
 	// console.log("Module & action:", moduleName, action);
+	// console.log("userControllerActionHash:", userControllerActionHash);
 	if (!userControllerActionHash || !Object.keys(userControllerActionHash).length) {
 		return false;
 	}
