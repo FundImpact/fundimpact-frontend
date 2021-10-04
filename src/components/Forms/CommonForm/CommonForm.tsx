@@ -128,7 +128,7 @@ function CommonForm({
 										color="secondary"
 										type="submit"
 										data-testid="createSaveButton"
-										disabled={!formik.isValid}
+										disabled={!formik.isValid || formik.isSubmitting}
 									>
 										{formAction === FORM_ACTIONS.CREATE ? "Create" : "Update"}
 									</Button>
