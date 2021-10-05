@@ -39,7 +39,6 @@ import {
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 } from "../../graphql/Deliverable/unit";
 import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
-import { FORM_ACTIONS } from "../../models/budget/constants";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -55,7 +54,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
-	console.log("svkhb", props);
+	const [getOutputsByProject, { data: outputsByProject }] = useLazyQuery(
+		GET_DELIVERABLE_TARGET_BY_PROJECT
+	); // for fetching outputs by project
+
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
@@ -121,37 +123,37 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	);
 
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE && props?.data?.is_qualitative) {
-		deliverableTargetForm[4].hidden = false;
 		deliverableTargetForm[5].hidden = false;
+		deliverableTargetForm[6].hidden = false;
 	}
 
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
-		deliverableTargetForm[4].disabled = true;
+		deliverableTargetForm[5].disabled = true;
 	} else {
-		deliverableTargetForm[4].disabled = false;
+		deliverableTargetForm[5].disabled = false;
 	}
 	const formIsOpen = props.open;
 	const onCancel = () => {
-		deliverableTargetForm[3].hidden = true;
-		deliverableTargetForm[5].hidden = true;
+		deliverableTargetForm[4].hidden = true;
+		deliverableTargetForm[6].hidden = true;
 		props.handleClose();
 	};
 	const formAction = props.type;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	const [openDeliverableCategoryDialog, setOpenDeliverableCategoryDialog] = useState<boolean>();
-	deliverableTargetForm[1].addNewClick = () => setOpenDeliverableCategoryDialog(true);
+	deliverableTargetForm[2].addNewClick = () => setOpenDeliverableCategoryDialog(true);
 
 	const [openDeliverableUnitDialog, setOpenDeliverableUnitDialog] = useState<boolean>();
-	deliverableTargetForm[2].addNewClick = () => setOpenDeliverableUnitDialog(true);
+	deliverableTargetForm[3].addNewClick = () => setOpenDeliverableUnitDialog(true);
 
-	deliverableTargetForm[4].getInputValue = (is_qualitative: boolean) => {
+	deliverableTargetForm[5].getInputValue = (is_qualitative: boolean) => {
 		if (is_qualitative) {
-			deliverableTargetForm[3].hidden = true;
-			deliverableTargetForm[5].hidden = false;
+			deliverableTargetForm[4].hidden = true;
+			deliverableTargetForm[6].hidden = false;
 		} else {
-			deliverableTargetForm[3].hidden = false;
-			deliverableTargetForm[5].hidden = true;
+			deliverableTargetForm[4].hidden = false;
+			deliverableTargetForm[6].hidden = true;
 		}
 	};
 
@@ -287,7 +289,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	};
 
 	const updateDeliverableTargetHelper = async (deliverableTarget: IDeliverableTarget) => {
-		console.log("here", deliverableTarget);
 		let options = [];
 		if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
 			options = deliverableTarget?.value_qualitative_option?.split(",") || [];
@@ -404,16 +405,20 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// }, [props.type]);
 	// updating categories field with fetched categories list
 	useEffect(() => {
+		if (outputsByProject) {
+			deliverableTargetForm[0].optionsArray = outputsByProject.deliverableTargetList;
+		}
+	}, [outputsByProject]);
+
+	useEffect(() => {
 		if (deliverableCategories) {
-			deliverableTargetForm[1].optionsArray = deliverableCategories.deliverableCategory;
-			// deliverableTargetForm[2].getInputValue = setcurrentCategory;
+			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
 		}
 	}, [deliverableCategories]);
 
 	useEffect(() => {
 		if (unitsByOrg) {
-			deliverableTargetForm[2].optionsArray = unitsByOrg.deliverableUnitOrg;
-			// deliverableTargetForm[2].getInputValue = setcurrentCategory;
+			deliverableTargetForm[3].optionsArray = unitsByOrg.deliverableUnitOrg;
 		}
 	}, [unitsByOrg]);
 
@@ -426,8 +431,64 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	}, [dashboardData, getUnitsByOrg]);
 
+	console.log("props.tyep: ", props.formType);
+
+	useEffect(() => {
+		if (dashboardData?.project?.id) {
+			if (props.formType === "deliverable") {
+				getOutputsByProject({
+					variables: {
+						filter: {
+							project_with_deliverable_targets: {
+								project: dashboardData?.project?.id,
+							},
+							type: "output",
+						},
+					},
+				});
+				deliverableTargetForm[0].label = "Output";
+			}
+
+			if (props.formType === "output") {
+				getOutputsByProject({
+					variables: {
+						filter: {
+							project_with_deliverable_targets: {
+								project: dashboardData?.project?.id,
+							},
+							type: "outcome",
+						},
+					},
+				});
+				deliverableTargetForm[0].label = "Outcome";
+			}
+
+			if (props.formType === "outcome") {
+				getOutputsByProject({
+					variables: {
+						filter: {
+							project_with_deliverable_targets: {
+								project: dashboardData?.project?.id,
+							},
+							type: "impact",
+						},
+					},
+				});
+				deliverableTargetForm[0].label = "Impact";
+			}
+
+			if (props.formType === "impact") {
+				deliverableTargetForm[0].hidden = true;
+				return () => {
+					deliverableTargetForm[0].hidden = false;
+				};
+			}
+		}
+	}, [dashboardData, getOutputsByProject, props.formType]);
+
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
+		console.log("Create: ", value);
 		let options = value?.value_qualitative_option?.split(",") || [];
 		options = options.map((elem: string) => ({ id: uuidv4(), name: elem.trim() }));
 

@@ -511,7 +511,6 @@ const createChipArray = ({
 	filterListObjectKeyValuePair: any;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) => {
-	console.log("filterListObjectKeyValuePair", filterListObjectKeyValuePair);
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
 		return chipArray({
 			list: [filterListObjectKeyValuePair[1]],
@@ -691,6 +690,7 @@ export default function DeliverablesTable({
 			deliverableTargetData.deliverableTargetList.length
 		) {
 			let deliverableTargetList = deliverableTargetData.deliverableTargetList;
+
 			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
 				let row: { collaspeTable: any; column: any[] } = {

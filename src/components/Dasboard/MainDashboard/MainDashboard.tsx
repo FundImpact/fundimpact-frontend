@@ -70,7 +70,7 @@ export default function MainDashboard() {
 							tooltip={intl.formatMessage({
 								id: "achievementCardTooltip",
 								defaultMessage:
-									"This card is showing total deliverable target and deliverable achieved for",
+									"This card is showing total deliverable target, Outcome, Output and Impact for",
 								description:
 									"This text will be show on dashboard for fund status card tooltip",
 							})}
