@@ -295,7 +295,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			// iF NAME EXIST PROVIDING THE SAME ID OTHERWISE A NEW ID
 			options = options.map((elem: string) => ({
 				id:
-					props.value_qualitative_option.find((e) => e.name == elem.trim())?.id ||
+					props.value_qualitative_option.find((e) => e.name === elem.trim())?.id ||
 					uuidv4(),
 				name: elem.trim(),
 			}));

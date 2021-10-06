@@ -1,13 +1,13 @@
 import {
 	ApolloClient,
-	DocumentNode,
+	// DocumentNode,
 	useApolloClient,
 	useLazyQuery,
 	useMutation,
 } from "@apollo/client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IntlShape, useIntl } from "react-intl";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import { FORM_ACTIONS } from "../../components/Forms/constant";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -143,13 +143,13 @@ const checkIfSelectedDonorIsDeletedProjectDonor = ({
 	projectDonors: IGetProjectDonor["projectDonors"] | undefined;
 }) =>
 	projectDonors?.some(
-		(projectDonor) => projectDonor?.donor?.id == selectedDonor && projectDonor?.deleted
+		(projectDonor) => projectDonor?.donor?.id === selectedDonor && projectDonor?.deleted
 	);
 
 const getProjectDonorIdForGivenDonor = (
 	projectDonors: IGetProjectDonor["projectDonors"],
 	donorId: string
-) => projectDonors.find((projectDonor) => projectDonor.donor.id == donorId)?.id;
+) => projectDonors.find((projectDonor) => projectDonor.donor.id === donorId)?.id;
 
 const checkIfCreateProjectDonorCheckBoxShouldBeShown = ({
 	selectedDonor,
@@ -190,7 +190,7 @@ const useProjectDonorSelectInput = ({
 			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
 		},
 	});
-	const [updateProjectDonorMutation, { loading: updatingProjectDonors }] = useMutation<
+	const [updateProjectDonorMutation] = useMutation<
 		ICreateProjectDonor,
 		IUpdateProjectDonorVariables
 	>(UPDATE_PROJECT_DONOR);
@@ -282,6 +282,7 @@ const useProjectDonorSelectInput = ({
 			});
 		}
 		return [];
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [getDonors, orgDonors, projectDonors, intl]);
 
 	const createProjectDonor = async () => {
@@ -294,10 +295,10 @@ const useProjectDonorSelectInput = ({
 				projectDonors: projectDonors?.projectDonors || [],
 				donorId: selectedDonorGlobal,
 			});
-			if (donorTypeSelected == donorType.organization) {
+			if (donorTypeSelected === donorType.organization) {
 				if (
-					formAction == FORM_ACTIONS.CREATE ||
-					(formAction == FORM_ACTIONS.UPDATE && !showCreateProjectDonorCheckboxGlobal)
+					formAction === FORM_ACTIONS.CREATE ||
+					(formAction === FORM_ACTIONS.UPDATE && !showCreateProjectDonorCheckboxGlobal)
 				) {
 					if (selectedDonorProjectDonorId) {
 						await updateProjectDonorMutation({
@@ -319,7 +320,7 @@ const useProjectDonorSelectInput = ({
 						selectedDonorProjectDonorId = createdProjDonor.data?.createProjDonor.id;
 					}
 				} else if (
-					formAction == FORM_ACTIONS.UPDATE &&
+					formAction === FORM_ACTIONS.UPDATE &&
 					showCreateProjectDonorCheckboxGlobal &&
 					createProjectDonorCheckboxValGlobal
 				) {

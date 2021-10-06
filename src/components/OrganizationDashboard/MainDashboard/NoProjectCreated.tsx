@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Typography, IconButton, CircularProgress } from "@material-ui/core";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { PROJECT_ACTIONS } from "../../Project/constants";
 import Project from "../../Project/Project";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -37,6 +37,7 @@ function NoProjectCreated({
 
 	useEffect(() => {
 		getProjects();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -49,6 +50,7 @@ function NoProjectCreated({
 		if (dashboardData) {
 			getWorkSpaces();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dashboardData]);
 
 	if (fetchingWorkspaces || !dashboardData) {

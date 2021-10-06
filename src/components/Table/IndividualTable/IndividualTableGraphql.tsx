@@ -2,16 +2,16 @@ import React, { useState, useEffect, useCallback } from "react";
 import IndividualTableContainer from "./IndividualTableContainer";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import IndividualTableGraphql from ".";
+// import IndividualTableGraphql from ".";
 import { GET_INDIVIDUALS, GET_INDIVIDUALS_COUNT } from "../../../graphql/Individual";
-import { useLazyQuery } from "@apollo/client";
-import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
+// import { useLazyQuery } from "@apollo/client";
+// import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import { IndividualTableType } from "../../../models/individual/constant";
 import { IDashboardDataContext } from "../../../models";
-import useLazyQueryCustom from "../../../hooks/useQueryCustom";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { setErrorNotification } from "../../../reducers/notificationReducer";
+// import useLazyQueryCustom from "../../../hooks/useQueryCustom";
+// import { useNotificationDispatch } from "../../../contexts/notificationContext";
+// import { setErrorNotification } from "../../../reducers/notificationReducer";
 
 const getDefaultFilterList = () => ({
 	name: "",
@@ -24,7 +24,7 @@ const getQueryFilter = ({
 	individualTableType: IndividualTableType;
 	dashboardData: IDashboardDataContext;
 }) => {
-	if (individualTableType == IndividualTableType.organization) {
+	if (individualTableType === IndividualTableType.organization) {
 		return { organization: dashboardData?.organization?.id, deleted: false };
 	}
 	return { t4d_project_individuals: { project: dashboardData?.project?.id }, deleted: false };
@@ -48,6 +48,7 @@ function IndividualCategoryTableGraphql({
 		if (dashboardData) {
 			setQueryFilter(getQueryFilter({ individualTableType, dashboardData }));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [setQueryFilter, dashboardData]);
 
 	useEffect(() => {
@@ -63,6 +64,7 @@ function IndividualCategoryTableGraphql({
 				...newFilterListObject,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filterList, dashboardData]);
 
 	const removeFilterListElements = (key: string, index?: number) =>

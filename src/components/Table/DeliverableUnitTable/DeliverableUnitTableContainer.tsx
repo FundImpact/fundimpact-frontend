@@ -5,9 +5,9 @@ import {
 	IDeliverableUnit,
 } from "../../../models/deliverable/deliverableUnit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import { ApolloQueryResult, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
-import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
+// import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
@@ -97,19 +97,19 @@ function DeliverableUnitTableContainer({
 		}
 	}, [openDialogs, getcategoryUnit]);
 
-	const deliverableCategoryMemoized = useMemo<string[]>(
-		() =>
-			deliverableCategoryUnitList?.deliverableCategoryUnitList
-				.filter(
-					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-						element.status
-				)
-				.map(
-					(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-						element.deliverable_category_org.id
-				),
-		[deliverableCategoryUnitList]
-	);
+	// const deliverableCategoryMemoized = useMemo<string[]>(
+	// 	() =>
+	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
+	// 			.filter(
+	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+	// 					element.status
+	// 			)
+	// 			.map(
+	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
+	// 					element.deliverable_category_org.id
+	// 			),
+	// 	[deliverableCategoryUnitList]
+	// );
 
 	const deliverableUnitEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

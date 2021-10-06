@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import IndividualTableView from "./IndividualTableView";
 import { IGET_INDIVIDUAL_LIST } from "../../../models/individual/query";
-import { IIndividualForm, IIndividual } from "../../../models/individual";
+import { IIndividual } from "../../../models/individual";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { CONTACT_ACTION } from "../../../utils/access/modules/contact/actions";
 import { INDIVIDUAL_ACTIONS } from "../../../utils/access/modules/individual/actions";

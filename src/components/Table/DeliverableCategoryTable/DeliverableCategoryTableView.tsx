@@ -3,21 +3,21 @@ import CommonTable from "../CommonTable";
 import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 import Deliverable from "../../Deliverable/Deliverable";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
-import DeliverableUnitTable from "../DeliverableUnitTable";
+// import DeliverableUnitTable from "../DeliverableUnitTable";
 import { deliverableCategoryTableHeading as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Chip, Avatar, MenuItem, Button, useTheme } from "@material-ui/core";
-import FilterList from "../../FilterList";
-import { deliverableCategoryInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
+import { Grid, Box, Chip, Avatar, Button, useTheme } from "@material-ui/core";
+// import FilterList from "../../FilterList";
+// import { deliverableCategoryInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	DELIVERABLE_CATEGORY_TABLE_EXPORT,
 	DELIVERABLE_CATEGORY_TABLE_IMPORT,
-	DELIVERABLE_CATEGORY_UNIT_EXPORT,
+	// DELIVERABLE_CATEGORY_UNIT_EXPORT,
 } from "../../../utils/endpoints.util";
-import { ApolloQueryResult } from "@apollo/client";
+// import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
-import { FormattedMessage } from "react-intl";
+// import { FormattedMessage } from "react-intl";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
 
