@@ -456,9 +456,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 			if (props.formType === "impact") {
 				deliverableTargetForm[0].hidden = true;
-				// return () => {
-				// 	deliverableTargetForm[0].hidden = false;
-				// };
 			}
 		}
 	}, [dashboardData, getOutputsByProject, props.formType]);
