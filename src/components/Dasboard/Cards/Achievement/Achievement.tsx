@@ -116,6 +116,14 @@ export default function Achievement() {
 		MODULE_CODES.IMPACT_TARGET,
 		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
 	);
+	const outputTargetFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	);
+	const outcomeTargetFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	);
 
 	let [GetDeliverableAmountTarget, { data: DeliverableAmountTarget }] = useLazyQuery(
 		GET_ALL_DELIVERABLES_TARGET_AMOUNT
@@ -124,7 +132,7 @@ export default function Achievement() {
 		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 		{
 			onCompleted: (data) => {
-				console.log("ddss", data);
+				// console.log("ddss", data);
 			},
 		}
 	);
@@ -137,13 +145,40 @@ export default function Achievement() {
 		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 		{
 			onCompleted: (data) => {
-				console.log("ddss", data);
+				// console.log("ddss", data);
+			},
+		}
+	);
+
+	let [GetOutputAmountTarget, { data: OutputAmountTarget }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+	);
+
+	let [GetOutputAmountSpend, { data: OutputAmountSpend }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				// console.log("output data", data);
+			},
+		}
+	);
+	let [GetOutcomeAmountTarget, { data: OutcomeAmountTarget }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+	);
+
+	let [GetOutcomeAmountSpend, { data: OutcomeAmountSpend }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				// console.log("output data", data);
 			},
 		}
 	);
 	useEffect(() => {
 		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS });
 		setIMPACT_STATUS({ ...IMPACT_STATUS });
+		setOUTPUT_STATUS({ ...OUTPUT_STATUS });
+		setOUTCOME_STATUS({ ...OUTCOME_STATUS });
 		if (!projectId) return;
 		GetDeliverableAmountSpend({
 			variables: {
@@ -185,7 +220,48 @@ export default function Achievement() {
 				},
 			},
 		});
+		GetOutputAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "output",
+					},
+				},
+			},
+		});
+		GetOutputAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "output",
+					},
+				},
+			},
+		});
+		GetOutcomeAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "outcome",
+					},
+				},
+			},
+		});
+		GetOutcomeAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "outcome",
+					},
+				},
+			},
+		});
 	}, [projectId]);
+
 	const intl = useIntl();
 	const [DELIVERABLE_STATUS, setDELIVERABLE_STATUS] = useState<IIndicatorProps_PROPS>({
 		name: intl.formatMessage({
@@ -204,6 +280,30 @@ export default function Achievement() {
 			id: "impactAchievementCard",
 			defaultMessage: "Impact",
 			description: `This text will be show on dashboard achievement card for fund deliverable`,
+		}),
+		achieved: 0,
+		target: 0,
+		lastUpdated: "20-5-2020",
+		color: "primary",
+	});
+
+	const [OUTPUT_STATUS, setOUTPUT_STATUS] = useState<IIndicatorProps_PROPS>({
+		name: intl.formatMessage({
+			id: "outputAchievementCard",
+			defaultMessage: "Output",
+			description: `This text will be show on dashboard achievement card for fund output`,
+		}),
+		achieved: 0,
+		target: 0,
+		lastUpdated: "20-5-2020",
+		color: "primary",
+	});
+
+	const [OUTCOME_STATUS, setOUTCOME_STATUS] = useState<IIndicatorProps_PROPS>({
+		name: intl.formatMessage({
+			id: "outcomeAchievementCard",
+			defaultMessage: "Outcome",
+			description: `This text will be show on dashboard achievement card for fund output`,
 		}),
 		achieved: 0,
 		target: 0,
@@ -231,10 +331,10 @@ export default function Achievement() {
 
 	useEffect(() => {
 		const TargetAmount = ImpactAmountTarget
-			? ImpactAmountTarget?.impactTargetProjectTotalAmount
+			? ImpactAmountTarget?.deliverableTargetTotalAmount
 			: null;
 		const AmoundSpend = ImpactAmountSpend
-			? ImpactAmountSpend.impactTrackingLineitemTotalSpendAmount
+			? ImpactAmountSpend.deliverableTrackingTotalSpendAmount
 			: null;
 		if (TargetAmount === undefined || TargetAmount === null) return;
 		if (AmoundSpend === undefined || AmoundSpend === null) return;
@@ -246,11 +346,49 @@ export default function Achievement() {
 		});
 	}, [ImpactAmountSpend, ImpactAmountTarget]);
 
+	useEffect(() => {
+		const TargetAmount = OutputAmountTarget
+			? OutputAmountTarget?.deliverableTargetTotalAmount
+			: null;
+		const AmoundSpend = OutputAmountSpend
+			? OutputAmountSpend.deliverableTrackingTotalSpendAmount
+			: null;
+		if (TargetAmount === undefined || TargetAmount === null) return;
+		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		setOUTPUT_STATUS({
+			...OUTPUT_STATUS,
+			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+			target: TargetAmount ? 100 : 0,
+		});
+	}, [OutputAmountSpend, OutputAmountTarget]);
+
+	useEffect(() => {
+		const TargetAmount = OutcomeAmountTarget
+			? OutcomeAmountTarget?.deliverableTargetTotalAmount
+			: null;
+		const AmoundSpend = OutcomeAmountSpend
+			? OutcomeAmountSpend.deliverableTrackingTotalSpendAmount
+			: null;
+		if (TargetAmount === undefined || TargetAmount === null) return;
+		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		setOUTCOME_STATUS({
+			...OUTCOME_STATUS,
+			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+			target: TargetAmount ? 100 : 0,
+		});
+	}, [OutcomeAmountSpend, OutcomeAmountTarget]);
+
 	if (
 		!DeliverableAmountTarget ||
 		!DeliverableAmountSpend ||
 		!ImpactAmountTarget ||
-		!ImpactAmountSpend
+		!ImpactAmountSpend ||
+		!OutputAmountTarget ||
+		!OutputAmountSpend ||
+		!OutcomeAmountTarget ||
+		!OutcomeAmountSpend
 	)
 		return (
 			<Grid item xs={12}>
@@ -260,11 +398,17 @@ export default function Achievement() {
 		);
 
 	return (
-		<>
-			<Grid container>
-				{deliverableTargetFindAccess && <ISTATUS {...DELIVERABLE_STATUS} />}
+		<Grid container>
+			<Grid item md={6}>
+				<Grid container>
+					{deliverableTargetFindAccess && <ISTATUS {...DELIVERABLE_STATUS} />}
+				</Grid>
+				<Grid container>{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}</Grid>
 			</Grid>
-			<Grid container>{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}</Grid>
-		</>
+			<Grid item md={6}>
+				<Grid container>{outputTargetFindAccess && <ISTATUS {...OUTPUT_STATUS} />}</Grid>
+				<Grid container>{outcomeTargetFindAccess && <ISTATUS {...OUTCOME_STATUS} />}</Grid>
+			</Grid>
+		</Grid>
 	);
 }

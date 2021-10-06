@@ -81,6 +81,9 @@ export const GET_IMPACT_SUB_TARGETS_COUNT = gql`
 		impactSubTargetsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
 			aggregate {
 				count
+				sum {
+					target_value
+				}
 			}
 		}
 	}

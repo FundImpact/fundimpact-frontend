@@ -10,6 +10,7 @@ const useDashBoardData = (): IDashboardDataContext | undefined => {
 	if (!context) {
 		throw new Error("useDashBoardData must be used within a DashboardProvider");
 	}
+	// console.log("context", context);
 	return context;
 };
 

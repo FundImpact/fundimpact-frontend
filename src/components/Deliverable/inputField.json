@@ -30,6 +30,21 @@
 	],
 	"deliverableTargetForm": [
 		{
+			"name": "parent_id",
+			"id": "parent_id",
+			"dataTestId": "deliverableOutputTarget",
+			"testId": "deliverableOutputTargetInput",
+			"label": "",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": false,
+			"size": 12
+		},
+		{
 			"name": "name",
 			"id": "name",
 			"dataTestId": "deliverableTargetName",
@@ -131,6 +146,7 @@
 			"size": 12
 		}
 	],
+
 	"deliverableTargetUpdateForm": [
 		{
 			"name": "name",
@@ -165,6 +181,7 @@
 			"size": 12
 		}
 	],
+
 	"deliverableUnitForm": [
 		{
 			"name": "name",
