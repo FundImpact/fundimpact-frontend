@@ -381,11 +381,12 @@ function SubTarget(props: SubTargetFormProps) {
 	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[9].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[10].optionsArray = lists.annualYear;
+
+	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState(false);
+	budgetSubTargetFormList[8].addNewClick = () => setOpenGrantPeriodForm(true);
 	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
-	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState(false);
-	budgetSubTargetFormList[8].addNewClick = () => setOpenGrantPeriodForm(true);
 
 	const createSubTargetHelper = async (
 		subTargetValues: ISubTarget,
