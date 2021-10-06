@@ -435,53 +435,30 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	useEffect(() => {
 		if (dashboardData?.project?.id) {
-			if (props.formType === "deliverable") {
+			let allowedProps = ["deliverable", "output", "outcome"];
+			let parentProps: any = { deliverable: "output", output: "outcome", outcome: "impact" };
+			if (allowedProps.includes(props.formType)) {
 				getOutputsByProject({
 					variables: {
 						filter: {
 							project_with_deliverable_targets: {
 								project: dashboardData?.project?.id,
 							},
-							type: "output",
+							type: parentProps[props.formType],
 						},
 					},
 				});
-				deliverableTargetForm[0].label = "Output";
-			}
-
-			if (props.formType === "output") {
-				getOutputsByProject({
-					variables: {
-						filter: {
-							project_with_deliverable_targets: {
-								project: dashboardData?.project?.id,
-							},
-							type: "outcome",
-						},
-					},
-				});
-				deliverableTargetForm[0].label = "Outcome";
-			}
-
-			if (props.formType === "outcome") {
-				getOutputsByProject({
-					variables: {
-						filter: {
-							project_with_deliverable_targets: {
-								project: dashboardData?.project?.id,
-							},
-							type: "impact",
-						},
-					},
-				});
-				deliverableTargetForm[0].label = "Impact";
+				deliverableTargetForm[0].hidden = false;
+				deliverableTargetForm[0].label =
+					parentProps[props.formType].charAt(0).toUpperCase() +
+					parentProps[props.formType].slice(1);
 			}
 
 			if (props.formType === "impact") {
 				deliverableTargetForm[0].hidden = true;
-				return () => {
-					deliverableTargetForm[0].hidden = false;
-				};
+				// return () => {
+				// 	deliverableTargetForm[0].hidden = false;
+				// };
 			}
 		}
 	}, [dashboardData, getOutputsByProject, props.formType]);
