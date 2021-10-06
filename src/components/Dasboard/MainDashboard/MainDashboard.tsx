@@ -41,7 +41,7 @@ export default function MainDashboard() {
 						<DashboardCard
 							title={intl.formatMessage({
 								id: "fundStatusCardTitle",
-								defaultMessage: "FUND STATUS",
+								defaultMessage: "FUND STATUS ",
 								description: `This text will be show on dashboard for fund status card title`,
 							})}
 							type={CARD_TYPES.DEFAULT}
@@ -59,7 +59,7 @@ export default function MainDashboard() {
 					</Grid>
 				)}
 				{(impactTargetFindAccess || deliverableTargetFindAccess) && (
-					<Grid item md={4}>
+					<Grid item md={8}>
 						<DashboardCard
 							title={intl.formatMessage({
 								id: "achievementCardTitle",
@@ -70,7 +70,7 @@ export default function MainDashboard() {
 							tooltip={intl.formatMessage({
 								id: "achievementCardTooltip",
 								defaultMessage:
-									"This card is showing total deliverable target and deliverable achieved for",
+									"This card is showing total deliverable target, Outcome, Output and Impact for",
 								description:
 									"This text will be show on dashboard for fund status card tooltip",
 							})}
@@ -80,7 +80,7 @@ export default function MainDashboard() {
 						</DashboardCard>
 					</Grid>
 				)}
-				{impactTargetFindAccess && (
+				{/* {impactTargetFindAccess && (
 					<Grid item md={4}>
 						<DashboardCard
 							title={intl.formatMessage({
@@ -101,7 +101,7 @@ export default function MainDashboard() {
 							<Impact />
 						</DashboardCard>
 					</Grid>
-				)}
+				)} */}
 			</Grid>
 			<Grid item style={{ flex: 4 }}>
 				<Box ml={1}>
