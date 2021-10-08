@@ -215,6 +215,7 @@ function DonorTable({
 			fetchPolicy: "network-only",
 		});
 		refetchDonorCount?.().then(() => refetchDonorsList?.());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [refetchDonorCount, refetchDonorsList]);
 
 	//this means new element has been added to the list

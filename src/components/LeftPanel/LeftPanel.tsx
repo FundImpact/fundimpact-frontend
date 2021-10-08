@@ -57,6 +57,7 @@ export default function LeftPanel() {
 	]);
 	const dispatch = useDashboardDispatch();
 	let { pathname } = useLocation();
+
 	useEffect(() => {
 		if (data) {
 			if (!data.orgProject.length && pathname === "/dashboard") {

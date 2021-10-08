@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ImpactUnitView from "./ImpactUnitTableView";
 import { IImpactUnitData } from "../../../models/impact/impact";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
@@ -8,7 +8,7 @@ import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 // import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
-import { IGetImpactCategoryUnit } from "../../../models/impact/query";
+// import { IGetImpactCategoryUnit } from "../../../models/impact/query";
 
 const getInitialValues = (
 	impactUnit: IImpactUnitData | null

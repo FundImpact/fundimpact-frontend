@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { FORM_ACTIONS } from "../constant";
 import CommonForm from "../../CommonForm/commonForm";
 import { userRoleForm } from "./inputField.json";
@@ -32,20 +32,20 @@ import {
 import FormDialog from "../../FormDialog";
 import { GET_PROJECTS } from "../../../graphql";
 import { IGetProject } from "../../../models/project/project";
-import { withStyles } from "@material-ui/core/styles";
-import MuiAccordion from "@material-ui/core/Accordion";
-import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
-import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
-import { Box, Grid, Typography } from "@material-ui/core";
-import { IGetUserRole } from "../../../models/access/query";
-import { RESTRICTED_ROLES } from "../../../models/User/constant";
+// import { withStyles } from "@material-ui/core/styles";
+// import MuiAccordion from "@material-ui/core/Accordion";
+// import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
+// import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
+// import { Box, Grid, Typography } from "@material-ui/core";
+// import { IGetUserRole } from "../../../models/access/query";
+// import { RESTRICTED_ROLES } from "../../../models/User/constant";
 
-const data = `Lorem ipsum dolor sit amet consectetur adipisicing elit.
-Earum repellat nisi, officiis incidunt repudiandae
-<h1>dqwdqwdqwdqwdqwd</h1>
-corporis magnam explicabo, iusto quibusdam similique,
-laboriosam commodi dolor sunt odit non cupiditate?
-Quasi, explicabo? Nulla.`;
+// const data = `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+// Earum repellat nisi, officiis incidunt repudiandae
+// <h1>dqwdqwdqwdqwdqwd</h1>
+// corporis magnam explicabo, iusto quibusdam similique,
+// laboriosam commodi dolor sunt odit non cupiditate?
+// Quasi, explicabo? Nulla.`;
 
 interface IUserRoleError extends Partial<Omit<IUserRole, "project">> {
 	project?: string;
@@ -121,46 +121,46 @@ interface IUnAssignSelectedProjectToUserProps {
 	>;
 }
 
-const Accordion = withStyles({
-	root: {
-		border: "1px solid rgba(0, 0, 0, .125)",
-		boxShadow: "none",
-		"&:not(:last-child)": {
-			borderBottom: 0,
-		},
-		"&:before": {
-			display: "none",
-		},
-		"&$expanded": {
-			margin: "auto",
-		},
-	},
-	expanded: {},
-})(MuiAccordion);
+// const Accordion = withStyles({
+// 	root: {
+// 		border: "1px solid rgba(0, 0, 0, .125)",
+// 		boxShadow: "none",
+// 		"&:not(:last-child)": {
+// 			borderBottom: 0,
+// 		},
+// 		"&:before": {
+// 			display: "none",
+// 		},
+// 		"&$expanded": {
+// 			margin: "auto",
+// 		},
+// 	},
+// 	expanded: {},
+// })(MuiAccordion);
 
-const AccordionSummary = withStyles({
-	root: {
-		backgroundColor: "rgba(0, 0, 0, .03)",
-		borderBottom: "1px solid rgba(0, 0, 0, .125)",
-		marginBottom: -1,
-		minHeight: 56,
-		"&$expanded": {
-			minHeight: 56,
-		},
-	},
-	content: {
-		"&$expanded": {
-			margin: "12px 0",
-		},
-	},
-	expanded: {},
-})(MuiAccordionSummary);
+// const AccordionSummary = withStyles({
+// 	root: {
+// 		backgroundColor: "rgba(0, 0, 0, .03)",
+// 		borderBottom: "1px solid rgba(0, 0, 0, .125)",
+// 		marginBottom: -1,
+// 		minHeight: 56,
+// 		"&$expanded": {
+// 			minHeight: 56,
+// 		},
+// 	},
+// 	content: {
+// 		"&$expanded": {
+// 			margin: "12px 0",
+// 		},
+// 	},
+// 	expanded: {},
+// })(MuiAccordionSummary);
 
-const AccordionDetails = withStyles((theme) => ({
-	root: {
-		padding: theme.spacing(2),
-	},
-}))(MuiAccordionDetails);
+// const AccordionDetails = withStyles((theme) => ({
+// 	root: {
+// 		padding: theme.spacing(2),
+// 	},
+// }))(MuiAccordionDetails);
 
 function getInitialValues(
 	props: UserRoleProps
@@ -401,7 +401,7 @@ function UserRoleForm(props: UserRoleProps) {
 		[projects]
 	);
 
-	if (props.type == FORM_ACTIONS.UPDATE) {
+	if (props.type === FORM_ACTIONS.UPDATE) {
 		hideRoleAndEmailFieldAndShowProjects();
 	}
 
@@ -432,7 +432,7 @@ function UserRoleForm(props: UserRoleProps) {
 	}[]) = useMemo(() => filterRoles(userRoles?.roles || []), [userRoles, dashboardData]);
 
 	useEffect(() => {
-		if (props.type == FORM_ACTIONS.UPDATE) {
+		if (props.type === FORM_ACTIONS.UPDATE) {
 			setSelectedRole(
 				getSelectedRole({
 					roleId: props.data.role,
@@ -440,6 +440,7 @@ function UserRoleForm(props: UserRoleProps) {
 				})
 			);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userRoles]);
 
 	userRoleForm[1].getInputValue = useCallback(

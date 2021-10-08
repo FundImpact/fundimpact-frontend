@@ -18,7 +18,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { UserDispatchContext } from "../../../contexts/userContext";
 import { useGetFetch } from "../../../hooks/fetch/useFetch";
@@ -30,7 +30,7 @@ import { setUser } from "../../../reducers/userReducer";
 import { checkIfUserIsOnStagingDeployment } from "../../../utils";
 import { COUNTRY_LIST_API, SIGNUP_API } from "../../../utils/endpoints.util";
 import { getDefaultBasicInformation } from "../../../utils/signup.util";
-import { DEMO, DEMO1, LOCAL, STAGING } from "../../../utils/stagingDeploymentEndpoints.util";
+// import { DEMO, DEMO1, LOCAL, STAGING } from "../../../utils/stagingDeploymentEndpoints.util";
 import AlertMsg from "../../AlertMessage/AlertMessage";
 import GlobalLoader from "../../commons/GlobalLoader";
 

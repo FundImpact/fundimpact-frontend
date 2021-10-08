@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
 	useMutation,
-	useQuery,
-	ApolloCache,
+	// useQuery,
+	// ApolloCache,
 	FetchResult,
 	MutationFunctionOptions,
-	useLazyQuery,
+	// useLazyQuery,
 } from "@apollo/client";
 import {
-	CREATE_IMPACT_CATEGORY_UNIT,
+	// CREATE_IMPACT_CATEGORY_UNIT,
 	CREATE_IMPACT_UNITS_ORG_INPUT,
 } from "../../../graphql/Impact/mutation";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
 import { UPDATE_IMPACT_UNIT_ORG } from "../../../graphql/Impact/mutation";
 import {
 	GET_IMPACT_UNIT_BY_ORG,
-	GET_IMPACT_CATEGORY_BY_ORG,
+	// GET_IMPACT_CATEGORY_BY_ORG,
 	GET_IMPACT_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Impact/query";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -34,17 +34,17 @@ import {
 	IGetImpactCategoryUnit,
 	IUpdateImpactCategoryUnit,
 	IUpdateImpactCategoryUnitVariables,
-	IGetImpactCategoryUnitVariables,
+	// IGetImpactCategoryUnitVariables,
 } from "../../../models/impact/query";
-import {
-	GET_IMPACT_CATEGORY_UNIT_COUNT,
-	GET_IMPACT_CATEGORY_UNIT,
-	UPDATE_IMPACT_CATEGORY_UNIT,
-} from "../../../graphql/Impact/categoryUnit";
+// import {
+// 	GET_IMPACT_CATEGORY_UNIT_COUNT,
+// 	GET_IMPACT_CATEGORY_UNIT,
+// 	UPDATE_IMPACT_CATEGORY_UNIT,
+// } from "../../../graphql/Impact/categoryUnit";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
-import ImpactCategoryDialog from "../ImpactCategoryDialog";
-import { useLocation } from "react-router";
+// import ImpactCategoryDialog from "../ImpactCategoryDialog";
+// import { useLocation } from "react-router";
 import DeleteModal from "../../DeleteModal";
 
 let inputFields: any[] = impactUnitForm;

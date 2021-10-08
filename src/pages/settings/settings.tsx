@@ -28,6 +28,7 @@ import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermiss
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
+import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 
 interface IPrivateRouterProps extends RouteProps {
@@ -184,7 +185,7 @@ export default function SettingContainer() {
 								<LeftPanel />
 							</Grid>
 							<Grid item xs={10}>
-								<SettingsSidebar></SettingsSidebar>
+								<SettingsSidebar />
 							</Grid>
 						</Grid>
 					</Box>
@@ -255,6 +256,11 @@ export default function SettingContainer() {
 							userAccess={organizationEditAccess}
 							element={<IndividualContainer />}
 							path="individual"
+						/>
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<TallyContainer />}
+							path="tally"
 						/>
 					</Routes>
 				</Grid>

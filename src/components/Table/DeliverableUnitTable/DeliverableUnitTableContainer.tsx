@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DeliverableUnitTableView from "./DeliverableUnitTableView";
 import {
 	IDeliverableUnitData,
@@ -11,7 +11,7 @@ import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
-import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
+// import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
 	deliverableUnit: IDeliverableUnitData | null,
@@ -75,9 +75,7 @@ function DeliverableUnitTableContainer({
 
 	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
 	const dashboardData = useDashBoardData();
-	const [getcategoryUnit, { data: deliverableCategoryUnitList }] = useLazyQuery(
-		GET_CATEGORY_UNIT
-	);
+	const [getcategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT);
 
 	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>

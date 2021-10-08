@@ -208,6 +208,7 @@ function OrganizationView({
 				resetDashboardColor({ formikInstanceRef, dashboardDispatch, dashboardData });
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	const intl = useIntl();
 

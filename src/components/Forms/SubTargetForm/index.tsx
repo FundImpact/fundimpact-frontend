@@ -191,7 +191,7 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
 		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
-		skip: !currentDonor || !dashboardData?.project?.id,
+		// skip: !currentDonor || !dashboardData?.project?.id,
 	});
 
 	const [lists, setList] = useState<{
@@ -379,12 +379,12 @@ function SubTarget(props: SubTargetFormProps) {
 	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[9].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[10].optionsArray = lists.annualYear;
-
-	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState(false);
-	budgetSubTargetFormList[8].addNewClick = () => setOpenGrantPeriodForm(true);
 	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
+
+	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState(false);
+	budgetSubTargetFormList[8].addNewClick = () => setOpenGrantPeriodForm(true);
 
 	const createSubTargetHelper = async (
 		subTargetValues: ISubTarget,
@@ -689,9 +689,9 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let currentTitle = getTitle();
 
-	useEffect(() => {
-		console.log("budgetSubTargetFormList: ", budgetSubTargetFormList);
-	}, [budgetSubTargetFormList]);
+	// useEffect(() => {
+	// 	console.log("budgetSubTargetFormList[8]: ", budgetSubTargetFormList[8].optionsArray);
+	// }, [budgetSubTargetFormList[8].optionsArray]);
 
 	return (
 		<React.Fragment>
@@ -727,6 +727,7 @@ function SubTarget(props: SubTargetFormProps) {
 						action={FORM_ACTIONS.CREATE}
 					/>
 				)}
+
 				{openDonorDialog && (
 					<Donor
 						open={openDonorDialog}
