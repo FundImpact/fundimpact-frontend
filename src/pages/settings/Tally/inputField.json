@@ -1,0 +1,230 @@
+{
+	"donorForm": [
+		{
+			"inputType": "select",
+			"name": "donor",
+			"id": "donor",
+			"dataTestId": "donorDataTestId",
+			"testId": "donorTestId",
+			"label": "Donor",
+			"optionsArray": [
+				{ "id": "1", "name": "Donor1" },
+				{ "id": "2", "name": "Donor2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "project",
+			"id": "project",
+			"dataTestId": "projectDataTestId",
+			"testId": "projectTestId",
+			"label": "Project",
+			"optionsArray": [
+				{ "id": "1", "name": "Project1" },
+				{ "id": "2", "name": "Project2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "target",
+			"id": "target",
+			"dataTestId": "targetDataTestId",
+			"testId": "targetTestId",
+			"label": "Target",
+			"optionsArray": [
+				{ "id": "1", "name": "Target1" },
+				{ "id": "2", "name": "Target2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "subTarget",
+			"id": "subTarget",
+			"dataTestId": "subTargetDataTestId",
+			"testId": "subTargetTestId",
+			"label": "Sub Target",
+			"optionsArray": [
+				{ "id": "1", "name": "Sub Target1" },
+				{ "id": "2", "name": "Sub Target2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "projectBudgetCategory",
+			"id": "projectBudgetCategory",
+			"dataTestId": "projectBudgetCategoryDataTestId",
+			"testId": "projectBudgetCategoryTestId",
+			"label": "Project Budget Category",
+			"optionsArray": [
+				{ "id": "1", "name": "Project Budget1" },
+				{ "id": "2", "name": "Project Budget2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": true
+		}
+	],
+	"projectForm": [
+		{
+			"inputType": "select",
+			"name": "projects",
+			"id": "projects",
+			"dataTestId": "projectsDataTestId",
+			"testId": "projectsTestId",
+			"label": "Projects",
+			"optionsArray": [
+				{ "id": "1", "name": "Projects1" },
+				{ "id": "2", "name": "Projects2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "target",
+			"id": "target",
+			"dataTestId": "targetDataTestId",
+			"testId": "targetTestId",
+			"label": "Target",
+			"optionsArray": [
+				{ "id": "1", "name": "Target1" },
+				{ "id": "2", "name": "Target2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "subTarget",
+			"id": "subTarget",
+			"dataTestId": "subTargetDataTestId",
+			"testId": "subTargetTestId",
+			"label": "Sub Target",
+			"optionsArray": [
+				{ "id": "1", "name": "Sub Target1" },
+				{ "id": "2", "name": "Sub Target2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "projectBudgetCategory",
+			"id": "projectBudgetCategory",
+			"dataTestId": "projectBudgetCategoryDataTestId",
+			"testId": "projectBudgetCategoryTestId",
+			"label": "Project Budget Category",
+			"optionsArray": [
+				{ "id": "1", "name": "Project Budget1" },
+				{ "id": "2", "name": "Project Budget2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": true
+		}
+	],
+	"targetForm": [
+		{
+			"inputType": "select",
+			"name": "target",
+			"id": "target",
+			"dataTestId": "targetDataTestId",
+			"testId": "targetTestId",
+			"label": "Target",
+			"optionsArray": [
+				{ "id": "1", "name": "Target1" },
+				{ "id": "2", "name": "Target2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		}
+	],
+	"budgetCategoryForm": [
+		{
+			"inputType": "select",
+			"name": "budget_category",
+			"id": "budget_category",
+			"dataTestId": "budgetCategoryDataTestId",
+			"testId": "budgetCategoryTestId",
+			"label": "Budget Category",
+			"optionsArray": [
+				{ "id": "1", "name": "Budget Category1" },
+				{ "id": "2", "name": "Budget Category2" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		}
+	]
+}
