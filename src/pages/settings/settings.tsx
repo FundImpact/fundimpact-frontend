@@ -29,6 +29,7 @@ import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
+import TallyContainer from "./Tally";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -256,6 +257,7 @@ export default function SettingContainer() {
 							element={<IndividualContainer />}
 							path="individual"
 						/>
+						<PrivateRoute userAccess={true} element={<TallyContainer />} path="tally" />
 					</Routes>
 				</Grid>
 			</Grid>

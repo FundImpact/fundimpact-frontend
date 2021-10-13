@@ -58,6 +58,12 @@ export const sidebarList: {
 				title: "Deliverable Categories And Units",
 				userAccess: true,
 			},
+			{
+				to: "tally",
+				dataTestId: "tally-link",
+				title: "Tally",
+				userAccess: true,
+			},
 		],
 	},
 	{
