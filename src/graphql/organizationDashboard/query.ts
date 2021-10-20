@@ -95,6 +95,7 @@ export const GET_IMPACTS_PROJECTS_ACHIEVED = gql`
 		impactAchieved(where: $filter)
 	}
 `;
+
 export const GET_DONOR_BY_FUND_RECEIVED = gql`
 	query getDonorsRecievedValue($filter: JSON) {
 		donorsRecievedValue(where: $filter)

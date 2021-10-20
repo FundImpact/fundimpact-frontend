@@ -20,7 +20,7 @@ const useStyle = makeStyles((theme: Theme) =>
 	})
 );
 
-const DonorsForm = ({
+const TallyForm = ({
 	initialValues,
 	validate,
 	onSubmit,
@@ -281,4 +281,4 @@ const DonorsForm = ({
 	);
 };
 
-export default DonorsForm;
+export default TallyForm;

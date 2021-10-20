@@ -7,10 +7,7 @@
 			"dataTestId": "donorDataTestId",
 			"testId": "donorTestId",
 			"label": "Donor",
-			"optionsArray": [
-				{ "id": "1", "name": "Donor1" },
-				{ "id": "2", "name": "Donor2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -27,10 +24,7 @@
 			"dataTestId": "projectDataTestId",
 			"testId": "projectTestId",
 			"label": "Project",
-			"optionsArray": [
-				{ "id": "1", "name": "Project1" },
-				{ "id": "2", "name": "Project2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -47,10 +41,7 @@
 			"dataTestId": "targetDataTestId",
 			"testId": "targetTestId",
 			"label": "Target",
-			"optionsArray": [
-				{ "id": "1", "name": "Target1" },
-				{ "id": "2", "name": "Target2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -58,7 +49,8 @@
 			"addNew": false,
 			"size": 6,
 			"position": "after",
-			"hidden": false
+			"hidden": false,
+			"getInputValue": {}
 		},
 		{
 			"inputType": "select",
@@ -67,10 +59,7 @@
 			"dataTestId": "subTargetDataTestId",
 			"testId": "subTargetTestId",
 			"label": "Sub Target",
-			"optionsArray": [
-				{ "id": "1", "name": "Sub Target1" },
-				{ "id": "2", "name": "Sub Target2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -87,10 +76,7 @@
 			"dataTestId": "projectBudgetCategoryDataTestId",
 			"testId": "projectBudgetCategoryTestId",
 			"label": "Project Budget Category",
-			"optionsArray": [
-				{ "id": "1", "name": "Project Budget1" },
-				{ "id": "2", "name": "Project Budget2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -109,10 +95,7 @@
 			"dataTestId": "projectsDataTestId",
 			"testId": "projectsTestId",
 			"label": "Projects",
-			"optionsArray": [
-				{ "id": "1", "name": "Projects1" },
-				{ "id": "2", "name": "Projects2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -120,7 +103,8 @@
 			"addNew": false,
 			"size": 6,
 			"position": "before",
-			"hidden": false
+			"hidden": false,
+			"getInputValue": {}
 		},
 		{
 			"inputType": "select",
@@ -129,10 +113,7 @@
 			"dataTestId": "targetDataTestId",
 			"testId": "targetTestId",
 			"label": "Target",
-			"optionsArray": [
-				{ "id": "1", "name": "Target1" },
-				{ "id": "2", "name": "Target2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -140,7 +121,8 @@
 			"addNew": false,
 			"size": 6,
 			"position": "after",
-			"hidden": false
+			"hidden": false,
+			"getInputValue": {}
 		},
 		{
 			"inputType": "select",
@@ -149,10 +131,7 @@
 			"dataTestId": "subTargetDataTestId",
 			"testId": "subTargetTestId",
 			"label": "Sub Target",
-			"optionsArray": [
-				{ "id": "1", "name": "Sub Target1" },
-				{ "id": "2", "name": "Sub Target2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -169,10 +148,7 @@
 			"dataTestId": "projectBudgetCategoryDataTestId",
 			"testId": "projectBudgetCategoryTestId",
 			"label": "Project Budget Category",
-			"optionsArray": [
-				{ "id": "1", "name": "Project Budget1" },
-				{ "id": "2", "name": "Project Budget2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -191,10 +167,7 @@
 			"dataTestId": "targetDataTestId",
 			"testId": "targetTestId",
 			"label": "Target",
-			"optionsArray": [
-				{ "id": "1", "name": "Target1" },
-				{ "id": "2", "name": "Target2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
@@ -213,10 +186,7 @@
 			"dataTestId": "budgetCategoryDataTestId",
 			"testId": "budgetCategoryTestId",
 			"label": "Budget Category",
-			"optionsArray": [
-				{ "id": "1", "name": "Budget Category1" },
-				{ "id": "2", "name": "Budget Category2" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
