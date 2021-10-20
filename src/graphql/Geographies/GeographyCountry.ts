@@ -19,3 +19,13 @@ export const GET_COUNTRY_DATA = gql`
 		}
 	}
 `;
+
+export const GET_COUNTRY_COUNT = gql`
+	query getcountryCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		countriesConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;

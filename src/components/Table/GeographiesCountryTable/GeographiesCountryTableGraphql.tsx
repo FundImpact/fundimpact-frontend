@@ -13,7 +13,7 @@ import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesCountryTableContainer from "./GeographiesCountryTableContainers";
-import { GET_COUNTRY_DATA } from "../../../graphql/Geographies/GeographyCountry";
+import { GET_COUNTRY_COUNT, GET_COUNTRY_DATA } from "../../../graphql/Geographies/GeographyCountry";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -109,6 +109,7 @@ function GoegraphiesCountryTableGraphql({
 		queryRefetch: refetchDeliverableCategory,
 		countRefetch: refetchDeliverableCategoryCount,
 	} = pagination({
+		// countQuery: GET_COUNTRY_COUNT,
 		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 		countFilter: queryFilter,
 		// query: GET_COUNTRY_DATA,
@@ -117,6 +118,10 @@ function GoegraphiesCountryTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
+
+	// console.log("category Count", deliverableCategoryCount);
+
+	// console.log("countris data", deliverableCategoryList);
 
 	// let {
 	// 	changePage: changeDeliverableCategoryUnitPage,

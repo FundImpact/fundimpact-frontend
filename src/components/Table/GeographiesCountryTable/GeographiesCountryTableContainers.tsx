@@ -7,7 +7,7 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 // import DeliverableCategoryTableView from "./DeliverableCategoryTableView";
 import GeographiesCountryTableView from "./GeographiesCountryTableView";
 import { useLazyQuery } from "@apollo/client";
-import { GET_COUNTRY_DATA } from "../../../graphql/Geographies/GeographyCountry";
+import { GET_COUNTRY_COUNT, GET_COUNTRY_DATA } from "../../../graphql/Geographies/GeographyCountry";
 // import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (
@@ -107,9 +107,17 @@ function GeographiesCountryTableContainer({
 
 	const [getCountries, countriesResponse] = useLazyQuery(GET_COUNTRY_DATA);
 
+	const [getCountryCount, countryCountResponse] = useLazyQuery(GET_COUNTRY_COUNT);
+
 	useEffect(() => {
 		getCountries();
+		getCountryCount();
 	}, []);
+
+	console.log(
+		"countryCountResponse",
+		countryCountResponse?.data?.countriesConnection?.aggregate?.count
+	);
 
 	let geographiesCountryList = countriesResponse?.data?.countries || [];
 
