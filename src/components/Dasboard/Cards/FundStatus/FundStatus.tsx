@@ -23,8 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	fundTextIcon: {
 		height: "12px",
-		marginRight: theme.spacing(1),
-		marginTop: theme.spacing(1),
+	},
+	txt: {
+		fontSize: "12px",
+		marginRight: "5px",
 	},
 }));
 
@@ -55,11 +57,13 @@ export default function FundStatus() {
 		description: `This text will be show on dashboard fund status card for fund status bullet chart on hover`,
 	});
 
+	/*
 	const totalLabel = intl.formatMessage({
 		id: "FundStatusTotalTitle",
 		defaultMessage: "Total",
 		description: `This text will be show on dashboard fund status card for total bullet chart`,
 	});
+ */
 
 	const createFundDetails = (
 		amountApproved: number,
@@ -85,11 +89,11 @@ export default function FundStatus() {
 			color: theme.palette.grey[200],
 		};
 
-		const TOTAL_FUNDS: IFunds = {
+		/* const TOTAL_FUNDS: IFunds = {
 			name: totalLabel,
 			amountToShow: undefined,
 			color: theme.palette.info.main,
-		};
+		}; */
 
 		// let pieData = {
 		// 	labels: ["Approved", "Spend", "Received"],
@@ -104,6 +108,7 @@ export default function FundStatus() {
 		// 		},
 		// 	],
 		// };
+
 		let BulletChartConfig = {
 			comparativeErrorMeasureData: [{ name: approvedLabel, y: amountApproved }],
 			primarySegmentedMeasureData: [{ name: spendLabel, y: amountSpend }],
@@ -113,7 +118,7 @@ export default function FundStatus() {
 			],
 		};
 
-		let totalAmount = amountApproved + amountSpend + amountReceived;
+		/*let totalAmount = amountApproved + amountSpend + amountReceived; */
 		let details = [
 			{
 				...FUNDS_APPROVED,
@@ -136,12 +141,6 @@ export default function FundStatus() {
 				amountToShow:
 					amountSpend > 999 ? (amountSpend / 1000).toFixed(1) + "K" : amountSpend + "",
 				originalAmount: amountSpend,
-			},
-			{
-				...TOTAL_FUNDS,
-				amountToShow:
-					totalAmount > 999 ? (totalAmount / 1000).toFixed(1) + "K" : totalAmount + "",
-				originalAmount: totalAmount,
 			},
 		];
 
@@ -194,7 +193,6 @@ export default function FundStatus() {
 		setFUND_DETAILS(undefined);
 
 		if (projectId === undefined || projectId === null) return;
-
 		GetProjectTotalBudget({ variables: { filter: { project: projectId } } });
 		GetProjectTotalSpend({ variables: { filter: { project: projectId } } });
 		GetProjectTotalReceived({ variables: { filter: { project: projectId } } });
@@ -210,6 +208,7 @@ export default function FundStatus() {
 				<Skeleton variant="text" animation="wave"></Skeleton>
 			</>
 		);
+	console.log("FUND_DETAILS", FUND_DETAILS);
 	return (
 		<Grid className={classes.root}>
 			<ChartBullet
@@ -228,23 +227,23 @@ export default function FundStatus() {
 			/>
 			<Grid container spacing={0} direction="row">
 				{FUND_DETAILS?.map((fund, index) => (
-					<Grid item xs={6} container={true} alignContent="center" key={fund.name}>
-						<Box m={0} ml={2} width="100%" display="inline">
+					<Grid item xs={6} container={true} key={fund.name}>
+						{/* <Box m={0} width="100%" display="inline"> */}
+						<Box display="flex" alignItems="center">
+							<FiberManualRecordIcon
+								className={classes.fundTextIcon}
+								style={{ color: fund.color }}
+							/>
 							<Box display="flex">
-								<FiberManualRecordIcon
-									className={classes.fundTextIcon}
-									style={{ color: fund.color }}
-								/>
-								<Box display="flex">
-									<Box mr={1}>
-										<Typography variant="subtitle1">
-											{fund.amountToShow}
-										</Typography>
-									</Box>
-									<Typography variant="subtitle1">{fund.name}</Typography>
-								</Box>
+								<Typography className={classes.txt} variant="subtitle1">
+									{fund.amountToShow}
+								</Typography>
+								<Typography className={classes.txt} variant="subtitle1">
+									{fund.name}
+								</Typography>
 							</Box>
 						</Box>
+						{/* </Box> */}
 					</Grid>
 				))}
 

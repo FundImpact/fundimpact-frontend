@@ -1,220 +1,261 @@
-import * as React from "react";
-import {
-	TableContainer,
-	Table,
-	TableRow,
-	TableCell,
-	TableBody,
-	TableHead,
-	IconButton,
-	MenuItem,
-	TableFooter,
-	TablePagination,
-	Collapse,
-	Box,
-	Typography,
-	TableSortLabel,
-	Grid,
-	Paper,
-	Button,
-	makeStyles,
-	Theme,
-	createStyles,
-	Menu,
-} from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { green } from "@material-ui/core/colors";
+import React, { useEffect, useState } from "react";
+import { Box, Button, FormControlLabel, RadioGroup, Radio } from "@material-ui/core";
+import FIDialog from "../../../components/Dialog/Dialog";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { donorForm, projectForm, targetForm, budgetCategoryForm } from "./inputField.json";
+import Tallyforms from "../../../components/Forms/Tally";
 
-const useStyles = makeStyles({
-	table: {
-		minWidth: 650,
-	},
-});
-
-const tableHeading = [
-	{ label: "Tally Id" },
-	{ label: "Cost Center" },
-	{ label: "Donor" },
-	{ label: "Project" },
-	{ label: "Target" },
-	{ label: "Sub-Target" },
-	{ label: "Category" },
-	{ label: "Status" },
-];
-
-const options = ["Modify", "delete"];
-
-const TableData = [
-	{
-		id: 1,
-		name: "ajeet kumar",
-		donor: "Donor1",
-		project: "project1",
-		Target: "Target",
-		subTarget: "subTarget",
-		category: "Donor 1",
-		status: true,
-	},
-	{
-		id: 2,
-		name: "ajeet kumar",
-		donor: "Donor1",
-		project: "project1",
-		Target: "Target",
-		subTarget: "subTarget",
-		category: "Donor 1",
-		status: true,
-	},
-	{
-		id: 3,
-		name: "ajeet kumar",
-		donor: "Donor1",
-		project: "project1",
-		Target: "Target",
-		subTarget: "subTarget",
-		category: "Donor 1",
-		status: false,
-	},
-	{
-		id: 4,
-		name: "ajeet kumar",
-		donor: "Donor1",
-		project: "project1",
-		Target: "Target",
-		subTarget: "subTarget",
-		category: "Donor 1",
-		status: true,
-	},
-];
-
-const styledTable = makeStyles((theme: Theme) =>
+const useStyle = makeStyles((theme: Theme) =>
 	createStyles({
-		th: { color: theme.palette.primary.main, backgroundColor: theme.palette.background.paper },
-		tbody: {
-			"& tr:nth-child(4n+1)": { background: theme.palette.action.hover },
-			"& tr:nth-child(even)": { background: theme.palette.action.selected },
-			"& td.MuiTableCell-root": {
-				paddingTop: "1px",
-				paddingBottom: "1px",
-			},
+		formWrapper: {
+			minHeight: theme.spacing(40),
+		},
+		childrenWrapper: {
+			width: "50%",
+			marginTop: theme.spacing(5),
+			marginBottom: theme.spacing(2),
 		},
 	})
 );
 
-const styleActive = {
-	borderRadius: "50px",
-	color: "white",
-	padding: "8px",
-	background: "#52dd87",
+const getInitialValues = (keyword: string) => {
+	if (keyword === "donor")
+		return {
+			donor: "",
+			project: "",
+			target: "",
+			subTarget: "",
+			projectBudgetCategory: "",
+		};
+
+	if (keyword === "project")
+		return {
+			projects: "",
+			target: "",
+			subTarget: "",
+			projectBudgetCategory: "",
+		};
+
+	if (keyword === "target")
+		return {
+			target: "",
+		};
+
+	if (keyword === "budget_category")
+		return {
+			budget_category: "",
+		};
 };
 
-const styleInactive = {
-	borderRadius: "50px",
-	color: "white",
-	padding: "8px",
-	background: "#bac0bd",
-};
+const TallyContainer = () => {
+	const classes = useStyle();
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
+	const [globalSelect, setGlobalSelect] = useState<string>("donor");
+	const [donorSelect, setDonorSelect] = useState<string>("targetsAndSubTargets");
 
-function TallyContainer() {
-	const tableStyles = styledTable();
-	const classes = useStyles();
+	const handleCloseDialog = () => {
+		setOpenDialog(false);
+	};
 
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
-	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(event.currentTarget);
+	const handleGlobalSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setGlobalSelect(e.target.value);
 	};
-	const handleClose = () => {
-		setAnchorEl(null);
+
+	const handleDonorSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setDonorSelect(e.target.value);
 	};
+
+	const validate = (values: any) => {
+		let errors: Partial<any> = {};
+		// if (props.type === DELIVERABLE_ACTIONS.CREATE) {
+
+		// if (!values.donor) {
+		// 	errors.donor = "Donor is required";
+		// }
+		// if (!values.project) {
+		// 	errors.project = "Projcet is required";
+		// }
+		// // }
+
+		// if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
+		// 	if (!values.name && !values.name.length) {
+		// 		errors.name = "Name is required";
+		// 	}
+		// 	if (!values.project) {
+		// 		errors.project = "Project is required";
+		// 	}
+		// 	if (values.is_qualitative) {
+		// 		if (!values.value_qualitative_option) {
+		// 			errors.value_qualitative_option = "Options are required";
+		// 		}
+		// 	} else {
+		// 		if (!values.value_calculation) {
+		// 			errors.value_calculation = "This Field is required";
+		// 		}
+		// 	}
+		// }
+		return errors;
+	};
+
+	const onCreate = (value: any) => {
+		console.log("Oncreate: ", value);
+	};
+	const onUpdate = (value: any) => {
+		console.log("Onupdate: ", value);
+	};
+
+	const onCancel = () => {
+		handleCloseDialog();
+	};
+
+	if (donorSelect === "targetsAndSubTargets") {
+		donorForm[2].hidden = false;
+		donorForm[3].hidden = false;
+		donorForm[4].hidden = true;
+		projectForm[1].hidden = false;
+		projectForm[2].hidden = false;
+		projectForm[3].hidden = true;
+	}
+
+	if (donorSelect === "projectBudgetCategory") {
+		donorForm[2].hidden = true;
+		donorForm[3].hidden = true;
+		donorForm[4].hidden = false;
+		projectForm[1].hidden = true;
+		projectForm[2].hidden = true;
+		projectForm[3].hidden = false;
+	}
 
 	return (
-		<div style={{ margin: "10px" }}>
-			<h1>Vouchers</h1>
-			<TableContainer component={Paper}>
-				<Table aria-label="simple table" className={classes.table}>
-					<TableHead className={tableStyles.th}>
-						<TableRow color="primary">
-							{tableHeading.map((data) => (
-								<TableCell style={{ color: "#5567FF" }}>{data.label}</TableCell>
-							))}
-							<TableCell>
-								<IconButton>
-									<MoreVertIcon />
-								</IconButton>
-							</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody className={tableStyles.tbody}>
-						{TableData.map((data) => (
-							<TableRow key={data.id}>
-								<TableCell>{data.id}</TableCell>
-								<TableCell>{data.name}</TableCell>
-								<TableCell>{data.donor}</TableCell>
-								<TableCell>{data.project}</TableCell>
-								<TableCell>{data.Target}</TableCell>
-								<TableCell>{data.subTarget}</TableCell>
-								<TableCell>{data.category}</TableCell>
-								<TableCell>
-									{/* <IconButton
-										aria-label="expand row"
-										size="small"
-										disabled={true}
-										className={statusColor}
-									> */}
-									<span style={data.status ? styleActive : styleInactive}>
-										{data.status ? "Active" : "Inactive"}
-									</span>
-									{/* </IconButton> */}
-								</TableCell>
-								<TableCell>
-									{/* <IconButton>
-									<MoreVertIcon />
-								</IconButton> */}
+		<Box p={2}>
+			<h1>Welcome to Tally</h1>
+			<Button onClick={() => setOpenDialog(true)} variant="contained">
+				Open Dialogue
+			</Button>
 
-									<IconButton
-										aria-label="more"
-										id="short-button"
-										aria-controls="short-menu"
-										aria-expanded={open ? "true" : undefined}
-										aria-haspopup="true"
-										onClick={handleClick}
-									>
-										<MoreVertIcon />
-									</IconButton>
-									<Menu
-										id="short-menu"
-										MenuListProps={{
-											"aria-labelledby": "short-button",
-										}}
-										anchorEl={anchorEl}
-										open={open}
-										onClose={handleClose}
-										PaperProps={{
-											style: {
-												// maxHeight: ITEM_HEIGHT * 4.5,
-												width: "15sch",
-											},
-										}}
-									>
-										{options.map((option) => (
-											<MenuItem
-												key={option}
-												selected={option === "Pyxis"}
-												onClick={handleClose}
-											>
-												{option}
-											</MenuItem>
-										))}
-									</Menu>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</div>
+			<FIDialog open={openDialog} handleClose={handleCloseDialog} header="Cost Center Name">
+				<RadioGroup
+					aria-label="tally"
+					name="row-radio-buttons-group"
+					onChange={handleGlobalSelection}
+					value={globalSelect}
+				>
+					<Box display="flex" justifyContent="space-between">
+						<FormControlLabel value="donor" control={<Radio />} label="Donor" />
+						<FormControlLabel value="project" control={<Radio />} label="Project" />
+						<FormControlLabel value="target" control={<Radio />} label="Target" />
+						<FormControlLabel
+							value="budget_category"
+							control={<Radio />}
+							label="Budget Category"
+						/>
+					</Box>
+				</RadioGroup>
+
+				<Box className={classes.formWrapper} mt={5}>
+					{globalSelect === "donor" && (
+						<Tallyforms
+							{...{
+								initialValues: getInitialValues("donor"),
+								inputFields: donorForm,
+								validate,
+								onSubmit: onCreate,
+								onCancel,
+								formAction: undefined,
+								onUpdate,
+							}}
+						>
+							<Box className={classes.childrenWrapper}>
+								<RadioGroup
+									aria-label="tally"
+									name="row-radio-buttons-group"
+									onChange={handleDonorSelection}
+									value={donorSelect}
+								>
+									<Box display="flex" justifyContent="space-between">
+										<FormControlLabel
+											value="targetsAndSubTargets"
+											control={<Radio />}
+											label="Targets and Sub-Targets"
+										/>
+										<FormControlLabel
+											value="projectBudgetCategory"
+											control={<Radio />}
+											label="Project Budget Category"
+										/>
+									</Box>
+								</RadioGroup>
+							</Box>
+						</Tallyforms>
+					)}
+
+					{globalSelect === "project" && (
+						<Tallyforms
+							{...{
+								initialValues: getInitialValues("project"),
+								inputFields: projectForm,
+								validate,
+								onSubmit: onCreate,
+								onCancel,
+								formAction: undefined,
+								onUpdate,
+							}}
+						>
+							<Box className={classes.childrenWrapper}>
+								<RadioGroup
+									aria-label="tally"
+									name="row-radio-buttons-group"
+									onChange={handleDonorSelection}
+									value={donorSelect}
+								>
+									<Box display="flex" justifyContent="space-between">
+										<FormControlLabel
+											value="targetsAndSubTargets"
+											control={<Radio />}
+											label="Targets and Sub-Targets"
+										/>
+										<FormControlLabel
+											value="projectBudgetCategory"
+											control={<Radio />}
+											label="Project Budget Category"
+										/>
+									</Box>
+								</RadioGroup>
+							</Box>
+						</Tallyforms>
+					)}
+
+					{globalSelect === "target" && (
+						<Tallyforms
+							{...{
+								initialValues: getInitialValues("target"),
+								inputFields: targetForm,
+								validate,
+								onSubmit: onCreate,
+								onCancel,
+								formAction: undefined,
+								onUpdate,
+							}}
+						/>
+					)}
+
+					{globalSelect === "budget_category" && (
+						<Tallyforms
+							{...{
+								initialValues: getInitialValues("budget_category"),
+								inputFields: budgetCategoryForm,
+								validate,
+								onSubmit: onCreate,
+								onCancel,
+								formAction: undefined,
+								onUpdate,
+							}}
+						/>
+					)}
+				</Box>
+			</FIDialog>
+		</Box>
 	);
-}
+};
 
 export default TallyContainer;

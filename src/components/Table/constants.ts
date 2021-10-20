@@ -47,9 +47,9 @@ export const deliverableAndimpactTracklineHeading: ITableHeadings[] = [
 	{ label: "#" },
 	{ label: "Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
-	{ label: "Achieved", keyMapping: "value" },
+	{ label: "Value", keyMapping: "value" },
 	{ label: "Year" },
-	{ label: "Tranche" },
+	{ label: "TimePeriod" },
 	{ label: "" }, //edit icon
 ];
 
@@ -65,14 +65,24 @@ export const budgetTargetTableHeading: ITableHeadings[] = [
 	{ label: "Progress %" },
 	{ label: "" },
 ];
+export const subTargetTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Sub Target", keyMapping: "name" },
+	{ label: "Target Value", keyMapping: "target_value" },
+	{ label: "Time Period", keyMapping: "timeperiod_start" },
+	{ label: "Years", keyMapping: "financial_year_donor" },
+	{ label: "Tranche", keyMapping: "donor" },
+	{ label: "Line Items" },
+	{ label: "" }, //edit icon
+];
 
 export const budgetLineItemTableHeading: ITableHeadings[] = [
 	{ label: "#" },
-	{ label: "Date", keyMapping: "reporting_date" },
+	{ label: "Report Date", keyMapping: "reporting_date" },
 	{ label: "Note", keyMapping: "note" },
 	{ label: "Amount", keyMapping: "amount" },
-	{ label: "Grant Period" },
 	{ label: "Year" },
+	{ label: "TimePeriod " },
 	{ label: "" },
 ];
 
@@ -100,6 +110,61 @@ export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
+	{ label: "" },
+];
+
+export const GeographiesCountryTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	// { label: "Parent" },
+	{ label: "" },
+];
+export const GeographiesStateTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Country" },
+	{ label: "" },
+];
+export const GeographiesDistrictTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "State" },
+	{ label: "" },
+];
+export const GeographiesBlockTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "District" },
+	{ label: "" },
+];
+export const GeographiesGrampanchayatTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "District" },
+	{ label: "" },
+];
+export const GeographiesVillageTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Block" },
 	{ label: "" },
 ];
 

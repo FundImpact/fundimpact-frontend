@@ -161,6 +161,18 @@
 			"value": "सामाजिक प्रभाव"
 		}
 	],
+	"outputAchievementCard": [
+		{
+			"type": 0,
+			"value": "उत्पादन"
+		}
+	],
+	"outcomeAchievementCard": [
+		{
+			"type": 0,
+			"value": "परिणाम"
+		}
+	],
 	"updatedAtAchievementCard": [
 		{
 			"type": 0,

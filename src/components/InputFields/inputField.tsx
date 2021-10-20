@@ -93,7 +93,7 @@ const InputFields = ({
 	const [elemName, setElemName] = React.useState<string[]>([]);
 
 	useEffect(() => {
-		if (inputType == "multiSelect") {
+		if (inputType === "multiSelect") {
 			setElemName(
 				formik.values[name]?.map((elem: any) => {
 					if (elem) return elem.id;
@@ -109,6 +109,7 @@ const InputFields = ({
 			})
 		);
 	};
+
 	let renderValue;
 	if (multiple) {
 		renderValue = (selected: any) => (
@@ -206,14 +207,19 @@ const InputFields = ({
 							!multiSelect &&
 							optionsArray?.map(
 								(
-									elem: { id: string; name: string; groupName?: string },
+									elem: {
+										id: string;
+										name: string;
+										groupName?: string;
+										target_value?: string;
+									},
 									index: number
 								) =>
 									elem.groupName ? (
 										<ListSubheader>{elem.groupName}</ListSubheader>
 									) : (
 										<MenuItem key={index} value={elem.id}>
-											{elem.name}
+											{elem.name || elem.target_value}
 										</MenuItem>
 									)
 							)}
@@ -236,8 +242,7 @@ const InputFields = ({
 						{secondOptionsLabel && (
 							<ListSubheader disableSticky={true}>{secondOptionsLabel}</ListSubheader>
 						)}
-						{multiSelect &&
-							secondOptionsArray &&
+						{secondOptionsArray &&
 							secondOptionsArray.map((element: any, index: number) => (
 								<MenuItem
 									key={index}
@@ -283,7 +288,7 @@ const InputFields = ({
 			</>
 		);
 	}
-	if (inputType == "autocomplete") {
+	if (inputType === "autocomplete") {
 		return (
 			<Autocomplete
 				multiple={multiple}
@@ -330,13 +335,19 @@ const InputFields = ({
 		);
 	}
 
-	if (inputType == "switch") {
+	if (inputType === "switch") {
 		return (
 			<FormControlLabel
 				control={
 					<Switch
 						checked={formik.values[name]}
-						onChange={formik.handleChange}
+						onChange={(event) => {
+							if (getInputValue) {
+								getInputValue(event.target.checked);
+								formik.handleChange(event);
+							} else formik.handleChange(event);
+						}}
+						disabled={disabled}
 						onBlur={formik.handleBlur}
 						name={name}
 					/>

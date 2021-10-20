@@ -35,8 +35,10 @@ const mapIdToName = (
 function BudgetLineItemTableGraphql({
 	budgetTargetId,
 	donor,
+	subTargetId,
 }: {
 	budgetTargetId: string;
+	subTargetId?: string;
 	donor: { id: string; country: { id: string } };
 }) {
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -65,9 +67,9 @@ function BudgetLineItemTableGraphql({
 
 	useEffect(() => {
 		setQueryFilter({
-			budget_targets_project: budgetTargetId,
+			budget_sub_target: subTargetId,
 		});
-	}, [budgetTargetId]);
+	}, [subTargetId]);
 
 	useEffect(() => {
 		if (filterList) {
@@ -78,11 +80,11 @@ function BudgetLineItemTableGraphql({
 				}
 			}
 			setQueryFilter({
-				budget_targets_project: budgetTargetId,
+				budget_sub_target: subTargetId,
 				...newFilterListObject,
 			});
 		}
-	}, [filterList, budgetTargetId]);
+	}, [filterList, subTargetId]);
 
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
@@ -109,6 +111,7 @@ function BudgetLineItemTableGraphql({
 	} = pagination({
 		query: GET_PROJECT_BUDGET_TARCKING,
 		countQuery: GET_PROJ_BUDGET_TRACINGS_COUNT,
+		aggregateCount: true,
 		countFilter: queryFilter,
 		queryFilter: queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
@@ -204,10 +207,9 @@ function BudgetLineItemTableGraphql({
 	if (financialYearDonor) {
 		budgetLineItemInputFields[5].optionsArray = financialYearDonor?.financialYearList || [];
 	}
-
 	return (
 		<BudgetLineItemTableContainer
-			budgetLineitemList={budgetLineitemList?.projBudgetTrackings || []}
+			budgetLineitemList={budgetLineitemList?.budgetTrackingLineitems || []}
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
 			count={count}
@@ -225,7 +227,7 @@ function BudgetLineItemTableGraphql({
 			removeFilterListElements={removeFilterListElements}
 			currency={currency?.currencyList[0]?.code || ""}
 			refetchOnSuccess={queryRefetch}
-			budgetTargetId={budgetTargetId}
+			budgetTargetId={"budgetSubTargets"}
 			donorCountryId={donor?.country?.id}
 			countRefetch={countRefetch}
 			refetchOnBudgetLineItemImport={refetchOnBudgetLineItemImport}

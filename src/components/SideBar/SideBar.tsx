@@ -176,13 +176,15 @@ export default function SideBar({ children }: { children?: Function }) {
 				</Box>
 			) : (
 				<div>
-					<Project
-						workspaces={workspaceList?.orgWorkspaces || []}
-						open={openProjectDialog}
-						handleClose={() => setOpenProjectDialog(false)}
-						type={PROJECT_ACTIONS.CREATE}
-						workspace=""
-					/>
+					{openProjectDialog && (
+						<Project
+							workspaces={workspaceList?.orgWorkspaces || []}
+							open={openProjectDialog}
+							handleClose={() => setOpenProjectDialog(false)}
+							type={PROJECT_ACTIONS.CREATE}
+							workspace=""
+						/>
+					)}
 					<Box display="flex" m={2}>
 						<Box flexGrow={1} ml={1} display="flex">
 							{dashboardData?.organization?.name && (

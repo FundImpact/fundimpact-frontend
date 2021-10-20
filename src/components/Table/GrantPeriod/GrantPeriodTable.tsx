@@ -51,7 +51,7 @@ import {
 } from "../../../utils/endpoints.util";
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
-import DeleteModal from "../../DeleteModal";
+// import DeleteModal from "../../DeleteModal";
 
 const useStyles = makeStyles({
 	table: {
@@ -264,7 +264,7 @@ const createChipArray = ({
 		});
 	}
 	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
-		if (filterListObjectKeyValuePair[0] == "donor") {
+		if (filterListObjectKeyValuePair[0] === "donor") {
 			return chipArr({
 				name: "do",
 				arr: filterListObjectKeyValuePair[1].map((ele) => donorHash[ele]),
@@ -388,10 +388,10 @@ export default function GrantPeriodTable() {
 			for (let key in filterList) {
 				if (filterList[key] && filterList[key].length) {
 					newFilterListObject[key] = filterList[key];
-					if (key == "start_date") {
+					if (key === "start_date") {
 						newFilterListObject[key] = `${new Date(filterList[key] as string)}`;
 					}
-					if (key == "end_date") {
+					if (key === "end_date") {
 						newFilterListObject[key] = `${new Date(filterList[key] as string)}`;
 					}
 				}
@@ -401,6 +401,7 @@ export default function GrantPeriodTable() {
 				...newFilterListObject,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filterList]);
 
 	let filter = { project: dashboardData?.project?.id };
@@ -443,6 +444,7 @@ export default function GrantPeriodTable() {
 				},
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dashboardData]);
 
 	grantPeriodInputFields[3].optionsArray = donors?.orgDonors || [];

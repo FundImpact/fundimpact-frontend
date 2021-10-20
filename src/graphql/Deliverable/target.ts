@@ -6,8 +6,11 @@ export const GET_DELIVERABLE_TARGETS = gql`
 			id
 			name
 			description
-			target_value
 			deleted
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			deliverable_unit_org {
 				id
 				name
@@ -32,8 +35,11 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 			id
 			name
 			description
-			target_value
 			deleted
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			project {
 				id
 				name
@@ -63,8 +69,18 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			id
 			name
 			description
-			target_value
+			type
 			deleted
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
+			project_with_deliverable_targets {
+				project {
+					id
+					name
+				}
+			}
 			project {
 				id
 				name
@@ -88,7 +104,10 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 			id
 			name
 			description
-			target_value
+			is_qualitative
+			sub_target_required
+			value_calculation
+			value_qualitative_option
 			project {
 				id
 				name
@@ -109,7 +128,7 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 
 export const GET_ACHIEVED_VALLUE_BY_TARGET = gql`
 	query getDeliverableTrackingTotalValueByProject($filter: JSON) {
-		deliverableTrackingTotalValue(where: $filter)
+		deliverableTargetCount(where: $filter)
 	}
 `;
 

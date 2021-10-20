@@ -154,6 +154,8 @@ function CommonTable<T extends { id: string }>({
 		setAnchorEl(null);
 	};
 
+	console.log("valueList", valuesList.length);
+
 	//this means that new item has been added
 	useEffect(() => {
 		setPage(0);

@@ -30,9 +30,12 @@ export const CREATE_PROJECT_BUDGET_TRACKING = gql`
 			amount
 			note
 			reporting_date
-			budget_targets_project {
+			budget_sub_target {
 				id
-				name
+				budget_targets_project {
+					id
+					name
+				}
 			}
 			annual_year {
 				id
@@ -62,10 +65,13 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 			note
 			reporting_date
 			deleted
-			budget_targets_project {
+			budget_sub_target {
 				id
-				name
-				deleted
+				budget_targets_project {
+					id
+					name
+					deleted
+				}
 			}
 			annual_year {
 				id
@@ -109,6 +115,104 @@ export const UPDATE_ORG_BUDGET_CATEGORY = gql`
 			code
 			description
 			deleted
+		}
+	}
+`;
+
+export const CREATE_BUDGET_SUB_TARGET = gql`
+	mutation createBudgetSubTarget($input: createBudgetSubTargetInput!) {
+		createBudgetSubTarget(input: $input) {
+			budgetSubTarget {
+				id
+				created_at
+				updated_at
+				project {
+					id
+					name
+				}
+				budget_targets_project {
+					id
+					name
+				}
+				target_value
+				timeperiod_end
+				timeperiod_start
+				financial_year_org {
+					id
+					name
+				}
+				financial_year_donor {
+					id
+					name
+				}
+				annual_year {
+					id
+					name
+				}
+				grant_periods_project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const UPDATE_BUDGET_SUB_TARGET = gql`
+	mutation updateBudgetSubTarget($input: updateBudgetSubTargetInput!) {
+		updateBudgetSubTarget(input: $input) {
+			budgetSubTarget {
+				id
+				created_at
+				updated_at
+				project {
+					id
+					name
+				}
+				budget_targets_project {
+					id
+					name
+				}
+				target_value
+				timeperiod_end
+				timeperiod_start
+				financial_year_org {
+					id
+					name
+				}
+				financial_year_donor {
+					id
+					name
+				}
+				annual_year {
+					id
+					name
+				}
+				grant_periods_project {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const CREATE_PROJECT_WITH_BUDGET_TARGET = gql`
+	mutation createProjectWithBudgetTarget($input: createProjectWithBudgetTargetInput!) {
+		createProjectWithBudgetTarget(input: $input) {
+			projectWithBudgetTarget {
+				id
+				created_at
+				updated_at
+				project {
+					id
+					name
+				}
+				budget_targets_project {
+					id
+					name
+				}
+			}
 		}
 	}
 `;

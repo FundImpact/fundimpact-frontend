@@ -58,6 +58,7 @@ function BudgetCategoryTableGraphql({
 	const budgetCategoryTableRefetch = useCallback(() => {
 		countRefetch?.().then(() => queryRefetch?.());
 		refetchBudgetCategoryOnBudgetCategoryImport();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [countRefetch, queryRefetch]);
 
 	return (

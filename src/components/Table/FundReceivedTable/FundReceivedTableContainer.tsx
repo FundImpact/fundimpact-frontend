@@ -3,7 +3,7 @@ import FundReceivedTableView from "./FundReceivedTableView";
 import { IGet_Fund_Receipt_List } from "../../../models/fundReceived/query";
 import { getTodaysDate } from "../../../utils";
 import { IFundReceivedForm } from "../../../models/fundReceived";
-import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+// import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
 interface IFUND_RECEIVED_TABLE_CONTAINER {
 	fundReceiptList: IGet_Fund_Receipt_List["fundReceiptProjectList"];

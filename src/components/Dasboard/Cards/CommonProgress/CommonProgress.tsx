@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@material-ui/core";
-import React, { ReactText } from "react";
+import React from "react";
 import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 
 export default function CommonProgress({

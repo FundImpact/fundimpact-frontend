@@ -64,6 +64,18 @@ export const sidebarList: {
 				title: "Tally",
 				userAccess: true,
 			},
+			{
+				to: "goeGraphies",
+				dataTestId: "goeGraphies-link",
+				title: "Geographies",
+				userAccess: true,
+			},
+			{
+				to: "goeRegions",
+				dataTestId: "geoRegions-link",
+				title: "GeoRegions",
+				userAccess: true,
+			},
 		],
 	},
 	{

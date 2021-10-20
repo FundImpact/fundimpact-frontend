@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
 			alignItems: "center",
 			justifyContent: "center",
 		},
+		dialog: {
+			minWidth: theme.breakpoints.values.md,
+		},
 		paper: {
 			backgroundColor: theme.palette.background.paper,
 			padding: theme.spacing(2),
@@ -40,9 +43,15 @@ export default function FIDialog({
 	const classes = useStyles();
 	return (
 		<div>
-			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="form-dialog-title"
+				maxWidth="lg"
+				className={classes.dialog}
+			>
 				<MuiDialogTitle disableTypography className={classes.closeButton}>
-					<Box flexGrow={1}>
+					<Box flexGrow={1} className={classes.dialog}>
 						{header && (
 							<DialogTitle id="form-dialog-title" data-testid="fi-dialog-header">
 								{header}

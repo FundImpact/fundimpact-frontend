@@ -17,7 +17,7 @@ import { setErrorNotification, setSuccessNotification } from "../../reducers/not
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import FormDialog from "../FormDialog";
 import WorkspaceForm from "../Forms/workspace/workspaceForm";
-import { FullScreenLoader } from "../Loader/Loader";
+// import { FullScreenLoader } from "../Loader/Loader";
 import { WORKSPACE_ACTIONS } from "./constants";
 import { TWorkspaceUpdate } from "./models/worksapceUpdate";
 
@@ -89,7 +89,7 @@ const updateOrganisationWorkspaceList = ({
 
 function Workspace(props: WorkspaceProps) {
 	const [initialValues, setinitialValues] = useState(getInitialValues(props));
-	const [successMessage, setsuccessMessage] = useState<string>();
+	// const [successMessage, setsuccessMessage] = useState<string>();
 	const [errorMessage, seterrorMessage] = useState<string>();
 	const notificationDispatch = useNotificationDispatch();
 	/*********************************
@@ -130,7 +130,7 @@ function Workspace(props: WorkspaceProps) {
 		if (!response) return;
 		setinitialValues({ description: "", name: "", short_name: "", organization: "" });
 
-		setsuccessMessage("Workspace Created.");
+		// setsuccessMessage("Workspace Created.");
 	}, [response]);
 
 	useEffect(() => {

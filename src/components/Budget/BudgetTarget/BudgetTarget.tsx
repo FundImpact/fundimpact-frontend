@@ -13,6 +13,7 @@ import {
 } from "../../../graphql/Budget";
 import {
 	CREATE_PROJECT_BUDGET_TARGET,
+	CREATE_PROJECT_WITH_BUDGET_TARGET,
 	UPDATE_PROJECT_BUDGET_TARGET,
 } from "../../../graphql/Budget/mutation";
 import {
@@ -149,9 +150,6 @@ const validate = (values: IBudgetTargetForm) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
-	if (!values.total_target_amount) {
-		errors.total_target_amount = "Total target amount is required";
-	}
 	if (!values.budget_category_organization) {
 		errors.budget_category_organization = "Budget Category is required";
 	}
@@ -196,8 +194,30 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const [openBudgetCategoryDialog, setOpenBudgetCategoryDialog] = useState<boolean>(false);
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
 
+	const [createProjectWithBudgetTarget] = useMutation(CREATE_PROJECT_WITH_BUDGET_TARGET);
+
 	const [createProjectBudgetTarget, { loading: creatingProjectBudgetTarget }] = useMutation(
-		CREATE_PROJECT_BUDGET_TARGET
+		CREATE_PROJECT_BUDGET_TARGET,
+		{
+			onCompleted: async (data) => {
+				if (data?.createProjectBudgetTarget) {
+					try {
+						await createProjectWithBudgetTarget({
+							variables: {
+								input: {
+									data: {
+										project: dashboardData?.project?.id,
+										budget_targets_project: data?.createProjectBudgetTarget?.id,
+									},
+								},
+							},
+						});
+					} catch (error) {
+						notificationDispatch(setErrorNotification(error?.message));
+					}
+				}
+			},
+		}
 	);
 
 	let [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(
@@ -360,7 +380,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 						});
@@ -369,7 +391,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_PROJECT_BUDGET_TARGETS_COUNT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 							data: {
@@ -385,7 +409,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -400,7 +426,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -415,7 +443,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							query: GET_BUDGET_TARGET_PROJECT,
 							variables: {
 								filter: {
-									project: dashboardData?.project?.id,
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
 								},
 							},
 							data: {
@@ -478,12 +508,6 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							...values,
 						},
 					},
-					refetchQueries: [
-						{
-							query: GET_PROJECT_BUDGET_AMOUNT,
-							variables: { filter: { project: dashboardData?.project?.id } },
-						},
-					],
 				}));
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 

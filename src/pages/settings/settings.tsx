@@ -20,16 +20,19 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverable
 import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
 import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
-import DefaultSettingsView from "./defaultView";
+// import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
-import { RolesContainer } from "./Roles/container";
+// import { RolesContainer } from "./Roles/container";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
-import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import TallyContainer from "./Tally";
+import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
+import GoegraphiesContainer from "./Goegraphies";
+import GeoRegionsContainer from "./geoRegions";
+// import TallyContainer from "./Tally";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -185,7 +188,7 @@ export default function SettingContainer() {
 								<LeftPanel />
 							</Grid>
 							<Grid item xs={10}>
-								<SettingsSidebar></SettingsSidebar>
+								<SettingsSidebar />
 							</Grid>
 						</Grid>
 					</Box>
@@ -257,7 +260,21 @@ export default function SettingContainer() {
 							element={<IndividualContainer />}
 							path="individual"
 						/>
-						<PrivateRoute userAccess={true} element={<TallyContainer />} path="tally" />
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<TallyContainer />}
+							path="tally"
+						/>
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<GoegraphiesContainer />}
+							path="goeGraphies"
+						/>
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<GeoRegionsContainer />}
+							path="goeRegions"
+						/>
 					</Routes>
 				</Grid>
 			</Grid>

@@ -1,7 +1,7 @@
 import { Box, Chip, Avatar } from "@material-ui/core";
 import React from "react";
 
-const chipArray = ({
+export const chipArray = ({
 	removeChip,
 	name,
 	list,

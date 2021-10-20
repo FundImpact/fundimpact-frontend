@@ -33,7 +33,7 @@ import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
 import Donor from "../Donor";
 import { FORM_ACTIONS } from "../Forms/constant";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
-import { Box, Button, Typography, useTheme } from "@material-ui/core";
+import { Box, Button, useTheme } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FIDialog from "../Dialog/Dialog";
 
@@ -111,14 +111,27 @@ const updateCachedProject = async ({
 	createdProject: ICreateProject["createOrgProject"];
 }) => {
 	try {
+		console.log("heresss", createdProject, createdProject.workspace.id);
 		let cachedProjects = apolloClient.readQuery<{
 			orgProject: ICreateProject["createOrgProject"][];
-		}>({ query: GET_PROJECTS });
+		}>({
+			query: GET_PROJECTS_BY_WORKSPACE,
+			variables: {
+				filter: {
+					workspace: createdProject.workspace.id,
+				},
+			},
+		});
 		if (cachedProjects) {
 			apolloClient.writeQuery<{
 				orgProject: ICreateProject["createOrgProject"][];
 			}>({
-				query: GET_PROJECTS,
+				query: GET_PROJECTS_BY_WORKSPACE,
+				variables: {
+					filter: {
+						workspace: createdProject.workspace.id,
+					},
+				},
 				data: { orgProject: [...cachedProjects.orgProject, createdProject] },
 			});
 		} else {
@@ -133,7 +146,7 @@ const updateCachedProject = async ({
 const getProjectDonorForGivenDonorId = (
 	projectDonors: IGetProjectDonor["projectDonors"],
 	donorId: string
-) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id == donorId);
+) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id === donorId);
 
 function Project(props: ProjectProps) {
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
@@ -154,7 +167,7 @@ function Project(props: ProjectProps) {
 	const apolloClient = useApolloClient();
 
 	const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
-	const [isConfirmedDelete, setIsConfirmedDelete] = useState(false);
+	// const [isConfirmedDelete, setIsConfirmedDelete] = useState(false);
 
 	const [workspaceSelected, setWorkspaceSelected] = useState(
 		props.type === PROJECT_ACTIONS.UPDATE ? props.data.workspace || "" : ""
@@ -184,12 +197,13 @@ function Project(props: ProjectProps) {
 			} else {
 				fetchProjectsInWorkspace({
 					apolloClient,
-					workspaceId: dashboardData?.project?.workspace?.id,
+					workspaceId: dashboardData?.workspace?.id,
 				});
 			}
 			setSuccess(false);
 			setProjectFilesArray([]);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [success]);
 
 	if (success) props.handleClose();
@@ -247,16 +261,16 @@ function Project(props: ProjectProps) {
 				},
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dashboardData]);
 
 	const [getProjectDonors, { data: projectDonors }] = useLazyQuery<IGetProjectDonor>(
 		GET_PROJ_DONORS
 	);
 
-	const [updateProjectDonor, { loading: updatingProjectDonors }] = useMutation<
-		ICreateProjectDonor,
-		IUpdateProjectDonorVariables
-	>(UPDATE_PROJECT_DONOR);
+	const [updateProjectDonor] = useMutation<ICreateProjectDonor, IUpdateProjectDonorVariables>(
+		UPDATE_PROJECT_DONOR
+	);
 
 	const projectId = dashboardData?.project?.id;
 
@@ -387,19 +401,16 @@ function Project(props: ProjectProps) {
 		}
 	};
 
-	const [updateProject, { data: updateResponse, loading: updateLoading }] = useMutation(
-		UPDATE_PROJECT,
-		{
-			onCompleted(data) {
-				// setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
+	const [updateProject, { loading: updateLoading }] = useMutation(UPDATE_PROJECT, {
+		onCompleted(data) {
+			// setTotalFilesToUpload(projectFilesArray.filter((elem) => !elem.id).length);
 
-				props.handleClose();
-				setProjectFilesArray([]);
+			props.handleClose();
+			setProjectFilesArray([]);
 
-				notificationDispatch(setSuccessNotification("Project Successfully updated !"));
-			},
-		}
-	);
+			notificationDispatch(setSuccessNotification("Project Successfully updated !"));
+		},
+	});
 
 	const deleteProject = async () => {
 		try {
@@ -456,7 +467,7 @@ function Project(props: ProjectProps) {
 		}
 	};
 
-	const clearErrors = (values: IProject) => {};
+	// const clearErrors = (values: IProject) => {};
 
 	const validate = (values: IPROJECT_FORM) => {
 		let errors: Partial<IPROJECT_FORM> = {};
@@ -551,7 +562,7 @@ function Project(props: ProjectProps) {
 							formAction,
 							onUpdate,
 							inputFields: projectForm,
-							additionalButtons: props.type == PROJECT_ACTIONS.UPDATE && (
+							additionalButtons: props.type === PROJECT_ACTIONS.UPDATE && (
 								<Button
 									startIcon={<DeleteIcon />}
 									style={{
@@ -577,7 +588,7 @@ function Project(props: ProjectProps) {
 					handleClose={() => setOpenAttachFiles(false)}
 					filesArray={projectFilesArray}
 					setFilesArray={setProjectFilesArray}
-					{...(props.type == PROJECT_ACTIONS.UPDATE
+					{...(props.type === PROJECT_ACTIONS.UPDATE
 						? {
 								uploadApiConfig: {
 									ref: "project",
@@ -588,7 +599,7 @@ function Project(props: ProjectProps) {
 						  }
 						: {})}
 					parentOnSuccessCall={() => {
-						if (props.type == PROJECT_ACTIONS.UPDATE) {
+						if (props.type === PROJECT_ACTIONS.UPDATE) {
 							refetchDocuments();
 						}
 					}}

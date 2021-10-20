@@ -1,6 +1,6 @@
-import { useApolloClient, useMutation, useQuery, useLazyQuery, ApolloClient } from "@apollo/client";
+import { useApolloClient, useMutation, useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import { useIntl, FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -9,20 +9,20 @@ import { CREATE_GRANT_PERIOD, UPDATE_GRANT_PERIOD } from "../../graphql/grantPer
 import { FETCH_GRANT_PERIODS } from "../../graphql/grantPeriod/query";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
 import { GrantPeriodDialogProps } from "../../models/grantPeriod/grantPeriodDialog";
-import { IGrantPeriod, DonorType } from "../../models/grantPeriod/grantPeriodForm";
+import { IGrantPeriod } from "../../models/grantPeriod/grantPeriodForm";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import FormDialog from "../FormDialog";
 import { GranPeriodForm } from "../Forms/GrantPeriod/GranPeriod";
-import {
-	IGetProjectDonor,
-	ICreateProjectDonor,
-	ICreateProjectDonorVariables,
-} from "../../models/project/project";
+// import {
+// 	IGetProjectDonor,
+// 	ICreateProjectDonor,
+// 	ICreateProjectDonorVariables,
+// } from "../../models/project/project";
 import { IGET_DONOR } from "../../models/donor/query";
 import { GET_PROJ_DONORS } from "../../graphql/project";
 import { GET_ORG_DONOR } from "../../graphql/donor";
-import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
+// import { CREATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import DeleteModal from "../DeleteModal";
 import { useProjectDonorSelectInput } from "../../hooks/project";
 

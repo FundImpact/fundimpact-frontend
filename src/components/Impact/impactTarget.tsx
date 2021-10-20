@@ -39,6 +39,7 @@ import ImpactUnitDialog from "./ImpactUnitDialog/ImpaceUnitDialog";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import { GET_IMPACT_CATEGORY_PROJECT_COUNT } from "../../graphql/Impact/category";
+import { CREATE_PROJECT_WITH_IMPACT_TARGET } from "../../graphql/Impact/projectWithImpactTarget";
 
 // import { DashboardProvider } from "../../contexts/dashboardContext";
 function getInitialValues(props: ImpactTargetProps) {
@@ -75,7 +76,28 @@ function ImpactTarget(props: ImpactTargetProps) {
 	); // for fetching units by category
 
 	// const [impactTarget, setImpactTarget] = useState<IImpactTarget>();
-	const [createImpactTarget, { loading: impactLoading }] = useMutation(CREATE_IMPACT_TARGET);
+	const [createProjectWithImpactTarget] = useMutation(CREATE_PROJECT_WITH_IMPACT_TARGET);
+
+	const [createImpactTarget, { loading: impactLoading }] = useMutation(CREATE_IMPACT_TARGET, {
+		onCompleted: async (data) => {
+			if (data?.createImpactTargetProjectInput) {
+				try {
+					await createProjectWithImpactTarget({
+						variables: {
+							input: {
+								data: {
+									project: dashboardData?.project?.id,
+									impact_target_project: data?.createImpactTargetProjectInput?.id,
+								},
+							},
+						},
+					});
+				} catch (error) {
+					notificationDispatch(setErrorNotification(error?.message));
+				}
+			}
+		},
+	});
 
 	const [updateImpactTarget, { loading: updateImpactTargetLoading }] = useMutation(
 		UPDATE_IMAPACT_TARGET

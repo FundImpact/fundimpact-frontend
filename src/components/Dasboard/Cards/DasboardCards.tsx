@@ -3,7 +3,6 @@ import {
 	Box,
 	Card,
 	CardContent,
-	Chip,
 	Grid,
 	IconButton,
 	Menu,
@@ -96,11 +95,11 @@ export default function DashboardCard(props: CardProps) {
 		}
 	}
 	const intl = useIntl();
-	let topLabel = intl.formatMessage({
-		id: "topLabelCards",
-		defaultMessage: "Top",
-		description: "This text will be show on cards for top label",
-	});
+	// let topLabel = intl.formatMessage({
+	// 	id: "topLabelCards",
+	// 	defaultMessage: "Top",
+	// 	description: "This text will be show on cards for top label",
+	// });
 
 	let byLabel = intl.formatMessage({
 		id: "byLabelCards",

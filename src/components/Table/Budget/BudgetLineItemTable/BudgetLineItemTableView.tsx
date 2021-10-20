@@ -5,7 +5,7 @@ import { FORM_ACTIONS } from "../../../Forms/constant";
 import { IBUDGET_LINE_ITEM_RESPONSE } from "../../../../models/budget/query";
 import { IBudgetTrackingLineitem } from "../../../../models/budget";
 import { budgetLineItemTableHeading as tableHeadings } from "../../constants";
-import { getTodaysDate, uploadPercentageCalculator } from "../../../../utils";
+import { getTodaysDate } from "../../../../utils";
 import { Box, Chip, Avatar, Grid, useTheme, Button } from "@material-ui/core";
 import FilterList from "../../../FilterList";
 import { getValueFromObject } from "../../../../utils";
@@ -18,13 +18,13 @@ import { FINANCIAL_YEAR_DONOR_ACTIONS } from "../../../../utils/access/modules/f
 import { CURRENCY_ACTION } from "../../../../utils/access/modules/currency/actions";
 import { AttachFile } from "../../../../models/AttachFile";
 import AttachFileForm from "../../../Forms/AttachFiles";
-import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
+// import useMultipleFileUpload from "../../../../hooks/multipleFileUpload";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
-import { CircularPercentage } from "../../../commons";
+// import { CommonUploadingFilesMessage } from "../../../../utils/commonFormattedMessage";
+// import { CircularPercentage } from "../../../commons";
 import { ApolloQueryResult } from "@apollo/client";
-import { useNotificationDispatch } from "../../../../contexts/notificationContext";
-import { setSuccessNotification } from "../../../../reducers/notificationReducer";
+// import { useNotificationDispatch } from "../../../../contexts/notificationContext";
+// import { setSuccessNotification } from "../../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../../ImportExportTableMenu";
 import {
 	ANNUAL_YEAR_EXPORT,
@@ -87,8 +87,8 @@ interface IBUDGET_LINE_ITEM_VIEW {
 //The value of the year tags is the way to retrieve value from budgetLineItem and keyName is the name
 //that we want to display in the chip
 const yearTags = {
-	FYO: "fy_org,name",
-	FYD: "fy_donor,name",
+	FYO: "financial_year_org,name",
+	FYD: "financial_year_donor,name",
 	AY: "annual_year,name",
 };
 
@@ -138,6 +138,7 @@ const BudgetLineitemYearTags: React.SFC<{ budgetLineItem: IBUDGET_LINE_ITEM_RESP
 								}
 								label={getValueFromObject(budgetLineItem, yearTagValue.split(","))}
 								size="small"
+								color="primary"
 							/>
 						</Box>
 					)
@@ -147,6 +148,17 @@ const BudgetLineitemYearTags: React.SFC<{ budgetLineItem: IBUDGET_LINE_ITEM_RESP
 	);
 };
 
+const TimePeriod = ({ budgetLineItem }: { budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE }) => {
+	let timeperiod_start: any = budgetLineItem?.timeperiod_start;
+	let timeperiod_end: any = budgetLineItem?.timeperiod_end;
+	return (
+		<div>
+			{require("moment")(getTodaysDate(timeperiod_start)).format("MMM d, YY") +
+				" - " +
+				require("moment")(getTodaysDate(timeperiod_end)).format("MMM d, YY")}
+		</div>
+	);
+};
 const rows = [
 	{
 		valueAccessKey: "",
@@ -156,11 +168,16 @@ const rows = [
 	},
 	{ valueAccessKey: "note" },
 	{ valueAccessKey: "amount" },
-	{ valueAccessKey: "grant_periods_project,name" },
 	{
 		valueAccessKey: "",
 		renderComponent: (budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE) => {
 			return <BudgetLineitemYearTags budgetLineItem={budgetLineItem} />;
+		},
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetLineItem: IBUDGET_LINE_ITEM_RESPONSE) => {
+			return <TimePeriod budgetLineItem={budgetLineItem} />;
 		},
 	},
 ];
@@ -411,7 +428,7 @@ function BudgetLineItemTableView({
 	}, [initialValues]);
 
 	const dashBoardData = useDashBoardData();
-	const notificationDispatch = useNotificationDispatch();
+	// const notificationDispatch = useNotificationDispatch();
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState(false);
 	return (
@@ -504,7 +521,7 @@ function BudgetLineItemTableView({
 							>
 								Financial Year Org
 							</Button>
-							{dashBoardData?.organization?.country?.id != donorCountryId && (
+							{dashBoardData?.organization?.country?.id !== donorCountryId && (
 								<Button
 									variant="outlined"
 									size="small"

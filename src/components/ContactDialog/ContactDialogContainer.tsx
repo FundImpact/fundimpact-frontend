@@ -344,7 +344,7 @@ const refetchContactList = async ({
 }) => {
 	try {
 		let count = getContactCountCachedValue(apolloClient, entity_id, entity_name);
-		if (count == 0) {
+		if (count === 0) {
 			count = await fetchContactListCount({ apolloClient, entity_id, entity_name });
 		}
 		await apolloClient.query({
@@ -377,7 +377,7 @@ const submitForm = async ({
 	contactId,
 }: ISubmitForm) => {
 	try {
-		if (formAction == FORM_ACTIONS.CREATE) {
+		if (formAction === FORM_ACTIONS.CREATE) {
 			await createContact({
 				variables: {
 					input: {
@@ -425,7 +425,7 @@ const submitForm = async ({
 		}
 		notificationDispatch(
 			setSuccessNotification(
-				`Contact ${formAction == FORM_ACTIONS.CREATE ? "created" : "updated"} successfully`
+				`Contact ${formAction === FORM_ACTIONS.CREATE ? "created" : "updated"} successfully`
 			)
 		);
 	} catch (err) {
@@ -435,7 +435,7 @@ const submitForm = async ({
 };
 
 function ContactDialogContainer(props: ICreateContactContainer) {
-	const { loading, createContact, entity_id, entity_name, updateContact } = props;
+	const { createContact, entity_id, entity_name, updateContact } = props;
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE
 			? getInitialFormValues()
@@ -466,6 +466,7 @@ function ContactDialogContainer(props: ICreateContactContainer) {
 			}));
 			return errors;
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[entity_name]
 	);
 
@@ -482,7 +483,7 @@ function ContactDialogContainer(props: ICreateContactContainer) {
 				notificationDispatch,
 				updateContact,
 				formAction: props.formAction,
-				contactId: props.formAction == FORM_ACTIONS.UPDATE ? props.initialValues.id : "",
+				contactId: props.formAction === FORM_ACTIONS.UPDATE ? props.initialValues.id : "",
 				apolloClient,
 				entity_name,
 				entity_id,

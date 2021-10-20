@@ -10,19 +10,27 @@ import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 } from "../../graphql/project";
+import { DELIVERABLE_TYPE } from "../../models/constants";
 
 const useRefetchOnDeliverableTargetImport = () => {
 	const apolloClient = useApolloClient();
 	const dashboardData = useDashBoardData();
-	const refetchOnDeliverableTargetImport = () => {
+	const refetchOnDeliverableTargetImport = (formType: DELIVERABLE_TYPE) => {
 		apolloClient.query({
 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-			variables: { filter: { project: dashboardData?.project?.id } },
+			variables: { filter: { project: dashboardData?.project?.id, type: formType } },
 			fetchPolicy: "network-only",
 		});
 		apolloClient.query({
 			query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
-			variables: { filter: { project: dashboardData?.project?.id } },
+			variables: {
+				filter: {
+					project: dashboardData?.project?.id,
+					deliverable_target_project: {
+						type: formType,
+					},
+				},
+			},
 			fetchPolicy: "network-only",
 		});
 		apolloClient.query({

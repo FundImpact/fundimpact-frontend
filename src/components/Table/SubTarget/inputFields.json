@@ -1,0 +1,70 @@
+{
+	"budgetSubTargetForm": [
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "budgetSubTargetTargetValue",
+			"testId": "budgetSubTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
+			"size": 6
+		},
+		{
+			"name": "timeperiod_start",
+			"id": "timeperiod_start",
+			"dataTestId": "budgetSubTargetTimePeriodStart",
+			"testId": "budgetSubTargetTimePeriodStartInput",
+			"label": "Start",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "timeperiod_end",
+			"id": "timeperiod_end",
+			"dataTestId": "budgetSubTargetTimePeriodEnd",
+			"testId": "budgetSubTargetTimePeriodEndInput",
+			"label": "End",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "financial_year_donor",
+			"id": "financial_year_donor",
+			"dataTestId": "budgetSubTargetDonorFinancialYear",
+			"testId": "budgetSubTargetDonorFinancialYearInput",
+			"label": "Donor Financial Year",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "financial_year_org",
+			"id": "financial_year_org",
+			"dataTestId": "budgetSubTargetOrgFinancialYear",
+			"testId": "budgetSubTargetOrgFinancialYearInput",
+			"label": "Organization Financial Year",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		},
+		{
+			"name": "annual_year",
+			"id": "annual_year",
+			"dataTestId": "budgetSubTargetAnnualYear",
+			"testId": "budgetSubTargetAnnualYearInput",
+			"label": "Annual Year",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"size": 6
+		}
+	]
+}

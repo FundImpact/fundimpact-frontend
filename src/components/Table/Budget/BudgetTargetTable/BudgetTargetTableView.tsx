@@ -32,9 +32,14 @@ import {
 } from "../../../../utils/endpoints.util";
 import ImportExportTableMenu from "../../../ImportExportTableMenu";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 import { exportTable } from "../../../../utils/importExportTable.utils";
 import { useAuth } from "../../../../contexts/userContext";
+import SubTargetTable from "../../SubTarget";
+import SubTarget from "../../../Forms/SubTargetForm";
+import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
+import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
+import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
 
 interface IBudgetTargetTableViewProps {
 	toggleDialogs: (index: number, val: boolean) => void;
@@ -91,38 +96,69 @@ const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "budget_category_organization,name" },
 	{ valueAccessKey: "donor,name" },
-	{ valueAccessKey: "total_target_amount" },
 	{
 		valueAccessKey: "",
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
-				{(amount: number) => {
-					return <span>{amount}</span>;
-				}}
-			</AmountSpent>
-		),
-	},
-	{
-		valueAccessKey: "",
-		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
-			<AmountSpent budgetTargetId={budgetTarget.id}>
-				{(amount: number) => {
-					return <span>{parseInt(budgetTarget.total_target_amount) - amount || 0}</span>;
-				}}
-			</AmountSpent>
-		),
-	},
-	{
-		valueAccessKey: "",
-		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
-			<AmountSpent budgetTargetId={budgetTarget.id}>
-				{(amount: number) => {
+				{(amount: number, spent: number) => {
 					return (
-						<span>
-							{((amount * 100) / parseInt(budgetTarget.total_target_amount)).toFixed(
-								2
-							)}
-						</span>
+						<Chip
+							icon={<AddOutlinedIcon fontSize="small" />}
+							label={amount}
+							color="primary"
+							size="small"
+						/>
+					);
+				}}
+			</AmountSpent>
+		),
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
+			<AmountSpent budgetTargetId={budgetTarget.id}>
+				{(amount: number, spent: number) => {
+					return (
+						<Chip
+							icon={<RemoveOutlinedIcon fontSize="small" />}
+							label={spent}
+							color="primary"
+							size="small"
+						/>
+					);
+				}}
+			</AmountSpent>
+		),
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
+			<AmountSpent budgetTargetId={budgetTarget.id}>
+				{(amount: number, spent: number) => {
+					return (
+						<Chip
+							icon={<AccountBalanceWalletOutlinedIcon fontSize="small" />}
+							label={amount - spent || 0}
+							color="primary"
+							size="small"
+						/>
+					);
+				}}
+			</AmountSpent>
+		),
+	},
+	{
+		valueAccessKey: "",
+		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
+			<AmountSpent budgetTargetId={budgetTarget.id}>
+				{(amount: number, spent: number) => {
+					return (
+						<Chip
+							icon={<ShowChartOutlinedIcon fontSize="small" />}
+							label={((spent * 100) / amount).toFixed(2)}
+							color="primary"
+							size="small"
+						/>
 					);
 				}}
 			</AmountSpent>
@@ -328,7 +364,8 @@ function BudgetTargetView({
 			budgetTargetTableEditMenu[0] = "Edit Budget Target";
 		}
 		if (budgetTargetLineItemCreateAccess) {
-			budgetTargetTableEditMenu[1] = "Report Expenditure";
+			// budgetTargetTableEditMenu[1] = "Report Expenditure";
+			budgetTargetTableEditMenu[1] = "Add Sub Target";
 		}
 		if (budgetTargetDeleteAccess) {
 			budgetTargetTableEditMenu[2] = "Delete Budget Target";
@@ -452,12 +489,21 @@ function BudgetTargetView({
 							initialValues={initialValues}
 						/>
 					)}
-					<BudgetLineitem
+					{/* <BudgetLineitem
 						open={openDialogs[1]}
 						handleClose={() => toggleDialogs(1, false)}
 						formAction={FORM_ACTIONS.CREATE}
 						initialValues={budgetLineItemInitialValues}
-					/>
+					/> */}
+					{openDialogs[1] && (
+						<SubTarget
+							open={openDialogs[1]}
+							handleClose={() => toggleDialogs(1, false)}
+							formAction={FORM_ACTIONS.CREATE}
+							target={initialValues?.id || ""}
+							formType="budget"
+						/>
+					)}
 					{openDialogs[2] && (
 						<BudgetTarget
 							open={openDialogs[2]}
@@ -488,11 +534,17 @@ function BudgetTargetView({
 								</Box>
 							</Grid>
 						</Grid>
+
 						{budgetTargetLineItemFindAccess && (
-							<BudgetLineItemTable
-								budgetTargetId={rowData.id}
+							<SubTargetTable
+								targetId={rowData.id}
+								tableType="budget"
 								donor={rowData.donor}
 							/>
+							// <BudgetLineItemTable
+							// 	budgetTargetId={rowData.id}
+							// 	donor={rowData.donor}
+							// />
 						)}
 					</>
 				)}

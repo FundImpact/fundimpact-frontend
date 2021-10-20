@@ -1,10 +1,8 @@
 import { Box, makeStyles, Tab, Tabs, Theme } from "@material-ui/core";
 import React, { useEffect } from "react";
-
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationData } from "../../../contexts/notificationContext";
-import { FORM_ACTIONS } from "../../../models/constants";
-import BudgetCategory from "../../Budget/BudgetCategory";
+import { DELIVERABLE_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import BudgetLineitem from "../../Budget/BudgetLineitem";
 import BudgetTarget from "../../Budget/BudgetTarget";
 import AddButton from "../../Dasboard/AddButton";
@@ -28,7 +26,6 @@ import { useIntl } from "react-intl";
 import { CreateButton } from "../../../models/addButton";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { BUDGET_TARGET_ACTIONS } from "../../../utils/access/modules/budgetTarget/actions";
-import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
 import { BUDGET_TARGET_LINE_ITEM_ACTIONS } from "../../../utils/access/modules/budgetTargetLineItem/actions";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
@@ -52,9 +49,8 @@ import { useDialogData } from "../../../contexts/DialogContext";
 import AttachFileForm from "../../Forms/AttachFiles";
 import { AttachFile } from "../../../models/AttachFile";
 import { useDocumentTableDataRefetch } from "../../../hooks/document";
-import { GET_PROJECT_BY_ID } from "../../../graphql/project";
-import { useLazyQuery } from "@apollo/client";
-import { IGetProjectById } from "../../../models/project/project";
+import SubTarget from "../../Forms/SubTargetForm";
+import ProjectTargets from "../../Forms/ProjectTargets";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -101,6 +97,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	button: {
 		margin: theme.spacing(1),
+		color: theme.palette.common.white,
+	},
+	tabs: {
+		backgroundColor: theme.palette.primary.main,
+		border: theme.palette.common.black,
+	},
+	tab: {
 		color: theme.palette.common.white,
 	},
 }));
@@ -155,6 +158,11 @@ export default function DashboardTableContainer() {
 	const budgetTargetCreateAccess = userHasAccess(
 		MODULE_CODES.BUDGET_TARGET,
 		BUDGET_TARGET_ACTIONS.CREATE_BUDGET_TARGET
+	);
+
+	const budgetTargetEditAccess = userHasAccess(
+		MODULE_CODES.BUDGET_TARGET,
+		BUDGET_TARGET_ACTIONS.UPDATE_BUDGET_TARGET
 	);
 
 	const budgetTargetFindAccess = userHasAccess(
@@ -260,6 +268,16 @@ export default function DashboardTableContainer() {
 		INDIVIDUAL_ACTIONS.UPDATE_INDIVIDUAL
 	);
 
+	let orgDeliverableAccessArr = dashboardData?.organization?.deliverable_type?.types || [];
+
+	const organizationDeliverableAccess = orgDeliverableAccessArr.includes(
+		DELIVERABLE_TYPE.DELIVERABLE
+	);
+	const organizationImpactAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.IMPACT);
+	const organizationOutcomeAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTCOME);
+	const organizationOutputAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTPUT);
+	const organizationActivityAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.ACTIVITY);
+
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -316,18 +334,52 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "reportBudgetSpend",
+						defaultMessage: "Create Sub Target",
+						description: `This text will be show on budgets Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"budget"}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectBudgetTargets",
+						defaultMessage: "Manage Budget Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Budget targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={"budget"}
+						/>
+					),
+					createButtonAccess: budgetTargetEditAccess,
+				},
 			],
 			tabVisibility:
 				budgetTargetFindAccess ||
 				// budgetCategoryCreateAccess ||
 				budgetTargetCreateAccess ||
-				budgetTargetLineItemCreateAccess,
+				budgetTargetLineItemCreateAccess ||
+				budgetTargetEditAccess,
 			tableVisibility: budgetTargetFindAccess,
 		},
+
 		{
 			label: intl.formatMessage({
 				id: "deliverableTabHeading",
-				defaultMessage: "Deliverable",
+				defaultMessage: "Deliverable / Activities",
 				description: `This text will be show on tab for Deliverables`,
 			}),
 			table: <DeliverablesTable />,
@@ -341,9 +393,26 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "createDeliverableSubTarget",
+						defaultMessage: "Create Deliverable Sub Target",
+						description: `This text will be show on deliverable Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -391,26 +460,210 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
 						/>
 					),
 					createButtonAccess: deliverableTracklineCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectDeliverableTargets",
+						defaultMessage: "Manage Deliverable Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Deliverable targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.DELIVERABLE}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
 			],
 			tabVisibility:
-				deliverableTargetFindAccess ||
-				deliverableTargetCreateAccess ||
-				deliverableUnitCreateAccess ||
-				deliverableCategoryCreateAccess ||
-				deliverableTracklineCreateAccess,
+				(deliverableTargetFindAccess ||
+					deliverableTargetCreateAccess ||
+					deliverableUnitCreateAccess ||
+					deliverableCategoryCreateAccess ||
+					deliverableTracklineCreateAccess) &&
+				organizationDeliverableAccess,
+			tableVisibility: deliverableTargetFindAccess,
+		},
+		{
+			label: intl.formatMessage({
+				id: "outputTabHeading",
+				defaultMessage: "Output",
+				description: `This text will be show on tab for output`,
+			}),
+			table: <DeliverablesTable type={DELIVERABLE_TYPE.OUTPUT} />,
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "createImpactTarget",
+						defaultMessage: "Create output Target",
+						description: `This text will be show on Add Button for Create output Target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.OUTPUT}
+							open={open}
+							handleClose={handleClose}
+							project={dashboardData?.project?.id}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "createImpactSubTarget",
+						defaultMessage: "Create Output Sub Target",
+						description: `This text will be show on output Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.OUTPUT}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "reportAchievement",
+						defaultMessage: "Report Achievement",
+						description: `This text will be show on Add Button for Report Achievement`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTrackLine
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.OUTPUT}
+						/>
+					),
+					createButtonAccess: deliverableTracklineCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectImpactTargets",
+						defaultMessage: "Manage Output Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Impact targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.OUTPUT}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+			],
+			tabVisibility:
+				(deliverableTargetFindAccess ||
+					deliverableTargetCreateAccess ||
+					deliverableUnitCreateAccess ||
+					deliverableCategoryCreateAccess ||
+					deliverableTracklineCreateAccess) &&
+				organizationOutputAccess,
+			tableVisibility: deliverableTargetFindAccess,
+		},
+		{
+			label: intl.formatMessage({
+				id: "outcomeTabHeading",
+				defaultMessage: "Outcome",
+				description: `This text will be show on tab for Outcome`,
+			}),
+			table: <DeliverablesTable type={DELIVERABLE_TYPE.OUTCOME} />,
+			createButtons: [
+				{
+					text: intl.formatMessage({
+						id: "createImpactTarget",
+						defaultMessage: "Create outcome Target",
+						description: `This text will be show on Add Button for Create outcome Target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.OUTCOME}
+							open={open}
+							handleClose={handleClose}
+							project={dashboardData?.project?.id}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "createImpactSubTarget",
+						defaultMessage: "Create outcome Sub Target",
+						description: `This text will be show on impact Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.OUTCOME}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "reportAchievement",
+						defaultMessage: "Report Achievement",
+						description: `This text will be show on Add Button for Report Achievement`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<DeliverableTrackLine
+							type={DELIVERABLE_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.OUTCOME}
+						/>
+					),
+					createButtonAccess: deliverableTracklineCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectImpactTargets",
+						defaultMessage: "Manage Outcome Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Impact targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.OUTCOME}
+						/>
+					),
+					createButtonAccess: deliverableTargetCreateAccess,
+				},
+			],
+			tabVisibility:
+				(deliverableTargetFindAccess ||
+					deliverableTargetCreateAccess ||
+					deliverableUnitCreateAccess ||
+					deliverableCategoryCreateAccess ||
+					deliverableTracklineCreateAccess) &&
+				organizationOutcomeAccess,
 			tableVisibility: deliverableTargetFindAccess,
 		},
 		{
 			label: intl.formatMessage({
 				id: "impactTabHeading",
-				defaultMessage: "Impact",
+				defaultMessage: "Impact / Goal",
 				description: `This text will be show on tab for Impact`,
 			}),
-			table: <ImpactsTable />,
+			table: <DeliverablesTable type={DELIVERABLE_TYPE.IMPACT} />,
 			createButtons: [
 				{
 					text: intl.formatMessage({
@@ -419,11 +672,28 @@ export default function DashboardTableContainer() {
 						description: `This text will be show on Add Button for Create Impact Target`,
 					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactTarget
-							type={IMPACT_ACTIONS.CREATE}
+						<DeliverableTarget
+							type={DELIVERABLE_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.IMPACT}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
+						/>
+					),
+					createButtonAccess: impactTargetCreateAccess,
+				},
+				{
+					text: intl.formatMessage({
+						id: "createImpactSubTarget",
+						defaultMessage: "Create Impact Sub Target",
+						description: `This text will be show on impact Add Button for create sub target`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<SubTarget
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.IMPACT}
 						/>
 					),
 					createButtonAccess: impactTargetCreateAccess,
@@ -467,23 +737,124 @@ export default function DashboardTableContainer() {
 						description: `This text will be show on Add Button for Report Achievement`,
 					}),
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactTrackLine
+						<DeliverableTrackLine
+							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							type={IMPACT_ACTIONS.CREATE}
+							formType={DELIVERABLE_TYPE.IMPACT}
 						/>
 					),
 					createButtonAccess: impactTracklineCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "manageProjectImpactTargets",
+						defaultMessage: "Manage Impact Project Targets",
+						description: `This text will be show on budgets Add Button for manage ptoject Impact targets`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<ProjectTargets
+							type={FORM_ACTIONS.UPDATE}
+							open={open}
+							handleClose={handleClose}
+							formType={DELIVERABLE_TYPE.IMPACT}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
 			],
 			tabVisibility:
-				impactTargetFindAccess ||
-				impactTargetCreateAccess ||
-				impactUnitCreateAccess ||
-				impactCategoryCreateAccess ||
-				impactTracklineCreateAccess,
-			tableVisibility: impactTargetFindAccess,
+				(deliverableTargetFindAccess ||
+					deliverableTargetCreateAccess ||
+					deliverableUnitCreateAccess ||
+					deliverableCategoryCreateAccess ||
+					deliverableTracklineCreateAccess) &&
+				organizationImpactAccess,
+			tableVisibility: deliverableTargetFindAccess,
 		},
+		// {
+		// 	label: intl.formatMessage({
+		// 		id: "ActivityTabHeading",
+		// 		defaultMessage: "Activity",
+		// 		description: `This text will be show on tab for Activity`,
+		// 	}),
+		// 	table: <DeliverablesTable type={DELIVERABLE_TYPE.ACTIVITY} />,
+		// 	createButtons: [
+		// 		{
+		// 			text: intl.formatMessage({
+		// 				id: "createImpactTarget",
+		// 				defaultMessage: "Create Activity Target",
+		// 				description: `This text will be show on Add Button for Create Activity Target`,
+		// 			}),
+		// 			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+		// 				<DeliverableTarget
+		// 					type={DELIVERABLE_ACTIONS.CREATE}
+		// 					formType={DELIVERABLE_TYPE.ACTIVITY}
+		// 					open={open}
+		// 					handleClose={handleClose}
+		// 					project={dashboardData?.project?.id}
+		// 				/>
+		// 			),
+		// 			createButtonAccess: deliverableTargetCreateAccess,
+		// 		},
+		// 		{
+		// 			text: intl.formatMessage({
+		// 				id: "createImpactSubTarget",
+		// 				defaultMessage: "Create Activity Sub Target",
+		// 				description: `This text will be show on impact Add Button for create sub target`,
+		// 			}),
+		// 			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+		// 				<SubTarget
+		// 					formAction={FORM_ACTIONS.CREATE}
+		// 					open={open}
+		// 					handleClose={handleClose}
+		// 					formType={DELIVERABLE_TYPE.ACTIVITY}
+		// 				/>
+		// 			),
+		// 			createButtonAccess: deliverableTargetCreateAccess,
+		// 		},
+		// 		{
+		// 			text: intl.formatMessage({
+		// 				id: "reportAchievement",
+		// 				defaultMessage: "Report Achievement",
+		// 				description: `This text will be show on Add Button for Report Achievement`,
+		// 			}),
+		// 			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+		// 				<DeliverableTrackLine
+		// 					type={DELIVERABLE_ACTIONS.CREATE}
+		// 					open={open}
+		// 					handleClose={handleClose}
+		// 					formType={DELIVERABLE_TYPE.ACTIVITY}
+		// 				/>
+		// 			),
+		// 			createButtonAccess: deliverableTracklineCreateAccess,
+		// 		},
+		// 		{
+		// 			text: intl.formatMessage({
+		// 				id: "manageProjectImpactTargets",
+		// 				defaultMessage: "Manage Activity Project Targets",
+		// 				description: `This text will be show on budgets Add Button for manage ptoject activity targets`,
+		// 			}),
+		// 			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+		// 				<ProjectTargets
+		// 					type={FORM_ACTIONS.UPDATE}
+		// 					open={open}
+		// 					handleClose={handleClose}
+		// 					formType={DELIVERABLE_TYPE.ACTIVITY}
+		// 				/>
+		// 			),
+		// 			createButtonAccess: deliverableTargetCreateAccess,
+		// 		},
+		// 	],
+		// 	tabVisibility:
+		// 		(deliverableTargetFindAccess ||
+		// 			deliverableTargetCreateAccess ||
+		// 			deliverableUnitCreateAccess ||
+		// 			deliverableCategoryCreateAccess ||
+		// 			deliverableTracklineCreateAccess) &&
+		// 		organizationActivityAccess,
+		// 	tableVisibility: deliverableTargetFindAccess,
+		// },
 		{
 			label: intl.formatMessage({
 				id: "fundReceivedTabHeading",
@@ -685,11 +1056,12 @@ export default function DashboardTableContainer() {
 	};
 
 	return (
-		<Box className={classes.root} boxShadow={0}>
+		<Box className={classes.root} boxShadow={0} mt={1}>
 			<Tabs
+				className={classes.tabs}
 				value={value}
-				indicatorColor="primary"
-				textColor="primary"
+				indicatorColor="secondary"
+				textColor="secondary"
 				onChange={handleChange}
 				variant="scrollable"
 				scrollButtons="auto"
@@ -699,7 +1071,7 @@ export default function DashboardTableContainer() {
 					(tab, index) =>
 						tab.tabVisibility && (
 							<Tab
-								textColor="secondary"
+								className={classes.tab}
 								key={tab.label}
 								value={index}
 								label={tab.label}

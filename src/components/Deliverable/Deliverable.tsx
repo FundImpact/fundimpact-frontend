@@ -22,7 +22,7 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IGetDeliverableCategory } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-import { useLocation } from "react-router";
+// import { useLocation } from "react-router";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 function getInitialValues(props: DeliverableProps) {
@@ -193,13 +193,15 @@ function Deliverable(props: DeliverableProps) {
 	};
 	const intl = useIntl();
 
+	console.log("props?.dialogType", props?.dialogType);
+
 	if (props?.dialogType === DIALOG_TYPE.DELETE) {
 		return (
 			<DeleteModal
 				open={props.open}
 				handleClose={onCancel}
 				onDeleteConformation={onDelete}
-				title="Delete Deliverable Category"
+				title="Delete Deliverable Category test"
 			/>
 		);
 	}

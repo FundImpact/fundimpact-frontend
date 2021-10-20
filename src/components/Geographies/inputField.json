@@ -1,0 +1,337 @@
+{
+	"deliverableCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Code",
+			"size": 6
+		}
+	],
+	"deliverableTargetForm": [
+		{
+			"name": "parent_id",
+			"id": "parent_id",
+			"dataTestId": "deliverableOutputTarget",
+			"testId": "deliverableOutputTargetInput",
+			"label": "",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": false,
+			"size": 12
+		},
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableTargetName",
+			"testId": "deliverableTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"required": true,
+			"size": 12
+		},
+		{
+			"name": "deliverable_category_org",
+			"id": "deliverable_category_org",
+			"dataTestId": "deliverableTargetCategory",
+			"testId": "deliverableTargetCategoryInput",
+			"label": "Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": true,
+			"addNewClick": {},
+			"size": 6
+		},
+		{
+			"name": "deliverable_unit_org",
+			"id": "deliverable_unit_org",
+			"dataTestId": "deliverableTargetUnit",
+			"testId": "deliverableTargetUnitInput",
+			"label": "Unit",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": true,
+			"addNewClick": {},
+			"size": 6
+		},
+		{
+			"name": "value_calculation",
+			"id": "value_calculation",
+			"dataTestId": "deliverableTargetValueCalculation",
+			"testId": "deliverableTargetValueCalculationInput",
+			"label": "Target Value Calculations *",
+			"optionsArray": [
+				{
+					"id": "AVG",
+					"name": "Average"
+				},
+				{
+					"id": "SUM",
+					"name": "Add"
+				}
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+
+			"hidden": false,
+			"size": 6
+		},
+		{
+			"name": "is_qualitative",
+			"id": "is_qualitative",
+			"dataTestId": "deliverableTargetIsQualitative",
+			"testId": "deliverableTargetIsQualitativeInput",
+			"label": "Is Qualitative",
+			"getInputValue": {},
+			"disabled": false,
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "value_qualitative_option",
+			"id": "value_qualitative_option",
+			"dataTestId": "deliverableTargetValueQualitativeOptions",
+			"testId": "deliverableTargetValueQualitativeOptionsInput",
+			"label": "Qualitative Options ( Ex: Opt1,Opt2 ) *",
+			"hidden": true,
+			"multiline": true,
+			"rows": 2,
+			"inputType": "textarea",
+			"size": 12
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableTargetDescription",
+			"testId": "deliverableTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+
+	"deliverableTargetUpdateForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableTargetName",
+			"testId": "deliverableTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "deliverableTargetTargetValue",
+			"testId": "deliverableTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
+			"required": true,
+			"size": 6,
+			"type": "number"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableTargetDescription",
+			"testId": "deliverableTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+
+	"GeographiesStateForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableUnitDescription",
+			"testId": "deliverableUnitDescriptionInput",
+			"label": "Country",
+			"size": 12
+		}
+	],
+	"deliverableTragetLineForm": [
+		{
+			"name": "deliverable_sub_target",
+			"id": "deliverable_sub_target",
+			"label": "Sub Target",
+			"size": 6,
+			"dataTestId": "deliverableTracklineTarget",
+			"testId": "deliverableTracklineTargetInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"addNew": true,
+			"addNewClick": {},
+			"getInputValue": {},
+			"required": true
+		},
+		{
+			"name": "value",
+			"id": "value",
+			"dataTestId": "deliverableTracklineValue",
+			"testId": "deliverableTracklineValueInput",
+			"label": "Value",
+			"type": "number",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "value_qualitative",
+			"id": "value_qualitative",
+			"dataTestId": "deliverableTracklineValueQuantitative",
+			"testId": "deliverableTracklineValueQuantitativeInput",
+			"label": "Target Value",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"hidden": true,
+			"size": 6
+		},
+		{
+			"name": "timeperiod_start",
+			"id": "timeperiod_start",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "Start Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "timeperiod_end",
+			"id": "timeperiod_end",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "End Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "reporting_date",
+			"id": "reporting_date",
+			"dataTestId": "deliverableTracklineDate",
+			"testId": "deliverableTracklineDateInput",
+			"label": "Reporting Date",
+			"type": "date",
+			"size": 6,
+			"required": true
+		},
+
+		{
+			"name": "annual_year",
+			"id": "annual_year",
+			"label": "Annual Year",
+			"size": 6,
+			"dataTestId": "deliverableTracklineAnnualYear",
+			"testId": "deliverableTracklineAnnualYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_year_org",
+			"id": "financial_year_org",
+			"label": "Financial Year Org",
+			"size": 6,
+			"dataTestId": "deliverableTracklineFinancialYear",
+			"testId": "deliverableTracklineFinancialYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "financial_year_donor",
+			"id": "financial_year_donor",
+			"label": "Financial Year Donor",
+			"size": 6,
+			"dataTestId": "deliverableTracklineFinancialYear",
+			"testId": "deliverableTracklineFinancialYearInput",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select"
+		},
+		{
+			"name": "note",
+			"id": "note",
+			"dataTestId": "deliverableTracklineNote",
+			"testId": "deliverableTracklineNoteInput",
+			"label": "Note",
+			"multiline": true,
+			"rows": 2,
+			"size": 12
+		},
+		{
+			"name": "attachfiles",
+			"id": "attachfiles",
+			"dataTestId": "deliverableTracklineAttachFile",
+			"testId": "deliverableTracklineAttachFileInput",
+			"label": "Attach files",
+			"inputType": "button",
+			"textNextToButton": "",
+			"onClick": {},
+			"size": 12
+		}
+	]
+}

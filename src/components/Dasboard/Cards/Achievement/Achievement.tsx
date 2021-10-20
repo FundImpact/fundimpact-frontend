@@ -1,13 +1,9 @@
 import { useLazyQuery } from "@apollo/client";
 import { Box, Grid, Typography } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+// import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import {
-	GET_ALL_IMPACT_TARGET_AMOUNT,
-	GET_ALL_IMPACT_AMOUNT_SPEND,
-} from "../../../../graphql/Impact/query";
 import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
@@ -17,10 +13,6 @@ import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../../utils/access/modules/deliverableTarget/actions";
 import { IMPACT_TARGET_ACTIONS } from "../../../../utils/access/modules/impactTarget/actions";
-
-const useStyles = makeStyles((theme: Theme) => ({
-	root: { height: "100vh" },
-}));
 
 interface IIndicatorProps_PROPS {
 	name: string;
@@ -116,30 +108,153 @@ export default function Achievement() {
 		MODULE_CODES.IMPACT_TARGET,
 		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
 	);
+	const outputTargetFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	);
+	const outcomeTargetFindAccess = userHasAccess(
+		MODULE_CODES.IMPACT_TARGET,
+		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	);
 
 	let [GetDeliverableAmountTarget, { data: DeliverableAmountTarget }] = useLazyQuery(
 		GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 	let [GetDeliverableAmountSpend, { data: DeliverableAmountSpend }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_SPEND_AMOUNT
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				// console.log("ddss", data);
+			},
+		}
 	);
 
 	let [GetImpactAmountTarget, { data: ImpactAmountTarget }] = useLazyQuery(
-		GET_ALL_IMPACT_TARGET_AMOUNT
+		GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 
 	let [GetImpactAmountSpend, { data: ImpactAmountSpend }] = useLazyQuery(
-		GET_ALL_IMPACT_AMOUNT_SPEND
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				// console.log("ddss", data);
+			},
+		}
+	);
+
+	let [GetOutputAmountTarget, { data: OutputAmountTarget }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+	);
+
+	let [GetOutputAmountSpend, { data: OutputAmountSpend }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				// console.log("output data", data);
+			},
+		}
+	);
+	let [GetOutcomeAmountTarget, { data: OutcomeAmountTarget }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+	);
+
+	let [GetOutcomeAmountSpend, { data: OutcomeAmountSpend }] = useLazyQuery(
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+		{
+			onCompleted: (data) => {
+				// console.log("output data", data);
+			},
+		}
 	);
 	useEffect(() => {
 		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS });
 		setIMPACT_STATUS({ ...IMPACT_STATUS });
+		setOUTPUT_STATUS({ ...OUTPUT_STATUS });
+		setOUTCOME_STATUS({ ...OUTCOME_STATUS });
 		if (!projectId) return;
-		GetDeliverableAmountSpend({ variables: { filter: { project: projectId } } });
-		GetDeliverableAmountTarget({ variables: { filter: { project: projectId } } });
-		GetImpactAmountTarget({ variables: { filter: { project: projectId } } });
-		GetImpactAmountSpend({ variables: { filter: { project: projectId } } });
+		GetDeliverableAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "deliverable",
+					},
+				},
+			},
+		});
+		GetDeliverableAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "deliverable",
+					},
+				},
+			},
+		});
+		GetImpactAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "impact",
+					},
+				},
+			},
+		});
+		GetImpactAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "impact",
+					},
+				},
+			},
+		});
+		GetOutputAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "output",
+					},
+				},
+			},
+		});
+		GetOutputAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "output",
+					},
+				},
+			},
+		});
+		GetOutcomeAmountTarget({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "outcome",
+					},
+				},
+			},
+		});
+		GetOutcomeAmountSpend({
+			variables: {
+				filter: {
+					project: projectId,
+					deliverable_target_project: {
+						type: "outcome",
+					},
+				},
+			},
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
+
 	const intl = useIntl();
 	const [DELIVERABLE_STATUS, setDELIVERABLE_STATUS] = useState<IIndicatorProps_PROPS>({
 		name: intl.formatMessage({
@@ -165,6 +280,30 @@ export default function Achievement() {
 		color: "primary",
 	});
 
+	const [OUTPUT_STATUS, setOUTPUT_STATUS] = useState<IIndicatorProps_PROPS>({
+		name: intl.formatMessage({
+			id: "outputAchievementCard",
+			defaultMessage: "Output",
+			description: `This text will be show on dashboard achievement card for fund output`,
+		}),
+		achieved: 0,
+		target: 0,
+		lastUpdated: "20-5-2020",
+		color: "primary",
+	});
+
+	const [OUTCOME_STATUS, setOUTCOME_STATUS] = useState<IIndicatorProps_PROPS>({
+		name: intl.formatMessage({
+			id: "outcomeAchievementCard",
+			defaultMessage: "Outcome",
+			description: `This text will be show on dashboard achievement card for fund output`,
+		}),
+		achieved: 0,
+		target: 0,
+		lastUpdated: "20-5-2020",
+		color: "primary",
+	});
+
 	useEffect(() => {
 		const TargetAmount = DeliverableAmountTarget
 			? DeliverableAmountTarget?.deliverableTargetTotalAmount
@@ -181,14 +320,15 @@ export default function Achievement() {
 			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
 			target: TargetAmount ? 100 : 0,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [DeliverableAmountTarget, DeliverableAmountSpend]);
 
 	useEffect(() => {
 		const TargetAmount = ImpactAmountTarget
-			? ImpactAmountTarget?.impactTargetProjectTotalAmount
+			? ImpactAmountTarget?.deliverableTargetTotalAmount
 			: null;
 		const AmoundSpend = ImpactAmountSpend
-			? ImpactAmountSpend.impactTrackingLineitemTotalSpendAmount
+			? ImpactAmountSpend.deliverableTrackingTotalSpendAmount
 			: null;
 		if (TargetAmount === undefined || TargetAmount === null) return;
 		if (AmoundSpend === undefined || AmoundSpend === null) return;
@@ -198,13 +338,54 @@ export default function Achievement() {
 			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
 			target: TargetAmount ? 100 : 0,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ImpactAmountSpend, ImpactAmountTarget]);
+
+	useEffect(() => {
+		const TargetAmount = OutputAmountTarget
+			? OutputAmountTarget?.deliverableTargetTotalAmount
+			: null;
+		const AmoundSpend = OutputAmountSpend
+			? OutputAmountSpend.deliverableTrackingTotalSpendAmount
+			: null;
+		if (TargetAmount === undefined || TargetAmount === null) return;
+		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		setOUTPUT_STATUS({
+			...OUTPUT_STATUS,
+			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+			target: TargetAmount ? 100 : 0,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [OutputAmountSpend, OutputAmountTarget]);
+
+	useEffect(() => {
+		const TargetAmount = OutcomeAmountTarget
+			? OutcomeAmountTarget?.deliverableTargetTotalAmount
+			: null;
+		const AmoundSpend = OutcomeAmountSpend
+			? OutcomeAmountSpend.deliverableTrackingTotalSpendAmount
+			: null;
+		if (TargetAmount === undefined || TargetAmount === null) return;
+		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
+		setOUTCOME_STATUS({
+			...OUTCOME_STATUS,
+			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+			target: TargetAmount ? 100 : 0,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [OutcomeAmountSpend, OutcomeAmountTarget]);
 
 	if (
 		!DeliverableAmountTarget ||
 		!DeliverableAmountSpend ||
 		!ImpactAmountTarget ||
-		!ImpactAmountSpend
+		!ImpactAmountSpend ||
+		!OutputAmountTarget ||
+		!OutputAmountSpend ||
+		!OutcomeAmountTarget ||
+		!OutcomeAmountSpend
 	)
 		return (
 			<Grid item xs={12}>
@@ -214,11 +395,17 @@ export default function Achievement() {
 		);
 
 	return (
-		<>
-			<Grid container>
-				{deliverableTargetFindAccess && <ISTATUS {...DELIVERABLE_STATUS} />}
+		<Grid container>
+			<Grid item md={6}>
+				<Grid container>
+					{deliverableTargetFindAccess && <ISTATUS {...DELIVERABLE_STATUS} />}
+				</Grid>
+				<Grid container>{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}</Grid>
 			</Grid>
-			<Grid container>{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}</Grid>
-		</>
+			<Grid item md={6}>
+				<Grid container>{outputTargetFindAccess && <ISTATUS {...OUTPUT_STATUS} />}</Grid>
+				<Grid container>{outcomeTargetFindAccess && <ISTATUS {...OUTCOME_STATUS} />}</Grid>
+			</Grid>
+		</Grid>
 	);
 }

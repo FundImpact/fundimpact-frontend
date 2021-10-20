@@ -46,7 +46,7 @@ function ContactDialogGraphql(props: IContactFormGraphqlProps) {
 			loading={creatingContact || updatingContact}
 			entity_name={entity_name}
 			entity_id={entity_id}
-			{...(props.formAction == FORM_ACTIONS.UPDATE
+			{...(props.formAction === FORM_ACTIONS.UPDATE
 				? {
 						initialValues: props.initialValues,
 						formAction: FORM_ACTIONS.UPDATE,

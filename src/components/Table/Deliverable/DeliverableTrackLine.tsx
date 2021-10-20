@@ -22,7 +22,11 @@ import {
 } from "../../../graphql/Deliverable/trackline";
 import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableTrackline";
-import { getTodaysDate, uploadPercentageCalculator } from "../../../utils";
+import {
+	getOptionFromTargetValueOptions,
+	getTodaysDate,
+	// uploadPercentageCalculator,
+} from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTrackline from "../../Deliverable/DeliverableTrackline";
@@ -41,23 +45,23 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/ac
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
-import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
-import { CircularPercentage } from "../../commons";
-import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { setSuccessNotification } from "../../../reducers/notificationReducer";
+// import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
+// import { CircularPercentage } from "../../commons";
+// import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+// import { useNotificationDispatch } from "../../../contexts/notificationContext";
+// import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	ANNUAL_YEAR_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT,
-	DONOR_EXPORT,
+	// DONOR_EXPORT,
 	FINANCIAL_YEAR_EXPORT,
-	GRANT_PERIOD_TABLE_EXPORT,
+	// GRANT_PERIOD_TABLE_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { DIALOG_TYPE } from "../../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../../../models/constants";
 import { useRefetchOnDeliverableLineItemImport } from "../../../hooks/deliverable";
 
 enum tableHeaders {
@@ -96,28 +100,28 @@ const chipArray = ({
 	));
 };
 
-const DeliverableTranche = ({ TracklineId }: { TracklineId: string }) => {
-	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
-		variables: { filter: { deliverable_tracking_lineitem: TracklineId } },
-	});
-	return (
-		<TableCell>
-			<Box display="flex">
-				{data?.deliverableLinitemFyDonorList.map((elem: any) => (
-					<Box mr={1}>
-						<Chip
-							label={`${elem?.grant_periods_project?.name || "-"} - ${
-								elem?.project_donor?.donor?.name || "-"
-							}`}
-							size="small"
-							color="primary"
-						/>
-					</Box>
-				))}
-			</Box>
-		</TableCell>
-	);
-};
+// const DeliverableTranche = ({ TracklineId }: { TracklineId: string }) => {
+// 	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
+// 		variables: { filter: { deliverable_tracking_lineitem: TracklineId } },
+// 	});
+// 	return (
+// 		<TableCell>
+// 			<Box display="flex">
+// 				{data?.deliverableLinitemFyDonorList.map((elem: any) => (
+// 					<Box mr={1}>
+// 						<Chip
+// 							label={`${elem?.grant_periods_project?.name || "-"} - ${
+// 								elem?.project_donor?.donor?.name || "-"
+// 							}`}
+// 							size="small"
+// 							color="primary"
+// 						/>
+// 					</Box>
+// 				))}
+// 			</Box>
+// 		</TableCell>
+// 	);
+// };
 
 // import {
 // 	GET_DELIVERABLE_TRANCHE,
@@ -135,7 +139,7 @@ function EditDeliverableTrackLineIcon({
 		| undefined;
 }) {
 	const [tracklineDonorsMapValues, setTracklineDonorsMapValues] = useState<any>({});
-	const notificationDispatch = useNotificationDispatch();
+	// const notificationDispatch = useNotificationDispatch();
 	const [tracklineDonors, setTracklineDonors] = useState<
 		{
 			id: string;
@@ -225,13 +229,19 @@ function EditDeliverableTrackLineIcon({
 						onClick={() => {
 							setDeliverableTracklineData({
 								id: deliverableTrackline?.id,
-								deliverable_target_project:
-									deliverableTrackline.deliverable_target_project?.id,
-								annual_year: deliverableTrackline.annual_year?.id,
+								deliverable_sub_target:
+									deliverableTrackline?.deliverable_sub_target?.id,
+								timeperiod_start: deliverableTrackline?.timeperiod_start,
+								timeperiod_end: deliverableTrackline?.timeperiod_end,
+								annual_year: deliverableTrackline?.annual_year?.id,
 								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
 								value: deliverableTrackline?.value,
+								value_qualitative: deliverableTrackline?.value_qualitative,
 								note: deliverableTrackline?.note,
 								financial_year: deliverableTrackline.financial_year?.id,
+								financial_year_org: deliverableTrackline?.financial_year_org?.id,
+								financial_year_donor:
+									deliverableTrackline?.financial_year_donor?.id,
 								donors: tracklineDonors,
 								donorMapValues: tracklineDonorsMapValues,
 								attachments: deliverableTrackline.attachments,
@@ -252,13 +262,19 @@ function EditDeliverableTrackLineIcon({
 						onClick={() => {
 							setDeliverableTracklineData({
 								id: deliverableTrackline?.id,
-								deliverable_target_project:
-									deliverableTrackline.deliverable_target_project?.id,
-								annual_year: deliverableTrackline.annual_year?.id,
+								deliverable_sub_target:
+									deliverableTrackline.deliverable_sub_target?.id,
+								timeperiod_start: deliverableTrackline?.timeperiod_start,
+								timeperiod_end: deliverableTrackline?.timeperiod_end,
+								annual_year: deliverableTrackline?.annual_year?.id,
 								reporting_date: getTodaysDate(deliverableTrackline?.reporting_date),
 								value: deliverableTrackline?.value,
+								value_qualitative: deliverableTrackline?.value_qualitative,
 								note: deliverableTrackline?.note,
 								financial_year: deliverableTrackline.financial_year?.id,
+								financial_year_org: deliverableTrackline?.financial_year_org?.id,
+								financial_year_donor:
+									deliverableTrackline?.financial_year_donor?.id,
 								donors: tracklineDonors,
 								donorMapValues: tracklineDonorsMapValues,
 								attachments: deliverableTrackline.attachments,
@@ -290,6 +306,7 @@ function EditDeliverableTrackLineIcon({
 					</MenuItem>
 				)}
 			</Menu>
+
 			{deliverableTracklineData && (
 				<DeliverableTrackline
 					open={deliverableTracklineData !== null}
@@ -299,11 +316,23 @@ function EditDeliverableTrackLineIcon({
 					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
 					data={deliverableTracklineData}
-					deliverableTarget={deliverableTrackline.deliverable_target_project.id}
+					formType={
+						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
+							?.type || DELIVERABLE_TYPE.DELIVERABLE
+					}
+					deliverableTarget={deliverableTrackline?.deliverable_sub_target}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}
 					reftechOnSuccess={refetch}
 					dialogType={
 						openDeleteDeliverableLineItem ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM
+					}
+					qualitativeParent={
+						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
+							?.is_qualitative || false
+					}
+					targetValueOptions={
+						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
+							?.value_qualitative_option?.options || []
 					}
 				/>
 			)}
@@ -389,8 +418,10 @@ const createChipArray = ({
 
 export default function DeliverablesTrackLineTable({
 	deliverableTargetId,
+	subTargetId,
 }: {
 	deliverableTargetId: string;
+	subTargetId?: string;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
 	const [orderBy, setOrderBy] = useState<string>("created_at");
@@ -435,9 +466,9 @@ export default function DeliverablesTrackLineTable({
 
 	useEffect(() => {
 		setQueryFilter({
-			deliverable_target_project: deliverableTargetId,
+			deliverable_sub_target: subTargetId,
 		});
-	}, [deliverableTargetId]);
+	}, [subTargetId]);
 
 	useEffect(() => {
 		if (filterList) {
@@ -448,11 +479,11 @@ export default function DeliverablesTrackLineTable({
 				}
 			}
 			setQueryFilter({
-				deliverable_target_project: deliverableTargetId,
+				deliverable_sub_target: subTargetId,
 				...newFilterListObject,
 			});
 		}
-	}, [filterList, deliverableTargetId]);
+	}, [filterList, subTargetId]);
 
 	const handleDeliverableLineChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
@@ -478,9 +509,11 @@ export default function DeliverablesTrackLineTable({
 		query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 		countQuery: GET_DELIVERABLE_TRACKLINE_COUNT,
 		countFilter: queryFilter,
+		aggregateCount: true,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
 	const limit = 10;
 	const [rows, setRows] = useState<React.ReactNode[]>([]);
 	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(
@@ -509,12 +542,13 @@ export default function DeliverablesTrackLineTable({
 	useEffect(() => {
 		if (
 			deliverableTracklineData &&
-			deliverableTracklineData.deliverableTrackingLineitemList &&
-			deliverableTracklineData.deliverableTrackingLineitemList.length
+			deliverableTracklineData.deliverableTrackingLineitems &&
+			deliverableTracklineData.deliverableTrackingLineitems.length
 		) {
 			let deliverableTrackingLineitemList =
-				deliverableTracklineData.deliverableTrackingLineitemList;
+				deliverableTracklineData.deliverableTrackingLineitems;
 			let arr = [];
+
 			for (let i = 0; i < deliverableTrackingLineitemList.length; i++) {
 				if (deliverableTrackingLineitemList[i]) {
 					let row = [
@@ -531,7 +565,9 @@ export default function DeliverablesTrackLineTable({
 								`${deliverableTrackingLineitemList[i]?.id}-1`
 							}
 						>
-							{getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)}
+							{require("moment")(
+								getTodaysDate(deliverableTrackingLineitemList[i]?.reporting_date)
+							).format(" MMM D , YY")}
 						</TableCell>,
 						<TableCell
 							key={
@@ -548,10 +584,20 @@ export default function DeliverablesTrackLineTable({
 								deliverableTrackingLineitemList[i]?.value +
 								`${deliverableTrackingLineitemList[i]?.id}-3`
 							}
-						>{`${deliverableTrackingLineitemList[i]?.value} ${deliverableTrackingLineitemList[i]?.deliverable_target_project?.deliverable_unit_org?.name}`}</TableCell>,
+						>
+							{deliverableTrackingLineitemList[i]?.deliverable_sub_target
+								?.deliverable_target_project?.is_qualitative
+								? getOptionFromTargetValueOptions(
+										deliverableTrackingLineitemList[i]?.deliverable_sub_target
+											?.deliverable_target_project.value_qualitative_option
+											?.options || [],
+										deliverableTrackingLineitemList[i]?.value_qualitative
+								  )
+								: deliverableTrackingLineitemList[i]?.value}
+						</TableCell>,
 						<TableCell
 							key={
-								deliverableTrackingLineitemList[i]?.financial_year?.name +
+								deliverableTrackingLineitemList[i]?.financial_year_org?.name +
 								+`${deliverableTrackingLineitemList[i]?.id}-4`
 							}
 						>
@@ -559,11 +605,12 @@ export default function DeliverablesTrackLineTable({
 								{financialYearFindAccess && (
 									<Box mr={1}>
 										<Chip
-											avatar={<Avatar>FY</Avatar>}
+											avatar={<Avatar>FYO</Avatar>}
 											label={
-												deliverableTrackingLineitemList[i]?.financial_year
+												deliverableTrackingLineitemList[i]
+													?.financial_year_org
 													? deliverableTrackingLineitemList[i]
-															?.financial_year?.name
+															?.financial_year_org?.name
 													: "-"
 											}
 											size="small"
@@ -571,6 +618,19 @@ export default function DeliverablesTrackLineTable({
 										/>
 									</Box>
 								)}
+								<Box mr={1}>
+									<Chip
+										avatar={<Avatar>FYD</Avatar>}
+										label={
+											deliverableTrackingLineitemList[i]?.financial_year_donor
+												? deliverableTrackingLineitemList[i]
+														?.financial_year_donor?.name
+												: "-"
+										}
+										size="small"
+										color="primary"
+									/>
+								</Box>
 								{annualYearFindAccess && (
 									<Chip
 										avatar={<Avatar>AY</Avatar>}
@@ -586,9 +646,26 @@ export default function DeliverablesTrackLineTable({
 								)}
 							</Box>
 						</TableCell>,
-						<DeliverableTranche
-							TracklineId={deliverableTrackingLineitemList[i]?.id || ""}
-						/>,
+						<TableCell
+							key={
+								deliverableTrackingLineitemList[i]?.timeperiod_start +
+								+`${deliverableTrackingLineitemList[i]?.id}-4`
+							}
+						>
+							<div>
+								{require("moment")(
+									getTodaysDate(
+										deliverableTrackingLineitemList[i]?.timeperiod_start
+									)
+								).format("MMM D, YY") +
+									" - " +
+									require("moment")(
+										getTodaysDate(
+											deliverableTrackingLineitemList[i]?.timeperiod_end
+										)
+									).format("MMM D, YY")}
+							</div>
+						</TableCell>,
 					];
 					row.push(
 						<EditDeliverableTrackLineIcon
@@ -604,6 +681,7 @@ export default function DeliverablesTrackLineTable({
 		} else {
 			setRows([]);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deliverableTracklineData, annualYearFindAccess, financialYearFindAccess, TracklinePage]);
 
 	const filteredDeliverableTracklineTableHeadings = useMemo(

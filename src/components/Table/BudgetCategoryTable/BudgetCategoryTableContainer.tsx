@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import BudgetCategoryTableView from "./BudgetCategoryTableView";
 import { IBudgetCategory } from "../../../models/budget";
-import { ApolloQueryResult, OperationVariables } from "@apollo/client";
+// import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
 const getInitialValues = (
 	budgetCategory: Required<IBudgetCategory> | null
