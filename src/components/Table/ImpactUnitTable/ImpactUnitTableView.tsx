@@ -4,23 +4,23 @@ import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IImpactUnitData } from "../../../models/impact/impact";
 import ImpactUnitDialog from "../../Impact/ImpactUnitDialog/ImpaceUnitDialog";
 import { IImpactUnitFormInput } from "../../../models/impact/impactForm";
-import ImpactCategory from "../ImpactCategoryTable";
+// import ImpactCategory from "../ImpactCategoryTable";
 import { impactUnitTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import FilterList from "../../FilterList";
+// import FilterList from "../../FilterList";
 import { Grid, Box, Chip, Avatar, useTheme, Button, MenuItem } from "@material-ui/core";
-import { impactUnitInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
+// import { impactUnitInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
-	IMPACT_CATEGORY_TABLE_EXPORT,
-	IMPACT_CATEGORY_UNIT_EXPORT,
+	// IMPACT_CATEGORY_TABLE_EXPORT,
+	// IMPACT_CATEGORY_UNIT_EXPORT,
 	IMPACT_UNIT_TABLE_EXPORT,
 	IMPACT_UNIT_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
-import { FormattedMessage } from "react-intl";
+// import { FormattedMessage } from "react-intl";
 
 const rows = [
 	{

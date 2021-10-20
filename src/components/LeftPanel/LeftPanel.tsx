@@ -57,6 +57,7 @@ export default function LeftPanel() {
 	]);
 	const dispatch = useDashboardDispatch();
 	let { pathname } = useLocation();
+
 	useEffect(() => {
 		if (data) {
 			if (!data.orgProject.length && pathname === "/dashboard") {
@@ -64,6 +65,7 @@ export default function LeftPanel() {
 			}
 			leftPannelList[0].onClick = () => dispatch(setProject(data.orgProject[0]));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, leftPannelList, dispatch, navigate]);
 
 	const settingButtonAccess = userHasAccess(

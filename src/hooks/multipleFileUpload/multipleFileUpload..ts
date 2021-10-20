@@ -27,6 +27,7 @@ const useMultipleFileUpload = (
 
 			setFilesArray(arr);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loadingStatus]);
 
 	useEffect(() => {

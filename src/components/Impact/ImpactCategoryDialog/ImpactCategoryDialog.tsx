@@ -27,7 +27,7 @@ import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { IGetImpactCategory } from "../../../models/impact/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
-import { useLocation } from "react-router";
+// import { useLocation } from "react-router";
 import DeleteModal from "../../DeleteModal";
 
 let inputFields: IInputField[] = dataInputFields.impactCategoryForm;

@@ -2,7 +2,7 @@ import "./index.css";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { IntlProvider } from "react-intl";
+// import { IntlProvider } from "react-intl";
 
 import App from "./App";
 import { UIProvider } from "./contexts/uiContext";

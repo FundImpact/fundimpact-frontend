@@ -57,9 +57,7 @@ function CommonInputForm({
 			enableReinitialize
 		>
 			{(formik) => {
-				{
-					getFormikInstance && getFormikInstance(formik);
-				}
+				getFormikInstance && getFormikInstance(formik);
 				return (
 					<Form>
 						<Grid container spacing={2}>

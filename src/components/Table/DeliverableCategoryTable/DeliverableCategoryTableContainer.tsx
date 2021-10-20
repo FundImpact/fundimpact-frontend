@@ -5,7 +5,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
-import { ApolloQueryResult } from "@apollo/client";
+// import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (
 	deliverableCategory: IDeliverableCategoryData | null,

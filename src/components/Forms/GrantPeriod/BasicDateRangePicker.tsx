@@ -1,6 +1,6 @@
 import { Box, Grid, TextField } from "@material-ui/core";
-import { DateRangeDelimiter, DateRangePicker } from "@material-ui/pickers";
-import { DateRange } from "@material-ui/pickers/DateRangePicker/RangeTypes";
+import { DateRangeDelimiter } from "@material-ui/pickers";
+// import { DateRange } from "@material-ui/pickers/DateRangePicker/RangeTypes";
 import React from "react";
 import { getTodaysDate } from "../../../utils";
 
@@ -23,6 +23,7 @@ export function ICustomDatePicker({
 
 	React.useMemo(() => {
 		onChange(fromDateSelected, toDateSelected);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fromDateSelected, toDateSelected]);
 
 	// const handleDateChange = (dateRange: DateRange<Date | null>) => {

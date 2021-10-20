@@ -79,7 +79,7 @@ function IndividualDialogGraphql(props: IAddressFormGraphqlProps) {
 			}
 			open={open}
 			handleClose={handleClose}
-			{...(props.formAction == FORM_ACTIONS.UPDATE
+			{...(props.formAction === FORM_ACTIONS.UPDATE
 				? {
 						initialValues: props.initialValues,
 						formAction: FORM_ACTIONS.UPDATE,

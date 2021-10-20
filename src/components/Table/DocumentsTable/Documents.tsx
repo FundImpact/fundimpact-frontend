@@ -68,7 +68,7 @@ export default function DocumentsTable({
 					}).length
 				)
 					organizationAttachments = organizationAttachments.filter((obj: any) => {
-						return obj.name == filterList?.name || obj.ext == filterList?.ext;
+						return obj.name === filterList?.name || obj.ext === filterList?.ext;
 					});
 
 				organizationAttachments?.map((document: Attachments, index: number) => {
@@ -105,6 +105,7 @@ export default function DocumentsTable({
 			},
 			[]
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, filterList]);
 
 	const intl = useIntl();

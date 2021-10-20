@@ -36,6 +36,7 @@ const MultilingualProvider = ({ children }: { children: React.ReactNode | React.
 		loadLocaleData(user?.language || locale).then((localeData) => {
 			setMessages(localeData);
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
 	return (

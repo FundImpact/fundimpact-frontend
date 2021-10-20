@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_COUNTRY_LIST, GET_CURRENCY_LIST } from "../../graphql/";
+import { GET_COUNTRY_LIST } from "../../graphql/";
 import { GET_DONOR_COUNT, GET_ORG_DONOR } from "../../graphql/donor";
 import {
 	CREATE_ORG_DONOR,
 	UPDATE_ORG_DONOR,
 	CREATE_PROJECT_DONOR,
 } from "../../graphql/donor/mutation";
-import { IInputField } from "../../models";
+// import { IInputField } from "../../models";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IDONOR, IDonorProps } from "../../models/donor";
 import { IGET_DONOR } from "../../models/donor/query";

@@ -1,13 +1,9 @@
 import { useLazyQuery } from "@apollo/client";
 import { Box, Grid, Typography } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+// import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
 import { useDashBoardData } from "../../../../contexts/dashboardContext";
-import {
-	GET_ALL_IMPACT_TARGET_AMOUNT,
-	GET_ALL_IMPACT_AMOUNT_SPEND,
-} from "../../../../graphql/Impact/query";
 import {
 	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
@@ -17,10 +13,6 @@ import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../../utils/access/modules/deliverableTarget/actions";
 import { IMPACT_TARGET_ACTIONS } from "../../../../utils/access/modules/impactTarget/actions";
-
-const useStyles = makeStyles((theme: Theme) => ({
-	root: { height: "100vh" },
-}));
 
 interface IIndicatorProps_PROPS {
 	name: string;
@@ -260,6 +252,7 @@ export default function Achievement() {
 				},
 			},
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const intl = useIntl();
@@ -327,6 +320,7 @@ export default function Achievement() {
 			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
 			target: TargetAmount ? 100 : 0,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [DeliverableAmountTarget, DeliverableAmountSpend]);
 
 	useEffect(() => {
@@ -344,6 +338,7 @@ export default function Achievement() {
 			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
 			target: TargetAmount ? 100 : 0,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ImpactAmountSpend, ImpactAmountTarget]);
 
 	useEffect(() => {
@@ -361,6 +356,7 @@ export default function Achievement() {
 			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
 			target: TargetAmount ? 100 : 0,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [OutputAmountSpend, OutputAmountTarget]);
 
 	useEffect(() => {
@@ -378,6 +374,7 @@ export default function Achievement() {
 			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
 			target: TargetAmount ? 100 : 0,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [OutcomeAmountSpend, OutcomeAmountTarget]);
 
 	if (

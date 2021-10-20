@@ -88,7 +88,7 @@ const setDashboardColor = ({
 	color: string;
 }) => {
 	const newColor =
-		themeColorTypePrimaryOrSecondary == colorType.primary
+		themeColorTypePrimaryOrSecondary === colorType.primary
 			? {
 					primary: {
 						main: color,
@@ -130,7 +130,7 @@ const resetDashboardColor = ({
 }) => {
 	if (
 		(formikInstanceRef.current?.values?.theme?.palette?.primary as SimplePaletteColorOptions)
-			?.main !=
+			?.main !==
 		(dashboardData?.organization?.theme?.palette?.primary as SimplePaletteColorOptions)?.main
 	) {
 		setDashboardColor({
@@ -144,7 +144,7 @@ const resetDashboardColor = ({
 	}
 	if (
 		(formikInstanceRef.current?.values?.theme?.palette?.secondary as SimplePaletteColorOptions)
-			?.main !=
+			?.main !==
 		(dashboardData?.organization?.theme?.palette?.secondary as SimplePaletteColorOptions)?.main
 	) {
 		setDashboardColor({
@@ -204,10 +204,11 @@ function OrganizationView({
 	const dashboardData = useDashBoardData();
 	useEffect(() => {
 		return () => {
-			if (formikInstanceRef.current?.submitCount == 0) {
+			if (formikInstanceRef.current?.submitCount === 0) {
 				resetDashboardColor({ formikInstanceRef, dashboardDispatch, dashboardData });
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	const intl = useIntl();
 

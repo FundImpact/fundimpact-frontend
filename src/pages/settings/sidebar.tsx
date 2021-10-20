@@ -1,7 +1,7 @@
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { Box, Divider, ListItem, ListItemText, Typography, Avatar } from "@material-ui/core";
+import { useLazyQuery } from "@apollo/client";
+import { Box, Divider, ListItemText, Typography, Avatar } from "@material-ui/core";
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { sidePanelStyles } from "../../components/Dasboard/styles";
 import SidebarSkeleton from "../../components/Skeletons/SidebarSkeleton";

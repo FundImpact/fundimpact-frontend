@@ -272,7 +272,7 @@ const submitForm = async ({
 }: ISubmitForm) => {
 	try {
 		let individualCreated, individualUpdated;
-		if (formAction == FORM_ACTIONS.CREATE) {
+		if (formAction === FORM_ACTIONS.CREATE) {
 			individualCreated = await createIndividual({
 				variables: {
 					input: {
@@ -297,13 +297,13 @@ const submitForm = async ({
 		}
 		notificationDispatch(
 			setSuccessNotification(
-				`Individual ${formAction == FORM_ACTIONS.CREATE ? "Created" : "Updated"}`
+				`Individual ${formAction === FORM_ACTIONS.CREATE ? "Created" : "Updated"}`
 			)
 		);
-		if (formAction == FORM_ACTIONS.CREATE && individualCreated && individualCreated.data) {
+		if (formAction === FORM_ACTIONS.CREATE && individualCreated && individualCreated.data) {
 			return individualCreated.data.createT4DIndividual.t4DIndividual;
 		}
-		if (formAction == FORM_ACTIONS.UPDATE && individualUpdated && individualUpdated.data) {
+		if (formAction === FORM_ACTIONS.UPDATE && individualUpdated && individualUpdated.data) {
 			return individualUpdated.data.updateT4DIndividual.t4DIndividual;
 		}
 	} catch (err) {
@@ -312,7 +312,7 @@ const submitForm = async ({
 	return null;
 };
 
-const onCancel = () => {};
+// const onCancel = () => {};
 
 const validate = (values: IIndividualForm) => {
 	let errors: Partial<IIndividualForm> = {};
@@ -430,7 +430,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 
 	const dashboardData = useDashBoardData();
 	const initialValues =
-		props.formAction == FORM_ACTIONS.CREATE
+		props.formAction === FORM_ACTIONS.CREATE
 			? getInitialFormValues()
 			: getInitialFormValues(props.initialValues);
 	const intl = useIntl();
@@ -455,7 +455,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				organizationId: dashboardData?.organization?.id || "",
 			});
 
-			if (individual && dialogType == IndividualDialogType.organization) {
+			if (individual && dialogType === IndividualDialogType.organization) {
 				//if the individual is created and has submitted various projects in form then
 				//associating individual with project
 				await associateIndividualWithProject({
@@ -484,7 +484,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				});
 			}
 
-			if (individual && dialogType == IndividualDialogType.project) {
+			if (individual && dialogType === IndividualDialogType.project) {
 				//if the individual is created and the dialog was open from the project page
 				//then the project is already selected that is why picking project from dashboard
 				await associateIndividualWithProject({
@@ -521,8 +521,8 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 
 	const onUpdate = async (valuesSubmitted: IIndividualForm) => {
 		try {
-			if (props.formAction == FORM_ACTIONS.UPDATE) {
-				valuesSubmitted.name != props.initialValues.name &&
+			if (props.formAction === FORM_ACTIONS.UPDATE) {
+				valuesSubmitted.name !== props.initialValues.name &&
 					(await submitForm({
 						valuesSubmitted,
 						createIndividual,

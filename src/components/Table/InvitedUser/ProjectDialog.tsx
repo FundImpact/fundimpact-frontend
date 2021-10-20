@@ -1,17 +1,5 @@
 import React from "react";
-import {
-	Dialog,
-	Typography,
-	Box,
-	List,
-	ListItem,
-	ListItemText,
-	makeStyles,
-	createStyles,
-	Theme,
-	useTheme,
-} from "@material-ui/core";
-import { DefaultTheme } from "@material-ui/styles";
+import { Dialog, Typography, Box, List, ListItem, ListItemText, useTheme } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
 
 function ProjectDialog({
@@ -58,7 +46,7 @@ function ProjectDialog({
 									key={index}
 									style={{
 										background:
-											index % 2 == 0
+											index % 2 === 0
 												? theme.palette.action.hover
 												: theme.palette.background.paper,
 									}}

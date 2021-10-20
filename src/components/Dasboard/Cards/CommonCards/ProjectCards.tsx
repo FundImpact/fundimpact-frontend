@@ -33,11 +33,11 @@ export function ProjectCard(projectCardConfig: ProjectCardConfig) {
 			</>
 		);
 	}
-	let overallLabel = intl.formatMessage({
-		id: "overallLabelCards",
-		defaultMessage: "Overall",
-		description: "This text will be show on cards for top label",
-	});
+	// let overallLabel = intl.formatMessage({
+	// 	id: "overallLabelCards",
+	// 	defaultMessage: "Overall",
+	// 	description: "This text will be show on cards for top label",
+	// });
 	return (
 		<>
 			<Grid item xs={12} container justify="flex-end">

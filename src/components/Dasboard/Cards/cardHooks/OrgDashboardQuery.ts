@@ -41,7 +41,7 @@ export function GetImpactOrgStatus(queryFilter: {
 	);
 	let {
 		data: totalAchivedImpactProjectByOrg,
-		loading: totalAchivedImpactProjectByOrgLoading,
+		// loading: totalAchivedImpactProjectByOrgLoading,
 	} = useQuery(GET_TOTAL_ACHIEVED_IMPACT_PROJECT, queryFilter);
 
 	let { data: totalImpactProjectByOrg, loading: totalImpactProjectByOrgLoading } = useQuery(
