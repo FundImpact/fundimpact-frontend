@@ -118,10 +118,6 @@ function GoegraphiesCountryTableGraphql({
 		fireRequest: Boolean(dashboardData),
 	});
 
-	console.log("deliverableCategoryList", deliverableCategoryList || []);
-
-	console.log("countQUery", deliverableCategoryCount);
-
 	// let {
 	// 	changePage: changeDeliverableCategoryUnitPage,
 	// 	count: deliverableCategoryUnitCount,

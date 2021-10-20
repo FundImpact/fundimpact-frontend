@@ -28,6 +28,10 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 import Geographies from "../../../components/Geographies/Geographies";
 import { GEOGRAPHIES_ACTIONS } from "../../../components/Geographies/constants";
 import GeographiesState from "../../../components/Geographies/GeographiesState";
+import GeographiesDistrict from "../../../components/Geographies/GeographiesDistrict";
+import GeographiesBlock from "../../../components/Geographies/GeographiesBlock";
+import GeographiesVillage from "../../../components/Geographies/GeographiesVillage";
+import GeographiesGrampanchayat from "../../../components/Geographies/GeographiesGrampanchayat";
 
 // console.log("deliverableCategoryInputFields", deliverableCategoryInputFields);
 
@@ -174,12 +178,18 @@ const GeographiesMasterView = ({
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.CREATE}
+					<GeographiesDistrict
+						type={GEOGRAPHIES_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
+					// <DeliverableUnit
+					// 	type={DELIVERABLE_ACTIONS.CREATE}
+					// 	open={open}
+					// 	handleClose={handleClose}
+					// 	organization={dashboardData?.organization?.id}
+					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -193,12 +203,18 @@ const GeographiesMasterView = ({
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.CREATE}
+					<GeographiesBlock
+						type={GEOGRAPHIES_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
+					// <DeliverableUnit
+					// 	type={DELIVERABLE_ACTIONS.CREATE}
+					// 	open={open}
+					// 	handleClose={handleClose}
+					// 	organization={dashboardData?.organization?.id}
+					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -212,12 +228,18 @@ const GeographiesMasterView = ({
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.CREATE}
+					<GeographiesGrampanchayat
+						type={GEOGRAPHIES_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
+					// <DeliverableUnit
+					// 	type={DELIVERABLE_ACTIONS.CREATE}
+					// 	open={open}
+					// 	handleClose={handleClose}
+					// 	organization={dashboardData?.organization?.id}
+					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -231,12 +253,18 @@ const GeographiesMasterView = ({
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.CREATE}
+					<GeographiesVillage
+						type={GEOGRAPHIES_ACTIONS.CREATE}
 						open={open}
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
+					// <DeliverableUnit
+					// 	type={DELIVERABLE_ACTIONS.CREATE}
+					// 	open={open}
+					// 	handleClose={handleClose}
+					// 	organization={dashboardData?.organization?.id}
+					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,

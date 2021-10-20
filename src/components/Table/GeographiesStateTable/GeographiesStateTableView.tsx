@@ -243,7 +243,8 @@ function GeographiesStateTableView({
 									})
 								}
 							>
-								Deliverable Unit Template
+								{/* Deliverable Unit Template */}
+								Geographies State Template
 							</Button>
 						</>
 					</ImportExportTableMenu>

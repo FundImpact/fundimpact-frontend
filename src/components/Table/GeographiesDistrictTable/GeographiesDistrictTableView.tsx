@@ -149,14 +149,14 @@ function GeographiesDistrictTableView({
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu[0] = "Edit State";
+			deliverableUnitTableEditMenu[0] = "Edit Distrct";
 			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
 	}, [deliverableUnitEditAccess]);
 
 	useEffect(() => {
 		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu[1] = "Delete State";
+			deliverableUnitTableEditMenu[1] = "Delete District";
 			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
 	}, [deliverableUnitDeleteAccess]);
@@ -243,7 +243,8 @@ function GeographiesDistrictTableView({
 									})
 								}
 							>
-								Deliverable Unit Template
+								Geographies District Template
+								{/* Deliverable Unit Template */}
 							</Button>
 						</>
 					</ImportExportTableMenu>

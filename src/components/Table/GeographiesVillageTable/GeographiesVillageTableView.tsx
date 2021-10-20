@@ -149,15 +149,15 @@ function GeographiesVillageTableView({
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu[0] = "Edit State";
-			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
+			deliverableUnitTableEditMenu[0] = "Edit Village";
 		}
 	}, [deliverableUnitEditAccess]);
 
+	console.log("deliverableUnitTableEditMenu[0]", deliverableUnitTableEditMenu);
+
 	useEffect(() => {
 		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu[1] = "Delete State";
-			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
+			deliverableUnitTableEditMenu[1] = "Delete Village";
 		}
 	}, [deliverableUnitDeleteAccess]);
 
@@ -243,7 +243,8 @@ function GeographiesVillageTableView({
 									})
 								}
 							>
-								Deliverable Unit Template
+								{/* Deliverable Unit Template */}
+								Geographies village Template
 							</Button>
 						</>
 					</ImportExportTableMenu>

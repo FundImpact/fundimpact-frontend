@@ -18,7 +18,7 @@ import {
 } from "../../graphql/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { deliverableCategoryForm } from "./inputField.json";
+import { GeographiesCountryForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { IGetDeliverableCategory } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
@@ -31,11 +31,6 @@ import {
 	IGeographies,
 	IGeographiesCountryData,
 } from "../../models/geographies/geographies";
-// import {
-// 	GeographiesProps,
-// 	IGeographies,
-// 	IGeographiesCountryData,
-// } from "../../models/Geographies/Geographies";
 
 function getInitialValues(props: GeographiesProps) {
 	// function getInitialValues(props: DeliverableProps) {
@@ -61,6 +56,9 @@ function Geographies(props: GeographiesProps) {
 	const [updateDeliverableCategory, { loading: updatingDeliverableCategory }] = useMutation(
 		UPDATE_DELIVERABLE_CATEGORY
 	);
+
+	console.log("updateDeliverableCategory", updateDeliverableCategory);
+
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
@@ -144,7 +142,7 @@ function Geographies(props: GeographiesProps) {
 			});
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
@@ -163,7 +161,7 @@ function Geographies(props: GeographiesProps) {
 			});
 			notificationDispatch(setSuccessNotification("Deliverable category updated !"));
 			onCancel();
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 			onCancel();
 		}
@@ -193,7 +191,7 @@ function Geographies(props: GeographiesProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Category Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();
@@ -260,7 +258,7 @@ function Geographies(props: GeographiesProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields: deliverableCategoryForm,
+						inputFields: GeographiesCountryForm,
 					}}
 				/>
 			</FormDialog>

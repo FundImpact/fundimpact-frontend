@@ -113,14 +113,22 @@ function GeographiesVillageTableContainer({
 	// 	[deliverableCategoryUnitList]
 	// );
 
-	const deliverableUnitEditAccess = userHasAccess(
+	const geographiesVillageEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
-	const deliverableUnitDeleteAccess = userHasAccess(
+	// const deliverableUnitEditAccess = userHasAccess(
+	// 	MODULE_CODES.DELIVERABLE_UNIT,
+	// 	DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+	// );
+	const geographiesVillageDeleteAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
+	// const deliverableUnitDeleteAccess = userHasAccess(
+	// 	MODULE_CODES.DELIVERABLE_UNIT,
+	// 	DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+	// );
 	const deliverableUnitImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
@@ -167,10 +175,12 @@ function GeographiesVillageTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			deliverableUnitEditAccess={deliverableUnitEditAccess}
+			deliverableUnitEditAccess={geographiesVillageEditAccess}
+			// deliverableUnitEditAccess={deliverableUnitEditAccess}
 			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
-			deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
+			deliverableUnitDeleteAccess={geographiesVillageDeleteAccess}
+			// deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
 			deliverableUnitImportFromCsvAccess={deliverableUnitImportFromCsvAccess}
 			deliverableUnitExportAccess={deliverableUnitExportAccess}
 		/>

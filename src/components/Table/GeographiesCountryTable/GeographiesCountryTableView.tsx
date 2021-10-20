@@ -229,7 +229,8 @@ function GeographiesCountryTableView({
 								})
 							}
 						>
-							Deliverable Category Template
+							Geographies Country Template
+							{/* Deliverable Category Template */}
 						</Button>
 					</ImportExportTableMenu>
 				)}

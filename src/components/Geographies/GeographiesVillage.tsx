@@ -9,11 +9,6 @@ import {
 import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
-import {
-	IDeliverableUnit,
-	DeliverableUnitProps,
-	IDeliverableUnitData,
-} from "../../models/deliverable/deliverableUnit";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 // import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -33,7 +28,7 @@ import { GEOGRAPHIES_ACTIONS } from "./constants";
 // import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { GeographiesStateForm } from "./inputField.json";
+import { GeographiesVillageForm } from "./inputField.json";
 import {
 	IGetDeliverablUnit,
 	// IGetDeliverableCategoryUnit,
@@ -48,12 +43,12 @@ import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMess
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
-	GoegraphiesStateProps,
-	IGeographiesState,
-	IGeographiesStateData,
-} from "../../models/geographies/geographiesState";
+	GoegraphiesVillageProps,
+	IGeographiesVillage,
+	IGeographiesVillageData,
+} from "../../models/geographies/geographiesVillage";
 
-function getInitialValues(props: GoegraphiesStateProps) {
+function getInitialValues(props: GoegraphiesVillageProps) {
 	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
@@ -68,12 +63,12 @@ function getInitialValues(props: GoegraphiesStateProps) {
 	};
 }
 
-interface IError extends Omit<Partial<IGeographiesState>, "GeographiesState"> {
+interface IError extends Omit<Partial<IGeographiesVillage>, "GeographiesVillage"> {
 	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	deliverableCategory?: string;
 }
 
-function GeographiesState(props: GoegraphiesStateProps) {
+function GeographiesVillage(props: GoegraphiesVillageProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
@@ -95,9 +90,9 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		}
 	);
 
-	let initialValues: IGeographiesState = getInitialValues(props);
+	let initialValues: IGeographiesVillage = getInitialValues(props);
 	// let initialValues: IDeliverableUnit = getInitialValues(props);
-	const onCreate = async (valueSubmitted: IGeographiesState) => {
+	const onCreate = async (valueSubmitted: IGeographiesVillage) => {
 		// const onCreate = async (valueSubmitted: IDeliverableUnit) => {
 		const value = Object.assign({}, valueSubmitted);
 		// setDeliverableCategory(value.deliverableCategory || []);
@@ -144,7 +139,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 								sort: "created_at:DESC",
 							},
 						});
-						let deliverableUnits: IGeographiesStateData[] = dataRead?.deliverableUnitOrg
+						let deliverableUnits: IGeographiesVillageData[] = dataRead?.deliverableUnitOrg
 							? // let deliverableUnits: IDeliverableUnitData[] = dataRead?.deliverableUnitOrg
 							  dataRead?.deliverableUnitOrg
 							: [];
@@ -174,7 +169,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Deliverable Unit creation Success !"));
+			notificationDispatch(setSuccessNotification("Geographies Village creation Success !"));
 		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		} finally {
@@ -182,7 +177,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		}
 	};
 
-	const onUpdate = async (value: IGeographiesState) => {
+	const onUpdate = async (value: IGeographiesVillage) => {
 		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
 			const submittedValue = Object.assign({}, value);
@@ -214,7 +209,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList || [],
 			// 	submittedDeliverableCategory,
 			// });
-			notificationDispatch(setSuccessNotification("Deliverable Unit updation created !"));
+			notificationDispatch(setSuccessNotification("Geographies Village updation created !"));
 			onCancel();
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
@@ -222,7 +217,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		}
 	};
 
-	const validate = (values: IGeographiesState) => {
+	const validate = (values: IGeographiesVillage) => {
 		// const validate = (values: IDeliverableUnit) => {
 		let errors: IError = {};
 		if (!values.name && !values.name.length) {
@@ -258,7 +253,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Gegraphies State Delete Success"));
+			notificationDispatch(setSuccessNotification("Gegraphies Village Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
@@ -274,7 +269,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 				handleClose={onCancel}
 				onDeleteConformation={onDelete}
 				open={props.open}
-				title="Delete Deliverable Unit test"
+				title="Delete Geographies Village"
 			/>
 		);
 	}
@@ -286,13 +281,13 @@ function GeographiesState(props: GoegraphiesStateProps) {
 					" " +
 					intl.formatMessage({
 						id: "deliverableUnitFormTitle",
-						defaultMessage: "Geographies State",
+						defaultMessage: "Geographies Village",
 						description: `This text will be show on deliverable unit form for title`,
 					})
 				}
 				subtitle={intl.formatMessage({
 					id: "deliverableUnitFormSubtitle",
-					defaultMessage: "Manage Geographies State data here",
+					defaultMessage: "Manage Geographies Village data here",
 					description: `This text will be show on deliverable unit form for subtitle`,
 				})}
 				workspace={""}
@@ -309,7 +304,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields: GeographiesStateForm,
+						inputFields: GeographiesVillageForm,
 					}}
 				/>
 				{/* {openDeliverableCategoryDialog && (
@@ -325,4 +320,4 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	);
 }
 
-export default GeographiesState;
+export default GeographiesVillage;

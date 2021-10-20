@@ -172,6 +172,26 @@
 		}
 	],
 
+	"GeographiesCountryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Code",
+			"size": 6
+		}
+	],
+
 	"GeographiesStateForm": [
 		{
 			"name": "name",
@@ -196,6 +216,114 @@
 			"dataTestId": "deliverableUnitDescription",
 			"testId": "deliverableUnitDescriptionInput",
 			"label": "Country",
+			"size": 12
+		}
+	],
+	"GeographiesDistrictForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableUnitDescription",
+			"testId": "deliverableUnitDescriptionInput",
+			"label": "state",
+			"size": 12
+		}
+	],
+	"GeographiesBlockForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableUnitDescription",
+			"testId": "deliverableUnitDescriptionInput",
+			"label": "District",
+			"size": 12
+		}
+	],
+	"GeographiesVillageForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableUnitDescription",
+			"testId": "deliverableUnitDescriptionInput",
+			"label": "Block",
+			"size": 12
+		}
+	],
+	"GeographiesGrampanchayatForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableUnitDescription",
+			"testId": "deliverableUnitDescriptionInput",
+			"label": "District",
 			"size": 12
 		}
 	],

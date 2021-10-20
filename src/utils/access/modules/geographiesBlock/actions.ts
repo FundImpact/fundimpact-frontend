@@ -1,0 +1,8 @@
+export enum GEOGRAPHIES_BLOCK_ACTIONS {
+	CREATE_GEOGRAPHIES_BLOCK = "create",
+	UPDATE_GEOGRAPHIES_BLOCK = "update",
+	DELETE_GEOGRAPHIES_BLOCK = "delete",
+	FIND_GEOGRAPHIES_BLOCK = "find",
+	GEOGRAPHIES_BLOCK_IMPORT_FROM_CSV = "creategeographiesblockorgfromcsv",
+	GEOGRAPHIES_BLOCK_EXPORT = "exporttable",
+}

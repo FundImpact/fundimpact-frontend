@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-// import DeliverableCategoryTableView from "./DeliverableCategoryTableView";
 import { IDeliverableCategoryData, IDeliverable } from "../../../models/deliverable/deliverable";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
+// import DeliverableCategoryTableView from "./DeliverableCategoryTableView";
 import GeographiesCountryTableView from "./GeographiesCountryTableView";
 import { useLazyQuery } from "@apollo/client";
 import { GET_COUNTRY_DATA } from "../../../graphql/Geographies/GeographyCountry";
@@ -74,15 +74,20 @@ function GeographiesCountryTableContainer({
 		);
 	};
 
-	const deliverableCategoryEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
-	);
 	// const deliverableCategoryEditAccess = userHasAccess(
 	// 	MODULE_CODES.DELIVERABLE_CATEGORY,
 	// 	DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
 	// );
-	const deliverableCategoryDeleteAccess = userHasAccess(
+	const geographiesCountryEditAccess = userHasAccess(
+		MODULE_CODES.DELIVERABLE_CATEGORY,
+		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
+	);
+
+	// const deliverableCategoryDeleteAccess = userHasAccess(
+	// 	MODULE_CODES.DELIVERABLE_CATEGORY,
+	// 	DELIVERABLE_CATEGORY_ACTIONS.DELETE_DELIVERABLE_CATEGORY
+	// );
+	const geographiesCountryDeleteAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.DELETE_DELIVERABLE_CATEGORY
 	);
@@ -136,10 +141,12 @@ function GeographiesCountryTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			deliverableCategoryEditAccess={deliverableCategoryEditAccess}
+			deliverableCategoryEditAccess={geographiesCountryEditAccess}
+			// deliverableCategoryEditAccess={deliverableCategoryEditAccess}
 			deliverableUnitFindAccess={deliverableUnitFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
-			deliverableCategoryDeleteAccess={deliverableCategoryDeleteAccess}
+			deliverableCategoryDeleteAccess={geographiesCountryDeleteAccess}
+			// deliverableCategoryDeleteAccess={deliverableCategoryDeleteAccess}
 			deliverableCategoryImportFromCsvAccess={deliverableCategoryImportFromCsvAccess}
 			deliverableCategoryExportAccess={deliverableCategoryExportAccess}
 		/>

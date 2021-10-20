@@ -33,7 +33,7 @@ import { GEOGRAPHIES_ACTIONS } from "./constants";
 // import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
-import { GeographiesStateForm } from "./inputField.json";
+import { GeographiesDistrictForm } from "./inputField.json";
 import {
 	IGetDeliverablUnit,
 	// IGetDeliverableCategoryUnit,
@@ -48,12 +48,12 @@ import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMess
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
-	GoegraphiesStateProps,
-	IGeographiesState,
-	IGeographiesStateData,
-} from "../../models/geographies/geographiesState";
+	GoegraphiesDistrictProps,
+	IGeographiesDistrict,
+	IGeographiesDistrictData,
+} from "../../models/geographies/geographiesDistrict";
 
-function getInitialValues(props: GoegraphiesStateProps) {
+function getInitialValues(props: GoegraphiesDistrictProps) {
 	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
@@ -68,12 +68,12 @@ function getInitialValues(props: GoegraphiesStateProps) {
 	};
 }
 
-interface IError extends Omit<Partial<IGeographiesState>, "GeographiesState"> {
+interface IError extends Omit<Partial<IGeographiesDistrict>, "GeographiesDistrict"> {
 	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	deliverableCategory?: string;
 }
 
-function GeographiesState(props: GoegraphiesStateProps) {
+function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
@@ -95,9 +95,9 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		}
 	);
 
-	let initialValues: IGeographiesState = getInitialValues(props);
+	let initialValues: IGeographiesDistrict = getInitialValues(props);
 	// let initialValues: IDeliverableUnit = getInitialValues(props);
-	const onCreate = async (valueSubmitted: IGeographiesState) => {
+	const onCreate = async (valueSubmitted: IGeographiesDistrict) => {
 		// const onCreate = async (valueSubmitted: IDeliverableUnit) => {
 		const value = Object.assign({}, valueSubmitted);
 		// setDeliverableCategory(value.deliverableCategory || []);
@@ -144,7 +144,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 								sort: "created_at:DESC",
 							},
 						});
-						let deliverableUnits: IGeographiesStateData[] = dataRead?.deliverableUnitOrg
+						let deliverableUnits: IGeographiesDistrictData[] = dataRead?.deliverableUnitOrg
 							? // let deliverableUnits: IDeliverableUnitData[] = dataRead?.deliverableUnitOrg
 							  dataRead?.deliverableUnitOrg
 							: [];
@@ -174,7 +174,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Deliverable Unit creation Success !"));
+			notificationDispatch(setSuccessNotification("Geographies District creation Success !"));
 		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		} finally {
@@ -182,7 +182,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		}
 	};
 
-	const onUpdate = async (value: IGeographiesState) => {
+	const onUpdate = async (value: IGeographiesDistrict) => {
 		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
 			const submittedValue = Object.assign({}, value);
@@ -214,7 +214,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList || [],
 			// 	submittedDeliverableCategory,
 			// });
-			notificationDispatch(setSuccessNotification("Deliverable Unit updation created !"));
+			notificationDispatch(setSuccessNotification("Geographies district updation created !"));
 			onCancel();
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
@@ -222,7 +222,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		}
 	};
 
-	const validate = (values: IGeographiesState) => {
+	const validate = (values: IGeographiesDistrict) => {
 		// const validate = (values: IDeliverableUnit) => {
 		let errors: IError = {};
 		if (!values.name && !values.name.length) {
@@ -258,7 +258,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Gegraphies State Delete Success"));
+			notificationDispatch(setSuccessNotification("Gegraphies District Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
@@ -274,7 +274,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 				handleClose={onCancel}
 				onDeleteConformation={onDelete}
 				open={props.open}
-				title="Delete Deliverable Unit test"
+				title="Delete Geographies District test"
 			/>
 		);
 	}
@@ -286,13 +286,13 @@ function GeographiesState(props: GoegraphiesStateProps) {
 					" " +
 					intl.formatMessage({
 						id: "deliverableUnitFormTitle",
-						defaultMessage: "Geographies State",
+						defaultMessage: "Geographies District",
 						description: `This text will be show on deliverable unit form for title`,
 					})
 				}
 				subtitle={intl.formatMessage({
 					id: "deliverableUnitFormSubtitle",
-					defaultMessage: "Manage Geographies State data here",
+					defaultMessage: "Manage Geographies District data here",
 					description: `This text will be show on deliverable unit form for subtitle`,
 				})}
 				workspace={""}
@@ -309,7 +309,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 						onCancel,
 						formAction,
 						onUpdate,
-						inputFields: GeographiesStateForm,
+						inputFields: GeographiesDistrictForm,
 					}}
 				/>
 				{/* {openDeliverableCategoryDialog && (
@@ -325,4 +325,4 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	);
 }
 
-export default GeographiesState;
+export default GeographiesDistrict;

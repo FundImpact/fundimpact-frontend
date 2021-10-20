@@ -50,6 +50,8 @@ function Deliverable(props: DeliverableProps) {
 	const onCancel = props.handleClose;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const onCreate = async (value: IDeliverable) => {
+		console.log("createValue", value);
+
 		try {
 			await createDeliverableCategory({
 				variables: { input: value },
@@ -126,12 +128,13 @@ function Deliverable(props: DeliverableProps) {
 			});
 			notificationDispatch(setSuccessNotification("Deliverable category created !"));
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
 
 	const onUpdate = async (value: IDeliverable) => {
+		console.log("updateValue", value);
 		try {
 			const submittedValue = Object.assign({}, value);
 			const id = submittedValue.id;
@@ -144,7 +147,7 @@ function Deliverable(props: DeliverableProps) {
 			});
 			notificationDispatch(setSuccessNotification("Deliverable category updated !"));
 			onCancel();
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 			onCancel();
 		}
@@ -174,7 +177,7 @@ function Deliverable(props: DeliverableProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Category Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

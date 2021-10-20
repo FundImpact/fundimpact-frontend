@@ -111,14 +111,22 @@ function GeographiesGrampanchayatTableContainer({
 	// 	[deliverableCategoryUnitList]
 	// );
 
-	const deliverableUnitEditAccess = userHasAccess(
+	const geographiesGrampanchayatEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
-	const deliverableUnitDeleteAccess = userHasAccess(
+	// const deliverableUnitEditAccess = userHasAccess(
+	// 	MODULE_CODES.DELIVERABLE_UNIT,
+	// 	DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+	// );
+	const geographiesGrampanchayatDeleteAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
+	// const deliverableUnitDeleteAccess = userHasAccess(
+	// 	MODULE_CODES.DELIVERABLE_UNIT,
+	// 	DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+	// );
 	const deliverableUnitImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
@@ -155,10 +163,12 @@ function GeographiesGrampanchayatTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			deliverableUnitEditAccess={deliverableUnitEditAccess}
+			deliverableUnitEditAccess={geographiesGrampanchayatEditAccess}
+			// deliverableUnitEditAccess={deliverableUnitEditAccess}
 			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
-			deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
+			deliverableUnitDeleteAccess={geographiesGrampanchayatDeleteAccess}
+			// deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
 			deliverableUnitImportFromCsvAccess={deliverableUnitImportFromCsvAccess}
 			deliverableUnitExportAccess={deliverableUnitExportAccess}
 		/>

@@ -149,14 +149,14 @@ function GeographiesBlockTableView({
 
 	useEffect(() => {
 		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu[0] = "Edit State";
+			deliverableUnitTableEditMenu[0] = "Edit Block";
 			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
 	}, [deliverableUnitEditAccess]);
 
 	useEffect(() => {
 		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu[1] = "Delete State";
+			deliverableUnitTableEditMenu[1] = "Delete Block";
 			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
 	}, [deliverableUnitDeleteAccess]);
@@ -243,7 +243,8 @@ function GeographiesBlockTableView({
 									})
 								}
 							>
-								Deliverable Unit Template
+								Geographies Block Template
+								{/* Deliverable Unit Template */}
 							</Button>
 						</>
 					</ImportExportTableMenu>

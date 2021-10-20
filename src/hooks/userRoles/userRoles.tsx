@@ -50,6 +50,7 @@ function UserRoles() {
 			});
 		}
 	}, [user, getUserRoles]);
+	// console.log("useRoleHash", userRoleHash);
 
 	return { data: userRoleHash, loading, error };
 }

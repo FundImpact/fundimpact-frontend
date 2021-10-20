@@ -22,7 +22,7 @@
 			"id": "description",
 			"dataTestId": "deliverableFormDescription",
 			"testId": "deliverableFormDescriptionInput",
-			"label": "Description",
+			"label": "Description test",
 			"multiline": true,
 			"rows": 3,
 			"size": 12
