@@ -11,9 +11,9 @@ export interface YearTagPayload {
 export interface IYearTag {
 	id?: string;
 	name: string;
-	type: "annual" | "financial";
-	start_date: Date;
-	end_date: Date;
+	type: "annual" | "financial" | "";
+	start_date: Date | string;
+	end_date: Date | string;
 	__typename?: string;
 }
 
@@ -23,4 +23,28 @@ export type IYearTagProps = {
 	formAction: FORM_ACTIONS.UPDATE | FORM_ACTIONS.CREATE;
 	initialValues?: IYearTag;
 	deleteYearTag?: boolean;
+};
+
+export interface ITablesDialogProps {
+	open: boolean;
+	handleClose: () => void;
+	yearTag?: IYearTag;
+}
+
+export type IYearTagCountry = {
+	__typename?: string;
+	id: string;
+	country: ICountry;
+	year_tag?: {
+		__typename?: string;
+		id: string;
+		name: string;
+	};
+};
+
+export type ICountry = {
+	__typename?: string;
+	id: string;
+	name: string;
+	code: string | null;
 };

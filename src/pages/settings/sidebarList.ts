@@ -47,6 +47,18 @@ export const sidebarList: {
 				userAccess: true,
 			},
 			{
+				to: "categories",
+				dataTestId: "categories-link",
+				title: "Categories",
+				userAccess: true,
+			},
+			{
+				to: "units",
+				dataTestId: "units-link",
+				title: "Units",
+				userAccess: true,
+			},
+			{
 				to: "impact",
 				dataTestId: "impact-category-link",
 				title: "Impact Categories And Units",

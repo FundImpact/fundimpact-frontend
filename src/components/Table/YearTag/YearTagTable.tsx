@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
 	TableContainer,
@@ -16,41 +16,31 @@ import {
 	Box,
 	Button,
 	Paper,
-	Slide,
-	Dialog,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SimpleMenu from "../../Menu";
-import Donor from "../../Donor";
-import { Entity_Name, FORM_ACTIONS } from "../../../models/constants";
-import { IDONOR_RESPONSE } from "../../../models/donor/query";
-import { GET_ORG_DONOR, GET_DONOR_COUNT } from "../../../graphql/donor";
-import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
-import { IDONOR } from "../../../models/donor";
+import { FORM_ACTIONS } from "../../../models/constants";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { GET_YEARTAGS, GET_YEARTAGS_COUNT } from "../../../graphql/yearTags/query";
 import pagination from "../../../hooks/pagination";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
-// import { donorTableHeading as tableHeading } from "../constants";
 import { yearTagTableHeadings as tableHeading } from "../constants";
-import { getValueFromObject } from "../../../utils";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { FormattedMessage } from "react-intl";
-import ContactDialog from "../../ContactDialog";
-import ContactListDialog from "../../ContactListDialog";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import { COUNTRY_EXPORT, DONOR_EXPORT, DONOR_IMPORT } from "../../../utils/endpoints.util";
 import { useAuth } from "../../../contexts/userContext";
 import { exportTable } from "../../../utils/importExportTable.utils";
-import { YearTagPayload } from "../../../models/yearTags";
 import { useApolloClient } from "@apollo/client";
-import { yearTagList } from "./dummyData.json";
 import { IYearTag } from "../../../models/yearTags";
-import TabelsDialog from "./TabelsDialog";
+import YearTagCountries from "./TabelsDialog";
+import YearTag from "../../YearTag";
+import { YEARTAG_ACTIONS } from "../../../utils/access/modules/yearTag/actions";
 
 enum tableHeader {
 	name = 1,
@@ -58,26 +48,6 @@ enum tableHeader {
 	shortName = 3,
 	country = 4,
 }
-
-const YearTagCountries = () => {
-	const [open, setOpen] = useState<boolean>(false);
-
-	const openDialog = () => {
-		setOpen(true);
-	};
-
-	const closeDialog = () => {
-		setOpen(false);
-	};
-	return (
-		<>
-			<TabelsDialog open={open} handleClose={closeDialog} />
-			<IconButton onClick={openDialog}>
-				<VisibilityIcon />
-			</IconButton>
-		</>
-	);
-};
 
 const useStyles = makeStyles({
 	table: {
@@ -101,69 +71,69 @@ const styledTable = makeStyles((theme: Theme) =>
 
 const keyNames = ["name", "type", "start_date", "end_date"];
 
-const getInitialValues = (donor: IDONOR_RESPONSE | null): IDONOR => {
+const getInitialValues = (yearTag: IYearTag | null): IYearTag => {
 	return {
-		country: donor?.country?.id || "",
-		legal_name: donor?.legal_name || "",
-		name: donor?.name || "",
-		short_name: donor?.short_name || "",
-		id: donor?.id || "",
+		name: yearTag?.name || "",
+		start_date: yearTag?.start_date || "",
+		end_date: yearTag?.end_date || "",
+		type: yearTag?.type || "",
+		id: yearTag?.id || "",
 	};
 };
 
-const ImportExportTableMenuHoc = ({
-	importButtonOnly,
-	refetchDonorTable,
-}: {
-	importButtonOnly?: boolean;
-	refetchDonorTable: () => void;
-}) => {
-	const theme = useTheme();
-	const { jwt } = useAuth();
+// const ImportExportTableMenuHoc = ({
+// 	importButtonOnly,
+// 	refetchDonorTable,
+// }: {
+// 	importButtonOnly?: boolean;
+// 	refetchDonorTable: () => void;
+// }) => {
+// 	const theme = useTheme();
+// 	const { jwt } = useAuth();
 
-	const donorExportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.EXPORT_DONOR);
-	const donorImportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.IMPORT_DONOR);
-	return (
-		<ImportExportTableMenu
-			tableName="Donors"
-			tableExportUrl={DONOR_EXPORT}
-			tableImportUrl={DONOR_IMPORT}
-			onImportTableSuccess={() => refetchDonorTable?.()}
-			hideExport={!donorExportAccess}
-			hideImport={!donorImportAccess}
-			importButtonOnly={importButtonOnly}
-		>
-			<>
-				<Button
-					variant="outlined"
-					style={{ marginRight: theme.spacing(1) }}
-					onClick={() =>
-						exportTable({
-							tableName: "Country",
-							jwt: jwt as string,
-							tableExportUrl: `${COUNTRY_EXPORT}`,
-						})
-					}
-				>
-					Country Export
-				</Button>
-				<Button
-					variant="outlined"
-					style={{ marginRight: theme.spacing(1), float: "right" }}
-					onClick={() =>
-						exportTable({
-							tableName: "Donor Template",
-							jwt: jwt as string,
-							tableExportUrl: `${DONOR_EXPORT}?header=true`,
-						})
-					}
-				>
-					Donor Template
-				</Button>
-			</>
-		</ImportExportTableMenu>
-	);
-};
+// 	const donorExportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.EXPORT_DONOR);
+// 	const donorImportAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.IMPORT_DONOR);
+// 	return (
+// 		<ImportExportTableMenu
+// 			tableName="Donors"
+// 			tableExportUrl={DONOR_EXPORT}
+// 			tableImportUrl={DONOR_IMPORT}
+// 			onImportTableSuccess={() => refetchDonorTable?.()}
+// 			hideExport={!donorExportAccess}
+// 			hideImport={!donorImportAccess}
+// 			importButtonOnly={importButtonOnly}
+// 		>
+// 			<>
+// 				<Button
+// 					variant="outlined"
+// 					style={{ marginRight: theme.spacing(1) }}
+// 					onClick={() =>
+// 						exportTable({
+// 							tableName: "Country",
+// 							jwt: jwt as string,
+// 							tableExportUrl: `${COUNTRY_EXPORT}`,
+// 						})
+// 					}
+// 				>
+// 					Country Export
+// 				</Button>
+// 				<Button
+// 					variant="outlined"
+// 					style={{ marginRight: theme.spacing(1), float: "right" }}
+// 					onClick={() =>
+// 						exportTable({
+// 							tableName: "Donor Template",
+// 							jwt: jwt as string,
+// 							tableExportUrl: `${DONOR_EXPORT}?header=true`,
+// 						})
+// 					}
+// 				>
+// 					Donor Template
+// 				</Button>
+// 			</>
+// 		</ImportExportTableMenu>
+// 	);
+// };
 
 function YearTagTable({
 	tableFilterList,
@@ -177,8 +147,7 @@ function YearTagTable({
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
-
-	const dashboardData = useDashBoardData();
+	const [pageCount, setPageCount] = useState(0);
 
 	const countryFindAccess = userHasAccess(MODULE_CODES.COUNTRY, COUNTRY_ACTION.FIND_COUNTRY);
 
@@ -190,28 +159,7 @@ function YearTagTable({
 		[countryFindAccess]
 	);
 
-	useEffect(() => {
-		setQueryFilter({
-			organization: dashboardData?.organization?.id,
-		});
-	}, [dashboardData]);
-
-	useEffect(() => {
-		let newFilterListObject: { [key: string]: string | string[] } = {};
-		for (let key in tableFilterList) {
-			if (tableFilterList[key] && tableFilterList[key].length) {
-				newFilterListObject[key] = tableFilterList[key];
-			}
-		}
-		setQueryFilter({
-			organization: dashboardData?.organization?.id,
-			...newFilterListObject,
-		});
-	}, [tableFilterList, dashboardData]);
-
 	const [openYearTagEditDialog, setOpenYearTagEditDialog] = useState(false);
-	const [openContactAddDialog, setOpenContactAddDialog] = useState(false);
-	const [openContactListDialog, setOpenContactListDialog] = useState(false);
 	const [openDeleteYearTagDialog, setOpenDeleteYearTagDialog] = useState(false);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -219,42 +167,26 @@ function YearTagTable({
 	let {
 		changePage,
 		count,
-		queryData: donorList,
+		queryData: yearTagList,
 		queryLoading,
 		countQueryLoading,
-		queryRefetch: refetchDonorsList,
-		countRefetch: refetchDonorCount,
+		queryRefetch: refetchYearTagsList,
+		countRefetch: refetchYearTagsCount,
 	} = pagination({
-		countQuery: GET_DONOR_COUNT,
-		countFilter: queryFilter,
-		query: GET_ORG_DONOR,
+		countQuery: GET_YEARTAGS_COUNT,
+		countFilter: {},
+		query: GET_YEARTAGS,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
-	const [getYearTags, yearTagsResponse] = useLazyQuery(GET_YEARTAGS);
-
 	useEffect(() => {
-		getYearTags();
-	}, []);
-
-	// console.log("donorList: ", yearTagsResponse);
+		if (count?.aggregate?.count) {
+			setPageCount(count.aggregate.count);
+		}
+	}, [count]);
 
 	const apolloClient = useApolloClient();
-
-	const refetchDonorTable = useCallback(() => {
-		apolloClient.query({
-			query: GET_ORG_DONOR,
-			variables: {
-				filter: {
-					organization: dashboardData?.organization?.id,
-				},
-			},
-			fetchPolicy: "network-only",
-		});
-		refetchDonorCount?.().then(() => refetchDonorsList?.());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [refetchDonorCount, refetchDonorsList]);
 
 	//this means new element has been added to the list
 	useEffect(() => {
@@ -269,7 +201,7 @@ function YearTagTable({
 		setAnchorEl(null);
 	};
 
-	const donorEditAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.UPDATE_DONOR);
+	const yearTagEditAccess = userHasAccess(MODULE_CODES.YEAR_TAG, YEARTAG_ACTIONS.UPDATE_YEAR_TAG);
 
 	const menuList = [
 		{
@@ -312,7 +244,7 @@ function YearTagTable({
 		return <TableSkeleton />;
 	}
 
-	if (!donorList?.orgDonors?.length) {
+	if (!yearTagList?.yearTags?.length) {
 		return (
 			<Box
 				m={2}
@@ -328,48 +260,33 @@ function YearTagTable({
 						description={`This text will be shown if no data found for table`}
 					/>
 				</Typography>
-				<ImportExportTableMenuHoc
+				{/* <ImportExportTableMenuHoc
 					refetchDonorTable={refetchDonorTable}
 					importButtonOnly={true}
-				/>
+				/> */}
 			</Box>
 		);
 	}
 
 	return (
 		<TableContainer component={Paper}>
-			{/* <Donor
+			<YearTag
 				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenDonorEditDialog(false)}
+				handleClose={() => setOpenYearTagEditDialog(false)}
 				initialValues={getInitialValues(selectedYearTag.current)}
-				open={openDonorEditDialog}
+				open={openYearTagEditDialog}
 			/>
-			<Donor
+			<YearTag
 				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenDeleteDonorDialog(false)}
+				handleClose={() => setOpenDeleteYearTagDialog(false)}
 				initialValues={getInitialValues(selectedYearTag.current)}
-				open={openDeleteDonorDialog}
-				deleteDonor={true}
+				open={openDeleteYearTagDialog}
+				deleteYearTag={true}
 			/>
-			<ContactDialog
-				entity_id={selectedYearTag.current?.id || ""}
-				entity_name={Entity_Name.donor}
-				formAction={FORM_ACTIONS.CREATE}
-				open={openContactAddDialog}
-				handleClose={() => setOpenContactAddDialog(false)}
-			/>
-			<ContactListDialog
-				entity_id={selectedYearTag.current?.id || ""}
-				entity_name={Entity_Name.donor}
-				open={openContactListDialog}
-				handleClose={() => setOpenContactListDialog(false)}
-			/> */}
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						{/* {console.log("filteredTableHeadings: ", filteredTableHeadings)} */}
-						{/* Check if yearTagList has data */}
-						{true
+						{yearTagList?.yearTags?.length > 0
 							? filteredTableHeadings.map(
 									(
 										heading: { label: string; keyMapping?: string },
@@ -405,20 +322,12 @@ function YearTagTable({
 							  )
 							: null}
 						<TableCell className={tableStyles.th} align="left">
-							<ImportExportTableMenuHoc refetchDonorTable={refetchDonorTable} />
+							{/* <ImportExportTableMenuHoc refetchDonorTable={refetchDonorTable} /> */}
 						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{/* <TableRow>
-						<TableCell>k</TableCell>
-					</TableRow> */}
-					{/* {console.log(
-						"getValueFromObject: ",
-						getValueFromObject(donorList?.orgDonors[0], keyNames[0].split(","))
-					)} */}
-					{/* {console.log("yearTagsResponse: ", yearTagsResponse)} */}
-					{yearTagsResponse.data?.yearTags.map((yearTag: IYearTag, index: number) => (
+					{yearTagList?.yearTags.map((yearTag: IYearTag, index: number) => (
 						<TableRow key={yearTag.id}>
 							<TableCell component="td" scope="row">
 								{page * 10 + index + 1}
@@ -428,7 +337,7 @@ function YearTagTable({
 							<TableCell align="left">{yearTag.start_date}</TableCell>
 							<TableCell align="left">{yearTag.end_date}</TableCell>
 							<TableCell align="left">
-								<YearTagCountries />
+								<YearTagCountries yearTag={yearTag} />
 							</TableCell>
 							<TableCell>
 								<IconButton
@@ -437,12 +346,11 @@ function YearTagTable({
 										selectedYearTag.current = yearTag;
 										handleClick(event);
 									}}
-									style={{ visibility: "visible" }}
+									style={{ visibility: yearTagEditAccess ? "visible" : "hidden" }}
 								>
 									<MoreVertIcon />
 								</IconButton>
-								{/* Year tag edit accces */}
-								{true && (
+								{yearTagEditAccess && (
 									<SimpleMenu
 										handleClose={handleClose}
 										id={`organizationMenu-${yearTag.id}`}
@@ -459,14 +367,14 @@ function YearTagTable({
 					))}
 				</TableBody>
 				{/* Check if yearTagList has data */}
-				{true ? (
+				{yearTagList?.yearTags.length > 0 ? (
 					<TableFooter>
 						<TableRow>
 							<TablePagination
 								rowsPerPageOptions={[]}
 								colSpan={8}
-								count={yearTagList.length}
-								rowsPerPage={count > 10 ? 10 : count}
+								count={pageCount}
+								rowsPerPage={pageCount > 10 ? 10 : pageCount}
 								page={page}
 								SelectProps={{
 									inputProps: { "aria-label": "rows per page" },
