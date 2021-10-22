@@ -71,6 +71,12 @@ export const sidebarList: {
 				userAccess: true,
 			},
 			{
+				to: "georegions",
+				dataTestId: "geo-regions-link",
+				title: "Geo Regions",
+				userAccess: true,
+			},
+			{
 				to: "yeartags",
 				dataTestId: "yeartags-link",
 				title: "Year Tags",
