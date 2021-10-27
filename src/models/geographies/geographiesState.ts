@@ -6,12 +6,13 @@ export interface IGeographiesState {
 	// export interface IDeliverableUnit {
 	id?: number;
 	name: string;
-	description?: string;
+	// description?: string;
 	code: string;
-	unit_type: number | string;
-	prefix_label: number | string;
-	suffix_label: number | string;
-	organization?: number | string;
+	country: string;
+	// unit_type: number | string;
+	// prefix_label: number | string;
+	// suffix_label: number | string;
+	// organization?: number | string;
 }
 
 export interface IGeographiesStateData extends Omit<IGeographiesState, "organization" | "id"> {

@@ -12,3 +12,45 @@ export const GET_DISTRICT_DATA = gql`
 		}
 	}
 `;
+
+export const CREATE_GEOGRAPHIES_DISTRICT = gql`
+	mutation createGeographiesDistrict($input: createDistrictInput) {
+		createDistrict(input: $input) {
+			district {
+				name
+				code
+				state {
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const UPDATE_GEOGRAPHIES_DISTRICT = gql`
+	mutation updateGeographiesDistrict($input: updateDistrictInput) {
+		updateDistrict(input: $input) {
+			district {
+				name
+				code
+				state {
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const DELETE_GEOGRAPHIES_DISTRICT = gql`
+	mutation deletGeographiesDistrict($input: deleteDistrictInput) {
+		deleteDistrict(input: $input) {
+			district {
+				name
+				code
+				state {
+					name
+				}
+			}
+		}
+	}
+`;

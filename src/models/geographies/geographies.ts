@@ -6,7 +6,7 @@ export interface IGeographies {
 	id?: number;
 	name: string;
 	code?: string;
-	description?: string;
+	// description?: string;
 	organization?: number | string;
 }
 

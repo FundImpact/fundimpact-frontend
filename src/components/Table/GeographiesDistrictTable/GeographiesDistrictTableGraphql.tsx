@@ -14,6 +14,8 @@ import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesDistrictTableContainer from "./GeographiesDistrictTableContainer";
+import { GET_DISTRICT_DATA } from "../../../graphql/Geographies/GeographiesDistrict";
+import { useLazyQuery } from "@apollo/client";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -27,7 +29,8 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 
 function GeographiesDistrictTableGraphql({
 	collapsableTable = false,
-	rowId: deliverableCategoryId,
+	rowId: geographiesDistrictId,
+	// rowId: deliverableCategoryId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -68,9 +71,11 @@ function GeographiesDistrictTableGraphql({
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
-			deliverable_category_org: deliverableCategoryId,
+			deliverable_category_org: geographiesDistrictId,
+			// deliverable_category_org: deliverableCategoryId,
 		});
-	}, [deliverableCategoryId]);
+	}, [geographiesDistrictId]);
+	// }, [deliverableCategoryId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -88,7 +93,8 @@ function GeographiesDistrictTableGraphql({
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
-					{ deliverable_category_org: deliverableCategoryId },
+					{ deliverable_category_org: geographiesDistrictId },
+					// { deliverable_category_org: deliverableCategoryId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -97,14 +103,17 @@ function GeographiesDistrictTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList, deliverableCategoryId]);
+	}, [nestedTableFilterList, geographiesDistrictId]);
+	// }, [nestedTableFilterList, deliverableCategoryId]);
 
 	let {
 		changePage: changeDeliverableUnitPage,
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
-		queryLoading: deliverableUnitLoading,
-		countQueryLoading: deliverableUnitCountLoading,
+		queryLoading: geographiesDistrictLoading,
+		// queryLoading: deliverableUnitLoading,
+		countQueryLoading: GeographiesDistrictCountLoading,
+		// countQueryLoading: deliverableUnitCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
@@ -145,30 +154,30 @@ function GeographiesDistrictTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
+	// console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
+	const [getDistricts, districtResponse] = useLazyQuery(GET_DISTRICT_DATA);
 
-	// const deliverableCategoryUnitListMemoized = useMemo(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			?.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element?.deliverable_units_org
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
+	useEffect(() => {
+		getDistricts();
+	}, []);
+
+	const geographiesDistrictList = districtResponse?.data?.districts || [];
+
+	let geographiesDistrictCount: number = 10;
+
+	console.log("districtResponse", geographiesDistrictList);
 
 	return (
 		// <DeliverableUnitTableContainer
 		<GeographiesDistrictTableContainer
-			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
+			geographiesDistrictList={geographiesDistrictList}
+			// deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
 			changePage={changeDeliverableUnitPage}
-			loading={deliverableUnitLoading || deliverableUnitCountLoading}
-			count={deliverableUnitCount}
+			loading={geographiesDistrictLoading || GeographiesDistrictCountLoading}
+			// loading={deliverableUnitLoading || deliverableUnitCountLoading}
+			count={geographiesDistrictCount}
+			// count={deliverableUnitCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

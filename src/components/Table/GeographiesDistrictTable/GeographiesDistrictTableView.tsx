@@ -28,18 +28,25 @@ import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { FormattedMessage } from "react-intl";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { IGeographiesStateData } from "../../../models/geographies/geographiesState";
+import {
+	IGeographiesDistrict,
+	IGeographiesDistrictData,
+} from "../../../models/geographies/geographiesDistrict";
+import GeographiesDistrict from "../../Geographies/GeographiesDistrict";
+import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
 	{ valueAccessKey: "description" },
-	{
-		valueAccessKey: "",
-		renderComponent: (deliverableUnit: IDeliverableUnitData) => (
-			<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
-		),
-	},
-	{ valueAccessKey: "" },
+	// {
+	// 	valueAccessKey: "",
+	// 	renderComponent: (deliverableUnit: IDeliverableUnitData) => (
+	// 		<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
+	// 	),
+	// },
+	// { valueAccessKey: "" },
 ];
 
 const chipArray = ({
@@ -90,14 +97,16 @@ const createChipArray = ({
 	return null;
 };
 
-let deliverableUnitTableEditMenu: string[] = [];
+let geographiesDistrictTableEditMenu: string[] = [];
 
 function GeographiesDistrictTableView({
 	toggleDialogs,
 	openDialogs,
-	selectedDeliverableUnit,
+	selectedGeographiesDistrict,
+	// selectedDeliverableUnit,
 	initialValues,
-	deliverableUnitList,
+	// deliverableUnitList,
+	geographiesDistrictList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -109,10 +118,13 @@ function GeographiesDistrictTableView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
-	deliverableUnitEditAccess,
-	deliverableCategoryFindAccess,
+	geographiesDistrictEditAccess,
+	// deliverableUnitEditAccess,
+	geographiesDistrictFindAccess,
+	// deliverableCategoryFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
-	deliverableUnitDeleteAccess,
+	geographiesDistrictDeleteAccess,
+	// deliverableUnitDeleteAccess,
 	deliverableUnitExportAccess,
 	deliverableUnitImportFromCsvAccess,
 }: {
@@ -133,33 +145,42 @@ function GeographiesDistrictTableView({
 	count: number;
 	changePage: (prev?: boolean) => void;
 	collapsableTable: boolean;
-	deliverableUnitList: IDeliverableUnitData[];
-	initialValues: IDeliverableUnit;
-	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
+	geographiesDistrictList: IGeographiesDistrictData[];
+	// deliverableUnitList: IDeliverableUnitData[];
+	initialValues: IGeographiesDistrict;
+	selectedGeographiesDistrict: React.MutableRefObject<IGeographiesDistrictData | null>;
+	// selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
 	openDialogs: boolean[];
 	toggleDialogs: (index: number, val: boolean) => void;
-	deliverableUnitEditAccess: boolean;
-	deliverableCategoryFindAccess: boolean;
+	geographiesDistrictEditAccess: boolean;
+	// deliverableUnitEditAccess: boolean;
+	geographiesDistrictFindAccess: boolean;
+	// deliverableCategoryFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
-	deliverableUnitDeleteAccess: boolean;
+	geographiesDistrictDeleteAccess: boolean;
+	// deliverableUnitDeleteAccess: boolean;
 	deliverableUnitImportFromCsvAccess: boolean;
 	deliverableUnitExportAccess: boolean;
 }) {
 	const dashboardData = useDashBoardData();
 
 	useEffect(() => {
-		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu[0] = "Edit Distrct";
+		if (geographiesDistrictEditAccess) {
+			// if (deliverableUnitEditAccess) {
+			geographiesDistrictTableEditMenu[0] = "Edit Distrct";
 			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
-	}, [deliverableUnitEditAccess]);
+	}, [geographiesDistrictEditAccess]);
+	// }, [deliverableUnitEditAccess]);
 
 	useEffect(() => {
-		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu[1] = "Delete District";
+		if (geographiesDistrictDeleteAccess) {
+			// if (deliverableUnitDeleteAccess) {
+			geographiesDistrictTableEditMenu[1] = "Delete District";
 			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
-	}, [deliverableUnitDeleteAccess]);
+	}, [geographiesDistrictDeleteAccess]);
+	// }, [deliverableUnitDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -204,16 +225,20 @@ function GeographiesDistrictTableView({
 			)}
 			<CommonTable
 				tableHeadings={
-					collapsableTable && deliverableCategoryFindAccess
-						? tableHeadings
+					collapsableTable && geographiesDistrictFindAccess
+						? // collapsableTable && deliverableCategoryFindAccess
+						  tableHeadings
 						: tableHeadings.slice(1)
 				}
-				valuesList={deliverableUnitList}
+				valuesList={geographiesDistrictList}
+				// valuesList={deliverableUnitList}
 				rows={rows}
-				selectedRow={selectedDeliverableUnit}
+				selectedRow={selectedGeographiesDistrict}
+				// selectedRow={selectedDeliverableUnit}
 				toggleDialogs={toggleDialogs}
-				editMenuName={deliverableUnitTableEditMenu}
-				collapsableTable={collapsableTable && deliverableCategoryFindAccess}
+				editMenuName={geographiesDistrictTableEditMenu}
+				collapsableTable={collapsableTable && geographiesDistrictFindAccess}
+				// collapsableTable={collapsableTable && deliverableCategoryFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
@@ -244,14 +269,28 @@ function GeographiesDistrictTableView({
 								}
 							>
 								Geographies District Template
-								{/* Deliverable Unit Template */}
 							</Button>
 						</>
 					</ImportExportTableMenu>
 				)}
 			>
 				<>
-					<DeliverableUnit
+					<GeographiesDistrict
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+						organization={dashboardData?.organization?.id || ""}
+					/>
+					<GeographiesDistrict
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
+						data={initialValues}
+						organization={dashboardData?.organization?.id || ""}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+					{/* <DeliverableUnit
 						type={DELIVERABLE_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
@@ -265,7 +304,7 @@ function GeographiesDistrictTableView({
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
 						dialogType={DIALOG_TYPE.DELETE}
-					/>
+					/> */}
 				</>
 				{/* {(rowData: { id: string }) => (
 					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />

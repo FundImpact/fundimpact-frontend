@@ -14,6 +14,8 @@ import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesBlockTableContainer from "./GeographiesBlockTableContainer";
+import { GET_BLOCK_DATA } from "../../../graphql/Geographies/GeographiesBlock";
+import { useLazyQuery } from "@apollo/client";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -27,7 +29,7 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 
 function GeographiesBlockTableGraphql({
 	collapsableTable = false,
-	rowId: deliverableCategoryId,
+	rowId: geographiesBlockId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -68,9 +70,9 @@ function GeographiesBlockTableGraphql({
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
-			deliverable_category_org: deliverableCategoryId,
+			deliverable_category_org: geographiesBlockId,
 		});
-	}, [deliverableCategoryId]);
+	}, [geographiesBlockId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -88,7 +90,7 @@ function GeographiesBlockTableGraphql({
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
-					{ deliverable_category_org: deliverableCategoryId },
+					{ deliverable_category_org: geographiesBlockId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -97,14 +99,15 @@ function GeographiesBlockTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList, deliverableCategoryId]);
+	}, [nestedTableFilterList, geographiesBlockId]);
 
 	let {
 		changePage: changeDeliverableUnitPage,
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
-		queryLoading: deliverableUnitLoading,
-		countQueryLoading: deliverableUnitCountLoading,
+		queryLoading: geographiesBlockLoading,
+		// queryLoading: deliverableUnitLoading,
+		countQueryLoading: geographiesBlockCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
@@ -147,28 +150,27 @@ function GeographiesBlockTableGraphql({
 
 	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
 
-	// const deliverableCategoryUnitListMemoized = useMemo(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			?.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element?.deliverable_units_org
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
+	const [getBlocks, blockResponse] = useLazyQuery(GET_BLOCK_DATA);
+
+	useEffect(() => {
+		getBlocks();
+	}, []);
+
+	const geographiesBlocksList = blockResponse?.data?.blocks || [];
+
+	console.log("blockResponse", geographiesBlocksList);
+
+	const GeographiesBlockCount: number = 10;
 
 	return (
 		// <DeliverableUnitTableContainer
 		<GeographiesBlockTableContainer
-			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
+			geographiesBlocksList={geographiesBlocksList}
+			// deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
 			changePage={changeDeliverableUnitPage}
-			loading={deliverableUnitLoading || deliverableUnitCountLoading}
-			count={deliverableUnitCount}
+			loading={geographiesBlockLoading || geographiesBlockCountLoading}
+			count={GeographiesBlockCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

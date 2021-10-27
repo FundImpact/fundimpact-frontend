@@ -541,10 +541,6 @@ const getTableHeadingByDeliverableTracklineAccess = (
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
 // console.log("heading.slice(1)", headings.slice(1));
-console.log(
-	"getTableHeadingByDeliverableTracklineAccess",
-	getTableHeadingByDeliverableTracklineAccess
-);
 
 const getDefaultFilterList = () => ({
 	name: "",

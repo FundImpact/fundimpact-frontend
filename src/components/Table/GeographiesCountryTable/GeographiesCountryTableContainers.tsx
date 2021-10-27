@@ -7,24 +7,33 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 // import DeliverableCategoryTableView from "./DeliverableCategoryTableView";
 import GeographiesCountryTableView from "./GeographiesCountryTableView";
 import { useLazyQuery } from "@apollo/client";
-import { GET_COUNTRY_COUNT, GET_COUNTRY_DATA } from "../../../graphql/Geographies/GeographyCountry";
+import { IGeographies, IGeographiesCountryData } from "../../../models/geographies/geographies";
 // import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (
-	deliverableCategory: IDeliverableCategoryData | null,
+	geographiesCountry: IGeographiesCountryData | null,
+	// deliverableCategory: IDeliverableCategoryData | null,
 	organization?: string
-): IDeliverable => {
+): IGeographies => {
+	// ): IDeliverable => {
+	console.log("getInitialValues", geographiesCountry);
 	return {
-		code: deliverableCategory?.code || "",
-		description: deliverableCategory?.description || "",
-		id: parseInt(deliverableCategory?.id || ""),
-		name: deliverableCategory?.name || "",
+		code: geographiesCountry?.code || "",
+		// description: geographiesCountry?.description || "",
+		id: parseInt(geographiesCountry?.id || ""),
+		name: geographiesCountry?.name || "",
 		organization,
+		// code: deliverableCategory?.code || "",
+		// description: deliverableCategory?.description || "",
+		// id: parseInt(deliverableCategory?.id || ""),
+		// name: deliverableCategory?.name || "",
+		// organization,
 	};
 };
 
 function GeographiesCountryTableContainer({
-	deliverableCategoryList,
+	geographiesCountryList,
+	// deliverableCategoryList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -44,7 +53,8 @@ function GeographiesCountryTableContainer({
 	count: number;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-	deliverableCategoryList: IDeliverableCategoryData[];
+	geographiesCountryList: IGeographiesCountryData[];
+	// deliverableCategoryList: IDeliverableCategoryData[];
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	loading: boolean;
 	filterList: {
@@ -57,16 +67,23 @@ function GeographiesCountryTableContainer({
 	>;
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	reftechDeliverableCategoryAndUnitTable: () => void;
-}) {
-	const editDeliverableCategory = false,
-		deleteDeliverableCategory = false;
+}): JSX.Element {
+	const editGeographiesCountry = false,
+		deleteGeographiesCountry = false;
+	// const editDeliverableCategory = false,
+	// 	deleteDeliverableCategory = false;
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
-		editDeliverableCategory,
-		deleteDeliverableCategory,
+		editGeographiesCountry,
+		deleteGeographiesCountry,
+		// editDeliverableCategory,
+		// deleteDeliverableCategory,
 	]);
-	const selectedDeliverableCategory = useRef<IDeliverableCategoryData | null>(null);
+	const selectedGeographiesCountry = useRef<IGeographiesCountryData | null>(null);
+	// const selectedDeliverableCategory = useRef<IDeliverableCategoryData | null>(null);
 
 	const dashboardData = useDashBoardData();
+
+	console.log("dashboardData", dashboardData);
 
 	const toggleDialogs = (index: number, dialogOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
@@ -91,11 +108,14 @@ function GeographiesCountryTableContainer({
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.DELETE_DELIVERABLE_CATEGORY
 	);
-	const deliverableCategoryImportFromCsvAccess = userHasAccess(
+
+	const geographiesCountryImportFromCsvAccess = userHasAccess(
+		// const deliverableCategoryImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.DELIVERABLE_CATEGORY_IMPORT_FROM_CSV
 	);
-	const deliverableCategoryExportAccess = userHasAccess(
+	const geographiesCountryExportAccess = userHasAccess(
+		// const deliverableCategoryExportAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.DELIVERABLE_CATEGORY_EXPORT
 	);
@@ -104,39 +124,29 @@ function GeographiesCountryTableContainer({
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
 	);
+	// const deliverableUnitFindAccess = userHasAccess(
+	// 	MODULE_CODES.DELIVERABLE_UNIT,
+	// 	DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+	// );
 
-	const [getCountries, countriesResponse] = useLazyQuery(GET_COUNTRY_DATA);
-
-	const [getCountryCount, countryCountResponse] = useLazyQuery(GET_COUNTRY_COUNT);
-
-	useEffect(() => {
-		getCountries();
-		getCountryCount();
-	}, []);
-
-	console.log(
-		"countryCountResponse",
-		countryCountResponse?.data?.countriesConnection?.aggregate?.count
-	);
-
-	let geographiesCountryList = countriesResponse?.data?.countries || [];
-
-	// console.log("CountryQueryData", geographiesCountryList);
-	// console.log("CountryQueryData twice", countriesResponse);
-
-	// console.log("deliverableCategoryList", deliverableCategoryList);
+	console.log("deliverableUnitFindAccess", deliverableUnitFindAccess);
 
 	return (
 		// <DeliverableCategoryTableView
 		<GeographiesCountryTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
-			selectedDeliverableCategory={selectedDeliverableCategory}
+			selectedGeographiesCountry={selectedGeographiesCountry}
+			// selectedDeliverableCategory={selectedDeliverableCategory}
 			initialValues={getInitialValues(
-				selectedDeliverableCategory.current,
-				dashboardData?.organization?.id || ""
+				selectedGeographiesCountry.current,
+				dashboardData?.organization?.country?.id || ""
 			)}
-			deliverableCategoryList={geographiesCountryList}
+			// initialValues={getInitialValues(
+			// 	selectedDeliverableCategory.current,
+			// 	dashboardData?.organization?.id || ""
+			// )}
+			geographiesCountryList={geographiesCountryList}
 			// deliverableCategoryList={deliverableCategoryList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
@@ -149,14 +159,16 @@ function GeographiesCountryTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			deliverableCategoryEditAccess={geographiesCountryEditAccess}
+			geographiesCountryEditAccess={geographiesCountryEditAccess}
 			// deliverableCategoryEditAccess={deliverableCategoryEditAccess}
 			deliverableUnitFindAccess={deliverableUnitFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
-			deliverableCategoryDeleteAccess={geographiesCountryDeleteAccess}
+			geographiesCountryDeleteAccess={geographiesCountryDeleteAccess}
 			// deliverableCategoryDeleteAccess={deliverableCategoryDeleteAccess}
-			deliverableCategoryImportFromCsvAccess={deliverableCategoryImportFromCsvAccess}
-			deliverableCategoryExportAccess={deliverableCategoryExportAccess}
+			geographiesCountryImportFromCsvAccess={geographiesCountryImportFromCsvAccess}
+			// deliverableCategoryImportFromCsvAccess={deliverableCategoryImportFromCsvAccess}
+			geographiesCountryExportAccess={geographiesCountryExportAccess}
+			// deliverableCategoryExportAccess={deliverableCategoryExportAccess}
 		/>
 	);
 }

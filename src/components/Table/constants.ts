@@ -102,6 +102,12 @@ export const budgetCategoryHeading = [
 	{ label: "Used in projects" },
 	{ label: "" },
 ];
+export const geoRegionsHeading = [
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Description", keyMapping: "description" },
+	{ label: "" },
+];
 
 export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "" },

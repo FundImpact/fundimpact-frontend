@@ -20,6 +20,7 @@ function UnitsAndCategoriesProjectCountGraphql({
 	deliverableCategoryId?: string;
 	deliverableUnitId?: string;
 }) {
+	console.log("deliverableCategoryId", deliverableCategoryId);
 	const [getBudgetCategoryProjectCount, { data: budgetCategoryProjectCount }] = useLazyQuery<{
 		projectCountBudgetCatByOrg: { project_count: number }[];
 	}>(GET_BUDGET_CATEGORY_PROJECT_COUNT);

@@ -6,19 +6,19 @@ export interface IGeographiesVillage {
 	// export interface IDeliverableUnit {
 	id?: number;
 	name: string;
-	description?: string;
+	block?: string;
 	code: string;
-	unit_type: number | string;
-	prefix_label: number | string;
-	suffix_label: number | string;
-	organization?: number | string;
+	// unit_type: number | string;
+	// prefix_label: number | string;
+	// suffix_label: number | string;
+	// organization?: number | string;
 }
 
 export interface IGeographiesVillageData extends Omit<IGeographiesVillage, "organization" | "id"> {
 	id: string;
 }
 
-export type GoegraphiesVillageProps = {
+export type GeographiesVillageProps = {
 	open: boolean;
 	handleClose: () => void;
 	organization: number | string | undefined;

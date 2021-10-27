@@ -13,6 +13,8 @@ import {
 import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
+import { GET_STATE_DATA } from "../../../graphql/Geographies/GeographyState";
+import { useLazyQuery } from "@apollo/client";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -26,7 +28,8 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 
 function GeographiesStateTableGraphql({
 	collapsableTable = false,
-	rowId: deliverableCategoryId,
+	rowId: geographiesStateId,
+	// rowId: deliverableCategoryId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -67,9 +70,11 @@ function GeographiesStateTableGraphql({
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
-			deliverable_category_org: deliverableCategoryId,
+			deliverable_category_org: geographiesStateId,
+			// deliverable_category_org: deliverableCategoryId,
 		});
-	}, [deliverableCategoryId]);
+	}, [geographiesStateId]);
+	// }, [deliverableCategoryId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -87,7 +92,8 @@ function GeographiesStateTableGraphql({
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
-					{ deliverable_category_org: deliverableCategoryId },
+					{ deliverable_category_org: geographiesStateId },
+					// { deliverable_category_org: deliverableCategoryId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -96,10 +102,12 @@ function GeographiesStateTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList, deliverableCategoryId]);
+	}, [nestedTableFilterList, geographiesStateId]);
+	// }, [nestedTableFilterList, deliverableCategoryId]);
 
 	let {
-		changePage: changeDeliverableUnitPage,
+		changePage: changeCountryStatePage,
+		// changePage: changeDeliverableUnitPage,
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
 		queryLoading: deliverableUnitLoading,
@@ -114,23 +122,6 @@ function GeographiesStateTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
-
-	// let {
-	// 	changePage: changeDeliverableCategoryUnitPage,
-	// 	count: deliverableCategoryUnitCount,
-	// 	queryData: deliverableCategoryUnitList,
-	// 	queryLoading: deliverableCategoryUnitLoading,
-	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
-	// 	queryRefetch: deliverableCategoryUnitRefetch,
-	// 	countRefetch: deliverableCategoryUnitCountRefetch,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-	// 	countFilter: nestedTableQueryFilter,
-	// 	query: GET_CATEGORY_UNIT,
-	// 	queryFilter: nestedTableQueryFilter,
-	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-	// 	fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	// });
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
@@ -160,14 +151,29 @@ function GeographiesStateTableGraphql({
 	// 	[deliverableCategoryUnitList]
 	// );
 
+	const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
+
+	useEffect(() => {
+		getState();
+	}, []);
+
+	let geographiesStateList = stateResponse?.data?.states || [];
+
+	let geographiesStateCount: number = 10;
+
+	// console.log("stateResponse", geographiesStateList);
+
 	return (
 		// <DeliverableUnitTableContainer
 		<GeographiesStateTableContainer
-			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
+			geographiesStateList={geographiesStateList}
+			// deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
-			changePage={changeDeliverableUnitPage}
+			changePage={changeCountryStatePage}
+			// changePage={changeDeliverableUnitPage}
 			loading={deliverableUnitLoading || deliverableUnitCountLoading}
-			count={deliverableUnitCount}
+			count={geographiesStateCount}
+			// count={deliverableUnitCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

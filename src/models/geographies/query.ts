@@ -3,6 +3,7 @@ import { IOrganisation } from "../organisation/types";
 // import { IDeliverableCategoryData } from "./deliverable";
 import { IDeliverableUnitData } from "../deliverable/deliverableUnit";
 import { IGeographiesCountryData } from "./geographies";
+import { IGeographiesStateData } from "./geographiesState";
 
 export interface IDeliverableCategoryUnitResponse {
 	id: string;
@@ -68,19 +69,26 @@ export interface IGET_DELIVERABLE_TRACKLINE_BY_TARGET {
 	deliverableTrackingLineitemList: IDeliverableTracklineByTargetResponse[];
 }
 
-export interface IGetDeliverableCategory {
-	deliverableCategory: IGeographiesCountryData[];
+export interface IGetGeographiesCountry {
+	// export interface IGetDeliverableCategory {
+	geographiesCountry: IGeographiesCountryData[];
 	// deliverableCategory: IDeliverableCategoryData[];
 }
 
-export interface IGetDeliverablCategoryVariables {
+export interface IGetGeographiesCountryVariables {
+	// export interface IGetDeliverablCategoryVariables {
 	filter: {
-		organization: string;
+		code: any;
+		// organization: string;
 	};
 }
-export interface IGetDeliverablUnit {
-	deliverableUnitOrg: IDeliverableUnitData[];
+export interface IGetGeographieState {
+	geographiesStateOrg: IGeographiesStateData[];
 }
+
+// export interface IGetDeliverablUnit {
+// 	deliverableUnitOrg: IDeliverableUnitData[];
+// }
 
 export interface IGetDeliverableUnitVariables {
 	filter: {

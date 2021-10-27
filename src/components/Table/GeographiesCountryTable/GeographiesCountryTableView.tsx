@@ -16,22 +16,17 @@ import {
 	DELIVERABLE_CATEGORY_TABLE_IMPORT,
 	// DELIVERABLE_CATEGORY_UNIT_EXPORT,
 } from "../../../utils/endpoints.util";
-// import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
-// import { FormattedMessage } from "react-intl";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
+import { IGeographies, IGeographiesCountryData } from "../../../models/geographies/geographies";
+import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+import Geographies from "../../Geographies/Geographies";
 
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
-	{ valueAccessKey: "description" },
-	// {
-	// 	valueAccessKey: "",
-	// 	renderComponent: (deliverableCategory: IDeliverableCategoryData) => (
-	// 		<UnitsAndCategoriesProjectCount deliverableCategoryId={deliverableCategory.id} />
-	// 	),
-	// },
+	// { valueAccessKey: "description" },
 	// { valueAccessKey: "" },
 ];
 
@@ -82,14 +77,19 @@ const createChipArray = ({
 	}
 	return null;
 };
-let deliverableCategoryTableEditMenu: string[] = [];
+// let deliverableCategoryTableEditMenu: string[] = [];
+let geographiesCountryTableEditMenu: string[] = [];
+
+console.log("geographiesCountryTableEditMenu", geographiesCountryTableEditMenu);
 
 function GeographiesCountryTableView({
 	toggleDialogs,
 	openDialogs,
-	selectedDeliverableCategory,
+	// selectedDeliverableCategory,
+	selectedGeographiesCountry,
 	initialValues,
-	deliverableCategoryList,
+	geographiesCountryList,
+	// deliverableCategoryList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -101,18 +101,24 @@ function GeographiesCountryTableView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
-	deliverableCategoryEditAccess,
+	geographiesCountryEditAccess,
+	// deliverableCategoryEditAccess,
 	deliverableUnitFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
-	deliverableCategoryDeleteAccess,
-	deliverableCategoryExportAccess,
-	deliverableCategoryImportFromCsvAccess,
-}: {
+	// deliverableCategoryDeleteAccess,
+	geographiesCountryDeleteAccess,
+	geographiesCountryExportAccess,
+	// deliverableCategoryExportAccess,
+	geographiesCountryImportFromCsvAccess,
+}: // deliverableCategoryImportFromCsvAccess,
+{
 	count: number;
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
-	selectedDeliverableCategory: React.MutableRefObject<IDeliverableCategoryData | null>;
-	initialValues: IDeliverable;
+	selectedGeographiesCountry: React.MutableRefObject<IGeographiesCountryData | null>;
+	// selectedDeliverableCategory: React.MutableRefObject<IDeliverableCategoryData | null>;
+	initialValues: IGeographies;
+	// initialValues: IDeliverable;
 	collapsableTable: boolean;
 	setFilterList: React.Dispatch<
 		React.SetStateAction<{
@@ -120,7 +126,8 @@ function GeographiesCountryTableView({
 		}>
 	>;
 	changePage: (prev?: boolean) => void;
-	deliverableCategoryList: IDeliverableCategoryData[];
+	geographiesCountryList: IGeographiesCountryData[];
+	// deliverableCategoryList: IDeliverableCategoryData[];
 	loading: boolean;
 	order: "asc" | "desc";
 	setOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -129,44 +136,43 @@ function GeographiesCountryTableView({
 	filterList: {
 		[key: string]: string;
 	};
-
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
-	deliverableCategoryEditAccess: boolean;
+	// deliverableCategoryEditAccess: boolean;
+	geographiesCountryEditAccess: boolean;
 	deliverableUnitFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
-	deliverableCategoryDeleteAccess: boolean;
-	deliverableCategoryImportFromCsvAccess: boolean;
-	deliverableCategoryExportAccess: boolean;
+	geographiesCountryDeleteAccess: boolean;
+	// deliverableCategoryDeleteAccess: boolean;
+	geographiesCountryImportFromCsvAccess: boolean;
+	// deliverableCategoryImportFromCsvAccess: boolean;
+	geographiesCountryExportAccess: boolean;
+	// deliverableCategoryExportAccess: boolean;
 }) {
-	useEffect(() => {
-		if (deliverableCategoryEditAccess) {
-			deliverableCategoryTableEditMenu[0] = "Edit Country";
-		}
-	}, [deliverableCategoryEditAccess]);
+	console.log(
+		"geographiesCountryEditAccess",
+		geographiesCountryEditAccess,
+		geographiesCountryDeleteAccess
+	);
 
 	useEffect(() => {
-		if (deliverableCategoryDeleteAccess) {
-			deliverableCategoryTableEditMenu[1] = "Delete Country";
+		if (geographiesCountryEditAccess) {
+			// if (deliverableCategoryEditAccess) {
+			geographiesCountryTableEditMenu[0] = "Edit Country";
+			// deliverableCategoryTableEditMenu[0] = "Edit Country";
 		}
-	}, [deliverableCategoryDeleteAccess]);
+	}, [geographiesCountryEditAccess]);
+	// }, [deliverableCategoryEditAccess]);
 
-	// {
-	// 	(!collapsableTable &&
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-	// 			<FilterList
-	// 				initialValues={{
-	// 					code: "",
-	// 					name: "",
-	// 					description: "",
-	// 				}}
-	// 				inputFields={deliverableCategoryInputFields}
-	// 				setFilterList={setFilterList}
-	// 			/>
-	// 		))) ||
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	// }
+	useEffect(() => {
+		if (geographiesCountryDeleteAccess) {
+			// if (deliverableCategoryDeleteAccess) {
+			geographiesCountryTableEditMenu[1] = "Delete Country";
+			// deliverableCategoryTableEditMenu[1] = "Delete Country";
+		}
+	}, [geographiesCountryDeleteAccess]);
+	// }, [deliverableCategoryDeleteAccess]);
 
-	// console.log("tableHeadings.slice(1)", tableHeadings.slice(1));
+	console.log("country initials", initialValues);
 
 	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -195,11 +201,13 @@ function GeographiesCountryTableView({
 						? tableHeadings
 						: tableHeadings.slice(1)
 				}
-				valuesList={deliverableCategoryList}
+				valuesList={geographiesCountryList}
 				rows={rows}
-				selectedRow={selectedDeliverableCategory}
+				selectedRow={selectedGeographiesCountry}
+				// selectedRow={selectedDeliverableCategory}
 				toggleDialogs={toggleDialogs}
-				editMenuName={deliverableCategoryTableEditMenu}
+				editMenuName={geographiesCountryTableEditMenu}
+				// editMenuName={deliverableCategoryTableEditMenu}
 				collapsableTable={collapsableTable && deliverableUnitFindAccess}
 				changePage={changePage}
 				loading={loading}
@@ -215,8 +223,10 @@ function GeographiesCountryTableView({
 						tableImportUrl={DELIVERABLE_CATEGORY_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableCategoryTableImportSuccess}
 						importButtonOnly={importButtonOnly}
-						hideImport={!deliverableCategoryImportFromCsvAccess}
-						hideExport={!deliverableCategoryExportAccess}
+						hideImport={!geographiesCountryImportFromCsvAccess}
+						// hideImport={!deliverableCategoryImportFromCsvAccess}
+						hideExport={!geographiesCountryExportAccess}
+						// hideExport={!deliverableCategoryExportAccess}
 					>
 						<Button
 							variant="outlined"
@@ -236,19 +246,32 @@ function GeographiesCountryTableView({
 				)}
 			>
 				<>
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.UPDATE}
+					<Geographies
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 					/>
-					<Deliverable
+					{/* <Deliverable
+						type={DELIVERABLE_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+					/> */}
+					<Geographies
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
+						handleClose={() => toggleDialogs(0, false)}
+						open={openDialogs[0]}
+						data={initialValues}
+						dialogType={DIALOG_TYPE.DELETE}
+					/>
+					{/* <Deliverable
 						type={DELIVERABLE_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}
 						open={openDialogs[1]}
 						data={initialValues}
 						dialogType={DIALOG_TYPE.DELETE}
-					/>
+					/> */}
 				</>
 				{/* {(rowData: { id: string }) => (
 					<>
@@ -261,3 +284,5 @@ function GeographiesCountryTableView({
 }
 
 export default GeographiesCountryTableView;
+
+// deliverableCategoryList in common Table in change of geographiesCountryList

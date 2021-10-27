@@ -17,10 +17,6 @@ import { makeStyles } from "@material-ui/styles";
 import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
-// import {
-// 	deliverableCategoryInputFields,
-// 	deliverableUnitInputFields,
-// } from "../DeliverableMaster/inputFields.json"; //make seprate json
 import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
@@ -32,8 +28,6 @@ import GeographiesDistrict from "../../../components/Geographies/GeographiesDist
 import GeographiesBlock from "../../../components/Geographies/GeographiesBlock";
 import GeographiesVillage from "../../../components/Geographies/GeographiesVillage";
 import GeographiesGrampanchayat from "../../../components/Geographies/GeographiesGrampanchayat";
-
-// console.log("deliverableCategoryInputFields", deliverableCategoryInputFields);
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -87,28 +81,34 @@ function a11yProp(index: any) {
 const GeographiesMasterView = ({
 	value,
 	setValue,
-	deliverableCategoryFilterList,
+	geographiesCountryFilterList,
+	// deliverableCategoryFilterList,
 	deliverableUnitFilterList,
 	removeFilteListElements,
-	setDeliverableCategoryFilterList,
+	setGeographiesCountryFilterList,
+	// setDeliverableCategoryFilterList,
 	setDeliverableUnitFilterList,
 	deliverableCategoryFindAccess,
 	deliverableUnitFindAccess,
-	deliverableCategoryCreateAccess,
+	geographiesCountryCreateAccess,
 	deliverableUnitCreateAccess,
 }: {
 	value: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
-	deliverableCategoryFilterList: { [key: string]: string };
+	geographiesCountryFilterList: { [key: string]: string };
+	// deliverableCategoryFilterList: { [key: string]: string };
 	deliverableUnitFilterList: { [key: string]: string };
 	removeFilteListElements: (elementToDelete: string) => void;
-	setDeliverableCategoryFilterList: React.Dispatch<
+	setGeographiesCountryFilterList: React.Dispatch<
 		React.SetStateAction<{ [key: string]: string }>
 	>;
+	// setDeliverableCategoryFilterList: React.Dispatch<
+	// 	React.SetStateAction<{ [key: string]: string }>
+	// >;
 	setDeliverableUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 	deliverableCategoryFindAccess: boolean;
 	deliverableUnitFindAccess: boolean;
-	deliverableCategoryCreateAccess: boolean;
+	geographiesCountryCreateAccess: boolean;
 	deliverableUnitCreateAccess: boolean;
 }) => {
 	const dashboardData = useDashBoardData();
@@ -120,10 +120,12 @@ const GeographiesMasterView = ({
 
 	// console.log("value", value);
 
+	// console.log("deliverableCategoryFilterList", deliverableUnitFilterList);
+
 	const tabs = [
 		{
 			label: "Country",
-			table: <GeographiesCountryTable tableFilterList={deliverableCategoryFilterList} />,
+			table: <GeographiesCountryTable tableFilterList={geographiesCountryFilterList} />,
 			// table: <DeliverableCategoryTable tableFilterList={deliverableCategoryFilterList} />,
 			createButtons: [],
 			buttonAction: {
@@ -142,9 +144,9 @@ const GeographiesMasterView = ({
 					// />
 				),
 			},
-			addButtonAccess: deliverableCategoryCreateAccess,
+			addButtonAccess: geographiesCountryCreateAccess,
 			tableAccess: deliverableCategoryFindAccess,
-			tabAccess: deliverableCategoryFindAccess || deliverableCategoryCreateAccess,
+			tabAccess: deliverableCategoryFindAccess || geographiesCountryCreateAccess,
 		},
 		{
 			label: "State",
@@ -275,6 +277,8 @@ const GeographiesMasterView = ({
 
 	const intl = useIntl();
 
+	// console.log("setDeliverableCategoryFilterList", setDeliverableCategoryFilterList);
+
 	return (
 		<>
 			<Box p={2}>
@@ -285,7 +289,7 @@ const GeographiesMasterView = ({
 								{(deliverableCategoryFindAccess ||
 									deliverableUnitFindAccess ||
 									deliverableUnitCreateAccess ||
-									deliverableCategoryCreateAccess) &&
+									geographiesCountryCreateAccess) &&
 									(value == 0 ? (
 										<FormattedMessage
 											description={`This text is the heding of deliverable Categories table`}
@@ -310,8 +314,9 @@ const GeographiesMasterView = ({
 								<FilterList
 									setFilterList={
 										value === 0
-											? setDeliverableCategoryFilterList
-											: setDeliverableUnitFilterList
+											? setGeographiesCountryFilterList
+											: // ? setDeliverableCategoryFilterList
+											  setDeliverableUnitFilterList
 									}
 									inputFields={
 										value === 0
@@ -325,8 +330,9 @@ const GeographiesMasterView = ({
 					<Grid item xs={12}>
 						<Box my={2} display="flex">
 							{(value === 0
-								? Object.entries(deliverableCategoryFilterList)
-								: Object.entries(deliverableUnitFilterList)
+								? Object.entries(geographiesCountryFilterList)
+								: // ? Object.entries(deliverableCategoryFilterList)
+								  Object.entries(deliverableUnitFilterList)
 							).map(
 								(filterListObjectKeyValuePair, index) =>
 									filterListObjectKeyValuePair[1] && (

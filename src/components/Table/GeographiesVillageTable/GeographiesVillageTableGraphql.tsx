@@ -14,6 +14,8 @@ import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesVillageTableContainer from "./GeographiesVillageTableContainer";
+import { GET_VILLAGE_DATA } from "../../../graphql/Geographies/GeographiesVillage";
+import { useLazyQuery } from "@apollo/client";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -27,7 +29,7 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 
 function GeographiesVillageTableGraphql({
 	collapsableTable = false,
-	rowId: deliverableCategoryId,
+	rowId: geographiesVillageId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -68,9 +70,9 @@ function GeographiesVillageTableGraphql({
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
-			deliverable_category_org: deliverableCategoryId,
+			deliverable_category_org: geographiesVillageId,
 		});
-	}, [deliverableCategoryId]);
+	}, [geographiesVillageId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -88,7 +90,7 @@ function GeographiesVillageTableGraphql({
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
-					{ deliverable_category_org: deliverableCategoryId },
+					{ deliverable_category_org: geographiesVillageId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -97,14 +99,14 @@ function GeographiesVillageTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList, deliverableCategoryId]);
+	}, [nestedTableFilterList, geographiesVillageId]);
 
 	let {
-		changePage: changeDeliverableUnitPage,
+		changePage: changeGeographiesVillagePage,
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
-		queryLoading: deliverableUnitLoading,
-		countQueryLoading: deliverableUnitCountLoading,
+		queryLoading: geographiesVillageLoading,
+		countQueryLoading: geographiesVillageCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
@@ -115,25 +117,6 @@ function GeographiesVillageTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
-
-	console.log("queryData", deliverableUnitList);
-
-	// let {
-	// 	changePage: changeDeliverableCategoryUnitPage,
-	// 	count: deliverableCategoryUnitCount,
-	// 	queryData: deliverableCategoryUnitList,
-	// 	queryLoading: deliverableCategoryUnitLoading,
-	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
-	// 	queryRefetch: deliverableCategoryUnitRefetch,
-	// 	countRefetch: deliverableCategoryUnitCountRefetch,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-	// 	countFilter: nestedTableQueryFilter,
-	// 	query: GET_CATEGORY_UNIT,
-	// 	queryFilter: nestedTableQueryFilter,
-	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-	// 	fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	// });
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
@@ -146,8 +129,6 @@ function GeographiesVillageTableGraphql({
 		deliverableUnitRefetch,
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
-
-	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
 
 	// const deliverableCategoryUnitListMemoized = useMemo(
 	// 	() =>
@@ -163,14 +144,24 @@ function GeographiesVillageTableGraphql({
 	// 	[deliverableCategoryUnitList]
 	// );
 
+	const [getVillage, villageResponse] = useLazyQuery(GET_VILLAGE_DATA);
+
+	useEffect(() => {
+		getVillage();
+	}, []);
+
+	const geographiesVillageList = villageResponse?.data?.villages || [];
+
+	let geographiesVillageCount: number = 10;
+
 	return (
 		// <DeliverableUnitTableContainer
 		<GeographiesVillageTableContainer
-			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
+			geographiesVillageList={geographiesVillageList}
 			collapsableTable={collapsableTable}
-			changePage={changeDeliverableUnitPage}
-			loading={deliverableUnitLoading || deliverableUnitCountLoading}
-			count={deliverableUnitCount}
+			changePage={changeGeographiesVillagePage}
+			loading={geographiesVillageLoading || geographiesVillageCountLoading}
+			count={geographiesVillageCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

@@ -179,7 +179,7 @@
 			"dataTestId": "deliverableFormName",
 			"testId": "deliverableFormNameInput",
 			"label": "Name",
-			"required": true,
+			"required": false,
 			"size": 6
 		},
 		{
@@ -211,14 +211,15 @@
 			"size": 6
 		},
 		{
-			"name": "description",
-			"id": "description",
+			"name": "country",
+			"id": "country",
 			"dataTestId": "deliverableUnitDescription",
 			"testId": "deliverableUnitDescriptionInput",
 			"label": "Country",
 			"size": 12
 		}
 	],
+
 	"GeographiesDistrictForm": [
 		{
 			"name": "name",
@@ -238,8 +239,8 @@
 			"size": 6
 		},
 		{
-			"name": "description",
-			"id": "description",
+			"name": "state",
+			"id": "state",
 			"dataTestId": "deliverableUnitDescription",
 			"testId": "deliverableUnitDescriptionInput",
 			"label": "state",
@@ -265,8 +266,8 @@
 			"size": 6
 		},
 		{
-			"name": "description",
-			"id": "description",
+			"name": "district",
+			"id": "district",
 			"dataTestId": "deliverableUnitDescription",
 			"testId": "deliverableUnitDescriptionInput",
 			"label": "District",
@@ -292,8 +293,8 @@
 			"size": 6
 		},
 		{
-			"name": "description",
-			"id": "description",
+			"name": "block",
+			"id": "block",
 			"dataTestId": "deliverableUnitDescription",
 			"testId": "deliverableUnitDescriptionInput",
 			"label": "Block",
@@ -319,8 +320,8 @@
 			"size": 6
 		},
 		{
-			"name": "description",
-			"id": "description",
+			"name": "district",
+			"id": "district",
 			"dataTestId": "deliverableUnitDescription",
 			"testId": "deliverableUnitDescriptionInput",
 			"label": "District",

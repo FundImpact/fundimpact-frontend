@@ -107,6 +107,19 @@
 			"multiline": true
 		},
 		{
+			"name": "geo_regions",
+			"label": "Choose Geo Regions",
+			"size": 6,
+			"testId": "createBudgetLineitemGeoRegionsOption",
+			"dataTestId": "createBudgetGeoRegionsAnnualYear",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-2",
+			"inputType": "select",
+			"displayName": "Geo Regions"
+		},
+		{
 			"name": "attachfiles",
 			"id": "attachfiles",
 			"dataTestId": "createBudgetTracklineAttachFile",

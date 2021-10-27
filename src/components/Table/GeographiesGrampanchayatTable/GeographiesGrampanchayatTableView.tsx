@@ -28,18 +28,24 @@ import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { FormattedMessage } from "react-intl";
 import { DIALOG_TYPE } from "../../../models/constants";
+import GeographiesGrampanchayat from "../../Geographies/GeographiesGrampanchayat";
+import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+import {
+	IGeographiesGrampanchayat,
+	IGeographiesGrampanchayatData,
+} from "../../../models/geographies/geographiesGrampanchayat";
 
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
 	{ valueAccessKey: "description" },
-	{
-		valueAccessKey: "",
-		renderComponent: (deliverableUnit: IDeliverableUnitData) => (
-			<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
-		),
-	},
-	{ valueAccessKey: "" },
+	// {
+	// 	valueAccessKey: "",
+	// 	renderComponent: (deliverableUnit: IDeliverableUnitData) => (
+	// 		<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
+	// 	),
+	// },
+	// { valueAccessKey: "" },
 ];
 
 const chipArray = ({
@@ -90,14 +96,14 @@ const createChipArray = ({
 	return null;
 };
 
-let deliverableUnitTableEditMenu: string[] = [];
+let geographiesGrampanchayatTableEditMenu: string[] = [];
 
 function GeographiesGrampanchayatTableView({
 	toggleDialogs,
 	openDialogs,
-	selectedDeliverableUnit,
+	selectedGeographiesGrampanchayat,
 	initialValues,
-	deliverableUnitList,
+	geographiesGrampanchayatList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -109,12 +115,12 @@ function GeographiesGrampanchayatTableView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
-	deliverableUnitEditAccess,
-	deliverableCategoryFindAccess,
+	geographiesGrampanchayatEditAccess,
+	geographiesGrampanchayatFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
-	deliverableUnitDeleteAccess,
-	deliverableUnitExportAccess,
-	deliverableUnitImportFromCsvAccess,
+	geographiesGrampanchayatDeleteAccess,
+	geographiesGrampanchayatExportAccess,
+	geographiesGrampanchayatImportFromCsvAccess,
 }: {
 	filterList: {
 		[key: string]: string;
@@ -133,33 +139,33 @@ function GeographiesGrampanchayatTableView({
 	count: number;
 	changePage: (prev?: boolean) => void;
 	collapsableTable: boolean;
-	deliverableUnitList: IDeliverableUnitData[];
-	initialValues: IDeliverableUnit;
-	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
+	geographiesGrampanchayatList: IGeographiesGrampanchayatData[];
+	initialValues: IGeographiesGrampanchayat;
+	selectedGeographiesGrampanchayat: React.MutableRefObject<IGeographiesGrampanchayatData | null>;
 	openDialogs: boolean[];
 	toggleDialogs: (index: number, val: boolean) => void;
-	deliverableUnitEditAccess: boolean;
-	deliverableCategoryFindAccess: boolean;
+	geographiesGrampanchayatEditAccess: boolean;
+	geographiesGrampanchayatFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
-	deliverableUnitDeleteAccess: boolean;
-	deliverableUnitImportFromCsvAccess: boolean;
-	deliverableUnitExportAccess: boolean;
+	geographiesGrampanchayatDeleteAccess: boolean;
+	geographiesGrampanchayatImportFromCsvAccess: boolean;
+	geographiesGrampanchayatExportAccess: boolean;
 }) {
 	const dashboardData = useDashBoardData();
 
 	useEffect(() => {
-		if (deliverableUnitEditAccess) {
-			deliverableUnitTableEditMenu[0] = "Edit Grampanchayat";
-			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
+		if (geographiesGrampanchayatEditAccess) {
+			geographiesGrampanchayatTableEditMenu[0] = "Edit Grampanchayat";
+			// geographiesGrampanchayatTableEditMenu[0] = "Edit Deliverable Unit";
 		}
-	}, [deliverableUnitEditAccess]);
+	}, [geographiesGrampanchayatEditAccess]);
 
 	useEffect(() => {
-		if (deliverableUnitDeleteAccess) {
-			deliverableUnitTableEditMenu[1] = "Delete Grampanchayat";
-			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
+		if (geographiesGrampanchayatDeleteAccess) {
+			geographiesGrampanchayatTableEditMenu[1] = "Delete Grampanchayat";
+			// geographiesGrampanchayatTableEditMenu[1] = "Delete Deliverable Unit";
 		}
-	}, [deliverableUnitDeleteAccess]);
+	}, [geographiesGrampanchayatDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -204,16 +210,16 @@ function GeographiesGrampanchayatTableView({
 			)}
 			<CommonTable
 				tableHeadings={
-					collapsableTable && deliverableCategoryFindAccess
+					collapsableTable && geographiesGrampanchayatFindAccess
 						? tableHeadings
 						: tableHeadings.slice(1)
 				}
-				valuesList={deliverableUnitList}
+				valuesList={geographiesGrampanchayatList}
 				rows={rows}
-				selectedRow={selectedDeliverableUnit}
+				selectedRow={selectedGeographiesGrampanchayat}
 				toggleDialogs={toggleDialogs}
-				editMenuName={deliverableUnitTableEditMenu}
-				collapsableTable={collapsableTable && deliverableCategoryFindAccess}
+				editMenuName={geographiesGrampanchayatTableEditMenu}
+				collapsableTable={collapsableTable && geographiesGrampanchayatFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
@@ -228,8 +234,8 @@ function GeographiesGrampanchayatTableView({
 						tableImportUrl={DELIVERABLE_UNIT_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableUnitTableRefetchSuccess}
 						importButtonOnly={importButtonOnly}
-						hideImport={!deliverableUnitImportFromCsvAccess}
-						hideExport={!deliverableUnitExportAccess}
+						hideImport={!geographiesGrampanchayatImportFromCsvAccess}
+						hideExport={!geographiesGrampanchayatExportAccess}
 					>
 						<>
 							<Button
@@ -244,22 +250,21 @@ function GeographiesGrampanchayatTableView({
 								}
 							>
 								Geographies Grampanchayat Template
-								{/* Deliverable Unit Template */}
 							</Button>
 						</>
 					</ImportExportTableMenu>
 				)}
 			>
 				<>
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.UPDATE}
+					<GeographiesGrampanchayat
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
 					/>
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.UPDATE}
+					<GeographiesGrampanchayat
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}
 						open={openDialogs[1]}
 						data={initialValues}

@@ -47,6 +47,7 @@ import { useDocumentTableDataRefetch } from "../../../hooks/document";
 import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
 import { YearTagPayload } from "../../../models/yearTags";
 import { GET_GRANT_PERIOD } from "../../../graphql";
+import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -62,6 +63,7 @@ const defaultFormValues: IBudgetTrackingLineitemForm = {
 	timeperiod_end: "",
 	grant_periods_project: "",
 	attachments: [],
+	geo_regions: "",
 };
 
 let budgetTargetHash: {
@@ -294,15 +296,27 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 
-	/* Open Attach File Form*/
-	budgetLineitemFormInputFields[9].onClick = () => setOpenAttachFiles(true);
+	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
 
-	if (filesArray.length) budgetLineitemFormInputFields[9].label = "View Files";
-	else budgetLineitemFormInputFields[9].label = "Attach Files";
+	useEffect(() => {
+		getGeoRegions();
+	}, []);
+
+	const geoResponse = geoRegionsResponse?.data?.geoRegions;
+
+	budgetLineitemFormInputFields[9].optionsArray = geoResponse;
+
+	console.log("budgetLineitemFormInputFields[]", budgetLineitemFormInputFields[9].optionsArray);
+
+	/* Open Attach File Form*/
+	budgetLineitemFormInputFields[10].onClick = () => setOpenAttachFiles(true);
+
+	if (filesArray.length) budgetLineitemFormInputFields[10].label = "View Files";
+	else budgetLineitemFormInputFields[10].label = "Attach Files";
 
 	if (filesArray.length)
-		budgetLineitemFormInputFields[9].textNextToButton = `${filesArray.length} files attached`;
-	else budgetLineitemFormInputFields[9].textNextToButton = ``;
+		budgetLineitemFormInputFields[10].textNextToButton = `${filesArray.length} files attached`;
+	else budgetLineitemFormInputFields[10].textNextToButton = ``;
 	useEffect(() => {
 		if (currentProject) {
 			getBudgetSubTarget({
@@ -573,7 +587,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Creation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			closeDialog();
@@ -659,7 +673,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget  Line Item Updation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			closeDialog();
@@ -754,7 +768,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Line Item Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			handleClose();

@@ -11,32 +11,44 @@ import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
-// import GeographiesStateTableView from "./GeographiesStateTableView";
-// import GeographiesDistrictTableView from "./GeographiesDistrictTableView";
 import GeographiesBlockTableView from "./GeographiesBlockTableView";
-import { GET_BLOCK_DATA } from "../../../graphql/Geographies/GeographiesBlock";
+import {
+	IGeographiesBlock,
+	IGeographiesBlockData,
+} from "../../../models/geographies/geographiesBlock";
 // import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
-	deliverableUnit: IDeliverableUnitData | null,
+	geographiesBlock: IGeographiesBlockData | null,
+	// deliverableUnit: IDeliverableUnitData | null,
 	organization: string | number
 	// deliverableCategory: string[]
-): IDeliverableUnit => {
+): IGeographiesBlock => {
 	return {
-		code: deliverableUnit?.code || "",
-		description: deliverableUnit?.description || "",
-		id: parseInt(deliverableUnit?.id || ""),
-		name: deliverableUnit?.name || "",
-		prefix_label: deliverableUnit?.prefix_label || "",
-		suffix_label: deliverableUnit?.suffix_label || "",
-		unit_type: deliverableUnit?.unit_type || "",
+		code: geographiesBlock?.code || "",
+		district: geographiesBlock?.district || "",
+		id: parseInt(geographiesBlock?.id || ""),
+		name: geographiesBlock?.name || "",
+		// prefix_label: geographiesBlock?.prefix_label || "",
+		// suffix_label: geographiesBlock?.suffix_label || "",
+		// unit_type: geographiesBlock?.unit_type || "",
 		// deliverableCategory,
-		organization,
+		// organization,
+		// code: deliverableUnit?.code || "",
+		// description: deliverableUnit?.description || "",
+		// id: parseInt(deliverableUnit?.id || ""),
+		// name: deliverableUnit?.name || "",
+		// prefix_label: deliverableUnit?.prefix_label || "",
+		// suffix_label: deliverableUnit?.suffix_label || "",
+		// unit_type: deliverableUnit?.unit_type || "",
+		// // deliverableCategory,
+		// organization,
 	};
 };
 
 function GeographiesBlockTableContainer({
-	deliverableUnitList,
+	// deliverableUnitList,
+	geographiesBlocksList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -57,7 +69,8 @@ function GeographiesBlockTableContainer({
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	orderBy: string;
-	deliverableUnitList: IDeliverableUnitData[];
+	geographiesBlocksList: IGeographiesBlockData[];
+	// deliverableUnitList: IDeliverableUnitData[];
 	filterList: {
 		[key: string]: string;
 	};
@@ -70,14 +83,14 @@ function GeographiesBlockTableContainer({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
-	const editDeliverableUnit = false,
-		deleteDeliverableUnit = false;
+	const editGeographiesBlock = false,
+		deleteGeographiesBlock = false;
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
-		editDeliverableUnit,
-		deleteDeliverableUnit,
+		editGeographiesBlock,
+		deleteGeographiesBlock,
 	]);
 
-	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
+	const selectedGeographiesBlock = useRef<IGeographiesBlockData | null>(null);
 	const dashboardData = useDashBoardData();
 	const [getcategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT);
 
@@ -88,11 +101,11 @@ function GeographiesBlockTableContainer({
 	};
 
 	useEffect(() => {
-		if (selectedDeliverableUnit.current && openDialogs[0]) {
+		if (selectedGeographiesBlock.current && openDialogs[0]) {
 			getcategoryUnit({
 				variables: {
 					filter: {
-						deliverable_units_org: selectedDeliverableUnit.current.id,
+						deliverable_units_org: selectedGeographiesBlock.current.id,
 					},
 				},
 			});
@@ -113,50 +126,40 @@ function GeographiesBlockTableContainer({
 	// 	[deliverableCategoryUnitList]
 	// );
 
-	const deliverableUnitEditAccess = userHasAccess(
+	const geographiesBlockEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
-	const deliverableUnitDeleteAccess = userHasAccess(
+
+	const geographiesBlockDeleteAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
-	const deliverableUnitImportFromCsvAccess = userHasAccess(
+
+	const geographiesBlockImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
 	);
-	const deliverableUnitExportAccess = userHasAccess(
+	const geographiesBlockExportAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_EXORT
 	);
 
-	const deliverableCategoryFindAccess = userHasAccess(
+	const geographiesBlockFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
 
-	const [getBlocks, blockResponse] = useLazyQuery(GET_BLOCK_DATA);
-
-	useEffect(() => {
-		getBlocks();
-	}, []);
-
-	const geographiesBlocksList = blockResponse?.data?.blocks || [];
-
-	console.log("blockResponse", geographiesBlocksList);
-
 	return (
 		<GeographiesBlockTableView
-			// <DeliverableUnitTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
-			selectedDeliverableUnit={selectedDeliverableUnit}
+			selectedGeographiesBlock={selectedGeographiesBlock}
 			initialValues={getInitialValues(
-				selectedDeliverableUnit.current,
+				selectedGeographiesBlock.current,
 				dashboardData?.organization?.id || ""
 			)}
-			deliverableUnitList={geographiesBlocksList}
-			// deliverableUnitList={deliverableUnitList}
+			geographiesBlocksList={geographiesBlocksList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}
@@ -168,12 +171,12 @@ function GeographiesBlockTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			deliverableUnitEditAccess={deliverableUnitEditAccess}
-			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
+			geographiesBlockEditAccess={geographiesBlockEditAccess}
+			geographiesBlockFindAccess={geographiesBlockFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
-			deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
-			deliverableUnitImportFromCsvAccess={deliverableUnitImportFromCsvAccess}
-			deliverableUnitExportAccess={deliverableUnitExportAccess}
+			geographiesBlockDeleteAccess={geographiesBlockDeleteAccess}
+			geographiesBlockImportFromCsvAccess={geographiesBlockImportFromCsvAccess}
+			geographiesBlockExportAccess={geographiesBlockExportAccess}
 		/>
 	);
 }

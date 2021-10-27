@@ -12,3 +12,45 @@ export const GET_BLOCK_DATA = gql`
 		}
 	}
 `;
+
+export const CREATE_GEOGRAPHIES_BLOCK = gql`
+	mutation createGeographiesBlock($input: createBlockInput) {
+		createBlock(input: $input) {
+			block {
+				name
+				code
+				district {
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const UPDATE_GEOGRAPHIES_BLOCK = gql`
+	mutation updateGeographiesBlock($input: updateBlockInput) {
+		updateBlock(input: $input) {
+			block {
+				name
+				code
+				district {
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const DELETE_GEOGRAPHIES_BLOCK = gql`
+	mutation deletGeographiesBlock($input: deleteBlockInput) {
+		deleteBlock(input: $input) {
+			block {
+				name
+				code
+				district {
+					name
+				}
+			}
+		}
+	}
+`;

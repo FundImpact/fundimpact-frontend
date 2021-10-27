@@ -1,7 +1,7 @@
 import { MODULE_CODES } from "../../moduleCodes";
 import { GEOGRAPHIES_STATE_ACTIONS } from "./actions";
 
-export const DELIVERABLE_STATE_MODULE = {
+export const GEOGRAPHIES_STATE_MODULE = {
 	name: "Geographies State",
 	code: MODULE_CODES.DELIVERABLE_CATEGORY,
 	actionsAvailable: {

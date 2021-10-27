@@ -150,6 +150,20 @@
 			"inputType": "select",
 			"required": true,
 			"size": 6
+		},
+		{
+			"name": "geo_regions",
+			"id": "geo_regions",
+			"dataTestId": "budgetSubTargetGeoRegions",
+			"testId": "budgetSubTargetGeoRegionsInput",
+			"label": "Geo Regions",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"size": 6
 		}
 	]
 }

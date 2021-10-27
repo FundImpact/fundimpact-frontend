@@ -45,6 +45,7 @@ function getInitialValues(props: ProjectProps): IPROJECT_FORM {
 		description: "",
 		workspace: props.workspace,
 		donor: [],
+		logframe_tracker: false,
 	};
 }
 
@@ -111,7 +112,7 @@ const updateCachedProject = async ({
 	createdProject: ICreateProject["createOrgProject"];
 }) => {
 	try {
-		console.log("heresss", createdProject, createdProject.workspace.id);
+		console.log("heresss", createdProject);
 		let cachedProjects = apolloClient.readQuery<{
 			orgProject: ICreateProject["createOrgProject"][];
 		}>({
@@ -156,6 +157,7 @@ function Project(props: ProjectProps) {
 	let initialValues: IPROJECT_FORM = getInitialValues(props);
 	const dashboardDispatch = useDashboardDispatch();
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
+	const [logFrameValue, setLogFrameValue] = React.useState<boolean>();
 	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>(
 		props.type === PROJECT_ACTIONS.UPDATE
 			? props.data.attachments
@@ -175,6 +177,15 @@ function Project(props: ProjectProps) {
 	/* Open Attach File Form*/
 
 	projectForm[5].onClick = () => setOpenAttachFiles(true);
+
+	projectForm[6].getInputValue = (value: boolean) => {
+		// console.log("innnnputs value", value);
+		// setLogFrameValue(value);
+	};
+
+	// projectForm[6].onClick = () => setLogFrameValue(true);
+
+	// console.log("project.tsx logFrameValue", logFrameValue);
 
 	if (projectFilesArray.length) projectForm[5].label = "View Files";
 	else projectForm[5].label = "Attach Files";
@@ -232,6 +243,8 @@ function Project(props: ProjectProps) {
 	});
 
 	const { data: orgProjects } = useQuery(GET_PROJECTS);
+	// console.log("orgProjects", orgProjects);
+
 	const theme = useTheme();
 	const [getOrganizationDonors, { data: donors }] = useLazyQuery(GET_ORG_DONOR, {
 		onError: (err) => notificationDispatch(setErrorNotification(err?.message)),
@@ -319,7 +332,7 @@ function Project(props: ProjectProps) {
 					},
 				});
 			}
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		}
 	};
@@ -394,12 +407,14 @@ function Project(props: ProjectProps) {
 					donorId,
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		} finally {
 			// props.handleClose();
 		}
 	};
+
+	// console.log("onCreate", onCreate);
 
 	const [updateProject, { loading: updateLoading }] = useMutation(UPDATE_PROJECT, {
 		onCompleted(data) {
@@ -421,7 +436,7 @@ function Project(props: ProjectProps) {
 				},
 			});
 			dashboardDispatch(setProject(orgProjects?.orgProject?.[0]));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		}
 	};
@@ -460,7 +475,7 @@ function Project(props: ProjectProps) {
 					donorId,
 				});
 			});
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		} finally {
 			// props.handleClose();
@@ -479,6 +494,8 @@ function Project(props: ProjectProps) {
 		}
 		return errors;
 	};
+
+	console.log("initialValuesinitialValues", initialValues);
 
 	const formAction = props.type;
 	const formIsOpen = props.open;

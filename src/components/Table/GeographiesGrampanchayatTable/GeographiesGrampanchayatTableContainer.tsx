@@ -13,28 +13,32 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 // import GeographiesStateTableView from "./GeographiesStateTableView";
 import GeographiesGrampanchayatTableView from "./GeographiesGrampanchayatTableView";
+import {
+	IGeographiesGrampanchayat,
+	IGeographiesGrampanchayatData,
+} from "../../../models/geographies/geographiesGrampanchayat";
 // import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
-	deliverableUnit: IDeliverableUnitData | null,
+	geographiesGrampanchayat: IGeographiesGrampanchayatData | null,
 	organization: string | number
 	// deliverableCategory: string[]
-): IDeliverableUnit => {
+): IGeographiesGrampanchayat => {
 	return {
-		code: deliverableUnit?.code || "",
-		description: deliverableUnit?.description || "",
-		id: parseInt(deliverableUnit?.id || ""),
-		name: deliverableUnit?.name || "",
-		prefix_label: deliverableUnit?.prefix_label || "",
-		suffix_label: deliverableUnit?.suffix_label || "",
-		unit_type: deliverableUnit?.unit_type || "",
+		code: geographiesGrampanchayat?.code || "",
+		district: geographiesGrampanchayat?.district || "",
+		id: parseInt(geographiesGrampanchayat?.id || ""),
+		name: geographiesGrampanchayat?.name || "",
+		// prefix_label: geographiesGrampanchayat?.prefix_label || "",
+		// suffix_label: geographiesGrampanchayat?.suffix_label || "",
+		// unit_type: geographiesGrampanchayat?.unit_type || "",
 		// deliverableCategory,
-		organization,
+		// organization,
 	};
 };
 
 function GeographiesGrampanchayatTableContainer({
-	deliverableUnitList,
+	geographiesGrampanchayatList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -55,7 +59,7 @@ function GeographiesGrampanchayatTableContainer({
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	orderBy: string;
-	deliverableUnitList: IDeliverableUnitData[];
+	geographiesGrampanchayatList: IGeographiesGrampanchayatData[];
 	filterList: {
 		[key: string]: string;
 	};
@@ -68,14 +72,14 @@ function GeographiesGrampanchayatTableContainer({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 	reftechDeliverableCategoryAndUnitTable: () => void;
 }) {
-	const editDeliverableUnit = false,
-		deleteDeliverableUnit = false;
+	const editGeographiesGrampanchayat = false,
+		deleteGeographiesGrampanchayat = false;
 	const [openDialogs, setOpenDialogs] = useState<boolean[]>([
-		editDeliverableUnit,
-		deleteDeliverableUnit,
+		editGeographiesGrampanchayat,
+		deleteGeographiesGrampanchayat,
 	]);
 
-	const selectedDeliverableUnit = useRef<IDeliverableUnitData | null>(null);
+	const selectedGeographiesGrampanchayat = useRef<IGeographiesGrampanchayatData | null>(null);
 	const dashboardData = useDashBoardData();
 	const [getcategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT);
 
@@ -86,11 +90,11 @@ function GeographiesGrampanchayatTableContainer({
 	};
 
 	useEffect(() => {
-		if (selectedDeliverableUnit.current && openDialogs[0]) {
+		if (selectedGeographiesGrampanchayat.current && openDialogs[0]) {
 			getcategoryUnit({
 				variables: {
 					filter: {
-						deliverable_units_org: selectedDeliverableUnit.current.id,
+						deliverable_units_org: selectedGeographiesGrampanchayat.current.id,
 					},
 				},
 			});
@@ -127,16 +131,16 @@ function GeographiesGrampanchayatTableContainer({
 	// 	MODULE_CODES.DELIVERABLE_UNIT,
 	// 	DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	// );
-	const deliverableUnitImportFromCsvAccess = userHasAccess(
+	const geographiesGrampanchayatImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
 	);
-	const deliverableUnitExportAccess = userHasAccess(
+	const geographiesGrampanchayatExportAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_EXORT
 	);
 
-	const deliverableCategoryFindAccess = userHasAccess(
+	const geographiesGrampanchayatFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
@@ -146,12 +150,12 @@ function GeographiesGrampanchayatTableContainer({
 			// <DeliverableUnitTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
-			selectedDeliverableUnit={selectedDeliverableUnit}
+			selectedGeographiesGrampanchayat={selectedGeographiesGrampanchayat}
 			initialValues={getInitialValues(
-				selectedDeliverableUnit.current,
+				selectedGeographiesGrampanchayat.current,
 				dashboardData?.organization?.id || ""
 			)}
-			deliverableUnitList={deliverableUnitList}
+			geographiesGrampanchayatList={geographiesGrampanchayatList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}
@@ -163,14 +167,14 @@ function GeographiesGrampanchayatTableContainer({
 			filterList={filterList}
 			setFilterList={setFilterList}
 			removeFilterListElements={removeFilterListElements}
-			deliverableUnitEditAccess={geographiesGrampanchayatEditAccess}
-			// deliverableUnitEditAccess={deliverableUnitEditAccess}
-			deliverableCategoryFindAccess={deliverableCategoryFindAccess}
+			geographiesGrampanchayatEditAccess={geographiesGrampanchayatEditAccess}
+			geographiesGrampanchayatFindAccess={geographiesGrampanchayatFindAccess}
 			reftechDeliverableCategoryAndUnitTable={reftechDeliverableCategoryAndUnitTable}
-			deliverableUnitDeleteAccess={geographiesGrampanchayatDeleteAccess}
-			// deliverableUnitDeleteAccess={deliverableUnitDeleteAccess}
-			deliverableUnitImportFromCsvAccess={deliverableUnitImportFromCsvAccess}
-			deliverableUnitExportAccess={deliverableUnitExportAccess}
+			geographiesGrampanchayatDeleteAccess={geographiesGrampanchayatDeleteAccess}
+			geographiesGrampanchayatImportFromCsvAccess={
+				geographiesGrampanchayatImportFromCsvAccess
+			}
+			geographiesGrampanchayatExportAccess={geographiesGrampanchayatExportAccess}
 		/>
 	);
 }

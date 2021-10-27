@@ -29,3 +29,42 @@ export const GET_COUNTRY_COUNT = gql`
 		}
 	}
 `;
+
+export const CREATE_GEOGRAPHIES_COUNTRY = gql`
+	mutation createGeographiesCountry($input: createCountryInput) {
+		createCountry(input: $input) {
+			country {
+				name
+				code
+			}
+		}
+	}
+`;
+
+export const UPDATE_GEOGRAPHIES_COUNTRY = gql`
+	mutation updateGeographiesCountry($input: updateCountryInput) {
+		updateCountry(input: $input) {
+			country {
+				id
+				created_at
+				updated_at
+				name
+				code
+			}
+		}
+	}
+`;
+
+export const DELETE_GEOGRAPHIES_COUNTRY = gql`
+	mutation deletGeographiesCountry($input: deleteCountryInput) {
+		deleteCountry(input: $input) {
+			country {
+				name
+				code
+				states {
+					name
+				}
+			}
+		}
+	}
+`;

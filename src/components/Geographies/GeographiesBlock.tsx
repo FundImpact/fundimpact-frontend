@@ -47,25 +47,31 @@ import {
 	IGeographiesBlock,
 	IGeographiesBlockData,
 } from "../../models/geographies/geographiesBlock";
+import { IGetGeographieState } from "../../models/geographies/query";
+import {
+	CREATE_GEOGRAPHIES_BLOCK,
+	DELETE_GEOGRAPHIES_BLOCK,
+	GET_BLOCK_DATA,
+	UPDATE_GEOGRAPHIES_BLOCK,
+} from "../../graphql/Geographies/GeographiesBlock";
 
 function getInitialValues(props: GoegraphiesBlockProps) {
-	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
-	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		code: "",
-		description: "",
-		unit_type: "",
-		prefix_label: "",
-		suffix_label: "",
-		organization: props.organization,
+		district: "",
+		// description: "",
+		// unit_type: "",
+		// prefix_label: "",
+		// suffix_label: "",
+		// organization: props.organization,
 	};
 }
 
-interface IError extends Omit<Partial<IGeographiesBlock>, "GeographiesBlock"> {
+interface IError extends Omit<Partial<IGeographiesBlock>, "geographiesBlock"> {
 	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
-	deliverableCategory?: string;
+	geographiesBlock?: string;
 }
 
 function GeographiesBlock(props: GoegraphiesBlockProps) {
@@ -75,31 +81,24 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
+	const [createBlock, { loading: createBlockLoading }] = useMutation(CREATE_GEOGRAPHIES_BLOCK, {
 		onCompleted(data) {
 			// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
 		},
 	});
 
-	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_DELIVERABLE_UNIT_ORG,
-		{
-			onCompleted(data) {
-				// createCategoryUnitHelper(data.updateDeliverableUnitOrg.id); // deliverable unit id
-			},
-		}
+	const [updateGeographiesBlock, { loading: updatingDeliverableUnit }] = useMutation(
+		UPDATE_GEOGRAPHIES_BLOCK
 	);
 
+	const [deleteGeographiesBlock] = useMutation(DELETE_GEOGRAPHIES_BLOCK);
+
 	let initialValues: IGeographiesBlock = getInitialValues(props);
-	// let initialValues: IDeliverableUnit = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesBlock) => {
-		// const onCreate = async (valueSubmitted: IDeliverableUnit) => {
 		const value = Object.assign({}, valueSubmitted);
-		// setDeliverableCategory(value.deliverableCategory || []);
-		// delete value.deliverableCategory;
 		try {
-			await createUnit({
-				variables: { input: value },
+			await createBlock({
+				variables: { input: { data: value } },
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -128,7 +127,8 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 						if (count) {
 							limit = count.deliverableUnitOrgCount;
 						}
-						const dataRead = await store.readQuery<IGetDeliverablUnit>({
+						const dataRead = await store.readQuery<IGetGeographieState>({
+							// const dataRead = await store.readQuery<IGetDeliverablUnit>({
 							query: GET_DELIVERABLE_UNIT_BY_ORG,
 							variables: {
 								filter: {
@@ -139,9 +139,9 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 								sort: "created_at:DESC",
 							},
 						});
-						let deliverableUnits: IGeographiesBlockData[] = dataRead?.deliverableUnitOrg
+						let deliverableUnits: IGeographiesBlockData[] = dataRead?.geographiesStateOrg
 							? // let deliverableUnits: IDeliverableUnitData[] = dataRead?.deliverableUnitOrg
-							  dataRead?.deliverableUnitOrg
+							  dataRead?.geographiesStateOrg
 							: [];
 
 						store.writeQuery<IGetDeliverablUnit>({
@@ -164,7 +164,7 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 				},
 				refetchQueries: [
 					{
-						query: GET_DELIVERABLE_UNIT_BY_ORG,
+						query: GET_BLOCK_DATA,
 						variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
@@ -178,28 +178,18 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesBlock) => {
-		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
-			const submittedValue = Object.assign({}, value);
-			const id = submittedValue.id;
-			// let submittedDeliverableCategory: string[] = submittedValue?.deliverableCategory || [];
-			// const newDeliverableCategories = getNewDeliverableCategories({
-			// 	deliverableCategories: submittedDeliverableCategory,
-			// 	oldDeliverableCategories:
-			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList?.map(
-			// 			(
-			// 				deliverableCategoryUnit: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]
-			// 			) => deliverableCategoryUnit.deliverable_category_org.id
-			// 		) || [],
-			// });
-			// setDeliverableCategory(newDeliverableCategories);
+			const id = value.id;
 
-			delete submittedValue.id;
-			// delete submittedValue.deliverableCategory;
-			await updateDeliverableUnit({
+			delete value.id;
+			await updateGeographiesBlock({
 				variables: {
-					id,
-					input: submittedValue,
+					input: {
+						where: {
+							id: id?.toString(),
+						},
+						data: value,
+					},
 				},
 			});
 			// //remove newDeliverableCategories
@@ -223,36 +213,42 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.organization) {
-			errors.organization = "Organization is required";
-		}
+		// if (!values.organization) {
+		// 	errors.organization = "Organization is required";
+		// }
 		return errors;
 	};
 
 	const onDelete = async () => {
 		try {
-			const deliverableUnitValues = { ...initialValues };
-			delete deliverableUnitValues["id"];
-			// delete deliverableUnitValues["deliverableCategory"];
-			await updateDeliverableUnit({
+			deleteGeographiesBlock({
 				variables: {
-					id: initialValues?.id,
 					input: {
-						deleted: true,
-						...deliverableUnitValues,
-					},
-				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-						variables: {
-							filter: {
-								organization: dashboardData?.organization?.id,
-							},
+						where: {
+							id: initialValues.id,
 						},
 					},
-				],
+				},
 			});
+			// await updateGeographiesBlock({
+			// 	variables: {
+			// 		id: initialValues?.id,
+			// 		input: {
+			// 			deleted: true,
+			// 			...deliverableUnitValues,
+			// 		},
+			// 	},
+			// 	refetchQueries: [
+			// 		{
+			// 			query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+			// 			variables: {
+			// 				filter: {
+			// 					organization: dashboardData?.organization?.id,
+			// 				},
+			// 			},
+			// 		},
+			// 	],
+			// });
 			notificationDispatch(setSuccessNotification("Gegraphies Block Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
@@ -294,7 +290,7 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
-				loading={createUnitLoading || updatingDeliverableUnit}
+				loading={createBlockLoading || updatingDeliverableUnit}
 			>
 				<CommonForm
 					{...{

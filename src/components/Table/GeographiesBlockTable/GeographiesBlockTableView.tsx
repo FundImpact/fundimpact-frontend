@@ -28,19 +28,27 @@ import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { FormattedMessage } from "react-intl";
 import { DIALOG_TYPE } from "../../../models/constants";
+import {
+	IGeographiesBlock,
+	IGeographiesBlockData,
+} from "../../../models/geographies/geographiesBlock";
+import GeographiesBlock from "../../Geographies/GeographiesBlock";
+import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
 	{ valueAccessKey: "description" },
-	{
-		valueAccessKey: "",
-		renderComponent: (deliverableUnit: IDeliverableUnitData) => (
-			<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
-		),
-	},
-	{ valueAccessKey: "" },
+	// {
+	// 	valueAccessKey: "",
+	// 	renderComponent: (deliverableUnit: IDeliverableUnitData) => (
+	// 		<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
+	// 	),
+	// },
+	// { valueAccessKey: "" },
 ];
+
+console.log("rows", rows);
 
 const chipArray = ({
 	arr,
@@ -95,9 +103,10 @@ let deliverableUnitTableEditMenu: string[] = [];
 function GeographiesBlockTableView({
 	toggleDialogs,
 	openDialogs,
-	selectedDeliverableUnit,
+	selectedGeographiesBlock,
 	initialValues,
-	deliverableUnitList,
+	geographiesBlocksList,
+	// deliverableUnitList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -109,12 +118,12 @@ function GeographiesBlockTableView({
 	filterList,
 	setFilterList,
 	removeFilterListElements,
-	deliverableUnitEditAccess,
-	deliverableCategoryFindAccess,
+	geographiesBlockEditAccess,
+	geographiesBlockFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
-	deliverableUnitDeleteAccess,
-	deliverableUnitExportAccess,
-	deliverableUnitImportFromCsvAccess,
+	geographiesBlockDeleteAccess,
+	geographiesBlockExportAccess,
+	geographiesBlockImportFromCsvAccess,
 }: {
 	filterList: {
 		[key: string]: string;
@@ -133,33 +142,34 @@ function GeographiesBlockTableView({
 	count: number;
 	changePage: (prev?: boolean) => void;
 	collapsableTable: boolean;
-	deliverableUnitList: IDeliverableUnitData[];
-	initialValues: IDeliverableUnit;
-	selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
+	geographiesBlocksList: IGeographiesBlockData[];
+	// deliverableUnitList: IDeliverableUnitData[];
+	initialValues: IGeographiesBlock;
+	selectedGeographiesBlock: React.MutableRefObject<IGeographiesBlockData | null>;
 	openDialogs: boolean[];
 	toggleDialogs: (index: number, val: boolean) => void;
-	deliverableUnitEditAccess: boolean;
-	deliverableCategoryFindAccess: boolean;
+	geographiesBlockEditAccess: boolean;
+	geographiesBlockFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
-	deliverableUnitDeleteAccess: boolean;
-	deliverableUnitImportFromCsvAccess: boolean;
-	deliverableUnitExportAccess: boolean;
+	geographiesBlockDeleteAccess: boolean;
+	geographiesBlockImportFromCsvAccess: boolean;
+	geographiesBlockExportAccess: boolean;
 }) {
 	const dashboardData = useDashBoardData();
 
 	useEffect(() => {
-		if (deliverableUnitEditAccess) {
+		if (geographiesBlockEditAccess) {
 			deliverableUnitTableEditMenu[0] = "Edit Block";
 			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
-	}, [deliverableUnitEditAccess]);
+	}, [geographiesBlockEditAccess]);
 
 	useEffect(() => {
-		if (deliverableUnitDeleteAccess) {
+		if (geographiesBlockDeleteAccess) {
 			deliverableUnitTableEditMenu[1] = "Delete Block";
 			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
-	}, [deliverableUnitDeleteAccess]);
+	}, [geographiesBlockDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -204,16 +214,17 @@ function GeographiesBlockTableView({
 			)}
 			<CommonTable
 				tableHeadings={
-					collapsableTable && deliverableCategoryFindAccess
+					collapsableTable && geographiesBlockFindAccess
 						? tableHeadings
 						: tableHeadings.slice(1)
 				}
-				valuesList={deliverableUnitList}
+				valuesList={geographiesBlocksList}
+				// valuesList={deliverableUnitList}
 				rows={rows}
-				selectedRow={selectedDeliverableUnit}
+				selectedRow={selectedGeographiesBlock}
 				toggleDialogs={toggleDialogs}
 				editMenuName={deliverableUnitTableEditMenu}
-				collapsableTable={collapsableTable && deliverableCategoryFindAccess}
+				collapsableTable={collapsableTable && geographiesBlockFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
@@ -228,8 +239,8 @@ function GeographiesBlockTableView({
 						tableImportUrl={DELIVERABLE_UNIT_TABLE_IMPORT}
 						onImportTableSuccess={onDeliverableUnitTableRefetchSuccess}
 						importButtonOnly={importButtonOnly}
-						hideImport={!deliverableUnitImportFromCsvAccess}
-						hideExport={!deliverableUnitExportAccess}
+						hideImport={!geographiesBlockImportFromCsvAccess}
+						hideExport={!geographiesBlockExportAccess}
 					>
 						<>
 							<Button
@@ -251,15 +262,16 @@ function GeographiesBlockTableView({
 				)}
 			>
 				<>
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.UPDATE}
+					<GeographiesBlock
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
 					/>
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.UPDATE}
+
+					<GeographiesBlock
+						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}
 						open={openDialogs[1]}
 						data={initialValues}

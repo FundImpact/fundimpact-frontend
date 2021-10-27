@@ -6,12 +6,12 @@ export interface IGeographiesDistrict {
 	// export interface IDeliverableUnit {
 	id?: number;
 	name: string;
-	description?: string;
+	state?: string;
 	code: string;
-	unit_type: number | string;
-	prefix_label: number | string;
-	suffix_label: number | string;
-	organization?: number | string;
+	// unit_type: number | string;
+	// prefix_label: number | string;
+	// suffix_label: number | string;
+	// organization?: number | string;
 }
 
 export interface IGeographiesDistrictData

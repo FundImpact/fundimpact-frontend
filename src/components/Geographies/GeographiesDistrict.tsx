@@ -9,20 +9,9 @@ import {
 import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
-import {
-	IDeliverableUnit,
-	DeliverableUnitProps,
-	IDeliverableUnitData,
-} from "../../models/deliverable/deliverableUnit";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-// import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-// import {
-// 	CREATE_CATEGORY_UNIT,
-// 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-// 	GET_CATEGORY_UNIT,
-// 	UPDATE_DELIVERABLE_CATEGPRY_UNIT,
-// } from "../../graphql/Deliverable/categoryUnit";
+
 import {
 	CREATE_DELIVERABLE_UNIT,
 	UPDATE_DELIVERABLE_UNIT_ORG,
@@ -30,7 +19,6 @@ import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 } from "../../graphql/Deliverable/unit";
 import { GEOGRAPHIES_ACTIONS } from "./constants";
-// import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesDistrictForm } from "./inputField.json";
@@ -43,8 +31,6 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-// import Deliverable from "./Deliverable";
-// import { useLocation } from "react-router";
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
@@ -52,19 +38,24 @@ import {
 	IGeographiesDistrict,
 	IGeographiesDistrictData,
 } from "../../models/geographies/geographiesDistrict";
+import {
+	CREATE_GEOGRAPHIES_DISTRICT,
+	DELETE_GEOGRAPHIES_DISTRICT,
+	GET_DISTRICT_DATA,
+	UPDATE_GEOGRAPHIES_DISTRICT,
+} from "../../graphql/Geographies/GeographiesDistrict";
 
 function getInitialValues(props: GoegraphiesDistrictProps) {
-	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
-	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		code: "",
-		description: "",
-		unit_type: "",
-		prefix_label: "",
-		suffix_label: "",
-		organization: props.organization,
+		state: "",
+		// description: "",
+		// unit_type: "",
+		// prefix_label: "",
+		// suffix_label: "",
+		// organization: props.organization,
 	};
 }
 
@@ -80,20 +71,21 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
-		onCompleted(data) {
-			// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-		},
-	});
-
-	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_DELIVERABLE_UNIT_ORG,
+	const [createDistrict, { loading: createDistrictLoading }] = useMutation(
+		CREATE_GEOGRAPHIES_DISTRICT,
+		// CREATE_DELIVERABLE_UNIT,
 		{
 			onCompleted(data) {
-				// createCategoryUnitHelper(data.updateDeliverableUnitOrg.id); // deliverable unit id
+				// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
 			},
 		}
 	);
+
+	const [updateGeographiesDistrict, { loading: updatingGeographiesDistrict }] = useMutation(
+		UPDATE_GEOGRAPHIES_DISTRICT
+	);
+
+	const [deleteGeographiesDistrict] = useMutation(DELETE_GEOGRAPHIES_DISTRICT);
 
 	let initialValues: IGeographiesDistrict = getInitialValues(props);
 	// let initialValues: IDeliverableUnit = getInitialValues(props);
@@ -103,8 +95,8 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 		// setDeliverableCategory(value.deliverableCategory || []);
 		// delete value.deliverableCategory;
 		try {
-			await createUnit({
-				variables: { input: value },
+			await createDistrict({
+				variables: { input: { data: value } },
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -169,7 +161,8 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 				},
 				refetchQueries: [
 					{
-						query: GET_DELIVERABLE_UNIT_BY_ORG,
+						query: GET_DISTRICT_DATA,
+						// query: GET_DELIVERABLE_UNIT_BY_ORG,
 						variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
@@ -185,28 +178,20 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 	const onUpdate = async (value: IGeographiesDistrict) => {
 		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
-			const submittedValue = Object.assign({}, value);
-			const id = submittedValue.id;
-			// let submittedDeliverableCategory: string[] = submittedValue?.deliverableCategory || [];
-			// const newDeliverableCategories = getNewDeliverableCategories({
-			// 	deliverableCategories: submittedDeliverableCategory,
-			// 	oldDeliverableCategories:
-			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList?.map(
-			// 			(
-			// 				deliverableCategoryUnit: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]
-			// 			) => deliverableCategoryUnit.deliverable_category_org.id
-			// 		) || [],
-			// });
-			// setDeliverableCategory(newDeliverableCategories);
+			const id = value.id;
 
-			delete submittedValue.id;
-			// delete submittedValue.deliverableCategory;
-			await updateDeliverableUnit({
+			delete value.id;
+			await updateGeographiesDistrict({
 				variables: {
-					id,
-					input: submittedValue,
+					input: {
+						where: {
+							id: id?.toString(),
+						},
+						data: value,
+					},
 				},
 			});
+
 			// //remove newDeliverableCategories
 			// await changeDeliverableCategoryUnitStatus({
 			// 	updateDeliverableCategoryUnit,
@@ -228,36 +213,42 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.organization) {
-			errors.organization = "Organization is required";
-		}
+		// if (!values.organization) {
+		// 	errors.organization = "Organization is required";
+		// }
 		return errors;
 	};
 
 	const onDelete = async () => {
 		try {
-			const deliverableUnitValues = { ...initialValues };
-			delete deliverableUnitValues["id"];
-			// delete deliverableUnitValues["deliverableCategory"];
-			await updateDeliverableUnit({
+			deleteGeographiesDistrict({
 				variables: {
-					id: initialValues?.id,
 					input: {
-						deleted: true,
-						...deliverableUnitValues,
-					},
-				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-						variables: {
-							filter: {
-								organization: dashboardData?.organization?.id,
-							},
+						where: {
+							id: initialValues.id,
 						},
 					},
-				],
+				},
 			});
+			// await updateGeographiesDistrict({
+			// 	variables: {
+			// 		id: initialValues?.id,
+			// 		input: {
+			// 			deleted: true,
+			// 			...deliverableUnitValues,
+			// 		},
+			// 	},
+			// 	refetchQueries: [
+			// 		{
+			// 			query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+			// 			variables: {
+			// 				filter: {
+			// 					organization: dashboardData?.organization?.id,
+			// 				},
+			// 			},
+			// 		},
+			// 	],
+			// });
 			notificationDispatch(setSuccessNotification("Gegraphies District Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
@@ -299,7 +290,7 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
-				loading={createUnitLoading || updatingDeliverableUnit}
+				loading={createDistrictLoading || updatingGeographiesDistrict}
 			>
 				<CommonForm
 					{...{

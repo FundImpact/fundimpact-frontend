@@ -14,6 +14,8 @@ import pagination from "../../../hooks/pagination";
 import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesGrampanchayatTableContainer from "./GeographiesGrampanchayatTableContainer";
+import { GET_GRAMPANCHAYAT_DATA } from "../../../graphql/Geographies/GeographiesGrampanchayat";
+import { useLazyQuery } from "@apollo/client";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -27,7 +29,7 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 
 function GeographiesGrampanchayatTableGraphql({
 	collapsableTable = false,
-	rowId: deliverableCategoryId,
+	rowId: geographiesGrampanchayatId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -68,9 +70,9 @@ function GeographiesGrampanchayatTableGraphql({
 
 	useEffect(() => {
 		setNestedTableQueryFilter({
-			deliverable_category_org: deliverableCategoryId,
+			deliverable_category_org: geographiesGrampanchayatId,
 		});
-	}, [deliverableCategoryId]);
+	}, [geographiesGrampanchayatId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -88,7 +90,7 @@ function GeographiesGrampanchayatTableGraphql({
 			setNestedTableQueryFilter(
 				Object.assign(
 					{},
-					{ deliverable_category_org: deliverableCategoryId },
+					{ deliverable_category_org: geographiesGrampanchayatId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -97,14 +99,14 @@ function GeographiesGrampanchayatTableGraphql({
 				)
 			);
 		}
-	}, [nestedTableFilterList, deliverableCategoryId]);
+	}, [nestedTableFilterList, geographiesGrampanchayatId]);
 
 	let {
-		changePage: changeDeliverableUnitPage,
-		count: deliverableUnitCount,
+		changePage: changeGeographiesGrampanchayatPage,
+		count: geographiesGrampanchayatCount,
 		queryData: deliverableUnitList,
-		queryLoading: deliverableUnitLoading,
-		countQueryLoading: deliverableUnitCountLoading,
+		queryLoading: geographiesGrampanchayatLoading,
+		countQueryLoading: geographiesGrampanchayatCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
@@ -115,23 +117,6 @@ function GeographiesGrampanchayatTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
-
-	// let {
-	// 	changePage: changeDeliverableCategoryUnitPage,
-	// 	count: deliverableCategoryUnitCount,
-	// 	queryData: deliverableCategoryUnitList,
-	// 	queryLoading: deliverableCategoryUnitLoading,
-	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
-	// 	queryRefetch: deliverableCategoryUnitRefetch,
-	// 	countRefetch: deliverableCategoryUnitCountRefetch,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-	// 	countFilter: nestedTableQueryFilter,
-	// 	query: GET_CATEGORY_UNIT,
-	// 	queryFilter: nestedTableQueryFilter,
-	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-	// 	fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	// });
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
@@ -145,30 +130,24 @@ function GeographiesGrampanchayatTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
+	const [getGrampanchayat, grampanchayatResponse] = useLazyQuery(GET_GRAMPANCHAYAT_DATA);
 
-	// const deliverableCategoryUnitListMemoized = useMemo(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			?.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element?.deliverable_units_org
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
+	useEffect(() => {
+		getGrampanchayat();
+	}, []);
+
+	const geographiesGrampanchayatList = grampanchayatResponse?.data?.grampanchayats || [];
+
+	console.log("geographiesGrampanchayatList", geographiesGrampanchayatList);
 
 	return (
-		// <DeliverableUnitTableContainer
 		<GeographiesGrampanchayatTableContainer
-			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
+			geographiesGrampanchayatList={geographiesGrampanchayatList}
+			// geographiesGrampanchayatList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
-			changePage={changeDeliverableUnitPage}
-			loading={deliverableUnitLoading || deliverableUnitCountLoading}
-			count={deliverableUnitCount}
+			changePage={changeGeographiesGrampanchayatPage}
+			loading={geographiesGrampanchayatLoading || geographiesGrampanchayatCountLoading}
+			count={geographiesGrampanchayatCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

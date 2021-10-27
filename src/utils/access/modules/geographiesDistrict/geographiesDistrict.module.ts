@@ -2,7 +2,7 @@ import { MODULE_CODES } from "../../moduleCodes";
 import { GEOGRAPHIES_DISTRICT_ACTIONS } from "./actions";
 // import { DELIVERABLE_CATEGORY_ACTIONS } from "./actions";
 
-export const DELIVERABLE_CATEGORY_MODULE = {
+export const GEOGRAPHIES_DISTRICT_MODULE = {
 	name: "Geographies district",
 	code: MODULE_CODES.DELIVERABLE_CATEGORY,
 	actionsAvailable: {

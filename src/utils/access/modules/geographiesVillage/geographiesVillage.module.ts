@@ -1,5 +1,6 @@
 import { MODULE_CODES } from "../../moduleCodes";
 import { GEOGRAPHIES_VILLAGE_ACTIONS } from "./actions";
+
 export const GEOGRAPHIES_VILLAGE_MODULE = {
 	name: "Geographies Village",
 	code: MODULE_CODES.DELIVERABLE_CATEGORY,

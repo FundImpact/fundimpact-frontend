@@ -47,6 +47,12 @@ import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
 } from "../../models/geographies/geographiesGrampanchayat";
+import {
+	CREATE_GEOGRAPHIES_GRAMPANCHAYAT,
+	DELETE_GEOGRAPHIES_GRAMPANCHAYAT,
+	GET_GRAMPANCHAYAT_DATA,
+	UPDATE_GEOGRAPHIES_GRAMPANCHAYAT,
+} from "../../graphql/Geographies/GeographiesGrampanchayat";
 
 function getInitialValues(props: GoegraphiesGrampanchayatProps) {
 	// function getInitialValues(props: DeliverableUnitProps) {
@@ -55,17 +61,17 @@ function getInitialValues(props: GoegraphiesGrampanchayatProps) {
 	return {
 		name: "",
 		code: "",
-		description: "",
-		unit_type: "",
-		prefix_label: "",
-		suffix_label: "",
-		organization: props.organization,
+		district: "",
+		// unit_type: "",
+		// prefix_label: "",
+		// suffix_label: "",
+		// organization: props.organization,
 	};
 }
 
 interface IError extends Omit<Partial<IGeographiesGrampanchayat>, "GeographiesGrampanchayat"> {
 	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
-	deliverableCategory?: string;
+	GeographiesGrampanchayat?: string;
 }
 
 function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
@@ -75,20 +81,20 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
-		onCompleted(data) {
-			// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-		},
-	});
-
-	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_DELIVERABLE_UNIT_ORG,
+	const [createGrampanchayat, { loading: createGrampanchayatLoading }] = useMutation(
+		CREATE_GEOGRAPHIES_GRAMPANCHAYAT,
 		{
 			onCompleted(data) {
-				// createCategoryUnitHelper(data.updateDeliverableUnitOrg.id); // deliverable unit id
+				// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
 			},
 		}
 	);
+
+	const [updateDeliverableUnit, { loading: updatingGeographiesGrampanchayat }] = useMutation(
+		UPDATE_GEOGRAPHIES_GRAMPANCHAYAT
+	);
+
+	const [deleteGeographiesGrampanchayat] = useMutation(DELETE_GEOGRAPHIES_GRAMPANCHAYAT);
 
 	let initialValues: IGeographiesGrampanchayat = getInitialValues(props);
 	// let initialValues: IDeliverableUnit = getInitialValues(props);
@@ -98,8 +104,8 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 		// setDeliverableCategory(value.deliverableCategory || []);
 		// delete value.deliverableCategory;
 		try {
-			await createUnit({
-				variables: { input: value },
+			await createGrampanchayat({
+				variables: { input: { data: value } },
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -164,7 +170,7 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 				},
 				refetchQueries: [
 					{
-						query: GET_DELIVERABLE_UNIT_BY_ORG,
+						query: GET_GRAMPANCHAYAT_DATA,
 						variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
@@ -180,28 +186,19 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesGrampanchayat) => {
-		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
-			const submittedValue = Object.assign({}, value);
-			const id = submittedValue.id;
-			// let submittedDeliverableCategory: string[] = submittedValue?.deliverableCategory || [];
-			// const newDeliverableCategories = getNewDeliverableCategories({
-			// 	deliverableCategories: submittedDeliverableCategory,
-			// 	oldDeliverableCategories:
-			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList?.map(
-			// 			(
-			// 				deliverableCategoryUnit: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]
-			// 			) => deliverableCategoryUnit.deliverable_category_org.id
-			// 		) || [],
-			// });
-			// setDeliverableCategory(newDeliverableCategories);
+			const id = value.id;
 
-			delete submittedValue.id;
+			delete value.id;
 			// delete submittedValue.deliverableCategory;
 			await updateDeliverableUnit({
 				variables: {
-					id,
-					input: submittedValue,
+					input: {
+						where: {
+							id: id?.toString(),
+						},
+						data: value,
+					},
 				},
 			});
 			// //remove newDeliverableCategories
@@ -227,36 +224,42 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.organization) {
-			errors.organization = "Organization is required";
-		}
+		// if (!values.organization) {
+		// 	errors.organization = "Organization is required";
+		// }
 		return errors;
 	};
 
 	const onDelete = async () => {
 		try {
-			const deliverableUnitValues = { ...initialValues };
-			delete deliverableUnitValues["id"];
-			// delete deliverableUnitValues["deliverableCategory"];
-			await updateDeliverableUnit({
+			deleteGeographiesGrampanchayat({
 				variables: {
-					id: initialValues?.id,
 					input: {
-						deleted: true,
-						...deliverableUnitValues,
-					},
-				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-						variables: {
-							filter: {
-								organization: dashboardData?.organization?.id,
-							},
+						where: {
+							id: initialValues.id,
 						},
 					},
-				],
+				},
 			});
+			// await updateDeliverableUnit({
+			// 	variables: {
+			// 		id: initialValues?.id,
+			// 		input: {
+			// 			deleted: true,
+			// 			...deliverableUnitValues,
+			// 		},
+			// 	},
+			// 	refetchQueries: [
+			// 		{
+			// 			query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+			// 			variables: {
+			// 				filter: {
+			// 					organization: dashboardData?.organization?.id,
+			// 				},
+			// 			},
+			// 		},
+			// 	],
+			// });
 			notificationDispatch(setSuccessNotification("Gegraphies Grampanchayat Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
@@ -298,7 +301,7 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
-				loading={createUnitLoading || updatingDeliverableUnit}
+				loading={createGrampanchayatLoading || updatingGeographiesGrampanchayat}
 			>
 				<CommonForm
 					{...{

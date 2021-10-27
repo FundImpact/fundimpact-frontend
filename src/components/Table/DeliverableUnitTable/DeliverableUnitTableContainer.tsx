@@ -133,6 +133,8 @@ function DeliverableUnitTableContainer({
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
 
+	console.log("deliverableCategoryFindAccess", deliverableCategoryFindAccess);
+
 	return (
 		<DeliverableUnitTableView
 			openDialogs={openDialogs}

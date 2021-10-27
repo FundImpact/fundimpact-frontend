@@ -43,52 +43,58 @@ import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMess
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
-	GoegraphiesVillageProps,
+	GeographiesVillageProps,
 	IGeographiesVillage,
 	IGeographiesVillageData,
 } from "../../models/geographies/geographiesVillage";
+import {
+	CREATE_GEOGRAPHIES_VILLAGE,
+	DELETE_GEOGRAPHIES_VILLAGE,
+	GET_VILLAGE_DATA,
+	UPDATE_GEOGRAPHIES_VILLAGE,
+} from "../../graphql/Geographies/GeographiesVillage";
 
-function getInitialValues(props: GoegraphiesVillageProps) {
+function getInitialValues(props: GeographiesVillageProps) {
 	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		code: "",
-		description: "",
-		unit_type: "",
-		prefix_label: "",
-		suffix_label: "",
-		organization: props.organization,
+		block: "",
+		// unit_type: "",
+		// prefix_label: "",
+		// suffix_label: "",
+		// organization: props.organization,
 	};
 }
 
 interface IError extends Omit<Partial<IGeographiesVillage>, "GeographiesVillage"> {
 	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
-	deliverableCategory?: string;
+	GeographiesVillage?: string;
 }
 
-function GeographiesVillage(props: GoegraphiesVillageProps) {
+function GeographiesVillage(props: GeographiesVillageProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
-		onCompleted(data) {
-			// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-		},
-	});
-
-	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_DELIVERABLE_UNIT_ORG,
+	const [createVillage, { loading: createGeographiesLoading }] = useMutation(
+		CREATE_GEOGRAPHIES_VILLAGE,
 		{
 			onCompleted(data) {
-				// createCategoryUnitHelper(data.updateDeliverableUnitOrg.id); // deliverable unit id
+				// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
 			},
 		}
 	);
+
+	const [updateGeographiesVillage, { loading: updatingGeographiesVillge }] = useMutation(
+		UPDATE_GEOGRAPHIES_VILLAGE
+	);
+
+	const [deleteGeographiesVillage] = useMutation(DELETE_GEOGRAPHIES_VILLAGE);
 
 	let initialValues: IGeographiesVillage = getInitialValues(props);
 	// let initialValues: IDeliverableUnit = getInitialValues(props);
@@ -98,8 +104,8 @@ function GeographiesVillage(props: GoegraphiesVillageProps) {
 		// setDeliverableCategory(value.deliverableCategory || []);
 		// delete value.deliverableCategory;
 		try {
-			await createUnit({
-				variables: { input: value },
+			await createVillage({
+				variables: { input: { data: value } },
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -164,7 +170,7 @@ function GeographiesVillage(props: GoegraphiesVillageProps) {
 				},
 				refetchQueries: [
 					{
-						query: GET_DELIVERABLE_UNIT_BY_ORG,
+						query: GET_VILLAGE_DATA,
 						variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
@@ -178,28 +184,18 @@ function GeographiesVillage(props: GoegraphiesVillageProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesVillage) => {
-		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
-			const submittedValue = Object.assign({}, value);
-			const id = submittedValue.id;
-			// let submittedDeliverableCategory: string[] = submittedValue?.deliverableCategory || [];
-			// const newDeliverableCategories = getNewDeliverableCategories({
-			// 	deliverableCategories: submittedDeliverableCategory,
-			// 	oldDeliverableCategories:
-			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList?.map(
-			// 			(
-			// 				deliverableCategoryUnit: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]
-			// 			) => deliverableCategoryUnit.deliverable_category_org.id
-			// 		) || [],
-			// });
-			// setDeliverableCategory(newDeliverableCategories);
+			const id = value.id;
 
-			delete submittedValue.id;
-			// delete submittedValue.deliverableCategory;
-			await updateDeliverableUnit({
+			delete value.id;
+			await updateGeographiesVillage({
 				variables: {
-					id,
-					input: submittedValue,
+					input: {
+						where: {
+							id: id?.toString(),
+						},
+						data: value,
+					},
 				},
 			});
 			// //remove newDeliverableCategories
@@ -209,7 +205,7 @@ function GeographiesVillage(props: GoegraphiesVillageProps) {
 			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList || [],
 			// 	submittedDeliverableCategory,
 			// });
-			notificationDispatch(setSuccessNotification("Geographies Village updation created !"));
+			notificationDispatch(setSuccessNotification("Geographies Village updated !"));
 			onCancel();
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
@@ -223,36 +219,42 @@ function GeographiesVillage(props: GoegraphiesVillageProps) {
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
-		if (!values.organization) {
-			errors.organization = "Organization is required";
-		}
+		// if (!values.organization) {
+		// 	errors.organization = "Organization is required";
+		// }
 		return errors;
 	};
 
 	const onDelete = async () => {
 		try {
-			const deliverableUnitValues = { ...initialValues };
-			delete deliverableUnitValues["id"];
-			// delete deliverableUnitValues["deliverableCategory"];
-			await updateDeliverableUnit({
+			deleteGeographiesVillage({
 				variables: {
-					id: initialValues?.id,
 					input: {
-						deleted: true,
-						...deliverableUnitValues,
-					},
-				},
-				refetchQueries: [
-					{
-						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-						variables: {
-							filter: {
-								organization: dashboardData?.organization?.id,
-							},
+						where: {
+							id: initialValues.id,
 						},
 					},
-				],
+				},
 			});
+			// await updateGeographiesVillage({
+			// 	variables: {
+			// 		id: initialValues?.id,
+			// 		input: {
+			// 			deleted: true,
+			// 			...deliverableUnitValues,
+			// 		},
+			// 	},
+			// 	refetchQueries: [
+			// 		{
+			// 			query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+			// 			variables: {
+			// 				filter: {
+			// 					organization: dashboardData?.organization?.id,
+			// 				},
+			// 			},
+			// 		},
+			// 	],
+			// });
 			notificationDispatch(setSuccessNotification("Gegraphies Village Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
@@ -294,7 +296,7 @@ function GeographiesVillage(props: GoegraphiesVillageProps) {
 				project={""}
 				open={formIsOpen}
 				handleClose={onCancel}
-				loading={createUnitLoading || updatingDeliverableUnit}
+				loading={createGeographiesLoading || updatingGeographiesVillge}
 			>
 				<CommonForm
 					{...{
