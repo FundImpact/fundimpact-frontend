@@ -47,6 +47,18 @@ export const sidebarList: {
 				userAccess: true,
 			},
 			{
+				to: "categories",
+				dataTestId: "categories-link",
+				title: "Categories",
+				userAccess: true,
+			},
+			{
+				to: "units",
+				dataTestId: "units-link",
+				title: "Units",
+				userAccess: true,
+			},
+			{
 				to: "impact",
 				dataTestId: "impact-category-link",
 				title: "Impact Categories And Units",
@@ -56,6 +68,12 @@ export const sidebarList: {
 				to: "deliverable",
 				dataTestId: "deliverable-category-link",
 				title: "Deliverable Categories And Units",
+				userAccess: true,
+			},
+			{
+				to: "georegions",
+				dataTestId: "geo-regions-link",
+				title: "Geo Regions",
 				userAccess: true,
 			},
 			{

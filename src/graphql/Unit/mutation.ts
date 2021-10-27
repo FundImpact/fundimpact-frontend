@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_YEAR_TAG = gql`
+export const CREATE_UNIT = gql`
 	mutation createYearTag($input: createYearTagInput) {
 		createYearTag(input: $input) {
 			yearTag {
@@ -10,7 +10,7 @@ export const CREATE_YEAR_TAG = gql`
 	}
 `;
 
-export const DELETE_YEAR_TAG = gql`
+export const DELETE_UNIT = gql`
 	mutation deleteYearTag($input: deleteYearTagInput) {
 		deleteYearTag(input: $input) {
 			yearTag {
@@ -21,7 +21,7 @@ export const DELETE_YEAR_TAG = gql`
 	}
 `;
 
-export const UPDATE_YEAR_TAG = gql`
+export const UPDATE_UNIT = gql`
 	mutation updateYearTag($input: updateYearTagInput) {
 		updateYearTag(input: $input) {
 			yearTag {

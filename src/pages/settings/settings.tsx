@@ -31,6 +31,10 @@ import IndividualContainer from "./Individual";
 import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import YearTags from "./YearTags";
+import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
+import Categories from "./Categories";
+import Units from "./Units";
+import GeoRegions from "./GeoRegions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -129,10 +133,14 @@ export default function SettingContainer() {
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+
 	const organizationFindAccess = userHasAccess(
 		MODULE_CODES.ORGANIZATION,
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
+
+	const yearTagFindAccess = userHasAccess(MODULE_CODES.YEAR_TAG, YEARTAG_ACTIONS.FIND_YEAR_TAG);
+
 	const getDefaultRoute = () => {
 		if (organizationEditAccess) {
 			return <Navigate to="organization" />;
@@ -204,6 +212,12 @@ export default function SettingContainer() {
 							element={<BudgetCategory />}
 						/>
 						<PrivateRoute
+							userAccess={impactCategoryFindAccess || deliverableCategoryFindAccess}
+							path="categories"
+							element={<Categories />}
+						/>
+						<PrivateRoute userAccess={true} path="units" element={<Units />} />
+						<PrivateRoute
 							userAccess={
 								impactCategoryFindAccess ||
 								impactUnitFindAccess ||
@@ -264,9 +278,14 @@ export default function SettingContainer() {
 							path="tally"
 						/>
 						<PrivateRoute
-							userAccess={organizationEditAccess}
+							userAccess={yearTagFindAccess}
 							element={<YearTags />}
 							path="yeartags"
+						/>
+						<PrivateRoute
+							userAccess={true} //To be changed
+							element={<GeoRegions />}
+							path="georegions"
 						/>
 					</Routes>
 				</Grid>

@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AddButton from "../../../components/Dasboard/AddButton";
-// import Donor from "../../../components/Donor";
 import YearTagTable from "../../../components/Table/YearTag";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
 import { Box, Grid, Typography, Avatar, Chip } from "@material-ui/core";
 import FilterList from "../../../components/FilterList";
-import { donorInputFields } from "./inputFields.json";
-import { GET_COUNTRY_LIST } from "../../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import { removeFilterListObjectElements } from "../../../utils/filterList";
+import { yeartagInputFields } from "./inputFields.json";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { DONOR_ACTIONS } from "../../../utils/access/modules/donor/actions";
 import YearTag from "../../../components/YearTag";
+import { YEARTAG_ACTIONS } from "../../../utils/access/modules/yearTag/actions";
 
 const chipArray = ({
 	arr,
@@ -104,25 +100,25 @@ const YearTags = () => {
 		country: [],
 	});
 
-	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
-	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+	const yearTagsFindAccess = userHasAccess(MODULE_CODES.YEAR_TAG, YEARTAG_ACTIONS.FIND_YEAR_TAG);
+	// const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
 
-	const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
+	// const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
 
-	const removeFilterListElements = (key: string, index?: number) =>
-		setTableFilterList((filterListObject) =>
-			removeFilterListObjectElements({ filterListObject, key, index })
-		);
+	// const removeFilterListElements = (key: string, index?: number) =>
+	// 	setTableFilterList((filterListObject) =>
+	// 		removeFilterListObjectElements({ filterListObject, key, index })
+	// 	);
 
-	// donorInputFields[3].optionsArray = countries?.countries || [];
+	// yeartagInputFields[3].optionsArray = countries?.countries || [];
 
-	if (!Object.keys(countryHash).length && countries?.countries) {
-		countryHash = mapIdToName(countries?.countries, countryHash);
-	}
+	// if (!Object.keys(countryHash).length && countries?.countries) {
+	// 	countryHash = mapIdToName(countries?.countries, countryHash);
+	// }
 
-	useEffect(() => {
-		getCountryList();
-	}, [getCountryList]);
+	// useEffect(() => {
+	// 	getCountryList();
+	// }, [getCountryList]);
 
 	return (
 		<Box p={2}>
@@ -140,11 +136,10 @@ const YearTags = () => {
 				</Grid>
 				<Grid item xs={1}>
 					<Box mt={2}>
-						{/* Year tag find access */}
-						{true && (
+						{yearTagsFindAccess && (
 							<FilterList
 								setFilterList={setTableFilterList}
-								inputFields={donorInputFields}
+								inputFields={yeartagInputFields}
 								initialValues={{
 									label: "",
 									type: "",
@@ -156,7 +151,7 @@ const YearTags = () => {
 						)}
 					</Box>
 				</Grid>
-				<Grid item xs={12}>
+				{/* <Grid item xs={12}>
 					<Box my={2} display="flex">
 						{Object.entries(tableFilterList).map((tableFilterListObjectKeyValuePair) =>
 							createChipArray({
@@ -165,14 +160,12 @@ const YearTags = () => {
 							})
 						)}
 					</Box>
-				</Grid>
+				</Grid> */}
 			</Grid>
 
-			{/* Year Tags find access */}
-			{true && <YearTagTable tableFilterList={tableFilterList} />}
+			{yearTagsFindAccess && <YearTagTable tableFilterList={tableFilterList} />}
 
-			{/* Year Tags create access */}
-			{true && (
+			{yearTagsFindAccess && (
 				<AddButton
 					createButtons={[]}
 					buttonAction={{
