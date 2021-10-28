@@ -38,6 +38,7 @@ import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
 import GeoRegions from "./geoRegions";
+import GeoRegionsMasterContainer from "./geoRegions";
 // import GeoRegions from "./GeoRegions";
 
 interface IPrivateRouterProps extends RouteProps {
@@ -294,10 +295,16 @@ export default function SettingContainer() {
 							element={<YearTags />}
 							path="yeartags"
 						/>
-						<PrivateRoute
+						{/* <PrivateRoute
 							userAccess={true} //To be changed
-							element={<GeoRegions />}
+							element={<GeoRegionsMasterContainer />}
+							// element={<GeoRegions />}
 							path="georegions"
+						/> */}
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<GeoRegionsContainer />}
+							path="goeRegions"
 						/>
 					</Routes>
 				</Grid>

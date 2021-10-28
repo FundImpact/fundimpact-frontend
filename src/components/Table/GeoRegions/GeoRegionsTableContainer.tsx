@@ -59,6 +59,8 @@ function GeoRegionsTableContainer({
 		);
 	};
 
+	console.log("geoRegionsList", geoRegionsList);
+
 	return (
 		<GeoRegionsTableView
 			// <BudgetCategoryTableView
