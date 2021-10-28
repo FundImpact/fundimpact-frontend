@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -14,6 +14,7 @@ import { addCategoryForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
 import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "../../graphql/Category/mutation";
+import { GET_PROJECTS } from "../../graphql";
 
 const defaultFormValues: ICategory = {
 	name: "",
@@ -35,6 +36,17 @@ function Category(props: ICategoryProps) {
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
 
 	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
+	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	useEffect(() => {
+		if (projectsList) {
+			addCategoryForm[5].optionsArray = projectsList.orgProject;
+		}
+	}, [projectsList]);
 
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
@@ -95,11 +107,11 @@ function Category(props: ICategoryProps) {
 		// }
 	};
 
-	addCategoryForm[3].getInputValue = (value: boolean) => {
+	addCategoryForm[4].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);
 	};
 
-	currentIsProject ? (addCategoryForm[4].hidden = false) : (addCategoryForm[4].hidden = true);
+	currentIsProject ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
 
 	// useEffect(() => {
 	// 	console.log("IsProject: ", currentIsProject);

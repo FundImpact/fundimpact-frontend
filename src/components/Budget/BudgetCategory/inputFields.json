@@ -26,6 +26,33 @@
 			"size": 12,
 			"multiline": true,
 			"rows": 3
+		},
+		{
+			"name": "is_project",
+			"id": "is_project",
+			"dataTestId": "isProjectTest",
+			"testId": "isProjectInput",
+			"label": "Is Project",
+			"getInputValue": {},
+			"disabled": false,
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "project",
+			"id": "project",
+			"dataTestId": "categoryProject",
+			"testId": "categoryProjectInput",
+			"label": "Project",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"hidden": true,
+			"size": 6
 		}
 	]
 }

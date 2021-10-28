@@ -24,7 +24,21 @@
 			"dataTestId": "categoryDescription",
 			"testId": "categoryDescriptionInput",
 			"label": "Description",
-			"size": 12
+			"size": 6
+		},
+		{
+			"name": "unit_type",
+			"label": "Unit Type",
+			"size": 6,
+			"testId": "unit_typeOption",
+			"dataTestId": "unit_type",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"inputType": "select",
+			"displayName": "country",
+			"required": true
 		},
 		{
 			"name": "is_project",
