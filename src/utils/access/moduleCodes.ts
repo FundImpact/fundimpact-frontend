@@ -48,4 +48,5 @@ export enum MODULE_CODES {
 	CONTACT = "t4d-contact",
 	ADDRESS = "t4d-address",
 	INDIVIDUAL = "t4d-individual",
+	YEAR_TAG = "year-tag",
 }

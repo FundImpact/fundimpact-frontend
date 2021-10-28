@@ -207,15 +207,15 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		console.error(error);
 	}
 
-	let cachedOrganizationDonors: IGET_DONOR | null = null;
+	// let cachedOrganizationDonors: IGET_DONOR | null = null;
 	try {
-		cachedOrganizationDonors = apolloClient.readQuery<IGET_DONOR>(
-			{
-				query: GET_ORG_DONOR,
-				variables: { filter: { organization: DashBoardData?.organization?.id } },
-			},
-			true
-		);
+		// cachedOrganizationDonors = apolloClient.readQuery<IGET_DONOR>(
+		// 	{
+		// 		query: GET_ORG_DONOR,
+		// 		variables: { filter: { organization: DashBoardData?.organization?.id } },
+		// 	},
+		// 	true
+		// );
 	} catch (error) {
 		console.error(error);
 	}

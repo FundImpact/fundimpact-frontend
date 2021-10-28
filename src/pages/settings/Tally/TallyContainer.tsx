@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, FormControlLabel, RadioGroup, Radio } from "@material-ui/core";
-import FIDialog from "../../../components/Dialog/Dialog";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { useLazyQuery } from "@apollo/client";
+import FIDialog from "../../../components/Dialog/Dialog";
 import { donorForm, projectForm, targetForm, budgetCategoryForm } from "./inputField.json";
 import Tallyforms from "../../../components/Forms/Tally";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
+import { GET_PROJECTS } from "../../../graphql";
+import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
+import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/Deliverable/target";
+import { GET_PROJ_DONORS } from "../../../graphql/project";
+import { IProjectDonor } from "../../../models/project/project";
 
 const useStyle = makeStyles((theme: Theme) =>
 	createStyles({
@@ -50,8 +57,66 @@ const getInitialValues = (keyword: string) => {
 const TallyContainer = () => {
 	const classes = useStyle();
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
+	const [currentProject, setCurrentProject] = useState<null | string | number>(null);
+	const [currentBudgetTarget, setCurrentBudgetTarget] = useState<null | string | number>(null);
 	const [globalSelect, setGlobalSelect] = useState<string>("donor");
 	const [donorSelect, setDonorSelect] = useState<string>("targetsAndSubTargets");
+
+	const [getProjects, projectsResponse] = useLazyQuery(GET_PROJECTS);
+	const [getDonors, donorsResponse] = useLazyQuery(GET_PROJ_DONORS);
+	const [getBudgetTarget, budgetTargetResponse] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
+	const [getBudgetSubTarget, budgetSubTargetResponse] = useLazyQuery(GET_BUDGET_SUB_TARGETS);
+
+	console.log("donorsResponse: ", donorsResponse.data);
+
+	useEffect(() => {
+		if (globalSelect === "donor") {
+			// getProjects();
+			// if (currentProject) {
+			// 	getDonors({
+			// 		variables: {
+			// 			filter: {
+			// 				project: currentProject,
+			// 			},
+			// 		},
+			// 	});
+			// }
+			getDonors();
+
+			if (donorSelect === "targetsAndSubTargets") {
+				donorForm[4].optionsArray = [];
+				getBudgetTarget();
+				if (currentBudgetTarget) {
+					getBudgetSubTarget({
+						variables: {
+							filter: {
+								budget_targets_project: currentBudgetTarget,
+							},
+						},
+					});
+				}
+			}
+
+			if (donorSelect === "projectBudgetCategory") {
+				donorForm[2].optionsArray = [];
+				donorForm[3].optionsArray = [];
+				if (currentProject) {
+					getBudgetTarget({
+						variables: {
+							filter: {
+								project_with_budget_targets: {
+									project: currentProject,
+								},
+							},
+						},
+					});
+				}
+			}
+		}
+
+		if (globalSelect === "project") {
+		}
+	}, [globalSelect, donorSelect, currentProject, currentBudgetTarget]);
 
 	const handleCloseDialog = () => {
 		setOpenDialog(false);
@@ -125,6 +190,68 @@ const TallyContainer = () => {
 		projectForm[2].hidden = true;
 		projectForm[3].hidden = false;
 	}
+
+	if (donorsResponse.data) {
+		donorForm[0].optionsArray = donorsResponse.data.projectDonors.map(
+			(donor: IProjectDonor) => donor.donor
+		);
+
+		donorForm[1].optionsArray = donorsResponse.data.projectDonors.map(
+			(donor: IProjectDonor) => donor.project
+		);
+	}
+
+	// if (projectsResponse.data) {
+	// 	donorForm[0].optionsArray = donorsResponse.data.projectDonors.map(
+	// 		(donor: IProjectDonor) => donor.donor
+	// 	);
+
+	// 	donorForm[1].optionsArray = donorsResponse.data.projectDonors.map(
+	// 		(donor: IProjectDonor) => donor.project
+	// 	);
+	// }
+
+	if (budgetTargetResponse.data) {
+		donorForm[2].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
+		donorForm[4].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
+
+		projectForm[1].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
+		projectForm[3].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
+
+		targetForm[0].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
+
+		budgetCategoryForm[0].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
+	}
+
+	if (budgetSubTargetResponse.data) {
+		donorForm[3].optionsArray = budgetSubTargetResponse.data.budgetSubTargets;
+
+		projectForm[2].optionsArray = budgetSubTargetResponse.data.budgetSubTargets;
+	}
+
+	if (projectsResponse.data) {
+		projectForm[0].optionsArray = projectsResponse.data.orgProject;
+	}
+
+	// donorForm[0].getInputValue = (projectId: string) => {
+	// 	setCurrentProject(projectId);
+	// };
+
+	projectForm[0].getInputValue = (projectId: string) => {
+		setCurrentProject(projectId);
+	};
+
+	donorForm[2].getInputValue = (targetId: string) => {
+		setCurrentBudgetTarget(targetId);
+	};
+
+	projectForm[1].getInputValue = (targetId: string) => {
+		setCurrentBudgetTarget(targetId);
+	};
+
+	// useEffect(() => {
+	// 	console.log("currentBudgetTarget: ", currentBudgetTarget);
+	// }, [currentBudgetTarget]);
 
 	return (
 		<Box p={2}>

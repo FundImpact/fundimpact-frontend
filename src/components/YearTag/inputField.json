@@ -1,0 +1,48 @@
+{
+	"addYearTagForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "yearTagName",
+			"testId": "yearTagName",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "type",
+			"label": "Type",
+			"size": 6,
+			"testId": "yearTagTypeOption",
+			"dataTestId": "yearTagType",
+			"optionsArray": [
+				{ "id": "annual", "name": "Annual" },
+				{ "id": "financial", "name": "Financial" }
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined",
+			"inputType": "select",
+			"displayName": "country",
+			"required": true
+		},
+		{
+			"name": "start_date",
+			"id": "start_date",
+			"dataTestId": "yearTagStartDate",
+			"testId": "yearTagStartDateInput",
+			"label": "Start Date",
+			"type": "date",
+			"size": 6
+		},
+		{
+			"name": "end_date",
+			"id": "end_date",
+			"dataTestId": "yearTagEndDate",
+			"testId": "yearTagEndDateInput",
+			"label": "End Date",
+			"type": "date",
+			"size": 6
+		}
+	]
+}

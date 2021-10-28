@@ -396,7 +396,6 @@ function SubTarget(props: SubTargetFormProps) {
 		} else if (Object.values(DELIVERABLE_TYPE).includes(props.formType)) {
 			let targetOptions = getTargetOptions();
 			let target = targetOptions.find((elem: any) => elem.id === targetId);
-			console.log("target", target);
 			setIsQualitativeParent(target?.is_qualitative || false);
 			setTargetValueOptions(target?.value_qualitative_option?.options || []);
 		}

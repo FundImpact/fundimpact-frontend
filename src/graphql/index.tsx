@@ -47,6 +47,7 @@ export const GET_WORKSPACES_BY_ORG = gql`
 		}
 	}
 `;
+
 export const GET_WORKSPACES = gql`
 	query getWorkspaceAndProject {
 		orgWorkspaces {
@@ -120,6 +121,7 @@ export const GET_FINANCIAL_YEARS_ORG_LIST_BY_ORG = gql`
 		}
 	}
 `;
+
 export const GET_FINANCIAL_YEARS_DONOR_LIST_BY_DONOR = gql`
 	query getfinancialYearsDonorListByDonor($filter: JSON) {
 		financialYearsDonorList(where: $filter) {
@@ -140,6 +142,7 @@ export const GET_ANNUAL_YEAR_LIST = gql`
 		}
 	}
 `;
+
 export const GET_ANNUAL_YEARS = gql`
 	query {
 		annualYears {
@@ -230,6 +233,7 @@ export const GET_GRANT_PERIOD = gql`
 		}
 	}
 `;
+
 export const GET_COUNTRY_LIST = gql`
 	query {
 		countries {

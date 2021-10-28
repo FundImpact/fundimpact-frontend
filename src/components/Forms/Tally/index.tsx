@@ -1,2 +1,2 @@
-import DonorsForm from "./DonorsForm";
-export default DonorsForm;
+import TallyForm from "./TallyForm";
+export default TallyForm;
