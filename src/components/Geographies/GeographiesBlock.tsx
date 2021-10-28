@@ -10,14 +10,8 @@ import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-// import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-// import {
-// 	CREATE_CATEGORY_UNIT,
-// 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-// 	GET_CATEGORY_UNIT,
-// 	UPDATE_DELIVERABLE_CATEGPRY_UNIT,
-// } from "../../graphql/Deliverable/categoryUnit";
+
 import {
 	CREATE_DELIVERABLE_UNIT,
 	UPDATE_DELIVERABLE_UNIT_ORG,
@@ -25,7 +19,6 @@ import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 } from "../../graphql/Deliverable/unit";
 import { GEOGRAPHIES_ACTIONS } from "./constants";
-// import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesBlockForm } from "./inputField.json";
@@ -38,8 +31,7 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-// import Deliverable from "./Deliverable";
-// import { useLocation } from "react-router";
+
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
@@ -70,7 +62,6 @@ function getInitialValues(props: GoegraphiesBlockProps) {
 }
 
 interface IError extends Omit<Partial<IGeographiesBlock>, "geographiesBlock"> {
-	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	geographiesBlock?: string;
 }
 
@@ -82,16 +73,19 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 	const onCancel = props.handleClose;
 
 	const [createBlock, { loading: createBlockLoading }] = useMutation(CREATE_GEOGRAPHIES_BLOCK, {
-		onCompleted(data) {
-			// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-		},
+		refetchQueries: [{ query: GET_BLOCK_DATA }],
 	});
 
 	const [updateGeographiesBlock, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_GEOGRAPHIES_BLOCK
+		UPDATE_GEOGRAPHIES_BLOCK,
+		{
+			refetchQueries: [{ query: GET_BLOCK_DATA }],
+		}
 	);
 
-	const [deleteGeographiesBlock] = useMutation(DELETE_GEOGRAPHIES_BLOCK);
+	const [deleteGeographiesBlock] = useMutation(DELETE_GEOGRAPHIES_BLOCK, {
+		refetchQueries: [{ query: GET_BLOCK_DATA }],
+	});
 
 	let initialValues: IGeographiesBlock = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesBlock) => {
@@ -128,7 +122,6 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 							limit = count.deliverableUnitOrgCount;
 						}
 						const dataRead = await store.readQuery<IGetGeographieState>({
-							// const dataRead = await store.readQuery<IGetDeliverablUnit>({
 							query: GET_DELIVERABLE_UNIT_BY_ORG,
 							variables: {
 								filter: {
@@ -165,7 +158,7 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 				refetchQueries: [
 					{
 						query: GET_BLOCK_DATA,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						// variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
 			});
@@ -192,13 +185,6 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 					},
 				},
 			});
-			// //remove newDeliverableCategories
-			// await changeDeliverableCategoryUnitStatus({
-			// 	updateDeliverableCategoryUnit,
-			// 	deliverableCategoryUnitList:
-			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList || [],
-			// 	submittedDeliverableCategory,
-			// });
 			notificationDispatch(setSuccessNotification("Geographies Block updation created !"));
 			onCancel();
 		} catch (err: any) {
@@ -208,7 +194,6 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 	};
 
 	const validate = (values: IGeographiesBlock) => {
-		// const validate = (values: IDeliverableUnit) => {
 		let errors: IError = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
@@ -303,14 +288,6 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 						inputFields: GeographiesBlockForm,
 					}}
 				/>
-				{/* {openDeliverableCategoryDialog && (
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={openDeliverableCategoryDialog}
-						handleClose={() => setOpenDeliverableCategoryDialog(false)}
-						organization={dashboardData?.organization?.id}
-					/>
-				)} */}
 			</FormDialog>
 		</React.Fragment>
 	);

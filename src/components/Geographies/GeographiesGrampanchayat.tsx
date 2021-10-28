@@ -10,14 +10,8 @@ import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-// import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-// import {
-// 	CREATE_CATEGORY_UNIT,
-// 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-// 	GET_CATEGORY_UNIT,
-// 	UPDATE_DELIVERABLE_CATEGPRY_UNIT,
-// } from "../../graphql/Deliverable/categoryUnit";
+
 import {
 	CREATE_DELIVERABLE_UNIT,
 	UPDATE_DELIVERABLE_UNIT_ORG,
@@ -38,8 +32,6 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-// import Deliverable from "./Deliverable";
-// import { useLocation } from "react-router";
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
@@ -55,9 +47,7 @@ import {
 } from "../../graphql/Geographies/GeographiesGrampanchayat";
 
 function getInitialValues(props: GoegraphiesGrampanchayatProps) {
-	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
-	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		code: "",
@@ -70,7 +60,6 @@ function getInitialValues(props: GoegraphiesGrampanchayatProps) {
 }
 
 interface IError extends Omit<Partial<IGeographiesGrampanchayat>, "GeographiesGrampanchayat"> {
-	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	GeographiesGrampanchayat?: string;
 }
 
@@ -84,25 +73,25 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 	const [createGrampanchayat, { loading: createGrampanchayatLoading }] = useMutation(
 		CREATE_GEOGRAPHIES_GRAMPANCHAYAT,
 		{
-			onCompleted(data) {
-				// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-			},
+			refetchQueries: [{ query: GET_GRAMPANCHAYAT_DATA }],
 		}
 	);
 
 	const [updateDeliverableUnit, { loading: updatingGeographiesGrampanchayat }] = useMutation(
-		UPDATE_GEOGRAPHIES_GRAMPANCHAYAT
+		UPDATE_GEOGRAPHIES_GRAMPANCHAYAT,
+		{
+			refetchQueries: [{ query: GET_GRAMPANCHAYAT_DATA }],
+		}
 	);
 
-	const [deleteGeographiesGrampanchayat] = useMutation(DELETE_GEOGRAPHIES_GRAMPANCHAYAT);
+	const [deleteGeographiesGrampanchayat] = useMutation(DELETE_GEOGRAPHIES_GRAMPANCHAYAT, {
+		refetchQueries: [{ query: GET_GRAMPANCHAYAT_DATA }],
+	});
 
 	let initialValues: IGeographiesGrampanchayat = getInitialValues(props);
-	// let initialValues: IDeliverableUnit = getInitialValues(props);
+
 	const onCreate = async (valueSubmitted: IGeographiesGrampanchayat) => {
-		// const onCreate = async (valueSubmitted: IDeliverableUnit) => {
 		const value = Object.assign({}, valueSubmitted);
-		// setDeliverableCategory(value.deliverableCategory || []);
-		// delete value.deliverableCategory;
 		try {
 			await createGrampanchayat({
 				variables: { input: { data: value } },
@@ -171,7 +160,7 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 				refetchQueries: [
 					{
 						query: GET_GRAMPANCHAYAT_DATA,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						// variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
 			});
@@ -190,7 +179,6 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 			const id = value.id;
 
 			delete value.id;
-			// delete submittedValue.deliverableCategory;
 			await updateDeliverableUnit({
 				variables: {
 					input: {
@@ -219,7 +207,6 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 	};
 
 	const validate = (values: IGeographiesGrampanchayat) => {
-		// const validate = (values: IDeliverableUnit) => {
 		let errors: IError = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
@@ -314,14 +301,6 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 						inputFields: GeographiesGrampanchayatForm,
 					}}
 				/>
-				{/* {openDeliverableCategoryDialog && (
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={openDeliverableCategoryDialog}
-						handleClose={() => setOpenDeliverableCategoryDialog(false)}
-						organization={dashboardData?.organization?.id}
-					/>
-				)} */}
 			</FormDialog>
 		</React.Fragment>
 	);

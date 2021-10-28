@@ -1,7 +1,5 @@
 import React from "react";
 import AddButton from "../../../components/Dasboard/AddButton";
-// import DeliverableCategoryTable from "../../../components/Table/DeliverableCategoryTable";
-// import DeliverableUnitTable from "../../../components/Table/DeliverableUnitTable";
 import GeographiesStateTable from "../../../components/Table/GeographiesStateTable";
 import GeographiesGrampanchayatTable from "../../../components/Table/GeographiesGrampanchayatTable";
 import GeographiesDistrictTable from "../../../components/Table/GeographiesDistrictTable";
@@ -9,18 +7,12 @@ import GeographiesBlockTable from "../../../components/Table/GeographiesBlockTab
 import GeographiesVillageTable from "../../../components/Table/GeographiesVillageTable";
 import GeographiesCountryTable from "../../../components/Table/GeographiesCountryTable";
 import { Box, Tabs, Tab, Theme, Grid, Typography, Chip, Avatar } from "@material-ui/core";
-import DeliverableUnit from "../../../components/Deliverable/DeliverableUnit";
-import Deliverable from "../../../components/Deliverable/Deliverable";
-import { DELIVERABLE_ACTIONS } from "../../../components/Deliverable/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { makeStyles } from "@material-ui/styles";
 import { FormattedMessage } from "react-intl";
 import { useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
-import { MODULE_CODES, userHasAccess } from "../../../utils/access";
-import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
-import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import Geographies from "../../../components/Geographies/Geographies";
 import { GEOGRAPHIES_ACTIONS } from "../../../components/Geographies/constants";
 import GeographiesState from "../../../components/Geographies/GeographiesState";
@@ -82,11 +74,9 @@ const GeographiesMasterView = ({
 	value,
 	setValue,
 	geographiesCountryFilterList,
-	// deliverableCategoryFilterList,
 	deliverableUnitFilterList,
 	removeFilteListElements,
 	setGeographiesCountryFilterList,
-	// setDeliverableCategoryFilterList,
 	setDeliverableUnitFilterList,
 	deliverableCategoryFindAccess,
 	deliverableUnitFindAccess,
@@ -96,15 +86,11 @@ const GeographiesMasterView = ({
 	value: number;
 	setValue: React.Dispatch<React.SetStateAction<number>>;
 	geographiesCountryFilterList: { [key: string]: string };
-	// deliverableCategoryFilterList: { [key: string]: string };
 	deliverableUnitFilterList: { [key: string]: string };
 	removeFilteListElements: (elementToDelete: string) => void;
 	setGeographiesCountryFilterList: React.Dispatch<
 		React.SetStateAction<{ [key: string]: string }>
 	>;
-	// setDeliverableCategoryFilterList: React.Dispatch<
-	// 	React.SetStateAction<{ [key: string]: string }>
-	// >;
 	setDeliverableUnitFilterList: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 	deliverableCategoryFindAccess: boolean;
 	deliverableUnitFindAccess: boolean;
@@ -118,15 +104,10 @@ const GeographiesMasterView = ({
 		setValue(newValue);
 	};
 
-	// console.log("value", value);
-
-	// console.log("deliverableCategoryFilterList", deliverableUnitFilterList);
-
 	const tabs = [
 		{
 			label: "Country",
 			table: <GeographiesCountryTable tableFilterList={geographiesCountryFilterList} />,
-			// table: <DeliverableCategoryTable tableFilterList={deliverableCategoryFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -136,12 +117,6 @@ const GeographiesMasterView = ({
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
-					// <Deliverable
-					// 	type={DELIVERABLE_ACTIONS.CREATE}
-					// 	open={open}
-					// 	handleClose={handleClose}
-					// 	organization={dashboardData?.organization?.id}
-					// />
 				),
 			},
 			addButtonAccess: geographiesCountryCreateAccess,
@@ -150,7 +125,6 @@ const GeographiesMasterView = ({
 		},
 		{
 			label: "State",
-			// table: <DeliverableUnitTable tableFilterList={deliverableUnitFilterList} />,
 			table: <GeographiesStateTable tableFilterList={deliverableUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
@@ -161,12 +135,6 @@ const GeographiesMasterView = ({
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
-					// <DeliverableUnit
-					// 	type={DELIVERABLE_ACTIONS.CREATE}
-					// 	open={open}
-					// 	handleClose={handleClose}
-					// 	organization={dashboardData?.organization?.id}
-					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -176,7 +144,6 @@ const GeographiesMasterView = ({
 		{
 			label: "District",
 			table: <GeographiesDistrictTable tableFilterList={deliverableUnitFilterList} />,
-			// table: <DeliverableUnitTable tableFilterList={deliverableUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -186,12 +153,6 @@ const GeographiesMasterView = ({
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
-					// <DeliverableUnit
-					// 	type={DELIVERABLE_ACTIONS.CREATE}
-					// 	open={open}
-					// 	handleClose={handleClose}
-					// 	organization={dashboardData?.organization?.id}
-					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -201,7 +162,6 @@ const GeographiesMasterView = ({
 		{
 			label: "Block",
 			table: <GeographiesBlockTable tableFilterList={deliverableUnitFilterList} />,
-			// table: <DeliverableUnitTable tableFilterList={deliverableUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -211,12 +171,6 @@ const GeographiesMasterView = ({
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
-					// <DeliverableUnit
-					// 	type={DELIVERABLE_ACTIONS.CREATE}
-					// 	open={open}
-					// 	handleClose={handleClose}
-					// 	organization={dashboardData?.organization?.id}
-					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -226,7 +180,6 @@ const GeographiesMasterView = ({
 		{
 			label: "Gram Panchayat",
 			table: <GeographiesGrampanchayatTable tableFilterList={deliverableUnitFilterList} />,
-			// table: <DeliverableUnitTable tableFilterList={deliverableUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -236,12 +189,6 @@ const GeographiesMasterView = ({
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
-					// <DeliverableUnit
-					// 	type={DELIVERABLE_ACTIONS.CREATE}
-					// 	open={open}
-					// 	handleClose={handleClose}
-					// 	organization={dashboardData?.organization?.id}
-					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -251,7 +198,6 @@ const GeographiesMasterView = ({
 		{
 			label: "Village",
 			table: <GeographiesVillageTable tableFilterList={deliverableUnitFilterList} />,
-			// table: <DeliverableUnitTable tableFilterList={deliverableUnitFilterList} />,
 			createButtons: [],
 			buttonAction: {
 				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
@@ -261,12 +207,6 @@ const GeographiesMasterView = ({
 						handleClose={handleClose}
 						organization={dashboardData?.organization?.id}
 					/>
-					// <DeliverableUnit
-					// 	type={DELIVERABLE_ACTIONS.CREATE}
-					// 	open={open}
-					// 	handleClose={handleClose}
-					// 	organization={dashboardData?.organization?.id}
-					// />
 				),
 			},
 			addButtonAccess: deliverableUnitCreateAccess,
@@ -276,8 +216,6 @@ const GeographiesMasterView = ({
 	];
 
 	const intl = useIntl();
-
-	// console.log("setDeliverableCategoryFilterList", setDeliverableCategoryFilterList);
 
 	return (
 		<>
@@ -294,14 +232,12 @@ const GeographiesMasterView = ({
 										<FormattedMessage
 											description={`This text is the heding of deliverable Categories table`}
 											defaultMessage={`Geographies`}
-											// defaultMessage={`Deliverable Categories`}
 											id={`deliverableMasterPageHeading-category`}
 										/>
 									) : (
 										<FormattedMessage
 											description={`This text is the heding of deliverable Unit table`}
 											defaultMessage={`Geographies`}
-											// defaultMessage={`Deliverable Unit`}
 											id={`deliverableMasterPageHeading-unit`}
 										/>
 									))}
@@ -315,8 +251,7 @@ const GeographiesMasterView = ({
 									setFilterList={
 										value === 0
 											? setGeographiesCountryFilterList
-											: // ? setDeliverableCategoryFilterList
-											  setDeliverableUnitFilterList
+											: setDeliverableUnitFilterList
 									}
 									inputFields={
 										value === 0
@@ -331,8 +266,7 @@ const GeographiesMasterView = ({
 						<Box my={2} display="flex">
 							{(value === 0
 								? Object.entries(geographiesCountryFilterList)
-								: // ? Object.entries(deliverableCategoryFilterList)
-								  Object.entries(deliverableUnitFilterList)
+								: Object.entries(deliverableUnitFilterList)
 							).map(
 								(filterListObjectKeyValuePair, index) =>
 									filterListObjectKeyValuePair[1] && (

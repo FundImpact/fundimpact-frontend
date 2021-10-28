@@ -10,14 +10,7 @@ import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-// import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-// import {
-// 	CREATE_CATEGORY_UNIT,
-// 	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-// 	GET_CATEGORY_UNIT,
-// 	UPDATE_DELIVERABLE_CATEGPRY_UNIT,
-// } from "../../graphql/Deliverable/categoryUnit";
 import {
 	CREATE_DELIVERABLE_UNIT,
 	UPDATE_DELIVERABLE_UNIT_ORG,
@@ -25,7 +18,6 @@ import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 } from "../../graphql/Deliverable/unit";
 import { GEOGRAPHIES_ACTIONS } from "./constants";
-// import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesVillageForm } from "./inputField.json";
@@ -38,8 +30,6 @@ import {
 } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-// import Deliverable from "./Deliverable";
-// import { useLocation } from "react-router";
 import DeleteModal from "../DeleteModal";
 import { DIALOG_TYPE } from "../../models/constants";
 import {
@@ -55,9 +45,7 @@ import {
 } from "../../graphql/Geographies/GeographiesVillage";
 
 function getInitialValues(props: GeographiesVillageProps) {
-	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
-	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		code: "",
@@ -70,7 +58,6 @@ function getInitialValues(props: GeographiesVillageProps) {
 }
 
 interface IError extends Omit<Partial<IGeographiesVillage>, "GeographiesVillage"> {
-	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	GeographiesVillage?: string;
 }
 
@@ -84,25 +71,24 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 	const [createVillage, { loading: createGeographiesLoading }] = useMutation(
 		CREATE_GEOGRAPHIES_VILLAGE,
 		{
-			onCompleted(data) {
-				// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-			},
+			refetchQueries: [{ query: GET_VILLAGE_DATA }],
 		}
 	);
 
 	const [updateGeographiesVillage, { loading: updatingGeographiesVillge }] = useMutation(
-		UPDATE_GEOGRAPHIES_VILLAGE
+		UPDATE_GEOGRAPHIES_VILLAGE,
+		{
+			refetchQueries: [{ query: GET_VILLAGE_DATA }],
+		}
 	);
 
-	const [deleteGeographiesVillage] = useMutation(DELETE_GEOGRAPHIES_VILLAGE);
+	const [deleteGeographiesVillage] = useMutation(DELETE_GEOGRAPHIES_VILLAGE, {
+		refetchQueries: [{ query: GET_VILLAGE_DATA }],
+	});
 
 	let initialValues: IGeographiesVillage = getInitialValues(props);
-	// let initialValues: IDeliverableUnit = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesVillage) => {
-		// const onCreate = async (valueSubmitted: IDeliverableUnit) => {
 		const value = Object.assign({}, valueSubmitted);
-		// setDeliverableCategory(value.deliverableCategory || []);
-		// delete value.deliverableCategory;
 		try {
 			await createVillage({
 				variables: { input: { data: value } },
@@ -171,7 +157,7 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 				refetchQueries: [
 					{
 						query: GET_VILLAGE_DATA,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						// variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
 			});
@@ -309,14 +295,6 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 						inputFields: GeographiesVillageForm,
 					}}
 				/>
-				{/* {openDeliverableCategoryDialog && (
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={openDeliverableCategoryDialog}
-						handleClose={() => setOpenDeliverableCategoryDialog(false)}
-						organization={dashboardData?.organization?.id}
-					/>
-				)} */}
 			</FormDialog>
 		</React.Fragment>
 	);

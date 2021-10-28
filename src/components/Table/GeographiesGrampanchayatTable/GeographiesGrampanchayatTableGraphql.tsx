@@ -1,17 +1,10 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-// import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
-// import GeographiesStateTableContainer from "./GeographiesStateTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_CATEGORY_UNIT,
-	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-} from "../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
-import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesGrampanchayatTableContainer from "./GeographiesGrampanchayatTableContainer";
 import { GET_GRAMPANCHAYAT_DATA } from "../../../graphql/Geographies/GeographiesGrampanchayat";
@@ -119,12 +112,9 @@ function GeographiesGrampanchayatTableGraphql({
 	});
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
-		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
 		refetchDeliverableUnitOnDeliverableUnitImport();
 	}, [
-		// deliverableCategoryUnitCountRefetch,
-		// deliverableCategoryUnitRefetch,
 		deliverableUnitCountRefetch,
 		deliverableUnitRefetch,
 		refetchDeliverableUnitOnDeliverableUnitImport,
@@ -138,12 +128,9 @@ function GeographiesGrampanchayatTableGraphql({
 
 	const geographiesGrampanchayatList = grampanchayatResponse?.data?.grampanchayats || [];
 
-	console.log("geographiesGrampanchayatList", geographiesGrampanchayatList);
-
 	return (
 		<GeographiesGrampanchayatTableContainer
 			geographiesGrampanchayatList={geographiesGrampanchayatList}
-			// geographiesGrampanchayatList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
 			changePage={changeGeographiesGrampanchayatPage}
 			loading={geographiesGrampanchayatLoading || geographiesGrampanchayatCountLoading}

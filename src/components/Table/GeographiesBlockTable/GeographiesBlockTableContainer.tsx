@@ -1,13 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-// import DeliverableUnitTableView from "./DeliverableUnitTableView";
-import {
-	IDeliverableUnitData,
-	IDeliverableUnit,
-} from "../../../models/deliverable/deliverableUnit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
-// import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
@@ -16,13 +10,10 @@ import {
 	IGeographiesBlock,
 	IGeographiesBlockData,
 } from "../../../models/geographies/geographiesBlock";
-// import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
 	geographiesBlock: IGeographiesBlockData | null,
-	// deliverableUnit: IDeliverableUnitData | null,
 	organization: string | number
-	// deliverableCategory: string[]
 ): IGeographiesBlock => {
 	return {
 		code: geographiesBlock?.code || "",
@@ -34,20 +25,10 @@ const getInitialValues = (
 		// unit_type: geographiesBlock?.unit_type || "",
 		// deliverableCategory,
 		// organization,
-		// code: deliverableUnit?.code || "",
-		// description: deliverableUnit?.description || "",
-		// id: parseInt(deliverableUnit?.id || ""),
-		// name: deliverableUnit?.name || "",
-		// prefix_label: deliverableUnit?.prefix_label || "",
-		// suffix_label: deliverableUnit?.suffix_label || "",
-		// unit_type: deliverableUnit?.unit_type || "",
-		// // deliverableCategory,
-		// organization,
 	};
 };
 
 function GeographiesBlockTableContainer({
-	// deliverableUnitList,
 	geographiesBlocksList,
 	collapsableTable,
 	changePage,
@@ -70,7 +51,6 @@ function GeographiesBlockTableContainer({
 	changePage: (prev?: boolean) => void;
 	orderBy: string;
 	geographiesBlocksList: IGeographiesBlockData[];
-	// deliverableUnitList: IDeliverableUnitData[];
 	filterList: {
 		[key: string]: string;
 	};
@@ -111,20 +91,6 @@ function GeographiesBlockTableContainer({
 			});
 		}
 	}, [openDialogs, getcategoryUnit]);
-
-	// const deliverableCategoryMemoized = useMemo<string[]>(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.deliverable_category_org.id
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
 
 	const geographiesBlockEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

@@ -60,7 +60,6 @@ function getInitialValues(props: GoegraphiesDistrictProps) {
 }
 
 interface IError extends Omit<Partial<IGeographiesDistrict>, "GeographiesDistrict"> {
-	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	deliverableCategory?: string;
 }
 
@@ -73,27 +72,25 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 
 	const [createDistrict, { loading: createDistrictLoading }] = useMutation(
 		CREATE_GEOGRAPHIES_DISTRICT,
-		// CREATE_DELIVERABLE_UNIT,
 		{
-			onCompleted(data) {
-				// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
-			},
+			refetchQueries: [{ query: GET_DISTRICT_DATA }],
 		}
 	);
 
 	const [updateGeographiesDistrict, { loading: updatingGeographiesDistrict }] = useMutation(
-		UPDATE_GEOGRAPHIES_DISTRICT
+		UPDATE_GEOGRAPHIES_DISTRICT,
+		{
+			refetchQueries: [{ query: GET_DISTRICT_DATA }],
+		}
 	);
 
-	const [deleteGeographiesDistrict] = useMutation(DELETE_GEOGRAPHIES_DISTRICT);
+	const [deleteGeographiesDistrict] = useMutation(DELETE_GEOGRAPHIES_DISTRICT, {
+		refetchQueries: [{ query: GET_DISTRICT_DATA }],
+	});
 
 	let initialValues: IGeographiesDistrict = getInitialValues(props);
-	// let initialValues: IDeliverableUnit = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesDistrict) => {
-		// const onCreate = async (valueSubmitted: IDeliverableUnit) => {
 		const value = Object.assign({}, valueSubmitted);
-		// setDeliverableCategory(value.deliverableCategory || []);
-		// delete value.deliverableCategory;
 		try {
 			await createDistrict({
 				variables: { input: { data: value } },
@@ -162,8 +159,7 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 				refetchQueries: [
 					{
 						query: GET_DISTRICT_DATA,
-						// query: GET_DELIVERABLE_UNIT_BY_ORG,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						// variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
 			});
@@ -176,7 +172,6 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesDistrict) => {
-		// const onUpdate = async (value: IDeliverableUnit) => {
 		try {
 			const id = value.id;
 
@@ -192,13 +187,6 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 				},
 			});
 
-			// //remove newDeliverableCategories
-			// await changeDeliverableCategoryUnitStatus({
-			// 	updateDeliverableCategoryUnit,
-			// 	deliverableCategoryUnitList:
-			// 		deliverableCategoryUnitList?.deliverableCategoryUnitList || [],
-			// 	submittedDeliverableCategory,
-			// });
 			notificationDispatch(setSuccessNotification("Geographies district updation created !"));
 			onCancel();
 		} catch (err: any) {
@@ -208,7 +196,6 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 	};
 
 	const validate = (values: IGeographiesDistrict) => {
-		// const validate = (values: IDeliverableUnit) => {
 		let errors: IError = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
@@ -303,14 +290,6 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 						inputFields: GeographiesDistrictForm,
 					}}
 				/>
-				{/* {openDeliverableCategoryDialog && (
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={openDeliverableCategoryDialog}
-						handleClose={() => setOpenDeliverableCategoryDialog(false)}
-						organization={dashboardData?.organization?.id}
-					/>
-				)} */}
 			</FormDialog>
 		</React.Fragment>
 	);

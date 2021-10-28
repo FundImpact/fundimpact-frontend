@@ -1,17 +1,11 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-// import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
 import GeographiesStateTableContainer from "./GeographiesStateTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_CATEGORY_UNIT,
-	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-} from "../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
-import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import { GET_STATE_DATA } from "../../../graphql/Geographies/GeographyState";
 import { useLazyQuery } from "@apollo/client";
@@ -29,7 +23,6 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 function GeographiesStateTableGraphql({
 	collapsableTable = false,
 	rowId: geographiesStateId,
-	// rowId: deliverableCategoryId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -71,10 +64,8 @@ function GeographiesStateTableGraphql({
 	useEffect(() => {
 		setNestedTableQueryFilter({
 			deliverable_category_org: geographiesStateId,
-			// deliverable_category_org: deliverableCategoryId,
 		});
 	}, [geographiesStateId]);
-	// }, [deliverableCategoryId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -93,7 +84,6 @@ function GeographiesStateTableGraphql({
 				Object.assign(
 					{},
 					{ deliverable_category_org: geographiesStateId },
-					// { deliverable_category_org: deliverableCategoryId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -103,11 +93,9 @@ function GeographiesStateTableGraphql({
 			);
 		}
 	}, [nestedTableFilterList, geographiesStateId]);
-	// }, [nestedTableFilterList, deliverableCategoryId]);
 
 	let {
 		changePage: changeCountryStatePage,
-		// changePage: changeDeliverableUnitPage,
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
 		queryLoading: deliverableUnitLoading,
@@ -124,32 +112,13 @@ function GeographiesStateTableGraphql({
 	});
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
-		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
 		refetchDeliverableUnitOnDeliverableUnitImport();
 	}, [
-		// deliverableCategoryUnitCountRefetch,
-		// deliverableCategoryUnitRefetch,
 		deliverableUnitCountRefetch,
 		deliverableUnitRefetch,
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
-
-	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
-
-	// const deliverableCategoryUnitListMemoized = useMemo(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			?.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element?.deliverable_units_org
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
 
 	const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
 
@@ -161,19 +130,13 @@ function GeographiesStateTableGraphql({
 
 	let geographiesStateCount: number = 10;
 
-	// console.log("stateResponse", geographiesStateList);
-
 	return (
-		// <DeliverableUnitTableContainer
 		<GeographiesStateTableContainer
 			geographiesStateList={geographiesStateList}
-			// deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
 			changePage={changeCountryStatePage}
-			// changePage={changeDeliverableUnitPage}
 			loading={deliverableUnitLoading || deliverableUnitCountLoading}
 			count={geographiesStateCount}
-			// count={deliverableUnitCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

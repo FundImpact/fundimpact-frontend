@@ -1,28 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
-// import DeliverableUnitTableView from "./DeliverableUnitTableView";
-import {
-	IDeliverableUnitData,
-	IDeliverableUnit,
-} from "../../../models/deliverable/deliverableUnit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useLazyQuery } from "@apollo/client";
 import { GET_CATEGORY_UNIT } from "../../../graphql/Deliverable/categoryUnit";
-// import { IDeliverableCategoryData } from "../../../models/deliverable/deliverable";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
-// import GeographiesStateTableView from "./GeographiesStateTableView";
 import GeographiesGrampanchayatTableView from "./GeographiesGrampanchayatTableView";
 import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
 } from "../../../models/geographies/geographiesGrampanchayat";
-// import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 
 const getInitialValues = (
 	geographiesGrampanchayat: IGeographiesGrampanchayatData | null,
 	organization: string | number
-	// deliverableCategory: string[]
 ): IGeographiesGrampanchayat => {
 	return {
 		code: geographiesGrampanchayat?.code || "",
@@ -101,36 +92,14 @@ function GeographiesGrampanchayatTableContainer({
 		}
 	}, [openDialogs, getcategoryUnit]);
 
-	// const deliverableCategoryMemoized = useMemo<string[]>(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.deliverable_category_org.id
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
-
 	const geographiesGrampanchayatEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
-	// const deliverableUnitEditAccess = userHasAccess(
-	// 	MODULE_CODES.DELIVERABLE_UNIT,
-	// 	DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
-	// );
 	const geographiesGrampanchayatDeleteAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
-	// const deliverableUnitDeleteAccess = userHasAccess(
-	// 	MODULE_CODES.DELIVERABLE_UNIT,
-	// 	DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
-	// );
 	const geographiesGrampanchayatImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.DELIVERABLE_UNIT_IMPORT_FROM_CSV
@@ -147,7 +116,6 @@ function GeographiesGrampanchayatTableContainer({
 
 	return (
 		<GeographiesGrampanchayatTableView
-			// <DeliverableUnitTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
 			selectedGeographiesGrampanchayat={selectedGeographiesGrampanchayat}

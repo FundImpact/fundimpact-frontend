@@ -31,6 +31,5 @@ export type GoegraphiesDistrictProps = {
 	| {
 			type: GEOGRAPHIES_ACTIONS.UPDATE;
 			data: IGeographiesDistrict;
-			// data: IDeliverableUnit;
 	  }
 );

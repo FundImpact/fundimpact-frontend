@@ -7,7 +7,6 @@ import React from "react";
 // } from "../../models/deliverable/deliverable";
 import { FullScreenLoader } from "../Loader/Loader";
 import { GEOGRAPHIES_ACTIONS } from "./constants";
-// import { DELIVERABLE_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import {
@@ -20,10 +19,8 @@ import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesCountryForm } from "./inputField.json";
 import { useDashBoardData } from "../../contexts/dashboardContext";
-// import { IGetDeliverableCategory } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
-// import { useLocation } from "react-router";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import {
@@ -40,9 +37,7 @@ import {
 } from "../../graphql/Geographies/GeographyCountry";
 
 function getInitialValues(props: GeographiesProps) {
-	// function getInitialValues(props: DeliverableProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
-	// if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 
 	return {
 		name: "",
@@ -53,51 +48,46 @@ function getInitialValues(props: GeographiesProps) {
 }
 
 function Geographies(props: GeographiesProps) {
-	// function Geographies(props: DeliverableProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	let initialValues: IGeographies = getInitialValues(props);
-	// let initialValues: IDeliverable = getInitialValues(props);
 	const [createGeographiesCountry, { loading: creatingGeographiesCountry }] = useMutation(
-		// CREATE_DELIVERABLE_CATEGORY
-		CREATE_GEOGRAPHIES_COUNTRY
+		CREATE_GEOGRAPHIES_COUNTRY,
+		{
+			refetchQueries: [{ query: GET_COUNTRY_DATA }],
+		}
 	);
 
 	console.log("creatingGeographiesCountry", creatingGeographiesCountry);
 
-	// const [createDeliverableCategory, { loading: creatingDeliverableCategory }] = useMutation(
-	// 	CREATE_DELIVERABLE_CATEGORY
-	// );
 	const [updateGeographiesCountry, { loading: updatingGeographiesCountry }] = useMutation(
-		// const [updateDeliverableCategory, { loading: updatingDeliverableCategory }] = useMutation(
-		UPDATE_GEOGRAPHIES_COUNTRY
+		UPDATE_GEOGRAPHIES_COUNTRY,
+		{
+			refetchQueries: [{ query: GET_COUNTRY_DATA }],
+		}
 	);
 
-	const [deleteGeographiesCountry] = useMutation(DELETE_GEOGRAPHIES_COUNTRY);
+	const [deleteGeographiesCountry] = useMutation(DELETE_GEOGRAPHIES_COUNTRY, {
+		refetchQueries: [{ query: GET_COUNTRY_DATA }],
+	});
 
 	const formAction = props.type;
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const onCreate = async (value: IGeographies) => {
-		console.log("value", value);
-		// const onCreate = async (value: IDeliverable) => {
 		try {
 			await createGeographiesCountry({
-				// await createDeliverableCategory({
 				variables: { input: { data: value } },
 				refetchQueries: [
 					{
 						query: GET_COUNTRY_DATA,
-						// query: GET_DELIVERABLE_ORG_CATEGORY,
-						variables: { filter: { organization: value.organization } },
+						// variables: { filter: { organization: value.organization } },
 					},
 				],
 				update: async (store, { data: createGeographiesCountry }) => {
-					// update: async (store, { data: createDeliverableCategoryData }) => {
 					try {
 						const count = await store.readQuery<{ geographiesCountryCount: number }>({
-							// const count = await store.readQuery<{ deliverableCategoryCount: number }>({
 							query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 							variables: {
 								filter: {
@@ -107,7 +97,6 @@ function Geographies(props: GeographiesProps) {
 						});
 
 						store.writeQuery<{ geographiesCountryCount: number }>({
-							// store.writeQuery<{ deliverableCategoryCount: number }>({
 							query: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 							variables: {
 								filter: {
@@ -117,17 +106,13 @@ function Geographies(props: GeographiesProps) {
 							data: {
 								geographiesCountryCount:
 									(count && count.geographiesCountryCount + 1) || 0,
-								// deliverableCategoryCount:
-								// 	(count && count.deliverableCategoryCount + 1) || 0,
 							},
 						});
 
 						let limit = 0;
 						if (count) {
 							limit = count.geographiesCountryCount;
-							// limit = count.deliverableCategoryCount;
 						}
-						// const dataRead = await store.readQuery<IGetDeliverableCategory>({
 						const dataRead = await store.readQuery<IGetGeographiesCountry>({
 							query: GET_DELIVERABLE_ORG_CATEGORY,
 							variables: {
@@ -147,7 +132,6 @@ function Geographies(props: GeographiesProps) {
 							  [];
 
 						store.writeQuery<IGetGeographiesCountry>({
-							// store.writeQuery<IGetDeliverableCategory>({
 							query: GET_DELIVERABLE_ORG_CATEGORY,
 							variables: {
 								filter: {
@@ -159,17 +143,12 @@ function Geographies(props: GeographiesProps) {
 							},
 							data: {
 								geographiesCountry: [
-									// deliverableCategory: [
 									createGeographiesCountry,
-									// createDeliverableCategoryData,
 									...geographiesCountries,
-									// ...deliverableCategories,
 								],
 							},
 						});
-					} catch (err) {
-						// console.error(err);
-					}
+					} catch (err) {}
 				},
 			});
 			notificationDispatch(setSuccessNotification("Geographies Country created !"));
@@ -184,7 +163,6 @@ function Geographies(props: GeographiesProps) {
 			const id = value.id;
 			delete value.id;
 			await updateGeographiesCountry({
-				// await updateDeliverableCategory({
 				variables: {
 					input: {
 						where: {
@@ -242,9 +220,7 @@ function Geographies(props: GeographiesProps) {
 	};
 
 	const validate = (values: IGeographies) => {
-		// const validate = (values: IDeliverable) => {
 		let errors: Partial<IGeographies> = {};
-		// let errors: Partial<IDeliverable> = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";
 		}
@@ -264,7 +240,6 @@ function Geographies(props: GeographiesProps) {
 				handleClose={onCancel}
 				onDeleteConformation={onDelete}
 				title="Delete Geographies Country Data"
-				// title="Delete Deliverable Category"
 			/>
 		);
 	}
@@ -276,17 +251,15 @@ function Geographies(props: GeographiesProps) {
 					newOrEdit +
 					" " +
 					intl.formatMessage({
-						id: "deliverableCategoryFormTitle",
+						id: "geographiesCountryFormTitle",
 						defaultMessage: "Geographies Country",
-						// defaultMessage: "Deliverable Category",
-						description: `This text will be show on deliverable category form for title`,
+						description: `This text will be show on geographies country form for title`,
 					})
 				}
 				subtitle={intl.formatMessage({
-					id: "deliverableCategoryFormSubtitle",
+					id: "geographiesCountryFormSubtitle",
 					defaultMessage: "Manage Country Data",
-					// defaultMessage: "Manage Deliverable Category",
-					description: `This text will be show on deliverable category form for subtitle`,
+					description: `This text will be show on geographies country form for subtitle`,
 				})}
 				workspace={""}
 				project={""}
@@ -305,10 +278,7 @@ function Geographies(props: GeographiesProps) {
 					}}
 				/>
 			</FormDialog>
-			{creatingGeographiesCountry || updatingGeographiesCountry ? (
-				// {creatingDeliverableCategory || updatingDeliverableCategory ? (
-				<FullScreenLoader />
-			) : null}
+			{creatingGeographiesCountry || updatingGeographiesCountry ? <FullScreenLoader /> : null}
 		</React.Fragment>
 	);
 }

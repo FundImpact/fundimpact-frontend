@@ -1,17 +1,10 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-// import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
-// import GeographiesStateTableContainer from "./GeographiesStateTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_CATEGORY_UNIT,
-	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-} from "../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
-import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesDistrictTableContainer from "./GeographiesDistrictTableContainer";
 import { GET_DISTRICT_DATA } from "../../../graphql/Geographies/GeographiesDistrict";
@@ -30,7 +23,6 @@ const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 function GeographiesDistrictTableGraphql({
 	collapsableTable = false,
 	rowId: geographiesDistrictId,
-	// rowId: deliverableCategoryId,
 	tableFilterList,
 }: {
 	tableFilterList?: { [key: string]: string };
@@ -72,10 +64,8 @@ function GeographiesDistrictTableGraphql({
 	useEffect(() => {
 		setNestedTableQueryFilter({
 			deliverable_category_org: geographiesDistrictId,
-			// deliverable_category_org: deliverableCategoryId,
 		});
 	}, [geographiesDistrictId]);
-	// }, [deliverableCategoryId]);
 
 	useEffect(() => {
 		if (tableFilterList) {
@@ -94,7 +84,6 @@ function GeographiesDistrictTableGraphql({
 				Object.assign(
 					{},
 					{ deliverable_category_org: geographiesDistrictId },
-					// { deliverable_category_org: deliverableCategoryId },
 					Object.keys(newFilterListObject).length && {
 						deliverable_units_org: {
 							...newFilterListObject,
@@ -104,16 +93,13 @@ function GeographiesDistrictTableGraphql({
 			);
 		}
 	}, [nestedTableFilterList, geographiesDistrictId]);
-	// }, [nestedTableFilterList, deliverableCategoryId]);
 
 	let {
 		changePage: changeDeliverableUnitPage,
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
 		queryLoading: geographiesDistrictLoading,
-		// queryLoading: deliverableUnitLoading,
 		countQueryLoading: GeographiesDistrictCountLoading,
-		// countQueryLoading: deliverableUnitCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
@@ -125,36 +111,15 @@ function GeographiesDistrictTableGraphql({
 		fireRequest: Boolean(dashboardData),
 	});
 
-	// let {
-	// 	changePage: changeDeliverableCategoryUnitPage,
-	// 	count: deliverableCategoryUnitCount,
-	// 	queryData: deliverableCategoryUnitList,
-	// 	queryLoading: deliverableCategoryUnitLoading,
-	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
-	// 	queryRefetch: deliverableCategoryUnitRefetch,
-	// 	countRefetch: deliverableCategoryUnitCountRefetch,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-	// 	countFilter: nestedTableQueryFilter,
-	// 	query: GET_CATEGORY_UNIT,
-	// 	queryFilter: nestedTableQueryFilter,
-	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-	// 	fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	// });
-
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
-		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
 		refetchDeliverableUnitOnDeliverableUnitImport();
 	}, [
-		// deliverableCategoryUnitCountRefetch,
-		// deliverableCategoryUnitRefetch,
 		deliverableUnitCountRefetch,
 		deliverableUnitRefetch,
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	// console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
 	const [getDistricts, districtResponse] = useLazyQuery(GET_DISTRICT_DATA);
 
 	useEffect(() => {
@@ -168,16 +133,12 @@ function GeographiesDistrictTableGraphql({
 	console.log("districtResponse", geographiesDistrictList);
 
 	return (
-		// <DeliverableUnitTableContainer
 		<GeographiesDistrictTableContainer
 			geographiesDistrictList={geographiesDistrictList}
-			// deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
 			changePage={changeDeliverableUnitPage}
 			loading={geographiesDistrictLoading || GeographiesDistrictCountLoading}
-			// loading={deliverableUnitLoading || deliverableUnitCountLoading}
 			count={geographiesDistrictCount}
-			// count={deliverableUnitCount}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

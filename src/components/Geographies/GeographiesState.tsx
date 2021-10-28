@@ -10,7 +10,6 @@ import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-// import { GET_DELIVERABLE_ORG_CATEGORY } from "../../graphql/Deliverable/category";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 
 import {
@@ -23,13 +22,7 @@ import { GEOGRAPHIES_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesStateForm } from "./inputField.json";
-import {
-	IGetDeliverablUnit,
-	// IGetDeliverableCategoryUnit,
-	// IGetDeliverableCategoryUnitVariables,
-	// IUpdateDeliverableCategoryUnit,
-	// IUpdateDeliverableCategoryUnitVariables,
-} from "../../models/deliverable/query";
+
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 
@@ -47,12 +40,9 @@ import {
 	GET_STATE_DATA,
 	UPDATE_GEOGRAPHIES_STATE,
 } from "../../graphql/Geographies/GeographyState";
-import id from "date-fns/esm/locale/id/index.js";
 
 function getInitialValues(props: GoegraphiesStateProps) {
-	// function getInitialValues(props: DeliverableUnitProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
-	// if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		code: "",
@@ -66,7 +56,6 @@ function getInitialValues(props: GoegraphiesStateProps) {
 }
 
 interface IError extends Omit<Partial<IGeographiesState>, "GeographiesState"> {
-	// interface IError extends Omit<Partial<IDeliverableUnit>, "deliverableCategory"> {
 	GeographiesState?: string;
 }
 
@@ -77,14 +66,22 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createState, { loading: createStateLoading }] = useMutation(CREATE_GEOGRAPHIES_STATE);
+	const [createState, { loading: createStateLoading }] = useMutation(CREATE_GEOGRAPHIES_STATE, {
+		refetchQueries: [{ query: GET_STATE_DATA }],
+	});
 
 	const [updateGeographiesState, { loading: updatingGeographiesState }] = useMutation(
-		UPDATE_GEOGRAPHIES_STATE
+		UPDATE_GEOGRAPHIES_STATE,
+		{
+			refetchQueries: [{ query: GET_STATE_DATA }],
+		}
 	);
 
 	const [deleteGeographiesState, { loading: deleteStateLoading }] = useMutation(
-		DELETE_GEOGRAPHIES_STATE
+		DELETE_GEOGRAPHIES_STATE,
+		{
+			refetchQueries: [{ query: GET_STATE_DATA }],
+		}
 	);
 
 	let initialValues: IGeographiesState = getInitialValues(props);
@@ -125,7 +122,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 							limit = count.deliverableUnitOrgCount;
 						}
 						const dataRead = await store.readQuery<IGetGeographieState>({
-							// const dataRead = await store.readQuery<IGetDeliverablUnit>({
 							query: GET_DELIVERABLE_UNIT_BY_ORG,
 							variables: {
 								filter: {
@@ -142,7 +138,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 							: [];
 
 						store.writeQuery<IGetGeographieState>({
-							// store.writeQuery<IGetDeliverablUnit>({
 							query: GET_DELIVERABLE_UNIT_BY_ORG,
 							variables: {
 								filter: {
@@ -157,7 +152,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 									createGeographiesStateOrg,
 									...geographiesState,
 								],
-								// deliverableUnitOrg: [createDeliverableUnitOrg, ...deliverableUnits],
 							},
 						});
 					} catch (err) {
@@ -167,7 +161,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 				refetchQueries: [
 					{
 						query: GET_STATE_DATA,
-						variables: { filter: { organization: dashboardData?.organization?.id } },
+						// variables: { filter: { organization: dashboardData?.organization?.id } },
 					},
 				],
 			});
@@ -285,7 +279,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 				open={formIsOpen}
 				handleClose={onCancel}
 				loading={createStateLoading || updatingGeographiesState}
-				// loading={createUnitLoading || updatingDeliverableUnit}
 			>
 				<CommonForm
 					{...{
@@ -298,14 +291,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 						inputFields: GeographiesStateForm,
 					}}
 				/>
-				{/* {openDeliverableCategoryDialog && (
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.CREATE}
-						open={openDeliverableCategoryDialog}
-						handleClose={() => setOpenDeliverableCategoryDialog(false)}
-						organization={dashboardData?.organization?.id}
-					/>
-				)} */}
 			</FormDialog>
 		</React.Fragment>
 	);

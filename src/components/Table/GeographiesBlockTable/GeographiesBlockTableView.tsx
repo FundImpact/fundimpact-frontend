@@ -1,21 +1,8 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import {
-	IDeliverableUnitData,
-	IDeliverableUnit,
-} from "../../../models/deliverable/deliverableUnit";
-import DeliverableUnit from "../../Deliverable/DeliverableUnit";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import DeliverableCategory from "../DeliverableCategoryTable";
 import { GeographiesBlockTableHeading as tableHeadings } from "../constants";
-// import { deliverableUnitTableHeadings as tableHeadings } from "../constants";
-import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import { Grid, Box, Chip, Avatar, Button, useTheme, MenuItem } from "@material-ui/core";
-import FilterList from "../../FilterList";
-import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import {
 	DELIVERABLE_CATEGORY_TABLE_EXPORT,
 	DELIVERABLE_CATEGORY_UNIT_EXPORT,
@@ -23,10 +10,8 @@ import {
 	DELIVERABLE_UNIT_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
-import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { FormattedMessage } from "react-intl";
 import { DIALOG_TYPE } from "../../../models/constants";
 import {
 	IGeographiesBlock,
@@ -106,7 +91,6 @@ function GeographiesBlockTableView({
 	selectedGeographiesBlock,
 	initialValues,
 	geographiesBlocksList,
-	// deliverableUnitList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -143,7 +127,6 @@ function GeographiesBlockTableView({
 	changePage: (prev?: boolean) => void;
 	collapsableTable: boolean;
 	geographiesBlocksList: IGeographiesBlockData[];
-	// deliverableUnitList: IDeliverableUnitData[];
 	initialValues: IGeographiesBlock;
 	selectedGeographiesBlock: React.MutableRefObject<IGeographiesBlockData | null>;
 	openDialogs: boolean[];
@@ -160,34 +143,16 @@ function GeographiesBlockTableView({
 	useEffect(() => {
 		if (geographiesBlockEditAccess) {
 			deliverableUnitTableEditMenu[0] = "Edit Block";
-			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
 	}, [geographiesBlockEditAccess]);
 
 	useEffect(() => {
 		if (geographiesBlockDeleteAccess) {
 			deliverableUnitTableEditMenu[1] = "Delete Block";
-			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
 	}, [geographiesBlockDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
-
-	// {
-	// 	(!collapsableTable &&
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-	// 			<FilterList
-	// 				initialValues={{
-	// 					name: "",
-	// 					code: "",
-	// 					description: "",
-	// 				}}
-	// 				setFilterList={setFilterList}
-	// 				inputFields={deliverableUnitInputFields}
-	// 			/>
-	// 		))) ||
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	// }
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
@@ -219,7 +184,6 @@ function GeographiesBlockTableView({
 						: tableHeadings.slice(1)
 				}
 				valuesList={geographiesBlocksList}
-				// valuesList={deliverableUnitList}
 				rows={rows}
 				selectedRow={selectedGeographiesBlock}
 				toggleDialogs={toggleDialogs}
@@ -248,14 +212,13 @@ function GeographiesBlockTableView({
 								style={{ marginRight: theme.spacing(1), float: "right" }}
 								onClick={() =>
 									exportTable({
-										tableName: "Deliverable Unit Template",
+										tableName: "Geographies Block Template",
 										jwt: jwt as string,
 										tableExportUrl: `${DELIVERABLE_UNIT_TABLE_EXPORT}?header=true`,
 									})
 								}
 							>
 								Geographies Block Template
-								{/* Deliverable Unit Template */}
 							</Button>
 						</>
 					</ImportExportTableMenu>

@@ -1,17 +1,10 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-// import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
-// import GeographiesStateTableContainer from "./GeographiesStateTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_CATEGORY_UNIT,
-	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-} from "../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
-import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesVillageTableContainer from "./GeographiesVillageTableContainer";
 import { GET_VILLAGE_DATA } from "../../../graphql/Geographies/GeographiesVillage";
@@ -119,30 +112,13 @@ function GeographiesVillageTableGraphql({
 	});
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
-		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
 		refetchDeliverableUnitOnDeliverableUnitImport();
 	}, [
-		// deliverableCategoryUnitCountRefetch,
-		// deliverableCategoryUnitRefetch,
 		deliverableUnitCountRefetch,
 		deliverableUnitRefetch,
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
-
-	// const deliverableCategoryUnitListMemoized = useMemo(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			?.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element?.deliverable_units_org
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
 
 	const [getVillage, villageResponse] = useLazyQuery(GET_VILLAGE_DATA);
 
@@ -155,7 +131,6 @@ function GeographiesVillageTableGraphql({
 	let geographiesVillageCount: number = 10;
 
 	return (
-		// <DeliverableUnitTableContainer
 		<GeographiesVillageTableContainer
 			geographiesVillageList={geographiesVillageList}
 			collapsableTable={collapsableTable}

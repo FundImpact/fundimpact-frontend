@@ -18,7 +18,6 @@ import {
 const getInitialValues = (
 	geographiesVillage: IGeographiesVillageData | null,
 	organization: string | number
-	// deliverableCategory: string[]
 ): IGeographiesVillage => {
 	return {
 		code: geographiesVillage?.code || "",
@@ -97,20 +96,6 @@ function GeographiesVillageTableContainer({
 		}
 	}, [openDialogs, getGeographiesVillage]);
 
-	// const deliverableCategoryMemoized = useMemo<string[]>(
-	// 	() =>
-	// 		deliverableCategoryUnitList?.deliverableCategoryUnitList
-	// 			.filter(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.status
-	// 			)
-	// 			.map(
-	// 				(element: IGetDeliverableCategoryUnit["deliverableCategoryUnitList"][0]) =>
-	// 					element.deliverable_category_org.id
-	// 			),
-	// 	[deliverableCategoryUnitList]
-	// );
-
 	const geographiesVillageEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
@@ -135,7 +120,6 @@ function GeographiesVillageTableContainer({
 
 	return (
 		<GeographiesVillageTableView
-			// <DeliverableUnitTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
 			selectedGeographiesVillage={selectedGeographiesVillage}

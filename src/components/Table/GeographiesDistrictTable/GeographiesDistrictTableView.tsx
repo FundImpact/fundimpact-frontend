@@ -1,21 +1,9 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import {
-	IDeliverableUnitData,
-	IDeliverableUnit,
-} from "../../../models/deliverable/deliverableUnit";
-import DeliverableUnit from "../../Deliverable/DeliverableUnit";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import DeliverableCategory from "../DeliverableCategoryTable";
 import { GeographiesDistrictTableHeading as tableHeadings } from "../constants";
-// import { deliverableUnitTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import { Grid, Box, Chip, Avatar, Button, useTheme, MenuItem } from "@material-ui/core";
-import FilterList from "../../FilterList";
-import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import {
 	DELIVERABLE_CATEGORY_TABLE_EXPORT,
 	DELIVERABLE_CATEGORY_UNIT_EXPORT,
@@ -103,9 +91,7 @@ function GeographiesDistrictTableView({
 	toggleDialogs,
 	openDialogs,
 	selectedGeographiesDistrict,
-	// selectedDeliverableUnit,
 	initialValues,
-	// deliverableUnitList,
 	geographiesDistrictList,
 	collapsableTable,
 	changePage,
@@ -119,12 +105,9 @@ function GeographiesDistrictTableView({
 	setFilterList,
 	removeFilterListElements,
 	geographiesDistrictEditAccess,
-	// deliverableUnitEditAccess,
 	geographiesDistrictFindAccess,
-	// deliverableCategoryFindAccess,
 	reftechDeliverableCategoryAndUnitTable,
 	geographiesDistrictDeleteAccess,
-	// deliverableUnitDeleteAccess,
 	deliverableUnitExportAccess,
 	deliverableUnitImportFromCsvAccess,
 }: {
@@ -146,19 +129,14 @@ function GeographiesDistrictTableView({
 	changePage: (prev?: boolean) => void;
 	collapsableTable: boolean;
 	geographiesDistrictList: IGeographiesDistrictData[];
-	// deliverableUnitList: IDeliverableUnitData[];
 	initialValues: IGeographiesDistrict;
 	selectedGeographiesDistrict: React.MutableRefObject<IGeographiesDistrictData | null>;
-	// selectedDeliverableUnit: React.MutableRefObject<IDeliverableUnitData | null>;
 	openDialogs: boolean[];
 	toggleDialogs: (index: number, val: boolean) => void;
 	geographiesDistrictEditAccess: boolean;
-	// deliverableUnitEditAccess: boolean;
 	geographiesDistrictFindAccess: boolean;
-	// deliverableCategoryFindAccess: boolean;
 	reftechDeliverableCategoryAndUnitTable: () => void;
 	geographiesDistrictDeleteAccess: boolean;
-	// deliverableUnitDeleteAccess: boolean;
 	deliverableUnitImportFromCsvAccess: boolean;
 	deliverableUnitExportAccess: boolean;
 }) {
@@ -166,39 +144,17 @@ function GeographiesDistrictTableView({
 
 	useEffect(() => {
 		if (geographiesDistrictEditAccess) {
-			// if (deliverableUnitEditAccess) {
 			geographiesDistrictTableEditMenu[0] = "Edit Distrct";
-			// deliverableUnitTableEditMenu[0] = "Edit Deliverable Unit";
 		}
 	}, [geographiesDistrictEditAccess]);
-	// }, [deliverableUnitEditAccess]);
 
 	useEffect(() => {
 		if (geographiesDistrictDeleteAccess) {
-			// if (deliverableUnitDeleteAccess) {
 			geographiesDistrictTableEditMenu[1] = "Delete District";
-			// deliverableUnitTableEditMenu[1] = "Delete Deliverable Unit";
 		}
 	}, [geographiesDistrictDeleteAccess]);
-	// }, [deliverableUnitDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
-
-	// {
-	// 	(!collapsableTable &&
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-	// 			<FilterList
-	// 				initialValues={{
-	// 					name: "",
-	// 					code: "",
-	// 					description: "",
-	// 				}}
-	// 				setFilterList={setFilterList}
-	// 				inputFields={deliverableUnitInputFields}
-	// 			/>
-	// 		))) ||
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	// }
 
 	const theme = useTheme();
 	const { jwt } = useAuth();
@@ -226,19 +182,15 @@ function GeographiesDistrictTableView({
 			<CommonTable
 				tableHeadings={
 					collapsableTable && geographiesDistrictFindAccess
-						? // collapsableTable && deliverableCategoryFindAccess
-						  tableHeadings
+						? tableHeadings
 						: tableHeadings.slice(1)
 				}
 				valuesList={geographiesDistrictList}
-				// valuesList={deliverableUnitList}
 				rows={rows}
 				selectedRow={selectedGeographiesDistrict}
-				// selectedRow={selectedDeliverableUnit}
 				toggleDialogs={toggleDialogs}
 				editMenuName={geographiesDistrictTableEditMenu}
 				collapsableTable={collapsableTable && geographiesDistrictFindAccess}
-				// collapsableTable={collapsableTable && deliverableCategoryFindAccess}
 				changePage={changePage}
 				loading={loading}
 				count={count}
@@ -290,21 +242,6 @@ function GeographiesDistrictTableView({
 						organization={dashboardData?.organization?.id || ""}
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
-					{/* <DeliverableUnit
-						type={DELIVERABLE_ACTIONS.UPDATE}
-						handleClose={() => toggleDialogs(0, false)}
-						open={openDialogs[0]}
-						data={initialValues}
-						organization={dashboardData?.organization?.id || ""}
-					/>
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.UPDATE}
-						handleClose={() => toggleDialogs(1, false)}
-						open={openDialogs[1]}
-						data={initialValues}
-						organization={dashboardData?.organization?.id || ""}
-						dialogType={DIALOG_TYPE.DELETE}
-					/> */}
 				</>
 				{/* {(rowData: { id: string }) => (
 					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />

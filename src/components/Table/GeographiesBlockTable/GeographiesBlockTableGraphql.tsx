@@ -1,17 +1,10 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-// import DeliverableUnitTableContainer from "./DeliverableUnitTableContainer";
-// import GeographiesStateTableContainer from "./GeographiesStateTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_CATEGORY_UNIT,
-	GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-} from "../../../graphql/Deliverable/categoryUnit";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 } from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
-import { IGetDeliverableCategoryUnit } from "../../../models/deliverable/query";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesBlockTableContainer from "./GeographiesBlockTableContainer";
 import { GET_BLOCK_DATA } from "../../../graphql/Geographies/GeographiesBlock";
@@ -106,7 +99,6 @@ function GeographiesBlockTableGraphql({
 		count: deliverableUnitCount,
 		queryData: deliverableUnitList,
 		queryLoading: geographiesBlockLoading,
-		// queryLoading: deliverableUnitLoading,
 		countQueryLoading: geographiesBlockCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
@@ -119,30 +111,10 @@ function GeographiesBlockTableGraphql({
 		fireRequest: Boolean(dashboardData),
 	});
 
-	// let {
-	// 	changePage: changeDeliverableCategoryUnitPage,
-	// 	count: deliverableCategoryUnitCount,
-	// 	queryData: deliverableCategoryUnitList,
-	// 	queryLoading: deliverableCategoryUnitLoading,
-	// 	countQueryLoading: deliverableCategoryUnitCountLoading,
-	// 	queryRefetch: deliverableCategoryUnitRefetch,
-	// 	countRefetch: deliverableCategoryUnitCountRefetch,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_CATEGORY_UNIT_COUNT,
-	// 	countFilter: nestedTableQueryFilter,
-	// 	query: GET_CATEGORY_UNIT,
-	// 	queryFilter: nestedTableQueryFilter,
-	// 	sort: `${nestedTableOrderBy}:${nestedTableOrder.toUpperCase()}`,
-	// 	fireRequest: Boolean(deliverableCategoryId && !collapsableTable),
-	// });
-
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
-		// deliverableCategoryUnitCountRefetch?.().then(() => deliverableCategoryUnitRefetch?.());
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
 		refetchDeliverableUnitOnDeliverableUnitImport();
 	}, [
-		// deliverableCategoryUnitCountRefetch,
-		// deliverableCategoryUnitRefetch,
 		deliverableUnitCountRefetch,
 		deliverableUnitRefetch,
 		refetchDeliverableUnitOnDeliverableUnitImport,
@@ -158,15 +130,11 @@ function GeographiesBlockTableGraphql({
 
 	const geographiesBlocksList = blockResponse?.data?.blocks || [];
 
-	console.log("blockResponse", geographiesBlocksList);
-
 	const GeographiesBlockCount: number = 10;
 
 	return (
-		// <DeliverableUnitTableContainer
 		<GeographiesBlockTableContainer
 			geographiesBlocksList={geographiesBlocksList}
-			// deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}
 			collapsableTable={collapsableTable}
 			changePage={changeDeliverableUnitPage}
 			loading={geographiesBlockLoading || geographiesBlockCountLoading}

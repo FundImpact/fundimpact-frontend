@@ -1,21 +1,9 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import {
-	IDeliverableUnitData,
-	IDeliverableUnit,
-} from "../../../models/deliverable/deliverableUnit";
-import DeliverableUnit from "../../Deliverable/DeliverableUnit";
-import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import DeliverableCategory from "../DeliverableCategoryTable";
 import { GeographiesVillageTableHeading as tableHeadings } from "../constants";
-// import { deliverableUnitTableHeadings as tableHeadings } from "../constants";
-import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
 import { Grid, Box, Chip, Avatar, Button, useTheme, MenuItem } from "@material-ui/core";
 import FilterList from "../../FilterList";
-import { deliverableUnitInputFields } from "../../../pages/settings/DeliverableMaster/inputFields.json";
-import { userHasAccess, MODULE_CODES } from "../../../utils/access";
-import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import {
 	DELIVERABLE_CATEGORY_TABLE_EXPORT,
 	DELIVERABLE_CATEGORY_UNIT_EXPORT,
@@ -23,10 +11,8 @@ import {
 	DELIVERABLE_UNIT_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
-import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
-import { FormattedMessage } from "react-intl";
 import { DIALOG_TYPE } from "../../../models/constants";
 import {
 	IGeographiesVillage,
@@ -35,18 +21,7 @@ import {
 import GeographiesVillage from "../../Geographies/GeographiesVillage";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 
-const rows = [
-	{ valueAccessKey: "name" },
-	{ valueAccessKey: "code" },
-	{ valueAccessKey: "Block" },
-	// {
-	// 	valueAccessKey: "",
-	// 	renderComponent: (geographiesVillage: IGeographiesVillageData) => (
-	// 		<UnitsAndCategoriesProjectCount deliverableUnitId={geographiesVillage.id} />
-	// 	),
-	// },
-	// { valueAccessKey: "" },
-];
+const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "code" }, { valueAccessKey: "Block" }];
 
 const chipArray = ({
 	arr,
@@ -167,22 +142,6 @@ function GeographiesVillageTableView({
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
-	// {
-	// 	(!collapsableTable &&
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = () => (
-	// 			<FilterList
-	// 				initialValues={{
-	// 					name: "",
-	// 					code: "",
-	// 					description: "",
-	// 				}}
-	// 				setFilterList={setFilterList}
-	// 				inputFields={deliverableUnitInputFields}
-	// 			/>
-	// 		))) ||
-	// 		(tableHeadings[tableHeadings.length - 1].renderComponent = undefined);
-	// }
-
 	const theme = useTheme();
 	const { jwt } = useAuth();
 
@@ -241,13 +200,12 @@ function GeographiesVillageTableView({
 								style={{ marginRight: theme.spacing(1), float: "right" }}
 								onClick={() =>
 									exportTable({
-										tableName: "Deliverable Unit Template",
+										tableName: "Geographies Village Template",
 										jwt: jwt as string,
 										tableExportUrl: `${DELIVERABLE_UNIT_TABLE_EXPORT}?header=true`,
 									})
 								}
 							>
-								{/* Deliverable Unit Template */}
 								Geographies village Template
 							</Button>
 						</>
