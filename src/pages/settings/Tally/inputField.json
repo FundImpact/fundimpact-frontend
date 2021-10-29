@@ -196,5 +196,33 @@
 			"position": "before",
 			"hidden": false
 		}
+	],
+	"tallyFormRadioButtons": [
+		{
+			"name": "donor",
+			"label": "Donor"
+		},
+		{
+			"name": "project",
+			"label": "Project"
+		},
+		{
+			"name": "target",
+			"label": "Target"
+		},
+		{
+			"name": "budget_category",
+			"label": "Budget Category"
+		}
+	],
+	"targetAndSubTargetRadios": [
+		{
+			"name": "targetsAndSubTargets",
+			"label": "Targets and Sub-Targets"
+		},
+		{
+			"name": "projectBudgetCategory",
+			"label": "Project Budget Category"
+		}
 	]
 }

@@ -33,7 +33,8 @@
 			"testId": "yearTagStartDateInput",
 			"label": "Start Date",
 			"type": "date",
-			"size": 6
+			"size": 6,
+			"required": true
 		},
 		{
 			"name": "end_date",
@@ -42,7 +43,8 @@
 			"testId": "yearTagEndDateInput",
 			"label": "End Date",
 			"type": "date",
-			"size": 6
+			"size": 6,
+			"required": true
 		}
 	]
 }

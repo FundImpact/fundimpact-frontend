@@ -1,8 +1,8 @@
 {
 	"yeartagInputFields": [
 		{
-			"name": "label",
-			"id": "label",
+			"name": "name",
+			"id": "name",
 			"dataTestId": "yearTagLabel",
 			"testId": "yearTagLabelInput",
 			"label": "Label",
@@ -15,37 +15,6 @@
 			"testId": "yearTagTypeInput",
 			"label": "Type",
 			"size": 6
-		},
-		{
-			"name": "start_date",
-			"id": "startDate",
-			"dataTestId": "yearTagStartDate",
-			"testId": "yearTagStartDateInput",
-			"label": "Start Date",
-			"size": 6,
-			"inputType": "date"
-		},
-		{
-			"name": "end_date",
-			"id": "endDate",
-			"dataTestId": "yearTagEndDate",
-			"testId": "yearTagEndDateInput",
-			"label": "End Date",
-			"size": 6,
-			"inputType": "date"
-		},
-		{
-			"name": "countires",
-			"label": "Choose Country",
-			"size": 12,
-			"testId": "createCountryOption",
-			"dataTestId": "createCountry",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-2",
-			"inputType": "select",
-			"multiple": true
 		}
 	]
 }
