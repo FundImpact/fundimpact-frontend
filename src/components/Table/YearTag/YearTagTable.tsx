@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	TableContainer,
 	Table,
@@ -24,7 +24,6 @@ import pagination from "../../../hooks/pagination";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { yearTagTableHeadings as tableHeading } from "../constants";
 import { MODULE_CODES, userHasAccess } from "../../../utils/access";
-import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 import { FormattedMessage } from "react-intl";
 import { useApolloClient } from "@apollo/client";
 import { IYearTag } from "../../../models/yearTags";
@@ -71,8 +70,8 @@ function YearTagTable({
 	const tableStyles = styledTable();
 	const selectedYearTag = React.useRef<any | null>(null);
 	const [page, setPage] = useState<number>(0);
-	const [orderBy, setOrderBy] = useState<string>("created_at");
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [ytOrderBy, setYTOrderBy] = useState<string>("created_at");
+	const [ytOrder, setYTOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
 	const [pageCount, setPageCount] = useState(0);
 
@@ -91,29 +90,21 @@ function YearTagTable({
 		setQueryFilter(newFilterListObject);
 	}, [tableFilterList]);
 
-	let {
-		changePage,
-		count,
-		queryData: yearTagList,
-		queryLoading,
-		countQueryLoading,
-		queryRefetch: refetchYearTagsList,
-		countRefetch: refetchYearTagsCount,
-	} = pagination({
-		countQuery: GET_YEARTAGS_COUNT,
-		countFilter: {},
-		query: GET_YEARTAGS,
-		queryFilter,
-		sort: `${orderBy}:${order.toUpperCase()}`,
-	});
+	let { changePage, count, queryData: yearTagList, queryLoading, countQueryLoading } = pagination(
+		{
+			countQuery: GET_YEARTAGS_COUNT,
+			countFilter: {},
+			query: GET_YEARTAGS,
+			queryFilter,
+			sort: `${ytOrderBy}:${ytOrder.toUpperCase()}`,
+		}
+	);
 
 	useEffect(() => {
 		if (count?.aggregate?.count) {
 			setPageCount(count.aggregate.count);
 		}
 	}, [count]);
-
-	const apolloClient = useApolloClient();
 
 	//this means new element has been added to the list
 	useEffect(() => {
@@ -212,7 +203,7 @@ function YearTagTable({
 						{yearTagList?.yearTags?.length > 0
 							? tableHeading.map(
 									(
-										heading: { label: string; keyMapping?: string },
+										obj: { label: string; keyMapping?: string },
 										index: number
 									) => (
 										<TableCell
@@ -220,24 +211,24 @@ function YearTagTable({
 											key={index}
 											align="left"
 										>
-											{heading.label}
-											{heading.keyMapping && (
+											{obj.label}
+											{obj.keyMapping && (
 												<TableSortLabel
-													active={orderBy === heading.keyMapping}
+													active={ytOrderBy === obj.keyMapping}
 													onClick={() => {
-														if (orderBy === heading.keyMapping) {
-															setOrder &&
-																setOrder(
-																	order === "asc" ? "desc" : "asc"
+														if (ytOrderBy === obj.keyMapping) {
+															setYTOrder &&
+																setYTOrder(
+																	ytOrder === "asc"
+																		? "desc"
+																		: "asc"
 																);
 														} else {
-															setOrderBy &&
-																setOrderBy(
-																	heading.keyMapping || ""
-																);
+															setYTOrderBy &&
+																setYTOrderBy(obj.keyMapping || "");
 														}
 													}}
-													direction={order}
+													direction={ytOrder}
 												></TableSortLabel>
 											)}
 										</TableCell>
@@ -245,7 +236,7 @@ function YearTagTable({
 							  )
 							: null}
 						<TableCell className={tableStyles.th} align="left">
-							{/* <ImportExportTableMenuHoc refetchDonorTable={refetchDonorTable} /> */}
+							No Data found
 						</TableCell>
 					</TableRow>
 				</TableHead>
@@ -313,7 +304,6 @@ function YearTagTable({
 									}
 									setPage(newPage);
 								}}
-								onChangeRowsPerPage={() => {}}
 								style={{ paddingRight: "40px" }}
 							/>
 						</TableRow>
