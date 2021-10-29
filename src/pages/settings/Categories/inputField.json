@@ -1,0 +1,57 @@
+{
+	"categoryInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "categoryName",
+			"testId": "categoryName",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "categoryCode",
+			"testId": "categoryCodeInput",
+			"label": "Code",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "categoryDescription",
+			"testId": "categoryDescriptionInput",
+			"label": "Description",
+			"size": 12
+		},
+		{
+			"name": "is_project",
+			"id": "is_project",
+			"dataTestId": "isProjectTest",
+			"testId": "isProjectInput",
+			"label": "Is Project",
+			"getInputValue": {},
+			"disabled": false,
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "project",
+			"id": "project",
+			"dataTestId": "categoryProject",
+			"testId": "categoryProjectInput",
+			"label": "Project",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"hidden": true,
+			"size": 6
+		}
+	]
+}

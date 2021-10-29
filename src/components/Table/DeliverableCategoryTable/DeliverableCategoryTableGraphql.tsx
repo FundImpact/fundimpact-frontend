@@ -115,6 +115,8 @@ function DeliverableCategoryTableGraphql({
 		fireRequest: Boolean(dashboardData),
 	});
 
+	// console.log("List: ", deliverableCategoryList);
+
 	// let {
 	// 	changePage: changeDeliverableCategoryUnitPage,
 	// 	count: deliverableCategoryUnitCount,

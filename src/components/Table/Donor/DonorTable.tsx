@@ -15,6 +15,7 @@ import {
 	Box,
 	Button,
 } from "@material-ui/core";
+import { useLazyQuery } from "@apollo/client";
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -202,6 +203,14 @@ function DonorTable({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
+	const [getYearTags, yearTagsResponse] = useLazyQuery(GET_DONOR_COUNT);
+
+	useEffect(() => {
+		getYearTags();
+	}, []);
+
+	console.log("donorCound: ", count);
+
 	const apolloClient = useApolloClient();
 
 	const refetchDonorTable = useCallback(() => {
@@ -215,6 +224,7 @@ function DonorTable({
 			fetchPolicy: "network-only",
 		});
 		refetchDonorCount?.().then(() => refetchDonorsList?.());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [refetchDonorCount, refetchDonorsList]);
 
 	//this means new element has been added to the list

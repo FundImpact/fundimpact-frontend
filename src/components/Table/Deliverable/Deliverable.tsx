@@ -18,7 +18,7 @@ import { FormattedMessage } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import {
-	GET_ACHIEVED_VALLUE_BY_TARGET,
+	// GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
 	GET_DELIVERABLE_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/target";
@@ -26,11 +26,11 @@ import pagination from "../../../hooks/pagination/pagination";
 import { IDeliverableTarget } from "../../../models/deliverable/deliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
-import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
+// import DeliverableTrackLine from "../../Deliverable/DeliverableTrackline";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
 import { deliverableHeadings } from "../constants";
 import FICollaspeTable from "../FICollapseTable";
-import DeliverableTracklineTable from "./DeliverableTrackLine";
+// import DeliverableTracklineTable from "./DeliverableTrackLine";
 import FilterList from "../../FilterList";
 import { deliverableTargetInputFields } from "./inputFields.json";
 import { GET_DELIVERABLE_ORG_CATEGORY } from "../../../graphql/Deliverable/category";
@@ -48,11 +48,11 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/delivera
 import { ITableHeadings } from "../../../models";
 import { useDialogDispatch } from "../../../contexts/DialogContext";
 import { setCloseDialog, setOpenDialog } from "../../../reducers/dialogReducer";
-import { FormatListBulleted } from "@material-ui/icons";
+// import { FormatListBulleted } from "@material-ui/icons";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	DELIVERABLE_CATEGORY_TABLE_EXPORT,
-	DELIVERABLE_CATEGORY_UNIT_EXPORT,
+	// DELIVERABLE_CATEGORY_UNIT_EXPORT,
 	DELIVERABLE_TARGET_PROJECTS_TABLE_EXPORT,
 	DELIVERABLE_TARGET_PROJECTS_TABLE_IMPORT,
 	DELIVERABLE_UNIT_TABLE_EXPORT,
@@ -72,7 +72,7 @@ import {
 	GET_DELIVERABLE_SUB_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/subTarget";
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
-import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
+// import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 enum tableHeaders {
@@ -172,6 +172,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 					/>
 				)
 			);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deliverableTarget, targetLineDialog]);
 
 	let value_qualitative_option_string = "";
@@ -180,7 +181,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 			value_qualitative_option_string =
 				value_qualitative_option_string +
 				`${elem?.name || "-"}${
-					index != deliverableTarget?.value_qualitative_option?.options?.length - 1
+					index !== deliverableTarget?.value_qualitative_option?.options?.length - 1
 						? ","
 						: ""
 				}`;
@@ -601,6 +602,7 @@ export default function DeliverablesTable({
 			type,
 		});
 		setFilterList(getDefaultFilterList());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dashboardData, setFilterList, setQueryFilter]);
 
 	useEffect(() => {
@@ -633,6 +635,7 @@ export default function DeliverablesTable({
 				return filter;
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filterList, dashboardData]);
 
 	const { refetchOnDeliverableTargetImport } = useRefetchOnDeliverableTargetImport();
@@ -657,6 +660,7 @@ export default function DeliverablesTable({
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
 		refetchOnDeliverableTargetImport(type);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]);
 
 	const [rows, setRows] = useState<any>([]);
@@ -757,6 +761,7 @@ export default function DeliverablesTable({
 		} else {
 			setRows([]);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deliverableTargetData, deliverableCategoryFindAccess, page]);
 
 	const filteredDeliverableHeadings = useMemo(

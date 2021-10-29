@@ -52,7 +52,7 @@ function Pagination({
 	customFetchPolicy?: "network-only";
 }) {
 	const startingValue = React.useRef<number>(start);
-	const count = React.useRef<number>(0);
+	const count = React.useRef<any>(0);
 	const apolloClient = useApolloClient();
 
 	const [error, setError] = useState<null | string>(null);

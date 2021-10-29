@@ -218,12 +218,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const [filesArray, setFilesArray] = React.useState<AttachFile[]>(
 		initialValues.attachments ? initialValues.attachments : []
 	);
-	let {
-		multiplefileMorph,
-		loading: uploadMorphLoading,
-		success,
-		setSuccess,
-	} = useMultipleFileUpload(filesArray, setFilesArray);
+	let { multiplefileMorph, success, setSuccess } = useMultipleFileUpload(
+		filesArray,
+		setFilesArray
+	);
 
 	const [submittedBudgetTarget, setSubmittedBudgetTarget] = React.useState<
 		string | number | undefined
@@ -263,6 +261,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			setSuccess(false);
 			closeDialog();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [success, budgetTrackingRefetch, props, setSuccess]);
 
 	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
@@ -285,12 +284,12 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getBudgetSubTarget, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_SUB_TARGETS);
 
-	let [getAnnualYears, { data: annualYears }] = useLazyQuery(GET_ANNUAL_YEAR_LIST);
+	let [getAnnualYears] = useLazyQuery(GET_ANNUAL_YEAR_LIST);
 
 	let [getGrantPeriodProject, { data: grantPeriodProject }] = useLazyQuery(GET_GRANT_PERIOD);
 
 	let [getFinancialYearOrg, { data: financialYearOrg }] = useLazyQuery(GET_FINANCIAL_YEARS);
-	let [getFinancialYearDonor, { data: financialYearDonor }] = useLazyQuery(GET_FINANCIAL_YEARS);
+	let [getFinancialYearDonor] = useLazyQuery(GET_FINANCIAL_YEARS);
 	let [getCurrency, { data: currency }] = useLazyQuery(GET_CURRENCY_LIST);
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
@@ -354,6 +353,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			}
 			return errors;
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[setSelectedDonor, dashboardData, grantPeriodProject]
 	);
 

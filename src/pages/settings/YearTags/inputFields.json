@@ -1,0 +1,20 @@
+{
+	"yeartagInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "yearTagLabel",
+			"testId": "yearTagLabelInput",
+			"label": "Label",
+			"size": 6
+		},
+		{
+			"name": "type",
+			"id": "type",
+			"dataTestId": "yeatTagType",
+			"testId": "yearTagTypeInput",
+			"label": "Type",
+			"size": 6
+		}
+	]
+}

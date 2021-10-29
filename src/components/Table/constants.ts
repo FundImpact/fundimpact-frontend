@@ -187,3 +187,12 @@ export const addressTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "" },
 ];
+
+export const yearTagTableHeadings: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Label", keyMapping: "name" },
+	{ label: "Type", keyMapping: "type" },
+	{ label: "Start Date", keyMapping: "start_date" },
+	{ label: "End Date", keyMapping: "end_date" },
+	{ label: "Countries" },
+];

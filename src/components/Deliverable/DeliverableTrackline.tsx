@@ -1,11 +1,11 @@
-import { ApolloClient, useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useMemo, useState } from "react";
+import { ApolloClient, useApolloClient, useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
-import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../graphql";
+// import { GET_ANNUAL_YEARS, GET_FINANCIAL_YEARS } from "../../graphql";
 import {
-	GET_ACHIEVED_VALLUE_BY_TARGET,
+	// GET_ACHIEVED_VALLUE_BY_TARGET,
 	GET_DELIVERABLE_TARGET_BY_PROJECT,
 } from "../../graphql/Deliverable/target";
 import {
@@ -19,14 +19,14 @@ import {
 	IDeliverableTargetLine,
 } from "../../models/deliverable/deliverableTrackline";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { getFetchPolicy, getTodaysDate, uploadPercentageCalculator } from "../../utils";
+import { getFetchPolicy, getTodaysDate } from "../../utils";
 import CommonForm from "../CommonForm/commonForm";
 import FormDialog from "../FormDialog/FormDialog";
 import { FORM_ACTIONS } from "../Forms/constant";
 import { FullScreenLoader } from "../Loader/Loader";
-import DeliverableStepper from "../Stepper/Stepper";
+// import DeliverableStepper from "../Stepper/Stepper";
 import { DELIVERABLE_ACTIONS } from "./constants";
-import DeliverableTracklineDonorYearTags from "./DeliverableTracklineDonor";
+// import DeliverableTracklineDonorYearTags from "./DeliverableTracklineDonor";
 import { deliverableTragetLineForm } from "./inputField.json";
 import {
 	IDeliverableTracklineByTargetResponse,
@@ -37,16 +37,16 @@ import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMess
 import AttachFileForm from "../Forms/AttachFiles";
 import { AttachFile } from "../../models/AttachFile";
 import useMultipleFileUpload from "../../hooks/multipleFileUpload";
-import { CircularPercentage, FormDetails } from "../commons";
+import { FormDetails } from "../commons";
 import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJ_DONORS } from "../../graphql/project";
-import DeliverableTarget from "./DeliverableTarget";
+// import DeliverableTarget from "./DeliverableTarget";
 import { IGetProjectDonor, IProjectDonor } from "../../models/project/project";
 import { GET_ORG_DONOR } from "../../graphql/donor";
 import { IGET_DONOR } from "../../models/donor/query";
 import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../Project/Project";
-import Donor from "../Donor";
-import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../../models/constants";
+// import Donor from "../Donor";
+import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
 import { GET_YEARTAGS } from "../../graphql/yearTags/query";
@@ -98,12 +98,12 @@ const FormDetailsCalculate = React.memo(
 			description:
 				"This text will be show on deliverable trackline form for deliverable category",
 		});
-		let deliverableAchievedTargetLabel = intl.formatMessage({
-			id: "deliverableAchievedTargetLabelFormDetail",
-			defaultMessage: "Achieved",
-			description:
-				"This text will be show on deliverable trackline form for deliverable category",
-		});
+		// let deliverableAchievedTargetLabel = intl.formatMessage({
+		// 	id: "deliverableAchievedTargetLabelFormDetail",
+		// 	defaultMessage: "Achieved",
+		// 	description:
+		// 		"This text will be show on deliverable trackline form for deliverable category",
+		// });
 
 		let fetchedDeliverableTarget = deliverableTargetResponse?.deliverableTargetList[0];
 		let formDetailsArray = fetchedDeliverableTarget
@@ -207,15 +207,15 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		console.error(error);
 	}
 
-	let cachedOrganizationDonors: IGET_DONOR | null = null;
+	// let cachedOrganizationDonors: IGET_DONOR | null = null;
 	try {
-		cachedOrganizationDonors = apolloClient.readQuery<IGET_DONOR>(
-			{
-				query: GET_ORG_DONOR,
-				variables: { filter: { organization: DashBoardData?.organization?.id } },
-			},
-			true
-		);
+		// cachedOrganizationDonors = apolloClient.readQuery<IGET_DONOR>(
+		// 	{
+		// 		query: GET_ORG_DONOR,
+		// 		variables: { filter: { organization: DashBoardData?.organization?.id } },
+		// 	},
+		// 	true
+		// );
 	} catch (error) {
 		console.error(error);
 	}
@@ -407,35 +407,35 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const getProjectDonorIdForGivenDonorId = (
 		projectDonors: IGetProjectDonor["projectDonors"] | undefined,
 		donorId: any
-	) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id == donorId)?.id;
+	) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id === donorId)?.id;
 
-	const createProjectDonorHelper = (value: any) => {
-		const projectDonorIdForGivenDonor = getProjectDonorIdForGivenDonorId(
-			cachedProjectDonors?.projectDonors,
-			value.id
-		);
-		if (projectDonorIdForGivenDonor) {
-			updateProjectDonor({
-				variables: {
-					id: projectDonorIdForGivenDonor,
-					input: {
-						project: DashBoardData?.project?.id,
-						donor: value.id,
-						deleted: false,
-					},
-				},
-			});
-		} else {
-			createProjectDonor({
-				variables: {
-					input: {
-						project: DashBoardData?.project?.id,
-						donor: value.id,
-					},
-				},
-			});
-		}
-	};
+	// const createProjectDonorHelper = (value: any) => {
+	// 	const projectDonorIdForGivenDonor = getProjectDonorIdForGivenDonorId(
+	// 		cachedProjectDonors?.projectDonors,
+	// 		value.id
+	// 	);
+	// 	if (projectDonorIdForGivenDonor) {
+	// 		updateProjectDonor({
+	// 			variables: {
+	// 				id: projectDonorIdForGivenDonor,
+	// 				input: {
+	// 					project: DashBoardData?.project?.id,
+	// 					donor: value.id,
+	// 					deleted: false,
+	// 				},
+	// 			},
+	// 		});
+	// 	} else {
+	// 		createProjectDonor({
+	// 			variables: {
+	// 				input: {
+	// 					project: DashBoardData?.project?.id,
+	// 					donor: value.id,
+	// 				},
+	// 			},
+	// 		});
+	// 	}
+	// };
 
 	// deliverableTragetLineForm[5].customMenuOnClick = createProjectDonorHelper;
 
@@ -448,6 +448,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			}
 			setSuccess(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [success, props, setSuccess, currentTargetId]);
 	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: false });
 

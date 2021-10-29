@@ -3,21 +3,21 @@ import CommonTable from "../CommonTable";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import ImpactCategoryDialog from "../../Impact/ImpactCategoryDialog";
 import { IImpactCategoryData } from "../../../models/impact/impact";
-import ImpactUnit from "../ImpactUnitTable";
+// import ImpactUnit from "../ImpactUnitTable";
 import { impactCategoryTableHeadings as tableHeadings } from "../constants";
 import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { Grid, Box, Avatar, Chip, MenuItem, Button, useTheme } from "@material-ui/core";
-import FilterList from "../../FilterList";
-import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
+import { Grid, Box, Avatar, Chip, Button, useTheme } from "@material-ui/core";
+// import FilterList from "../../FilterList";
+// import { impactCategoryInputFields } from "../../../pages/settings/ImpactMaster/inputFields.json";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	IMPACT_CATEGORY_TABLE_EXPORT,
 	IMPACT_CATEGORY_TABLE_IMPORT,
-	IMPACT_CATEGORY_UNIT_EXPORT,
+	// IMPACT_CATEGORY_UNIT_EXPORT,
 } from "../../../utils/endpoints.util";
-import { ApolloQueryResult } from "@apollo/client";
+// import { ApolloQueryResult } from "@apollo/client";
 import { exportTable } from "../../../utils/importExportTable.utils";
-import { FormattedMessage } from "react-intl";
+// import { FormattedMessage } from "react-intl";
 import { useAuth } from "../../../contexts/userContext";
 
 const rows = [

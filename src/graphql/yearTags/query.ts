@@ -11,3 +11,26 @@ export const GET_YEARTAGS = gql`
 		}
 	}
 `;
+
+export const GET_YEARTAGS_COUNT = gql`
+	query yearTagsCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		yearTagsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+				totalCount
+			}
+		}
+	}
+`;
+
+export const GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID = gql`
+	query yearTagCountries($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		yearTagsCountries(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			country {
+				id
+				name
+				code
+			}
+		}
+	}
+`;

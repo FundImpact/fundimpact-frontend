@@ -20,15 +20,21 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverable
 import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
 import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
-import DefaultSettingsView from "./defaultView";
+// import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
-import { RolesContainer } from "./Roles/container";
+// import { RolesContainer } from "./Roles/container";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
+import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
+import YearTags from "./YearTags";
+import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
+import Categories from "./Categories";
+import Units from "./Units";
+import GeoRegions from "./GeoRegions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -127,10 +133,14 @@ export default function SettingContainer() {
 	const donorFindAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.FIND_DONOR);
 
 	const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
+
 	const organizationFindAccess = userHasAccess(
 		MODULE_CODES.ORGANIZATION,
 		ORGANIZATION_ACTIONS.UPDATE_ORGANIZATION
 	);
+
+	const yearTagFindAccess = userHasAccess(MODULE_CODES.YEAR_TAG, YEARTAG_ACTIONS.FIND_YEAR_TAG);
+
 	const getDefaultRoute = () => {
 		if (organizationEditAccess) {
 			return <Navigate to="organization" />;
@@ -184,7 +194,7 @@ export default function SettingContainer() {
 								<LeftPanel />
 							</Grid>
 							<Grid item xs={10}>
-								<SettingsSidebar></SettingsSidebar>
+								<SettingsSidebar />
 							</Grid>
 						</Grid>
 					</Box>
@@ -201,6 +211,12 @@ export default function SettingContainer() {
 							path="budget"
 							element={<BudgetCategory />}
 						/>
+						<PrivateRoute
+							userAccess={impactCategoryFindAccess || deliverableCategoryFindAccess}
+							path="categories"
+							element={<Categories />}
+						/>
+						<PrivateRoute userAccess={true} path="units" element={<Units />} />
 						<PrivateRoute
 							userAccess={
 								impactCategoryFindAccess ||
@@ -255,6 +271,21 @@ export default function SettingContainer() {
 							userAccess={organizationEditAccess}
 							element={<IndividualContainer />}
 							path="individual"
+						/>
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<TallyContainer />}
+							path="tally"
+						/>
+						<PrivateRoute
+							userAccess={yearTagFindAccess}
+							element={<YearTags />}
+							path="yeartags"
+						/>
+						<PrivateRoute
+							userAccess={true} //To be changed
+							element={<GeoRegions />}
+							path="georegions"
 						/>
 					</Routes>
 				</Grid>

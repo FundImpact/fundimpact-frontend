@@ -375,6 +375,7 @@ export default function DashboardTableContainer() {
 				budgetTargetEditAccess,
 			tableVisibility: budgetTargetFindAccess,
 		},
+
 		{
 			label: intl.formatMessage({
 				id: "deliverableTabHeading",

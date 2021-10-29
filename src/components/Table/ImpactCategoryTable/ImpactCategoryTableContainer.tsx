@@ -4,7 +4,7 @@ import { IImpactCategoryData } from "../../../models/impact/impact";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { IMPACT_CATEGORY_ACTIONS } from "../../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../../utils/access/modules/impactUnit/actions";
-import { ApolloQueryResult } from "@apollo/client";
+// import { ApolloQueryResult } from "@apollo/client";
 
 const getInitialValues = (impactCategory: IImpactCategoryData | null): IImpactCategoryData => {
 	return {

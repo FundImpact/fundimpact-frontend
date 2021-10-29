@@ -1,13 +1,5 @@
-import {
-	Box,
-	Button,
-	CircularProgress,
-	IconButton,
-	Input,
-	InputLabel,
-	MenuItem,
-} from "@material-ui/core";
-import React, { useRef, useState } from "react";
+import { Button, IconButton, MenuItem } from "@material-ui/core";
+import React from "react";
 import { useAuth } from "../../contexts/userContext";
 import SimpleMenu from "../Menu/Menu";
 import axios from "axios";

@@ -93,7 +93,7 @@ const InputFields = ({
 	const [elemName, setElemName] = React.useState<string[]>([]);
 
 	useEffect(() => {
-		if (inputType == "multiSelect") {
+		if (inputType === "multiSelect") {
 			setElemName(
 				formik.values[name]?.map((elem: any) => {
 					if (elem) return elem.id;
@@ -109,6 +109,7 @@ const InputFields = ({
 			})
 		);
 	};
+
 	let renderValue;
 	if (multiple) {
 		renderValue = (selected: any) => (
@@ -287,7 +288,7 @@ const InputFields = ({
 			</>
 		);
 	}
-	if (inputType == "autocomplete") {
+	if (inputType === "autocomplete") {
 		return (
 			<Autocomplete
 				multiple={multiple}
@@ -334,7 +335,7 @@ const InputFields = ({
 		);
 	}
 
-	if (inputType == "switch") {
+	if (inputType === "switch") {
 		return (
 			<FormControlLabel
 				control={

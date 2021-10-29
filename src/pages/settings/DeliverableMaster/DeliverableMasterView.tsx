@@ -151,7 +151,7 @@ const DeliverableMasterView = ({
 									deliverableUnitFindAccess ||
 									deliverableUnitCreateAccess ||
 									deliverableCategoryCreateAccess) &&
-									(value == 0 ? (
+									(value === 0 ? (
 										<FormattedMessage
 											description={`This text is the heding of deliverable Categories table`}
 											defaultMessage={`Deliverable Categories`}

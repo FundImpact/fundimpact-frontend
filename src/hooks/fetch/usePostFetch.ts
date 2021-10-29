@@ -23,6 +23,7 @@ export const usePostFetch = <T>({
 			intiatePostRequest(payload, url, setLoading, setData, setError, jwt);
 			setError("");
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [payload, url, initiateRequest]);
 
 	return { error, loading, data, setPayload };

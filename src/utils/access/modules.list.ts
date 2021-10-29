@@ -32,6 +32,7 @@ import { FUND_RECEIPT_MODULE } from "./modules/fundReceipt/fundReceipt.module";
 import { CONTACT_MODULE } from "./modules/contact/contact.module";
 import { ADDRESS_MODULE } from "./modules/address/address.module";
 import { INDIVIDUAL_MODULE } from "./modules/individual/individual.module";
+import { YEAR_TAGS_MODULE } from "./modules/yearTag/yearTags.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -102,4 +103,5 @@ export const MODULES = {
 	[MODULE_CODES.CONTACT]: CONTACT_MODULE,
 	[MODULE_CODES.ADDRESS]: ADDRESS_MODULE,
 	[MODULE_CODES.INDIVIDUAL]: INDIVIDUAL_MODULE,
+	[MODULE_CODES.YEAR_TAG]: YEAR_TAGS_MODULE,
 } as const;

@@ -1,5 +1,5 @@
 import { ApolloQueryResult, useQuery } from "@apollo/client";
-import { List, ListItem, ListItemText, Button, IconButton, Box, Link } from "@material-ui/core";
+import { List, ListItem, ListItemText, IconButton, Box, Link } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -134,6 +134,7 @@ export default function ProjectList({
 			dispatch(setProject(data.orgProject[0]));
 			setIsAnyActiveProject(true);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, dispatch, projectIndex, pathname]);
 
 	const projectCreateAccess = userHasAccess(

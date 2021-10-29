@@ -2,7 +2,7 @@ import React from "react";
 import { IGetContact } from "../../models/contact/query";
 import { contactTableHeadings } from "../Table/constants";
 import { Entity_Name } from "../../models/constants";
-import { Grid, Box, Chip, Avatar, Typography } from "@material-ui/core";
+import { Grid, Box, Typography } from "@material-ui/core";
 import { contactInputFields } from "./inputFields.json";
 import FilterList from "../FilterList";
 import ContactCard from "../ContactCard";
@@ -35,64 +35,64 @@ interface IContactCardListView {
 	{ id: "OFFICE", name: "OFFICE" },
 ];
 
-const chipArray = ({
-	name,
-	removeChip,
-	elementList,
-}: {
-	removeChip: (index: number) => void;
-	elementList: string[];
-	name: string;
-}) => {
-	return elementList.map((element, index) => (
-		<Box key={index} m={1}>
-			<Chip
-				avatar={
-					<Avatar
-						style={{
-							height: "30px",
-							width: "30px",
-						}}
-					>
-						<span>{name}</span>
-					</Avatar>
-				}
-				label={element}
-				onDelete={() => removeChip(index)}
-			/>
-		</Box>
-	));
-};
+// const chipArray = ({
+// 	name,
+// 	removeChip,
+// 	elementList,
+// }: {
+// 	removeChip: (index: number) => void;
+// 	elementList: string[];
+// 	name: string;
+// }) => {
+// 	return elementList.map((element, index) => (
+// 		<Box key={index} m={1}>
+// 			<Chip
+// 				avatar={
+// 					<Avatar
+// 						style={{
+// 							height: "30px",
+// 							width: "30px",
+// 						}}
+// 					>
+// 						<span>{name}</span>
+// 					</Avatar>
+// 				}
+// 				label={element}
+// 				onDelete={() => removeChip(index)}
+// 			/>
+// 		</Box>
+// 	));
+// };
 
-const createChipArray = ({
-	filterListObjectKeyValuePair,
-	removeFilterListElements,
-}: {
-	filterListObjectKeyValuePair: any;
-	removeFilterListElements: (key: string, index?: number | undefined) => void;
-}) => {
-	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
-		return chipArray({
-			elementList: [filterListObjectKeyValuePair[1]],
-			name: filterListObjectKeyValuePair[0].slice(0, 4),
-			removeChip: (index: number) => {
-				removeFilterListElements(filterListObjectKeyValuePair[0]);
-			},
-		});
-	}
-	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
-		if (filterListObjectKeyValuePair[0] === "contact_type") {
-			return chipArray({
-				elementList: filterListObjectKeyValuePair[1],
-				name: "cont",
-				removeChip: (index: number) => {
-					removeFilterListElements(filterListObjectKeyValuePair[0], index);
-				},
-			});
-		}
-	}
-	return null;
-};
+// const createChipArray = ({
+// 	filterListObjectKeyValuePair,
+// 	removeFilterListElements,
+// }: {
+// 	filterListObjectKeyValuePair: any;
+// 	removeFilterListElements: (key: string, index?: number | undefined) => void;
+// }) => {
+// 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+// 		return chipArray({
+// 			elementList: [filterListObjectKeyValuePair[1]],
+// 			name: filterListObjectKeyValuePair[0].slice(0, 4),
+// 			removeChip: (index: number) => {
+// 				removeFilterListElements(filterListObjectKeyValuePair[0]);
+// 			},
+// 		});
+// 	}
+// 	if (filterListObjectKeyValuePair[1] && Array.isArray(filterListObjectKeyValuePair[1])) {
+// 		if (filterListObjectKeyValuePair[0] === "contact_type") {
+// 			return chipArray({
+// 				elementList: filterListObjectKeyValuePair[1],
+// 				name: "cont",
+// 				removeChip: (index: number) => {
+// 					removeFilterListElements(filterListObjectKeyValuePair[0], index);
+// 				},
+// 			});
+// 		}
+// 	}
+// 	return null;
+// };
 
 function ContactCardListView({
 	contactList,

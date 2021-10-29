@@ -25,7 +25,7 @@ import { IDeliverableTargetLine } from "../../../models/deliverable/deliverableT
 import {
 	getOptionFromTargetValueOptions,
 	getTodaysDate,
-	uploadPercentageCalculator,
+	// uploadPercentageCalculator,
 } from "../../../utils";
 import FullScreenLoader from "../../commons/GlobalLoader";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
@@ -45,19 +45,19 @@ import { ANNUAL_YEAR_ACTIONS } from "../../../utils/access/modules/annualYear/ac
 import { removeArrayElementsAtVariousIndex as filterTableHeadingsAndRows } from "../../../utils";
 import { AttachFile } from "../../../models/AttachFile";
 import AttachFileForm from "../../Forms/AttachFiles";
-import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
-import { CircularPercentage } from "../../commons";
-import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
-import { useNotificationDispatch } from "../../../contexts/notificationContext";
-import { setSuccessNotification } from "../../../reducers/notificationReducer";
+// import useMultipleFileUpload from "../../../hooks/multipleFileUpload/multipleFileUpload.";
+// import { CircularPercentage } from "../../commons";
+// import { CommonUploadingFilesMessage } from "../../../utils/commonFormattedMessage";
+// import { useNotificationDispatch } from "../../../contexts/notificationContext";
+// import { setSuccessNotification } from "../../../reducers/notificationReducer";
 import ImportExportTableMenu from "../../ImportExportTableMenu";
 import {
 	ANNUAL_YEAR_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_EXPORT,
 	DELIVERABLE_LINE_ITEM_PROJECTS_TABLE_IMPORT,
-	DONOR_EXPORT,
+	// DONOR_EXPORT,
 	FINANCIAL_YEAR_EXPORT,
-	GRANT_PERIOD_TABLE_EXPORT,
+	// GRANT_PERIOD_TABLE_EXPORT,
 } from "../../../utils/endpoints.util";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
@@ -100,28 +100,28 @@ const chipArray = ({
 	));
 };
 
-const DeliverableTranche = ({ TracklineId }: { TracklineId: string }) => {
-	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
-		variables: { filter: { deliverable_tracking_lineitem: TracklineId } },
-	});
-	return (
-		<TableCell>
-			<Box display="flex">
-				{data?.deliverableLinitemFyDonorList.map((elem: any) => (
-					<Box mr={1}>
-						<Chip
-							label={`${elem?.grant_periods_project?.name || "-"} - ${
-								elem?.project_donor?.donor?.name || "-"
-							}`}
-							size="small"
-							color="primary"
-						/>
-					</Box>
-				))}
-			</Box>
-		</TableCell>
-	);
-};
+// const DeliverableTranche = ({ TracklineId }: { TracklineId: string }) => {
+// 	const { data } = useQuery(GET_DELIVERABLE_TRANCHE, {
+// 		variables: { filter: { deliverable_tracking_lineitem: TracklineId } },
+// 	});
+// 	return (
+// 		<TableCell>
+// 			<Box display="flex">
+// 				{data?.deliverableLinitemFyDonorList.map((elem: any) => (
+// 					<Box mr={1}>
+// 						<Chip
+// 							label={`${elem?.grant_periods_project?.name || "-"} - ${
+// 								elem?.project_donor?.donor?.name || "-"
+// 							}`}
+// 							size="small"
+// 							color="primary"
+// 						/>
+// 					</Box>
+// 				))}
+// 			</Box>
+// 		</TableCell>
+// 	);
+// };
 
 // import {
 // 	GET_DELIVERABLE_TRANCHE,
@@ -139,7 +139,7 @@ function EditDeliverableTrackLineIcon({
 		| undefined;
 }) {
 	const [tracklineDonorsMapValues, setTracklineDonorsMapValues] = useState<any>({});
-	const notificationDispatch = useNotificationDispatch();
+	// const notificationDispatch = useNotificationDispatch();
 	const [tracklineDonors, setTracklineDonors] = useState<
 		{
 			id: string;
@@ -681,6 +681,7 @@ export default function DeliverablesTrackLineTable({
 		} else {
 			setRows([]);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deliverableTracklineData, annualYearFindAccess, financialYearFindAccess, TracklinePage]);
 
 	const filteredDeliverableTracklineTableHeadings = useMemo(
