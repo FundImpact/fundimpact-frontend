@@ -88,6 +88,23 @@ export interface IInputField {
 	size: any;
 	required?: boolean;
 }
+export interface IGeoregionInputField {
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	endAdornment?: string;
+	formik?: any;
+	type?: string;
+	size: any;
+	required?: boolean;
+	optionsArray?: any[];
+	getInputValue?: any;
+	multiple?: boolean;
+}
 
 export interface IInputFields {
 	inputType: string;

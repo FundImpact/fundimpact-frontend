@@ -1,4 +1,5 @@
 import {
+	useLazyQuery,
 	useMutation,
 	// useQuery,
 	// ApolloCache,
@@ -6,7 +7,7 @@ import {
 	// FetchResult,
 	// MutationFunctionOptions,
 } from "@apollo/client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -40,6 +41,7 @@ import {
 	GET_STATE_DATA,
 	UPDATE_GEOGRAPHIES_STATE,
 } from "../../graphql/Geographies/GeographyState";
+import { GET_COUNTRY_DATA } from "../../graphql/Geographies/GeographyCountry";
 
 function getInitialValues(props: GoegraphiesStateProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
@@ -60,6 +62,17 @@ interface IError extends Omit<Partial<IGeographiesState>, "GeographiesState"> {
 }
 
 function GeographiesState(props: GoegraphiesStateProps) {
+	const [getCountryDropdown, countryDropdownResponse] = useLazyQuery(GET_COUNTRY_DATA);
+
+	useEffect(() => {
+		getCountryDropdown();
+	}, []);
+
+	console.log("countryDropdownResponse", countryDropdownResponse?.data?.countries);
+
+	GeographiesStateForm[2].optionsArray = countryDropdownResponse?.data?.countries;
+	console.log("GeographiesStateForm", GeographiesStateForm[2].optionsArray);
+
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;

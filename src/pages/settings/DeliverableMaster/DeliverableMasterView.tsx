@@ -99,8 +99,6 @@ const DeliverableMasterView = ({
 		setValue(newValue);
 	};
 
-	// console.log("deliverableUnitFilterList", deliverableUnitFilterList);
-
 	const tabs = [
 		{
 			buttonAction: {

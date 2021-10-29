@@ -128,7 +128,11 @@ function GeographiesBlockTableGraphql({
 		getBlocks();
 	}, []);
 
-	const geographiesBlocksList = blockResponse?.data?.blocks || [];
+	const geographiesBlocksList: any =
+		blockResponse?.data?.blocks.map((item: any) => ({
+			...item,
+			district: item.district ? item.district.name : null,
+		})) || [];
 
 	const GeographiesBlockCount: number = 10;
 

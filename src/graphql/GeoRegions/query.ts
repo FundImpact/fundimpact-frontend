@@ -9,17 +9,103 @@ export const GET_GEOREGIONS_DATA = gql`
 				id
 				name
 			}
+			description
 			is_active
 		}
 	}
 `;
 
 export const CREATE_GEOREGIONS = gql`
-	mutation createGeographiesCountry($input: createGeoRegionInput) {
+	mutation createGeoRegions($input: createGeoRegionInput) {
 		createGeoRegion(input: $input) {
 			geoRegion {
+				id
+				created_at
+				updated_at
 				name
 				description
+				country_id {
+					name
+				}
+				state_id {
+					name
+				}
+				district_id {
+					name
+				}
+				block_id {
+					name
+				}
+				village_id {
+					name
+				}
+				gp_id {
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const UPDATE_GEOREGIONS = gql`
+	mutation createGeoRegions($input: updateGeoRegionInput) {
+		updateGeoRegion(input: $input) {
+			geoRegion {
+				id
+				created_at
+				updated_at
+				name
+				description
+				country_id {
+					name
+				}
+				state_id {
+					name
+				}
+				district_id {
+					name
+				}
+				block_id {
+					name
+				}
+				village_id {
+					name
+				}
+				gp_id {
+					name
+				}
+			}
+		}
+	}
+`;
+
+export const DELETE_GEOREGIONS = gql`
+	mutation deleteGeoRegions($input: deleteGeoRegionInput) {
+		deleteGeoRegion(input: $input) {
+			geoRegion {
+				id
+				created_at
+				updated_at
+				name
+				description
+				country_id {
+					name
+				}
+				state_id {
+					name
+				}
+				district_id {
+					name
+				}
+				block_id {
+					name
+				}
+				village_id {
+					name
+				}
+				gp_id {
+					name
+				}
 			}
 		}
 	}

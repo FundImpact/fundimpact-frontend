@@ -691,7 +691,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		}
 	}, [initialValues, budgetTargets]);
 
-	budgetLineitemFormInputFields[4].getInputValue = (budgetTargetId: string) => {
+	budgetLineitemFormInputFields[0].getInputValue = (budgetTargetId: string) => {
 		setSelectedBudgetTarget(
 			getBudgetTarget({
 				budgetTargetId,
@@ -707,7 +707,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}
 
 	if (currency?.currencyList?.length) {
-		budgetLineitemFormInputFields[1].endAdornment = currency.currencyList[0].code;
+		budgetLineitemFormInputFields[2].endAdornment = currency.currencyList[0].code;
 	}
 
 	if (lists.annualYear) {
@@ -715,7 +715,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}
 
 	if (budgetTargets) {
-		budgetLineitemFormInputFields[4].optionsArray = budgetTargets.budgetSubTargets;
+		budgetLineitemFormInputFields[0].optionsArray = budgetTargets.budgetSubTargets;
 	}
 	if (lists.financialYear) {
 		budgetLineitemFormInputFields[6].optionsArray = lists.financialYear;

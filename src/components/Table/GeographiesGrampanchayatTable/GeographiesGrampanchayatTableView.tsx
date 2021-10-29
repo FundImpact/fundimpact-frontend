@@ -23,14 +23,7 @@ import {
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
-	{ valueAccessKey: "description" },
-	// {
-	// 	valueAccessKey: "",
-	// 	renderComponent: (deliverableUnit: IDeliverableUnitData) => (
-	// 		<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
-	// 	),
-	// },
-	// { valueAccessKey: "" },
+	{ valueAccessKey: "district" },
 ];
 
 const chipArray = ({

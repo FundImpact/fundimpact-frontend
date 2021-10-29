@@ -345,21 +345,6 @@ export default function DashboardTableContainer() {
 				{
 					text: intl.formatMessage({
 						id: "reportBudgetSpend",
-						defaultMessage: "Report Budget Spend",
-						description: `This text will be show on Add Button for Report Budget Spend`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetLineitem
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-						/>
-					),
-					createButtonAccess: budgetTargetLineItemCreateAccess,
-				},
-				{
-					text: intl.formatMessage({
-						id: "reportBudgetSpend",
 						defaultMessage: "Create Sub Target",
 						description: `This text will be show on budgets Add Button for create sub target`,
 					}),
@@ -373,6 +358,22 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "reportBudgetSpend",
+						defaultMessage: "Report Budget Spend",
+						description: `This text will be show on Add Button for Report Budget Spend`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<BudgetLineitem
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
+
 				{
 					text: intl.formatMessage({
 						id: "manageProjectBudgetTargets",

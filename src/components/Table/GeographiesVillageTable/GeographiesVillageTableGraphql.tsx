@@ -126,7 +126,13 @@ function GeographiesVillageTableGraphql({
 		getVillage();
 	}, []);
 
-	const geographiesVillageList = villageResponse?.data?.villages || [];
+	const geographiesVillageList: any =
+		villageResponse?.data?.villages.map((item: any) => ({
+			...item,
+			block: item.block ? item.block.name : null,
+		})) || [];
+
+	console.log("geographiesVillageList", geographiesVillageList);
 
 	let geographiesVillageCount: number = 10;
 

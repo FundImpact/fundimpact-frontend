@@ -5,25 +5,17 @@
 			"id": "name",
 			"dataTestId": "createBudgetName",
 			"testId": "createBudgetNameInput",
-			"label": "name",
+			"label": "Name",
 			"size": 6,
 			"required": true
 		},
 		{
-			"name": "project",
-			"id": "project",
-			"dataTestId": "createBudgetCode",
-			"testId": "createBudgetCodeInput",
-			"label": "Project",
-			"size": 6
-		},
-		{
-			"name": "Description",
+			"name": "description",
 			"id": "description",
 			"dataTestId": "createBudgetDescription",
 			"testId": "createBudgetDescriptionInput",
 			"label": "Description",
-			"size": 12
+			"size": 6
 		}
 	]
 }

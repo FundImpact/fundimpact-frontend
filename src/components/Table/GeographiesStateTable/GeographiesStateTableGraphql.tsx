@@ -126,7 +126,13 @@ function GeographiesStateTableGraphql({
 		getState();
 	}, []);
 
-	let geographiesStateList = stateResponse?.data?.states || [];
+	let geographiesStateList: any =
+		stateResponse?.data?.states.map((item: any) => ({
+			...item,
+			country: item.country ? item.country.name : null,
+		})) || [];
+
+	console.log("geographiesStateList", geographiesStateList);
 
 	let geographiesStateCount: number = 10;
 

@@ -129,6 +129,5 @@ const sendPostRequest = async (
 		update ? {} : formData,
 		config
 	);
-	console.log("adcadsc", FILE_UPLOAD);
 	return response?.data;
 };

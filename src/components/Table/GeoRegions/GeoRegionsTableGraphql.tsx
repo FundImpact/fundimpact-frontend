@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-// import BudgetCategoryTableContainer from "./BudgetCategoryTableContainer";
 import pagination from "../../../hooks/pagination";
 import {
 	GET_ORG_BUDGET_CATEGORY_COUNT,
@@ -59,10 +58,8 @@ function GeoRegionsTableGraphql({
 	});
 
 	const geoRegionsTableRefetch = useCallback(() => {
-		// const budgetCategoryTableRefetch = useCallback(() => {
 		countRefetch?.().then(() => queryRefetch?.());
 		refetchBudgetCategoryOnBudgetCategoryImport();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [countRefetch, queryRefetch]);
 
 	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
@@ -73,12 +70,9 @@ function GeoRegionsTableGraphql({
 
 	const geoRegionsData = geoRegionsResponse?.data?.geoRegions;
 
-	console.log("geoRegionsData", geoRegionsData);
-
 	return (
 		<GeoRegionsTableContainer
 			geoRegionsList={geoRegionsData || []}
-			// budgetCategoryList={budgetCategoryList?.orgBudgetCategory || []}
 			collapsableTable={false}
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}

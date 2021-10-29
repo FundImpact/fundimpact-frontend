@@ -40,7 +40,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"addNew": false,
 			"size": 12
 		},
@@ -81,7 +81,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"addNew": true,
 			"addNewClick": {},
 			"size": 6
@@ -262,7 +262,7 @@
 			"label": "Start Date",
 			"type": "date",
 			"size": 6,
-			"required": true
+			"required": false
 		},
 		{
 			"name": "timeperiod_end",
@@ -272,7 +272,7 @@
 			"label": "End Date",
 			"type": "date",
 			"size": 6,
-			"required": true
+			"required": false
 		},
 		{
 			"name": "reporting_date",

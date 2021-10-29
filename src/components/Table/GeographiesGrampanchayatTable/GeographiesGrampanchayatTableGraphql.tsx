@@ -126,7 +126,13 @@ function GeographiesGrampanchayatTableGraphql({
 		getGrampanchayat();
 	}, []);
 
-	const geographiesGrampanchayatList = grampanchayatResponse?.data?.grampanchayats || [];
+	const geographiesGrampanchayatList: any =
+		grampanchayatResponse?.data?.grampanchayats.map((item: any) => ({
+			...item,
+			district: item.district ? item.district.name : null,
+		})) || [];
+
+	console.log("geographiesGrampanchayatList", geographiesGrampanchayatList);
 
 	return (
 		<GeographiesGrampanchayatTableContainer

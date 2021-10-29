@@ -106,6 +106,7 @@ export const geoRegionsHeading = [
 	{ label: "#" },
 	{ label: "Name", keyMapping: "name" },
 	{ label: "Description", keyMapping: "description" },
+	// { label: "See Georegions" },
 	{ label: "" },
 ];
 

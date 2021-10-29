@@ -1,5 +1,5 @@
-import { useMutation } from "@apollo/client";
-import React from "react";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import React, { useCallback, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -12,8 +12,7 @@ import {
 	CREATE_ORG_BUDGET_CATEGORY,
 	UPDATE_ORG_BUDGET_CATEGORY,
 } from "../../graphql/Budget/mutation";
-import { IInputField } from "../../models";
-import { IBudgetCategory, IBudgetCategoryProps } from "../../models/budget";
+import { IInputField, IGeoregionInputField } from "../../models";
 import { IGET_BUDGET_CATEGORY } from "../../models/budget/query";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
@@ -24,15 +23,31 @@ import CommonForm from "../CommonForm";
 import { GeoRegionsFormInputFields } from "./inputFields.json";
 import DeleteModal from "../DeleteModal";
 import { IGeoRegions, IGeoRegionsProps } from "../../models/GeoRegions";
-import { CREATE_GEOREGIONS } from "../../graphql/GeoRegions/query";
+import {
+	CREATE_GEOREGIONS,
+	DELETE_GEOREGIONS,
+	GET_GEOREGIONS_DATA,
+	UPDATE_GEOREGIONS,
+} from "../../graphql/GeoRegions/query";
+import { GET_COUNTRY_DATA } from "../../graphql/Geographies/GeographyCountry";
+import { GET_VILLAGE_DATA } from "../../graphql/Geographies/GeographiesVillage";
+import { GET_GRAMPANCHAYAT_DATA } from "../../graphql/Geographies/GeographiesGrampanchayat";
+import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
+import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
+import { GET_STATE_DATA } from "../../graphql/Geographies/GeographyState";
 
-let inputFields: IInputField[] = GeoRegionsFormInputFields;
+let inputFields: IGeoregionInputField[] = GeoRegionsFormInputFields;
 // let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
 let defaultFormValues: IGeoRegions = {
 	name: "",
-	code: "",
 	description: "",
+	country_id: "",
+	state_id: "",
+	district_id: "",
+	block_id: "",
+	gp_id: "",
+	village_id: "",
 };
 
 const validate = (values: IGeoRegions) => {
@@ -51,19 +66,94 @@ function GeoRegions({
 	getCreatedGeoRegions,
 	dialogType,
 }: IGeoRegionsProps) {
+	// const [currCountryId, setCurrCountryId] = useState<string>("");
+	// const [currStateId, setCurrStateId] = useState<string>("");
+	// const [currDistrictId, setCurrDistrictId] = useState<string>("");
+	// const [currBlockId, setCurrBlockId] = useState<string>("");
+	// const [currGrampanchyatId, setCurrGrampanchayatId] = useState<string>("");
+	// const [currVillageId, setCurrVillageId] = useState<string>("");
 	const [createNewOrgGeoRegions, { loading: creatingGeoRegions }] = useMutation(
-		CREATE_GEOREGIONS
-		// CREATE_ORG_BUDGET_CATEGORY
+		CREATE_GEOREGIONS,
+		{
+			refetchQueries: [{ query: GET_GEOREGIONS_DATA }],
+		}
 	);
-	const [updateGeoRegions, { loading: updatingGeoRegions }] = useMutation(
-		UPDATE_ORG_BUDGET_CATEGORY
-	);
-	// const [createNewOrgBudgetCategory, { loading: creatingBudgetCategory }] = useMutation(
-	// 	CREATE_ORG_BUDGET_CATEGORY
-	// );
-	// const [updateBudgetCategory, { loading: updatingBudgetCategory }] = useMutation(
-	// 	UPDATE_ORG_BUDGET_CATEGORY
-	// );
+	const [updateGeoRegions, { loading: updatingGeoRegions }] = useMutation(UPDATE_GEOREGIONS, {
+		refetchQueries: [{ query: GET_GEOREGIONS_DATA }],
+	});
+
+	const [deleteGeoRegions] = useMutation(DELETE_GEOREGIONS, {
+		refetchQueries: [{ query: GET_GEOREGIONS_DATA }],
+	});
+
+	// const [getCountry, countryResponse] = useLazyQuery(GET_COUNTRY_DATA);
+	// const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
+	// const [getDistrict, districtResponse] = useLazyQuery(GET_DISTRICT_DATA);
+	// const [getBlock, blockResponse] = useLazyQuery(GET_BLOCK_DATA);
+	// const [getGrampanchayat, grampanchayatResponse] = useLazyQuery(GET_GRAMPANCHAYAT_DATA);
+	// const [getVillage, villageResponse] = useLazyQuery(GET_VILLAGE_DATA);
+
+	// useEffect(() => {
+	// 	getCountry();
+	// }, []);
+
+	// useEffect(() => {
+	// 	if (currCountryId !== "") getState();
+	// }, [currCountryId]);
+
+	// useEffect(() => {
+	// 	if (currStateId !== "") getDistrict();
+	// }, [currStateId]);
+
+	// useEffect(() => {
+	// 	if (currDistrictId !== "") getBlock();
+	// }, [currDistrictId]);
+
+	// useEffect(() => {
+	// 	if (currDistrictId !== "") getGrampanchayat();
+	// }, [currDistrictId]);
+
+	// useEffect(() => {
+	// 	if (currBlockId !== "") getVillage();
+	// }, [currBlockId]);
+
+	// let dependentApi = {
+	// 	country: "call state api url with id",
+	// 	state: "call district api url with state id",
+	// };
+
+	// inputFields[2].optionsArray = countryResponse?.data?.countries || [];
+	// inputFields[3].optionsArray = stateResponse?.data?.states || [];
+	// inputFields[4].optionsArray = districtResponse?.data?.districts || [];
+	// inputFields[5].optionsArray = blockResponse?.data?.blocks || [];
+	// inputFields[6].optionsArray = grampanchayatResponse?.data?.grampanchayats || [];
+	// inputFields[7].optionsArray = villageResponse?.data?.villages || [];
+
+	// inputFields[2].getInputValue = (id: any) => {
+	// 	console.log("Country ID", id);
+
+	// 	setCurrCountryId(id);
+	// };
+	// inputFields[3].getInputValue = (id: any) => {
+	// 	console.log("state id", id);
+	// 	setCurrStateId(id);
+	// };
+	// inputFields[4].getInputValue = (id: any) => {
+	// 	console.log("district Id", id);
+	// 	setCurrDistrictId(id);
+	// };
+	// inputFields[5].getInputValue = (id: any) => {
+	// 	console.log("block ID", id);
+	// 	setCurrBlockId(id);
+	// };
+	// inputFields[6].getInputValue = (id: any) => {
+	// 	console.log("gramoanchayat ID", id);
+	// 	setCurrGrampanchayatId(id);
+	// };
+	// inputFields[7].getInputValue = (id: any) => {
+	// 	console.log("village ID", id);
+	// 	setCurrVillageId(id);
+	// };
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -73,6 +163,8 @@ function GeoRegions({
 
 	const onSubmit = async (valuesSubmitted: IGeoRegions) => {
 		let values = removeEmptyKeys<IGeoRegions>({ objectToCheck: valuesSubmitted });
+		console.log("gei region Values", values);
+
 		try {
 			await createNewOrgGeoRegions({
 				variables: {
@@ -143,7 +235,6 @@ function GeoRegions({
 							},
 							data: {
 								orgBudgetCategory: [createOrgGeoRegions, ...geoRegions],
-								// orgBudgetCategory: [createOrgBudgetCategory, ...budgetCategories],
 							},
 						});
 					} catch (err) {
@@ -172,7 +263,6 @@ function GeoRegions({
 							},
 							data: {
 								orgBudgetCategory: [createOrgGeoRegions, ...geoRegion],
-								// orgBudgetCategory: [createOrgBudgetCategory, ...budgetCategory],
 							},
 						});
 					} catch (err) {
@@ -188,27 +278,39 @@ function GeoRegions({
 		}
 	};
 
-	const onUpdate = async (valuesSubmitted: IGeoRegions) => {
+	const onUpdate = async (value: IGeoRegions) => {
 		try {
-			let values = removeEmptyKeys<IGeoRegions>({
-				objectToCheck: valuesSubmitted,
-				keysToRemainUnchecked: {
-					description: 1,
-				},
-			});
+			// let values = removeEmptyKeys<IGeoRegions>({
+			// 	objectToCheck: valuesSubmitted,
+			// 	keysToRemainUnchecked: {
+			// 		description: 1,
+			// 	},
+			// });
 
-			if (compareObjectKeys(values, initialValues)) {
-				handleClose();
-				return;
-			}
-			delete values.id;
+			// if (compareObjectKeys(values, initialValues)) {
+			// 	handleClose();
+			// 	return;
+			// }
+			// delete values.id;
 
+			// await updateGeoRegions({
+			// 	variables: {
+			// 		id: initialValues?.id,
+			// 		input: {
+			// 			...values,
+			// 			organization: dashboardData?.organization?.id,
+			// 		},
+			// 	},
+			// });
+			const id = value.id;
+			delete value.id;
 			await updateGeoRegions({
 				variables: {
-					id: initialValues?.id,
 					input: {
-						...values,
-						organization: dashboardData?.organization?.id,
+						where: {
+							id: id,
+						},
+						data: value,
 					},
 				},
 			});
@@ -222,28 +324,37 @@ function GeoRegions({
 
 	const onDelete = async () => {
 		try {
-			const budgetCategoryValues: any = { ...initialValues };
-			delete budgetCategoryValues["id"];
-			await updateGeoRegions({
+			deleteGeoRegions({
 				variables: {
-					id: initialValues?.id,
 					input: {
-						deleted: true,
-						...budgetCategoryValues,
-						organization: dashboardData?.organization?.id,
-					},
-				},
-				refetchQueries: [
-					{
-						query: GET_ORG_BUDGET_CATEGORY_COUNT,
-						variables: {
-							filter: {
-								organization: dashboardData?.organization?.id,
-							},
+						where: {
+							id: initialValues?.id,
 						},
 					},
-				],
+				},
 			});
+			// const budgetCategoryValues: any = { ...initialValues };
+			// delete budgetCategoryValues["id"];
+			// await updateGeoRegions({
+			// 	variables: {
+			// 		id: initialValues?.id,
+			// 		input: {
+			// 			deleted: true,
+			// 			...budgetCategoryValues,
+			// 			organization: dashboardData?.organization?.id,
+			// 		},
+			// 	},
+			// 	refetchQueries: [
+			// 		{
+			// 			query: GET_ORG_BUDGET_CATEGORY_COUNT,
+			// 			variables: {
+			// 				filter: {
+			// 					organization: dashboardData?.organization?.id,
+			// 				},
+			// 			},
+			// 		},
+			// 	],
+			// });
 			notificationDispatch(setSuccessNotification("Geo Regions Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));

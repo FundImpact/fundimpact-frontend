@@ -187,7 +187,6 @@ function SimpleTable({
 									{grantPeriodEditAccess && (
 										<MenuItem
 											onClick={() => {
-												console.log(data[index]);
 												editGrantPeriod(data[index]);
 												// seteditWorkspace(workpsaceToEdit as any);
 												closeMenuItems(index);
@@ -419,7 +418,6 @@ export default function GrantPeriodTable() {
 	useEffect(() => {
 		if (!dashboardData?.project?.id) return;
 		filter = { ...filter, project: dashboardData?.project?.id };
-		console.log(`fecthing new list for project`, dashboardData?.project?.id, { ...filter });
 		getProjectGrantPeriods({
 			variables: { filter: queryFilter },
 		});
@@ -429,8 +427,6 @@ export default function GrantPeriodTable() {
 		if (!data) {
 			return;
 		}
-
-		console.log(`grantPeriods`, data.grantPeriodsProjectList);
 	}, [data]);
 	const [grantPeriodToEdit, setGrantPeriodDialog] = useState<IGrantPeriod | null>(null);
 

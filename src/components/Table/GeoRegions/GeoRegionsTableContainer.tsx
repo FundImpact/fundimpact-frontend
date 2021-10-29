@@ -1,26 +1,23 @@
 import React, { useState, useRef } from "react";
-// import BudgetCategoryTableView from "./BudgetCategoryTableView";
-import { IBudgetCategory } from "../../../models/budget";
 import { IGeoRegions } from "../../../models/GeoRegions";
 import GeoRegionsTableView from "./GeoRegionsTableView";
-// import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
-const getInitialValues = (
-	geoRegions: Required<IGeoRegions> | null
-	// budgetCategory: Required<IBudgetCategory> | null
-): Required<IGeoRegions> => {
+const getInitialValues = (geoRegions: Required<IGeoRegions> | null): Required<IGeoRegions> => {
 	return {
-		code: geoRegions?.code || "",
-		// code: budgetCategory?.code || "",
 		description: geoRegions?.description || "",
 		id: geoRegions?.id || "",
 		name: geoRegions?.name || "",
+		country_id: geoRegions?.country_id || "",
+		state_id: geoRegions?.state_id || "",
+		district_id: geoRegions?.district_id || "",
+		block_id: geoRegions?.block_id || "",
+		gp_id: geoRegions?.gp_id || "",
+		village_id: geoRegions?.village_id || "",
 	};
 };
 
 function GeoRegionsTableContainer({
 	geoRegionsList,
-	// budgetCategoryList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -30,10 +27,8 @@ function GeoRegionsTableContainer({
 	orderBy,
 	setOrderBy,
 	geoRegionsTableRefetch,
-}: // budgetCategoryTableRefetch,
-{
+}: {
 	geoRegionsList: Required<IGeoRegions>[];
-	// budgetCategoryList: Required<IBudgetCategory>[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	loading: boolean;
@@ -59,17 +54,13 @@ function GeoRegionsTableContainer({
 		);
 	};
 
-	console.log("geoRegionsList", geoRegionsList);
-
 	return (
 		<GeoRegionsTableView
-			// <BudgetCategoryTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
 			selectedGeoRegions={selectedGeoRegions}
 			initialValues={getInitialValues(selectedGeoRegions.current)}
 			geoRegionsList={geoRegionsList}
-			// budgetCategoryList={budgetCategoryList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}

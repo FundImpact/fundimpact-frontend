@@ -126,7 +126,11 @@ function GeographiesDistrictTableGraphql({
 		getDistricts();
 	}, []);
 
-	const geographiesDistrictList = districtResponse?.data?.districts || [];
+	const geographiesDistrictList: any =
+		districtResponse?.data?.districts.map((item: any) => ({
+			...item,
+			state: item.state ? item.state.name : null,
+		})) || [];
 
 	let geographiesDistrictCount: number = 10;
 

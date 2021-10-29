@@ -6,6 +6,9 @@ export const GET_STATE_DATA = gql`
 			id
 			name
 			code
+			country {
+				name
+			}
 		}
 	}
 `;

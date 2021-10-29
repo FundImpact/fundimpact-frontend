@@ -47,10 +47,8 @@ const GeoRegionsMasterView = ({
 	);
 
 	const filterObject = Object.entries(tableFilterList).map((e, i) => {
-		console.log("eee", e);
+		// console.log("eee", e);
 	});
-
-	console.log("filterObject", filterObject);
 
 	return (
 		<>

@@ -24,18 +24,7 @@ import {
 import GeographiesDistrict from "../../Geographies/GeographiesDistrict";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 
-const rows = [
-	{ valueAccessKey: "name" },
-	{ valueAccessKey: "code" },
-	{ valueAccessKey: "description" },
-	// {
-	// 	valueAccessKey: "",
-	// 	renderComponent: (deliverableUnit: IDeliverableUnitData) => (
-	// 		<UnitsAndCategoriesProjectCount deliverableUnitId={deliverableUnit.id} />
-	// 	),
-	// },
-	// { valueAccessKey: "" },
-];
+const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "code" }, { valueAccessKey: "state" }];
 
 const chipArray = ({
 	arr,

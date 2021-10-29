@@ -21,7 +21,7 @@ import {
 import GeographiesVillage from "../../Geographies/GeographiesVillage";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 
-const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "code" }, { valueAccessKey: "Block" }];
+const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "code" }, { valueAccessKey: "block" }];
 
 const chipArray = ({
 	arr,

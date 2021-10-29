@@ -1,4 +1,5 @@
 import {
+	useLazyQuery,
 	useMutation,
 	// useQuery,
 	// ApolloCache,
@@ -6,7 +7,7 @@ import {
 	// FetchResult,
 	// MutationFunctionOptions,
 } from "@apollo/client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -45,6 +46,7 @@ import {
 	GET_GRAMPANCHAYAT_DATA,
 	UPDATE_GEOGRAPHIES_GRAMPANCHAYAT,
 } from "../../graphql/Geographies/GeographiesGrampanchayat";
+import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
 
 function getInitialValues(props: GoegraphiesGrampanchayatProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
@@ -64,6 +66,20 @@ interface IError extends Omit<Partial<IGeographiesGrampanchayat>, "GeographiesGr
 }
 
 function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
+	const [getGrampanchayatDropdown, grampanchayatDropdownResponse] = useLazyQuery(
+		GET_DISTRICT_DATA
+	);
+
+	useEffect(() => {
+		getGrampanchayatDropdown();
+	}, []);
+
+	console.log(
+		"grampanchayatDropdownResponse?.data?.districts;",
+		grampanchayatDropdownResponse?.data?.districts
+	);
+
+	GeographiesGrampanchayatForm[2].optionsArray = grampanchayatDropdownResponse?.data?.districts;
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
