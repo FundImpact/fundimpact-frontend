@@ -121,7 +121,7 @@ function GeographiesStateTableGraphql({
 	]);
 
 	const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
-
+	const [filter, setFilter] = useState({});
 	useEffect(() => {
 		getState();
 	}, []);
