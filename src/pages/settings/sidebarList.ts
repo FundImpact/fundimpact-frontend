@@ -58,18 +58,6 @@ export const sidebarList: {
 				title: "Units",
 				userAccess: true,
 			},
-			// {
-			// 	to: "impact",
-			// 	dataTestId: "impact-category-link",
-			// 	title: "Impact Categories And Units",
-			// 	userAccess: true,
-			// },
-			// {
-			// 	to: "deliverable",
-			// 	dataTestId: "deliverable-category-link",
-			// 	title: "Deliverable Categories And Units",
-			// 	userAccess: true,
-			// },
 			{
 				to: "yeartags",
 				dataTestId: "yeartags-link",
