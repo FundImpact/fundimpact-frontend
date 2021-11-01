@@ -3,14 +3,21 @@ import { Box, Button, FormControlLabel, RadioGroup, Radio } from "@material-ui/c
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useLazyQuery } from "@apollo/client";
 import FIDialog from "../../../components/Dialog/Dialog";
-import { donorForm, projectForm, targetForm, budgetCategoryForm } from "./inputField.json";
+import {
+	donorForm,
+	projectForm,
+	targetForm,
+	budgetCategoryForm,
+	targetAndSubTargetRadios,
+	tallyFormRadioButtons,
+} from "./inputField.json";
 import Tallyforms from "../../../components/Forms/Tally";
-import { GET_ORG_DONOR } from "../../../graphql/donor";
 import { GET_PROJECTS } from "../../../graphql";
 import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
-import { GET_DELIVERABLE_TARGET_BY_PROJECT } from "../../../graphql/Deliverable/target";
 import { GET_PROJ_DONORS } from "../../../graphql/project";
 import { IProjectDonor } from "../../../models/project/project";
+import TallyFormContainer from "./TallyFormContainer";
+import TallyFormRadioButtons from "./TallyFormRadioButtons";
 
 const useStyle = makeStyles((theme: Theme) =>
 	createStyles({
@@ -61,26 +68,15 @@ const TallyContainer = () => {
 	const [currentBudgetTarget, setCurrentBudgetTarget] = useState<null | string | number>(null);
 	const [globalSelect, setGlobalSelect] = useState<string>("donor");
 	const [donorSelect, setDonorSelect] = useState<string>("targetsAndSubTargets");
+	const [projectSelect, setProjectSelect] = useState<string>("targetsAndSubTargets");
 
 	const [getProjects, projectsResponse] = useLazyQuery(GET_PROJECTS);
 	const [getDonors, donorsResponse] = useLazyQuery(GET_PROJ_DONORS);
 	const [getBudgetTarget, budgetTargetResponse] = useLazyQuery(GET_BUDGET_TARGET_PROJECT);
 	const [getBudgetSubTarget, budgetSubTargetResponse] = useLazyQuery(GET_BUDGET_SUB_TARGETS);
 
-	console.log("donorsResponse: ", donorsResponse.data);
-
 	useEffect(() => {
 		if (globalSelect === "donor") {
-			// getProjects();
-			// if (currentProject) {
-			// 	getDonors({
-			// 		variables: {
-			// 			filter: {
-			// 				project: currentProject,
-			// 			},
-			// 		},
-			// 	});
-			// }
 			getDonors();
 
 			if (donorSelect === "targetsAndSubTargets") {
@@ -115,6 +111,7 @@ const TallyContainer = () => {
 		}
 
 		if (globalSelect === "project") {
+			getProjects();
 		}
 	}, [globalSelect, donorSelect, currentProject, currentBudgetTarget]);
 
@@ -129,36 +126,12 @@ const TallyContainer = () => {
 	const handleDonorSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setDonorSelect(e.target.value);
 	};
+	const handleProjectSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setProjectSelect(e.target.value);
+	};
 
 	const validate = (values: any) => {
 		let errors: Partial<any> = {};
-		// if (props.type === DELIVERABLE_ACTIONS.CREATE) {
-
-		// if (!values.donor) {
-		// 	errors.donor = "Donor is required";
-		// }
-		// if (!values.project) {
-		// 	errors.project = "Projcet is required";
-		// }
-		// // }
-
-		// if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
-		// 	if (!values.name && !values.name.length) {
-		// 		errors.name = "Name is required";
-		// 	}
-		// 	if (!values.project) {
-		// 		errors.project = "Project is required";
-		// 	}
-		// 	if (values.is_qualitative) {
-		// 		if (!values.value_qualitative_option) {
-		// 			errors.value_qualitative_option = "Options are required";
-		// 		}
-		// 	} else {
-		// 		if (!values.value_calculation) {
-		// 			errors.value_calculation = "This Field is required";
-		// 		}
-		// 	}
-		// }
 		return errors;
 	};
 
@@ -201,16 +174,6 @@ const TallyContainer = () => {
 		);
 	}
 
-	// if (projectsResponse.data) {
-	// 	donorForm[0].optionsArray = donorsResponse.data.projectDonors.map(
-	// 		(donor: IProjectDonor) => donor.donor
-	// 	);
-
-	// 	donorForm[1].optionsArray = donorsResponse.data.projectDonors.map(
-	// 		(donor: IProjectDonor) => donor.project
-	// 	);
-	// }
-
 	if (budgetTargetResponse.data) {
 		donorForm[2].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
 		donorForm[4].optionsArray = budgetTargetResponse.data.projectBudgetTargets;
@@ -233,10 +196,6 @@ const TallyContainer = () => {
 		projectForm[0].optionsArray = projectsResponse.data.orgProject;
 	}
 
-	// donorForm[0].getInputValue = (projectId: string) => {
-	// 	setCurrentProject(projectId);
-	// };
-
 	projectForm[0].getInputValue = (projectId: string) => {
 		setCurrentProject(projectId);
 	};
@@ -249,10 +208,6 @@ const TallyContainer = () => {
 		setCurrentBudgetTarget(targetId);
 	};
 
-	// useEffect(() => {
-	// 	console.log("currentBudgetTarget: ", currentBudgetTarget);
-	// }, [currentBudgetTarget]);
-
 	return (
 		<Box p={2}>
 			<h1>Welcome to Tally</h1>
@@ -261,122 +216,70 @@ const TallyContainer = () => {
 			</Button>
 
 			<FIDialog open={openDialog} handleClose={handleCloseDialog} header="Cost Center Name">
-				<RadioGroup
-					aria-label="tally"
-					name="row-radio-buttons-group"
-					onChange={handleGlobalSelection}
+				<TallyFormRadioButtons
 					value={globalSelect}
-				>
-					<Box display="flex" justifyContent="space-between">
-						<FormControlLabel value="donor" control={<Radio />} label="Donor" />
-						<FormControlLabel value="project" control={<Radio />} label="Project" />
-						<FormControlLabel value="target" control={<Radio />} label="Target" />
-						<FormControlLabel
-							value="budget_category"
-							control={<Radio />}
-							label="Budget Category"
-						/>
-					</Box>
-				</RadioGroup>
+					onChange={handleGlobalSelection}
+					radios={tallyFormRadioButtons}
+				/>
 
 				<Box className={classes.formWrapper} mt={5}>
 					{globalSelect === "donor" && (
-						<Tallyforms
-							{...{
-								initialValues: getInitialValues("donor"),
-								inputFields: donorForm,
-								validate,
-								onSubmit: onCreate,
-								onCancel,
-								formAction: undefined,
-								onUpdate,
-							}}
+						<TallyFormContainer
+							initialValues={getInitialValues("donor")}
+							inputFields={donorForm}
+							validate={validate}
+							onSubmit={onsubmit}
+							onCancel={onCancel}
+							onUpdate={onUpdate}
 						>
 							<Box className={classes.childrenWrapper}>
-								<RadioGroup
-									aria-label="tally"
-									name="row-radio-buttons-group"
-									onChange={handleDonorSelection}
+								<TallyFormRadioButtons
+									radios={targetAndSubTargetRadios}
 									value={donorSelect}
-								>
-									<Box display="flex" justifyContent="space-between">
-										<FormControlLabel
-											value="targetsAndSubTargets"
-											control={<Radio />}
-											label="Targets and Sub-Targets"
-										/>
-										<FormControlLabel
-											value="projectBudgetCategory"
-											control={<Radio />}
-											label="Project Budget Category"
-										/>
-									</Box>
-								</RadioGroup>
+									onChange={handleDonorSelection}
+								/>
 							</Box>
-						</Tallyforms>
+						</TallyFormContainer>
 					)}
 
 					{globalSelect === "project" && (
-						<Tallyforms
-							{...{
-								initialValues: getInitialValues("project"),
-								inputFields: projectForm,
-								validate,
-								onSubmit: onCreate,
-								onCancel,
-								formAction: undefined,
-								onUpdate,
-							}}
+						<TallyFormContainer
+							initialValues={getInitialValues("project")}
+							inputFields={projectForm}
+							validate={validate}
+							onSubmit={onsubmit}
+							onCancel={onCancel}
+							onUpdate={onUpdate}
 						>
 							<Box className={classes.childrenWrapper}>
-								<RadioGroup
-									aria-label="tally"
-									name="row-radio-buttons-group"
-									onChange={handleDonorSelection}
-									value={donorSelect}
-								>
-									<Box display="flex" justifyContent="space-between">
-										<FormControlLabel
-											value="targetsAndSubTargets"
-											control={<Radio />}
-											label="Targets and Sub-Targets"
-										/>
-										<FormControlLabel
-											value="projectBudgetCategory"
-											control={<Radio />}
-											label="Project Budget Category"
-										/>
-									</Box>
-								</RadioGroup>
+								<TallyFormRadioButtons
+									radios={targetAndSubTargetRadios}
+									value={projectSelect}
+									onChange={handleProjectSelection}
+								/>
 							</Box>
-						</Tallyforms>
+						</TallyFormContainer>
 					)}
 
 					{globalSelect === "target" && (
-						<Tallyforms
-							{...{
-								initialValues: getInitialValues("target"),
-								inputFields: targetForm,
-								validate,
-								onSubmit: onCreate,
-								onCancel,
-								formAction: undefined,
-								onUpdate,
-							}}
+						<TallyFormContainer
+							initialValues={getInitialValues("target")}
+							inputFields={targetForm}
+							validate={validate}
+							onSubmit={onsubmit}
+							onCancel={onCancel}
+							onUpdate={onUpdate}
 						/>
 					)}
 
 					{globalSelect === "budget_category" && (
-						<Tallyforms
-							{...{
-								initialValues: getInitialValues("budget_category"),
-								inputFields: budgetCategoryForm,
-								validate,
-								onSubmit: onCreate,
-								onCancel,
-								formAction: undefined,
-								onUpdate,
-							}}
+						<TallyFormContainer
+							initialValues={getInitialValues("budget_category")}
+							inputFields={budgetCategoryForm}
+							validate={validate}
+							onSubmit={onsubmit}
+							onCancel={onCancel}
+							onUpdate={onUpdate}
 						/>
 					)}
 				</Box>

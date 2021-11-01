@@ -9,50 +9,8 @@ import { yeartagInputFields } from "./inputFields.json";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import YearTag from "../../../components/YearTag";
 import { YEARTAG_ACTIONS } from "../../../utils/access/modules/yearTag/actions";
-
-const chipArray = ({
-	arr,
-	name,
-	removeChips,
-}: {
-	arr: string[];
-	name: string;
-	removeChips: (index: number) => void;
-}) => {
-	return arr.map((element, index) => (
-		<Box key={index} mx={1}>
-			<Chip
-				label={element}
-				avatar={
-					<Avatar
-						style={{
-							width: "30px",
-							height: "30px",
-						}}
-					>
-						<span>{name}</span>
-					</Avatar>
-				}
-				onDelete={() => removeChips(index)}
-			/>
-		</Box>
-	));
-};
-
-let countryHash: { [key: string]: string } = {};
-
-const mapIdToName = (
-	arr: { id: string; name: string }[],
-	initialObject: { [key: string]: string }
-) => {
-	return arr.reduce(
-		(accumulator: { [key: string]: string }, current: { id: string; name: string }) => {
-			accumulator[current.id] = current.name;
-			return accumulator;
-		},
-		initialObject
-	);
-};
+import { removeFilterListObjectElements } from "../../../utils/filterList";
+import ChipArray from "../../../components/Chips";
 
 const createChipArray = ({
 	tableFilterListObjectKeyValuePair,
@@ -65,7 +23,7 @@ const createChipArray = ({
 		tableFilterListObjectKeyValuePair[1] &&
 		typeof tableFilterListObjectKeyValuePair[1] == "string"
 	) {
-		return chipArray({
+		return ChipArray({
 			arr: [tableFilterListObjectKeyValuePair[1]],
 			name: tableFilterListObjectKeyValuePair[0].slice(0, 4),
 			removeChips: (index: number) => {
@@ -73,21 +31,6 @@ const createChipArray = ({
 			},
 		});
 	}
-	if (
-		tableFilterListObjectKeyValuePair[1] &&
-		Array.isArray(tableFilterListObjectKeyValuePair[1])
-	) {
-		if (tableFilterListObjectKeyValuePair[0] === "country") {
-			return chipArray({
-				arr: tableFilterListObjectKeyValuePair[1].map((ele) => countryHash[ele]),
-				name: "co",
-				removeChips: (index: number) => {
-					removeFilterListElements(tableFilterListObjectKeyValuePair[0], index);
-				},
-			});
-		}
-	}
-	return null;
 };
 
 const YearTags = () => {
@@ -95,30 +38,17 @@ const YearTags = () => {
 		[key: string]: string | string[];
 	}>({
 		name: "",
-		legal_name: "",
-		short_name: "",
-		country: [],
+		type: "",
 	});
 
+	// console.log(" tableFilterList; ", tableFilterList);
+
 	const yearTagsFindAccess = userHasAccess(MODULE_CODES.YEAR_TAG, YEARTAG_ACTIONS.FIND_YEAR_TAG);
-	// const donorCreateAccess = userHasAccess(MODULE_CODES.DONOR, DONOR_ACTIONS.CREATE_DONOR);
 
-	// const [getCountryList, { data: countries }] = useLazyQuery(GET_COUNTRY_LIST);
-
-	// const removeFilterListElements = (key: string, index?: number) =>
-	// 	setTableFilterList((filterListObject) =>
-	// 		removeFilterListObjectElements({ filterListObject, key, index })
-	// 	);
-
-	// yeartagInputFields[3].optionsArray = countries?.countries || [];
-
-	// if (!Object.keys(countryHash).length && countries?.countries) {
-	// 	countryHash = mapIdToName(countries?.countries, countryHash);
-	// }
-
-	// useEffect(() => {
-	// 	getCountryList();
-	// }, [getCountryList]);
+	const removeFilterListElements = (key: string, index?: number) =>
+		setTableFilterList((filterListObject) =>
+			removeFilterListObjectElements({ filterListObject, key, index })
+		);
 
 	return (
 		<Box p={2}>
@@ -141,17 +71,14 @@ const YearTags = () => {
 								setFilterList={setTableFilterList}
 								inputFields={yeartagInputFields}
 								initialValues={{
-									label: "",
+									name: "",
 									type: "",
-									start_date: "",
-									end_date: "",
-									countires: [],
 								}}
 							/>
 						)}
 					</Box>
 				</Grid>
-				{/* <Grid item xs={12}>
+				<Grid item xs={12}>
 					<Box my={2} display="flex">
 						{Object.entries(tableFilterList).map((tableFilterListObjectKeyValuePair) =>
 							createChipArray({
@@ -160,7 +87,7 @@ const YearTags = () => {
 							})
 						)}
 					</Box>
-				</Grid> */}
+				</Grid>
 			</Grid>
 
 			{yearTagsFindAccess && <YearTagTable tableFilterList={tableFilterList} />}

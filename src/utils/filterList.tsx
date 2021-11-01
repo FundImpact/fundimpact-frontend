@@ -1,6 +1,7 @@
 //the value of a key of filterListObject can be string or string array
 //if the value of filterListObject key is array then use filter to remove the element
 //otherwise set the value to empty string. If the value is array then the index would be given as
+
 //argument
 export const removeFilterListObjectElements = ({
 	filterListObject,

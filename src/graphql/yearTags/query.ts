@@ -26,15 +26,10 @@ export const GET_YEARTAGS_COUNT = gql`
 export const GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID = gql`
 	query yearTagCountries($sort: String, $limit: Int, $start: Int, $filter: JSON) {
 		yearTagsCountries(sort: $sort, limit: $limit, start: $start, where: $filter) {
-			id
 			country {
 				id
 				name
 				code
-			}
-			year_tag {
-				id
-				name
 			}
 		}
 	}

@@ -64,11 +64,11 @@ const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
 						</TableHead>
 						<TableBody>
 							{data.yearTagsCountries.map((country: IYearTagCountry) => (
-								<TableRow key={country.id}>
-									<TableCell>{country.country.id}</TableCell>
-									<TableCell>{country.country.name}</TableCell>
+								<TableRow key={country?.country?.id}>
+									<TableCell>{country?.country?.id}</TableCell>
+									<TableCell>{country?.country?.name}</TableCell>
 									<TableCell>
-										{country.country.code ? country.country.code : "-"}
+										{country?.country?.code ? country?.country?.code : "-"}
 									</TableCell>
 								</TableRow>
 							))}
