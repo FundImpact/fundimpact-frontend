@@ -30,10 +30,7 @@ function GeoRegionsTableGraphql({
 				newFilterListObject[key] = tableFilterList[key];
 			}
 		}
-		setQueryFilter({
-			// organization: dashboardData?.organization?.id,
-			...newFilterListObject,
-		});
+		setQueryFilter(newFilterListObject);
 	}, [tableFilterList, dashboardData]);
 
 	let {
@@ -51,8 +48,6 @@ function GeoRegionsTableGraphql({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-
-	console.log("geoRegionsData", count);
 
 	const geoRegionsTableRefetch = useCallback(() => {
 		countRefetch?.().then(() => queryRefetch?.());

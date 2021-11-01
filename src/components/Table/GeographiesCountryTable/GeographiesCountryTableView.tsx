@@ -14,13 +14,9 @@ import { DIALOG_TYPE } from "../../../models/constants";
 import { IGeographies, IGeographiesCountryData } from "../../../models/geographies/geographies";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 import Geographies from "../../Geographies/Geographies";
+import ChipArray from "../../Chips";
 
-const rows = [
-	{ valueAccessKey: "name" },
-	{ valueAccessKey: "code" },
-	// { valueAccessKey: "description" },
-	// { valueAccessKey: "" },
-];
+const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "code" }];
 
 const chipArr = ({
 	list,
@@ -59,19 +55,17 @@ const createChipArray = ({
 	filterListObjectKeyValuePair: any;
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
-		return chipArr({
-			removeChip: (index: number) => {
+		return ChipArray({
+			arr: [filterListObjectKeyValuePair[1]],
+			name: filterListObjectKeyValuePair[0],
+			removeChips: () => {
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
-			list: [filterListObjectKeyValuePair[1]],
-			name: filterListObjectKeyValuePair[0].slice(0, 4),
 		});
 	}
 	return null;
 };
 let geographiesCountryTableEditMenu: string[] = [];
-
-console.log("geographiesCountryTableEditMenu", geographiesCountryTableEditMenu);
 
 function GeographiesCountryTableView({
 	toggleDialogs,
@@ -126,12 +120,6 @@ function GeographiesCountryTableView({
 	geographiesCountryImportFromCsvAccess: boolean;
 	geographiesCountryExportAccess: boolean;
 }) {
-	console.log(
-		"geographiesCountryEditAccess",
-		geographiesCountryEditAccess,
-		geographiesCountryDeleteAccess
-	);
-
 	useEffect(() => {
 		if (geographiesCountryEditAccess) {
 			geographiesCountryTableEditMenu[0] = "Edit Country";
@@ -143,8 +131,6 @@ function GeographiesCountryTableView({
 			geographiesCountryTableEditMenu[1] = "Delete Country";
 		}
 	}, [geographiesCountryDeleteAccess]);
-
-	console.log("country initials", initialValues);
 
 	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
 
@@ -227,11 +213,6 @@ function GeographiesCountryTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{/* {(rowData: { id: string }) => (
-					<>
-						<DeliverableUnitTable rowId={rowData.id} collapsableTable={false} />
-					</>
-				)} */}
 			</CommonTable>
 		</>
 	);
