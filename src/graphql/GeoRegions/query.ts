@@ -15,6 +15,16 @@ export const GET_GEOREGIONS_DATA = gql`
 	}
 `;
 
+export const GET_GEOREGIONS_COUNT = gql`
+	query getgeoregionCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		geoRegionsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
 export const CREATE_GEOREGIONS = gql`
 	mutation createGeoRegions($input: createGeoRegionInput) {
 		createGeoRegion(input: $input) {

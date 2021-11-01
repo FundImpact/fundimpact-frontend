@@ -13,6 +13,16 @@ export const GET_STATE_DATA = gql`
 	}
 `;
 
+export const GET_STATE_COUNT = gql`
+	query getstateCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		statesConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
 export const CREATE_GEOGRAPHIES_STATE = gql`
 	mutation createGeographiesState($input: createStateInput) {
 		createState(input: $input) {

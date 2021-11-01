@@ -13,6 +13,16 @@ export const GET_VILLAGE_DATA = gql`
 	}
 `;
 
+export const GET_VILLAGE_COUNT = gql`
+	query getvillageCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		villagesConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
 export const CREATE_GEOGRAPHIES_VILLAGE = gql`
 	mutation createGeographiesVillage($input: createVillageInput) {
 		createVillage(input: $input) {

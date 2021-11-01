@@ -7,7 +7,7 @@ import {
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesBlockTableContainer from "./GeographiesBlockTableContainer";
-import { GET_BLOCK_DATA } from "../../../graphql/Geographies/GeographiesBlock";
+import { GET_BLOCK_COUNT, GET_BLOCK_DATA } from "../../../graphql/Geographies/GeographiesBlock";
 import { useLazyQuery } from "@apollo/client";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
@@ -71,7 +71,7 @@ function GeographiesBlockTableGraphql({
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
 			});
 		}
@@ -96,16 +96,16 @@ function GeographiesBlockTableGraphql({
 
 	let {
 		changePage: changeDeliverableUnitPage,
-		count: deliverableUnitCount,
-		queryData: deliverableUnitList,
+		count: geographyBlockCount,
+		queryData: geographyBlock,
 		queryLoading: geographiesBlockLoading,
 		countQueryLoading: geographiesBlockCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+		countQuery: GET_BLOCK_COUNT,
 		countFilter: queryFilter,
-		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		query: GET_BLOCK_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
@@ -120,21 +120,11 @@ function GeographiesBlockTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
-
-	const [getBlocks, blockResponse] = useLazyQuery(GET_BLOCK_DATA);
-
-	useEffect(() => {
-		getBlocks();
-	}, []);
-
 	const geographiesBlocksList: any =
-		blockResponse?.data?.blocks.map((item: any) => ({
+		geographyBlock?.blocks.map((item: any) => ({
 			...item,
 			district: item.district ? item.district.name : null,
 		})) || [];
-
-	const GeographiesBlockCount: number = 10;
 
 	return (
 		<GeographiesBlockTableContainer
@@ -142,7 +132,7 @@ function GeographiesBlockTableGraphql({
 			collapsableTable={collapsableTable}
 			changePage={changeDeliverableUnitPage}
 			loading={geographiesBlockLoading || geographiesBlockCountLoading}
-			count={GeographiesBlockCount}
+			count={geographyBlockCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

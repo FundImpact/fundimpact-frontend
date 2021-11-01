@@ -1,14 +1,12 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_DELIVERABLE_UNIT_BY_ORG,
-	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesVillageTableContainer from "./GeographiesVillageTableContainer";
-import { GET_VILLAGE_DATA } from "../../../graphql/Geographies/GeographiesVillage";
-import { useLazyQuery } from "@apollo/client";
+import {
+	GET_VILLAGE_COUNT,
+	GET_VILLAGE_DATA,
+} from "../../../graphql/Geographies/GeographiesVillage";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -71,7 +69,7 @@ function GeographiesVillageTableGraphql({
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
 			});
 		}
@@ -96,16 +94,16 @@ function GeographiesVillageTableGraphql({
 
 	let {
 		changePage: changeGeographiesVillagePage,
-		count: deliverableUnitCount,
-		queryData: deliverableUnitList,
+		count: geographyVillageCount,
+		queryData: geographyVillages,
 		queryLoading: geographiesVillageLoading,
 		countQueryLoading: geographiesVillageCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-		countFilter: queryFilter,
-		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		countQuery: GET_VILLAGE_COUNT,
+		countFilter: {},
+		query: GET_VILLAGE_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
@@ -120,21 +118,11 @@ function GeographiesVillageTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	const [getVillage, villageResponse] = useLazyQuery(GET_VILLAGE_DATA);
-
-	useEffect(() => {
-		getVillage();
-	}, []);
-
 	const geographiesVillageList: any =
-		villageResponse?.data?.villages.map((item: any) => ({
+		geographyVillages?.villages?.map((item: any) => ({
 			...item,
 			block: item.block ? item.block.name : null,
 		})) || [];
-
-	console.log("geographiesVillageList", geographiesVillageList);
-
-	let geographiesVillageCount: number = 10;
 
 	return (
 		<GeographiesVillageTableContainer
@@ -142,7 +130,7 @@ function GeographiesVillageTableGraphql({
 			collapsableTable={collapsableTable}
 			changePage={changeGeographiesVillagePage}
 			loading={geographiesVillageLoading || geographiesVillageCountLoading}
-			count={geographiesVillageCount}
+			count={geographyVillageCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

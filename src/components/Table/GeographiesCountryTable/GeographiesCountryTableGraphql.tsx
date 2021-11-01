@@ -1,9 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_DELIVERABLE_ORG_CATEGORY,
-	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/category";
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesCountryTableContainer from "./GeographiesCountryTableContainers";
@@ -60,7 +56,7 @@ function GoegraphiesCountryTableGraphql({
 		if (tableFilterList) {
 			let newFilterListObject: { [key: string]: string } = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
 			});
 		}
@@ -72,11 +68,11 @@ function GoegraphiesCountryTableGraphql({
 		});
 	}, [delivarableUnitId]);
 
-	useEffect(() => {
-		setQueryFilter({
-			organization: dashboardData?.organization?.id,
-		});
-	}, [dashboardData]);
+	// useEffect(() => {
+	// 	setQueryFilter({
+	// 		organization: dashboardData?.organization?.id,
+	// 	});
+	// }, [dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
@@ -105,28 +101,20 @@ function GoegraphiesCountryTableGraphql({
 
 	let {
 		changePage: changeGeographiesCountryPage,
-		count: deliverableCategoryCount,
-		queryData: deliverableCategoryList,
+		count: geographyCountryCount,
+		queryData: geographyCountry,
 		queryLoading: geographiesCountryLoading,
 		countQueryLoading: geographiesCountryCountLoading,
 		queryRefetch: refetchDeliverableCategory,
 		countRefetch: refetchDeliverableCategoryCount,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
-		countFilter: queryFilter,
-		query: GET_DELIVERABLE_ORG_CATEGORY,
+		countQuery: GET_COUNTRY_COUNT,
+		countFilter: {},
+		query: GET_COUNTRY_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
-
-	const [getCountries, countriesResponse] = useLazyQuery(GET_COUNTRY_DATA);
-
-	useEffect(() => {
-		getCountries();
-	}, []);
-
-	let geographiesCountryList = countriesResponse?.data?.countries;
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		refetchDeliverableCategoryOnDeliverableCategoryImport();
@@ -137,14 +125,13 @@ function GoegraphiesCountryTableGraphql({
 		refetchDeliverableCategoryOnDeliverableCategoryImport,
 	]);
 
-	let GeographiesCountryCount = 10;
 	return (
 		<GeographiesCountryTableContainer
-			geographiesCountryList={geographiesCountryList || []}
+			geographiesCountryList={geographyCountry?.countries || []}
 			collapsableTable={collapsableTable}
 			changePage={changeGeographiesCountryPage}
 			loading={geographiesCountryLoading || geographiesCountryCountLoading}
-			count={GeographiesCountryCount}
+			count={geographyCountryCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

@@ -13,6 +13,16 @@ export const GET_BLOCK_DATA = gql`
 	}
 `;
 
+export const GET_BLOCK_COUNT = gql`
+	query getblockCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		blocksConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
 export const CREATE_GEOGRAPHIES_BLOCK = gql`
 	mutation createGeographiesBlock($input: createBlockInput) {
 		createBlock(input: $input) {

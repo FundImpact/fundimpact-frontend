@@ -1,14 +1,13 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_DELIVERABLE_UNIT_BY_ORG,
-	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/unit";
+
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesGrampanchayatTableContainer from "./GeographiesGrampanchayatTableContainer";
-import { GET_GRAMPANCHAYAT_DATA } from "../../../graphql/Geographies/GeographiesGrampanchayat";
-import { useLazyQuery } from "@apollo/client";
+import {
+	GET_GRAMPANCHAYAT_COUNT,
+	GET_GRAMPANCHAYAT_DATA,
+} from "../../../graphql/Geographies/GeographiesGrampanchayat";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -71,7 +70,7 @@ function GeographiesGrampanchayatTableGraphql({
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
 			});
 		}
@@ -96,16 +95,16 @@ function GeographiesGrampanchayatTableGraphql({
 
 	let {
 		changePage: changeGeographiesGrampanchayatPage,
-		count: geographiesGrampanchayatCount,
-		queryData: deliverableUnitList,
+		count: geographyGrampanchayatCount,
+		queryData: geographyGrampanchayat,
 		queryLoading: geographiesGrampanchayatLoading,
 		countQueryLoading: geographiesGrampanchayatCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+		countQuery: GET_GRAMPANCHAYAT_COUNT,
 		countFilter: queryFilter,
-		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		query: GET_GRAMPANCHAYAT_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
@@ -120,19 +119,11 @@ function GeographiesGrampanchayatTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	const [getGrampanchayat, grampanchayatResponse] = useLazyQuery(GET_GRAMPANCHAYAT_DATA);
-
-	useEffect(() => {
-		getGrampanchayat();
-	}, []);
-
 	const geographiesGrampanchayatList: any =
-		grampanchayatResponse?.data?.grampanchayats.map((item: any) => ({
+		geographyGrampanchayat?.grampanchayats.map((item: any) => ({
 			...item,
 			district: item.district ? item.district.name : null,
 		})) || [];
-
-	console.log("geographiesGrampanchayatList", geographiesGrampanchayatList);
 
 	return (
 		<GeographiesGrampanchayatTableContainer
@@ -140,7 +131,7 @@ function GeographiesGrampanchayatTableGraphql({
 			collapsableTable={collapsableTable}
 			changePage={changeGeographiesGrampanchayatPage}
 			loading={geographiesGrampanchayatLoading || geographiesGrampanchayatCountLoading}
-			count={geographiesGrampanchayatCount}
+			count={geographyGrampanchayatCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

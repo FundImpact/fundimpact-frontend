@@ -13,6 +13,16 @@ export const GET_DISTRICT_DATA = gql`
 	}
 `;
 
+export const GET_DISTRICT_COUNT = gql`
+	query getdistrictCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		districtsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
 export const CREATE_GEOGRAPHIES_DISTRICT = gql`
 	mutation createGeographiesDistrict($input: createDistrictInput) {
 		createDistrict(input: $input) {

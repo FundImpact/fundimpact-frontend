@@ -38,6 +38,7 @@ import { IGetGeographieState } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_STATE,
 	DELETE_GEOGRAPHIES_STATE,
+	GET_STATE_COUNT,
 	GET_STATE_DATA,
 	UPDATE_GEOGRAPHIES_STATE,
 } from "../../graphql/Geographies/GeographyState";
