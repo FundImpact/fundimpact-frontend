@@ -3,7 +3,7 @@ import AddButton from "../../../components/Dasboard/AddButton";
 import YearTagTable from "../../../components/Table/YearTag";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { FormattedMessage } from "react-intl";
-import { Box, Grid, Typography, Avatar, Chip } from "@material-ui/core";
+import { Box, Grid, Typography } from "@material-ui/core";
 import FilterList from "../../../components/FilterList";
 import { yeartagInputFields } from "./inputFields.json";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";

@@ -32,7 +32,10 @@
 			"size": 6,
 			"testId": "cat_typeOption",
 			"dataTestId": "cat_type",
-			"optionsArray": [],
+			"optionsArray": [
+				{ "id": 1, "name": "Deliverable" },
+				{ "id": 2, "name": "Impact" }
+			],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
