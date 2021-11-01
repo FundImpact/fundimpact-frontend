@@ -905,7 +905,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Line Item Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

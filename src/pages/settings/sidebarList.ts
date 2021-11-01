@@ -71,12 +71,6 @@ export const sidebarList: {
 			// 	userAccess: true,
 			// },
 			{
-				to: "georegions",
-				dataTestId: "geo-regions-link",
-				title: "Geo Regions",
-				userAccess: true,
-			},
-			{
 				to: "yeartags",
 				dataTestId: "yeartags-link",
 				title: "Year Tags",
@@ -86,6 +80,18 @@ export const sidebarList: {
 				to: "tally",
 				dataTestId: "tally-link",
 				title: "Tally Masters",
+				userAccess: true,
+			},
+			{
+				to: "goeGraphies",
+				dataTestId: "goeGraphies-link",
+				title: "Geographies",
+				userAccess: true,
+			},
+			{
+				to: "goeRegions",
+				dataTestId: "geoRegions-link",
+				title: "GeoRegions",
 				userAccess: true,
 			},
 		],

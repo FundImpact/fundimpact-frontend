@@ -17,6 +17,12 @@
 			"value": "Budget Categories"
 		}
 	],
+	"geoRegionsHeading": [
+		{
+			"type": 0,
+			"value": "Geo Regions"
+		}
+	],
 	"donorSettingLink": [
 		{
 			"type": 0,

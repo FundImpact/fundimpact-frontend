@@ -51,6 +51,8 @@ function getInitialValues(props: DeliverableTargetProps) {
 	};
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
+	console.log("deliverableTargetForm", deliverableTargetForm[4]);
+
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
@@ -110,7 +112,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								},
 							],
 						});
-					} catch (error) {
+					} catch (error: any) {
 						notificationDispatch(setErrorNotification(error?.message));
 					}
 				}
@@ -283,7 +285,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			// setcurrentCategory("");
 			notificationDispatch(setSuccessNotification("Target created successfully !"));
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		}
 	};
@@ -374,7 +376,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			notificationDispatch(setSuccessNotification("Target updated successfully !"));
 			// setcurrentCategory("");
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
@@ -600,7 +602,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Target Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

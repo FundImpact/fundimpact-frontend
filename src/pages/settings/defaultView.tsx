@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 const IDefaultView = () => {
 	const classes = useStyles();
-	console.log("IDefaultView rendering");
 	return (
 		<Grid
 			className={classes.root}

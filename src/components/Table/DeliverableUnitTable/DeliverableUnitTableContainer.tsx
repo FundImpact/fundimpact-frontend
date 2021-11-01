@@ -77,6 +77,8 @@ function DeliverableUnitTableContainer({
 	const dashboardData = useDashBoardData();
 	const [getcategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT);
 
+	console.log("getCategoryUnit", getcategoryUnit);
+
 	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
 			openStatus.map((element: boolean, i) => (i === index ? dialogNewOpenStatus : element))
@@ -130,6 +132,8 @@ function DeliverableUnitTableContainer({
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
+
+	console.log("deliverableCategoryFindAccess", deliverableCategoryFindAccess);
 
 	return (
 		<DeliverableUnitTableView

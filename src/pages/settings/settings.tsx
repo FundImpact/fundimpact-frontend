@@ -30,11 +30,16 @@ import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
 import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
+import GoegraphiesContainer from "./Goegraphies";
+import GeoRegionsContainer from "./geoRegions";
+// import TallyContainer from "./Tally";
 import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
-import GeoRegions from "./GeoRegions";
+import GeoRegions from "./geoRegions";
+import GeoRegionsMasterContainer from "./geoRegions";
+// import GeoRegions from "./GeoRegions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -278,14 +283,28 @@ export default function SettingContainer() {
 							path="tally"
 						/>
 						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<GoegraphiesContainer />}
+							path="goeGraphies"
+						/>
+						<PrivateRoute
+							// userAccess={organizationEditAccess}
+							// element={<GeoRegionsContainer />}
+							// path="goeRegions"
 							userAccess={yearTagFindAccess}
 							element={<YearTags />}
 							path="yeartags"
 						/>
-						<PrivateRoute
+						{/* <PrivateRoute
 							userAccess={true} //To be changed
-							element={<GeoRegions />}
+							element={<GeoRegionsMasterContainer />}
+							// element={<GeoRegions />}
 							path="georegions"
+						/> */}
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<GeoRegionsContainer />}
+							path="goeRegions"
 						/>
 					</Routes>
 				</Grid>

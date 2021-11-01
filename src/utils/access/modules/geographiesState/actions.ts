@@ -1,0 +1,8 @@
+export enum GEOGRAPHIES_STATE_ACTIONS {
+	CREATE_GEOGRAPHIES_STATE = "create",
+	UPDATE_GEOGRAPHIES_STATE = "update",
+	DELETE_GEOGRAPHIES_STATE = "delete",
+	FIND_GEOGRAPHIES_STATE = "find",
+	GEOGRAPHIES_STATE_IMPORT_FROM_CSV = "creategeographiesstateorgfromcsv",
+	GEOGRAPHIES_STATE_EXPORT = "exporttable",
+}

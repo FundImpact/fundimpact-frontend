@@ -102,6 +102,13 @@ export const budgetCategoryHeading = [
 	{ label: "Used in projects" },
 	{ label: "" },
 ];
+export const geoRegionsHeading = [
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Description", keyMapping: "description" },
+	// { label: "See Georegions" },
+	{ label: "" },
+];
 
 export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "" },
@@ -110,6 +117,61 @@ export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
+	{ label: "" },
+];
+
+export const GeographiesCountryTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	// { label: "Parent" },
+	{ label: "" },
+];
+export const GeographiesStateTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Country" },
+	{ label: "" },
+];
+export const GeographiesDistrictTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "State" },
+	{ label: "" },
+];
+export const GeographiesBlockTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "District" },
+	{ label: "" },
+];
+export const GeographiesGrampanchayatTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "District" },
+	{ label: "" },
+];
+export const GeographiesVillageTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Block" },
 	{ label: "" },
 ];
 

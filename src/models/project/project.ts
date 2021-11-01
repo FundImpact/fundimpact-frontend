@@ -11,12 +11,14 @@ export interface IProject {
 	short_name?: string;
 	description?: string;
 	workspace?: any;
+	logframe_tracker: boolean;
 }
 export type ProjectProps = {
 	workspaces: NonNullable<Pick<IWorkspace, "id" | "name">>[];
 	open: boolean;
 	handleClose: () => void;
 	workspace: string;
+	// logframe_tracker: boolean;
 	reftechOnSuccess?:
 		| ((
 				variables?: Partial<Record<string, any>> | undefined
@@ -33,7 +35,12 @@ export type ProjectProps = {
 );
 
 export interface IGetProject {
-	orgProject: { id: string; name: string; workspace: { id: string; name: string } }[];
+	orgProject: {
+		id: string;
+		name: string;
+		workspace: { id: string; name: string };
+		logframe_tracker: boolean;
+	}[];
 }
 
 export interface IGetProjectById {
@@ -44,6 +51,7 @@ export interface IGetProjectById {
 		short_name: string;
 		description: string;
 		attachments: AttachFile[];
+		logframe_tracker: boolean;
 	};
 }
 
@@ -100,5 +108,6 @@ export interface ICreateProject {
 		workspace: IOrganisationWorkspaces;
 		short_name: string;
 		description: string;
+		logframe_tracker: boolean;
 	};
 }
