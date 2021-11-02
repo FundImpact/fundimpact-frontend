@@ -2,11 +2,8 @@ import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GeographiesVillageTableHeading as tableHeadings } from "../constants";
-import { Grid, Box, Chip, Avatar, Button, useTheme, MenuItem } from "@material-ui/core";
-import FilterList from "../../FilterList";
+import { Grid, Box, Button, useTheme } from "@material-ui/core";
 import {
-	DELIVERABLE_CATEGORY_TABLE_EXPORT,
-	DELIVERABLE_CATEGORY_UNIT_EXPORT,
 	DELIVERABLE_UNIT_TABLE_EXPORT,
 	DELIVERABLE_UNIT_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
@@ -20,37 +17,9 @@ import {
 } from "../../../models/geographies/geographiesVillage";
 import GeographiesVillage from "../../Geographies/GeographiesVillage";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+import ChipArray from "../../Chips";
 
 const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "code" }, { valueAccessKey: "block" }];
-
-const chipArray = ({
-	arr,
-	chipName,
-	removeChip,
-}: {
-	arr: string[];
-	removeChip: (index: number) => void;
-	chipName: string;
-}) => {
-	return arr.map((element, index) => (
-		<Box key={index} m={1}>
-			<Chip
-				label={element}
-				avatar={
-					<Avatar
-						style={{
-							width: "30px",
-							height: "30px",
-						}}
-					>
-						<span>{chipName}</span>
-					</Avatar>
-				}
-				onDelete={() => removeChip(index)}
-			/>
-		</Box>
-	));
-};
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,
@@ -60,10 +29,10 @@ const createChipArray = ({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
-		return chipArray({
+		return ChipArray({
 			arr: [filterListObjectKeyValuePair[1]],
-			chipName: filterListObjectKeyValuePair[0].slice(0, 4),
-			removeChip: (index: number) => {
+			name: filterListObjectKeyValuePair[0].split(0, 4),
+			removeChips: () => {
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
 		});
@@ -145,10 +114,6 @@ function GeographiesVillageTableView({
 	const theme = useTheme();
 	const { jwt } = useAuth();
 
-	Object.entries(filterList).map((filterListObjectKeyValuePair) =>
-		console.log("filterListObjectKeyValuePair", filterListObjectKeyValuePair)
-	);
-
 	return (
 		<>
 			{!collapsableTable && (
@@ -229,9 +194,6 @@ function GeographiesVillageTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{/* {(rowData: { id: string }) => (
-					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />
-				)} */}
 			</CommonTable>
 		</>
 	);

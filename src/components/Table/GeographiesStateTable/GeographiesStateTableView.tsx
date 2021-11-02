@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
-import { IGeographiesState } from "../../../models/geographies/geographiesState";
+import {
+	IGeographiesState,
+	IGeographiesStateData,
+} from "../../../models/geographies/geographiesState";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GeographiesStateTableHeading as tableHeadings } from "../constants";
-import { Grid, Box, Chip, Avatar, Button, useTheme, MenuItem } from "@material-ui/core";
-import FilterList from "../../FilterList";
+import { Grid, Box, Button, useTheme } from "@material-ui/core";
 import {
-	DELIVERABLE_CATEGORY_TABLE_EXPORT,
-	DELIVERABLE_CATEGORY_UNIT_EXPORT,
 	DELIVERABLE_UNIT_TABLE_EXPORT,
 	DELIVERABLE_UNIT_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
@@ -15,46 +15,15 @@ import ImportExportTableMenu from "../../ImportExportTableMenu";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import { DIALOG_TYPE } from "../../../models/constants";
-import { IGeographiesStateData } from "../../../models/geographies/geographiesState";
 import GeographiesState from "../../Geographies/GeographiesState";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
-// import ChipArrary from '../../../components/Chips'
+import ChipArray from "../../Chips";
 
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
 	{ valueAccessKey: "country" },
-	// { valueAccessKey: "description" },
 ];
-
-const chipArray = ({
-	arr,
-	chipName,
-	removeChip,
-}: {
-	arr: string[];
-	removeChip: (index: number) => void;
-	chipName: string;
-}) => {
-	return arr.map((element, index) => (
-		<Box key={index} m={1}>
-			<Chip
-				label={element}
-				avatar={
-					<Avatar
-						style={{
-							width: "30px",
-							height: "30px",
-						}}
-					>
-						<span>{chipName}</span>
-					</Avatar>
-				}
-				onDelete={() => removeChip(index)}
-			/>
-		</Box>
-	));
-};
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,
@@ -64,12 +33,10 @@ const createChipArray = ({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
-		// return ChipArray
-		return chipArray({
+		return ChipArray({
 			arr: [filterListObjectKeyValuePair[1]],
-			chipName: filterListObjectKeyValuePair[0].slice(0, 4),
-			removeChip: (index: number) => {
-				console.log("Chip", filterListObjectKeyValuePair[0]);
+			name: filterListObjectKeyValuePair[0].slice(0, 4),
+			removeChips: (index: number) => {
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
 		});
@@ -149,10 +116,6 @@ function GeographiesStateTableView({
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
 	const theme = useTheme();
 	const { jwt } = useAuth();
-
-	Object.entries(filterList).map((filterListObjectKeyValuePair) =>
-		console.log("filterListObjectKeyValuePair", filterListObjectKeyValuePair)
-	);
 
 	return (
 		<>
@@ -234,9 +197,6 @@ function GeographiesStateTableView({
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
 				</>
-				{/* {(rowData: { id: string }) => (
-					<DeliverableCategory rowId={rowData.id} collapsableTable={false} />
-				)} */}
 			</CommonTable>
 		</>
 	);

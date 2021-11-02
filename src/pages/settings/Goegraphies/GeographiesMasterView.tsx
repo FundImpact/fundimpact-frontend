@@ -9,8 +9,7 @@ import GeographiesCountryTable from "../../../components/Table/GeographiesCountr
 import { Box, Tabs, Tab, Theme, Grid, Typography, Chip, Avatar } from "@material-ui/core";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { makeStyles } from "@material-ui/styles";
-import { FormattedMessage } from "react-intl";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import FilterList from "../../../components/FilterList";
 import { deliverableCategoryInputFields, deliverableUnitInputFields } from "./inputFields.json"; //make seprate json
 import Geographies from "../../../components/Geographies/Geographies";
@@ -23,7 +22,6 @@ import GeographiesGrampanchayat from "../../../components/Geographies/Geographie
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		//flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
 		height: "100%",
 		overflow: "scroll",
