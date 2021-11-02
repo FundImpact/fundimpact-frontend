@@ -83,6 +83,12 @@ export const sidebarList: {
 				userAccess: true,
 			},
 			{
+				to: "tallyMapper",
+				dataTestId: "tallyMapper-link",
+				title: "Tally Mapper",
+				userAccess: true,
+			},
+			{
 				to: "goeGraphies",
 				dataTestId: "goeGraphies-link",
 				title: "Geographies",

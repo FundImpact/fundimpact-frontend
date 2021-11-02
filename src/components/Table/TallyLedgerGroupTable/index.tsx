@@ -1,0 +1,3 @@
+import TallyMapperLedgerGroupTableGraphql from "./TallyMapperLedgerGroupTableGraphql";
+
+export default TallyMapperLedgerGroupTableGraphql;
