@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-// import BudgetCategoryTableContainer from "./BudgetCategoryTableContainer";
 import pagination from "../../../hooks/pagination";
-import {
-	GET_ORG_BUDGET_CATEGORY_COUNT,
-	GET_ORGANIZATION_BUDGET_CATEGORY,
-} from "../../../graphql/Budget";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useRefetchBudgetCategoryOnBudgetCategoryImport } from "../../../hooks/budget";
 import GeoRegionsTableContainer from "./GeoRegionsTableContainer";
-import { useLazyQuery } from "@apollo/client";
-import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
+import { GET_GEOREGIONS_COUNT, GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
 
 function GeoRegionsTableGraphql({
 	tableFilterList,
@@ -37,7 +31,7 @@ function GeoRegionsTableGraphql({
 			}
 		}
 		setQueryFilter({
-			organization: dashboardData?.organization?.id,
+			// organization: dashboardData?.organization?.id,
 			...newFilterListObject,
 		});
 	}, [tableFilterList, dashboardData]);
@@ -45,44 +39,33 @@ function GeoRegionsTableGraphql({
 	let {
 		changePage,
 		count,
-		queryData: budgetCategoryList,
+		queryData: geoRegionsData,
 		queryLoading,
 		countQueryLoading,
 		queryRefetch,
 		countRefetch,
 	} = pagination({
-		countQuery: GET_ORG_BUDGET_CATEGORY_COUNT,
-		countFilter: queryFilter,
-		query: GET_ORGANIZATION_BUDGET_CATEGORY,
+		countQuery: GET_GEOREGIONS_COUNT,
+		countFilter: {},
+		query: GET_GEOREGIONS_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
+	console.log("geoRegionsData", count);
+
 	const geoRegionsTableRefetch = useCallback(() => {
-		// const budgetCategoryTableRefetch = useCallback(() => {
 		countRefetch?.().then(() => queryRefetch?.());
 		refetchBudgetCategoryOnBudgetCategoryImport();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [countRefetch, queryRefetch]);
-
-	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
-
-	useEffect(() => {
-		getGeoRegions();
-	}, []);
-
-	const geoRegionsData = geoRegionsResponse?.data?.geoRegions;
-
-	console.log("geoRegionsData", geoRegionsData);
 
 	return (
 		<GeoRegionsTableContainer
-			geoRegionsList={geoRegionsData || []}
-			// budgetCategoryList={budgetCategoryList?.orgBudgetCategory || []}
+			geoRegionsList={geoRegionsData?.geoRegions || []}
 			collapsableTable={false}
 			changePage={changePage}
 			loading={queryLoading || countQueryLoading}
-			count={count}
+			count={count?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

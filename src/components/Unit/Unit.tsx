@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -14,6 +14,7 @@ import { addUnitForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
 import { CREATE_UNIT, UPDATE_UNIT, DELETE_UNIT } from "../../graphql/Unit/mutation";
+import { GET_PROJECTS } from "../../graphql";
 
 const defaultFormValues: IUnits = {
 	name: "",
@@ -35,6 +36,17 @@ function Unit(props: IUnitProps) {
 	const [deleteUnit, { loading: deletingUnit }] = useMutation(DELETE_UNIT);
 
 	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
+	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	useEffect(() => {
+		if (projectsList) {
+			addUnitForm[5].optionsArray = projectsList.orgProject;
+		}
+	}, [projectsList]);
 
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
@@ -95,11 +107,11 @@ function Unit(props: IUnitProps) {
 		// }
 	};
 
-	addUnitForm[3].getInputValue = (value: boolean) => {
+	addUnitForm[4].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);
 	};
 
-	currentIsProject ? (addUnitForm[4].hidden = false) : (addUnitForm[4].hidden = true);
+	currentIsProject ? (addUnitForm[5].hidden = false) : (addUnitForm[5].hidden = true);
 
 	// useEffect(() => {
 	// 	console.log("IsProject: ", currentIsProject);

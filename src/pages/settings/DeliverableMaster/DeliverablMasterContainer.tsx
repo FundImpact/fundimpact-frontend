@@ -13,8 +13,6 @@ function DeliverablMasterContainer() {
 		description: "",
 	});
 
-	// console.log("deliverableCategoryFilterList", deliverableCategoryFilterList);
-
 	const [deliverableUnitFilterList, setDeliverableUnitFilterList] = useState<{
 		[key: string]: string;
 	}>({
@@ -23,14 +21,10 @@ function DeliverablMasterContainer() {
 		description: "",
 	});
 
-	// console.log("deliverableUnitFilterList", deliverableUnitFilterList);
-
 	const deliverableCategoryCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
 	);
-
-	// console.log("deliverableCategoryCreateAccess", deliverableCategoryCreateAccess);
 
 	const deliverableUnitCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
@@ -41,8 +35,6 @@ function DeliverablMasterContainer() {
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
-
-	// console.log("deliverableCategoryFindAccess", deliverableCategoryFindAccess);
 
 	const deliverableUnitFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

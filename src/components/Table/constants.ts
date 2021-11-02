@@ -106,6 +106,7 @@ export const geoRegionsHeading = [
 	{ label: "#" },
 	{ label: "Name", keyMapping: "name" },
 	{ label: "Description", keyMapping: "description" },
+	// { label: "See Georegions" },
 	{ label: "" },
 ];
 
@@ -251,9 +252,9 @@ export const addressTableHeadings: ITableHeadings[] = [
 
 export const yearTagTableHeadings: ITableHeadings[] = [
 	{ label: "#" },
-	{ label: "Label" },
-	{ label: "Type" },
-	{ label: "Start Date" },
-	{ label: "End Date" },
+	{ label: "Label", keyMapping: "name" },
+	{ label: "Type", keyMapping: "type" },
+	{ label: "Start Date", keyMapping: "start_date" },
+	{ label: "End Date", keyMapping: "end_date" },
 	{ label: "Countries" },
 ];

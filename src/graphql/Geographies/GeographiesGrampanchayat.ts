@@ -10,6 +10,16 @@ export const GET_GRAMPANCHAYAT_DATA = gql`
 	}
 `;
 
+export const GET_GRAMPANCHAYAT_COUNT = gql`
+	query getgrampanchayatCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		grampanchayatsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
 export const CREATE_GEOGRAPHIES_GRAMPANCHAYAT = gql`
 	mutation createGeographiesGrampanchayat($input: createGrampanchayatInput) {
 		createGrampanchayat(input: $input) {

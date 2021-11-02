@@ -47,10 +47,8 @@ const GeoRegionsMasterView = ({
 	);
 
 	const filterObject = Object.entries(tableFilterList).map((e, i) => {
-		console.log("eee", e);
+		// console.log("eee", e);
 	});
-
-	console.log("filterObject", filterObject);
 
 	return (
 		<>
@@ -75,6 +73,7 @@ const GeoRegionsMasterView = ({
 								<FilterList
 									setFilterList={setTableFilterList}
 									inputFields={GeoRegionsInputFields}
+									initialValues={{ name: "", description: "" }}
 								/>
 							)}
 						</Box>
@@ -114,13 +113,8 @@ const GeoRegionsMasterView = ({
 						</Box>
 					</Grid>
 				</Grid>
-				{geoRegionsFindAccess && (
-					// {budgetCategoryFindAccess && (
-					<GeoRegionsTable tableFilterList={tableFilterList} />
-					// <BudgetCategoryTable tableFilterList={tableFilterList} />
-				)}
+				{geoRegionsFindAccess && <GeoRegionsTable tableFilterList={tableFilterList} />}
 				{createGeoRegionsAccess && (
-					// {createBudgetCategoryAccess && (
 					<AddButton
 						createButtons={[]}
 						buttonAction={{
@@ -132,7 +126,6 @@ const GeoRegionsMasterView = ({
 								handleClose: () => void;
 							}) => (
 								<GeoRegions
-									// <BudgetCategory
 									open={open}
 									handleClose={handleClose}
 									formAction={FORM_ACTIONS.CREATE}

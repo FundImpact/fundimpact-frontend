@@ -1,4 +1,5 @@
 import {
+	useLazyQuery,
 	useMutation,
 	// useQuery,
 	// ApolloCache,
@@ -6,7 +7,7 @@ import {
 	// FetchResult,
 	// MutationFunctionOptions,
 } from "@apollo/client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -43,6 +44,7 @@ import {
 	GET_VILLAGE_DATA,
 	UPDATE_GEOGRAPHIES_VILLAGE,
 } from "../../graphql/Geographies/GeographiesVillage";
+import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
 
 function getInitialValues(props: GeographiesVillageProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
@@ -62,6 +64,13 @@ interface IError extends Omit<Partial<IGeographiesVillage>, "GeographiesVillage"
 }
 
 function GeographiesVillage(props: GeographiesVillageProps) {
+	const [getVillageDropdown, villageDropdownResponse] = useLazyQuery(GET_BLOCK_DATA);
+
+	useEffect(() => {
+		getVillageDropdown();
+	}, []);
+
+	GeographiesVillageForm[2].optionsArray = villageDropdownResponse?.data?.blocks;
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;

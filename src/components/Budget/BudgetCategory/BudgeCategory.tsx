@@ -1,5 +1,5 @@
-import { useMutation } from "@apollo/client";
-import React from "react";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -26,6 +26,7 @@ import FormDialog from "../../FormDialog";
 import CommonForm from "../../CommonForm";
 import { budgetCategoryFormInputFields } from "./inputFields.json";
 import DeleteModal from "../../DeleteModal";
+import { GET_PROJECTS } from "../../../graphql";
 
 let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
@@ -51,12 +52,24 @@ function BudgetCategory({
 	getCreatedBudgetCategory,
 	dialogType,
 }: IBudgetCategoryProps) {
+	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [createNewOrgBudgetCategory, { loading: creatingBudgetCategory }] = useMutation(
 		CREATE_ORG_BUDGET_CATEGORY
 	);
 	const [updateBudgetCategory, { loading: updatingBudgetCategory }] = useMutation(
 		UPDATE_ORG_BUDGET_CATEGORY
 	);
+	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	useEffect(() => {
+		if (projectsList) {
+			budgetCategoryFormInputFields[4].optionsArray = projectsList.orgProject;
+		}
+	}, [projectsList]);
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -171,6 +184,14 @@ function BudgetCategory({
 			handleClose();
 		}
 	};
+
+	budgetCategoryFormInputFields[3].getInputValue = (value: boolean) => {
+		setCurrentIsProject(value);
+	};
+
+	currentIsProject
+		? (budgetCategoryFormInputFields[4].hidden = false)
+		: (budgetCategoryFormInputFields[4].hidden = true);
 
 	const onUpdate = async (valuesSubmitted: IBudgetCategory) => {
 		try {

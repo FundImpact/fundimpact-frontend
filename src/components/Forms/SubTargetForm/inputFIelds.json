@@ -31,7 +31,7 @@
 			"id": "target_value",
 			"dataTestId": "budgetSubTargetTargetValue",
 			"testId": "budgetSubTargetTargetValueInput",
-			"label": "Target Value",
+			"label": "Sub-Target Value",
 			"required": true,
 			"hidden": true,
 			"inputType": "textarea",
@@ -61,7 +61,7 @@
 			"label": "Start",
 			"type": "date",
 			"size": 6,
-			"required": true
+			"required": false
 		},
 		{
 			"name": "timeperiod_end",
@@ -71,12 +71,12 @@
 			"label": "End",
 			"type": "date",
 			"size": 6,
-			"required": true
+			"required": false
 		},
 		{
 			"name": "donor",
 			"id": "donor",
-			"label": "Select Donors",
+			"label": "Select Donor",
 			"size": 12,
 			"dataTestId": "budgetSubTargetDonor",
 			"testId": "budgetSubTargetDonorInput",
@@ -104,7 +104,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"size": 6
 		},
 		{
@@ -118,7 +118,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"addNew": true,
 			"addNewClick": {},
 			"size": 6
@@ -134,7 +134,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"size": 6
 		},
 		{
@@ -148,7 +148,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"size": 6
 		},
 		{
@@ -162,7 +162,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
+			"required": false,
 			"size": 6
 		}
 	]

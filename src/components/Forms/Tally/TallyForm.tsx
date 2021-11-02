@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import { Grid, Button, Box } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputFields from "../../InputFields/inputField";
-import { ITallyForm, ITallyInputFields } from "./models";
+import TallyInput from "./TallyInput";
+import { ITallyForm } from "./models";
+import { IInputFields } from "../../../models";
 
 const useStyle = makeStyles((theme: Theme) =>
 	createStyles({
@@ -31,8 +32,8 @@ const TallyForm = ({
 	children,
 }: ITallyForm) => {
 	const classes = useStyle();
-	const [inputsBeforeChildren, setInputsBeforeChildren] = useState<ITallyInputFields[]>([]);
-	const [inputsAfterChildren, setInputsAfterChildren] = useState<ITallyInputFields[]>([]);
+	const [inputsBeforeChildren, setInputsBeforeChildren] = useState<IInputFields[]>([]);
+	const [inputsAfterChildren, setInputsAfterChildren] = useState<IInputFields[]>([]);
 
 	const validateInitialValues = (initialValues: any) => {
 		const errors = validate(initialValues) as Object;
@@ -61,202 +62,26 @@ const TallyForm = ({
 					<Form>
 						<Grid container spacing={2}>
 							{inputsBeforeChildren.length > 0 &&
-								inputsBeforeChildren?.map(
-									(value: ITallyInputFields, index: number) => {
-										return (
-											!value.hidden && (
-												<Grid item xs={value.size} key={index}>
-													<InputFields
-														inputType={value.inputType}
-														formik={formik}
-														name={value.name}
-														id={value.id}
-														dataTestId={value.dataTestId}
-														testId={value.testId}
-														label={value.label}
-														multiline={
-															value.multiline
-																? value.multiline
-																: false
-														}
-														rows={value.rows ? value.rows : 1}
-														type={value.type ? value.type : "text"}
-														optionsLabel={
-															value.optionsLabel
-																? value.optionsLabel
-																: undefined
-														}
-														optionsArray={
-															value.optionsArray
-																? value.optionsArray
-																: []
-														}
-														secondOptionsArray={
-															value.secondOptionsArray
-																? value.secondOptionsArray
-																: []
-														}
-														customMenuOnClick={
-															value.customMenuOnClick
-																? value.customMenuOnClick
-																: null
-														}
-														secondOptionsLabel={
-															value.secondOptionsLabel
-																? value.secondOptionsLabel
-																: undefined
-														}
-														inputLabelId={
-															value.inputLabelId
-																? value.inputLabelId
-																: ""
-														}
-														selectLabelId={
-															value.selectLabelId
-																? value.selectLabelId
-																: ""
-														}
-														selectId={
-															value.selectId ? value.selectId : ""
-														}
-														getInputValue={
-															value.getInputValue
-																? value.getInputValue
-																: null
-														}
-														required={value.required ? true : false}
-														multiple={
-															value.multiple ? value.multiple : false
-														}
-														logo={value.logo ? value.logo : ""}
-														disabled={
-															value.disabled ? value.disabled : false
-														}
-														autoCompleteGroupBy={
-															value.autoCompleteGroupBy || undefined
-														}
-														onClick={
-															value.onClick ? value.onClick : null
-														}
-														textNextToButton={
-															value.textNextToButton
-																? value.textNextToButton
-																: undefined
-														}
-														addNew={value.addNew ? value.addNew : false}
-														addNewClick={
-															value.addNewClick
-																? value.addNewClick
-																: null
-														}
-														helperText={value?.helperText || ""}
-													/>
-												</Grid>
-											)
-										);
-									}
-								)}
+								inputsBeforeChildren?.map((value: IInputFields, index: number) => {
+									return (
+										!value.hidden && (
+											<TallyInput value={value} formik={formik} key={index} />
+										)
+									);
+								})}
 						</Grid>
 
 						{children}
 
 						<Grid container spacing={2}>
 							{inputsAfterChildren.length > 0 &&
-								inputsAfterChildren?.map(
-									(value: ITallyInputFields, index: number) => {
-										return (
-											!value.hidden && (
-												<Grid item xs={value.size} key={index}>
-													<InputFields
-														inputType={value.inputType}
-														formik={formik}
-														name={value.name}
-														id={value.id}
-														dataTestId={value.dataTestId}
-														testId={value.testId}
-														label={value.label}
-														multiline={
-															value.multiline
-																? value.multiline
-																: false
-														}
-														rows={value.rows ? value.rows : 1}
-														type={value.type ? value.type : "text"}
-														optionsLabel={
-															value.optionsLabel
-																? value.optionsLabel
-																: undefined
-														}
-														optionsArray={
-															value.optionsArray
-																? value.optionsArray
-																: []
-														}
-														secondOptionsArray={
-															value.secondOptionsArray
-																? value.secondOptionsArray
-																: []
-														}
-														customMenuOnClick={
-															value.customMenuOnClick
-																? value.customMenuOnClick
-																: null
-														}
-														secondOptionsLabel={
-															value.secondOptionsLabel
-																? value.secondOptionsLabel
-																: undefined
-														}
-														inputLabelId={
-															value.inputLabelId
-																? value.inputLabelId
-																: ""
-														}
-														selectLabelId={
-															value.selectLabelId
-																? value.selectLabelId
-																: ""
-														}
-														selectId={
-															value.selectId ? value.selectId : ""
-														}
-														getInputValue={
-															value.getInputValue
-																? value.getInputValue
-																: null
-														}
-														required={value.required ? true : false}
-														multiple={
-															value.multiple ? value.multiple : false
-														}
-														logo={value.logo ? value.logo : ""}
-														disabled={
-															value.disabled ? value.disabled : false
-														}
-														autoCompleteGroupBy={
-															value.autoCompleteGroupBy || undefined
-														}
-														onClick={
-															value.onClick ? value.onClick : null
-														}
-														textNextToButton={
-															value.textNextToButton
-																? value.textNextToButton
-																: undefined
-														}
-														addNew={value.addNew ? value.addNew : false}
-														addNewClick={
-															value.addNewClick
-																? value.addNewClick
-																: null
-														}
-														helperText={value?.helperText || ""}
-													/>
-												</Grid>
-											)
-										);
-									}
-								)}
+								inputsAfterChildren?.map((value: IInputFields, index: number) => {
+									return (
+										!value.hidden && (
+											<TallyInput value={value} formik={formik} key={index} />
+										)
+									);
+								})}
 						</Grid>
 
 						<Box className={classes.btnsWrapper}>

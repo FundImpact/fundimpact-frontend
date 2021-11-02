@@ -31,7 +31,7 @@ import IndividualContainer from "./Individual";
 import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import GoegraphiesContainer from "./Goegraphies";
-// import GeoRegionsContainer from "./geoRegions";
+import GeoRegionsContainer from "./geoRegions";
 // import TallyContainer from "./Tally";
 import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
@@ -306,6 +306,11 @@ export default function SettingContainer() {
 							element={<GeoRegionsContainer />}
 							path="goeRegions"
 						/> */}
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<GeoRegionsContainer />}
+							path="goeRegions"
+						/>
 					</Routes>
 				</Grid>
 			</Grid>

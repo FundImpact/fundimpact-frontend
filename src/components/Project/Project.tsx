@@ -255,6 +255,7 @@ function Project(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) {
 		/*Disable already mapped donors*/
 		mappedDonors = props?.data?.donor;
+		console.log("mappedDonors", mappedDonors);
 		let donorList: any = [];
 		donors?.orgDonors?.forEach((fetchedDonor: any) => {
 			const isInDonorList = mappedDonors.includes(fetchedDonor?.id);

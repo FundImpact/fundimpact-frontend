@@ -1,14 +1,9 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import GeographiesStateTableContainer from "./GeographiesStateTableContainer";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_DELIVERABLE_UNIT_BY_ORG,
-	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
-import { GET_STATE_DATA } from "../../../graphql/Geographies/GeographyState";
-import { useLazyQuery } from "@apollo/client";
+import { GET_STATE_COUNT, GET_STATE_DATA } from "../../../graphql/Geographies/GeographyState";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -57,6 +52,8 @@ function GeographiesStateTableGraphql({
 	const removeNestedFilterListElements = (key: string, index?: number) => {
 		setNestedTableFilterList((nestedTableFilterListObject) => {
 			nestedTableFilterListObject[key] = "";
+			// console.log("Remove Filter List Object", nestedTableFilterListObject);
+			// console.log("Remove Filter List", removeNestedFilterListElements);
 			return { ...nestedTableFilterListObject };
 		});
 	};
@@ -70,8 +67,10 @@ function GeographiesStateTableGraphql({
 	useEffect(() => {
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
+			console.log("Filter", newFilterListObject);
+			console.log("Filter Table List", tableFilterList);
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
 			});
 		}
@@ -96,16 +95,16 @@ function GeographiesStateTableGraphql({
 
 	let {
 		changePage: changeCountryStatePage,
-		count: deliverableUnitCount,
-		queryData: deliverableUnitList,
+		count: geographyStateCount,
+		queryData: geographyState,
 		queryLoading: deliverableUnitLoading,
 		countQueryLoading: deliverableUnitCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+		countQuery: GET_STATE_COUNT,
 		countFilter: queryFilter,
-		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		query: GET_STATE_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
@@ -120,15 +119,11 @@ function GeographiesStateTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
-	const [filter, setFilter] = useState({});
-	useEffect(() => {
-		getState();
-	}, []);
-
-	let geographiesStateList = stateResponse?.data?.states || [];
-
-	let geographiesStateCount: number = 10;
+	let geographiesStateList: any =
+		geographyState?.states.map((item: any) => ({
+			...item,
+			country: item.country ? item.country.name : null,
+		})) || [];
 
 	return (
 		<GeographiesStateTableContainer
@@ -136,7 +131,7 @@ function GeographiesStateTableGraphql({
 			collapsableTable={collapsableTable}
 			changePage={changeCountryStatePage}
 			loading={deliverableUnitLoading || deliverableUnitCountLoading}
-			count={geographiesStateCount}
+			count={geographyStateCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

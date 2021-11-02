@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import BudgetMasterView from "./BudgetMasterView";
 import GeoRegionsMasterView from "./GeoRegionMasterView";
 
 function GeoRegionsMasterContainer() {
@@ -8,9 +7,10 @@ function GeoRegionsMasterContainer() {
 		[key: string]: string;
 	}>({
 		name: "",
-		// code: "",
 		description: "",
 	});
+
+	console.log("tableFilterList", tableFilterList);
 
 	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
 		setTableFilterList((filterListObject) => {
@@ -22,7 +22,6 @@ function GeoRegionsMasterContainer() {
 	return (
 		<div>
 			<GeoRegionsMasterView
-				// <BudgetMasterView
 				tableFilterList={tableFilterList}
 				setTableFilterList={setTableFilterList}
 				removeFilteListElements={removeFilteListElements}

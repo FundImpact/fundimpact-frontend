@@ -213,9 +213,16 @@
 		{
 			"name": "country",
 			"id": "country",
-			"dataTestId": "deliverableUnitDescription",
-			"testId": "deliverableUnitDescriptionInput",
+			"dataTestId": "geographiesCountry",
+			"testId": "geographiesCountryInput",
 			"label": "Country",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
 			"size": 12
 		}
 	],
@@ -241,9 +248,16 @@
 		{
 			"name": "state",
 			"id": "state",
-			"dataTestId": "deliverableUnitDescription",
-			"testId": "deliverableUnitDescriptionInput",
-			"label": "state",
+			"dataTestId": "geographiesState",
+			"testId": "geographiesStateInput",
+			"label": "State",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
 			"size": 12
 		}
 	],
@@ -268,9 +282,16 @@
 		{
 			"name": "district",
 			"id": "district",
-			"dataTestId": "deliverableUnitDescription",
-			"testId": "deliverableUnitDescriptionInput",
+			"dataTestId": "geographiesDistrict",
+			"testId": "geographiesDistrictyInput",
 			"label": "District",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
 			"size": 12
 		}
 	],
@@ -295,9 +316,16 @@
 		{
 			"name": "block",
 			"id": "block",
-			"dataTestId": "deliverableUnitDescription",
-			"testId": "deliverableUnitDescriptionInput",
+			"dataTestId": "geographiesBlock",
+			"testId": "geographiesBlockInput",
 			"label": "Block",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
 			"size": 12
 		}
 	],
@@ -322,144 +350,16 @@
 		{
 			"name": "district",
 			"id": "district",
-			"dataTestId": "deliverableUnitDescription",
-			"testId": "deliverableUnitDescriptionInput",
+			"dataTestId": "geographiesDistrict",
+			"testId": "geographiesDistrictyInput",
 			"label": "District",
-			"size": 12
-		}
-	],
-	"deliverableTragetLineForm": [
-		{
-			"name": "deliverable_sub_target",
-			"id": "deliverable_sub_target",
-			"label": "Sub Target",
-			"size": 6,
-			"dataTestId": "deliverableTracklineTarget",
-			"testId": "deliverableTracklineTargetInput",
 			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"addNew": true,
-			"addNewClick": {},
-			"getInputValue": {},
-			"required": true
-		},
-		{
-			"name": "value",
-			"id": "value",
-			"dataTestId": "deliverableTracklineValue",
-			"testId": "deliverableTracklineValueInput",
-			"label": "Value",
-			"type": "number",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "value_qualitative",
-			"id": "value_qualitative",
-			"dataTestId": "deliverableTracklineValueQuantitative",
-			"testId": "deliverableTracklineValueQuantitativeInput",
-			"label": "Target Value",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true,
-			"hidden": true,
-			"size": 6
-		},
-		{
-			"name": "timeperiod_start",
-			"id": "timeperiod_start",
-			"dataTestId": "deliverableTracklineDate",
-			"testId": "deliverableTracklineDateInput",
-			"label": "Start Date",
-			"type": "date",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "timeperiod_end",
-			"id": "timeperiod_end",
-			"dataTestId": "deliverableTracklineDate",
-			"testId": "deliverableTracklineDateInput",
-			"label": "End Date",
-			"type": "date",
-			"size": 6,
-			"required": true
-		},
-		{
-			"name": "reporting_date",
-			"id": "reporting_date",
-			"dataTestId": "deliverableTracklineDate",
-			"testId": "deliverableTracklineDateInput",
-			"label": "Reporting Date",
-			"type": "date",
-			"size": 6,
-			"required": true
-		},
-
-		{
-			"name": "annual_year",
-			"id": "annual_year",
-			"label": "Annual Year",
-			"size": 6,
-			"dataTestId": "deliverableTracklineAnnualYear",
-			"testId": "deliverableTracklineAnnualYearInput",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
-		},
-		{
-			"name": "financial_year_org",
-			"id": "financial_year_org",
-			"label": "Financial Year Org",
-			"size": 6,
-			"dataTestId": "deliverableTracklineFinancialYear",
-			"testId": "deliverableTracklineFinancialYearInput",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
-		},
-		{
-			"name": "financial_year_donor",
-			"id": "financial_year_donor",
-			"label": "Financial Year Donor",
-			"size": 6,
-			"dataTestId": "deliverableTracklineFinancialYear",
-			"testId": "deliverableTracklineFinancialYearInput",
-			"optionsArray": [],
-			"inputLabelId": "demo-simple-select-outlined-label",
-			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
-		},
-		{
-			"name": "note",
-			"id": "note",
-			"dataTestId": "deliverableTracklineNote",
-			"testId": "deliverableTracklineNoteInput",
-			"label": "Note",
-			"multiline": true,
-			"rows": 2,
-			"size": 12
-		},
-		{
-			"name": "attachfiles",
-			"id": "attachfiles",
-			"dataTestId": "deliverableTracklineAttachFile",
-			"testId": "deliverableTracklineAttachFileInput",
-			"label": "Attach files",
-			"inputType": "button",
-			"textNextToButton": "",
-			"onClick": {},
+			"required": false,
+			"addNew": false,
 			"size": 12
 		}
 	]

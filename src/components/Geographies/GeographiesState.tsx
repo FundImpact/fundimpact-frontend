@@ -1,4 +1,5 @@
 import {
+	useLazyQuery,
 	useMutation,
 	// useQuery,
 	// ApolloCache,
@@ -6,7 +7,7 @@ import {
 	// FetchResult,
 	// MutationFunctionOptions,
 } from "@apollo/client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
@@ -37,9 +38,11 @@ import { IGetGeographieState } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_STATE,
 	DELETE_GEOGRAPHIES_STATE,
+	GET_STATE_COUNT,
 	GET_STATE_DATA,
 	UPDATE_GEOGRAPHIES_STATE,
 } from "../../graphql/Geographies/GeographyState";
+import { GET_COUNTRY_DATA } from "../../graphql/Geographies/GeographyCountry";
 
 function getInitialValues(props: GoegraphiesStateProps) {
 	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
@@ -60,6 +63,17 @@ interface IError extends Omit<Partial<IGeographiesState>, "GeographiesState"> {
 }
 
 function GeographiesState(props: GoegraphiesStateProps) {
+	const [getCountryDropdown, countryDropdownResponse] = useLazyQuery(GET_COUNTRY_DATA);
+
+	useEffect(() => {
+		getCountryDropdown();
+	}, []);
+
+	console.log("countryDropdownResponse", countryDropdownResponse?.data?.countries);
+
+	GeographiesStateForm[2].optionsArray = countryDropdownResponse?.data?.countries;
+	console.log("GeographiesStateForm", GeographiesStateForm[2].optionsArray);
+
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
@@ -174,6 +188,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesState) => {
+		console.log("Update", value);
 		try {
 			const id = value.id;
 
@@ -192,6 +207,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 			onCancel();
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
+			// notificationDispatch(setErrorNotification('This is test error'));
 			onCancel();
 		}
 	};

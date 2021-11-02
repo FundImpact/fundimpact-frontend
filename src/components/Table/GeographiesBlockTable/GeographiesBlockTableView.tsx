@@ -23,7 +23,7 @@ import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 const rows = [
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "code" },
-	{ valueAccessKey: "description" },
+	{ valueAccessKey: "district" },
 	// {
 	// 	valueAccessKey: "",
 	// 	renderComponent: (deliverableUnit: IDeliverableUnitData) => (

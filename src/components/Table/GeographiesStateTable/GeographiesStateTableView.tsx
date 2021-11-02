@@ -18,6 +18,7 @@ import { DIALOG_TYPE } from "../../../models/constants";
 import { IGeographiesStateData } from "../../../models/geographies/geographiesState";
 import GeographiesState from "../../Geographies/GeographiesState";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+// import ChipArrary from '../../../components/Chips'
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -63,10 +64,12 @@ const createChipArray = ({
 	removeFilterListElements: (key: string, index?: number | undefined) => void;
 }) => {
 	if (filterListObjectKeyValuePair[1] && typeof filterListObjectKeyValuePair[1] == "string") {
+		// return ChipArray
 		return chipArray({
 			arr: [filterListObjectKeyValuePair[1]],
 			chipName: filterListObjectKeyValuePair[0].slice(0, 4),
 			removeChip: (index: number) => {
+				console.log("Chip", filterListObjectKeyValuePair[0]);
 				removeFilterListElements(filterListObjectKeyValuePair[0]);
 			},
 		});

@@ -1,14 +1,12 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_DELIVERABLE_UNIT_BY_ORG,
-	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/unit";
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesDistrictTableContainer from "./GeographiesDistrictTableContainer";
-import { GET_DISTRICT_DATA } from "../../../graphql/Geographies/GeographiesDistrict";
-import { useLazyQuery } from "@apollo/client";
+import {
+	GET_DISTRICT_COUNT,
+	GET_DISTRICT_DATA,
+} from "../../../graphql/Geographies/GeographiesDistrict";
 
 const removeEmptyKeys = (filterList: { [key: string]: string }) => {
 	let newFilterListObject: { [key: string]: string } = {};
@@ -71,7 +69,7 @@ function GeographiesDistrictTableGraphql({
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
 			setQueryFilter({
-				organization: dashboardData?.organization?.id,
+				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
 			});
 		}
@@ -96,20 +94,22 @@ function GeographiesDistrictTableGraphql({
 
 	let {
 		changePage: changeDeliverableUnitPage,
-		count: deliverableUnitCount,
-		queryData: deliverableUnitList,
+		count: geographyDistrictCount,
+		queryData: geographyDistrict,
 		queryLoading: geographiesDistrictLoading,
 		countQueryLoading: GeographiesDistrictCountLoading,
 		queryRefetch: deliverableUnitRefetch,
 		countRefetch: deliverableUnitCountRefetch,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+		countQuery: GET_DISTRICT_COUNT,
 		countFilter: queryFilter,
-		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		query: GET_DISTRICT_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
+
+	// console.log("deliverableUnitCount", deliverableUnitCount, deliverableUnitList);
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
@@ -120,17 +120,11 @@ function GeographiesDistrictTableGraphql({
 		refetchDeliverableUnitOnDeliverableUnitImport,
 	]);
 
-	const [getDistricts, districtResponse] = useLazyQuery(GET_DISTRICT_DATA);
-
-	useEffect(() => {
-		getDistricts();
-	}, []);
-
-	const geographiesDistrictList = districtResponse?.data?.districts || [];
-
-	let geographiesDistrictCount: number = 10;
-
-	console.log("districtResponse", geographiesDistrictList);
+	const geographiesDistrictList: any =
+		geographyDistrict?.districts.map((item: any) => ({
+			...item,
+			state: item.state ? item.state.name : null,
+		})) || [];
 
 	return (
 		<GeographiesDistrictTableContainer
@@ -138,7 +132,7 @@ function GeographiesDistrictTableGraphql({
 			collapsableTable={collapsableTable}
 			changePage={changeDeliverableUnitPage}
 			loading={geographiesDistrictLoading || GeographiesDistrictCountLoading}
-			count={geographiesDistrictCount}
+			count={geographyDistrictCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

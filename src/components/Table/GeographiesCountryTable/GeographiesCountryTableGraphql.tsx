@@ -1,9 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
-import {
-	GET_DELIVERABLE_ORG_CATEGORY,
-	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/category";
 import pagination from "../../../hooks/pagination";
 import { useRefetchDeliverableMastersOnDeliverableMasterImport } from "../../../hooks/deliverable";
 import GeographiesCountryTableContainer from "./GeographiesCountryTableContainers";
@@ -57,16 +53,26 @@ function GoegraphiesCountryTableGraphql({
 	};
 
 	useEffect(() => {
+		if (tableFilterList) {
+			let newFilterListObject: { [key: string]: string } = removeEmptyKeys(tableFilterList);
+			setQueryFilter({
+				// organization: dashboardData?.organization?.id,
+				...newFilterListObject,
+			});
+		}
+	}, [tableFilterList, dashboardData]);
+
+	useEffect(() => {
 		setNestedTableQueryFilter({
 			deliverable_units_org: delivarableUnitId,
 		});
 	}, [delivarableUnitId]);
 
-	useEffect(() => {
-		setQueryFilter({
-			organization: dashboardData?.organization?.id,
-		});
-	}, [dashboardData]);
+	// useEffect(() => {
+	// 	setQueryFilter({
+	// 		organization: dashboardData?.organization?.id,
+	// 	});
+	// }, [dashboardData]);
 
 	useEffect(() => {
 		if (nestedTableFilterList) {
@@ -95,16 +101,16 @@ function GoegraphiesCountryTableGraphql({
 
 	let {
 		changePage: changeGeographiesCountryPage,
-		count: deliverableCategoryCount,
-		queryData: deliverableCategoryList,
+		count: geographyCountryCount,
+		queryData: geographyCountry,
 		queryLoading: geographiesCountryLoading,
 		countQueryLoading: geographiesCountryCountLoading,
 		queryRefetch: refetchDeliverableCategory,
 		countRefetch: refetchDeliverableCategoryCount,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
-		countFilter: queryFilter,
-		query: GET_DELIVERABLE_ORG_CATEGORY,
+		countQuery: GET_COUNTRY_COUNT,
+		countFilter: {},
+		query: GET_COUNTRY_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
@@ -128,18 +134,18 @@ function GoegraphiesCountryTableGraphql({
 				newFilterListObject[key] = tableFilterList[key];
 			}
 		}
-		console.log("agage", tableFilterList);
-		console.log("newFilterListObject", newFilterListObject);
+		// console.log("agage", tableFilterList);
+		// console.log("newFilterListObject", newFilterListObject);
 		// console.log("nested", nestedTableFilterList);
 		// console.log("newFilter",newFilterListObject);
 		setFilter(newFilterListObject);
-		console.log("Filter inside useEffect", filter);
+		// console.log("Filter inside useEffect", filter);
 		getCountries({
 			variables: {
 				filter: newFilterListObject,
 			},
 		});
-		console.log("Filter inside useEffect 2", filter);
+		// console.log("Filter inside useEffect 2", filter);
 	}, [tableFilterList]);
 
 	let geographiesCountryList = countriesResponse?.data?.countries;
@@ -153,14 +159,13 @@ function GoegraphiesCountryTableGraphql({
 		refetchDeliverableCategoryOnDeliverableCategoryImport,
 	]);
 
-	let GeographiesCountryCount = 10;
 	return (
 		<GeographiesCountryTableContainer
-			geographiesCountryList={geographiesCountryList || []}
+			geographiesCountryList={geographyCountry?.countries || []}
 			collapsableTable={collapsableTable}
 			changePage={changeGeographiesCountryPage}
 			loading={geographiesCountryLoading || geographiesCountryCountLoading}
-			count={GeographiesCountryCount}
+			count={geographyCountryCount?.aggregate?.count}
 			order={order}
 			setOrder={setOrder}
 			orderBy={orderBy}

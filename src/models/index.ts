@@ -75,6 +75,22 @@ export interface IOrganizationCurrency {
 }
 
 export interface IInputField {
+	inputType?: string;
+	name: string;
+	label: string;
+	testId: string;
+	dataTestId: string;
+	id: string;
+	multiline?: boolean;
+	rows?: number;
+	endAdornment?: string;
+	formik?: any;
+	type?: string;
+	size?: any;
+	required?: boolean;
+	position?: string;
+}
+export interface IGeoregionInputField {
 	name: string;
 	label: string;
 	testId: string;
@@ -87,6 +103,9 @@ export interface IInputField {
 	type?: string;
 	size: any;
 	required?: boolean;
+	optionsArray?: any[];
+	getInputValue?: any;
+	multiple?: boolean;
 }
 
 export interface IInputFields {
@@ -121,6 +140,7 @@ export interface IInputFields {
 	addNew?: boolean;
 	addNewClick?: (() => void) | null;
 	helperText?: string | React.ReactNode;
+	position?: string;
 }
 
 export interface ISelectField {
@@ -163,6 +183,7 @@ export interface ICommonForm {
 	initialValues: any;
 	formAction?: FORM_ACTIONS;
 	buttons?: any;
+	children?: any;
 }
 
 export interface ICountry {

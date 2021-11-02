@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import CommonTable from "../CommonTable";
 import { geoRegionsHeading as tableHeadings } from "../constants";
-// import { budgetCategoryHeading as tableHeadings } from "../constants";
-import UnitsAndCategoriesProjectCount from "../../UnitsAndCategoriesProjectCount";
-import { IBudgetCategory } from "../../../models/budget";
-import BudgetCategory from "../../Budget/BudgetCategory";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
 import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { BUDGET_CATEGORY_ACTIONS } from "../../../utils/access/modules/budgetCategory/actions";
@@ -13,26 +9,13 @@ import {
 	BUDGET_CATEGORY_TABLE_EXPORT,
 	BUDGET_CATEGORY_TABLE_IMPORT,
 } from "../../../utils/endpoints.util";
-import { ApolloQueryResult, OperationVariables, useApolloClient } from "@apollo/client";
 import { Button, useTheme } from "@material-ui/core";
 import { exportTable } from "../../../utils/importExportTable.utils";
 import { useAuth } from "../../../contexts/userContext";
 import GeoRegions from "../../GeoRegions";
 import { IGeoRegions } from "../../../models/GeoRegions";
 
-const rows = [
-	{ valueAccessKey: "name" },
-	// { valueAccessKey: "id" },
-	{ valueAccessKey: "description" },
-	// { valueAccessKey: "description" },
-	// {
-	// 	valueAccessKey: "",
-	// 	renderComponent: (budgetCategory: IBudgetCategory) => (
-	// 		<UnitsAndCategoriesProjectCount budgetCategoryId={budgetCategory.id} />
-	// 	),
-	// },
-	// { valueAccessKey: "" },
-];
+const rows = [{ valueAccessKey: "name" }, { valueAccessKey: "description" }];
 
 let geoRegionsTableEditMenu: string[] = [];
 
@@ -42,7 +25,6 @@ function GeoRegionsTableView({
 	selectedGeoRegions,
 	initialValues,
 	geoRegionsList,
-	// budgetCategoryList,
 	collapsableTable,
 	changePage,
 	loading,
@@ -52,14 +34,12 @@ function GeoRegionsTableView({
 	orderBy,
 	setOrderBy,
 	geoRegionsTableRefetch,
-}: // budgetCategoryTableRefetch,
-{
+}: {
 	toggleDialogs: (index: number, val: boolean) => void;
 	openDialogs: boolean[];
 	selectedGeoRegions: React.MutableRefObject<Required<IGeoRegions> | null>;
-	initialValues: Required<IBudgetCategory>;
-	geoRegionsList: Required<IBudgetCategory>[];
-	// budgetCategoryList: Required<IBudgetCategory>[];
+	initialValues: Required<IGeoRegions>;
+	geoRegionsList: Required<IGeoRegions>[];
 	collapsableTable: boolean;
 	changePage: (prev?: boolean) => void;
 	count: number;
@@ -69,7 +49,6 @@ function GeoRegionsTableView({
 	orderBy: string;
 	setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 	geoRegionsTableRefetch: () => void;
-	// budgetCategoryTableRefetch: () => void;
 }) {
 	const geoRegionsEditAccess = userHasAccess(
 		MODULE_CODES.BUDGET_CATEGORY,
@@ -91,7 +70,6 @@ function GeoRegionsTableView({
 	);
 
 	const onImportTableSuccess = () => geoRegionsTableRefetch && geoRegionsTableRefetch();
-	// const onImportTableSuccess = () => budgetCategoryTableRefetch && budgetCategoryTableRefetch();
 
 	useEffect(() => {
 		if (geoRegionsEditAccess) {
@@ -152,14 +130,12 @@ function GeoRegionsTableView({
 		>
 			<>
 				<GeoRegions
-					// <BudgetCategory
 					formAction={FORM_ACTIONS.UPDATE}
 					handleClose={() => toggleDialogs(0, false)}
 					open={openDialogs[0]}
 					initialValues={initialValues}
 				/>
 				<GeoRegions
-					// <BudgetCategory
 					formAction={FORM_ACTIONS.UPDATE}
 					handleClose={() => toggleDialogs(1, false)}
 					open={openDialogs[1]}

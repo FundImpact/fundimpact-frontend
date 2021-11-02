@@ -4,7 +4,12 @@ export interface IGeoRegions {
 	id?: string;
 	name: string;
 	description?: string;
-	code: string;
+	country_id?: string;
+	state_id?: string;
+	district_id?: string;
+	block_id?: string;
+	gp_id?: string;
+	village_id?: string;
 }
 
 export type IGeoRegionsProps =
