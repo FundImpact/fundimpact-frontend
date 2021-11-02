@@ -34,11 +34,9 @@ function UserRoles() {
 			setUserRoleHash({ ...userRoleHashTempObject });
 		},
 	});
-	// console.log('error :>> ', error);
 	const [userRoleHash, setUserRoleHash] = useState<{
 		[key: string]: { id: string; controller: string; action: string; enabled: boolean };
 	}>({});
-	// console.log("userRoleHash :>> ", userRoleHash);
 	useEffect(() => {
 		if (user) {
 			getUserRoles({

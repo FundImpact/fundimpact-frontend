@@ -306,7 +306,7 @@ const submitForm = async ({
 		if (formAction === FORM_ACTIONS.UPDATE && individualUpdated && individualUpdated.data) {
 			return individualUpdated.data.updateT4DIndividual.t4DIndividual;
 		}
-	} catch (err) {
+	} catch (err: any) {
 		notificationDispatch(setSuccessNotification(err.message));
 	}
 	return null;
@@ -557,7 +557,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 							apolloClient,
 							projectList: newAssignedProjectsToIndividual,
 						});
-					} catch (err) {
+					} catch (err: any) {
 						notificationDispatch(setErrorNotification(err.message));
 					}
 				}
@@ -581,7 +581,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 							),
 							increaseCount: false,
 						});
-					} catch (err) {
+					} catch (err: any) {
 						notificationDispatch(setErrorNotification(err.message));
 					}
 				}
@@ -649,7 +649,7 @@ function IndividualDialogContainer(props: IIndividualDialogContainerProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Individual Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			props.handleClose();

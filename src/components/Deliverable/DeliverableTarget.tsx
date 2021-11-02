@@ -51,6 +51,8 @@ function getInitialValues(props: DeliverableTargetProps) {
 	};
 }
 function DeliverableTarget(props: DeliverableTargetProps) {
+	console.log("deliverableTargetForm", deliverableTargetForm[4]);
+
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
@@ -110,7 +112,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 								},
 							],
 						});
-					} catch (error) {
+					} catch (error: any) {
 						notificationDispatch(setErrorNotification(error?.message));
 					}
 				}
@@ -283,7 +285,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			// setcurrentCategory("");
 			notificationDispatch(setSuccessNotification("Target created successfully !"));
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		}
 	};
@@ -374,7 +376,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			notificationDispatch(setSuccessNotification("Target updated successfully !"));
 			// setcurrentCategory("");
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.message));
 		}
 	};
@@ -435,53 +437,27 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	useEffect(() => {
 		if (dashboardData?.project?.id) {
-			if (props.formType === "deliverable") {
+			let allowedProps = ["deliverable", "output", "outcome"];
+			let parentProps: any = { deliverable: "output", output: "outcome", outcome: "impact" };
+			if (allowedProps.includes(props.formType)) {
 				getOutputsByProject({
 					variables: {
 						filter: {
 							project_with_deliverable_targets: {
 								project: dashboardData?.project?.id,
 							},
-							type: "output",
+							type: parentProps[props.formType],
 						},
 					},
 				});
-				deliverableTargetForm[0].label = "Output";
-			}
-
-			if (props.formType === "output") {
-				getOutputsByProject({
-					variables: {
-						filter: {
-							project_with_deliverable_targets: {
-								project: dashboardData?.project?.id,
-							},
-							type: "outcome",
-						},
-					},
-				});
-				deliverableTargetForm[0].label = "Outcome";
-			}
-
-			if (props.formType === "outcome") {
-				getOutputsByProject({
-					variables: {
-						filter: {
-							project_with_deliverable_targets: {
-								project: dashboardData?.project?.id,
-							},
-							type: "impact",
-						},
-					},
-				});
-				deliverableTargetForm[0].label = "Impact";
+				deliverableTargetForm[0].hidden = false;
+				deliverableTargetForm[0].label =
+					parentProps[props.formType].charAt(0).toUpperCase() +
+					parentProps[props.formType].slice(1);
 			}
 
 			if (props.formType === "impact") {
 				deliverableTargetForm[0].hidden = true;
-				return () => {
-					deliverableTargetForm[0].hidden = false;
-				};
 			}
 		}
 	}, [dashboardData, getOutputsByProject, props.formType]);
@@ -626,7 +602,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Target Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

@@ -12,6 +12,7 @@ function DeliverablMasterContainer() {
 		code: "",
 		description: "",
 	});
+
 	const [deliverableUnitFilterList, setDeliverableUnitFilterList] = useState<{
 		[key: string]: string;
 	}>({
@@ -19,6 +20,7 @@ function DeliverablMasterContainer() {
 		code: "",
 		description: "",
 	});
+
 	const deliverableCategoryCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY

@@ -102,6 +102,13 @@ export const budgetCategoryHeading = [
 	{ label: "Used in projects" },
 	{ label: "" },
 ];
+export const geoRegionsHeading = [
+	{ label: "#" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Description", keyMapping: "description" },
+	// { label: "See Georegions" },
+	{ label: "" },
+];
 
 export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "" },
@@ -110,6 +117,127 @@ export const deliverableCategoryTableHeading: ITableHeadings[] = [
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
+	{ label: "" },
+];
+
+export const GeographiesCountryTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	// { label: "Parent" },
+	{ label: "" },
+];
+export const GeographiesStateTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Country" },
+	{ label: "" },
+];
+export const GeographiesDistrictTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "State" },
+	{ label: "" },
+];
+export const GeographiesBlockTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "District" },
+	{ label: "" },
+];
+export const GeographiesGrampanchayatTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "District" },
+	{ label: "" },
+];
+export const GeographiesVillageTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "#" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Name", keyMapping: "name" },
+	{ label: "Code", keyMapping: "code" },
+	{ label: "Block" },
+	{ label: "" },
+];
+
+export const TallyMapperCostcenterTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "Tally ID" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Cost Center", keyMapping: "costcenter" },
+	{ label: "Donor", keyMapping: "donor" },
+	{ label: "Project", keyMapping: "project" },
+	{ label: "Target", keyMapping: "target" },
+	{ label: "Sub-Target", keyMapping: "subtarget" },
+	{ label: "Category", keyMapping: "category" },
+	{ label: "Status", keyMapping: "status" },
+	{ label: "" },
+];
+export const TallyMapperCategoriesTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "Tally ID" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Cost Categories", keyMapping: "costcategories" },
+	{ label: "Donor", keyMapping: "donor" },
+	{ label: "Project", keyMapping: "project" },
+	{ label: "Target", keyMapping: "target" },
+	{ label: "Sub-Target", keyMapping: "subtarget" },
+	{ label: "Category", keyMapping: "category" },
+	{ label: "Status", keyMapping: "status" },
+	{ label: "" },
+];
+export const TallyMapperLedgerTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "Tally ID" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Cost Ledger", keyMapping: "costledger" },
+	{ label: "Donor", keyMapping: "donor" },
+	{ label: "Project", keyMapping: "project" },
+	{ label: "Target", keyMapping: "target" },
+	{ label: "Sub-Target", keyMapping: "subtarget" },
+	{ label: "Category", keyMapping: "category" },
+	{ label: "Status", keyMapping: "status" },
+	{ label: "" },
+];
+export const TallyMapperLedgerGroupTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "Tally ID" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Cost Ledger Group", keyMapping: "costledgergroup" },
+	{ label: "Donor", keyMapping: "donor" },
+	{ label: "Project", keyMapping: "project" },
+	{ label: "Target", keyMapping: "target" },
+	{ label: "Sub-Target", keyMapping: "subtarget" },
+	{ label: "Category", keyMapping: "category" },
+	{ label: "Status", keyMapping: "status" },
+	{ label: "" },
+];
+export const TallyMapperVoucherTableHeading: ITableHeadings[] = [
+	{ label: "" },
+	{ label: "Tally ID" },
+	// { label: "ID", keyMapping: "id" },
+	{ label: "Cost Voucher", keyMapping: "costvoucher" },
+	{ label: "Donor", keyMapping: "donor" },
+	{ label: "Project", keyMapping: "project" },
+	{ label: "Target", keyMapping: "target" },
+	{ label: "Sub-Target", keyMapping: "subtarget" },
+	{ label: "Category", keyMapping: "category" },
+	{ label: "Status", keyMapping: "status" },
 	{ label: "" },
 ];
 

@@ -1,0 +1,28 @@
+"deliverableCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Code",
+			"size": 6
+		}
+		// {
+		// 	"name": "description",
+		// 	"id": "description",
+		// 	"dataTestId": "deliverableFormDescription",
+		// 	"testId": "deliverableFormDescriptionInput",
+		// 	"label": "Parent",
+		// 	"multiline": true,
+		// 	"size": 12
+		// }
+	],

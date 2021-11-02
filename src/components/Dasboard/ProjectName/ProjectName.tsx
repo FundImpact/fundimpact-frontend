@@ -42,6 +42,7 @@ function ProjectEditButton({
 		short_name: string;
 		name: string;
 		id: number;
+		logframe_tracker: boolean;
 	};
 	workspaces: IOrganisationWorkspaces[];
 	refetch:
@@ -49,11 +50,13 @@ function ProjectEditButton({
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
-}) {
+}): JSX.Element {
 	const { data: projDonors } = useQuery(GET_PROJ_DONORS, {
 		variables: { filter: { project: project.id } },
 	});
 	const classes = useStyles();
+
+	// console.log("project projectName.tsx", project);
 
 	const [openUpdateForm, setOpenUpdateForm] = useState<boolean>(false);
 	const [projectDetails, setProjectDetails] = useState<any>();
@@ -68,12 +71,15 @@ function ProjectEditButton({
 				name: project.name,
 				short_name: project.short_name,
 				description: project.description,
+				logframe_tracker: project.logframe_tracker,
 				workspace: project.workspace.id,
 				donor: donorIds,
 				attachments: project.attachments,
 			});
 		}
 	}, [projDonors, project]);
+	// console.log("projectDetails projectName", projectDetails);
+
 	return (
 		<>
 			<IconButton
@@ -105,6 +111,9 @@ export default function ProjectName() {
 	const [getProject, { data: fetchedProject, loading }] = useLazyQuery<IGetProjectById>(
 		GET_PROJECT_BY_ID
 	);
+
+	// console.log("fetchedProject", fetchedProject);
+
 	const [getProjectsByWorkspace, { data: projectList, refetch }] = useLazyQuery(
 		GET_PROJECTS_BY_WORKSPACE
 	);
@@ -128,6 +137,8 @@ export default function ProjectName() {
 			getProject({ variables: { id: dashboardData?.project.id } });
 		}
 	}, [dashboardData, getProject]);
+
+	// console.log("dashboardData project", dashboardData);
 
 	useEffect(() => {
 		if (dashboardData) {

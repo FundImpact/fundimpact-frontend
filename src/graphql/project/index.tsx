@@ -9,6 +9,7 @@ export const CREATE_PROJECT = gql`
 				id
 				name
 			}
+			logframe_tracker
 		}
 	}
 `;
@@ -22,6 +23,7 @@ export const UPDATE_PROJECT = gql`
 				id
 				name
 			}
+			logframe_tracker
 			short_name
 			description
 			attachments {
@@ -49,6 +51,7 @@ export const GET_PROJECT_BY_ID = gql`
 				id
 				name
 			}
+			logframe_tracker
 			attachments {
 				id
 				name

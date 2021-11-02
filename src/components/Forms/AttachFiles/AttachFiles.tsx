@@ -260,7 +260,7 @@ function AttachFileForm(props: {
 
 											let fileArr: any = [];
 											Array.from(e.target?.files).forEach((file: any) => {
-												console.log("file", file);
+												// console.log("file", file);
 												fileArr.push({
 													file: file,
 													preview: isValidImage(

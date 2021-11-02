@@ -1,0 +1,3 @@
+import GeographiesGrampanchayatTableGraphql from "./GeographiesGrampanchayatTableGraphql";
+
+export default GeographiesGrampanchayatTableGraphql;

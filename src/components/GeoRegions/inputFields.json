@@ -1,0 +1,21 @@
+{
+	"GeoRegionsFormInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createBudgetName",
+			"testId": "createBudgetNameInput",
+			"label": "Name",
+			"size": 6,
+			"required": true
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createBudgetDescription",
+			"testId": "createBudgetDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	]
+}

@@ -1,4 +1,4 @@
-import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../../contexts/notificationContext";
@@ -51,6 +51,7 @@ import { DELIVERABLE_TYPE } from "../../../models/constants";
 import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../../graphql/donor/mutation";
 import { updateProjectDonorCache } from "../../Project/Project";
 import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
+import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
 
 function getInitialValues(props: SubTargetFormProps) {
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
@@ -67,8 +68,10 @@ function getInitialValues(props: SubTargetFormProps) {
 		annual_year: null,
 		grant_periods_project: null,
 		donor: null,
+		geo_regions: null,
 	};
 }
+
 function SubTarget(props: SubTargetFormProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -114,6 +117,8 @@ function SubTarget(props: SubTargetFormProps) {
 	);
 
 	const [targetValueOptions, setTargetValueOptions] = useState(props.targetValueOptions || []);
+
+	console.log("targetValueOptions", targetValueOptions);
 
 	useEffect(() => {
 		if (isQualitativeParent) {
@@ -189,6 +194,30 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const [currentDonor, setCurrentDonor] = useState<null | string | number>(null);
 
+	const [geoRegions, setGeoRegions] = useState<string | number[]>([]);
+
+	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
+
+	useEffect(() => {
+		getGeoRegions();
+	}, []);
+
+	const geoResponse = geoRegionsResponse?.data?.geoRegions;
+
+	budgetSubTargetFormList[11].optionsArray = geoResponse;
+
+	console.log("geoResponse", geoResponse);
+
+	// const [getGeoregions, geoResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
+
+	// useEffect(() => {
+	// 	getGeoregions();
+	// }, []);
+
+	// const getResponseData = geoResponse;
+
+	// console.log("getResponseData", getResponseData);
+
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
 		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
 		// skip: !currentDonor || !dashboardData?.project?.id,
@@ -201,6 +230,8 @@ function SubTarget(props: SubTargetFormProps) {
 		annualYear: [],
 		financialYear: [],
 	});
+
+	console.log("lists", lists);
 
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
 		onError: (err) => {
@@ -333,7 +364,7 @@ function SubTarget(props: SubTargetFormProps) {
 	budgetSubTargetFormList[6].secondOptionsArray = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
 		if (projectDonors && orgDonors) {
-			console.log("orgDonors --- ", projectDonors, orgDonors);
+			// console.log("orgDonors --- ", projectDonors, orgDonors);
 			orgDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
 				let projectDonorNotContainsOrgDonor = true;
 				projectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
@@ -560,6 +591,8 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let initialValues: any = getInitialValues(props);
 
+	console.log("initialValues", initialValues);
+
 	const checkValuesToDelete = (value: ISubTarget) => {
 		let values = { ...value };
 		if (props.formType === "budget") {
@@ -691,6 +724,8 @@ function SubTarget(props: SubTargetFormProps) {
 	// useEffect(() => {
 	// 	console.log("budgetSubTargetFormList[8]: ", budgetSubTargetFormList[8].optionsArray);
 	// }, [budgetSubTargetFormList[8].optionsArray]);
+
+	console.log("budgetSubTargetFormList", budgetSubTargetFormList[11].optionsArray);
 
 	return (
 		<React.Fragment>

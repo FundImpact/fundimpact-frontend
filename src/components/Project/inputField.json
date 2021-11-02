@@ -65,6 +65,19 @@
 			"onClick": {},
 			"textNextToButton": "",
 			"size": 12
+		},
+		{
+			"name": "logframe_tracker",
+			"id": "logframe_tracker",
+			"dataTestId": "projectLogFrame",
+			"testId": "projectlogFrameInput",
+			"label": "Log Frame",
+			"inputType": "switch",
+			"getInputValue": {},
+			"disabled": false,
+			"onClick": {},
+			"textNextToButton": "",
+			"size": 12
 		}
 	]
 }

@@ -26,6 +26,7 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { getValueFromObject } from "../../../utils";
 import { FormattedMessage, useIntl } from "react-intl";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles({
 	table: {
@@ -154,6 +155,8 @@ function CommonTable<T extends { id: string }>({
 		setAnchorEl(null);
 	};
 
+	// console.log("valueList", valuesList.length);
+
 	//this means that new item has been added
 	useEffect(() => {
 		setPage(0);
@@ -173,6 +176,7 @@ function CommonTable<T extends { id: string }>({
 							handleClose();
 						}}
 					>
+						{console.log("element", index)}
 						{element}
 					</MenuItem>
 				)) ||
@@ -280,6 +284,22 @@ function CommonTable<T extends { id: string }>({
 								rows={rows}
 								serialNo={page * defaultRows + index + 1}
 							>
+								{/* eyeIcon  */}
+								{/* <TableCell>
+									<IconButton
+										aria-haspopup="true"
+										onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+											selectedRow.current = rowData;
+											handleClick(event);
+										}}
+										style={{
+											visibility: menuList.length > 0 ? "visible" : "hidden",
+										}}
+									>
+										<VisibilityIcon />
+									</IconButton>
+								</TableCell> */}
+								{/* eyeIcon end  */}
 								<TableCell>
 									<IconButton
 										aria-haspopup="true"

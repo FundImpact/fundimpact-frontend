@@ -1,0 +1,20 @@
+{
+	"GeoRegionsInputFields": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "createGeoregionsName",
+			"testId": "createBudgetCategoryCodeInput",
+			"label": "Name",
+			"size": 6
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "createGeoRegionDescription",
+			"testId": "createGeoRegionDescriptionInput",
+			"label": "Description",
+			"size": 6
+		}
+	]
+}

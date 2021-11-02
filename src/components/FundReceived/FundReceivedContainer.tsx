@@ -377,7 +377,7 @@ const onFormSubmit = async ({
 			}));
 
 		notificationDispatch(setSuccessNotification("Fund Received Reported"));
-	} catch (err) {
+	} catch (err: any) {
 		notificationDispatch(setErrorNotification(err.message));
 	}
 };
@@ -441,7 +441,7 @@ function FundReceivedContainer({
 
 	const submitForm = useCallback(
 		async (valuesSubmitted: IFundReceivedForm) => {
-			console.log("ccc", valuesSubmitted);
+			// console.log("ccc", valuesSubmitted);
 			await onFormSubmit({
 				valuesSubmitted,
 				createFundReceipt,
@@ -514,7 +514,7 @@ function FundReceivedContainer({
 				],
 			});
 			notificationDispatch(setSuccessNotification("Fund Receipt Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			handleClose();

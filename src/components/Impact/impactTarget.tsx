@@ -92,7 +92,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 							},
 						},
 					});
-				} catch (error) {
+				} catch (error: any) {
 					notificationDispatch(setErrorNotification(error?.message));
 				}
 			}
@@ -186,7 +186,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Target updated successfully !"));
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		} finally {
 			onCancel();
@@ -306,7 +306,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 			});
 			notificationDispatch(setSuccessNotification("Impact Target Successfully created !"));
 			onCancel();
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error.message));
 		} finally {
 			onCancel();
@@ -421,7 +421,7 @@ function ImpactTarget(props: ImpactTargetProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Target Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

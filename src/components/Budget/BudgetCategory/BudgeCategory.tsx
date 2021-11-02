@@ -219,7 +219,7 @@ function BudgetCategory({
 				},
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Updation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			handleClose();
@@ -251,7 +251,7 @@ function BudgetCategory({
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Category Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			handleClose();
