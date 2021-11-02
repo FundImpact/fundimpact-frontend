@@ -148,7 +148,10 @@ function EditSubTarget({
 		timeperiod_start: "",
 		timeperiod_end: "",
 		attachments: [],
+		geo_regions: "",
 	};
+
+	console.log("subTarget", subTarget);
 
 	return (
 		<>
@@ -240,7 +243,7 @@ function EditSubTarget({
 							{tableType === "budget" ? (
 								<FormattedMessage
 									id="reportLineItem"
-									defaultMessage="Report Line Item"
+									defaultMessage="Report Expenditure"
 									description="Report Line Item"
 								/>
 							) : (
@@ -586,6 +589,8 @@ export default function ({
 	// 	: Object.values(DELIVERABLE_TYPE).includes(tableType)
 	// 	? GET_DELIVERABLE_SUB_TARGETS_COUNT
 	// 	: GET_DELIVERABLE_SUB_TARGETS_COUNT;
+
+	console.log("budgetSubTargetForm", budgetSubTargetForm);
 
 	const getSubTargetCountQuery = () =>
 		tableType === "budget" ? GET_BUDGET_SUB_TARGETS_COUNT : GET_DELIVERABLE_SUB_TARGETS_COUNT;

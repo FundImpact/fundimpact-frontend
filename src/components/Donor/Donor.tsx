@@ -212,7 +212,7 @@ function Donor(props: IDonorProps) {
 				});
 			}
 			notificationDispatch(setSuccessNotification("Donor Creation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
@@ -245,7 +245,7 @@ function Donor(props: IDonorProps) {
 				},
 			});
 			notificationDispatch(setSuccessNotification("Donor Updation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
@@ -305,7 +305,7 @@ function Donor(props: IDonorProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Donor Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			props.handleClose();

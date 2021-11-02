@@ -1,0 +1,135 @@
+
+// {
+// 	"budgetLineitemFormInputFields": [
+// 		{
+// 			"name": "reporting_date",
+// 			"id": "reporting-date",
+// 			"dataTestId": "createBudgetLineitemReportingDate",
+// 			"testId": "createBudgetLineitemReportingDateInput",
+// 			"label": "Reporting date",
+// 			"size": 6,
+// 			"type": "date",
+// 			"required": true
+// 		},
+// 		{
+// 			"name": "amount",
+// 			"id": "amount",
+// 			"dataTestId": "createBudgetLineitemAmount",
+// 			"testId": "createBudgetLineitemAmountInput",
+// 			"label": "Amount",
+// 			"size": 6,
+// 			"type": "number",
+// 			"endAdornment": "",
+// 			"required": true
+// 		},
+// 		{
+// 			"name": "timeperiod_start",
+// 			"id": "timeperiod_start",
+// 			"dataTestId": "budgetSubTargetTimePeriodStart",
+// 			"testId": "budgetSubTargetTimePeriodStartInput",
+// 			"label": "Start",
+// 			"type": "date",
+// 			"size": 6,
+// 			"required": false
+// 		},
+// 		{
+// 			"name": "timeperiod_end",
+// 			"id": "timeperiod_end",
+// 			"dataTestId": "budgetSubTargetTimePeriodEnd",
+// 			"testId": "budgetSubTargetTimePeriodEndInput",
+// 			"label": "End",
+// 			"type": "date",
+// 			"size": 6,
+// 			"required": false
+// 		},
+// 		{
+// 			"name": "budget_sub_target",
+// 			"label": "Choose Budget SubTarget",
+// 			"size": 12,
+// 			"testId": "createBudgetLineitemBudgetTargetsOption",
+// 			"dataTestId": "createBudgetLineitemBudgetTargets",
+// 			"optionsArray": [],
+// 			"inputLabelId": "demo-simple-select-outlined-label",
+// 			"selectLabelId": "demo-simple-select-outlined-label",
+// 			"selectId": "demo-simple-select-outlined-1",
+// 			"inputType": "select",
+// 			"displayName": "budget target",
+// 			"required": true,
+// 			"getInputValue": {}
+// 		},
+// 		{
+// 			"name": "annual_year",
+// 			"label": "Choose Annual Year",
+// 			"size": 6,
+// 			"testId": "createBudgetLineitemAnnualYearOption",
+// 			"dataTestId": "createBudgetLineitemAnnualYear",
+// 			"optionsArray": [],
+// 			"inputLabelId": "demo-simple-select-outlined-label",
+// 			"selectLabelId": "demo-simple-select-outlined-label",
+// 			"selectId": "demo-simple-select-outlined-2",
+// 			"inputType": "select",
+// 			"displayName": "annual year"
+// 		},
+// 		{
+// 			"name": "financial_year_donor",
+// 			"label": "Choose Donor Financial year",
+// 			"size": 6,
+// 			"testId": "createBudgetLineitemFinancialYearDonorOption",
+// 			"dataTestId": "createBudgetLineitemFinancialYearDonor",
+// 			"optionsArray": [],
+// 			"inputLabelId": "demo-simple-select-outlined-label",
+// 			"selectLabelId": "demo-simple-select-outlined-label",
+// 			"selectId": "demo-simple-select-outlined-2",
+// 			"inputType": "select",
+// 			"hidden": false,
+// 			"displayName": "donor financial year"
+// 		},
+// 		{
+// 			"name": "financial_year_org",
+// 			"label": "Choose Organization Financial Year",
+// 			"size": 6,
+// 			"testId": "createBudgetLineitemFinancialYearOrgOption",
+// 			"dataTestId": "createBudgetLineitemFinancialYearOrg",
+// 			"optionsArray": [],
+// 			"inputLabelId": "demo-simple-select-outlined-label",
+// 			"selectLabelId": "demo-simple-select-outlined-label",
+// 			"selectId": "demo-simple-select-outlined-2",
+// 			"inputType": "select",
+// 			"displayName": "organization financial year"
+// 		},
+// 		{
+// 			"name": "note",
+// 			"id": "note",
+// 			"dataTestId": "createBudgetLineitemNote",
+// 			"testId": "createBudgetLineitemNoteInput",
+// 			"label": "Note",
+// 			"size": 12,
+// 			"rows": 2,
+// 			"multiline": true
+// 		},
+// 		{
+// 			"name": "geo_regions",
+// 			"label": "Choose Geo Regions",
+// 			"size": 6,
+// 			"testId": "createBudgetLineitemGeoRegionsOption",
+// 			"dataTestId": "createBudgetGeoRegionsAnnualYear",
+// 			"optionsArray": [],
+// 			"inputLabelId": "demo-simple-select-outlined-label",
+// 			"selectLabelId": "demo-simple-select-outlined-label",
+// 			"selectId": "demo-simple-select-outlined-2",
+// 			"inputType": "select",
+// 			"displayName": "Geo Regions"
+// 		},
+// 		{
+// 			"name": "attachfiles",
+// 			"id": "attachfiles",
+// 			"dataTestId": "createBudgetTracklineAttachFile",
+// 			"testId": "createBudgetTracklineAttachFileInput",
+// 			"label": "Attach files",
+// 			"inputType": "button",
+// 			"onClick": {},
+// 			"textNextToButton": {},
+// 			"size": 12
+// 		}
+// 	]
+// }

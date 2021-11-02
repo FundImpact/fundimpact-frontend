@@ -208,7 +208,7 @@ export default function FundStatus() {
 				<Skeleton variant="text" animation="wave"></Skeleton>
 			</>
 		);
-	console.log("FUND_DETAILS", FUND_DETAILS);
+	// console.log("FUND_DETAILS", FUND_DETAILS);
 	return (
 		<Grid className={classes.root}>
 			<ChartBullet

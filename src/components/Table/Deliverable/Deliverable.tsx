@@ -540,6 +540,8 @@ const getTableHeadingByDeliverableTracklineAccess = (
 	collapseTableAccess: boolean
 ) => (collapseTableAccess ? headings : headings.slice(1));
 
+// console.log("heading.slice(1)", headings.slice(1));
+
 const getDefaultFilterList = () => ({
 	name: "",
 	deliverable_category_org: [],

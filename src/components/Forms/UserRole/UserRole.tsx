@@ -508,7 +508,7 @@ function UserRoleForm(props: UserRoleProps) {
 			});
 			await refetchUsers({ apolloClient });
 			notificationDispatch(setSuccessNotification("User updated"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

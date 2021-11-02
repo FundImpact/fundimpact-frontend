@@ -1,0 +1,366 @@
+{
+	"deliverableCategoryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Code",
+			"size": 6
+		}
+	],
+	"deliverableTargetForm": [
+		{
+			"name": "parent_id",
+			"id": "parent_id",
+			"dataTestId": "deliverableOutputTarget",
+			"testId": "deliverableOutputTargetInput",
+			"label": "",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": false,
+			"size": 12
+		},
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableTargetName",
+			"testId": "deliverableTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"required": true,
+			"size": 12
+		},
+		{
+			"name": "deliverable_category_org",
+			"id": "deliverable_category_org",
+			"dataTestId": "deliverableTargetCategory",
+			"testId": "deliverableTargetCategoryInput",
+			"label": "Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": true,
+			"addNewClick": {},
+			"size": 6
+		},
+		{
+			"name": "deliverable_unit_org",
+			"id": "deliverable_unit_org",
+			"dataTestId": "deliverableTargetUnit",
+			"testId": "deliverableTargetUnitInput",
+			"label": "Unit",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": true,
+			"addNew": true,
+			"addNewClick": {},
+			"size": 6
+		},
+		{
+			"name": "value_calculation",
+			"id": "value_calculation",
+			"dataTestId": "deliverableTargetValueCalculation",
+			"testId": "deliverableTargetValueCalculationInput",
+			"label": "Target Value Calculations *",
+			"optionsArray": [
+				{
+					"id": "AVG",
+					"name": "Average"
+				},
+				{
+					"id": "SUM",
+					"name": "Add"
+				}
+			],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+
+			"hidden": false,
+			"size": 6
+		},
+		{
+			"name": "is_qualitative",
+			"id": "is_qualitative",
+			"dataTestId": "deliverableTargetIsQualitative",
+			"testId": "deliverableTargetIsQualitativeInput",
+			"label": "Is Qualitative",
+			"getInputValue": {},
+			"disabled": false,
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "value_qualitative_option",
+			"id": "value_qualitative_option",
+			"dataTestId": "deliverableTargetValueQualitativeOptions",
+			"testId": "deliverableTargetValueQualitativeOptionsInput",
+			"label": "Qualitative Options ( Ex: Opt1,Opt2 ) *",
+			"hidden": true,
+			"multiline": true,
+			"rows": 2,
+			"inputType": "textarea",
+			"size": 12
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableTargetDescription",
+			"testId": "deliverableTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+
+	"deliverableTargetUpdateForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableTargetName",
+			"testId": "deliverableTargetNameInput",
+			"label": "Name",
+			"inputType": "textarea",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "target_value",
+			"id": "target_value",
+			"dataTestId": "deliverableTargetTargetValue",
+			"testId": "deliverableTargetTargetValueInput",
+			"label": "Target Value",
+			"inputType": "textarea",
+			"required": true,
+			"size": 6,
+			"type": "number"
+		},
+		{
+			"name": "description",
+			"id": "description",
+			"dataTestId": "deliverableTargetDescription",
+			"testId": "deliverableTargetDescriptionInput",
+			"label": "Description",
+			"multiline": true,
+			"rows": 3,
+			"inputType": "textarea",
+			"size": 12
+		}
+	],
+
+	"GeographiesCountryForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableFormName",
+			"testId": "deliverableFormNameInput",
+			"label": "Name",
+			"required": false,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "impactCode",
+			"dataTestId": "deliverableFormCode",
+			"testId": "deliverableFormCodeInput",
+			"label": "Code",
+			"size": 6
+		}
+	],
+
+	"GeographiesStateForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "country",
+			"id": "country",
+			"dataTestId": "geographiesCountry",
+			"testId": "geographiesCountryInput",
+			"label": "Country",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
+			"size": 12
+		}
+	],
+
+	"GeographiesDistrictForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "state",
+			"id": "state",
+			"dataTestId": "geographiesState",
+			"testId": "geographiesStateInput",
+			"label": "State",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
+			"size": 12
+		}
+	],
+	"GeographiesBlockForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "district",
+			"id": "district",
+			"dataTestId": "geographiesDistrict",
+			"testId": "geographiesDistrictyInput",
+			"label": "District",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
+			"size": 12
+		}
+	],
+	"GeographiesVillageForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "block",
+			"id": "block",
+			"dataTestId": "geographiesBlock",
+			"testId": "geographiesBlockInput",
+			"label": "Block",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
+			"size": 12
+		}
+	],
+	"GeographiesGrampanchayatForm": [
+		{
+			"name": "name",
+			"id": "name",
+			"dataTestId": "deliverableUnitName",
+			"testId": "deliverableUnitNameInput",
+			"label": "Name",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "code",
+			"id": "code",
+			"dataTestId": "deliverableUnitCode",
+			"testId": "deliverableUnitCodeInput",
+			"label": "Code",
+			"size": 6
+		},
+		{
+			"name": "district",
+			"id": "district",
+			"dataTestId": "geographiesDistrict",
+			"testId": "geographiesDistrictyInput",
+			"label": "District",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"addNew": false,
+			"size": 12
+		}
+	]
+}
