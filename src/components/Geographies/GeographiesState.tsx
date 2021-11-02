@@ -188,6 +188,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesState) => {
+		console.log("Update", value);
 		try {
 			const id = value.id;
 
@@ -206,6 +207,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 			onCancel();
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
+			// notificationDispatch(setErrorNotification('This is test error'));
 			onCancel();
 		}
 	};

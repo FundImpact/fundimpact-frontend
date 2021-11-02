@@ -207,8 +207,8 @@ function GeographiesCountryTableView({
 					/>
 					<Geographies
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
-						handleClose={() => toggleDialogs(0, false)}
-						open={openDialogs[0]}
+						handleClose={() => toggleDialogs(1, false)}
+						open={openDialogs[1]}
 						data={initialValues}
 						dialogType={DIALOG_TYPE.DELETE}
 					/>
