@@ -1,6 +1,5 @@
 import { IProject } from "../project/project";
 import { IOrganisation } from "../organisation/types";
-// import { IDeliverableCategoryData } from "./deliverable";
 import { IDeliverableUnitData } from "../deliverable/deliverableUnit";
 import { IGeographiesCountryData } from "./geographies";
 import { IGeographiesStateData } from "./geographiesState";
@@ -32,63 +31,19 @@ export interface IGeographiesCountryDataRespone {
 		code: string;
 	};
 }
-export interface IDeliverableTargetByProjectResponse {
-	id: string;
-	name: string;
-	target_value: number;
-	description: string;
-	deliverable_category_unit: IDeliverableCategoryUnitResponse;
-	project: Partial<IProject>;
-}
-
-export interface IDeliverableTracklineByTargetResponse {
-	id: string;
-	value: string;
-	note: string;
-	reporting_date: string;
-	deliverable_target_project: Partial<IDeliverableTargetByProjectResponse>;
-	annual_year: {
-		id: string;
-		name: string;
-		short_name: string;
-		start_date: string;
-		end_date: string;
-	};
-	financial_year: {
-		id: string;
-		name: string;
-		country: { id: string; name: string };
-	};
-}
-
-export interface IGET_DELIVERABLE_TARGET_BY_PROJECT {
-	deliverableTargetList: IDeliverableTargetByProjectResponse[];
-}
-
-export interface IGET_DELIVERABLE_TRACKLINE_BY_TARGET {
-	deliverableTrackingLineitemList: IDeliverableTracklineByTargetResponse[];
-}
 
 export interface IGetGeographiesCountry {
-	// export interface IGetDeliverableCategory {
 	geographiesCountry: IGeographiesCountryData[];
-	// deliverableCategory: IDeliverableCategoryData[];
 }
 
 export interface IGetGeographiesCountryVariables {
-	// export interface IGetDeliverablCategoryVariables {
 	filter: {
 		code: any;
-		// organization: string;
 	};
 }
 export interface IGetGeographieState {
 	geographiesStateOrg: IGeographiesStateData[];
 }
-
-// export interface IGetDeliverablUnit {
-// 	deliverableUnitOrg: IDeliverableUnitData[];
-// }
 
 export interface IGetDeliverableUnitVariables {
 	filter: {
@@ -115,7 +70,6 @@ export interface IGetDeliverableCategoryUnit {
 		id: string;
 		status: boolean;
 		deliverable_category_org: IGeographiesCountryData;
-		// deliverable_category_org: IDeliverableCategoryData;
 		deliverable_units_org: IDeliverableUnitData;
 	}[];
 }
@@ -124,7 +78,6 @@ export interface IUpdateDeliverableCategoryUnit {
 	updateDeliverableCategoryUnitInput: {
 		id: string;
 		status: boolean;
-		// deliverable_category_org: IDeliverableCategoryData;
 		deliverable_category_org: IGeographiesCountryData;
 		deliverable_units_org: IDeliverableUnitData;
 	}[];
