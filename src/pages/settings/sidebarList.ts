@@ -3,7 +3,6 @@ const manageMasterObject = [
 	"categories",
 	"units",
 	"yeartags",
-	"tally",
 	"goeGraphies",
 	"goeRegions",
 	"tallyMapper",

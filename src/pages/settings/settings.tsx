@@ -20,25 +20,20 @@ import { DELIVERABLE_UNIT_ACTIONS } from "../../utils/access/modules/deliverable
 import { IMPACT_CATEGORY_ACTIONS } from "../../utils/access/modules/impactCategory/actions";
 import { IMPACT_UNIT_ACTIONS } from "../../utils/access/modules/impactUnit/actions";
 import { ORGANIZATION_ACTIONS } from "../../utils/access/modules/organization/actions";
-// import DefaultSettingsView from "./defaultView";
 import { DONOR_ACTIONS } from "../../utils/access/modules/donor/actions";
 import { UserRoleContainer } from "./UserRole/container";
-// import { RolesContainer } from "./Roles/container";
 import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermissions/actions";
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
-// import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import GoegraphiesContainer from "./Goegraphies";
 import GeoRegionsContainer from "./GeoRegions";
-// import TallyContainer from "./Tally";
 import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
 import TallyMapperContainer from "./TallyMapper";
-// import GeoRegions from "./GeoRegions";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;

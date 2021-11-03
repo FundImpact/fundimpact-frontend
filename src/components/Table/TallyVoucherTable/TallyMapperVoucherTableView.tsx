@@ -22,6 +22,7 @@ import {
 import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [
+	{ valueAccessKey: "tally_id" },
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "donor" },
 	{ valueAccessKey: "project" },
