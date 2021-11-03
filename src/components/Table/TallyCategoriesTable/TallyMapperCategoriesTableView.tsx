@@ -18,6 +18,7 @@ import { DIALOG_TYPE } from "../../../models/constants";
 import { IGeographiesStateData } from "../../../models/geographies/geographiesState";
 import GeographiesState from "../../Geographies/GeographiesState";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -218,13 +219,17 @@ function TallyMapperCategoriesTableView({
 				)}
 			>
 				<>
-					<GeographiesState
+					<TallyForm
+						isOpenTallyForm={openDialogs[0]}
+						closeTallyForm={() => toggleDialogs(0, false)}
+					/>
+					{/* <GeographiesState
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
-					/>
+					/> */}
 					<GeographiesState
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}

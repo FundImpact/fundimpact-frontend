@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, FormControlLabel, RadioGroup, Radio } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useLazyQuery } from "@apollo/client";
-import FIDialog from "../../../components/Dialog/Dialog";
+import FIDialog from "../Dialog/Dialog";
 import {
 	donorForm,
 	projectForm,
@@ -10,12 +10,11 @@ import {
 	budgetCategoryForm,
 	targetAndSubTargetRadios,
 	tallyFormRadioButtons,
-} from "./inputField.json";
-import Tallyforms from "../../../components/Forms/Tally";
-import { GET_PROJECTS } from "../../../graphql";
-import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_TARGET_PROJECT } from "../../../graphql/Budget";
-import { GET_PROJ_DONORS } from "../../../graphql/project";
-import { IProjectDonor } from "../../../models/project/project";
+} from "./tallyFormInputField.json";
+import { GET_PROJECTS } from "../../graphql";
+import { GET_BUDGET_SUB_TARGETS, GET_BUDGET_TARGET_PROJECT } from "../../graphql/Budget";
+import { GET_PROJ_DONORS } from "../../graphql/project";
+import { IProjectDonor } from "../../models/project/project";
 import TallyFormContainer from "./TallyFormContainer";
 import TallyFormRadioButtons from "./TallyFormRadioButtons";
 
