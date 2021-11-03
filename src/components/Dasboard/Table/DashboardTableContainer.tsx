@@ -51,6 +51,9 @@ import { AttachFile } from "../../../models/AttachFile";
 import { useDocumentTableDataRefetch } from "../../../hooks/document";
 import SubTarget from "../../Forms/SubTargetForm";
 import ProjectTargets from "../../Forms/ProjectTargets";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { GET_PROJECT_BY_ID } from "../../../graphql/project";
+import { IGetProjectById } from "../../../models/project/project";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -149,9 +152,29 @@ const getTabToShow = (
 };
 
 export default function DashboardTableContainer() {
+	// const { data, loading } = useQuery(GET_PROJECT_BY_ID);
+
+	const [getProject, { data: fetchedProject, loading }] = useLazyQuery<IGetProjectById>(
+		GET_PROJECT_BY_ID
+	);
+
+	// useEffect(() => {
+	// 	getProject();
+	// }, []);
+
 	const intl = useIntl();
 	const dashboardData = useDashBoardData();
 	const [projectFilesArray, setProjectFilesArray] = React.useState<AttachFile[]>([]);
+
+	useEffect(() => {
+		if (dashboardData?.project) {
+			getProject({ variables: { id: dashboardData?.project.id } });
+		}
+	}, [dashboardData, getProject]);
+
+	const tabsShow = fetchedProject?.project?.logframe_tracker;
+
+	// console.log("projectByIs", fetchedProject?.project?.logframe_tracker);
 
 	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: true });
 
@@ -322,21 +345,6 @@ export default function DashboardTableContainer() {
 				{
 					text: intl.formatMessage({
 						id: "reportBudgetSpend",
-						defaultMessage: "Report Budget Spend",
-						description: `This text will be show on Add Button for Report Budget Spend`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<BudgetLineitem
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-						/>
-					),
-					createButtonAccess: budgetTargetLineItemCreateAccess,
-				},
-				{
-					text: intl.formatMessage({
-						id: "reportBudgetSpend",
 						defaultMessage: "Create Sub Target",
 						description: `This text will be show on budgets Add Button for create sub target`,
 					}),
@@ -350,6 +358,22 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
 				},
+				{
+					text: intl.formatMessage({
+						id: "reportBudgetSpend",
+						defaultMessage: "Report Budget Spend",
+						description: `This text will be show on Add Button for Report Budget Spend`,
+					}),
+					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+						<BudgetLineitem
+							formAction={FORM_ACTIONS.CREATE}
+							open={open}
+							handleClose={handleClose}
+						/>
+					),
+					createButtonAccess: budgetTargetLineItemCreateAccess,
+				},
+
 				{
 					text: intl.formatMessage({
 						id: "manageProjectBudgetTargets",
@@ -379,7 +403,7 @@ export default function DashboardTableContainer() {
 		{
 			label: intl.formatMessage({
 				id: "deliverableTabHeading",
-				defaultMessage: "Deliverable / Activities",
+				defaultMessage: "Activities",
 				description: `This text will be show on tab for Deliverables`,
 			}),
 			table: <DeliverablesTable />,
@@ -571,7 +595,8 @@ export default function DashboardTableContainer() {
 					deliverableUnitCreateAccess ||
 					deliverableCategoryCreateAccess ||
 					deliverableTracklineCreateAccess) &&
-				organizationOutputAccess,
+				organizationOutputAccess &&
+				tabsShow,
 			tableVisibility: deliverableTargetFindAccess,
 		},
 		{
@@ -654,13 +679,14 @@ export default function DashboardTableContainer() {
 					deliverableUnitCreateAccess ||
 					deliverableCategoryCreateAccess ||
 					deliverableTracklineCreateAccess) &&
-				organizationOutcomeAccess,
+				organizationOutcomeAccess &&
+				tabsShow,
 			tableVisibility: deliverableTargetFindAccess,
 		},
 		{
 			label: intl.formatMessage({
 				id: "impactTabHeading",
-				defaultMessage: "Impact / Goal",
+				defaultMessage: "Goal",
 				description: `This text will be show on tab for Impact`,
 			}),
 			table: <DeliverablesTable type={DELIVERABLE_TYPE.IMPACT} />,
@@ -1050,6 +1076,8 @@ export default function DashboardTableContainer() {
 		projectEditAccess,
 		projectFindAccess,
 	]);
+
+	// console.log("fundReceiptFindAccess", fundReceiptFindAccess);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		setValue(newValue);

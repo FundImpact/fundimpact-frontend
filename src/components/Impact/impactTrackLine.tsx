@@ -684,7 +684,7 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Impact Line Item Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onCancel();

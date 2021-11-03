@@ -121,6 +121,8 @@ function ProjectTargets(props: ProjectTargetsProps) {
 	projectTargetsForm[0].optionsArray = getTargetOptions();
 	projectTargetsForm[1].optionsArray = orgProject?.orgProject || [];
 
+	console.log("orgProject?.orgProject", orgProject?.orgProject);
+
 	projectTargetsForm[0].getInputValue = (targetId: string) => {
 		let projects = [];
 		let currTarget: any = projectTargetsForm[0]?.optionsArray.find(
@@ -135,6 +137,9 @@ function ProjectTargets(props: ProjectTargetsProps) {
 				(elem: { project: { id: string; name: string } }) => elem.project.id
 			);
 		}
+
+		console.log("projects", projects);
+
 		// if (formType === "impact") {
 		// 	projects = currTarget?.project_with_impact_targets?.map(
 		// 		(elem: { project: { id: string; name: string } }) => elem.project.id

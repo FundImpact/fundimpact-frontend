@@ -212,7 +212,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 						});
-					} catch (error) {
+					} catch (error: any) {
 						notificationDispatch(setErrorNotification(error?.message));
 					}
 				}
@@ -461,9 +461,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Budget Target Creation Success"));
+			notificationDispatch(setSuccessNotification("Budget Target Creation Success test"));
 			closeBudgetTargetProjectDialog();
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 			closeBudgetTargetProjectDialog();
 		}
@@ -512,7 +512,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 
 			closeBudgetTargetProjectDialog();
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 			closeBudgetTargetProjectDialog();
 		}
@@ -521,6 +521,8 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	const onDelete = async () => {
 		try {
 			const budgetTargetValues = { ...initialValues };
+			console.log("budgetTargetValues", budgetTargetValues);
+
 			delete budgetTargetValues["id"];
 			await updateProjectBudgetTarget({
 				variables: {
@@ -556,7 +558,7 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Target Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			handleClose();
