@@ -176,6 +176,7 @@ function CommonTable<T extends { id: string }>({
 							handleClose();
 						}}
 					>
+						{console.log("element", index)}
 						{element}
 					</MenuItem>
 				)) ||

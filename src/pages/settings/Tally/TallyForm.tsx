@@ -61,7 +61,13 @@ const getInitialValues = (keyword: string) => {
 		};
 };
 
-const TallyContainer = () => {
+const TallyForm = ({
+	isOpenTallyForm,
+	closeTallyForm,
+}: {
+	isOpenTallyForm: boolean;
+	closeTallyForm: () => void;
+}) => {
 	const classes = useStyle();
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [currentProject, setCurrentProject] = useState<null | string | number>(null);
@@ -210,12 +216,7 @@ const TallyContainer = () => {
 
 	return (
 		<Box p={2}>
-			<h1>Welcome to Tally</h1>
-			<Button onClick={() => setOpenDialog(true)} variant="contained">
-				Open Dialogue
-			</Button>
-
-			<FIDialog open={openDialog} handleClose={handleCloseDialog} header="Cost Center Name">
+			<FIDialog open={isOpenTallyForm} handleClose={closeTallyForm} header="Cost Center Name">
 				<TallyFormRadioButtons
 					value={globalSelect}
 					onChange={handleGlobalSelection}
@@ -288,4 +289,4 @@ const TallyContainer = () => {
 	);
 };
 
-export default TallyContainer;
+export default TallyForm;

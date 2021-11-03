@@ -3,9 +3,9 @@ const manageMasterObject = [
 	"categories",
 	"units",
 	"yeartags",
-	"tally",
 	"goeGraphies",
 	"goeRegions",
+	"tallyMapper",
 ];
 const manageMasterSubHeadings = manageMasterObject.map((item) => ({
 	to: item,

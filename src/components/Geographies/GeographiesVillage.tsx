@@ -209,7 +209,6 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 	};
 
 	const validate = (values: IGeographiesVillage) => {
-		// const validate = (values: IDeliverableUnit) => {
 		let errors: IError = {};
 		if (!values.name && !values.name.length) {
 			errors.name = "Name is required";

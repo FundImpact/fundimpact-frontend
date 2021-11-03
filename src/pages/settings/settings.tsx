@@ -28,7 +28,7 @@ import { USER_PERMISSIONS_ACTIONS } from "../../utils/access/modules/userPermiss
 import { AUTH_ACTIONS } from "../../utils/access/modules/auth/actions";
 import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
-import TallyContainer from "./Tally";
+// import TallyContainer from "./Tally";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import GoegraphiesContainer from "./Goegraphies";
 import GeoRegionsContainer from "./geoRegions";
@@ -37,8 +37,9 @@ import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
-// import GeoRegions from "./geoRegions";
-// import GeoRegionsMasterContainer from "./geoRegions";
+import GeoRegions from "./geoRegions";
+import GeoRegionsMasterContainer from "./geoRegions";
+import TallyMapperContainer from "./TallyMapper";
 // import GeoRegions from "./GeoRegions";
 
 interface IPrivateRouterProps extends RouteProps {
@@ -277,15 +278,20 @@ export default function SettingContainer() {
 							element={<IndividualContainer />}
 							path="individual"
 						/>
-						<PrivateRoute
+						{/* <PrivateRoute
 							userAccess={organizationEditAccess}
 							element={<TallyContainer />}
 							path="tally"
-						/>
+						/> */}
 						<PrivateRoute
 							userAccess={organizationEditAccess}
 							element={<GoegraphiesContainer />}
 							path="goeGraphies"
+						/>
+						<PrivateRoute
+							userAccess={organizationEditAccess}
+							element={<TallyMapperContainer />}
+							path="tallyMapper"
 						/>
 						<PrivateRoute
 							// userAccess={organizationEditAccess}
