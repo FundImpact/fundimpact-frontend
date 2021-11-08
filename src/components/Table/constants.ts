@@ -96,7 +96,7 @@ export const donorTableHeading = [
 
 export const budgetCategoryHeading = [
 	{ label: "#" },
-	{ label: "Budget Category", keyMapping: "name" },
+	{ label: "Name", keyMapping: "name" },
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },

@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import BudgetCategoryTableView from "./BudgetCategoryTableView";
 import { IBudgetCategory } from "../../../models/budget";
-// import { ApolloQueryResult, OperationVariables } from "@apollo/client";
 
 const getInitialValues = (
 	budgetCategory: Required<IBudgetCategory> | null
@@ -11,6 +10,8 @@ const getInitialValues = (
 		description: budgetCategory?.description || "",
 		id: budgetCategory?.id || "",
 		name: budgetCategory?.name || "",
+		project_id: budgetCategory?.project_id || "",
+		is_project: budgetCategory?.is_project || false,
 	};
 };
 

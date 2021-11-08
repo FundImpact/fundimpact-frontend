@@ -1,13 +1,15 @@
 import { gql } from "@apollo/client";
 
 export const GET_CATEGORIES = gql`
-	query yearTags($sort: String, $limit: Int, $start: Int, $filter: JSON) {
-		yearTags(sort: $sort, limit: $limit, start: $start, where: $filter) {
+	query category {
+		category {
 			id
+			created_at
+			updated_at
 			name
+			code
+			description
 			type
-			start_date
-			end_date
 		}
 	}
 `;

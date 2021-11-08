@@ -163,7 +163,7 @@ const UnitsTable = () => {
 						<TableCell>Name</TableCell>
 						<TableCell>Code</TableCell>
 						<TableCell>Description</TableCell>
-						<TableCell>Unit Type</TableCell>
+						<TableCell>Deliverable Type</TableCell>
 						<TableCell>
 							<IconButton>
 								<MoreVertIcon />

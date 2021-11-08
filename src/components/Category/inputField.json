@@ -38,7 +38,7 @@
 			"selectId": "demo-simple-select-outlined",
 			"inputType": "select",
 			"displayName": "country",
-			"required": true
+			"required": false
 		},
 		{
 			"name": "is_project",

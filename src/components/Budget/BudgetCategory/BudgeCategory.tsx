@@ -34,6 +34,8 @@ let defaultFormValues: IBudgetCategory = {
 	name: "",
 	code: "",
 	description: "",
+	project_id: "",
+	is_project: false,
 };
 
 const validate = (values: IBudgetCategory) => {
@@ -79,7 +81,9 @@ function BudgetCategory({
 
 	const onSubmit = async (valuesSubmitted: IBudgetCategory) => {
 		let values = removeEmptyKeys<IBudgetCategory>({ objectToCheck: valuesSubmitted });
+
 		try {
+			delete values.is_project;
 			await createNewOrgBudgetCategory({
 				variables: {
 					input: { ...values, organization: dashboardData?.organization?.id },
@@ -207,6 +211,7 @@ function BudgetCategory({
 				return;
 			}
 			delete values.id;
+			delete values.is_project;
 
 			await updateBudgetCategory({
 				variables: {
