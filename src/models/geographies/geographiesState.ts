@@ -1,18 +1,15 @@
-// import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
 import { GEOGRAPHIES_ACTIONS } from "../../components/Geographies/constants";
 import { DIALOG_TYPE } from "../constants";
 
 export interface IGeographiesState {
-	// export interface IDeliverableUnit {
 	id?: number;
 	name: string;
-	// description?: string;
 	code: string;
 	country: string;
-	// unit_type: number | string;
-	// prefix_label: number | string;
-	// suffix_label: number | string;
-	// organization?: number | string;
+	// country: {
+	// 	id: string;
+	// 	name: string;
+	// };
 }
 
 export interface IGeographiesStateData extends Omit<IGeographiesState, "organization" | "id"> {
@@ -31,6 +28,5 @@ export type GoegraphiesStateProps = {
 	| {
 			type: GEOGRAPHIES_ACTIONS.UPDATE;
 			data: IGeographiesState;
-			// data: IDeliverableUnit;
 	  }
 );

@@ -121,8 +121,11 @@ function GeographiesStateTableGraphql({
 			country: item.country ? item.country.name : null,
 		})) || [];
 
+	console.log("geographyState", geographyState);
+
 	return (
 		<GeographiesStateTableContainer
+			// geographiesStateList={geographyState?.states || []}
 			geographiesStateList={geographiesStateList}
 			collapsableTable={collapsableTable}
 			changePage={changeCountryStatePage}

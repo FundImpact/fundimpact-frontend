@@ -15,6 +15,7 @@ import { DIALOG_TYPE } from "../../../models/constants";
 import { IGeographies, IGeographiesCountryData } from "../../../models/geographies/geographies";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 import Geographies from "../../Geographies/Geographies";
+import TallyMapperCostCenter from "../../TallyMapper/TallyMapperCostCenter";
 
 const rows = [
 	{ valueAccessKey: "name" },
@@ -211,13 +212,13 @@ function TallyMapperCostcenterTableView({
 				)}
 			>
 				<>
-					<Geographies
+					<TallyMapperCostCenter
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 					/>
-					<Geographies
+					<TallyMapperCostCenter
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}
 						open={openDialogs[1]}
