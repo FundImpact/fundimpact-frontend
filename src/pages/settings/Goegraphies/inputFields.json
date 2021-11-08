@@ -13,7 +13,7 @@
 			"id": "budgetCode",
 			"dataTestId": "createDeliverableCode",
 			"testId": "createDeliverableCategoryCodeInput",
-			"label": "Geographies Country Code",
+			"label": "Code",
 			"size": 6
 		},
 		{
@@ -39,7 +39,7 @@
 			"id": "DeliverableUnitCode",
 			"dataTestId": "createDeliverableUnitCode",
 			"testId": "createDeliverableUnitCodeInput",
-			"label": "Geographies State Code",
+			"label": "Code",
 			"size": 6
 		},
 		{

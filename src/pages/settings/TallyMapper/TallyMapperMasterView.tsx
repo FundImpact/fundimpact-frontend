@@ -24,6 +24,7 @@ import GeographiesDistrict from "../../../components/Geographies/GeographiesDist
 import GeographiesBlock from "../../../components/Geographies/GeographiesBlock";
 import GeographiesVillage from "../../../components/Geographies/GeographiesVillage";
 import GeographiesGrampanchayat from "../../../components/Geographies/GeographiesGrampanchayat";
+import TallyFormDialog from "../../../components/Tally/TallyFormDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -112,6 +113,13 @@ const TallyMapperMasterView = ({
 		{
 			label: "Cost Center",
 			table: <TallyMapperCostcenterTable tableFilterList={geographiesCountryFilterList} />,
+			dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				<TallyFormDialog
+					type="UPDATE"
+					isOpenTallyForm={open}
+					closeTallyForm={handleClose}
+				/>
+			),
 			// table: <GeographiesCountryTable tableFilterList={geographiesCountryFilterList} />,
 			// createButtons: [],
 			// buttonAction: {
@@ -131,6 +139,7 @@ const TallyMapperMasterView = ({
 		{
 			label: "Categories",
 			table: <TallyMapperCategoriesTable tableFilterList={deliverableUnitFilterList} />,
+
 			// createButtons: [],
 			// buttonAction: {
 			// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (

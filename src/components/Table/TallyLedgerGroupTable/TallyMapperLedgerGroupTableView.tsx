@@ -19,8 +19,10 @@ import {
 } from "../../../models/geographies/geographiesBlock";
 import GeographiesBlock from "../../Geographies/GeographiesBlock";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [
+	{ valueAccessKey: "tally_id" },
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "donor" },
 	{ valueAccessKey: "project" },
@@ -222,13 +224,17 @@ function TallyMapperLedgerGroupTableView({
 				)}
 			>
 				<>
-					<GeographiesBlock
+					<TallyForm
+						isOpenTallyForm={openDialogs[0]}
+						closeTallyForm={() => toggleDialogs(0, false)}
+					/>
+					{/* <GeographiesBlock
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
-					/>
+					/> */}
 
 					<GeographiesBlock
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
