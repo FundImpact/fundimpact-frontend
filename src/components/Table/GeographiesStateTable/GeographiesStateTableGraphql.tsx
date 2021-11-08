@@ -52,6 +52,8 @@ function GeographiesStateTableGraphql({
 	const removeNestedFilterListElements = (key: string, index?: number) => {
 		setNestedTableFilterList((nestedTableFilterListObject) => {
 			nestedTableFilterListObject[key] = "";
+			// console.log("Remove Filter List Object", nestedTableFilterListObject);
+			// console.log("Remove Filter List", removeNestedFilterListElements);
 			return { ...nestedTableFilterListObject };
 		});
 	};
@@ -65,6 +67,8 @@ function GeographiesStateTableGraphql({
 	useEffect(() => {
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
+			console.log("Filter", newFilterListObject);
+			console.log("Filter Table List", tableFilterList);
 			setQueryFilter({
 				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,

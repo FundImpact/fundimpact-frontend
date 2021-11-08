@@ -1,6 +1,6 @@
 import React from "react";
-import Tallyforms from "../../../components/Forms/Tally";
-import { ITallyForm } from "../../../components/Forms/Tally/models";
+import Tallyforms from "../Forms/Tally";
+import { ITallyForm } from "../Forms/Tally/models";
 
 const TallyFormContainer = ({
 	initialValues,

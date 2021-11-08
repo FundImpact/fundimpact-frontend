@@ -28,6 +28,7 @@ import {
 	IGeographies,
 	IGeographiesCountryData,
 } from "../../models/geographies/geographies";
+
 import { IGetGeographiesCountry } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_COUNTRY,
@@ -160,6 +161,13 @@ function Geographies(props: GeographiesProps) {
 	};
 
 	const onUpdate = async (value: IGeographies) => {
+		// console.log("Update", value);
+		const updateValue = {
+			code: value.code,
+			name: value.name,
+		};
+		// console.log("Update Value", updateValue);
+		// console.log("Update ID", value.id);
 		try {
 			const id = value.id;
 			delete value.id;
@@ -167,9 +175,9 @@ function Geographies(props: GeographiesProps) {
 				variables: {
 					input: {
 						where: {
-							id: id?.toString,
+							id: id,
 						},
-						data: value,
+						data: updateValue,
 					},
 				},
 			});

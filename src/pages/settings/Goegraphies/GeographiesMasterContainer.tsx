@@ -19,6 +19,8 @@ function GeographiesMasterContainer() {
 		// description: "",
 	});
 
+	console.log("sadfk: ", geographiesCountryFilterList);
+
 	const [geoGraphiesUnitFilterList, setgeoGraphiesUnitFilterList] = useState<{
 		// const [geoRegionsUnitFilterList, setgeoRegionsUnitFilterList] = useState<{
 		[key: string]: string;

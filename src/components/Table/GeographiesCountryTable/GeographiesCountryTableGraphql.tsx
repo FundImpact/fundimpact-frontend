@@ -107,6 +107,40 @@ function GoegraphiesCountryTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
+	const [filter, setFilter] = useState({});
+	const [getCountries, countriesResponse] = useLazyQuery(GET_COUNTRY_DATA);
+	// useEffect(() => {
+	// 	getCountries();
+	// },[])
+
+	// useEffect(() => {
+	// 	setFilter({
+	// 		organization : dashboardData?.organization?.id,
+	// 	});
+	// },[dashboardData])
+
+	useEffect(() => {
+		let newFilterListObject: { [key: string]: string | string[] } = {};
+		for (let key in tableFilterList) {
+			if (tableFilterList[key] && tableFilterList[key].length) {
+				newFilterListObject[key] = tableFilterList[key];
+			}
+		}
+		// console.log("agage", tableFilterList);
+		// console.log("newFilterListObject", newFilterListObject);
+		// console.log("nested", nestedTableFilterList);
+		// console.log("newFilter",newFilterListObject);
+		setFilter(newFilterListObject);
+		// console.log("Filter inside useEffect", filter);
+		getCountries({
+			variables: {
+				filter: newFilterListObject,
+			},
+		});
+		// console.log("Filter inside useEffect 2", filter);
+	}, [tableFilterList]);
+
+	let geographiesCountryList = countriesResponse?.data?.countries;
 
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		refetchDeliverableCategoryOnDeliverableCategoryImport();

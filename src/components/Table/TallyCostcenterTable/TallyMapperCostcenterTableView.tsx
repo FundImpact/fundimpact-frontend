@@ -16,8 +16,10 @@ import { IGeographies, IGeographiesCountryData } from "../../../models/geographi
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 import Geographies from "../../Geographies/Geographies";
 import TallyMapperCostCenter from "../../TallyMapper/TallyMapperCostCenter";
+import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [
+	{ valueAccessKey: "tally_id" },
 	{ valueAccessKey: "name" },
 	{ valueAccessKey: "donor" },
 	{ valueAccessKey: "project" },
@@ -212,13 +214,17 @@ function TallyMapperCostcenterTableView({
 				)}
 			>
 				<>
-					<TallyMapperCostCenter
+					<TallyForm
+						isOpenTallyForm={openDialogs[0]}
+						closeTallyForm={() => toggleDialogs(0, false)}
+					/>
+					{/* <Geographies
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
-					/>
-					<TallyMapperCostCenter
+					/> */}
+					<Geographies
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}
 						open={openDialogs[1]}
