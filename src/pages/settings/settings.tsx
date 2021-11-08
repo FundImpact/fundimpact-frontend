@@ -37,8 +37,8 @@ import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
-import GeoRegions from "./geoRegions";
-import GeoRegionsMasterContainer from "./geoRegions";
+// import GeoRegions from "./geoRegions";
+// import GeoRegionsMasterContainer from "./geoRegions";
 import TallyMapperContainer from "./TallyMapper";
 // import GeoRegions from "./GeoRegions";
 
