@@ -15,11 +15,14 @@ const getInitialValues = (
 	geographiesState: IGeographiesStateData | null,
 	organization: string | number
 ): IGeographiesState => {
+	console.log("geographiesState", geographiesState);
+
 	return {
 		code: geographiesState?.code || "",
 		// description: geographiesState?.description || "",
 		id: parseInt(geographiesState?.id || ""),
 		name: geographiesState?.name || "",
+		// country: geographiesState?.country || { id: "", name: "" },
 		country: geographiesState?.country || "",
 		// prefix_label: geographiesState?.prefix_label || "",
 		// suffix_label: geographiesState?.suffix_label || "",

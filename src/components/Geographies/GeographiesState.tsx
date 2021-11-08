@@ -38,7 +38,6 @@ import { IGetGeographieState } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_STATE,
 	DELETE_GEOGRAPHIES_STATE,
-	GET_STATE_COUNT,
 	GET_STATE_DATA,
 	UPDATE_GEOGRAPHIES_STATE,
 } from "../../graphql/Geographies/GeographyState";
@@ -50,11 +49,10 @@ function getInitialValues(props: GoegraphiesStateProps) {
 		name: "",
 		code: "",
 		country: "",
-		// description: "",
-		// unit_type: "",
-		// prefix_label: "",
-		// suffix_label: "",
-		// organization: props.organization,
+		// country: {
+		// 	id: "",
+		// 	name: "",
+		// },
 	};
 }
 
@@ -64,15 +62,12 @@ interface IError extends Omit<Partial<IGeographiesState>, "GeographiesState"> {
 
 function GeographiesState(props: GoegraphiesStateProps) {
 	const [getCountryDropdown, countryDropdownResponse] = useLazyQuery(GET_COUNTRY_DATA);
-
 	useEffect(() => {
 		getCountryDropdown();
 	}, []);
-
-	console.log("countryDropdownResponse", countryDropdownResponse?.data?.countries);
+	console.log("props", props);
 
 	GeographiesStateForm[2].optionsArray = countryDropdownResponse?.data?.countries;
-	console.log("GeographiesStateForm", GeographiesStateForm[2].optionsArray);
 
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -99,6 +94,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	);
 
 	let initialValues: IGeographiesState = getInitialValues(props);
+
 	console.log("initialValues", initialValues);
 
 	const onCreate = async (valueSubmitted: IGeographiesState) => {
@@ -191,6 +187,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		console.log("Update", value);
 		try {
 			const id = value.id;
+			console.log("value", value);
 
 			delete value.id;
 			await updateGeographiesState({
@@ -200,6 +197,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 							id: id?.toString(),
 						},
 						data: value,
+						// data: { ...value },
 					},
 				},
 			});

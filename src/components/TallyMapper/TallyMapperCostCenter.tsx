@@ -252,13 +252,13 @@ function TallyMapperCostCenter(props: GeographiesProps) {
 					" " +
 					intl.formatMessage({
 						id: "geographiesCountryFormTitle",
-						defaultMessage: "Geographies Country",
+						defaultMessage: "Tally Cost Center",
 						description: `This text will be show on geographies country form for title`,
 					})
 				}
 				subtitle={intl.formatMessage({
 					id: "geographiesCountryFormSubtitle",
-					defaultMessage: "Manage Country Data",
+					defaultMessage: "Manage Cost Center",
 					description: `This text will be show on geographies country form for subtitle`,
 				})}
 				workspace={""}

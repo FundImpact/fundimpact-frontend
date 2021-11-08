@@ -15,6 +15,7 @@ import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
 import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "../../graphql/Category/mutation";
 import { GET_PROJECTS } from "../../graphql";
+import { GET_CATEGORIES } from "../../graphql/Category/query";
 
 const defaultFormValues: ICategory = {
 	name: "",
@@ -34,6 +35,8 @@ function Category(props: ICategoryProps) {
 	const [createCategory, { loading: creatingCategory }] = useMutation(CREATE_CATEGORY);
 	const [updateCategory, { loading: updatingCategory }] = useMutation(UPDATE_CATEGORY);
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
+
+	console.log("creatingCategory", creatingCategory);
 
 	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
@@ -56,27 +59,29 @@ function Category(props: ICategoryProps) {
 	const dashboardData = useDashBoardData();
 
 	const onCreate = async (valuesSubmitted: ICategory) => {
-		// try {
-		// 	let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
-		// 	await createCategory({
-		// 		variables: {
-		// 			input: { data: { ...values } },
-		// 		},
-		// 		refetchQueries: [
-		// 			{
-		// 				query: GET_YEARTAGS,
-		// 			},
-		// 			{
-		// 				query: GET_YEARTAGS_COUNT,
-		// 			},
-		// 		],
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
-		// } catch (err: any) {
-		// 	notificationDispatch(setErrorNotification(err?.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
+			console.log("values Category", values);
+
+			await createCategory({
+				variables: {
+					input: { data: { ...values } },
+				},
+				refetchQueries: [
+					{
+						query: GET_CATEGORIES,
+					},
+					// {
+					// 	query: GET_YEARTAGS_COUNT,
+					// },
+				],
+			});
+			notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	const onUpdate = async (valuesSubmitted: ICategory) => {
@@ -106,6 +111,8 @@ function Category(props: ICategoryProps) {
 		// 	props.handleClose();
 		// }
 	};
+
+	console.log("addCategoryForm", addCategoryForm[5].optionsArray);
 
 	addCategoryForm[4].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);

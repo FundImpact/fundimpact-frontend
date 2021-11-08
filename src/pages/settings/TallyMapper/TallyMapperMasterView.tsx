@@ -24,6 +24,7 @@ import GeographiesDistrict from "../../../components/Geographies/GeographiesDist
 import GeographiesBlock from "../../../components/Geographies/GeographiesBlock";
 import GeographiesVillage from "../../../components/Geographies/GeographiesVillage";
 import GeographiesGrampanchayat from "../../../components/Geographies/GeographiesGrampanchayat";
+import TallyMapperCostCenter from "../../../components/TallyMapper/TallyMapperCostCenter";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -113,18 +114,19 @@ const TallyMapperMasterView = ({
 			label: "Cost Center",
 			table: <TallyMapperCostcenterTable tableFilterList={geographiesCountryFilterList} />,
 			// table: <GeographiesCountryTable tableFilterList={geographiesCountryFilterList} />,
-			// createButtons: [],
-			// buttonAction: {
-			// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-			// <Geographies
-			// 			type={GEOGRAPHIES_ACTIONS.CREATE}
-			// 			open={open}
-			// 			handleClose={handleClose}
-			// 			organization={dashboardData?.organization?.id}
-			// 		/>
-			// 	),
-			// },
-			// addButtonAccess: geographiesCountryCreateAccess,
+			createButtons: [],
+			buttonAction: {
+				dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+					// <Geographies
+					<TallyMapperCostCenter
+						type={GEOGRAPHIES_ACTIONS.CREATE}
+						open={open}
+						handleClose={handleClose}
+						organization={dashboardData?.organization?.id}
+					/>
+				),
+			},
+			addButtonAccess: geographiesCountryCreateAccess,
 			tableAccess: deliverableCategoryFindAccess,
 			tabAccess: deliverableCategoryFindAccess || geographiesCountryCreateAccess,
 		},

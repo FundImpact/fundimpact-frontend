@@ -1,3 +1,2 @@
-import GeoRegionsMasterContainer from "./GeoRegionsMasterContainer";
-
-export default GeoRegionsMasterContainer;
+import GeoRegions from "./GeoRegionsMasterContainer";
+export default GeoRegions;

@@ -8,10 +8,6 @@ import {
 	GET_ORG_BUDGET_CATEGORY_COUNT,
 	GET_ORGANIZATION_BUDGET_CATEGORY,
 } from "../../graphql/Budget";
-import {
-	CREATE_ORG_BUDGET_CATEGORY,
-	UPDATE_ORG_BUDGET_CATEGORY,
-} from "../../graphql/Budget/mutation";
 import { IInputField, IGeoregionInputField } from "../../models";
 import { IGET_BUDGET_CATEGORY } from "../../models/budget/query";
 import { DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
