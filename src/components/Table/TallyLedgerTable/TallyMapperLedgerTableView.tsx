@@ -23,6 +23,7 @@ import {
 } from "../../../models/geographies/geographiesDistrict";
 import GeographiesDistrict from "../../Geographies/GeographiesDistrict";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
+import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [
 	{ valueAccessKey: "tally_id" },
@@ -225,13 +226,17 @@ function TallyMapperLedgerTableView({
 				)}
 			>
 				<>
-					<GeographiesDistrict
+					<TallyForm
+						isOpenTallyForm={openDialogs[0]}
+						closeTallyForm={() => toggleDialogs(0, false)}
+					/>
+					{/* <GeographiesDistrict
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
-					/>
+					/> */}
 					<GeographiesDistrict
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(1, false)}

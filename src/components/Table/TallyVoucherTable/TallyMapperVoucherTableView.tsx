@@ -19,6 +19,7 @@ import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
 } from "../../../models/geographies/geographiesGrampanchayat";
+import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [
 	{ valueAccessKey: "tally_id" },
@@ -221,12 +222,16 @@ function TallyMapperVoucherTableView({
 				)}
 			>
 				<>
-					<GeographiesGrampanchayat
+					{/* <GeographiesGrampanchayat
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
 						handleClose={() => toggleDialogs(0, false)}
 						open={openDialogs[0]}
 						data={initialValues}
 						organization={dashboardData?.organization?.id || ""}
+					/> */}
+					<TallyForm
+						isOpenTallyForm={openDialogs[0]}
+						closeTallyForm={() => toggleDialogs(0, false)}
 					/>
 					<GeographiesGrampanchayat
 						type={GEOGRAPHIES_ACTIONS.UPDATE}
