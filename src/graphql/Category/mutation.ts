@@ -1,32 +1,42 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_CATEGORY = gql`
-	mutation createYearTag($input: createYearTagInput) {
-		createYearTag(input: $input) {
-			yearTag {
-				id
-			}
-		}
-	}
-`;
-
-export const DELETE_CATEGORY = gql`
-	mutation deleteYearTag($input: deleteYearTagInput) {
-		deleteYearTag(input: $input) {
-			yearTag {
+	mutation createCategory($input: createCategoryInput) {
+		createCategory(input: $input) {
+			category {
 				id
 				name
+				code
+				description
+				type
 			}
 		}
 	}
 `;
 
 export const UPDATE_CATEGORY = gql`
-	mutation updateYearTag($input: updateYearTagInput) {
-		updateYearTag(input: $input) {
-			yearTag {
+	mutation updateCategory($input: updateCategoryInput) {
+		updateCategory(input: $input) {
+			category {
 				id
 				name
+				code
+				description
+				type
+			}
+		}
+	}
+`;
+
+export const DELETE_CATEGORY = gql`
+	mutation deleteCategory($input: deleteCategoryInput) {
+		deleteCategory(input: $input) {
+			category {
+				id
+				name
+				code
+				description
+				type
 			}
 		}
 	}

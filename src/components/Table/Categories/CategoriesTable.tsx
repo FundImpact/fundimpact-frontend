@@ -10,6 +10,8 @@ import {
 	IconButton,
 	MenuItem,
 } from "@material-ui/core";
+import { useLazyQuery } from "@apollo/client";
+import { GET_CATEGORIES } from "../../../graphql/Category/query";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import { categories } from "./dummyData.json";
@@ -66,6 +68,20 @@ const CategoriesTable = () => {
 	const [pageCount, setPageCount] = useState(0);
 	const [openCategoryEditDialog, setOpenCategoryEditDialog] = useState<boolean>(false);
 	const [openCategoryDeleteDialog, setOpenCategoryDeleteDialog] = useState<boolean>(false);
+
+	const [getCategories, categoriesResponse] = useLazyQuery(GET_CATEGORIES);
+
+	useEffect(() => {
+		getCategories({ variables: { id: "2" } });
+	}, []);
+
+	console.log("fetchedProject", categoriesResponse);
+
+	// useEffect(() => {
+	// 	if (dashboardData?.project) {
+	// 		getProject({ variables: { id: dashboardData?.project.id } });
+	// 	}
+	// }, [dashboardData, getProject]);
 
 	// let {
 	// 	changePage: deliverableChangePage,
@@ -163,7 +179,7 @@ const CategoriesTable = () => {
 						<TableCell>Name</TableCell>
 						<TableCell>Code</TableCell>
 						<TableCell>Description</TableCell>
-						<TableCell>Category Type</TableCell>
+						<TableCell>Deliverable Type</TableCell>
 						<TableCell>
 							<IconButton>
 								<MoreVertIcon />

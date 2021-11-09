@@ -96,7 +96,7 @@ export const donorTableHeading = [
 
 export const budgetCategoryHeading = [
 	{ label: "#" },
-	{ label: "Budget Category", keyMapping: "name" },
+	{ label: "Name", keyMapping: "name" },
 	{ label: "Code", keyMapping: "code" },
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
@@ -263,6 +263,14 @@ export const impactUnitTableHeadings: ITableHeadings[] = [
 	{ label: "Description", keyMapping: "description" },
 	{ label: "Used in projects" },
 	{ label: "" },
+];
+
+export const unitsTableHeading: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Name" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Unit Type" },
 ];
 
 export const impactCategoryTableHeadings: ITableHeadings[] = [

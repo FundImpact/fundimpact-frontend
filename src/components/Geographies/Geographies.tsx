@@ -33,6 +33,7 @@ import { IGetGeographiesCountry } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_COUNTRY,
 	DELETE_GEOGRAPHIES_COUNTRY,
+	GET_COUNTRY_COUNT,
 	GET_COUNTRY_DATA,
 	UPDATE_GEOGRAPHIES_COUNTRY,
 } from "../../graphql/Geographies/GeographyCountry";
@@ -55,7 +56,7 @@ function Geographies(props: GeographiesProps) {
 	const [createGeographiesCountry, { loading: creatingGeographiesCountry }] = useMutation(
 		CREATE_GEOGRAPHIES_COUNTRY,
 		{
-			refetchQueries: [{ query: GET_COUNTRY_DATA }],
+			refetchQueries: [{ query: GET_COUNTRY_COUNT }],
 		}
 	);
 

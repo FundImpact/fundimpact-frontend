@@ -6,7 +6,6 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../models/constants";
 import { ICategory, ICategoryProps } from "../../models/categories";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { compareObjectKeys } from "../../utils";
 import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
 import CommonForm from "../CommonForm";
@@ -15,6 +14,7 @@ import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
 import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "../../graphql/Category/mutation";
 import { GET_PROJECTS } from "../../graphql";
+import { GET_CATEGORIES } from "../../graphql/Category/query";
 
 const defaultFormValues: ICategory = {
 	name: "",
@@ -35,7 +35,6 @@ function Category(props: ICategoryProps) {
 	const [updateCategory, { loading: updatingCategory }] = useMutation(UPDATE_CATEGORY);
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
 
-	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
 	useEffect(() => {
@@ -56,27 +55,29 @@ function Category(props: ICategoryProps) {
 	const dashboardData = useDashBoardData();
 
 	const onCreate = async (valuesSubmitted: ICategory) => {
-		// try {
-		// 	let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
-		// 	await createCategory({
-		// 		variables: {
-		// 			input: { data: { ...values } },
-		// 		},
-		// 		refetchQueries: [
-		// 			{
-		// 				query: GET_YEARTAGS,
-		// 			},
-		// 			{
-		// 				query: GET_YEARTAGS_COUNT,
-		// 			},
-		// 		],
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
-		// } catch (err: any) {
-		// 	notificationDispatch(setErrorNotification(err?.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
+			console.log("values Category", values);
+
+			await createCategory({
+				variables: {
+					input: { data: { ...values } },
+				},
+				refetchQueries: [
+					{
+						query: GET_CATEGORIES,
+					},
+					// {
+					// 	query: GET_YEARTAGS_COUNT,
+					// },
+				],
+			});
+			notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	const onUpdate = async (valuesSubmitted: ICategory) => {
@@ -108,14 +109,8 @@ function Category(props: ICategoryProps) {
 	};
 
 	addCategoryForm[4].getInputValue = (value: boolean) => {
-		setCurrentIsProject(value);
+		value ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
 	};
-
-	currentIsProject ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
-
-	// useEffect(() => {
-	// 	console.log("IsProject: ", currentIsProject);
-	// }, [currentIsProject]);
 
 	const intl = useIntl();
 

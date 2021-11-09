@@ -91,14 +91,6 @@ function GoegraphiesCountryTableGraphql({
 		}
 	}, [nestedTableFilterList, delivarableUnitId]);
 
-	const [getCountryCount, countryCountResponse] = useLazyQuery(GET_COUNTRY_COUNT);
-
-	useEffect(() => {
-		getCountryCount();
-	}, []);
-
-	let CountryCount = countryCountResponse;
-
 	let {
 		changePage: changeGeographiesCountryPage,
 		count: geographyCountryCount,

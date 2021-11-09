@@ -15,6 +15,7 @@ import { DIALOG_TYPE } from "../../../models/constants";
 import { IGeographies, IGeographiesCountryData } from "../../../models/geographies/geographies";
 import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 import Geographies from "../../Geographies/Geographies";
+import TallyMapperCostCenter from "../../TallyMapper/TallyMapperCostCenter";
 import TallyForm from "../../TallyMapper/TallyForm";
 
 const rows = [

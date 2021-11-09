@@ -10,6 +10,8 @@ export interface IBudgetCategory {
 	name: string;
 	description?: string;
 	code: string;
+	is_project: boolean;
+	project_id: string;
 }
 
 export interface IBudgetTrackingLineitem {
