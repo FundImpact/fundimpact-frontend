@@ -1,42 +1,65 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_CATEGORY = gql`
-	mutation createCategory($input: createCategoryInput) {
-		createCategory(input: $input) {
-			category {
+	mutation createDeliverableCategoryOrg($input: createDeliverableCategoryOrgInput) {
+		createDeliverableCategoryOrg(input: $input) {
+			deliverableCategoryOrg {
 				id
 				name
 				code
 				description
-				type
+				project_id {
+					id
+					name
+				}
 			}
 		}
 	}
 `;
 
 export const UPDATE_CATEGORY = gql`
-	mutation updateCategory($input: updateCategoryInput) {
-		updateCategory(input: $input) {
-			category {
+	mutation updateDeliverableCategoryOrg($input: updateDeliverableCategoryOrgInput) {
+		updateDeliverableCategoryOrg(input: $input) {
+			deliverableCategoryOrg {
 				id
 				name
 				code
 				description
-				type
+				organization {
+					name
+				}
+				deleted
+				project_id {
+					name
+				}
+				deliverable_type_id {
+					id
+					name
+				}
 			}
 		}
 	}
 `;
 
 export const DELETE_CATEGORY = gql`
-	mutation deleteCategory($input: deleteCategoryInput) {
-		deleteCategory(input: $input) {
-			category {
+	mutation deleteDeliverableCategoryOrg($input: deleteDeliverableCategoryOrgInput) {
+		deleteDeliverableCategoryOrg(input: $input) {
+			deliverableCategoryOrg {
 				id
 				name
 				code
 				description
-				type
+				organization {
+					name
+				}
+				deleted
+				project_id {
+					name
+				}
+				deliverable_type_id {
+					id
+					name
+				}
 			}
 		}
 	}

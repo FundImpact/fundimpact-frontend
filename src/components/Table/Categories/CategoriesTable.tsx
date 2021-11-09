@@ -53,6 +53,12 @@ const getInitialValues = (cat: ICategory | null): ICategory => {
 		name: cat?.name || "",
 		code: cat?.code || "",
 		description: cat?.description || "",
+		cat_type: cat?.cat_type || "",
+		is_project: cat?.is_project || false,
+		project_id: cat?.project_id || {
+			id: "",
+			name: "",
+		},
 	};
 };
 
@@ -72,16 +78,12 @@ const CategoriesTable = () => {
 	const [getCategories, categoriesResponse] = useLazyQuery(GET_CATEGORIES);
 
 	useEffect(() => {
-		getCategories({ variables: { id: "2" } });
+		getCategories();
 	}, []);
 
-	console.log("fetchedProject", categoriesResponse);
+	let categoryList = categoriesResponse?.data?.deliverableCategoryOrgs || [];
 
-	// useEffect(() => {
-	// 	if (dashboardData?.project) {
-	// 		getProject({ variables: { id: dashboardData?.project.id } });
-	// 	}
-	// }, [dashboardData, getProject]);
+	console.log("fetchedProject", categoriesResponse?.data?.deliverableCategoryOrgs);
 
 	// let {
 	// 	changePage: deliverableChangePage,
@@ -188,7 +190,7 @@ const CategoriesTable = () => {
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{categories.map((cat: ICategory, index: number) => (
+					{categoryList.map((cat: ICategory, index: number) => (
 						<TableRow key={cat.id}>
 							<TableCell component="td" scope="row">
 								{page * 10 + index + 1}

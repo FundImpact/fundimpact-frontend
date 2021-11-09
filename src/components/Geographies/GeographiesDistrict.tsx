@@ -42,6 +42,7 @@ import {
 import {
 	CREATE_GEOGRAPHIES_DISTRICT,
 	DELETE_GEOGRAPHIES_DISTRICT,
+	GET_DISTRICT_COUNT,
 	GET_DISTRICT_DATA,
 	UPDATE_GEOGRAPHIES_DISTRICT,
 } from "../../graphql/Geographies/GeographiesDistrict";
@@ -80,22 +81,14 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 	const onCancel = props.handleClose;
 
 	const [createDistrict, { loading: createDistrictLoading }] = useMutation(
-		CREATE_GEOGRAPHIES_DISTRICT,
-		{
-			refetchQueries: [{ query: GET_DISTRICT_DATA }],
-		}
+		CREATE_GEOGRAPHIES_DISTRICT
 	);
 
 	const [updateGeographiesDistrict, { loading: updatingGeographiesDistrict }] = useMutation(
-		UPDATE_GEOGRAPHIES_DISTRICT,
-		{
-			refetchQueries: [{ query: GET_DISTRICT_DATA }],
-		}
+		UPDATE_GEOGRAPHIES_DISTRICT
 	);
 
-	const [deleteGeographiesDistrict] = useMutation(DELETE_GEOGRAPHIES_DISTRICT, {
-		refetchQueries: [{ query: GET_DISTRICT_DATA }],
-	});
+	const [deleteGeographiesDistrict] = useMutation(DELETE_GEOGRAPHIES_DISTRICT);
 
 	let initialValues: IGeographiesDistrict = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesDistrict) => {
@@ -103,6 +96,14 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 		try {
 			await createDistrict({
 				variables: { input: { data: value } },
+				refetchQueries: [
+					{
+						query: GET_DISTRICT_DATA,
+					},
+					{
+						query: GET_DISTRICT_COUNT,
+					},
+				],
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -165,12 +166,6 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 						console.error(err);
 					}
 				},
-				refetchQueries: [
-					{
-						query: GET_DISTRICT_DATA,
-						// variables: { filter: { organization: dashboardData?.organization?.id } },
-					},
-				],
 			});
 			notificationDispatch(setSuccessNotification("Geographies District creation Success !"));
 		} catch (error: any) {
@@ -194,6 +189,14 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 						data: value,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DISTRICT_DATA,
+					},
+					{
+						query: GET_DISTRICT_COUNT,
+					},
+				],
 			});
 
 			notificationDispatch(setSuccessNotification("Geographies district updation created !"));
@@ -225,6 +228,14 @@ function GeographiesDistrict(props: GoegraphiesDistrictProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_DISTRICT_DATA,
+					},
+					{
+						query: GET_DISTRICT_COUNT,
+					},
+				],
 			});
 			// await updateGeographiesDistrict({
 			// 	variables: {

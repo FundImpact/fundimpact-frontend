@@ -14,23 +14,14 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 
 import {
-	CREATE_DELIVERABLE_UNIT,
-	UPDATE_DELIVERABLE_UNIT_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 	GET_DELIVERABLE_UNIT_BY_ORG,
 } from "../../graphql/Deliverable/unit";
 import { GEOGRAPHIES_ACTIONS } from "./constants";
-// import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesGrampanchayatForm } from "./inputField.json";
-import {
-	IGetDeliverablUnit,
-	// IGetDeliverableCategoryUnit,
-	// IGetDeliverableCategoryUnitVariables,
-	// IUpdateDeliverableCategoryUnit,
-	// IUpdateDeliverableCategoryUnitVariables,
-} from "../../models/deliverable/query";
+import { IGetDeliverablUnit } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import DeleteModal from "../DeleteModal";
@@ -43,6 +34,7 @@ import {
 import {
 	CREATE_GEOGRAPHIES_GRAMPANCHAYAT,
 	DELETE_GEOGRAPHIES_GRAMPANCHAYAT,
+	GET_GRAMPANCHAYAT_COUNT,
 	GET_GRAMPANCHAYAT_DATA,
 	UPDATE_GEOGRAPHIES_GRAMPANCHAYAT,
 } from "../../graphql/Geographies/GeographiesGrampanchayat";
@@ -74,11 +66,6 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 		getGrampanchayatDropdown();
 	}, []);
 
-	console.log(
-		"grampanchayatDropdownResponse?.data?.districts;",
-		grampanchayatDropdownResponse?.data?.districts
-	);
-
 	GeographiesGrampanchayatForm[2].optionsArray = grampanchayatDropdownResponse?.data?.districts;
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
@@ -87,22 +74,14 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 	const onCancel = props.handleClose;
 
 	const [createGrampanchayat, { loading: createGrampanchayatLoading }] = useMutation(
-		CREATE_GEOGRAPHIES_GRAMPANCHAYAT,
-		{
-			refetchQueries: [{ query: GET_GRAMPANCHAYAT_DATA }],
-		}
+		CREATE_GEOGRAPHIES_GRAMPANCHAYAT
 	);
 
 	const [updateDeliverableUnit, { loading: updatingGeographiesGrampanchayat }] = useMutation(
-		UPDATE_GEOGRAPHIES_GRAMPANCHAYAT,
-		{
-			refetchQueries: [{ query: GET_GRAMPANCHAYAT_DATA }],
-		}
+		UPDATE_GEOGRAPHIES_GRAMPANCHAYAT
 	);
 
-	const [deleteGeographiesGrampanchayat] = useMutation(DELETE_GEOGRAPHIES_GRAMPANCHAYAT, {
-		refetchQueries: [{ query: GET_GRAMPANCHAYAT_DATA }],
-	});
+	const [deleteGeographiesGrampanchayat] = useMutation(DELETE_GEOGRAPHIES_GRAMPANCHAYAT);
 
 	let initialValues: IGeographiesGrampanchayat = getInitialValues(props);
 
@@ -111,6 +90,14 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 		try {
 			await createGrampanchayat({
 				variables: { input: { data: value } },
+				refetchQueries: [
+					{
+						query: GET_GRAMPANCHAYAT_DATA,
+					},
+					{
+						query: GET_GRAMPANCHAYAT_COUNT,
+					},
+				],
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -173,12 +160,6 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 						console.error(err);
 					}
 				},
-				refetchQueries: [
-					{
-						query: GET_GRAMPANCHAYAT_DATA,
-						// variables: { filter: { organization: dashboardData?.organization?.id } },
-					},
-				],
 			});
 			notificationDispatch(
 				setSuccessNotification("Geographies Grampanchayat creation Success !")
@@ -204,6 +185,14 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 						data: value,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_GRAMPANCHAYAT_DATA,
+					},
+					{
+						query: GET_GRAMPANCHAYAT_COUNT,
+					},
+				],
 			});
 			// //remove newDeliverableCategories
 			// await changeDeliverableCategoryUnitStatus({
@@ -243,6 +232,14 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_GRAMPANCHAYAT_DATA,
+					},
+					{
+						query: GET_GRAMPANCHAYAT_COUNT,
+					},
+				],
 			});
 			// await updateDeliverableUnit({
 			// 	variables: {

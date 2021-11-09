@@ -56,8 +56,8 @@
 			"size": 6
 		},
 		{
-			"name": "project",
-			"id": "project",
+			"name": "project_id",
+			"id": "project_id",
 			"dataTestId": "categoryProject",
 			"testId": "categoryProjectInput",
 			"label": "Project",
