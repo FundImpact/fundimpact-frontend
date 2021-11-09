@@ -1,0 +1,228 @@
+{
+	"donorForm": [
+		{
+			"inputType": "select",
+			"name": "donor",
+			"id": "donor",
+			"dataTestId": "donorDataTestId",
+			"testId": "donorTestId",
+			"label": "Donor",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "project",
+			"id": "project",
+			"dataTestId": "projectDataTestId",
+			"testId": "projectTestId",
+			"label": "Project",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "target",
+			"id": "target",
+			"dataTestId": "targetDataTestId",
+			"testId": "targetTestId",
+			"label": "Target",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false,
+			"getInputValue": {}
+		},
+		{
+			"inputType": "select",
+			"name": "subTarget",
+			"id": "subTarget",
+			"dataTestId": "subTargetDataTestId",
+			"testId": "subTargetTestId",
+			"label": "Sub Target",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "projectBudgetCategory",
+			"id": "projectBudgetCategory",
+			"dataTestId": "projectBudgetCategoryDataTestId",
+			"testId": "projectBudgetCategoryTestId",
+			"label": "Project Budget Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": true
+		}
+	],
+	"projectForm": [
+		{
+			"inputType": "select",
+			"name": "projects",
+			"id": "projects",
+			"dataTestId": "projectsDataTestId",
+			"testId": "projectsTestId",
+			"label": "Projects",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false,
+			"getInputValue": {}
+		},
+		{
+			"inputType": "select",
+			"name": "target",
+			"id": "target",
+			"dataTestId": "targetDataTestId",
+			"testId": "targetTestId",
+			"label": "Target",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false,
+			"getInputValue": {}
+		},
+		{
+			"inputType": "select",
+			"name": "subTarget",
+			"id": "subTarget",
+			"dataTestId": "subTargetDataTestId",
+			"testId": "subTargetTestId",
+			"label": "Sub Target",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": false
+		},
+		{
+			"inputType": "select",
+			"name": "projectBudgetCategory",
+			"id": "projectBudgetCategory",
+			"dataTestId": "projectBudgetCategoryDataTestId",
+			"testId": "projectBudgetCategoryTestId",
+			"label": "Project Budget Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "after",
+			"hidden": true
+		}
+	],
+	"targetForm": [
+		{
+			"inputType": "select",
+			"name": "target",
+			"id": "target",
+			"dataTestId": "targetDataTestId",
+			"testId": "targetTestId",
+			"label": "Target",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		}
+	],
+	"budgetCategoryForm": [
+		{
+			"inputType": "select",
+			"name": "budget_category",
+			"id": "budget_category",
+			"dataTestId": "budgetCategoryDataTestId",
+			"testId": "budgetCategoryTestId",
+			"label": "Budget Category",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"required": false,
+			"addNew": false,
+			"size": 6,
+			"position": "before",
+			"hidden": false
+		}
+	],
+	"tallyFormRadioButtons": [
+		{
+			"name": "donor",
+			"label": "Donor"
+		},
+		{
+			"name": "project",
+			"label": "Project"
+		},
+		{
+			"name": "target",
+			"label": "Target"
+		},
+		{
+			"name": "budget_category",
+			"label": "Budget Category"
+		}
+	],
+	"targetAndSubTargetRadios": [
+		{
+			"name": "targetsAndSubTargets",
+			"label": "Targets and Sub-Targets"
+		},
+		{
+			"name": "projectBudgetCategory",
+			"label": "Project Budget Category"
+		}
+	]
+}

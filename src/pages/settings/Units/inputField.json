@@ -6,8 +6,7 @@
 			"dataTestId": "categoryName",
 			"testId": "categoryName",
 			"label": "Name",
-			"size": 6,
-			"required": true
+			"size": 6
 		},
 		{
 			"name": "code",
@@ -15,8 +14,7 @@
 			"dataTestId": "categoryCode",
 			"testId": "categoryCodeInput",
 			"label": "Code",
-			"size": 6,
-			"required": true
+			"size": 6
 		},
 		{
 			"name": "description",
@@ -27,31 +25,20 @@
 			"size": 12
 		},
 		{
-			"name": "is_project",
-			"id": "is_project",
-			"dataTestId": "isProjectTest",
-			"testId": "isProjectInput",
-			"label": "Is Project",
-			"getInputValue": {},
-			"disabled": false,
-			"inputType": "switch",
-			"required": true,
-			"size": 6
-		},
-		{
-			"name": "project",
-			"id": "project",
-			"dataTestId": "categoryProject",
-			"testId": "categoryProjectInput",
-			"label": "Project",
-			"optionsArray": [],
+			"name": "unit_type",
+			"label": "Unit Type",
+			"size": 6,
+			"testId": "unit_typeOption",
+			"dataTestId": "unit_type",
+			"optionsArray": [
+				{ "id": "Deliverable", "name": "Deliverable" },
+				{ "id": "Impact", "name": "Impact" }
+			],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
-			"selectId": "demo-simple-select-outlined-1",
+			"selectId": "demo-simple-select-outlined",
 			"inputType": "select",
-			"required": false,
-			"hidden": true,
-			"size": 6
+			"displayName": "country"
 		}
 	]
 }

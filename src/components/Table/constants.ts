@@ -265,6 +265,14 @@ export const impactUnitTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 ];
 
+export const unitsTableHeading: ITableHeadings[] = [
+	{ label: "#" },
+	{ label: "Name" },
+	{ label: "Code" },
+	{ label: "Description" },
+	{ label: "Unit Type" },
+];
+
 export const impactCategoryTableHeadings: ITableHeadings[] = [
 	{ label: "" },
 	{ label: "#" },

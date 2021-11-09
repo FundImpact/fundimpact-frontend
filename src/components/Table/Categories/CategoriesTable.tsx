@@ -26,6 +26,7 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import Category from "../../Category";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { ICategory } from "../../../models/categories";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
 
 const useStyles = makeStyles({
 	table: {
@@ -62,7 +63,12 @@ const getInitialValues = (cat: ICategory | null): ICategory => {
 	};
 };
 
-const CategoriesTable = () => {
+const CategoriesTable = ({
+	tableFilterList,
+}: {
+	tableFilterList?: { [key: string]: string | string[] };
+}) => {
+	const dashboardData = useDashBoardData();
 	const classes = useStyles();
 	const tableStyles = styledTable();
 	const selectedCategory = useRef<any | null>(null);
@@ -74,6 +80,35 @@ const CategoriesTable = () => {
 	const [pageCount, setPageCount] = useState(0);
 	const [openCategoryEditDialog, setOpenCategoryEditDialog] = useState<boolean>(false);
 	const [openCategoryDeleteDialog, setOpenCategoryDeleteDialog] = useState<boolean>(false);
+
+	// let {
+	// 	changePage: unitChangePage,
+	// 	count: unitCount,
+	// 	queryData: unitsList,
+	// 	queryLoading: unitsLoading,
+	// 	countQueryLoading: unitsCountLoading,
+	// 	queryRefetch: refetchUnitList,
+	// 	countRefetch: refetchUnitCount,
+	// } = pagination({
+	// 	countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+	// 	countFilter: {},
+	// 	query: GET_CATEGORIES,
+	// 	queryFilter,
+	// 	sort: `${orderBy}:${order.toUpperCase()}`,
+	// });
+
+	useEffect(() => {
+		let newFilterListObject: { [key: string]: string | string[] } = {};
+		for (let key in tableFilterList) {
+			if (tableFilterList[key] && tableFilterList[key].length) {
+				newFilterListObject[key] = tableFilterList[key];
+			}
+		}
+		setQueryFilter({
+			organization: dashboardData?.organization?.id,
+			...newFilterListObject,
+		});
+	}, [tableFilterList, dashboardData]);
 
 	const [getCategories, categoriesResponse] = useLazyQuery(GET_CATEGORIES);
 

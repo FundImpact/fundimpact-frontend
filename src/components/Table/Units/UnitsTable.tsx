@@ -9,6 +9,8 @@ import {
 	TableCell,
 	IconButton,
 	MenuItem,
+	TableFooter,
+	TablePagination,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
@@ -24,6 +26,14 @@ import TableSkeleton from "../../Skeletons/TableSkeleton";
 import Unit from "../../Unit";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IUnits } from "../../../models/units";
+import pagination from "../../../hooks/pagination";
+import {
+	GET_DELIVERABLE_UNIT_BY_ORG,
+	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+} from "../../../graphql/Deliverable/unit";
+import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { unitsTableHeading } from "../constants";
+import { stringify } from "querystring";
 
 const useStyles = makeStyles({
 	table: {
@@ -54,7 +64,12 @@ const getInitialValues = (unit: IUnits | null): IUnits => {
 	};
 };
 
-const UnitsTable = () => {
+const UnitsTable = ({
+	tableFilterList,
+}: {
+	tableFilterList?: { [key: string]: string | string[] };
+}) => {
+	const dashboardData = useDashBoardData();
 	const classes = useStyles();
 	const tableStyles = styledTable();
 	const selectedUnit = useRef<any | null>(null);
@@ -67,30 +82,34 @@ const UnitsTable = () => {
 	const [openUnitEditDialog, setOpenUnitEditDialog] = useState<boolean>(false);
 	const [openUnitDeleteDialog, setOpenUnitDeleteDialog] = useState<boolean>(false);
 
-	// let {
-	// 	changePage: deliverableChangePage,
-	// 	count: deliverableCatCount,
-	// 	queryData: deliverableCatList,
-	// 	queryLoading: deliverableQueryLoading,
-	// 	countQueryLoading: deliverableCountQueryLoading,
-	// 	queryRefetch: refetchDeliverableCatList,
-	// 	countRefetch: refetchDeliverableCatCount,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_ORG_CATEGORY_COUNT,
-	// 	countFilter: {},
-	// 	query: GET_DELIVERABLE_ORG_CATEGORY,
-	// 	queryFilter,
-	// 	sort: `${orderBy}:${order.toUpperCase()}`,
-	// });
+	let {
+		changePage: unitChangePage,
+		count: unitCount,
+		queryData: unitsList,
+		queryLoading: unitsLoading,
+		countQueryLoading: unitsCountLoading,
+		queryRefetch: refetchUnitList,
+		countRefetch: refetchUnitCount,
+	} = pagination({
+		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+		countFilter: {},
+		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
+	});
 
-	// useEffect(() => {
-	// 	if (deliverableCatCount?.aggregate?.count) {
-	// 		setPageCount(deliverableCatCount.aggregate.count);
-	// 	}
-	// }, [deliverableCatCount]);
-
-	// console.log("Data: ", deliverableCatList);
-	// console.log("Count: ", deliverableCatCount);
+	useEffect(() => {
+		let newFilterListObject: { [key: string]: string | string[] } = {};
+		for (let key in tableFilterList) {
+			if (tableFilterList[key] && tableFilterList[key].length) {
+				newFilterListObject[key] = tableFilterList[key];
+			}
+		}
+		setQueryFilter({
+			organization: dashboardData?.organization?.id,
+			...newFilterListObject,
+		});
+	}, [tableFilterList, dashboardData]);
 
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -135,8 +154,20 @@ const UnitsTable = () => {
 		},
 	];
 
-	// Check for the loading
-	if (false) {
+	const handlePageChange = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > page) {
+			unitChangePage();
+			setPage(newPage);
+		} else {
+			unitChangePage(true);
+			setPage(newPage);
+		}
+	};
+
+	if (unitsLoading || unitsCountLoading) {
 		return <TableSkeleton />;
 	}
 
@@ -159,11 +190,22 @@ const UnitsTable = () => {
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						<TableCell>#</TableCell>
-						<TableCell>Name</TableCell>
-						<TableCell>Code</TableCell>
-						<TableCell>Description</TableCell>
-						<TableCell>Deliverable Type</TableCell>
+						{unitsList?.deliverableUnitOrg?.length
+							? unitsTableHeading.map(
+									(
+										heading: { label: string; keyMapping?: string },
+										index: number
+									) => (
+										<TableCell
+											className={tableStyles.th}
+											key={index}
+											align="left"
+										>
+											{heading.label}
+										</TableCell>
+									)
+							  )
+							: null}
 						<TableCell>
 							<IconButton>
 								<MoreVertIcon />
@@ -172,7 +214,7 @@ const UnitsTable = () => {
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{units.map((unit: IUnits, index: number) => (
+					{unitsList?.deliverableUnitOrg.map((unit: IUnits, index: number) => (
 						<TableRow key={unit.id}>
 							<TableCell component="td" scope="row">
 								{page * 10 + index + 1}
@@ -180,7 +222,7 @@ const UnitsTable = () => {
 							<TableCell>{unit.name}</TableCell>
 							<TableCell>{unit.code}</TableCell>
 							<TableCell>{unit.description}</TableCell>
-							<TableCell>{unit.deliverable_type_id?.name}</TableCell>
+							<TableCell>{unit.unit_type}</TableCell>
 							<TableCell>
 								<IconButton
 									aria-haspopup="true"
@@ -209,6 +251,21 @@ const UnitsTable = () => {
 						</TableRow>
 					))}
 				</TableBody>
+				{unitsList?.deliverableUnitOrg.length && unitCount && (
+					<TableFooter>
+						<TableRow>
+							<TablePagination
+								rowsPerPageOptions={[]}
+								count={unitCount}
+								rowsPerPage={unitCount > 10 ? 10 : unitCount}
+								page={page}
+								onChangePage={handlePageChange}
+								onChangeRowsPerPage={() => {}}
+								style={{ paddingRight: "40px" }}
+							/>
+						</TableRow>
+					</TableFooter>
+				)}
 			</Table>
 		</TableContainer>
 	);

@@ -33,7 +33,7 @@ import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
-import TallyMapperContainer from "./TallyMapper";
+import TallyMapperMasterContainer from "./TallyMapper";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -283,7 +283,7 @@ export default function SettingContainer() {
 						/>
 						<PrivateRoute
 							userAccess={organizationEditAccess}
-							element={<TallyMapperContainer />}
+							element={<TallyMapperMasterContainer />}
 							path="tallyMapper"
 						/>
 						<PrivateRoute

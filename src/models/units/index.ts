@@ -15,6 +15,8 @@ export interface IUnits {
 	description: string | null;
 	project_id?: ProjectId;
 	deliverable_type_id?: DeliverableType | null;
+	unit_type?: string;
+	is_project?: boolean;
 }
 
 export type ProjectId = {
