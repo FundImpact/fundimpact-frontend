@@ -28,12 +28,12 @@ import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import GoegraphiesContainer from "./Goegraphies";
-import GeoRegionsMasterContainer from "./GeoRegions";
+import GeoRegionsMasterContainer from "./geoRegions";
 import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
 import Units from "./Units";
-import TallyMapperContainer from "./TallyMapper";
+import TallyMapperMasterContainer from "./TallyMapper";
 
 interface IPrivateRouterProps extends RouteProps {
 	userAccess?: boolean;
@@ -283,7 +283,7 @@ export default function SettingContainer() {
 						/>
 						<PrivateRoute
 							userAccess={organizationEditAccess}
-							element={<TallyMapperContainer />}
+							element={<TallyMapperMasterContainer />}
 							path="tallyMapper"
 						/>
 						<PrivateRoute

@@ -6,7 +6,6 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../models/constants";
 import { ICategory, ICategoryProps } from "../../models/categories";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { compareObjectKeys } from "../../utils";
 import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
 import CommonForm from "../CommonForm";
@@ -36,9 +35,6 @@ function Category(props: ICategoryProps) {
 	const [updateCategory, { loading: updatingCategory }] = useMutation(UPDATE_CATEGORY);
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
 
-	console.log("creatingCategory", creatingCategory);
-
-	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
 	useEffect(() => {
@@ -112,17 +108,9 @@ function Category(props: ICategoryProps) {
 		// }
 	};
 
-	console.log("addCategoryForm", addCategoryForm[5].optionsArray);
-
 	addCategoryForm[4].getInputValue = (value: boolean) => {
-		setCurrentIsProject(value);
+		value ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
 	};
-
-	currentIsProject ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
-
-	// useEffect(() => {
-	// 	console.log("IsProject: ", currentIsProject);
-	// }, [currentIsProject]);
 
 	const intl = useIntl();
 

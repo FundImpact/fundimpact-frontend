@@ -5,16 +5,20 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../models/constants";
 import { IUnits, IUnitProps } from "../../models/units";
-import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { compareObjectKeys } from "../../utils";
-import { removeEmptyKeys } from "../../utils";
 import FormDialog from "../FormDialog";
 import CommonForm from "../CommonForm";
 import { addUnitForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
-import { CREATE_UNIT, UPDATE_UNIT, DELETE_UNIT } from "../../graphql/Unit/mutation";
 import { GET_PROJECTS } from "../../graphql";
+import {
+	CREATE_DELIVERABLE_UNIT,
+	GET_DELIVERABLE_UNIT_BY_ORG,
+	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+	UPDATE_DELIVERABLE_UNIT_ORG,
+} from "../../graphql/Deliverable/unit";
+import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
+import { compareObjectKeys, removeEmptyKeys } from "../../utils";
 
 const defaultFormValues: IUnits = {
 	name: "",
@@ -31,11 +35,10 @@ const validate = (values: IUnits) => {
 };
 
 function Unit(props: IUnitProps) {
-	const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_UNIT);
-	const [updateUnit, { loading: updatingUnit }] = useMutation(UPDATE_UNIT);
-	const [deleteUnit, { loading: deletingUnit }] = useMutation(DELETE_UNIT);
+	const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_DELIVERABLE_UNIT);
+	const [updateUnit, { loading: updatingUnit }] = useMutation(UPDATE_DELIVERABLE_UNIT_ORG);
+	// const [deleteUnit, { loading: deletingUnit }] = useMutation(DELETE_UNIT);
 
-	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
 	useEffect(() => {
@@ -56,66 +59,59 @@ function Unit(props: IUnitProps) {
 	const dashboardData = useDashBoardData();
 
 	const onCreate = async (valuesSubmitted: IUnits) => {
-		// try {
-		// 	let values = removeEmptyKeys<IUnits>({ objectToCheck: valuesSubmitted });
-		// 	await createCategory({
-		// 		variables: {
-		// 			input: { data: { ...values } },
-		// 		},
-		// 		refetchQueries: [
-		// 			{
-		// 				query: GET_YEARTAGS,
-		// 			},
-		// 			{
-		// 				query: GET_YEARTAGS_COUNT,
-		// 			},
-		// 		],
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
-		// } catch (err: any) {
-		// 	notificationDispatch(setErrorNotification(err?.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			let values = valuesSubmitted;
+			delete values.is_project;
+			delete values.project_id;
+			await createUnit({
+				variables: {
+					input: values,
+				},
+				refetchQueries: [
+					{
+						query: GET_DELIVERABLE_UNIT_BY_ORG,
+					},
+					{
+						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Unite created successfully"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	const onUpdate = async (valuesSubmitted: IUnits) => {
-		// try {
-		// 	let values = removeEmptyKeys<IUnits>({
-		// 		objectToCheck: valuesSubmitted,
-		// 	});
-		// 	if (compareObjectKeys(values, initialValues)) {
-		// 		props.handleClose();
-		// 		return;
-		// 	}
-		// 	delete (values as any).id;
-		// 	await updateCategory({
-		// 		variables: {
-		// 			input: {
-		// 				where: {
-		// 					id: initialValues?.id,
-		// 				},
-		// 				data: values,
-		// 			},
-		// 		},
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Updation Success"));
-		// } catch (err) {
-		// 	notificationDispatch(setErrorNotification(err?.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			let values = removeEmptyKeys<IUnits>({
+				objectToCheck: valuesSubmitted,
+			});
+			if (compareObjectKeys(values, initialValues)) {
+				props.handleClose();
+				return;
+			}
+
+			delete (values as any).id;
+			await updateUnit({
+				variables: {
+					id: initialValues?.id,
+					input: values,
+				},
+			});
+			notificationDispatch(setSuccessNotification("Unit updated successfully"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	addUnitForm[4].getInputValue = (value: boolean) => {
-		setCurrentIsProject(value);
+		value ? (addUnitForm[5].hidden = false) : (addUnitForm[5].hidden = true);
 	};
-
-	currentIsProject ? (addUnitForm[5].hidden = false) : (addUnitForm[5].hidden = true);
-
-	// useEffect(() => {
-	// 	console.log("IsProject: ", currentIsProject);
-	// }, [currentIsProject]);
 
 	const intl = useIntl();
 
@@ -148,27 +144,21 @@ function Unit(props: IUnitProps) {
 	});
 
 	const onDelete = async () => {
-		// try {
-		// 	await deleteCategory({
-		// 		variables: {
-		// 			input: {
-		// 				where: {
-		// 					id: initialValues?.id,
-		// 				},
-		// 			},
-		// 		},
-		// 		refetchQueries: [
-		// 			{
-		// 				query: GET_YEARTAGS,
-		// 			},
-		// 		],
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Delete Success"));
-		// } catch (err) {
-		// 	notificationDispatch(setErrorNotification(err.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			await updateUnit({
+				variables: {
+					id: initialValues?.id,
+					input: {
+						deleted: true,
+					},
+				},
+			});
+			notificationDispatch(setSuccessNotification("Unit deleted successfully"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	if (props.deleteUnit) {
@@ -187,7 +177,7 @@ function Unit(props: IUnitProps) {
 			<FormDialog
 				handleClose={props.handleClose}
 				open={props.open}
-				loading={creatingUnit || updatingUnit || deletingUnit}
+				loading={creatingUnit || updatingUnit}
 				title={getTitle()}
 				subtitle={
 					props.formAction === FORM_ACTIONS.CREATE

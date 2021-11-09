@@ -33,8 +33,8 @@
 			"testId": "unit_typeOption",
 			"dataTestId": "unit_type",
 			"optionsArray": [
-				{ "id": 1, "name": "Deliverable" },
-				{ "id": 2, "name": "Impact" }
+				{ "id": "Deliverable", "name": "Deliverable" },
+				{ "id": "Impact", "name": "Impact" }
 			],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -56,8 +56,8 @@
 			"size": 6
 		},
 		{
-			"name": "project",
-			"id": "project",
+			"name": "project_id",
+			"id": "project_id",
 			"dataTestId": "categoryProject",
 			"testId": "categoryProjectInput",
 			"label": "Project",
