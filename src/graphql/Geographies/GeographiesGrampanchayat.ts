@@ -6,6 +6,10 @@ export const GET_GRAMPANCHAYAT_DATA = gql`
 			id
 			name
 			code
+			district {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -27,6 +31,7 @@ export const CREATE_GEOGRAPHIES_GRAMPANCHAYAT = gql`
 				name
 				code
 				district {
+					id
 					name
 				}
 			}
@@ -41,6 +46,7 @@ export const UPDATE_GEOGRAPHIES_GRAMPANCHAYAT = gql`
 				name
 				code
 				district {
+					id
 					name
 				}
 			}

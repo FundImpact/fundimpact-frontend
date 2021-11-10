@@ -48,7 +48,13 @@ import {
 import { GET_STATE_DATA } from "../../graphql/Geographies/GeographyState";
 
 function getInitialValues(props: GoegraphiesDistrictProps) {
-	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
+	let stateList: any = GeographiesDistrictForm[2].optionsArray || [];
+
+	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) {
+		stateList = stateList.find((state: any) => state.name == props.data.state);
+		props.data.state = (stateList && stateList.id) || null;
+		return { ...props.data };
+	}
 	return {
 		name: "",
 		code: "",

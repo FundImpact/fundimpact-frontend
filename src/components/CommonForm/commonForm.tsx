@@ -44,6 +44,8 @@ function CommonInputForm({
 		if (!errors) return true;
 		return Object.keys(errors).length ? false : true;
 	};
+	console.log("afahoha", initialValues);
+	// console.log("aetaetq",)
 	return (
 		<Formik
 			initialValues={initialValues}
@@ -57,11 +59,14 @@ function CommonInputForm({
 			enableReinitialize
 		>
 			{(formik) => {
+				console.log("testingenvasj", formik);
 				getFormikInstance && getFormikInstance(formik);
 				return (
 					<Form>
 						<Grid container spacing={2}>
 							{inputFields.map((element: IInputFields, index: number) => {
+								// console.log("arfiqwfma",element.type);
+								// console.log("aethq3tn",element.getInputValue);
 								return (
 									!element.hidden && (
 										<Grid item xs={element.size} key={index}>

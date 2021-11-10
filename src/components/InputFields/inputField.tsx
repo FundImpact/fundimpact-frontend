@@ -89,9 +89,10 @@ const InputFields = ({
 				);
 			});
 	}, [optionsArray]);
+
 	// const classes = useStyles();
 	const [elemName, setElemName] = React.useState<string[]>([]);
-
+	// console.log('afhqnff',inputType);
 	useEffect(() => {
 		if (inputType === "multiSelect") {
 			setElemName(
@@ -124,12 +125,20 @@ const InputFields = ({
 
 	if (inputType === "select" || inputType === "multiSelect") {
 		let multiSelect: boolean = inputType === "multiSelect" ? true : false;
+		let defaultValue;
+
+		console.log("inputTypeinitial", formik);
+		// console.log("inputType2Name",name);
+		// console.log("inputType3Label",optionsLabel);
+
 		let onChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+			console.log("getInputValue", formik);
 			if (inputType === "multiSelect") {
 				elemHandleChange(event);
 				formik.handleChange(event);
 			}
 			if (inputType === "select") {
+				defaultValue = formik.values[name];
 				if (multiple && Array.isArray(event.target.value)) {
 					event.target.value = (event.target.value as any[]).filter((elem) => elem);
 				}
@@ -146,11 +155,13 @@ const InputFields = ({
 				return arr.filter((item: any) => !!item).join(", ");
 			};
 		}
+		// formik.values.district = "18";
 		return (
 			<>
 				<FormControl variant="outlined" className={classes.formControl}>
 					<InputLabel required={required} id={inputLabelId}>
 						{label}
+						{/* {"Test it"} */}
 					</InputLabel>
 
 					<Select
@@ -158,12 +169,15 @@ const InputFields = ({
 						id={selectId}
 						error={!!formik.errors[name] && !!formik.touched[name]}
 						value={formik.values[name]}
+						// value = "18"
+						// value = {formik.values.district}
 						multiple={multiSelect || multiple}
 						onChange={onChange}
 						required={required}
 						onBlur={formik.handleBlur}
 						label={label}
 						name={name}
+						// name = {formik.values[name]}
 						renderValue={renderValue}
 						data-testid={dataTestId}
 						inputProps={{
@@ -399,6 +413,7 @@ const InputFields = ({
 		<TextField
 			style={{ width: "100%" }}
 			value={formik.values[name]}
+			// value={"afqqa"}
 			error={!!formik.errors[name] && !!formik.touched[name]}
 			helperText={formik.touched[name] && formik.errors[name]}
 			onBlur={formik.handleBlur}
@@ -419,6 +434,7 @@ const InputFields = ({
 			required={required}
 			fullWidth
 			name={`${name}`}
+			// name = {"testing"}
 			variant="outlined"
 			id={id}
 			multiline={multiline}

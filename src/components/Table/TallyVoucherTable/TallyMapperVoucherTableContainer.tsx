@@ -9,6 +9,8 @@ import TallyMapperVoucherTableView from "./TallyMapperVoucherTableView";
 import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
+	IGeographiesGrampanchayatDataObj,
+	IGeographiesGrampanchayatObj,
 } from "../../../models/geographies/geographiesGrampanchayat";
 
 const getInitialValues = (
@@ -18,8 +20,12 @@ const getInitialValues = (
 	return {
 		code: geographiesGrampanchayat?.code || "",
 		district: geographiesGrampanchayat?.district || "",
-		id: parseInt(geographiesGrampanchayat?.id || ""),
 		name: geographiesGrampanchayat?.name || "",
+		// district : {
+		// 	id : geographiesGrampanchayat?.district?.id || "",
+		// 	name : geographiesGrampanchayat?.district?.name || ""
+		// },
+		id: parseInt(geographiesGrampanchayat?.id || ""),
 		// prefix_label: geographiesGrampanchayat?.prefix_label || "",
 		// suffix_label: geographiesGrampanchayat?.suffix_label || "",
 		// unit_type: geographiesGrampanchayat?.unit_type || "",

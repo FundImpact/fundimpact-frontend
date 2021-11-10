@@ -64,7 +64,8 @@ function CommonTableRow<T extends { id: string }>({
 	const [openRow, setOpenRow] = useState(false);
 	const childrenArray = React.Children.toArray(children);
 	const intl = useIntl();
-
+	console.log("aeufhnq", rowData);
+	// console.log("",rowData)
 	return (
 		<>
 			<TableRow>
@@ -118,7 +119,6 @@ function CommonTableRow<T extends { id: string }>({
 		</>
 	);
 }
-
 const defaultRows = 10;
 
 const removeNullElementsFromMenuList = (element: { children: JSX.Element | null }) =>
@@ -185,7 +185,8 @@ function CommonTable<T extends { id: string }>({
 		.filter(removeNullElementsFromMenuList);
 
 	const classes = useStyles();
-
+	console.log("selectedRow", selectedRow);
+	console.log("SelectedRowValueList", valuesList);
 	if (loading) {
 		return <TableSkeleton />;
 	}
@@ -214,7 +215,7 @@ function CommonTable<T extends { id: string }>({
 	}
 
 	let childrenArray = React.Children.toArray(children);
-
+	// console.log("ValueList",valuesList);
 	return (
 		<TableContainer component={Paper}>
 			{/* childrenArray[0]  is the dialog we want in the table*/}

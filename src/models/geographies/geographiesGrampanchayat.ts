@@ -14,8 +14,23 @@ export interface IGeographiesGrampanchayat {
 	// organization?: number | string;
 }
 
+export interface IGeographiesGrampanchayatObj {
+	id?: number;
+	name: string;
+	district: {
+		id?: string;
+		name?: string;
+	};
+	code: string;
+}
+
 export interface IGeographiesGrampanchayatData
 	extends Omit<IGeographiesGrampanchayat, "organization" | "id"> {
+	id: string;
+}
+
+export interface IGeographiesGrampanchayatDataObj
+	extends Omit<IGeographiesGrampanchayatObj, "organization" | "id"> {
 	id: string;
 }
 
@@ -34,3 +49,19 @@ export type GoegraphiesGrampanchayatProps = {
 			// data: IDeliverableUnit;
 	  }
 );
+
+// export type GoegraphiesGrampanchayatProps = {
+// 	open: boolean;
+// 	handleClose: () => void;
+// 	organization: number | string | undefined;
+// 	dialogType?: DIALOG_TYPE;
+// } & (
+// 	| {
+// 			type: GEOGRAPHIES_ACTIONS.CREATE;
+// 	  }
+// 	| {
+// 			type: GEOGRAPHIES_ACTIONS.UPDATE;
+// 			data: IGeographiesGrampanchayat;
+// 			// data: IDeliverableUnit;
+// 	  }
+// );

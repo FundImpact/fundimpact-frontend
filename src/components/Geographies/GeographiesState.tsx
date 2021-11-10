@@ -45,7 +45,13 @@ import {
 import { GET_COUNTRY_DATA } from "../../graphql/Geographies/GeographyCountry";
 
 function getInitialValues(props: GoegraphiesStateProps) {
-	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
+	let countyList: any = GeographiesStateForm[2].optionsArray || [];
+
+	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) {
+		countyList = countyList.find((country: any) => country.name == props.data.country);
+		props.data.country = (countyList && countyList.id) || null;
+		return { ...props.data };
+	}
 	return {
 		name: "",
 		code: "",
@@ -72,7 +78,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	console.log("countryDropdownResponse", countryDropdownResponse?.data?.countries);
 
 	GeographiesStateForm[2].optionsArray = countryDropdownResponse?.data?.countries;
-	console.log("GeographiesStateForm", GeographiesStateForm[2].optionsArray);
+	// console.log("GeographiesStateForm", GeographiesStateForm[2].optionsArray);
 
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();

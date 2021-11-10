@@ -330,6 +330,7 @@ const GeographiesMasterView = ({
 					{tabs.map((tab, index) => (
 						<TabContent key={index} value={value} index={index}>
 							{tab.tableAccess && tab.table}
+							{console.log("tabs", tab)}
 							{/* create button */}
 							{tab.addButtonAccess && (
 								<AddButton

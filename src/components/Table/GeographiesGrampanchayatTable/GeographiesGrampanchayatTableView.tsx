@@ -16,6 +16,8 @@ import { GEOGRAPHIES_ACTIONS } from "../../Geographies/constants";
 import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
+	IGeographiesGrampanchayatDataObj,
+	IGeographiesGrampanchayatObj,
 } from "../../../models/geographies/geographiesGrampanchayat";
 import ChipArray from "../../Chips";
 
@@ -114,10 +116,10 @@ function GeographiesGrampanchayatTableView({
 	}, [geographiesGrampanchayatDeleteAccess]);
 
 	const onDeliverableUnitTableRefetchSuccess = () => reftechDeliverableCategoryAndUnitTable();
-
+	console.log("afuw", initialValues);
 	const theme = useTheme();
 	const { jwt } = useAuth();
-
+	console.log("anwkflwnf", selectedGeographiesGrampanchayat);
 	return (
 		<>
 			{!collapsableTable && (

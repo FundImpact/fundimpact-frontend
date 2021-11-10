@@ -32,8 +32,12 @@ function FormDialog({
 	leftComponent?: React.ReactNode;
 	formDetails?: React.ReactNode;
 }) {
-	const theme = useTheme();
-
+	// const theme = useTheme();
+	// console.log("aegnioaeng children",children);
+	// console.log("aegnioaeng workspace", workspace);
+	// console.log("aegnioaeng project", project);
+	// console.log("aegnioaeng formDetails", formDetails);
+	// console.log("aegnioaeng left comp", leftComponent);
 	return (
 		<Dialog
 			fullWidth
@@ -56,7 +60,7 @@ function FormDialog({
 							<Box
 								p={3}
 								mt={3}
-								style={{ backgroundColor: theme.palette.action.hover }}
+								// style={{ backgroundColor: theme.palette.action.hover }}
 							>
 								<Typography
 									color="primary"

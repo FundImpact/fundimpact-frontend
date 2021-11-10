@@ -39,6 +39,7 @@ import {
 	GoegraphiesGrampanchayatProps,
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
+	// IGeographiesGrampanchayatObj
 } from "../../models/geographies/geographiesGrampanchayat";
 import {
 	CREATE_GEOGRAPHIES_GRAMPANCHAYAT,
@@ -46,14 +47,26 @@ import {
 	GET_GRAMPANCHAYAT_DATA,
 	UPDATE_GEOGRAPHIES_GRAMPANCHAYAT,
 } from "../../graphql/Geographies/GeographiesGrampanchayat";
-import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
+import {
+	GET_DISTRICT_DATA,
+	GET_DISTRICT_OPTIONS,
+} from "../../graphql/Geographies/GeographiesDistrict";
 
 function getInitialValues(props: GoegraphiesGrampanchayatProps) {
-	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
+	// console.log("praewops",props, GET_DISTRICT_DATA, GeographiesGrampanchayatForm[2].optionsArray);
+	let districtList: any = GeographiesGrampanchayatForm[2].optionsArray || [];
+
+	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) {
+		districtList = districtList.find((district: any) => district.name == props.data.district);
+		props.data.district = (districtList && districtList.id) || null;
+		// console.log("praewops_INSIDE_IF_PROPS",props);
+		return { ...props.data };
+	}
 	return {
 		name: "",
 		code: "",
 		district: "",
+		// district: "",
 		// unit_type: "",
 		// prefix_label: "",
 		// suffix_label: "",
@@ -66,20 +79,24 @@ interface IError extends Omit<Partial<IGeographiesGrampanchayat>, "GeographiesGr
 }
 
 function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
+	console.log("propsppps", props);
 	const [getGrampanchayatDropdown, grampanchayatDropdownResponse] = useLazyQuery(
 		GET_DISTRICT_DATA
 	);
 
+	// console.log("getInitialValues",getInitialValues(props));
 	useEffect(() => {
+		// console.log("getGrampanchayatDropdown",getGrampanchayatDropdown());
 		getGrampanchayatDropdown();
 	}, []);
 
-	console.log(
-		"grampanchayatDropdownResponse?.data?.districts;",
-		grampanchayatDropdownResponse?.data?.districts
-	);
-
 	GeographiesGrampanchayatForm[2].optionsArray = grampanchayatDropdownResponse?.data?.districts;
+	// // GeographiesGrampanchayatForm[2].id = "18";
+	// console.log("egioegj",GeographiesGrampanchayatForm);
+	// console.log("egioegj",grampanchayatDropdownResponse);
+	console.log("propsppps", props);
+	// console.log("grampanchayatDropdownResponse", grampanchayatDropdownResponse?.data?.districts);
+
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const formAction = props.type;
@@ -107,7 +124,9 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 	let initialValues: IGeographiesGrampanchayat = getInitialValues(props);
 
 	const onCreate = async (valueSubmitted: IGeographiesGrampanchayat) => {
+		// console.log("OrganizationData123",dashboardData);
 		const value = Object.assign({}, valueSubmitted);
+		console.log("agqnelkg", value);
 		try {
 			await createGrampanchayat({
 				variables: { input: { data: value } },
@@ -195,6 +214,8 @@ function GeographiesGrampanchayat(props: GoegraphiesGrampanchayatProps) {
 			const id = value.id;
 
 			delete value.id;
+			console.log("FeelsLike", value);
+			console.log("a33tq3t", initialValues);
 			await updateDeliverableUnit({
 				variables: {
 					input: {

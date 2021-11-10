@@ -50,7 +50,14 @@ import {
 import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
 
 function getInitialValues(props: GoegraphiesBlockProps) {
-	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
+	let districtList: any = GeographiesBlockForm[2].optionsArray || [];
+
+	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) {
+		districtList = districtList.find((district: any) => district.name == props.data.district);
+		props.data.district = (districtList && districtList.id) || null;
+		return { ...props.data };
+	}
+
 	return {
 		name: "",
 		code: "",

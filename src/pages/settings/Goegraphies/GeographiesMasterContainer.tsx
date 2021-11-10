@@ -149,6 +149,26 @@ function GeographiesMasterContainer() {
 				geoGraphiesUnitFilterListObject[elementToDelete] = "";
 				return { ...geoGraphiesUnitFilterListObject };
 			});
+		value === 2 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 3 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 4 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 5 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
 	};
 
 	return (

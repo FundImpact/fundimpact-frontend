@@ -9,17 +9,25 @@ import GeographiesGrampanchayatTableView from "./GeographiesGrampanchayatTableVi
 import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
+	IGeographiesGrampanchayatDataObj,
+	IGeographiesGrampanchayatObj,
 } from "../../../models/geographies/geographiesGrampanchayat";
 
 const getInitialValues = (
 	geographiesGrampanchayat: IGeographiesGrampanchayatData | null,
 	organization: string | number
 ): IGeographiesGrampanchayat => {
+	// console.log("geographiesGrampanchayat",geographiesGrampanchayat);
+	// console.log("geographiesGrampanchayatORG",organization);
 	return {
 		code: geographiesGrampanchayat?.code || "",
-		district: geographiesGrampanchayat?.district || "",
-		id: parseInt(geographiesGrampanchayat?.id || ""),
 		name: geographiesGrampanchayat?.name || "",
+		district: geographiesGrampanchayat?.district || "",
+		// district: {
+		// 	id : geographiesGrampanchayat?.district?.id || "",
+		// 	name : geographiesGrampanchayat?.district?.name || ""
+		// },
+		id: parseInt(geographiesGrampanchayat?.id || ""),
 		// prefix_label: geographiesGrampanchayat?.prefix_label || "",
 		// suffix_label: geographiesGrampanchayat?.suffix_label || "",
 		// unit_type: geographiesGrampanchayat?.unit_type || "",
@@ -27,7 +35,7 @@ const getInitialValues = (
 		// organization,
 	};
 };
-
+// console.log("geographiesGrampanchayatAFTER_RETURN",getInitialValues());
 function GeographiesGrampanchayatTableContainer({
 	geographiesGrampanchayatList,
 	collapsableTable,
@@ -72,25 +80,28 @@ function GeographiesGrampanchayatTableContainer({
 
 	const selectedGeographiesGrampanchayat = useRef<IGeographiesGrampanchayatData | null>(null);
 	const dashboardData = useDashBoardData();
-	const [getcategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT);
+	// console.log("afhqnm",dashboardData);
+	// const [getcategoryUnit] = useLazyQuery(GET_CATEGORY_UNIT);
 
 	const toggleDialogs = (index: number, dialogNewOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
 			openStatus.map((element: boolean, i) => (i === index ? dialogNewOpenStatus : element))
 		);
 	};
+	// console.log("toggleDialogss", toggleDialogs);
 
-	useEffect(() => {
-		if (selectedGeographiesGrampanchayat.current && openDialogs[0]) {
-			getcategoryUnit({
-				variables: {
-					filter: {
-						deliverable_units_org: selectedGeographiesGrampanchayat.current.id,
-					},
-				},
-			});
-		}
-	}, [openDialogs, getcategoryUnit]);
+	// useEffect(() => {
+	// 	if (selectedGeographiesGrampanchayat.current && openDialogs[0]) {
+	// 		// console.log("selectedGeographiesGrampanchayat",selectedGeographiesGrampanchayat);
+	// 		getcategoryUnit({
+	// 			variables: {
+	// 				filter: {
+	// 					deliverable_units_org: selectedGeographiesGrampanchayat.current.id,
+	// 				},
+	// 			},
+	// 		});
+	// 	}
+	// }, [openDialogs, getcategoryUnit]);
 
 	const geographiesGrampanchayatEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
@@ -113,7 +124,7 @@ function GeographiesGrampanchayatTableContainer({
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
 	);
-
+	console.log("aeqnegmoq3m", selectedGeographiesGrampanchayat);
 	return (
 		<GeographiesGrampanchayatTableView
 			openDialogs={openDialogs}

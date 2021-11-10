@@ -47,7 +47,13 @@ import {
 import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
 
 function getInitialValues(props: GeographiesVillageProps) {
-	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) return { ...props.data };
+	let blockList: any = GeographiesVillageForm[2].optionsArray || [];
+
+	if (props.type === GEOGRAPHIES_ACTIONS.UPDATE) {
+		blockList = blockList.find((block: any) => block.name == props.data.block);
+		props.data.block = (blockList && blockList.id) || null;
+		return { ...props.data };
+	}
 	return {
 		name: "",
 		code: "",
