@@ -14,8 +14,8 @@ export interface IDeliverableTarget {
 	sub_target_required?: boolean;
 	value_calculation?: ValueCalculations;
 	value_qualitative_option?: any;
-	deliverable_category_org?: number | string;
-	deliverable_unit_org?: number | string;
+	category?: number | string;
+	unit?: number | string;
 	project?: number | string;
 }
 

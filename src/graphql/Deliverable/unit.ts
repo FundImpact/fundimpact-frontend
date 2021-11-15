@@ -46,6 +46,86 @@ export const GET_DELIVERABLE_UNIT_BY_ORG = gql`
 	}
 `;
 
+export const CREATE_UNIT = gql`
+	mutation createUnit($input: createUnitInput) {
+		createUnit(input: $input) {
+			unit {
+				id
+				created_at
+				updated_at
+				name
+				code
+				description
+				type
+			}
+		}
+	}
+`;
+
+export const GET_UNIT = gql`
+	query unit($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		units(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			id
+			created_at
+			updated_at
+			name
+			code
+			description
+			type
+		}
+	}
+`;
+
+export const GET_UNIT_COUNT = gql`
+	query getunitCount($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+		unitsConnection(sort: $sort, limit: $limit, start: $start, where: $filter) {
+			aggregate {
+				count
+			}
+		}
+	}
+`;
+
+export const UPDATE_UNIT = gql`
+	mutation updateUnit($input: updateUnitInput) {
+		updateUnit(input: $input) {
+			unit {
+				id
+				created_at
+				updated_at
+				name
+				code
+				description
+				type
+				sustainable_development_goal {
+					name
+					id
+				}
+			}
+		}
+	}
+`;
+
+export const DELETE_UNIT = gql`
+	mutation deleteUnit($input: deleteUnitInput) {
+		deleteUnit(input: $input) {
+			unit {
+				id
+				created_at
+				updated_at
+				name
+				code
+				description
+				type
+				sustainable_development_goal {
+					id
+					name
+				}
+			}
+		}
+	}
+`;
+
 export const UPDATE_DELIVERABLE_UNIT_ORG = gql`
 	mutation updateDeliverableUnitOrg($id: ID!, $input: DeliverableUnitsOrgInput!) {
 		updateDeliverableUnitOrg(id: $id, input: $input) {

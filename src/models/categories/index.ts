@@ -13,7 +13,7 @@ export interface ICategory {
 	name: string;
 	code: string | null;
 	description: string | null;
-	cat_type: string | null;
+	type: string | null;
 	is_project: boolean;
 	project_id?: ProjectId;
 	deliverable_type_id?: DeliverableType | null;

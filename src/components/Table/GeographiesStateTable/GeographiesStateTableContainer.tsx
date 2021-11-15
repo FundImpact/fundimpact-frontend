@@ -10,6 +10,7 @@ import {
 	IGeographiesState,
 	IGeographiesStateData,
 } from "../../../models/geographies/geographiesState";
+import { GEOGRAPHIES_STATE_ACTIONS } from "../../../utils/access/modules/geographiesState/actions";
 
 const getInitialValues = (
 	geographiesState: IGeographiesStateData | null,
@@ -98,12 +99,16 @@ function GeographiesStateTableContainer({
 	}, [openDialogs, getGeographiesState]);
 
 	const geographiesStateEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_STATE,
+		GEOGRAPHIES_STATE_ACTIONS.UPDATE_GEOGRAPHIES_STATE
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
 	const geographiesStateDeleteAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_STATE,
+		GEOGRAPHIES_STATE_ACTIONS.DELETE_GEOGRAPHIES_STATE
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
 	const deliverableUnitImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

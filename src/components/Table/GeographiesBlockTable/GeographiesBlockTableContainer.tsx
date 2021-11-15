@@ -10,6 +10,7 @@ import {
 	IGeographiesBlock,
 	IGeographiesBlockData,
 } from "../../../models/geographies/geographiesBlock";
+import { GEOGRAPHIES_BLOCK_ACTIONS } from "../../../utils/access/modules/geographiesBlock/actions";
 
 const getInitialValues = (
 	geographiesBlock: IGeographiesBlockData | null,
@@ -93,13 +94,17 @@ function GeographiesBlockTableContainer({
 	}, [openDialogs, getcategoryUnit]);
 
 	const geographiesBlockEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_BLOCK,
+		GEOGRAPHIES_BLOCK_ACTIONS.UPDATE_GEOGRAPHIES_BLOCK
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
 
 	const geographiesBlockDeleteAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_BLOCK,
+		GEOGRAPHIES_BLOCK_ACTIONS.DELETE_GEOGRAPHIES_BLOCK
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
 
 	const geographiesBlockImportFromCsvAccess = userHasAccess(

@@ -9,17 +9,12 @@ import {
 	TableCell,
 	IconButton,
 	MenuItem,
+	TableFooter,
+	TablePagination,
 } from "@material-ui/core";
-import { useLazyQuery } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../graphql/Category/query";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { categories } from "./dummyData.json";
-// import pagination from "../../../hooks/pagination";
-// import {
-// 	GET_DELIVERABLE_ORG_CATEGORY_COUNT,
-// 	GET_DELIVERABLE_ORG_CATEGORY,
-// } from "../../../graphql/Deliverable/orgCategory";
 import SimpleMenu from "../../Menu";
 import { FormattedMessage } from "react-intl";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
@@ -27,6 +22,9 @@ import Category from "../../Category";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { ICategory } from "../../../models/categories";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
+import { GET_CATEGORY_COUNT } from "../../../graphql/Category/mutation";
+import pagination from "../../../hooks/pagination";
+import { categoriesTableHeading } from "../constants";
 
 const useStyles = makeStyles({
 	table: {
@@ -54,7 +52,7 @@ const getInitialValues = (cat: ICategory | null): ICategory => {
 		name: cat?.name || "",
 		code: cat?.code || "",
 		description: cat?.description || "",
-		cat_type: cat?.cat_type || "",
+		type: cat?.type || "",
 		is_project: cat?.is_project || false,
 		project_id: cat?.project_id || {
 			id: "",
@@ -81,22 +79,6 @@ const CategoriesTable = ({
 	const [openCategoryEditDialog, setOpenCategoryEditDialog] = useState<boolean>(false);
 	const [openCategoryDeleteDialog, setOpenCategoryDeleteDialog] = useState<boolean>(false);
 
-	// let {
-	// 	changePage: unitChangePage,
-	// 	count: unitCount,
-	// 	queryData: unitsList,
-	// 	queryLoading: unitsLoading,
-	// 	countQueryLoading: unitsCountLoading,
-	// 	queryRefetch: refetchUnitList,
-	// 	countRefetch: refetchUnitCount,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-	// 	countFilter: {},
-	// 	query: GET_CATEGORIES,
-	// 	queryFilter,
-	// 	sort: `${orderBy}:${order.toUpperCase()}`,
-	// });
-
 	useEffect(() => {
 		let newFilterListObject: { [key: string]: string | string[] } = {};
 		for (let key in tableFilterList) {
@@ -105,45 +87,32 @@ const CategoriesTable = ({
 			}
 		}
 		setQueryFilter({
-			organization: dashboardData?.organization?.id,
+			// organization: dashboardData?.organization?.id,
 			...newFilterListObject,
 		});
 	}, [tableFilterList, dashboardData]);
 
-	const [getCategories, categoriesResponse] = useLazyQuery(GET_CATEGORIES);
-
-	useEffect(() => {
-		getCategories();
-	}, []);
-
-	let categoryList = categoriesResponse?.data?.deliverableCategoryOrgs || [];
-
-	console.log("fetchedProject", categoriesResponse?.data?.deliverableCategoryOrgs);
-
-	// let {
-	// 	changePage: deliverableChangePage,
-	// 	count: deliverableCatCount,
-	// 	queryData: deliverableCatList,
-	// 	queryLoading: deliverableQueryLoading,
-	// 	countQueryLoading: deliverableCountQueryLoading,
-	// 	queryRefetch: refetchDeliverableCatList,
-	// 	countRefetch: refetchDeliverableCatCount,
-	// } = pagination({
-	// 	countQuery: GET_DELIVERABLE_ORG_CATEGORY_COUNT,
-	// 	countFilter: {},
-	// 	query: GET_DELIVERABLE_ORG_CATEGORY,
-	// 	queryFilter,
-	// 	sort: `${orderBy}:${order.toUpperCase()}`,
-	// });
+	let {
+		changePage: categoryChangePage,
+		count: categoryCount,
+		queryData: categoryList,
+		queryLoading: categoryLoading,
+		countQueryLoading: categoryCountLoading,
+		queryRefetch: refetchDeliverableCatList,
+		countRefetch: refetchDeliverableCatCount,
+	} = pagination({
+		countQuery: GET_CATEGORY_COUNT,
+		countFilter: {},
+		query: GET_CATEGORIES,
+		queryFilter,
+		sort: `${orderBy}:${order.toUpperCase()}`,
+	});
 
 	// useEffect(() => {
 	// 	if (deliverableCatCount?.aggregate?.count) {
 	// 		setPageCount(deliverableCatCount.aggregate.count);
 	// 	}
 	// }, [deliverableCatCount]);
-
-	// console.log("Data: ", deliverableCatList);
-	// console.log("Count: ", deliverableCatCount);
 
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -188,8 +157,21 @@ const CategoriesTable = ({
 		},
 	];
 
+	const handlePageChange = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		if (newPage > page) {
+			categoryChangePage();
+			setPage(newPage);
+		} else {
+			categoryChangePage(true);
+			setPage(newPage);
+		}
+	};
+
 	// Check for the loading
-	if (false) {
+	if (categoryLoading || categoryCountLoading) {
 		return <TableSkeleton />;
 	}
 
@@ -212,11 +194,22 @@ const CategoriesTable = ({
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						<TableCell>#</TableCell>
-						<TableCell>Name</TableCell>
-						<TableCell>Code</TableCell>
-						<TableCell>Description</TableCell>
-						<TableCell>Deliverable Type</TableCell>
+						{categoryList?.categories?.length
+							? categoriesTableHeading.map(
+									(
+										heading: { label: string; keyMapping?: string },
+										index: number
+									) => (
+										<TableCell
+											className={tableStyles.th}
+											key={index}
+											align="left"
+										>
+											{heading.label}
+										</TableCell>
+									)
+							  )
+							: null}
 						<TableCell>
 							<IconButton>
 								<MoreVertIcon />
@@ -225,7 +218,7 @@ const CategoriesTable = ({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{categoryList.map((cat: ICategory, index: number) => (
+					{categoryList?.categories?.map((cat: ICategory, index: number) => (
 						<TableRow key={cat.id}>
 							<TableCell component="td" scope="row">
 								{page * 10 + index + 1}
@@ -264,6 +257,25 @@ const CategoriesTable = ({
 						</TableRow>
 					))}
 				</TableBody>
+				{categoryList?.categories?.length && categoryCount && (
+					<TableFooter>
+						<TableRow>
+							<TablePagination
+								rowsPerPageOptions={[]}
+								count={categoryCount?.aggregate?.count}
+								rowsPerPage={
+									categoryCount?.aggregate?.count > 10
+										? 10
+										: categoryCount?.aggregate?.count
+								}
+								page={page}
+								onChangePage={handlePageChange}
+								onChangeRowsPerPage={() => {}}
+								style={{ paddingRight: "40px" }}
+							/>
+						</TableRow>
+					</TableFooter>
+				)}
 			</Table>
 		</TableContainer>
 	);

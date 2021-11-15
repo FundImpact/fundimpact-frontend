@@ -9,6 +9,7 @@ import { GEOGRAPHIES_DISTRICT_ACTIONS } from "../../../utils/access/modules/geog
 import { GEOGRAPHIES_BLOCK_ACTIONS } from "../../../utils/access/modules/geographiesBlock/actions";
 import { GEOGRAPHIES_GRAMPANCHAYAT_ACTIONS } from "../../../utils/access/modules/geographiesGrampanchayat/actions";
 import { GEOGRAPHIES_VILLAGE_ACTIONS } from "../../../utils/access/modules/geographiesVillage/actions";
+import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 
 function GeographiesMasterContainer() {
 	const [geographiesCountryFilterList, setGeographiesCountryFilterList] = useState<{
@@ -18,8 +19,6 @@ function GeographiesMasterContainer() {
 		code: "",
 		// description: "",
 	});
-
-	console.log("sadfk: ", geographiesCountryFilterList);
 
 	const [geoGraphiesUnitFilterList, setgeoGraphiesUnitFilterList] = useState<{
 		// const [geoRegionsUnitFilterList, setgeoRegionsUnitFilterList] = useState<{
@@ -32,8 +31,8 @@ function GeographiesMasterContainer() {
 
 	const geographiesCountryCreateAccess = userHasAccess(
 		// const geographiesCountryCreateAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+		MODULE_CODES.COUNTRY,
+		COUNTRY_ACTION.CREATE_COUNTRY
 	);
 
 	// country ---
@@ -98,18 +97,27 @@ function GeographiesMasterContainer() {
 	// )
 
 	const deliverableUnitCreateAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_STATE,
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+		GEOGRAPHIES_STATE_ACTIONS.CREATE_GEOGRAPHIES_STATE
 	);
 
 	const geographiesCountryFindAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+		// MODULE_CODES.DELIVERABLE_CATEGORY,
+		// DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+		MODULE_CODES.COUNTRY,
+		// MODULE_CODES.DELIVERABLE_CATEGORY,
+		// DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+		// GEOGRAPHIES_COUNTRY_ACTIONS.CREATE_GEOGRAPHIES_COUNTRY
+		COUNTRY_ACTION.FIND_COUNTRY
 	);
 
 	const geographiesStateFindAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_STATE,
+		GEOGRAPHIES_STATE_ACTIONS.FIND_GEOGRAPHIES_STATE
 	);
 	const geographiesDistrictFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,
@@ -145,6 +153,26 @@ function GeographiesMasterContainer() {
 				return { ...geographiesCountryFilterListObject };
 			});
 		value === 1 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 2 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 3 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 4 &&
+			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
+				geoGraphiesUnitFilterListObject[elementToDelete] = "";
+				return { ...geoGraphiesUnitFilterListObject };
+			});
+		value === 5 &&
 			setgeoGraphiesUnitFilterList((geoGraphiesUnitFilterListObject) => {
 				geoGraphiesUnitFilterListObject[elementToDelete] = "";
 				return { ...geoGraphiesUnitFilterListObject };

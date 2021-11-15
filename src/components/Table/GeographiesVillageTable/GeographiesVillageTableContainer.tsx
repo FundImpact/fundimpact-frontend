@@ -14,6 +14,7 @@ import {
 	IGeographiesVillage,
 	IGeographiesVillageData,
 } from "../../../models/geographies/geographiesVillage";
+import { GEOGRAPHIES_VILLAGE_ACTIONS } from "../../../utils/access/modules/geographiesVillage/actions";
 
 const getInitialValues = (
 	geographiesVillage: IGeographiesVillageData | null,
@@ -97,12 +98,16 @@ function GeographiesVillageTableContainer({
 	}, [openDialogs, getGeographiesVillage]);
 
 	const geographiesVillageEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_VILLAGE,
+		GEOGRAPHIES_VILLAGE_ACTIONS.UPDATE_GEOGRAPHIES_VILLAGE
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
 	const geographiesVillageDeleteAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_VILLAGE,
+		GEOGRAPHIES_VILLAGE_ACTIONS.UPDATE_GEOGRAPHIES_VILLAGE
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
 	const geographiesVillageImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

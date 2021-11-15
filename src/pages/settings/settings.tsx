@@ -211,7 +211,8 @@ export default function SettingContainer() {
 							element={<BudgetCategory />}
 						/>
 						<PrivateRoute
-							userAccess={impactCategoryFindAccess || deliverableCategoryFindAccess}
+							userAccess={true}
+							// userAccess={impactCategoryFindAccess || deliverableCategoryFindAccess}
 							path="categories"
 							element={<Categories />}
 						/>

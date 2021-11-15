@@ -108,7 +108,7 @@
 			"multiline": true
 		},
 		{
-			"name": "geo_regions",
+			"name": "geo_region_id",
 			"label": "Choose Geo Regions",
 			"size": 6,
 			"testId": "createBudgetLineitemGeoRegionsOption",

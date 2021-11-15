@@ -28,6 +28,8 @@ import {
 	UPDATE_DELIVERABLE_UNIT_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 	GET_DELIVERABLE_UNIT_BY_ORG,
+	CREATE_UNIT,
+	UPDATE_UNIT,
 } from "../../graphql/Deliverable/unit";
 import { DELIVERABLE_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
@@ -306,14 +308,16 @@ function DeliverableUnit(props: DeliverableUnitProps) {
 	// 	}
 	// };
 
-	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
+	const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_UNIT, {
+		// const [createUnit, { loading: createUnitLoading }] = useMutation(CREATE_DELIVERABLE_UNIT, {
 		onCompleted(data) {
 			// createCategoryUnitHelper(data.createDeliverableUnitOrg.id); // deliverable unit id
 		},
 	});
 
 	const [updateDeliverableUnit, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_DELIVERABLE_UNIT_ORG,
+		// UPDATE_DELIVERABLE_UNIT_ORG,
+		UPDATE_UNIT,
 		{
 			onCompleted(data) {
 				// createCategoryUnitHelper(data.updateDeliverableUnitOrg.id); // deliverable unit id

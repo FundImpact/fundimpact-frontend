@@ -17,6 +17,7 @@ export type ISubTarget = {
 	annual_year?: number | string;
 	grant_periods_project?: number | string;
 	donor?: number | string;
+	geo_region_id?: number | string;
 };
 
 export type SubTargetFormProps = {

@@ -54,6 +54,8 @@ import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
 
 function getInitialValues(props: SubTargetFormProps) {
+	console.log("props", props);
+
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		budget_targets_project: props?.target,
@@ -68,7 +70,7 @@ function getInitialValues(props: SubTargetFormProps) {
 		annual_year: null,
 		grant_periods_project: null,
 		donor: null,
-		geo_regions: null,
+		geo_region_id: null,
 	};
 }
 
@@ -194,7 +196,9 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const [currentDonor, setCurrentDonor] = useState<null | string | number>(null);
 
-	const [geoRegions, setGeoRegions] = useState<string | number[]>([]);
+	const [geoRegions, setGeoRegions] = useState<null | string | number>(null);
+
+	console.log("geoRegions", geoRegions);
 
 	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
 
@@ -203,10 +207,6 @@ function SubTarget(props: SubTargetFormProps) {
 	}, []);
 
 	const geoResponse = geoRegionsResponse?.data?.geoRegions;
-
-	budgetSubTargetFormList[11].optionsArray = geoResponse;
-
-	console.log("geoResponse", geoResponse);
 
 	// const [getGeoregions, geoResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
 
@@ -361,6 +361,25 @@ function SubTarget(props: SubTargetFormProps) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectDonors, props]);
 
+	budgetSubTargetFormList[11].optionsArray = useMemo(() => {
+		let geoRegionsArray: any = [];
+		if (geoResponse) {
+			geoResponse.forEach((elem: any) => {
+				geoRegionsArray.push({
+					...elem,
+					id: elem.id,
+					name: elem.name,
+				});
+			});
+		}
+		return geoRegionsArray;
+	}, [geoResponse, props]);
+
+	console.log(
+		"budgetSubTargetFormList[11].optionsArray",
+		budgetSubTargetFormList[11].optionsArray
+	);
+
 	budgetSubTargetFormList[6].secondOptionsArray = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
 		if (projectDonors && orgDonors) {
@@ -383,8 +402,13 @@ function SubTarget(props: SubTargetFormProps) {
 
 	useMemo(() => {
 		if (props.formAction === FORM_ACTIONS.UPDATE) {
+			console.log("pppp", props?.data);
+
 			if (props?.data?.donor) {
 				setCurrentDonor(props?.data?.donor || "");
+			}
+			if (props?.data?.geo_region_id) {
+				setGeoRegions(props?.data?.geo_region_id || "");
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -412,6 +436,11 @@ function SubTarget(props: SubTargetFormProps) {
 	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
+	// budgetSubTargetFormList[11].optionsArray = geoResponse;4
+
+	// if (formAction === FORM_ACTIONS.UPDATE) {
+	// 	budgetSubTargetFormList[11].optionsArray = geoResponse;
+	// }
 
 	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState(false);
 	budgetSubTargetFormList[8].addNewClick = () => setOpenGrantPeriodForm(true);

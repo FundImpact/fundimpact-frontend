@@ -89,6 +89,7 @@ export interface IInputField {
 	size?: any;
 	required?: boolean;
 	position?: string;
+	disabled?: boolean;
 }
 export interface IGeoregionInputField {
 	name: string;
@@ -106,6 +107,7 @@ export interface IGeoregionInputField {
 	optionsArray?: any[];
 	getInputValue?: any;
 	multiple?: boolean;
+	hidden?: boolean;
 }
 
 export interface IInputFields {

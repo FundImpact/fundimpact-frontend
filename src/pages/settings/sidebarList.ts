@@ -1,18 +1,25 @@
 const manageMasterObject = [
 	"budget",
-	"categories",
+	"",
+	"",
 	"units",
+	"categories",
 	"yeartags",
 	"goeGraphies",
 	"goeRegions",
-	"tallyMapper",
+	// "tallyMapper",
 ];
-const manageMasterSubHeadings = manageMasterObject.map((item) => ({
-	to: item,
-	dataTestId: item == "budget" ? "budget-category-link" : item + "-link",
-	title: item.charAt(0).toUpperCase() + item.slice(1),
-	userAccess: true,
-}));
+const manageMasterSubHeadings = manageMasterObject.map((item) => {
+	return {
+		to: item,
+		dataTestId: item == "budget" ? "budget-category-link" : item + "-link",
+		title: item.charAt(0).toUpperCase() + item.slice(1),
+		userAccess: true,
+	};
+});
+
+console.log("manageMasterSubHeadings", manageMasterSubHeadings);
+
 export const sidebarList: {
 	mainHeading: string;
 	subHeadings: { to: string; dataTestId: string; title: string; userAccess: boolean }[];

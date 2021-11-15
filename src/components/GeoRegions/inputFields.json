@@ -16,6 +16,33 @@
 			"testId": "createBudgetDescriptionInput",
 			"label": "Description",
 			"size": 6
+		},
+		{
+			"name": "is_project",
+			"id": "is_project",
+			"dataTestId": "isProjectTest",
+			"testId": "isProjectInput",
+			"label": "Is Project",
+			"getInputValue": {},
+			"disabled": false,
+			"inputType": "switch",
+			"required": true,
+			"size": 6
+		},
+		{
+			"name": "project_id",
+			"id": "project_id",
+			"dataTestId": "georegionProject",
+			"testId": "georegionProjectInput",
+			"label": "Project",
+			"optionsArray": [],
+			"inputLabelId": "demo-simple-select-outlined-label",
+			"selectLabelId": "demo-simple-select-outlined-label",
+			"selectId": "demo-simple-select-outlined-1",
+			"inputType": "select",
+			"required": false,
+			"hidden": true,
+			"size": 6
 		}
 	]
 }

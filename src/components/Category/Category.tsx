@@ -6,7 +6,6 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../models/constants";
 import { ICategory, ICategoryProps } from "../../models/categories";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-// import { removeEmptyKeys } from "../../utils";
 import { compareObjectKeys, removeEmptyKeys } from "../../utils";
 
 import FormDialog from "../FormDialog";
@@ -14,7 +13,12 @@ import CommonForm from "../CommonForm";
 import { addCategoryForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
-import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "../../graphql/Category/mutation";
+import {
+	CREATE_CATEGORY,
+	UPDATE_CATEGORY,
+	DELETE_CATEGORY,
+	GET_CATEGORY_COUNT,
+} from "../../graphql/Category/mutation";
 import { GET_PROJECTS } from "../../graphql";
 import { GET_CATEGORIES } from "../../graphql/Category/query";
 
@@ -22,7 +26,7 @@ const defaultFormValues: ICategory = {
 	name: "",
 	code: "",
 	description: "",
-	cat_type: "",
+	type: "",
 	is_project: false,
 	project_id: {
 		id: "",
@@ -70,16 +74,15 @@ function Category(props: ICategoryProps) {
 			delete values.is_project;
 			await createCategory({
 				variables: {
-					// input: { data: { ...valuesSubmitted } },
 					input: { data: { ...values } },
 				},
 				refetchQueries: [
 					{
 						query: GET_CATEGORIES,
 					},
-					// {
-					// 	query: GET_YEARTAGS_COUNT,
-					// },
+					{
+						query: GET_CATEGORY_COUNT,
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
@@ -99,6 +102,7 @@ function Category(props: ICategoryProps) {
 				props.handleClose();
 				return;
 			}
+
 			delete (values as any).id;
 			delete values.is_project;
 			await updateCategory({
@@ -110,6 +114,14 @@ function Category(props: ICategoryProps) {
 						data: values,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_CATEGORIES,
+					},
+					{
+						query: GET_CATEGORY_COUNT,
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Category Updation Success"));
 		} catch (err: any) {
@@ -166,6 +178,9 @@ function Category(props: ICategoryProps) {
 				refetchQueries: [
 					{
 						query: GET_CATEGORIES,
+					},
+					{
+						query: GET_CATEGORY_COUNT,
 					},
 				],
 			});

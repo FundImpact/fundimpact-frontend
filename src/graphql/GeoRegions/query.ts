@@ -34,6 +34,10 @@ export const CREATE_GEOREGIONS = gql`
 				updated_at
 				name
 				description
+				project_id {
+					id
+					name
+				}
 				country_id {
 					name
 				}
@@ -109,6 +113,10 @@ export const DELETE_GEOREGIONS = gql`
 				updated_at
 				name
 				description
+				project_id {
+					id
+					name
+				}
 				country_id {
 					name
 				}

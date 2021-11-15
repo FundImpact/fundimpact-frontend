@@ -87,11 +87,11 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 				short_name
 				description
 			}
-			deliverable_unit_org {
+			unit {
 				id
 				name
 			}
-			deliverable_category_org {
+			category {
 				id
 				name
 			}
@@ -114,11 +114,11 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 				short_name
 				description
 			}
-			deliverable_unit_org {
+			unit {
 				id
 				name
 			}
-			deliverable_category_org {
+			category {
 				id
 				name
 			}

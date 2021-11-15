@@ -12,10 +12,11 @@ import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
 import { GET_PROJECTS } from "../../graphql";
 import {
-	CREATE_DELIVERABLE_UNIT,
-	GET_DELIVERABLE_UNIT_BY_ORG,
-	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-	UPDATE_DELIVERABLE_UNIT_ORG,
+	CREATE_UNIT,
+	DELETE_UNIT,
+	GET_UNIT,
+	GET_UNIT_COUNT,
+	UPDATE_UNIT,
 } from "../../graphql/Deliverable/unit";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { compareObjectKeys, removeEmptyKeys } from "../../utils";
@@ -35,9 +36,11 @@ const validate = (values: IUnits) => {
 };
 
 function Unit(props: IUnitProps) {
-	const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_DELIVERABLE_UNIT);
-	const [updateUnit, { loading: updatingUnit }] = useMutation(UPDATE_DELIVERABLE_UNIT_ORG);
-	// const [deleteUnit, { loading: deletingUnit }] = useMutation(DELETE_UNIT);
+	const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_UNIT);
+	// const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_DELIVERABLE_UNIT);
+	const [updateUnit, { loading: updatingUnit }] = useMutation(UPDATE_UNIT);
+	// const [updateUnit, { loading: updatingUnit }] = useMutation(UPDATE_DELIVERABLE_UNIT_ORG);
+	const [deleteUnit, { loading: deletingUnit }] = useMutation(DELETE_UNIT);
 
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
@@ -54,6 +57,8 @@ function Unit(props: IUnitProps) {
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
+	console.log("props.formAction", initialValues);
+
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
@@ -61,18 +66,21 @@ function Unit(props: IUnitProps) {
 	const onCreate = async (valuesSubmitted: IUnits) => {
 		try {
 			let values = valuesSubmitted;
+			console.log("create values", values);
 			delete values.is_project;
-			delete values.project_id;
+			// delete values.project_id;
 			await createUnit({
 				variables: {
-					input: values,
+					input: {
+						data: values,
+					},
 				},
 				refetchQueries: [
 					{
-						query: GET_DELIVERABLE_UNIT_BY_ORG,
+						query: GET_UNIT,
 					},
 					{
-						query: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+						query: GET_UNIT_COUNT,
 					},
 				],
 			});
@@ -94,11 +102,26 @@ function Unit(props: IUnitProps) {
 				return;
 			}
 
-			delete (values as any).id;
+			delete values.id;
+			delete values.is_project;
+			delete values.project_id;
 			await updateUnit({
 				variables: {
 					id: initialValues?.id,
-					input: values,
+					input: {
+						where: {
+							id: initialValues?.id,
+						},
+						data: values,
+					},
+					refetchQueries: [
+						{
+							query: GET_UNIT,
+						},
+						{
+							query: GET_UNIT_COUNT,
+						},
+					],
 				},
 			});
 			notificationDispatch(setSuccessNotification("Unit updated successfully"));
@@ -145,13 +168,23 @@ function Unit(props: IUnitProps) {
 
 	const onDelete = async () => {
 		try {
-			await updateUnit({
+			await deleteUnit({
 				variables: {
 					id: initialValues?.id,
 					input: {
-						deleted: true,
+						where: {
+							id: initialValues?.id,
+						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_UNIT,
+					},
+					{
+						query: GET_UNIT_COUNT,
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Unit deleted successfully"));
 		} catch (err: any) {

@@ -1,101 +1,251 @@
 import { gql } from "@apollo/client";
 
+// export const CREATE_DELIVERABLE_TRACKLINE = gql`
+// 	mutation createDeliverableTrackingLineitemDetail($input: DeliverableTrackingLineitemInput!) {
+// 		createDeliverableTrackingLineitemDetail(input: $input) {
+// 			id
+// 			value
+// 			value_qualitative
+// 			note
+// 			reporting_date
+// 			deliverable_sub_target {
+// 				id
+// 			}
+// 			deliverable_target_project {
+// 				id
+// 				name
+// 				description
+// 				is_qualitative
+// 				sub_target_required
+// 				value_calculation
+// 				value_qualitative_option
+// 				deliverable_category_org {
+// 					id
+// 					name
+// 					code
+// 					description
+
+// 					organization {
+// 						id
+// 						name
+// 						account {
+// 							id
+// 							name
+// 							description
+// 							account_no
+// 						}
+
+// 						legal_name
+// 						description
+// 						organization_registration_type {
+// 							id
+// 							reg_type
+// 						}
+// 					}
+// 				}
+// 				deliverable_unit_org {
+// 					id
+// 					name
+// 					description
+// 					code
+// 					unit_type
+// 					prefix_label
+// 					suffix_label
+// 				}
+// 				project {
+// 					id
+// 					name
+
+// 					description
+// 				}
+// 			}
+// 			annual_year {
+// 				id
+// 				name
+// 				start_date
+// 				end_date
+// 			}
+// 			financial_year_org {
+// 				id
+// 			}
+// 			financial_year {
+// 				id
+// 				name
+
+// 				start_date
+// 				end_date
+// 				country {
+// 					id
+// 					name
+// 				}
+// 			}
+// 			timeperiod_start
+// 			timeperiod_end
+// 			grant_periods_project {
+// 				id
+// 				name
+// 				description
+
+// 				start_date
+// 				end_date
+// 				project {
+// 					id
+// 					name
+// 				}
+// 			}
+// 		}
+// 	}
+// `;
+
 export const CREATE_DELIVERABLE_TRACKLINE = gql`
 	mutation createDeliverableTrackingLineitemDetail($input: DeliverableTrackingLineitemInput!) {
 		createDeliverableTrackingLineitemDetail(input: $input) {
 			id
-			value
-			value_qualitative
-			note
-			reporting_date
+			created_at
+			updated_at
 			deliverable_sub_target {
 				id
-			}
-			deliverable_target_project {
-				id
 				name
-				description
-				is_qualitative
-				sub_target_required
-				value_calculation
-				value_qualitative_option
-				deliverable_category_org {
-					id
-					name
-					code
-					description
-
-					organization {
-						id
-						name
-						account {
-							id
-							name
-							description
-							account_no
-						}
-
-						legal_name
-						description
-						organization_registration_type {
-							id
-							reg_type
-						}
-					}
-				}
-				deliverable_unit_org {
-					id
-					name
-					description
-					code
-					unit_type
-					prefix_label
-					suffix_label
-				}
-				project {
-					id
-					name
-
-					description
-				}
 			}
+			value
+			note
 			annual_year {
 				id
 				name
-				start_date
-				end_date
 			}
-			financial_year_org {
-				id
-			}
-			financial_year {
-				id
-				name
-
-				start_date
-				end_date
-				country {
-					id
-					name
-				}
-			}
-			timeperiod_start
-			timeperiod_end
 			grant_periods_project {
 				id
 				name
-				description
-
-				start_date
-				end_date
-				project {
-					id
-					name
-				}
+			}
+			reporting_date
+			deleted
+			deliverable_sub_target {
+				id
+				name
+			}
+			timeperiod_start
+			timeperiod_end
+			financial_year_org {
+				id
+				name
+			}
+			financial_year_donor {
+				id
+				name
+			}
+			value_qualitative
+			attachments {
+				id
+				created_at
+				updated_at
+				name
 			}
 		}
 	}
 `;
+
+// export const UPDATE_DELIVERABLE_TRACKLINE = gql`
+// 	mutation updateDeliverableTrackingLineitemDetail(
+// 		$id: ID!
+// 		$input: DeliverableTrackingLineitemInput!
+// 	) {
+// 		updateDeliverableTrackingLineitemDetail(id: $id, input: $input) {
+// 			id
+// 			value_qualitative
+// 			value
+// 			note
+// 			reporting_date
+// 			deleted
+// 			deliverable_sub_target {
+// 				id
+// 			}
+// 			deliverable_target_project {
+// 				id
+// 				name
+// 				description
+// 				deleted
+// 				is_qualitative
+// 				sub_target_required
+// 				value_calculation
+// 				value_qualitative_option
+// 				deliverable_category_org {
+// 					id
+// 					name
+// 					code
+// 					description
+// 					deleted
+// 					organization {
+// 						id
+// 						name
+// 						account {
+// 							id
+// 							name
+// 							description
+// 							account_no
+// 						}
+
+// 						legal_name
+// 						description
+// 						organization_registration_type {
+// 							id
+// 							reg_type
+// 						}
+// 					}
+// 				}
+// 				deliverable_unit_org {
+// 					id
+// 					name
+// 					description
+// 					code
+// 					unit_type
+// 					prefix_label
+// 					suffix_label
+// 					deleted
+// 				}
+// 				project {
+// 					id
+// 					name
+
+// 					description
+// 				}
+// 			}
+// 			annual_year {
+// 				id
+// 				name
+// 				start_date
+// 				end_date
+// 			}
+// 			financial_year_org {
+// 				id
+// 			}
+// 			financial_year {
+// 				id
+// 				name
+
+// 				start_date
+// 				end_date
+// 				country {
+// 					id
+// 					name
+// 				}
+// 			}
+// 			timeperiod_start
+// 			timeperiod_end
+// 			grant_periods_project {
+// 				id
+// 				name
+// 				description
+
+// 				start_date
+// 				end_date
+// 				project {
+// 					id
+// 					name
+// 				}
+// 			}
+// 		}
+// 	}
+// `;
 
 export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 	mutation updateDeliverableTrackingLineitemDetail(
@@ -104,97 +254,42 @@ export const UPDATE_DELIVERABLE_TRACKLINE = gql`
 	) {
 		updateDeliverableTrackingLineitemDetail(id: $id, input: $input) {
 			id
-			value_qualitative
+			created_at
+			updated_at
+			deliverable_sub_target {
+				id
+				name
+			}
 			value
 			note
+			annual_year {
+				id
+				name
+			}
+			grant_periods_project {
+				id
+				name
+			}
 			reporting_date
 			deleted
 			deliverable_sub_target {
 				id
-			}
-			deliverable_target_project {
-				id
 				name
-				description
-				deleted
-				is_qualitative
-				sub_target_required
-				value_calculation
-				value_qualitative_option
-				deliverable_category_org {
-					id
-					name
-					code
-					description
-					deleted
-					organization {
-						id
-						name
-						account {
-							id
-							name
-							description
-							account_no
-						}
-
-						legal_name
-						description
-						organization_registration_type {
-							id
-							reg_type
-						}
-					}
-				}
-				deliverable_unit_org {
-					id
-					name
-					description
-					code
-					unit_type
-					prefix_label
-					suffix_label
-					deleted
-				}
-				project {
-					id
-					name
-
-					description
-				}
-			}
-			annual_year {
-				id
-				name
-				start_date
-				end_date
-			}
-			financial_year_org {
-				id
-			}
-			financial_year {
-				id
-				name
-
-				start_date
-				end_date
-				country {
-					id
-					name
-				}
 			}
 			timeperiod_start
 			timeperiod_end
-			grant_periods_project {
+			financial_year_org {
 				id
 				name
-				description
-
-				start_date
-				end_date
-				project {
-					id
-					name
-				}
+			}
+			financial_year_donor {
+				id
+				name
+			}
+			value_qualitative
+			attachments {
+				id
+				name
 			}
 		}
 	}

@@ -32,13 +32,18 @@ import { GET_GRAMPANCHAYAT_DATA } from "../../graphql/Geographies/GeographiesGra
 import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
 import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
 import { GET_STATE_DATA } from "../../graphql/Geographies/GeographyState";
+import { GET_PROJECTS } from "../../graphql";
 
 let inputFields: IGeoregionInputField[] = GeoRegionsFormInputFields;
 // let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
+console.log("immmm", inputFields);
+
 let defaultFormValues: IGeoRegions = {
 	name: "",
 	description: "",
+	project_id: "",
+	is_project: "",
 	country_id: "",
 	state_id: "",
 	district_id: "",
@@ -75,6 +80,20 @@ function GeoRegions({
 	const [updateGeoRegions, { loading: updatingGeoRegions }] = useMutation(UPDATE_GEOREGIONS);
 
 	const [deleteGeoRegions] = useMutation(DELETE_GEOREGIONS);
+
+	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	console.log("projectsList", projectsList);
+
+	useEffect(() => {
+		if (projectsList) {
+			inputFields[3].optionsArray = projectsList.orgProject;
+		}
+	}, [projectsList]);
 
 	// const [getCountry, countryResponse] = useLazyQuery(GET_COUNTRY_DATA);
 	// const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
@@ -153,9 +172,10 @@ function GeoRegions({
 
 	const onSubmit = async (valuesSubmitted: IGeoRegions) => {
 		let values = removeEmptyKeys<IGeoRegions>({ objectToCheck: valuesSubmitted });
-		console.log("gei region Values", values);
+		console.log("geo region Values", values);
 
 		try {
+			delete values.is_project;
 			await createNewOrgGeoRegions({
 				variables: {
 					input: { data: values },
@@ -298,6 +318,10 @@ function GeoRegions({
 		} finally {
 			handleClose();
 		}
+	};
+
+	inputFields[2].getInputValue = (value: boolean) => {
+		value ? (inputFields[3].hidden = false) : (inputFields[3].hidden = true);
 	};
 
 	const onDelete = async () => {

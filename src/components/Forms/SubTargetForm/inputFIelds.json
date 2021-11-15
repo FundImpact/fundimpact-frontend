@@ -152,8 +152,8 @@
 			"size": 6
 		},
 		{
-			"name": "geo_regions",
-			"id": "geo_regions",
+			"name": "geo_region_id",
+			"id": "geo_region_id",
 			"dataTestId": "budgetSubTargetGeoRegions",
 			"testId": "budgetSubTargetGeoRegionsInput",
 			"label": "Geo Regions",
