@@ -375,11 +375,6 @@ function SubTarget(props: SubTargetFormProps) {
 		return geoRegionsArray;
 	}, [geoResponse, props]);
 
-	console.log(
-		"budgetSubTargetFormList[11].optionsArray",
-		budgetSubTargetFormList[11].optionsArray
-	);
-
 	budgetSubTargetFormList[6].secondOptionsArray = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
 		if (projectDonors && orgDonors) {

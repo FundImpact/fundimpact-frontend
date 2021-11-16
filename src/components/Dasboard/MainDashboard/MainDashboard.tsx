@@ -37,7 +37,7 @@ export default function MainDashboard() {
 
 			<Grid item container style={{ flex: 1.5 }}>
 				{budgetTargetFindAccess && (
-					<Grid item md={4}>
+					<Grid item md={6}>
 						<DashboardCard
 							title={intl.formatMessage({
 								id: "fundStatusCardTitle",
@@ -59,7 +59,7 @@ export default function MainDashboard() {
 					</Grid>
 				)}
 				{(impactTargetFindAccess || deliverableTargetFindAccess) && (
-					<Grid item md={8}>
+					<Grid item md={6}>
 						<DashboardCard
 							title={intl.formatMessage({
 								id: "achievementCardTitle",
