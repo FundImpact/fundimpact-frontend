@@ -38,6 +38,7 @@ import { IGetGeographieState } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_STATE,
 	DELETE_GEOGRAPHIES_STATE,
+	GET_STATE_COUNT,
 	GET_STATE_DATA,
 	UPDATE_GEOGRAPHIES_STATE,
 } from "../../graphql/Geographies/GeographyState";
@@ -75,23 +76,13 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createState, { loading: createStateLoading }] = useMutation(CREATE_GEOGRAPHIES_STATE, {
-		refetchQueries: [{ query: GET_STATE_DATA }],
-	});
+	const [createState, { loading: createStateLoading }] = useMutation(CREATE_GEOGRAPHIES_STATE);
 
 	const [updateGeographiesState, { loading: updatingGeographiesState }] = useMutation(
-		UPDATE_GEOGRAPHIES_STATE,
-		{
-			refetchQueries: [{ query: GET_STATE_DATA }],
-		}
+		UPDATE_GEOGRAPHIES_STATE
 	);
 
-	const [deleteGeographiesState, { loading: deleteStateLoading }] = useMutation(
-		DELETE_GEOGRAPHIES_STATE,
-		{
-			refetchQueries: [{ query: GET_STATE_DATA }],
-		}
-	);
+	const [deleteGeographiesState] = useMutation(DELETE_GEOGRAPHIES_STATE);
 
 	let initialValues: IGeographiesState = getInitialValues(props);
 
@@ -103,6 +94,15 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		try {
 			await createState({
 				variables: { input: { data: value } },
+				refetchQueries: [
+					{
+						query: GET_STATE_DATA,
+					},
+					{
+						query: GET_STATE_COUNT,
+					},
+				],
+
 				update: async (store, { data: createGeographiesStateOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -143,8 +143,7 @@ function GeographiesState(props: GoegraphiesStateProps) {
 							},
 						});
 						let geographiesState: IGeographiesStateData[] = dataRead?.geographiesStateOrg
-							? // let deliverableUnits: IDeliverableUnitData[] = dataRead?.deliverableUnitOrg
-							  dataRead?.geographiesStateOrg
+							? dataRead?.geographiesStateOrg
 							: [];
 
 						store.writeQuery<IGetGeographieState>({
@@ -168,12 +167,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 						console.error(err);
 					}
 				},
-				refetchQueries: [
-					{
-						query: GET_STATE_DATA,
-						// variables: { filter: { organization: dashboardData?.organization?.id } },
-					},
-				],
 			});
 			notificationDispatch(setSuccessNotification("Geographies State creation Success !"));
 		} catch (error: any) {
@@ -187,7 +180,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 		console.log("Update", value);
 		try {
 			const id = value.id;
-			console.log("value", value);
 
 			delete value.id;
 			await updateGeographiesState({
@@ -200,6 +192,14 @@ function GeographiesState(props: GoegraphiesStateProps) {
 						// data: { ...value },
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_STATE_DATA,
+					},
+					{
+						query: GET_STATE_COUNT,
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Geographies State updation created !"));
 			onCancel();
@@ -231,6 +231,14 @@ function GeographiesState(props: GoegraphiesStateProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_STATE_DATA,
+					},
+					{
+						query: GET_STATE_COUNT,
+					},
+				],
 			});
 			// await updateGeographiesState({
 			// 	variables: {

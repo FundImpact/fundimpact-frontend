@@ -72,6 +72,7 @@ const InputFields = ({
 	textNextToButton,
 	helperText,
 }: IInputFields) => {
+	console.log("disabled: ", disabled);
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
 	useEffect(() => {

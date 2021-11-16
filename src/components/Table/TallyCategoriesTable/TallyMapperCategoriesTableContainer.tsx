@@ -21,7 +21,7 @@ const getInitialValues = (
 		id: parseInt(geographiesState?.id || ""),
 		name: geographiesState?.name || "",
 		country: geographiesState?.country || "",
-		// country: geographiesState?.country || "",
+		// country: geographiesState?.country || { id: "", name: "" },
 		// prefix_label: geographiesState?.prefix_label || "",
 		// suffix_label: geographiesState?.suffix_label || "",
 		// unit_type: geographiesState?.unit_type || "",

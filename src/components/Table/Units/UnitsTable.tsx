@@ -14,12 +14,6 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { units } from "./dummyData.json";
-// import pagination from "../../../hooks/pagination";
-// import {
-// 	GET_DELIVERABLE_ORG_CATEGORY_COUNT,
-// 	GET_DELIVERABLE_ORG_CATEGORY,
-// } from "../../../graphql/Deliverable/orgCategory";
 import SimpleMenu from "../../Menu";
 import { FormattedMessage } from "react-intl";
 import TableSkeleton from "../../Skeletons/TableSkeleton";
@@ -27,14 +21,9 @@ import Unit from "../../Unit";
 import { FORM_ACTIONS } from "../../../models/constants";
 import { IUnits } from "../../../models/units";
 import pagination from "../../../hooks/pagination";
-import {
-	GET_DELIVERABLE_UNIT_BY_ORG,
-	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
-} from "../../../graphql/Deliverable/unit";
+import { GET_UNIT, GET_UNIT_COUNT } from "../../../graphql/Deliverable/unit";
 import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { unitsTableHeading } from "../constants";
-import { stringify } from "querystring";
-
 const useStyles = makeStyles({
 	table: {
 		minWidth: 650,
@@ -91,9 +80,9 @@ const UnitsTable = ({
 		queryRefetch: refetchUnitList,
 		countRefetch: refetchUnitCount,
 	} = pagination({
-		countQuery: GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
+		countQuery: GET_UNIT_COUNT,
 		countFilter: {},
-		query: GET_DELIVERABLE_UNIT_BY_ORG,
+		query: GET_UNIT,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
@@ -106,7 +95,7 @@ const UnitsTable = ({
 			}
 		}
 		setQueryFilter({
-			organization: dashboardData?.organization?.id,
+			// organization: dashboardData?.organization?.id,
 			...newFilterListObject,
 		});
 	}, [tableFilterList, dashboardData]);
@@ -190,7 +179,7 @@ const UnitsTable = ({
 			<Table className={classes.table} aria-label="simple table">
 				<TableHead>
 					<TableRow color="primary">
-						{unitsList?.deliverableUnitOrg?.length
+						{unitsList?.units?.length
 							? unitsTableHeading.map(
 									(
 										heading: { label: string; keyMapping?: string },
@@ -214,7 +203,7 @@ const UnitsTable = ({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{unitsList?.deliverableUnitOrg.map((unit: IUnits, index: number) => (
+					{unitsList?.units?.map((unit: IUnits, index: number) => (
 						<TableRow key={unit.id}>
 							<TableCell component="td" scope="row">
 								{page * 10 + index + 1}
@@ -251,13 +240,17 @@ const UnitsTable = ({
 						</TableRow>
 					))}
 				</TableBody>
-				{unitsList?.deliverableUnitOrg.length && unitCount && (
+				{unitsList?.units?.length && unitCount && (
 					<TableFooter>
 						<TableRow>
 							<TablePagination
 								rowsPerPageOptions={[]}
-								count={unitCount}
-								rowsPerPage={unitCount > 10 ? 10 : unitCount}
+								count={unitCount?.aggregate?.count}
+								rowsPerPage={
+									unitCount?.aggregate?.count > 10
+										? 10
+										: unitCount?.aggregate?.count
+								}
 								page={page}
 								onChangePage={handlePageChange}
 								onChangeRowsPerPage={() => {}}

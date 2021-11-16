@@ -102,31 +102,31 @@ function GeoRegionsTableView({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
-			tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
-				<ImportExportTableMenu
-					tableName="Budget Category "
-					tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
-					tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
-					onImportTableSuccess={onImportTableSuccess}
-					importButtonOnly={importButtonOnly}
-					hideImport={!geoRegionsImportFromCsvAccess}
-					hideExport={!geoRegionsExportAccess}
-				>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1), float: "right" }}
-						onClick={() =>
-							exportTable({
-								tableName: "Geo Regions Template",
-								jwt: jwt as string,
-								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
-							})
-						}
-					>
-						Geo Regions Template
-					</Button>
-				</ImportExportTableMenu>
-			)}
+			// tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+			// 	<ImportExportTableMenu
+			// 		tableName="Budget Category "
+			// 		tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
+			// 		tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
+			// 		onImportTableSuccess={onImportTableSuccess}
+			// 		importButtonOnly={importButtonOnly}
+			// 		hideImport={!geoRegionsImportFromCsvAccess}
+			// 		hideExport={!geoRegionsExportAccess}
+			// 	>
+			// 		<Button
+			// 			variant="outlined"
+			// 			style={{ marginRight: theme.spacing(1), float: "right" }}
+			// 			onClick={() =>
+			// 				exportTable({
+			// 					tableName: "Geo Regions Template",
+			// 					jwt: jwt as string,
+			// 					tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
+			// 				})
+			// 			}
+			// 		>
+			// 			Geo Regions Template
+			// 		</Button>
+			// 	</ImportExportTableMenu>
+			// )}
 		>
 			<>
 				<GeoRegions

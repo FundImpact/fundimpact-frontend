@@ -111,6 +111,7 @@ function EditSubTarget({
 	tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
+	console.log("subTarget data", subTarget);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 	const dashBoardData = useDashBoardData();
 
@@ -148,7 +149,7 @@ function EditSubTarget({
 		timeperiod_start: "",
 		timeperiod_end: "",
 		attachments: [],
-		geo_regions: "",
+		geo_region_id: "",
 	};
 
 	console.log("subTarget", subTarget);
@@ -190,6 +191,7 @@ function EditSubTarget({
 								grant_periods_project: subTarget.grant_periods_project?.id,
 								annual_year: subTarget.annual_year?.id,
 								project: subTarget.project?.id,
+								geo_region_id: subTarget.geo_region_id?.id,
 							});
 							handleMenuClose();
 						}}
@@ -670,6 +672,9 @@ export default function ({
 		aggregateCount: true,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	console.log("subTargetData", subTargetData);
+
 	const limit = 10;
 	const [rows, setRows] = useState<any>([]);
 	const { refetchOnDeliverableLineItemImport } = useRefetchOnDeliverableLineItemImport(targetId);

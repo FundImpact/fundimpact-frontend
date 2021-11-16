@@ -3,6 +3,8 @@ import { userHasAccess, MODULE_CODES } from "../../../utils/access";
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deliverableCategory/actions";
 import TallyMapperMasterView from "./TallyMapperMasterView";
+import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
+import { GEOGRAPHIES_STATE_ACTIONS } from "../../../utils/access/modules/geographiesState/actions";
 
 function TallyMapperMasterContainer() {
 	const [geographiesCountryFilterList, setGeographiesCountryFilterList] = useState<{
@@ -21,23 +23,27 @@ function TallyMapperMasterContainer() {
 	});
 
 	const geographiesCountryCreateAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
+		MODULE_CODES.COUNTRY,
+		COUNTRY_ACTION.CREATE_COUNTRY
+		// MODULE_CODES.DELIVERABLE_CATEGORY,
+		// DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
 	);
 
 	const deliverableUnitCreateAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.CREATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_STATE,
+		GEOGRAPHIES_STATE_ACTIONS.CREATE_GEOGRAPHIES_STATE
 	);
 
 	const geographiesCountryFindAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.FIND_DELIVERABLE_CATEGORY
+		MODULE_CODES.COUNTRY,
+		COUNTRY_ACTION.FIND_COUNTRY
 	);
 
 	const geographiesStateFindAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_STATE,
+		GEOGRAPHIES_STATE_ACTIONS.FIND_GEOGRAPHIES_STATE
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
 	);
 	const geographiesDistrictFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

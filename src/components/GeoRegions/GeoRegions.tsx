@@ -22,6 +22,7 @@ import { IGeoRegions, IGeoRegionsProps } from "../../models/GeoRegions";
 import {
 	CREATE_GEOREGIONS,
 	DELETE_GEOREGIONS,
+	GET_GEOREGIONS_COUNT,
 	GET_GEOREGIONS_DATA,
 	UPDATE_GEOREGIONS,
 } from "../../graphql/GeoRegions/query";
@@ -31,13 +32,18 @@ import { GET_GRAMPANCHAYAT_DATA } from "../../graphql/Geographies/GeographiesGra
 import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
 import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
 import { GET_STATE_DATA } from "../../graphql/Geographies/GeographyState";
+import { GET_PROJECTS } from "../../graphql";
 
 let inputFields: IGeoregionInputField[] = GeoRegionsFormInputFields;
 // let inputFields: IInputField[] = budgetCategoryFormInputFields;
 
+console.log("immmm", inputFields);
+
 let defaultFormValues: IGeoRegions = {
 	name: "",
 	description: "",
+	project_id: "",
+	is_project: "",
 	country_id: "",
 	state_id: "",
 	district_id: "",
@@ -69,18 +75,25 @@ function GeoRegions({
 	// const [currGrampanchyatId, setCurrGrampanchayatId] = useState<string>("");
 	// const [currVillageId, setCurrVillageId] = useState<string>("");
 	const [createNewOrgGeoRegions, { loading: creatingGeoRegions }] = useMutation(
-		CREATE_GEOREGIONS,
-		{
-			refetchQueries: [{ query: GET_GEOREGIONS_DATA }],
-		}
+		CREATE_GEOREGIONS
 	);
-	const [updateGeoRegions, { loading: updatingGeoRegions }] = useMutation(UPDATE_GEOREGIONS, {
-		refetchQueries: [{ query: GET_GEOREGIONS_DATA }],
-	});
+	const [updateGeoRegions, { loading: updatingGeoRegions }] = useMutation(UPDATE_GEOREGIONS);
 
-	const [deleteGeoRegions] = useMutation(DELETE_GEOREGIONS, {
-		refetchQueries: [{ query: GET_GEOREGIONS_DATA }],
-	});
+	const [deleteGeoRegions] = useMutation(DELETE_GEOREGIONS);
+
+	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	console.log("projectsList", projectsList);
+
+	useEffect(() => {
+		if (projectsList) {
+			inputFields[3].optionsArray = projectsList.orgProject;
+		}
+	}, [projectsList]);
 
 	// const [getCountry, countryResponse] = useLazyQuery(GET_COUNTRY_DATA);
 	// const [getState, stateResponse] = useLazyQuery(GET_STATE_DATA);
@@ -159,26 +172,29 @@ function GeoRegions({
 
 	const onSubmit = async (valuesSubmitted: IGeoRegions) => {
 		let values = removeEmptyKeys<IGeoRegions>({ objectToCheck: valuesSubmitted });
-		console.log("gei region Values", values);
+		console.log("geo region Values", values);
 
 		try {
+			delete values.is_project;
 			await createNewOrgGeoRegions({
 				variables: {
 					input: { data: values },
-					// input: { ...values, organization: dashboardData?.organization?.id },
 				},
+				refetchQueries: [
+					{
+						query: GET_GEOREGIONS_DATA,
+					},
+					{
+						query: GET_GEOREGIONS_COUNT,
+					},
+				],
 				update: async (store, { data: { createOrgGeoRegions } }) => {
-					// update: async (store, { data: { createOrgBudgetCategory } }) => {
 					try {
 						if (getCreatedGeoRegions) {
 							getCreatedGeoRegions(createOrgGeoRegions);
 						}
-						// if (getCreatedBudgetCategory) {
-						// 	getCreatedBudgetCategory(createOrgBudgetCategory);
-						// }
 
 						const count = await store.readQuery<{ orgGeoRegionsCount: number }>({
-							// const count = await store.readQuery<{ orgBudgetCategoryCount: number }>({
 							query: GET_ORG_BUDGET_CATEGORY_COUNT,
 							variables: {
 								filter: {
@@ -215,8 +231,7 @@ function GeoRegions({
 							},
 						});
 						let geoRegions: Partial<IGeoRegions>[] = dataRead?.orgBudgetCategory
-							? // let budgetCategories: Partial<IGeoRegions>[] = dataRead?.orgBudgetCategory
-							  dataRead?.orgBudgetCategory
+							? dataRead?.orgBudgetCategory
 							: [];
 
 						store.writeQuery<IGET_BUDGET_CATEGORY>({
@@ -276,39 +291,26 @@ function GeoRegions({
 
 	const onUpdate = async (value: IGeoRegions) => {
 		try {
-			// let values = removeEmptyKeys<IGeoRegions>({
-			// 	objectToCheck: valuesSubmitted,
-			// 	keysToRemainUnchecked: {
-			// 		description: 1,
-			// 	},
-			// });
-
-			// if (compareObjectKeys(values, initialValues)) {
-			// 	handleClose();
-			// 	return;
-			// }
-			// delete values.id;
-
-			// await updateGeoRegions({
-			// 	variables: {
-			// 		id: initialValues?.id,
-			// 		input: {
-			// 			...values,
-			// 			organization: dashboardData?.organization?.id,
-			// 		},
-			// 	},
-			// });
 			const id = value.id;
+			console.log("id", id);
 			delete value.id;
 			await updateGeoRegions({
 				variables: {
 					input: {
 						where: {
-							id: id,
+							id: id?.toString(),
 						},
 						data: value,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_GEOREGIONS_DATA,
+					},
+					{
+						query: GET_GEOREGIONS_COUNT,
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Geo Regions Updation Success"));
 		} catch (err: any) {
@@ -316,6 +318,10 @@ function GeoRegions({
 		} finally {
 			handleClose();
 		}
+	};
+
+	inputFields[2].getInputValue = (value: boolean) => {
+		value ? (inputFields[3].hidden = false) : (inputFields[3].hidden = true);
 	};
 
 	const onDelete = async () => {
@@ -328,29 +334,15 @@ function GeoRegions({
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_GEOREGIONS_DATA,
+					},
+					{
+						query: GET_GEOREGIONS_COUNT,
+					},
+				],
 			});
-			// const budgetCategoryValues: any = { ...initialValues };
-			// delete budgetCategoryValues["id"];
-			// await updateGeoRegions({
-			// 	variables: {
-			// 		id: initialValues?.id,
-			// 		input: {
-			// 			deleted: true,
-			// 			...budgetCategoryValues,
-			// 			organization: dashboardData?.organization?.id,
-			// 		},
-			// 	},
-			// 	refetchQueries: [
-			// 		{
-			// 			query: GET_ORG_BUDGET_CATEGORY_COUNT,
-			// 			variables: {
-			// 				filter: {
-			// 					organization: dashboardData?.organization?.id,
-			// 				},
-			// 			},
-			// 		},
-			// 	],
-			// });
 			notificationDispatch(setSuccessNotification("Geo Regions Delete Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
@@ -363,13 +355,13 @@ function GeoRegions({
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 
 	const updateGeoRegionSubtitle = intl.formatMessage({
-		id: "BudgetCategoryUpdateFormSubtitle",
+		id: "GeoRegionsUpdateFormSubtitle",
 		defaultMessage: "Update Geo Regions Of Organization",
 		description: `This text will be show on update geo regions form`,
 	});
 
 	const createGeoRegionSubtitle = intl.formatMessage({
-		id: "BudgetCategoryCreateFormSubtitle",
+		id: "GeoRegionsCreateCreateFormSubtitle",
 		defaultMessage: "Create New Geo Regions For Organization",
 		description: `This text will be show on create geo regions form`,
 	});

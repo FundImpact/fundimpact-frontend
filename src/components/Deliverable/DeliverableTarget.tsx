@@ -37,16 +37,18 @@ import DeleteModal from "../DeleteModal";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
 	GET_DELIVERABLE_UNIT_PROJECT_COUNT,
+	GET_UNIT,
 } from "../../graphql/Deliverable/unit";
 import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
+import { GET_CATEGORIES } from "../../graphql/Category/query";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
 		description: "",
-		deliverable_unit_org: "",
-		deliverable_category_org: "",
+		unit: "",
+		category: "",
 		project: props.project,
 	};
 }
@@ -56,6 +58,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
+
+	const { data: units } = useQuery(GET_UNIT);
+
+	console.log("units", units?.units);
+
 	const [getOutputsByProject, { data: outputsByProject }] = useLazyQuery(
 		GET_DELIVERABLE_TARGET_BY_PROJECT
 	); // for fetching outputs by project
@@ -63,6 +70,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
+
+	const { data: categories } = useQuery(GET_CATEGORIES);
+
+	console.log("categories", categories?.categories);
 
 	// const [currentCategory, setcurrentCategory] = useState<any>();
 	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
@@ -412,17 +423,28 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	}, [outputsByProject]);
 
-	useEffect(() => {
-		if (deliverableCategories) {
-			deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
-		}
-	}, [deliverableCategories]);
+	// useEffect(() => {
+	// 	if (deliverableCategories) {
+	// 		deliverableTargetForm[2].optionsArray = deliverableCategories.deliverableCategory;
+	// 	}
+	// }, [deliverableCategories]);
 
 	useEffect(() => {
-		if (unitsByOrg) {
-			deliverableTargetForm[3].optionsArray = unitsByOrg.deliverableUnitOrg;
+		if (categories) {
+			deliverableTargetForm[2].optionsArray = categories?.categories;
 		}
-	}, [unitsByOrg]);
+	}, [categories]);
+
+	useEffect(() => {
+		if (units) {
+			deliverableTargetForm[3].optionsArray = units?.units;
+		}
+	}, [units]);
+	// useEffect(() => {
+	// 	if (unitsByOrg) {
+	// 		deliverableTargetForm[3].optionsArray = unitsByOrg.deliverableUnitOrg;
+	// 	}
+	// }, [unitsByOrg]);
 
 	// handling category change
 	useEffect(() => {
@@ -477,8 +499,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			name: value.name,
 			description: value.description,
 			project: value.project,
-			deliverable_category_org: value?.deliverable_category_org,
-			deliverable_unit_org: value?.deliverable_unit_org,
+			category: value?.category,
+			unit: value?.unit,
 			is_qualitative: value.is_qualitative,
 			sub_target_required: true,
 			value_calculation: value.value_calculation,
@@ -519,12 +541,18 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				}
 			}
 
-			if (!values.deliverable_category_org) {
-				errors.deliverable_category_org = "Deliverable Category is required";
+			if (!values.category) {
+				errors.category = "Deliverable Category is required";
 			}
-			if (!values.deliverable_unit_org) {
-				errors.deliverable_unit_org = "Deliverable Unit is required";
+			if (!values.unit) {
+				errors.unit = "Deliverable Unit is required";
 			}
+			// if (!values.deliverable_category_org) {
+			// 	errors.deliverable_category_org = "Deliverable Category is required";
+			// }
+			// if (!values.deliverable_unit_org) {
+			// 	errors.deliverable_unit_org = "Deliverable Unit is required";
+			// }
 		}
 
 		if (props.type === DELIVERABLE_ACTIONS.UPDATE) {
@@ -586,8 +614,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_CATEGORY_PROJECT_COUNT,
 						variables: {
 							filter: {
-								deliverable_category_org:
-									deliverableTargetValues?.deliverable_category_org,
+								deliverable_category_org: deliverableTargetValues?.category,
+								// deliverableTargetValues?.deliverable_category_org,
 							},
 						},
 					},
@@ -595,7 +623,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
 						variables: {
 							filter: {
-								deliverable_unit_org: deliverableTargetValues?.deliverable_unit_org,
+								deliverable_unit_org: deliverableTargetValues?.unit,
+								// deliverable_unit_org: deliverableTargetValues?.deliverable_unit_org,
 							},
 						},
 					},

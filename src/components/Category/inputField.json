@@ -27,14 +27,14 @@
 			"size": 6
 		},
 		{
-			"name": "cat_type",
+			"name": "type",
 			"label": "Category Type",
 			"size": 6,
 			"testId": "cat_typeOption",
 			"dataTestId": "cat_type",
 			"optionsArray": [
-				{ "id": 1, "name": "Deliverable" },
-				{ "id": 2, "name": "Impact" }
+				{ "id": "1", "name": "Deliverable" },
+				{ "id": "2", "name": "Impact" }
 			],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
@@ -56,8 +56,8 @@
 			"size": 6
 		},
 		{
-			"name": "project",
-			"id": "project",
+			"name": "project_id",
+			"id": "project_id",
 			"dataTestId": "categoryProject",
 			"testId": "categoryProjectInput",
 			"label": "Project",

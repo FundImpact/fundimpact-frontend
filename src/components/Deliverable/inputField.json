@@ -55,8 +55,8 @@
 			"size": 12
 		},
 		{
-			"name": "deliverable_category_org",
-			"id": "deliverable_category_org",
+			"name": "category",
+			"id": "category",
 			"dataTestId": "deliverableTargetCategory",
 			"testId": "deliverableTargetCategoryInput",
 			"label": "Category",
@@ -71,8 +71,8 @@
 			"size": 6
 		},
 		{
-			"name": "deliverable_unit_org",
-			"id": "deliverable_unit_org",
+			"name": "unit",
+			"id": "unit",
 			"dataTestId": "deliverableTargetUnit",
 			"testId": "deliverableTargetUnitInput",
 			"label": "Unit",
@@ -262,7 +262,7 @@
 			"label": "Start Date",
 			"type": "date",
 			"size": 6,
-			"required": false
+			"required": true
 		},
 		{
 			"name": "timeperiod_end",
@@ -272,7 +272,7 @@
 			"label": "End Date",
 			"type": "date",
 			"size": 6,
-			"required": false
+			"required": true
 		},
 		{
 			"name": "reporting_date",
@@ -296,7 +296,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
+			"inputType": "select",
+			"required": true
 		},
 		{
 			"name": "financial_year_org",
@@ -309,7 +310,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
+			"inputType": "select",
+			"required": true
 		},
 		{
 			"name": "financial_year_donor",
@@ -322,7 +324,8 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select"
+			"inputType": "select",
+			"required": true
 		},
 		{
 			"name": "note",
@@ -332,7 +335,8 @@
 			"label": "Note",
 			"multiline": true,
 			"rows": 2,
-			"size": 12
+			"size": 12,
+			"required": true
 		},
 		{
 			"name": "attachfiles",

@@ -13,8 +13,6 @@ import { useDashBoardData } from "../../contexts/dashboardContext";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import {
-	CREATE_DELIVERABLE_UNIT,
-	UPDATE_DELIVERABLE_UNIT_ORG,
 	GET_DELIVERABLE_UNIT_COUNT_BY_ORG,
 	GET_DELIVERABLE_UNIT_BY_ORG,
 } from "../../graphql/Deliverable/unit";
@@ -22,13 +20,7 @@ import { GEOGRAPHIES_ACTIONS } from "./constants";
 import FormDialog from "../FormDialog/FormDialog";
 import CommonForm from "../CommonForm/commonForm";
 import { GeographiesVillageForm } from "./inputField.json";
-import {
-	IGetDeliverablUnit,
-	// IGetDeliverableCategoryUnit,
-	// IGetDeliverableCategoryUnitVariables,
-	// IUpdateDeliverableCategoryUnit,
-	// IUpdateDeliverableCategoryUnitVariables,
-} from "../../models/deliverable/query";
+import { IGetDeliverablUnit } from "../../models/deliverable/query";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMessage";
 import DeleteModal from "../DeleteModal";
@@ -41,6 +33,7 @@ import {
 import {
 	CREATE_GEOGRAPHIES_VILLAGE,
 	DELETE_GEOGRAPHIES_VILLAGE,
+	GET_VILLAGE_COUNT,
 	GET_VILLAGE_DATA,
 	UPDATE_GEOGRAPHIES_VILLAGE,
 } from "../../graphql/Geographies/GeographiesVillage";
@@ -78,22 +71,14 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 	const onCancel = props.handleClose;
 
 	const [createVillage, { loading: createGeographiesLoading }] = useMutation(
-		CREATE_GEOGRAPHIES_VILLAGE,
-		{
-			refetchQueries: [{ query: GET_VILLAGE_DATA }],
-		}
+		CREATE_GEOGRAPHIES_VILLAGE
 	);
 
 	const [updateGeographiesVillage, { loading: updatingGeographiesVillge }] = useMutation(
-		UPDATE_GEOGRAPHIES_VILLAGE,
-		{
-			refetchQueries: [{ query: GET_VILLAGE_DATA }],
-		}
+		UPDATE_GEOGRAPHIES_VILLAGE
 	);
 
-	const [deleteGeographiesVillage] = useMutation(DELETE_GEOGRAPHIES_VILLAGE, {
-		refetchQueries: [{ query: GET_VILLAGE_DATA }],
-	});
+	const [deleteGeographiesVillage] = useMutation(DELETE_GEOGRAPHIES_VILLAGE);
 
 	let initialValues: IGeographiesVillage = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesVillage) => {
@@ -101,6 +86,14 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 		try {
 			await createVillage({
 				variables: { input: { data: value } },
+				refetchQueries: [
+					{
+						query: GET_VILLAGE_DATA,
+					},
+					{
+						query: GET_VILLAGE_COUNT,
+					},
+				],
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -163,12 +156,6 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 						console.error(err);
 					}
 				},
-				refetchQueries: [
-					{
-						query: GET_VILLAGE_DATA,
-						// variables: { filter: { organization: dashboardData?.organization?.id } },
-					},
-				],
 			});
 			notificationDispatch(setSuccessNotification("Geographies Village creation Success !"));
 		} catch (error: any) {
@@ -192,6 +179,14 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 						data: value,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_VILLAGE_DATA,
+					},
+					{
+						query: GET_VILLAGE_COUNT,
+					},
+				],
 			});
 			// //remove newDeliverableCategories
 			// await changeDeliverableCategoryUnitStatus({
@@ -229,6 +224,14 @@ function GeographiesVillage(props: GeographiesVillageProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_VILLAGE_DATA,
+					},
+					{
+						query: GET_VILLAGE_COUNT,
+					},
+				],
 			});
 			// await updateGeographiesVillage({
 			// 	variables: {

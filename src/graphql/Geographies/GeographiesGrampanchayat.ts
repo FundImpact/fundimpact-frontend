@@ -6,6 +6,10 @@ export const GET_GRAMPANCHAYAT_DATA = gql`
 			id
 			name
 			code
+			district {
+				id
+				name
+			}
 		}
 	}
 `;

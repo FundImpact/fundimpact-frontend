@@ -6,6 +6,10 @@ export const CREATE_ORG_BUDGET_CATEGORY = gql`
 			id
 			name
 			code
+			project_id {
+				name
+				id
+			}
 		}
 	}
 `;
@@ -41,7 +45,7 @@ export const CREATE_PROJECT_BUDGET_TRACKING = gql`
 				id
 				name
 			}
-			fy_org {
+			financial_year_org {
 				id
 				name
 			}
@@ -49,7 +53,7 @@ export const CREATE_PROJECT_BUDGET_TRACKING = gql`
 				id
 				name
 			}
-			fy_donor {
+			financial_year_donor {
 				id
 				name
 			}
@@ -77,16 +81,15 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 				id
 				name
 			}
-			fy_org {
+			financial_year_org {
 				id
 				name
 			}
 			grant_periods_project {
 				id
-				deleted
 				name
 			}
-			fy_donor {
+			financial_year_donor {
 				id
 				name
 			}
@@ -115,6 +118,10 @@ export const UPDATE_ORG_BUDGET_CATEGORY = gql`
 			code
 			description
 			deleted
+			project_id {
+				name
+				id
+			}
 		}
 	}
 `;
@@ -150,6 +157,10 @@ export const CREATE_BUDGET_SUB_TARGET = gql`
 					name
 				}
 				grant_periods_project {
+					id
+					name
+				}
+				geo_region_id {
 					id
 					name
 				}

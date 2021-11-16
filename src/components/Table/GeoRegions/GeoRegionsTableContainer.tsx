@@ -7,6 +7,8 @@ const getInitialValues = (geoRegions: Required<IGeoRegions> | null): Required<IG
 		description: geoRegions?.description || "",
 		id: geoRegions?.id || "",
 		name: geoRegions?.name || "",
+		project_id: geoRegions?.project_id || "",
+		is_project: geoRegions?.is_project || "",
 		country_id: geoRegions?.country_id || "",
 		state_id: geoRegions?.state_id || "",
 		district_id: geoRegions?.district_id || "",

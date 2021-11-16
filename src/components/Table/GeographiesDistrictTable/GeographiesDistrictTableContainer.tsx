@@ -10,6 +10,7 @@ import {
 	IGeographiesDistrict,
 	IGeographiesDistrictData,
 } from "../../../models/geographies/geographiesDistrict";
+import { GEOGRAPHIES_DISTRICT_ACTIONS } from "../../../utils/access/modules/geographiesDistrict/actions";
 
 const getInitialValues = (
 	geographiesDistrict: IGeographiesDistrictData | null,
@@ -93,13 +94,17 @@ function GeographiesDistrictTableContainer({
 	}, [openDialogs, getgeographiesDistrict]);
 
 	const geographiesDistrictEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_DISTRICT,
+		GEOGRAPHIES_DISTRICT_ACTIONS.UPDATE_GEOGRAPHIES_DISTRICT
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
 
 	const geographiesDistrictDeleteAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_DISTRICT,
+		GEOGRAPHIES_DISTRICT_ACTIONS.UPDATE_GEOGRAPHIES_DISTRICT
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
 
 	const deliverableUnitImportFromCsvAccess = userHasAccess(

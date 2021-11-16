@@ -5,6 +5,7 @@ import { DELIVERABLE_CATEGORY_ACTIONS } from "../../../utils/access/modules/deli
 import { DELIVERABLE_UNIT_ACTIONS } from "../../../utils/access/modules/deliverableUnit/actions";
 import GeographiesCountryTableView from "./GeographiesCountryTableView";
 import { IGeographies, IGeographiesCountryData } from "../../../models/geographies/geographies";
+import { COUNTRY_ACTION } from "../../../utils/access/modules/country/actions";
 
 const getInitialValues = (
 	geographiesCountry: IGeographiesCountryData | null,
@@ -79,13 +80,17 @@ function GeographiesCountryTableContainer({
 	};
 
 	const geographiesCountryEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
+		MODULE_CODES.COUNTRY,
+		COUNTRY_ACTION.UPDATE_COUNTRY
+		// MODULE_CODES.DELIVERABLE_CATEGORY,
+		// DELIVERABLE_CATEGORY_ACTIONS.UPDATE_DELIVERABLE_CATEGORY
 	);
 
 	const geographiesCountryDeleteAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_CATEGORY,
-		DELIVERABLE_CATEGORY_ACTIONS.DELETE_DELIVERABLE_CATEGORY
+		MODULE_CODES.COUNTRY,
+		COUNTRY_ACTION.DELETE_COUNTRY
+		// MODULE_CODES.DELIVERABLE_CATEGORY,
+		// DELIVERABLE_CATEGORY_ACTIONS.DELETE_DELIVERABLE_CATEGORY
 	);
 
 	const geographiesCountryImportFromCsvAccess = userHasAccess(

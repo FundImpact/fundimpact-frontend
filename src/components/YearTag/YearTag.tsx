@@ -61,7 +61,7 @@ function YearTag(props: IYearTagProps) {
 				],
 			});
 			notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();

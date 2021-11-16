@@ -44,6 +44,7 @@ import { IGetGeographieState } from "../../models/geographies/query";
 import {
 	CREATE_GEOGRAPHIES_BLOCK,
 	DELETE_GEOGRAPHIES_BLOCK,
+	GET_BLOCK_COUNT,
 	GET_BLOCK_DATA,
 	UPDATE_GEOGRAPHIES_BLOCK,
 } from "../../graphql/Geographies/GeographiesBlock";
@@ -81,20 +82,13 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 	const formIsOpen = props.open;
 	const onCancel = props.handleClose;
 
-	const [createBlock, { loading: createBlockLoading }] = useMutation(CREATE_GEOGRAPHIES_BLOCK, {
-		refetchQueries: [{ query: GET_BLOCK_DATA }],
-	});
+	const [createBlock, { loading: createBlockLoading }] = useMutation(CREATE_GEOGRAPHIES_BLOCK);
 
 	const [updateGeographiesBlock, { loading: updatingDeliverableUnit }] = useMutation(
-		UPDATE_GEOGRAPHIES_BLOCK,
-		{
-			refetchQueries: [{ query: GET_BLOCK_DATA }],
-		}
+		UPDATE_GEOGRAPHIES_BLOCK
 	);
 
-	const [deleteGeographiesBlock] = useMutation(DELETE_GEOGRAPHIES_BLOCK, {
-		refetchQueries: [{ query: GET_BLOCK_DATA }],
-	});
+	const [deleteGeographiesBlock] = useMutation(DELETE_GEOGRAPHIES_BLOCK);
 
 	let initialValues: IGeographiesBlock = getInitialValues(props);
 	const onCreate = async (valueSubmitted: IGeographiesBlock) => {
@@ -102,6 +96,14 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 		try {
 			await createBlock({
 				variables: { input: { data: value } },
+				refetchQueries: [
+					{
+						query: GET_BLOCK_DATA,
+					},
+					{
+						query: GET_BLOCK_COUNT,
+					},
+				],
 				update: async (store, { data: createDeliverableUnitOrg }) => {
 					try {
 						const count = await store.readQuery<{ deliverableUnitOrgCount: number }>({
@@ -164,12 +166,6 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 						console.error(err);
 					}
 				},
-				refetchQueries: [
-					{
-						query: GET_BLOCK_DATA,
-						// variables: { filter: { organization: dashboardData?.organization?.id } },
-					},
-				],
 			});
 			notificationDispatch(setSuccessNotification("Geographies Block creation Success !"));
 		} catch (error: any) {
@@ -193,6 +189,14 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 						data: value,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_BLOCK_DATA,
+					},
+					{
+						query: GET_BLOCK_COUNT,
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Geographies Block updation created !"));
 			onCancel();
@@ -223,6 +227,14 @@ function GeographiesBlock(props: GoegraphiesBlockProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_BLOCK_DATA,
+					},
+					{
+						query: GET_BLOCK_COUNT,
+					},
+				],
 			});
 			// await updateGeographiesBlock({
 			// 	variables: {

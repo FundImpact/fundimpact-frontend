@@ -6,13 +6,19 @@ import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { FORM_ACTIONS } from "../../models/constants";
 import { ICategory, ICategoryProps } from "../../models/categories";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
-import { removeEmptyKeys } from "../../utils";
+import { compareObjectKeys, removeEmptyKeys } from "../../utils";
+
 import FormDialog from "../FormDialog";
 import CommonForm from "../CommonForm";
 import { addCategoryForm } from "./inputField.json";
 import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
-import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "../../graphql/Category/mutation";
+import {
+	CREATE_CATEGORY,
+	UPDATE_CATEGORY,
+	DELETE_CATEGORY,
+	GET_CATEGORY_COUNT,
+} from "../../graphql/Category/mutation";
 import { GET_PROJECTS } from "../../graphql";
 import { GET_CATEGORIES } from "../../graphql/Category/query";
 
@@ -20,6 +26,12 @@ const defaultFormValues: ICategory = {
 	name: "",
 	code: "",
 	description: "",
+	type: "",
+	is_project: false,
+	project_id: {
+		id: "",
+		name: "",
+	},
 };
 
 const validate = (values: ICategory) => {
@@ -35,6 +47,7 @@ function Category(props: ICategoryProps) {
 	const [updateCategory, { loading: updatingCategory }] = useMutation(UPDATE_CATEGORY);
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
 
+	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
 	useEffect(() => {
@@ -58,7 +71,7 @@ function Category(props: ICategoryProps) {
 		try {
 			let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
 			console.log("values Category", values);
-
+			delete values.is_project;
 			await createCategory({
 				variables: {
 					input: { data: { ...values } },
@@ -67,9 +80,9 @@ function Category(props: ICategoryProps) {
 					{
 						query: GET_CATEGORIES,
 					},
-					// {
-					// 	query: GET_YEARTAGS_COUNT,
-					// },
+					{
+						query: GET_CATEGORY_COUNT,
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
@@ -81,31 +94,41 @@ function Category(props: ICategoryProps) {
 	};
 
 	const onUpdate = async (valuesSubmitted: ICategory) => {
-		// try {
-		// 	let values = removeEmptyKeys<ICategory>({
-		// 		objectToCheck: valuesSubmitted,
-		// 	});
-		// 	if (compareObjectKeys(values, initialValues)) {
-		// 		props.handleClose();
-		// 		return;
-		// 	}
-		// 	delete (values as any).id;
-		// 	await updateCategory({
-		// 		variables: {
-		// 			input: {
-		// 				where: {
-		// 					id: initialValues?.id,
-		// 				},
-		// 				data: values,
-		// 			},
-		// 		},
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Updation Success"));
-		// } catch (err) {
-		// 	notificationDispatch(setErrorNotification(err?.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			let values = removeEmptyKeys<ICategory>({
+				objectToCheck: valuesSubmitted,
+			});
+			if (compareObjectKeys(values, initialValues)) {
+				props.handleClose();
+				return;
+			}
+
+			delete (values as any).id;
+			delete values.is_project;
+			await updateCategory({
+				variables: {
+					input: {
+						where: {
+							id: initialValues?.id,
+						},
+						data: values,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_CATEGORIES,
+					},
+					{
+						query: GET_CATEGORY_COUNT,
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("Category Updation Success"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	addCategoryForm[4].getInputValue = (value: boolean) => {
@@ -143,27 +166,30 @@ function Category(props: ICategoryProps) {
 	});
 
 	const onDelete = async () => {
-		// try {
-		// 	await deleteCategory({
-		// 		variables: {
-		// 			input: {
-		// 				where: {
-		// 					id: initialValues?.id,
-		// 				},
-		// 			},
-		// 		},
-		// 		refetchQueries: [
-		// 			{
-		// 				query: GET_YEARTAGS,
-		// 			},
-		// 		],
-		// 	});
-		// 	notificationDispatch(setSuccessNotification("Year Tag Delete Success"));
-		// } catch (err) {
-		// 	notificationDispatch(setErrorNotification(err.message));
-		// } finally {
-		// 	props.handleClose();
-		// }
+		try {
+			await deleteCategory({
+				variables: {
+					input: {
+						where: {
+							id: initialValues?.id,
+						},
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_CATEGORIES,
+					},
+					{
+						query: GET_CATEGORY_COUNT,
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("categories Delete Success"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err.message));
+		} finally {
+			props.handleClose();
+		}
 	};
 
 	if (props.deleteCategory) {

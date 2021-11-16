@@ -75,6 +75,7 @@ import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 // import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import { GET_CATEGORIES } from "../../../graphql/Category/query";
 enum tableHeaders {
 	name = 2,
 	category = 3,
@@ -220,9 +221,11 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
 								description: deliverableTarget.description,
-								deliverable_category_org:
-									deliverableTarget?.deliverable_category_org?.id,
-								deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
+								category: deliverableTarget?.category?.id,
+								// deliverable_category_org:
+								// 	deliverableTarget?.deliverable_category_org?.id,
+								unit: deliverableTarget?.unit?.id,
+								// deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
 								is_qualitative: deliverableTarget?.is_qualitative,
 								value_calculation: deliverableTarget?.value_calculation,
 								value_qualitative_option: value_qualitative_option_string,
@@ -275,9 +278,11 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
 								description: deliverableTarget.description,
-								deliverable_category_org:
-									deliverableTarget?.deliverable_category_org?.id,
-								deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
+								category: deliverableTarget?.ategory?.id,
+								// deliverable_category_org:
+								// 	deliverableTarget?.deliverable_category_org?.id,
+								unit: deliverableTarget?.unit?.id,
+								// deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
 								is_qualitative: deliverableTarget?.is_qualitative,
 								value_calculation: deliverableTarget?.value_calculation,
 								value_qualitative_option: value_qualitative_option_string,
@@ -559,9 +564,12 @@ export default function DeliverablesTable({
 	const [queryFilter, setQueryFilter] = useState({});
 	const [filterList, setFilterList] = useState<any>(getDefaultFilterList());
 
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+	const { data: deliverableCategories } = useQuery(GET_CATEGORIES, {
 		variables: { filter: { organization: dashboardData?.organization?.id } },
 	});
+	// const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
+	// });
 
 	const deliverableTracklineFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
@@ -658,6 +666,8 @@ export default function DeliverablesTable({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	console.log("deliverableTargetData", deliverableTargetData);
 
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());

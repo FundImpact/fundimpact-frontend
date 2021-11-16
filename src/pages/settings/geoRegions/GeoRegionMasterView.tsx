@@ -59,7 +59,6 @@ const GeoRegionsMasterView = ({
 							<Box mt={2} fontWeight="fontWeightBold">
 								<FormattedMessage
 									id="geoRegionsHeading"
-									// id="budgetCategoriesHeading"
 									defaultMessage="Geo Regions"
 									description="This text is the heding of budget category table"
 								/>
@@ -69,7 +68,6 @@ const GeoRegionsMasterView = ({
 					<Grid item xs={1}>
 						<Box mt={2}>
 							{geoRegionsFindAccess && (
-								// {budgetCategoryFindAccess && (
 								<FilterList
 									setFilterList={setTableFilterList}
 									inputFields={GeoRegionsInputFields}

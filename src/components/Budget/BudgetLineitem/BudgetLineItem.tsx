@@ -63,7 +63,7 @@ const defaultFormValues: IBudgetTrackingLineitemForm = {
 	timeperiod_end: "",
 	grant_periods_project: "",
 	attachments: [],
-	geo_regions: "",
+	geo_region_id: "",
 };
 
 let budgetTargetHash: {
@@ -185,6 +185,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		financialYear: [],
 	});
 
+	console.log("lists", lists);
+
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
 		onError: (err) => {
 			console.log("err", err);
@@ -305,8 +307,6 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const geoResponse = geoRegionsResponse?.data?.geoRegions;
 
 	budgetLineitemFormInputFields[9].optionsArray = geoResponse;
-
-	console.log("budgetLineitemFormInputFields[]", budgetLineitemFormInputFields[9].optionsArray);
 
 	/* Open Attach File Form*/
 	budgetLineitemFormInputFields[10].onClick = () => setOpenAttachFiles(true);
@@ -700,11 +700,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		);
 	};
 
-	if (financialYearOrg) {
-		budgetLineitemFormInputFields[7].optionsArray = lists.financialYear
-			? lists.financialYear
-			: [];
-	}
+	// if (true) {
+	// if (financialYearOrg) {
+	budgetLineitemFormInputFields[7].optionsArray = lists.financialYear ? lists.financialYear : [];
+	// }
 
 	if (currency?.currencyList?.length) {
 		budgetLineitemFormInputFields[2].endAdornment = currency.currencyList[0].code;

@@ -27,7 +27,7 @@
 			"size": 6
 		},
 		{
-			"name": "unit_type",
+			"name": "type",
 			"label": "Unit Type",
 			"size": 6,
 			"testId": "unit_typeOption",
@@ -67,6 +67,7 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"required": false,
+			"disabled": false,
 			"hidden": true,
 			"size": 6
 		}

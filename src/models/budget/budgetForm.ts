@@ -7,7 +7,7 @@ export interface IBudgetTrackingLineitemForm
 	> {
 	amount: string;
 	reporting_date: string;
-	geo_regions?: string;
+	geo_region_id?: string;
 }
 
 export interface IBudgetTargetForm extends Omit<IBudgetTarget, "total_target_amount"> {

@@ -34,6 +34,10 @@ export const CREATE_GEOREGIONS = gql`
 				updated_at
 				name
 				description
+				project_id {
+					id
+					name
+				}
 				country_id {
 					name
 				}
@@ -58,30 +62,41 @@ export const CREATE_GEOREGIONS = gql`
 `;
 
 export const UPDATE_GEOREGIONS = gql`
-	mutation createGeoRegions($input: updateGeoRegionInput) {
+	mutation updateGeoRegion($input: updateGeoRegionInput) {
 		updateGeoRegion(input: $input) {
 			geoRegion {
 				id
 				created_at
 				updated_at
 				name
+				project_id {
+					id
+					name
+				}
+				is_active
 				description
 				country_id {
+					id
 					name
 				}
 				state_id {
+					id
 					name
 				}
 				district_id {
+					id
 					name
 				}
 				block_id {
+					id
 					name
 				}
 				village_id {
+					id
 					name
 				}
 				gp_id {
+					id
 					name
 				}
 			}
@@ -98,6 +113,10 @@ export const DELETE_GEOREGIONS = gql`
 				updated_at
 				name
 				description
+				project_id {
+					id
+					name
+				}
 				country_id {
 					name
 				}

@@ -109,15 +109,6 @@ function GoegraphiesCountryTableGraphql({
 	});
 	const [filter, setFilter] = useState({});
 	const [getCountries, countriesResponse] = useLazyQuery(GET_COUNTRY_DATA);
-	// useEffect(() => {
-	// 	getCountries();
-	// },[])
-
-	// useEffect(() => {
-	// 	setFilter({
-	// 		organization : dashboardData?.organization?.id,
-	// 	});
-	// },[dashboardData])
 
 	useEffect(() => {
 		let newFilterListObject: { [key: string]: string | string[] } = {};
@@ -150,6 +141,8 @@ function GoegraphiesCountryTableGraphql({
 		refetchDeliverableCategory,
 		refetchDeliverableCategoryOnDeliverableCategoryImport,
 	]);
+
+	console.log("geographyCountry?.countries", geographyCountry?.countries);
 
 	return (
 		<GeographiesCountryTableContainer

@@ -10,6 +10,7 @@ import {
 	IGeographiesGrampanchayat,
 	IGeographiesGrampanchayatData,
 } from "../../../models/geographies/geographiesGrampanchayat";
+import { GEOGRAPHIES_GRAMPANCHAYAT_ACTIONS } from "../../../utils/access/modules/geographiesGrampanchayat/actions";
 
 const getInitialValues = (
 	geographiesGrampanchayat: IGeographiesGrampanchayatData | null,
@@ -93,12 +94,16 @@ function GeographiesGrampanchayatTableContainer({
 	}, [openDialogs, getcategoryUnit]);
 
 	const geographiesGrampanchayatEditAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_GRAMPANCHAYAT,
+		GEOGRAPHIES_GRAMPANCHAYAT_ACTIONS.UPDATE_GEOGRAPHIES_GRAPMPANCHAYAT
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.UPDATE_DELIVERABLE_UNIT
 	);
 	const geographiesGrampanchayatDeleteAccess = userHasAccess(
-		MODULE_CODES.DELIVERABLE_UNIT,
-		DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
+		MODULE_CODES.GEOGRAPHIES_GRAMPANCHAYAT,
+		GEOGRAPHIES_GRAMPANCHAYAT_ACTIONS.DELETE_GEOGRAPHIES_GRAPMPANCHAYAT
+		// MODULE_CODES.DELIVERABLE_UNIT,
+		// DELIVERABLE_UNIT_ACTIONS.DELETE_DELIVERABLE_UNIT
 	);
 	const geographiesGrampanchayatImportFromCsvAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_UNIT,

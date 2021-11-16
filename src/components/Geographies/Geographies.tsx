@@ -10,9 +10,7 @@ import { GEOGRAPHIES_ACTIONS } from "./constants";
 import { useNotificationDispatch } from "../../contexts/notificationContext";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import {
-	CREATE_DELIVERABLE_CATEGORY,
 	GET_DELIVERABLE_ORG_CATEGORY,
-	UPDATE_DELIVERABLE_CATEGORY,
 	GET_DELIVERABLE_CATEGORY_COUNT_BY_ORG,
 } from "../../graphql/Deliverable/category";
 import FormDialog from "../FormDialog/FormDialog";
@@ -54,24 +52,16 @@ function Geographies(props: GeographiesProps) {
 	const dashboardData = useDashBoardData();
 	let initialValues: IGeographies = getInitialValues(props);
 	const [createGeographiesCountry, { loading: creatingGeographiesCountry }] = useMutation(
-		CREATE_GEOGRAPHIES_COUNTRY,
-		{
-			refetchQueries: [{ query: GET_COUNTRY_COUNT }],
-		}
+		CREATE_GEOGRAPHIES_COUNTRY
 	);
 
 	console.log("creatingGeographiesCountry", creatingGeographiesCountry);
 
 	const [updateGeographiesCountry, { loading: updatingGeographiesCountry }] = useMutation(
-		UPDATE_GEOGRAPHIES_COUNTRY,
-		{
-			refetchQueries: [{ query: GET_COUNTRY_DATA }],
-		}
+		UPDATE_GEOGRAPHIES_COUNTRY
 	);
 
-	const [deleteGeographiesCountry] = useMutation(DELETE_GEOGRAPHIES_COUNTRY, {
-		refetchQueries: [{ query: GET_COUNTRY_DATA }],
-	});
+	const [deleteGeographiesCountry] = useMutation(DELETE_GEOGRAPHIES_COUNTRY);
 
 	const formAction = props.type;
 	const formIsOpen = props.open;
@@ -84,7 +74,9 @@ function Geographies(props: GeographiesProps) {
 				refetchQueries: [
 					{
 						query: GET_COUNTRY_DATA,
-						// variables: { filter: { organization: value.organization } },
+					},
+					{
+						query: GET_COUNTRY_COUNT,
 					},
 				],
 				update: async (store, { data: createGeographiesCountry }) => {
@@ -180,6 +172,14 @@ function Geographies(props: GeographiesProps) {
 						data: updateValue,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_COUNTRY_DATA,
+					},
+					{
+						query: GET_COUNTRY_COUNT,
+					},
+				],
 			});
 			notificationDispatch(setSuccessNotification("Gepgraphies country updated !"));
 			onCancel();
@@ -199,6 +199,14 @@ function Geographies(props: GeographiesProps) {
 						},
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_COUNTRY_DATA,
+					},
+					{
+						query: GET_COUNTRY_COUNT,
+					},
+				],
 			});
 			// await updateGeographiesCountry({
 			// 	variables: {

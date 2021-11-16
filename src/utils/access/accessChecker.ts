@@ -11,6 +11,8 @@ type actionType<T extends MODULE_CODES> = keyof typeof MODULES[T]["actionsAvaila
 function UserHasAccess<T extends MODULE_CODES>(moduleName: T, action: actionType<T>) {
 	const { data: userControllerActionHash } = userRoles();
 	// console.log("userControllerActionHash", userControllerActionHash);
+	// console.log("moduleName", moduleName);
+
 	// console.log("Module & action:", moduleName, action);
 	// console.log("userControllerActionHash:", userControllerActionHash);
 	if (!userControllerActionHash || !Object.keys(userControllerActionHash).length) {

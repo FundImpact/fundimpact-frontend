@@ -28,7 +28,7 @@ import OrganizationDocumentContainer from "./Organization/Documents";
 import IndividualContainer from "./Individual";
 import { INDIVIDUAL_ACTIONS } from "../../utils/access/modules/individual/actions";
 import GoegraphiesContainer from "./Goegraphies";
-import GeoRegionsMasterContainer from "./geoRegions";
+import GeoRegionsMasterContainer from "./GeoRegions";
 import YearTags from "./YearTags";
 import { YEARTAG_ACTIONS } from "../../utils/access/modules/yearTag/actions";
 import Categories from "./Categories";
@@ -211,7 +211,8 @@ export default function SettingContainer() {
 							element={<BudgetCategory />}
 						/>
 						<PrivateRoute
-							userAccess={impactCategoryFindAccess || deliverableCategoryFindAccess}
+							userAccess={true}
+							// userAccess={impactCategoryFindAccess || deliverableCategoryFindAccess}
 							path="categories"
 							element={<Categories />}
 						/>

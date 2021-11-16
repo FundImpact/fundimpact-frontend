@@ -43,10 +43,6 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				name
 				id
 			}
-			fy_org {
-				id
-				name
-			}
 			financial_year_donor {
 				id
 				name
@@ -56,10 +52,6 @@ export const GET_PROJECT_BUDGET_TARCKING = gql`
 				name
 			}
 			grant_periods_project {
-				id
-				name
-			}
-			fy_donor {
 				id
 				name
 			}
@@ -156,6 +148,10 @@ export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
 			code
 			description
 			deleted
+			project_id {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -207,6 +203,10 @@ export const GET_BUDGET_SUB_TARGETS = gql`
 				name
 			}
 			grant_periods_project {
+				id
+				name
+			}
+			geo_region_id {
 				id
 				name
 			}

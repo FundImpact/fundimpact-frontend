@@ -33,6 +33,12 @@ import { CONTACT_MODULE } from "./modules/contact/contact.module";
 import { ADDRESS_MODULE } from "./modules/address/address.module";
 import { INDIVIDUAL_MODULE } from "./modules/individual/individual.module";
 import { YEAR_TAGS_MODULE } from "./modules/yearTag/yearTags.module";
+import { GEOGRAPHIES_COUNTRY_MODULE } from "./modules/geographiesCountry/geographiesCountry.module";
+import { GEOGRAPHIES_STATE_MODULE } from "./modules/geographiesState/geographiesState.module";
+import { GEOGRAPHIES_DISTRICT_MODULE } from "./modules/geographiesDistrict/geographiesDistrict.module";
+import { GEOGRAPHIES_BLOCK_MODULE } from "./modules/geographiesBlock/geographiesBlock.module";
+import { GEOGRAPHIES_GRAPMPANCHAYAT_MODULE } from "./modules/geographiesGrampanchayat/geographiesGrampanchayat.module";
+import { GEOGRAPHIES_VILLAGE_MODULE } from "./modules/geographiesVillage/geographiesVillage.module";
 
 /**
  * @summary This file contains 2 important factors related to module.
@@ -74,6 +80,12 @@ export const MODULES = {
 	[MODULE_CODES.BUDGET_TARGET]: BUDGET_TARGET_MODULE,
 	[MODULE_CODES.BUDGET_TARGET_LINE_ITEM]: BUDGET_TARGET_LINE_ITEM_MODULE,
 	[MODULE_CODES.DELIVERABLE_CATEGORY]: DELIVERABLE_CATEGORY_MODULE,
+	[MODULE_CODES.GEOGRAPHIES_COUNTRY]: GEOGRAPHIES_COUNTRY_MODULE,
+	[MODULE_CODES.GEOGRAPHIES_STATE]: GEOGRAPHIES_STATE_MODULE,
+	[MODULE_CODES.GEOGRAPHIES_DISTRICT]: GEOGRAPHIES_DISTRICT_MODULE,
+	[MODULE_CODES.GEOGRAPHIES_BLOCK]: GEOGRAPHIES_BLOCK_MODULE,
+	[MODULE_CODES.GEOGRAPHIES_GRAMPANCHAYAT]: GEOGRAPHIES_GRAPMPANCHAYAT_MODULE,
+	[MODULE_CODES.GEOGRAPHIES_VILLAGE]: GEOGRAPHIES_VILLAGE_MODULE,
 	[MODULE_CODES.DELIVERABLE_TARGET]: DELIVERABLE_TARGET_MODULE,
 	[MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM]: DELIVERABLE_TRACKING_LINE_ITEM_MODULE,
 	[MODULE_CODES.DELIVERABLE_UNIT]: DELIVERABLE_UNIT_MODULE,
