@@ -33,6 +33,7 @@ import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
 import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
 import { GET_STATE_DATA } from "../../graphql/Geographies/GeographyState";
 import { GET_PROJECTS } from "../../graphql";
+import GeoTabs from "./GeoTabs";
 
 let inputFields: IGeoregionInputField[] = GeoRegionsFormInputFields;
 // let inputFields: IInputField[] = budgetCategoryFormInputFields;
@@ -400,7 +401,7 @@ function GeoRegions({
 				workspace={""}
 				project={""}
 			>
-				<CommonForm
+				{/* <CommonForm
 					initialValues={initialValues}
 					validate={validate}
 					onCreate={onSubmit}
@@ -408,7 +409,8 @@ function GeoRegions({
 					inputFields={inputFields}
 					formAction={formAction}
 					onUpdate={onUpdate}
-				/>
+				/> */}
+				<GeoTabs />
 			</FormDialog>
 		</>
 	);

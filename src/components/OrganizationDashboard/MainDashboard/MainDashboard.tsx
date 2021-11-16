@@ -379,7 +379,7 @@ export default function MainOrganizationDashboard() {
 					</Box>
 				</Grid>
 				{budgetTargetFindAccess && (
-					<Grid item md={4}>
+					<Grid item md={6}>
 						<DashboardCard
 							type={CARD_TYPES.PROJECT}
 							cardOf={CARD_OF.BUDGET}
@@ -416,7 +416,7 @@ export default function MainOrganizationDashboard() {
 					</Grid>
 				)}
 				{deliverableTargetFindAccess && (
-					<Grid item md={4}>
+					<Grid item md={6}>
 						<DashboardCard
 							type={CARD_TYPES.PROJECT}
 							cardOf={CARD_OF.DELIVERABLE}
@@ -501,7 +501,7 @@ export default function MainOrganizationDashboard() {
 					</Box>
 				</Grid>
 				{budgetTargetFindAccess && (
-					<Grid item md={4}>
+					<Grid item md={6}>
 						<DashboardCard
 							globalDonorAndFinancialYearFilter={globalDonorAndFinancialYearFilter}
 							title={intl.formatMessage({
@@ -524,7 +524,7 @@ export default function MainOrganizationDashboard() {
 					</Grid>
 				)}
 				{deliverableTargetFindAccess && (
-					<Grid item md={4}>
+					<Grid item md={6}>
 						<DashboardCard
 							globalDonorAndFinancialYearFilter={globalDonorAndFinancialYearFilter}
 							title={intl.formatMessage({
@@ -590,7 +590,7 @@ export default function MainOrganizationDashboard() {
 						{checked && (
 							<>
 								{donorFindAccess && (
-									<Grid item md={3}>
+									<Grid item md={6}>
 										<DashboardCard
 											// title={intl.formatMessage({
 											// 	id: "donorsCardTitle",
@@ -608,7 +608,7 @@ export default function MainOrganizationDashboard() {
 									</Grid>
 								)}
 								{budgetCategoryFindAccess && (
-									<Grid item md={3}>
+									<Grid item md={6}>
 										<DashboardCard
 											cardFilter={[
 												{ label: expenditure, base: "Expenditure" },
