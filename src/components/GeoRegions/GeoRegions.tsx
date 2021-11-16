@@ -401,7 +401,7 @@ function GeoRegions({
 				workspace={""}
 				project={""}
 			>
-				{/* <CommonForm
+				<CommonForm
 					initialValues={initialValues}
 					validate={validate}
 					onCreate={onSubmit}
@@ -409,8 +409,8 @@ function GeoRegions({
 					inputFields={inputFields}
 					formAction={formAction}
 					onUpdate={onUpdate}
-				/> */}
-				<GeoTabs />
+				/>
+				{/* <GeoTabs /> */}
 			</FormDialog>
 		</>
 	);
