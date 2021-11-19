@@ -61,6 +61,8 @@ interface TabPanelProps {
 	value: any;
 }
 
+console.log("DELIVERABLE_TYPE", DELIVERABLE_TYPE);
+
 function TabContent(props: TabPanelProps) {
 	const { children, value, index, ...other } = props;
 
@@ -174,7 +176,7 @@ export default function DashboardTableContainer() {
 
 	const tabsShow = fetchedProject?.project?.logframe_tracker;
 
-	// console.log("projectByIs", fetchedProject?.project?.logframe_tracker);
+	console.log("projectByIs", tabsShow);
 
 	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: true });
 
@@ -211,28 +213,37 @@ export default function DashboardTableContainer() {
 		MODULE_CODES.BUDGET_TARGET_LINE_ITEM,
 		BUDGET_TARGET_LINE_ITEM_ACTIONS.CREATE_BUDGET_TARGET_LINE_ITEM
 	);
-	const impactCategoryCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_CATEGORY,
-		IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
-	);
-	const impactUnitCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_UNIT,
-		IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
-	);
-	const impactTargetCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_TARGET,
-		IMPACT_TARGET_ACTIONS.CREATE_IMPACT_TARGET
-	);
+	// const impactCategoryCreateAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_CATEGORY,
+	// 	IMPACT_CATEGORY_ACTIONS.CREATE_IMPACT_CATEGORY
+	// );
+
+	const impactCategoryCreateAccess: boolean = true;
+
+	// const impactUnitCreateAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_UNIT,
+	// 	IMPACT_UNIT_ACTIONS.CREATE_IMPACT_UNIT
+	// );
+
+	const impactUnitCreateAccess: boolean = true;
+	// const impactTargetCreateAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_TARGET,
+	// 	IMPACT_TARGET_ACTIONS.CREATE_IMPACT_TARGET
+	// );
+
+	const impactTargetCreateAccess: boolean = true;
 
 	const impactTargetFindAccess = userHasAccess(
 		MODULE_CODES.IMPACT_TARGET,
 		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
 	);
 
-	const impactTracklineCreateAccess = userHasAccess(
-		MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
-		IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
-	);
+	// const impactTracklineCreateAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_TRACKING_LINE_ITEM,
+	// 	IMPACT_TRACKING_LINE_ITEM_ACTIONS.CREATE_IMPACT_TRACKING_LINE_ITEM
+	// );
+
+	const impactTracklineCreateAccess: boolean = true;
 	const deliverableCategoryCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_CATEGORY,
 		DELIVERABLE_CATEGORY_ACTIONS.CREATE_DELIVERABLE_CATEGORY
@@ -250,6 +261,8 @@ export default function DashboardTableContainer() {
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.FIND_DELIVERABLE_TARGET
 	);
+
+	console.log("deliverableTargetFindAccess", deliverableTargetFindAccess);
 
 	const deliverableTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
@@ -293,13 +306,33 @@ export default function DashboardTableContainer() {
 
 	let orgDeliverableAccessArr = dashboardData?.organization?.deliverable_type?.types || [];
 
-	const organizationDeliverableAccess = orgDeliverableAccessArr.includes(
-		DELIVERABLE_TYPE.DELIVERABLE
-	);
-	const organizationImpactAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.IMPACT);
-	const organizationOutcomeAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTCOME);
-	const organizationOutputAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTPUT);
+	console.log("dashboardData?.organization?.deliverable_type", dashboardData?.organization);
+
+	// const organizationDeliverableAccess = orgDeliverableAccessArr.includes(
+	// 	DELIVERABLE_TYPE.DELIVERABLE
+	// );
+
+	const organizationDeliverableAccess: boolean = true;
+
+	console.log("organizationDeliverableAccess", organizationDeliverableAccess);
+
+	// const organizationImpactAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.IMPACT);
+	const organizationImpactAccess: boolean = true;
+	const organizationOutcomeAccess: boolean = true;
+	const organizationOutputAccess: boolean = true;
+	// const organizationOutcomeAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTCOME);
+	// const organizationOutputAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTPUT);
 	const organizationActivityAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.ACTIVITY);
+
+	console.log(
+		"organizationImpactAccess",
+		organizationOutcomeAccess,
+		organizationImpactAccess,
+		impactTargetCreateAccess,
+		impactCategoryCreateAccess,
+		impactUnitCreateAccess,
+		impactTracklineCreateAccess
+	);
 
 	const tabs = [
 		{

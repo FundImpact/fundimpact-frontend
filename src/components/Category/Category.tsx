@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -20,7 +20,7 @@ import {
 	GET_CATEGORY_COUNT,
 } from "../../graphql/Category/mutation";
 import { GET_PROJECTS } from "../../graphql";
-import { GET_CATEGORIES } from "../../graphql/Category/query";
+import { GET_CATEGORIES, GET_CATEGORY_TYPES } from "../../graphql/Category/query";
 
 const defaultFormValues: ICategory = {
 	name: "",
@@ -28,10 +28,11 @@ const defaultFormValues: ICategory = {
 	description: "",
 	type: "",
 	is_project: false,
-	project_id: {
-		id: "",
-		name: "",
-	},
+	project_id: "",
+	// {
+	// 	id: "",
+	// 	name: "",
+	// } || 0,
 };
 
 const validate = (values: ICategory) => {
@@ -50,6 +51,8 @@ function Category(props: ICategoryProps) {
 	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
+	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
+
 	useEffect(() => {
 		getProjects();
 	}, []);
@@ -58,10 +61,19 @@ function Category(props: ICategoryProps) {
 		if (projectsList) {
 			addCategoryForm[5].optionsArray = projectsList.orgProject;
 		}
-	}, [projectsList]);
+		if (deliverableTypesList) {
+			addCategoryForm[3].optionsArray = deliverableTypesList?.deliverableTypes;
+		}
+	}, [projectsList, deliverableTypesList]);
 
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+
+	const formAction = props.formAction;
+
+	const formValues = props.initialValues;
+
+	console.log("formValues", formValues);
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -70,8 +82,9 @@ function Category(props: ICategoryProps) {
 	const onCreate = async (valuesSubmitted: ICategory) => {
 		try {
 			let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
-			console.log("values Category", values);
 			delete values.is_project;
+			if (!values.project_id) delete values.project_id;
+			console.log("values Category", values);
 			await createCategory({
 				variables: {
 					input: { data: { ...values } },
@@ -92,6 +105,25 @@ function Category(props: ICategoryProps) {
 			props.handleClose();
 		}
 	};
+
+	// if (
+	// 	typeof formValues?.project_id === "object" &&
+	// 	Object.values(formValues?.project_id).length > 0 &&
+	// 	formAction === "UPDATE"
+	// ) {
+	if (!formValues?.project_id && formAction === "UPDATE") {
+		addCategoryForm[4].hidden = true;
+		addCategoryForm[5].hidden = true;
+	}
+
+	if (formValues?.project_id && formAction === "UPDATE") {
+		addCategoryForm[5].disabled = true;
+		addCategoryForm[4].hidden = false;
+	}
+	if (formAction === "CREATE") {
+		addCategoryForm[4].hidden = false;
+		addCategoryForm[5].disabled = false;
+	}
 
 	const onUpdate = async (valuesSubmitted: ICategory) => {
 		try {
@@ -202,6 +234,19 @@ function Category(props: ICategoryProps) {
 			/>
 		);
 	}
+	// if (formValues?.project_id && formAction === "UPDATE") {
+	// 	budgetCategoryFormInputFields[4].disabled = true;
+	// 	budgetCategoryFormInputFields[3].hidden = false;
+	// }
+
+	// if (!formValues?.project_id && formAction === "UPDATE") {
+	// 	budgetCategoryFormInputFields[3].hidden = true;
+	// 	budgetCategoryFormInputFields[4].hidden = true;
+	// }
+	// if (formAction === "CREATE") {
+	// 	budgetCategoryFormInputFields[3].hidden = false;
+	// 	budgetCategoryFormInputFields[4].disabled = false;
+	// }
 
 	return (
 		<>

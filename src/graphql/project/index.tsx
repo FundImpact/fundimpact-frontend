@@ -78,6 +78,12 @@ export const GET_PROJ_DONORS = gql`
 				id
 				name
 				deleted
+				country {
+					id
+					name
+					created_at
+					updated_at
+				}
 			}
 			deleted
 		}

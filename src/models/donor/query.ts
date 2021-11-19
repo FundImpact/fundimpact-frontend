@@ -1,10 +1,10 @@
 export interface IDONOR_RESPONSE {
 	id: string;
 	name: string;
-	country: {
-		name: string;
-		id: string;
-	};
+	country?: {
+		name?: string;
+		id?: string;
+	} | null;
 	legal_name: string;
 	short_name: string;
 }

@@ -13,7 +13,7 @@ const InputField = ({
 	rows = 1,
 	type = "text",
 	endAdornment,
-	required = false
+	required = false,
 }: Omit<IInputField, "size">) => {
 	return (
 		<TextField

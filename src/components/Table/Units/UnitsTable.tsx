@@ -50,6 +50,9 @@ const getInitialValues = (unit: IUnits | null): IUnits => {
 		name: unit?.name || "",
 		code: unit?.code || "",
 		description: unit?.description || "",
+		type: unit?.type || "",
+		is_project: unit?.is_project || false,
+		project_id: unit?.project_id || "",
 	};
 };
 
@@ -211,7 +214,7 @@ const UnitsTable = ({
 							<TableCell>{unit.name}</TableCell>
 							<TableCell>{unit.code}</TableCell>
 							<TableCell>{unit.description}</TableCell>
-							<TableCell>{unit.unit_type}</TableCell>
+							<TableCell>{unit.type}</TableCell>
 							<TableCell>
 								<IconButton
 									aria-haspopup="true"

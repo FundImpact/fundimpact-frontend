@@ -200,7 +200,8 @@ const chipArray = ({
 	));
 };
 
-const getNewTotalAmountHeaderOfTable = (currency: string) => `Total Amount (${currency})`;
+const getNewTotalAmountHeaderOfTable = (currency: string) => `Total Amount`;
+// const getNewTotalAmountHeaderOfTable = (currency: string) => `Total Amount (${currency})`;
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,

@@ -32,10 +32,7 @@
 			"size": 6,
 			"testId": "cat_typeOption",
 			"dataTestId": "cat_type",
-			"optionsArray": [
-				{ "id": "1", "name": "Deliverable" },
-				{ "id": "2", "name": "Impact" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
@@ -53,7 +50,8 @@
 			"disabled": false,
 			"inputType": "switch",
 			"required": true,
-			"size": 6
+			"size": 6,
+			"hidden": false
 		},
 		{
 			"name": "project_id",
@@ -66,6 +64,7 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
+			"disabled": false,
 			"required": false,
 			"hidden": true,
 			"size": 6

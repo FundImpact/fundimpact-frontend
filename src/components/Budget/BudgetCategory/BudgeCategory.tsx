@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
@@ -34,8 +34,8 @@ let defaultFormValues: IBudgetCategory = {
 	name: "",
 	code: "",
 	description: "",
-	project_id: "",
 	is_project: false,
+	project_id: "",
 };
 
 console.log("inputFields", inputFields);
@@ -63,18 +63,14 @@ function BudgetCategory({
 	const [updateBudgetCategory, { loading: updatingBudgetCategory }] = useMutation(
 		UPDATE_ORG_BUDGET_CATEGORY
 	);
-	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
+
+	const { data: projectList } = useQuery(GET_PROJECTS);
 
 	useEffect(() => {
-		getProjects();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		if (projectsList) {
-			budgetCategoryFormInputFields[4].optionsArray = projectsList.orgProject;
+		if (projectList) {
+			budgetCategoryFormInputFields[4].optionsArray = projectList?.orgProject;
 		}
-	}, [projectsList]);
+	}, [projectList]);
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -194,6 +190,9 @@ function BudgetCategory({
 
 	budgetCategoryFormInputFields[3].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);
+		// value
+		// 	? (budgetCategoryFormInputFields[4].hidden = false)
+		// 	: (budgetCategoryFormInputFields[4].hidden = true);
 	};
 
 	currentIsProject
@@ -202,17 +201,16 @@ function BudgetCategory({
 
 	console.log("formValues", formValues);
 
-	if (formValues?.project_id && FORM_ACTIONS.UPDATE === "UPDATE") {
+	if (formValues?.project_id && formAction === "UPDATE") {
 		budgetCategoryFormInputFields[4].disabled = true;
-		// budgetCategoryFormInputFields[4].disabled = true;
 		budgetCategoryFormInputFields[3].hidden = false;
 	}
 
-	if (!formValues?.project_id && FORM_ACTIONS.UPDATE === "UPDATE") {
+	if (!formValues?.project_id && formAction === "UPDATE") {
 		budgetCategoryFormInputFields[3].hidden = true;
 		budgetCategoryFormInputFields[4].hidden = true;
 	}
-	if (FORM_ACTIONS.CREATE == "CREATE") {
+	if (formAction === "CREATE") {
 		budgetCategoryFormInputFields[3].hidden = false;
 		budgetCategoryFormInputFields[4].disabled = false;
 	}

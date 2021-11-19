@@ -99,6 +99,17 @@ export const UPDATE_GEOREGIONS = gql`
 					id
 					name
 				}
+				budget_sub_targets {
+					id
+					name
+				}
+				deliverable_sub_targets {
+					id
+					name
+				}
+				budget_tracking_lineitems {
+					id
+				}
 			}
 		}
 	}

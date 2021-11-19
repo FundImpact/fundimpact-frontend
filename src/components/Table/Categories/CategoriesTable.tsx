@@ -25,6 +25,7 @@ import { useDashBoardData } from "../../../contexts/dashboardContext";
 import { GET_CATEGORY_COUNT } from "../../../graphql/Category/mutation";
 import pagination from "../../../hooks/pagination";
 import { categoriesTableHeading } from "../constants";
+import { ca } from "date-fns/locale";
 
 const useStyles = makeStyles({
 	table: {
@@ -54,10 +55,11 @@ const getInitialValues = (cat: ICategory | null): ICategory => {
 		description: cat?.description || "",
 		type: cat?.type || "",
 		is_project: cat?.is_project || false,
-		project_id: cat?.project_id || {
-			id: "",
-			name: "",
-		},
+		project_id: cat?.project_id || "",
+		// project_id: cat?.project_id || {
+		// 	id: "",
+		// 	name: "",
+		// },
 	};
 };
 
@@ -78,6 +80,8 @@ const CategoriesTable = ({
 	const [pageCount, setPageCount] = useState(0);
 	const [openCategoryEditDialog, setOpenCategoryEditDialog] = useState<boolean>(false);
 	const [openCategoryDeleteDialog, setOpenCategoryDeleteDialog] = useState<boolean>(false);
+
+	console.log("selectedCategory", selectedCategory);
 
 	useEffect(() => {
 		let newFilterListObject: { [key: string]: string | string[] } = {};
@@ -107,6 +111,8 @@ const CategoriesTable = ({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	console.log("categoryList", categoryList);
 
 	// useEffect(() => {
 	// 	if (deliverableCatCount?.aggregate?.count) {
@@ -218,6 +224,7 @@ const CategoriesTable = ({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
+					{console.log("categories:", categoryList?.categories)}
 					{categoryList?.categories?.map((cat: ICategory, index: number) => (
 						<TableRow key={cat.id}>
 							<TableCell component="td" scope="row">
@@ -226,7 +233,9 @@ const CategoriesTable = ({
 							<TableCell>{cat.name}</TableCell>
 							<TableCell>{cat.code}</TableCell>
 							<TableCell>{cat.description}</TableCell>
-							<TableCell>{cat.deliverable_type_id?.name}</TableCell>
+							<TableCell>{cat.type}</TableCell>
+
+							{/* <TableCell>{cat.deliverable_type_id?.name}</TableCell> */}
 							<TableCell>
 								<IconButton
 									aria-haspopup="true"

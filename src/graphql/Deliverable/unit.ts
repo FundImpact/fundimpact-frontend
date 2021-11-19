@@ -57,6 +57,10 @@ export const CREATE_UNIT = gql`
 				code
 				description
 				type
+				project_id {
+					id
+					name
+				}
 			}
 		}
 	}
@@ -72,6 +76,10 @@ export const GET_UNIT = gql`
 			code
 			description
 			type
+			project_id {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -97,6 +105,10 @@ export const UPDATE_UNIT = gql`
 				code
 				description
 				type
+				project_id {
+					id
+					name
+				}
 				sustainable_development_goal {
 					name
 					id

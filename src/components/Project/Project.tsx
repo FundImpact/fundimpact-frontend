@@ -180,7 +180,7 @@ function Project(props: ProjectProps) {
 
 	projectForm[6].getInputValue = (value: boolean) => {
 		// console.log("innnnputs value", value);
-		// setLogFrameValue(value);
+		setLogFrameValue(value);
 	};
 
 	// projectForm[6].onClick = () => setLogFrameValue(true);
@@ -459,6 +459,11 @@ function Project(props: ProjectProps) {
 			delete formData.attachments;
 			const updatedResponse = await updateProject({
 				variables: { id: projectId, input: formData },
+				// refetchQueries: [
+				// 	{
+				// 		query: GET_PROJECTS_BY_WORKSPACE,
+				// 	},
+				// ],
 			});
 			if (workspaceSelected !== value.workspace) {
 				fetchProjectsInWorkspace({

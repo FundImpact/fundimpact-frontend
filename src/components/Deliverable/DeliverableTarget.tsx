@@ -52,28 +52,44 @@ function getInitialValues(props: DeliverableTargetProps) {
 		project: props.project,
 	};
 }
-function DeliverableTarget(props: DeliverableTargetProps) {
-	console.log("deliverableTargetForm", deliverableTargetForm[4]);
 
+function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
+	const types = props.formType;
 
 	const { data: units } = useQuery(GET_UNIT);
 
-	console.log("units", units?.units);
+	console.log("units", units);
+	let unitType: any = [];
+	units?.units.map((elem: any) => {
+		console.log("elem", elem, types);
+		if (types === elem.type) {
+			unitType.push(elem);
+		}
+	});
+
+	console.log("unitType", unitType);
 
 	const [getOutputsByProject, { data: outputsByProject }] = useLazyQuery(
 		GET_DELIVERABLE_TARGET_BY_PROJECT
 	); // for fetching outputs by project
 
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
-		variables: { filter: { organization: dashboardData?.organization?.id } },
-	});
+	// const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
+	// });
 
 	const { data: categories } = useQuery(GET_CATEGORIES);
 
-	console.log("categories", categories?.categories);
+	let categoryType: any = [];
+	categories?.categories.map((elem: any) => {
+		console.log("elem", elem, types);
+		if (types === elem.type) {
+			categoryType.push(elem);
+		}
+	});
+	// console.log("categories", categories?.categories, categoryType);
 
 	// const [currentCategory, setcurrentCategory] = useState<any>();
 	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
@@ -431,13 +447,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	useEffect(() => {
 		if (categories) {
-			deliverableTargetForm[2].optionsArray = categories?.categories;
+			deliverableTargetForm[2].optionsArray = categoryType;
+			// deliverableTargetForm[2].optionsArray = categories?.categories;
 		}
 	}, [categories]);
 
 	useEffect(() => {
 		if (units) {
-			deliverableTargetForm[3].optionsArray = units?.units;
+			deliverableTargetForm[3].optionsArray = unitType;
+			// deliverableTargetForm[3].optionsArray = units?.units;
 		}
 	}, [units]);
 	// useEffect(() => {

@@ -32,10 +32,7 @@
 			"size": 6,
 			"testId": "unit_typeOption",
 			"dataTestId": "unit_type",
-			"optionsArray": [
-				{ "id": "Deliverable", "name": "Deliverable" },
-				{ "id": "Impact", "name": "Impact" }
-			],
+			"optionsArray": [],
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined",
@@ -51,6 +48,7 @@
 			"label": "Is Project",
 			"getInputValue": {},
 			"disabled": false,
+			"hidden": false,
 			"inputType": "switch",
 			"required": true,
 			"size": 6
