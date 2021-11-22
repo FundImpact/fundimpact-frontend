@@ -61,6 +61,7 @@ import BudgetTarget from "../../../components/Budget/BudgetTarget";
 
 function getInitialValues(props: SubTargetFormProps) {
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
+
 	return {
 		budget_targets_project: props?.target,
 		deliverable_target_project: props?.target,
@@ -178,12 +179,6 @@ function SubTarget(props: SubTargetFormProps) {
 	);
 
 	let budgetSubTargetFormList: any = budgetSubTargetForm;
-
-	// budgetSubTargetFormList[2].getInputValue = (value: number) => {
-	// 	if (value < 0) {
-	// 		return null;
-	// 	}
-	// };
 
 	const getTargetId = () =>
 		props.formType === "budget"
@@ -695,6 +690,15 @@ function SubTarget(props: SubTargetFormProps) {
 	};
 
 	let initialValues: any = getInitialValues(props);
+
+	// console.log("initialValues", initialValues);
+
+	// budgetSubTargetFormList[2].getInputValue = (value: number) => {
+	// 	if (value < 0) {
+	// 		alert("enter a valid Number");
+	// 		return value;
+	// 	}
+	// };
 
 	const checkValuesToDelete = (value: ISubTarget) => {
 		let values = { ...value };

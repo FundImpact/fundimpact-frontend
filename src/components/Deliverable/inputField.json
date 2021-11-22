@@ -236,6 +236,7 @@
 			"testId": "deliverableTracklineValueInput",
 			"label": "Value",
 			"type": "number",
+			"inputType": "number",
 			"size": 6,
 			"required": true
 		},

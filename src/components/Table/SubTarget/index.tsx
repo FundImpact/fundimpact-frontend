@@ -111,7 +111,6 @@ function EditSubTarget({
 	tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
-	console.log("subTarget data", subTarget);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 	const dashBoardData = useDashBoardData();
 
@@ -151,8 +150,6 @@ function EditSubTarget({
 		attachments: [],
 		geo_region_id: "",
 	};
-
-	console.log("subTarget", subTarget);
 
 	return (
 		<>
@@ -592,8 +589,6 @@ export default function ({
 	// 	? GET_DELIVERABLE_SUB_TARGETS_COUNT
 	// 	: GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
-	console.log("budgetSubTargetForm", budgetSubTargetForm);
-
 	const getSubTargetCountQuery = () =>
 		tableType === "budget" ? GET_BUDGET_SUB_TARGETS_COUNT : GET_DELIVERABLE_SUB_TARGETS_COUNT;
 
@@ -672,8 +667,6 @@ export default function ({
 		aggregateCount: true,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-
-	console.log("subTargetData", subTargetData);
 
 	const limit = 10;
 	const [rows, setRows] = useState<any>([]);

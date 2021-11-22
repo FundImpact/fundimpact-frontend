@@ -34,8 +34,7 @@
 			"label": "Sub-Target Value",
 			"required": true,
 			"hidden": true,
-			"getInputValue": {},
-			"inputType": "textarea",
+			"inputType": "number",
 			"size": 6,
 			"type": "number"
 		},

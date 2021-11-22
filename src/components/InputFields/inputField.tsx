@@ -400,6 +400,7 @@ const InputFields = ({
 		return (
 			<TextField
 				type="number"
+				label={label}
 				onChange={
 					getInputValue
 						? (event) => {
@@ -408,6 +409,11 @@ const InputFields = ({
 						  }
 						: formik.handleChange
 				}
+				InputProps={{
+					inputProps: {
+						min: 0,
+					},
+				}}
 				required={required}
 				fullWidth
 				name={`${name}`}
@@ -416,6 +422,7 @@ const InputFields = ({
 				multiline={multiline}
 				rows={rows}
 				disabled={disabled}
+				value={formik.values[name]}
 			/>
 		);
 	}

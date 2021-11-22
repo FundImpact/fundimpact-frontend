@@ -59,14 +59,37 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
 	const types = props.formType;
 
+	console.log("types", types);
+	let deliverableId: number;
+	let outcomeId: number;
+	let outputId: number;
+	let impactId: number;
+	if (types === "deliverable") {
+		deliverableId = 6;
+	}
+	if (types === "outcome") {
+		outcomeId = 5;
+	}
+	if (types === "output") {
+		outputId = 4;
+	}
+	if (types === "impact") {
+		impactId = 3;
+	}
+
 	const { data: units } = useQuery(GET_UNIT);
 
-	console.log("units", units);
 	let unitType: any = [];
-	units?.units.map((elem: any) => {
-		console.log("elem", elem, types);
-		if (types === elem.type) {
-			unitType.push(elem);
+	units?.units?.forEach((elem: any) => {
+		if (elem.type) {
+			if (
+				deliverableId == elem.type ||
+				outcomeId == elem.type ||
+				outputId == elem.type ||
+				impactId == elem.type
+			) {
+				unitType.push(elem);
+			}
 		}
 	});
 
@@ -83,13 +106,20 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const { data: categories } = useQuery(GET_CATEGORIES);
 
 	let categoryType: any = [];
-	categories?.categories.map((elem: any) => {
-		console.log("elem", elem, types);
-		if (types === elem.type) {
-			categoryType.push(elem);
+	categories?.categories.forEach((elem: any) => {
+		if (elem.type) {
+			if (
+				deliverableId == elem.type ||
+				outcomeId == elem.type ||
+				outputId == elem.type ||
+				impactId == elem.type
+			) {
+				categoryType.push(elem);
+			}
 		}
 	});
-	// console.log("categories", categories?.categories, categoryType);
+
+	console.log("categoryType", categoryType);
 
 	// const [currentCategory, setcurrentCategory] = useState<any>();
 	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
@@ -473,8 +503,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	}, [dashboardData, getUnitsByOrg]);
 
-	console.log("props.tyep: ", props.formType);
-
 	useEffect(() => {
 		if (dashboardData?.project?.id) {
 			let allowedProps = ["deliverable", "output", "outcome"];
@@ -504,7 +532,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
-		console.log("Create: ", value);
 		let options = value?.value_qualitative_option?.split(",") || [];
 		options = options.map((elem: string) => ({ id: uuidv4(), name: elem.trim() }));
 

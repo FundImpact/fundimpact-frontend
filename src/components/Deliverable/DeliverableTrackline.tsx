@@ -291,7 +291,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	deliverableTragetLineForm[0].getInputValue = (targetId: string) => {
 		let subTargetOptions = deliverableTargets.deliverableSubTargets;
 		let subTarget = subTargetOptions.find((elem: any) => elem.id === targetId);
-		console.log("target", subTarget);
 		setIsQualitativeParentTarget(
 			subTarget?.deliverable_target_project?.is_qualitative || false
 		);
@@ -353,8 +352,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		},
 	});
 
-	console.log("deliverableTargets", deliverableTargets?.deliverableSubTargets[0]?.donor?.id);
-
 	const { data: fetchedOrganizationYear } = useQuery<any>(
 		GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR,
 		{
@@ -368,8 +365,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			// id: 392,
 		},
 	});
-
-	console.log("fetchedDonorYear", fetchedDonorYear);
 
 	let {
 		multiplefileMorph,
@@ -608,11 +603,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		}
 	}, [lists]);
 
-	console.log(
-		"deliverableTragetLineForm[8].optionsArray",
-		deliverableTragetLineForm[8].optionsArray
-	);
-
 	const getDeliverableTargetBySubTarget = async (
 		apolloClient: any,
 		deliverable_sub_target: string
@@ -646,7 +636,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 
 		let input = { ...value };
-		console.log("input", input);
 		delete (input as any).donors;
 		if (!input.annual_year) delete (input as any).annual_year;
 		if (!input.financial_year) delete (input as any).financial_year;
