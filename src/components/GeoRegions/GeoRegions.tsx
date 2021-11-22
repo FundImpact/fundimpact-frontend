@@ -18,7 +18,7 @@ import FormDialog from "../FormDialog";
 import CommonForm from "../CommonForm";
 import { GeoRegionsFormInputFields } from "./inputFields.json";
 import DeleteModal from "../DeleteModal";
-import { IGeoRegions, IGeoRegionsProps } from "../../models/GeoRegions";
+import { IGeoRegions, IGeoRegionsProps, IGET_GEO_REGIONS } from "../../models/GeoRegions";
 import {
 	CREATE_GEOREGIONS,
 	DELETE_GEOREGIONS,
@@ -36,10 +36,6 @@ import { GET_PROJECTS } from "../../graphql";
 import GeoTabs from "./GeoTabs";
 
 let inputFields: IGeoregionInputField[] = GeoRegionsFormInputFields;
-// let inputFields: IInputField[] = budgetCategoryFormInputFields;
-
-console.log("immmm", inputFields);
-
 let defaultFormValues: IGeoRegions = {
 	name: "",
 	description: "",
@@ -220,7 +216,8 @@ function GeoRegions({
 						if (count) {
 							limit = count.orgGeoRegionsCount;
 						}
-						const dataRead = await store.readQuery<IGET_BUDGET_CATEGORY>({
+						const dataRead = await store.readQuery<IGET_GEO_REGIONS>({
+							// const dataRead = await store.readQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
 								filter: {
@@ -231,11 +228,15 @@ function GeoRegions({
 								sort: "created_at:DESC",
 							},
 						});
-						let geoRegions: Partial<IGeoRegions>[] = dataRead?.orgBudgetCategory
-							? dataRead?.orgBudgetCategory
+						let geoRegions: Partial<IGeoRegions>[] = dataRead?.orgGeoRegions
+							? dataRead?.orgGeoRegions
 							: [];
+						// let geoRegions: Partial<IGeoRegions>[] = dataRead?.orgBudgetCategory
+						// 	? dataRead?.orgBudgetCategory
+						// 	: [];
 
-						store.writeQuery<IGET_BUDGET_CATEGORY>({
+						store.writeQuery<IGET_GEO_REGIONS>({
+							// store.writeQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
 								filter: {
@@ -246,7 +247,7 @@ function GeoRegions({
 								sort: "created_at:DESC",
 							},
 							data: {
-								orgBudgetCategory: [createOrgGeoRegions, ...geoRegions],
+								orgGeoRegions: [createOrgGeoRegions, ...geoRegions],
 							},
 						});
 					} catch (err) {
@@ -254,7 +255,8 @@ function GeoRegions({
 					}
 
 					try {
-						const data = store.readQuery<IGET_BUDGET_CATEGORY>({
+						const data = store.readQuery<IGET_GEO_REGIONS>({
+							// const data = store.readQuery<IGET_BUDGET_CATEGORY>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
 								filter: {
@@ -262,11 +264,11 @@ function GeoRegions({
 								},
 							},
 						});
-						let geoRegion: Partial<IGeoRegions>[] = data?.orgBudgetCategory
+						let geoRegion: Partial<IGeoRegions>[] = data?.orgGeoRegions
 							? // let budgetCategory: Partial<IGeoRegions>[] = data?.orgBudgetCategory
-							  data?.orgBudgetCategory
+							  data?.orgGeoRegions
 							: [];
-						store.writeQuery<IGET_BUDGET_CATEGORY>({
+						store.writeQuery<IGET_GEO_REGIONS>({
 							query: GET_ORGANIZATION_BUDGET_CATEGORY,
 							variables: {
 								filter: {
@@ -274,7 +276,7 @@ function GeoRegions({
 								},
 							},
 							data: {
-								orgBudgetCategory: [createOrgGeoRegions, ...geoRegion],
+								orgGeoRegions: [createOrgGeoRegions, ...geoRegion],
 							},
 						});
 					} catch (err) {
@@ -293,13 +295,20 @@ function GeoRegions({
 	const onUpdate = async (value: IGeoRegions) => {
 		try {
 			const id = value.id;
-			console.log("id", id);
 			delete value.id;
+			delete value.is_project;
+			delete value.country_id;
+			delete value.state_id;
+			delete value.block_id;
+			delete value.district_id;
+			delete value.gp_id;
+			delete value.village_id;
 			await updateGeoRegions({
 				variables: {
 					input: {
 						where: {
-							id: id?.toString(),
+							id: id,
+							// id: id?.toString(),
 						},
 						data: value,
 					},
@@ -376,6 +385,20 @@ function GeoRegions({
 				onDeleteConformation={onDelete}
 			/>
 		);
+	}
+
+	if (!formValues?.project_id && formAction === "UPDATE") {
+		inputFields[2].hidden = true;
+		inputFields[3].hidden = true;
+	}
+
+	if (formValues?.project_id && formAction === "UPDATE") {
+		inputFields[3].disabled = true;
+		inputFields[2].hidden = false;
+	}
+	if (formAction === "CREATE") {
+		inputFields[2].hidden = false;
+		inputFields[3].disabled = false;
 	}
 
 	return (

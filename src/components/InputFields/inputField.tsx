@@ -396,6 +396,37 @@ const InputFields = ({
 			</Box>
 		);
 	}
+	if (inputType === "number") {
+		return (
+			<TextField
+				type="number"
+				label={label}
+				onChange={
+					getInputValue
+						? (event) => {
+								getInputValue(event.target.value);
+								formik.handleChange(event);
+						  }
+						: formik.handleChange
+				}
+				InputProps={{
+					inputProps: {
+						min: 0,
+					},
+				}}
+				required={required}
+				fullWidth
+				name={`${name}`}
+				variant="outlined"
+				id={id}
+				multiline={multiline}
+				rows={rows}
+				disabled={disabled}
+				value={formik.values[name]}
+			/>
+		);
+	}
+
 	return (
 		<TextField
 			style={{ width: "100%" }}

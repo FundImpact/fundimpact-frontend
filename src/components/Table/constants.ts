@@ -270,14 +270,14 @@ export const unitsTableHeading: ITableHeadings[] = [
 	{ label: "Name" },
 	{ label: "Code" },
 	{ label: "Description" },
-	{ label: "Unit Type" },
+	{ label: "Deliverable Type" },
 ];
 export const categoriesTableHeading: ITableHeadings[] = [
 	{ label: "#" },
 	{ label: "Name" },
 	{ label: "Code" },
 	{ label: "Description" },
-	{ label: "Unit Type" },
+	{ label: "Deliverable Type" },
 ];
 
 export const impactCategoryTableHeadings: ITableHeadings[] = [

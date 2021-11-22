@@ -1,4 +1,4 @@
-import { ApolloClient, useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { ApolloClient, useApolloClient, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -49,7 +49,11 @@ import { updateProjectDonorCache } from "../Project/Project";
 import { DIALOG_TYPE } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
-import { GET_YEARTAGS } from "../../graphql/yearTags/query";
+import {
+	GET_YEARTAGS,
+	GET_YEAR_TAG_DONOR_FINANCIAL_YEAR,
+	GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR,
+} from "../../graphql/yearTags/query";
 import { YearTagPayload } from "../../models/yearTags";
 import { GET_DELIVERABLE_SUB_TARGETS } from "../../graphql/Deliverable/subTarget";
 import SubTarget from "../Forms/SubTargetForm";
@@ -190,7 +194,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		variables: { filter: { project: DashBoardData?.project?.id } },
 	});
 
-	useQuery(GET_ORG_DONOR, {
+	const { data: orgDonor } = useQuery(GET_ORG_DONOR, {
 		variables: { filter: { organization: DashBoardData?.organization?.id } },
 	});
 
@@ -287,7 +291,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	deliverableTragetLineForm[0].getInputValue = (targetId: string) => {
 		let subTargetOptions = deliverableTargets.deliverableSubTargets;
 		let subTarget = subTargetOptions.find((elem: any) => elem.id === targetId);
-		console.log("target", subTarget);
 		setIsQualitativeParentTarget(
 			subTarget?.deliverable_target_project?.is_qualitative || false
 		);
@@ -348,6 +351,21 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			},
 		},
 	});
+
+	const { data: fetchedOrganizationYear } = useQuery<any>(
+		GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR,
+		{
+			variables: { id: DashBoardData?.organization?.id },
+		}
+	);
+
+	const { data: fetchedDonorYear } = useQuery(GET_YEAR_TAG_DONOR_FINANCIAL_YEAR, {
+		variables: {
+			id: deliverableTargets?.deliverableSubTargets[0]?.donor?.id,
+			// id: 392,
+		},
+	});
+
 	let {
 		multiplefileMorph,
 		loading: uploadMorphLoading,
@@ -569,13 +587,17 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// }, [cachedProjectDonors, cachedOrganizationDonors]);
 
 	// updating financial year field with fetched financial year list
+	deliverableTragetLineForm[8].optionsArray = fetchedDonorYear?.yearTagDonor;
 	useEffect(() => {
-		if (lists?.financialYear) {
-			deliverableTragetLineForm[7].optionsArray = lists.financialYear; //fyData.financialYearList;
+		if (fetchedOrganizationYear?.yearTagOrganization) {
+			deliverableTragetLineForm[7].optionsArray =
+				fetchedOrganizationYear?.yearTagOrganization || []; //fyData.financialYearList;
+			// deliverableTragetLineForm[7].optionsArray = lists.financialYear; //fyData.financialYearList;
 		}
-		if (lists?.financialYear) {
-			deliverableTragetLineForm[8].optionsArray = lists.financialYear; //fyData.financialYearList;
-		}
+		// if (fetchedDonorYear?.yearTagDonor) {
+		//fyData.financialYearList;
+		// deliverableTragetLineForm[8].optionsArray = lists.financialYear; //fyData.financialYearList;
+		// }
 		if (lists?.annualYear) {
 			deliverableTragetLineForm[6].optionsArray = lists.annualYear; //annualYears.annualYears;
 		}
@@ -617,6 +639,12 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		delete (input as any).donors;
 		if (!input.annual_year) delete (input as any).annual_year;
 		if (!input.financial_year) delete (input as any).financial_year;
+		if (!input.deliverable_target_project) delete (input as any).deliverable_target_project;
+		if (!input.note) delete (input as any).note;
+		if (!input.timeperiod_end) delete (input as any).timeperiod_end;
+		if (!input.timeperiod_start) delete (input as any).timeperiod_start;
+		if (!input.financial_year_donor) delete (input as any).financial_year_donor;
+		if (!input.financial_year_org) delete (input as any).financial_year_org;
 
 		let donorsForTracklineDonorForm = getProjectDonorsWithDonorsId(
 			value.donors?.filter((item) => !!item),

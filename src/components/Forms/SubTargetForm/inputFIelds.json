@@ -34,7 +34,7 @@
 			"label": "Sub-Target Value",
 			"required": true,
 			"hidden": true,
-			"inputType": "textarea",
+			"inputType": "number",
 			"size": 6,
 			"type": "number"
 		},
@@ -91,7 +91,8 @@
 			"inputType": "select",
 			"required": true,
 			"addNew": true,
-			"addNewClick": {}
+			"addNewClick": {},
+			"getInputValue": {}
 		},
 		{
 			"name": "financial_year_donor",

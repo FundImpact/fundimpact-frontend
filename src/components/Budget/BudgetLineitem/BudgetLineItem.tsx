@@ -44,10 +44,15 @@ import AmountSpent from "../../Table/Budget/BudgetTargetTable/AmountSpent";
 import { GET_PROJECT_AMOUNT_SPEND } from "../../../graphql/project";
 import DeleteModal from "../../DeleteModal";
 import { useDocumentTableDataRefetch } from "../../../hooks/document";
-import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
+import {
+	GET_YEARTAGS,
+	GET_YEAR_TAG_DONOR_FINANCIAL_YEAR,
+	GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR,
+} from "../../../graphql/yearTags/query";
 import { YearTagPayload } from "../../../models/yearTags";
 import { GET_GRANT_PERIOD } from "../../../graphql";
 import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
+import { GET_ORG_DONOR } from "../../../graphql/donor";
 
 const defaultFormValues: IBudgetTrackingLineitemForm = {
 	amount: "",
@@ -185,11 +190,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		financialYear: [],
 	});
 
-	console.log("lists", lists);
-
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
 		onError: (err) => {
-			console.log("err", err);
+			// console.log("err", err);
 		},
 	});
 
@@ -305,6 +308,24 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	}, []);
 
 	const geoResponse = geoRegionsResponse?.data?.geoRegions;
+
+	const { data: fetchedOrganizationYear } = useQuery(GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR, {
+		variables: { id: dashboardData?.organization?.id },
+	});
+
+	const { data: orgDonor } = useQuery(GET_ORG_DONOR, {
+		variables: { filter: { organization: dashboardData?.organization?.id } },
+	});
+
+	const { data: fetchedDonorYear } = useQuery(GET_YEAR_TAG_DONOR_FINANCIAL_YEAR, {
+		variables: {
+			id: budgetTargets?.budgetSubTargets[0]?.donor?.id,
+		},
+	});
+
+	// useEffect(() => {
+	// 	getOrganizationYear({ variables: { id: dashboardData?.organization?.id } });
+	// }, [getOrganizationYear]);
 
 	budgetLineitemFormInputFields[9].optionsArray = geoResponse;
 
@@ -702,7 +723,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	// if (true) {
 	// if (financialYearOrg) {
-	budgetLineitemFormInputFields[7].optionsArray = lists.financialYear ? lists.financialYear : [];
+	budgetLineitemFormInputFields[7].optionsArray =
+		fetchedOrganizationYear?.yearTagOrganization || [];
+	// budgetLineitemFormInputFields[7].optionsArray = lists.financialYear ? lists.financialYear : [];
 	// }
 
 	if (currency?.currencyList?.length) {
@@ -716,9 +739,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	if (budgetTargets) {
 		budgetLineitemFormInputFields[0].optionsArray = budgetTargets.budgetSubTargets;
 	}
-	if (lists.financialYear) {
-		budgetLineitemFormInputFields[6].optionsArray = lists.financialYear;
-	}
+	// if (lists.financialYear) {
+	budgetLineitemFormInputFields[6].optionsArray = fetchedDonorYear?.yearTagDonor || [];
+	// budgetLineitemFormInputFields[6].optionsArray = lists.financialYear;
+	// }
 
 	// budgetLineitemFormInputFields[0].addNewClick = () => setOpenBudgetTargetDialog(true);
 	// budgetLineitemFormInputFields[8].addNewClick = () => setOpenGrantPeriodDialog(true);

@@ -33,6 +33,7 @@
 			"label": "Amount",
 			"size": 6,
 			"type": "number",
+			"inputType": "number",
 			"endAdornment": "",
 			"required": true
 		},

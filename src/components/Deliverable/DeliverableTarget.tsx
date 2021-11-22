@@ -52,28 +52,74 @@ function getInitialValues(props: DeliverableTargetProps) {
 		project: props.project,
 	};
 }
-function DeliverableTarget(props: DeliverableTargetProps) {
-	console.log("deliverableTargetForm", deliverableTargetForm[4]);
 
+function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
+	const types = props.formType;
+
+	console.log("types", types);
+	let deliverableId: number;
+	let outcomeId: number;
+	let outputId: number;
+	let impactId: number;
+	if (types === "deliverable") {
+		deliverableId = 6;
+	}
+	if (types === "outcome") {
+		outcomeId = 5;
+	}
+	if (types === "output") {
+		outputId = 4;
+	}
+	if (types === "impact") {
+		impactId = 3;
+	}
 
 	const { data: units } = useQuery(GET_UNIT);
 
-	console.log("units", units?.units);
+	let unitType: any = [];
+	units?.units?.forEach((elem: any) => {
+		if (elem.type) {
+			if (
+				deliverableId == elem.type ||
+				outcomeId == elem.type ||
+				outputId == elem.type ||
+				impactId == elem.type
+			) {
+				unitType.push(elem);
+			}
+		}
+	});
+
+	console.log("unitType", unitType);
 
 	const [getOutputsByProject, { data: outputsByProject }] = useLazyQuery(
 		GET_DELIVERABLE_TARGET_BY_PROJECT
 	); // for fetching outputs by project
 
-	const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
-		variables: { filter: { organization: dashboardData?.organization?.id } },
-	});
+	// const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
+	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
+	// });
 
 	const { data: categories } = useQuery(GET_CATEGORIES);
 
-	console.log("categories", categories?.categories);
+	let categoryType: any = [];
+	categories?.categories.forEach((elem: any) => {
+		if (elem.type) {
+			if (
+				deliverableId == elem.type ||
+				outcomeId == elem.type ||
+				outputId == elem.type ||
+				impactId == elem.type
+			) {
+				categoryType.push(elem);
+			}
+		}
+	});
+
+	console.log("categoryType", categoryType);
 
 	// const [currentCategory, setcurrentCategory] = useState<any>();
 	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
@@ -431,13 +477,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	useEffect(() => {
 		if (categories) {
-			deliverableTargetForm[2].optionsArray = categories?.categories;
+			deliverableTargetForm[2].optionsArray = categoryType;
+			// deliverableTargetForm[2].optionsArray = categories?.categories;
 		}
 	}, [categories]);
 
 	useEffect(() => {
 		if (units) {
-			deliverableTargetForm[3].optionsArray = units?.units;
+			deliverableTargetForm[3].optionsArray = unitType;
+			// deliverableTargetForm[3].optionsArray = units?.units;
 		}
 	}, [units]);
 	// useEffect(() => {
@@ -454,8 +502,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			});
 		}
 	}, [dashboardData, getUnitsByOrg]);
-
-	console.log("props.tyep: ", props.formType);
 
 	useEffect(() => {
 		if (dashboardData?.project?.id) {
@@ -486,7 +532,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 	const onCreate = async (value: IDeliverableTarget) => {
-		console.log("Create: ", value);
 		let options = value?.value_qualitative_option?.split(",") || [];
 		options = options.map((elem: string) => ({ id: uuidv4(), name: elem.trim() }));
 

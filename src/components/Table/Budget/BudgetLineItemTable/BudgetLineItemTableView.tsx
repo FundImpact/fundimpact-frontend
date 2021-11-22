@@ -227,7 +227,8 @@ const chipArray = ({
 	));
 };
 
-const getNewAmountHeaderOfTable = (currency: string) => `Amount (${currency})`;
+const getNewAmountHeaderOfTable = (currency: string) => `Amount`;
+// const getNewAmountHeaderOfTable = (currency: string) => `Amount (${currency})`;
 
 const createChipArray = ({
 	filterListObjectKeyValuePair,

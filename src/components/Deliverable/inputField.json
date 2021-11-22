@@ -236,6 +236,7 @@
 			"testId": "deliverableTracklineValueInput",
 			"label": "Value",
 			"type": "number",
+			"inputType": "number",
 			"size": 6,
 			"required": true
 		},
@@ -250,7 +251,6 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"required": true,
 			"hidden": true,
 			"size": 6
 		},
@@ -261,8 +261,7 @@
 			"testId": "deliverableTracklineDateInput",
 			"label": "Start Date",
 			"type": "date",
-			"size": 6,
-			"required": true
+			"size": 6
 		},
 		{
 			"name": "timeperiod_end",
@@ -271,8 +270,7 @@
 			"testId": "deliverableTracklineDateInput",
 			"label": "End Date",
 			"type": "date",
-			"size": 6,
-			"required": true
+			"size": 6
 		},
 		{
 			"name": "reporting_date",
@@ -296,8 +294,7 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true
+			"inputType": "select"
 		},
 		{
 			"name": "financial_year_org",
@@ -310,8 +307,7 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true
+			"inputType": "select"
 		},
 		{
 			"name": "financial_year_donor",
@@ -324,8 +320,7 @@
 			"inputLabelId": "demo-simple-select-outlined-label",
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
-			"inputType": "select",
-			"required": true
+			"inputType": "select"
 		},
 		{
 			"name": "note",
@@ -335,8 +330,7 @@
 			"label": "Note",
 			"multiline": true,
 			"rows": 2,
-			"size": 12,
-			"required": true
+			"size": 12
 		},
 		{
 			"name": "attachfiles",

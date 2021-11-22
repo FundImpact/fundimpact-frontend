@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -20,11 +20,14 @@ import {
 } from "../../graphql/Deliverable/unit";
 import { setErrorNotification, setSuccessNotification } from "../../reducers/notificationReducer";
 import { compareObjectKeys, removeEmptyKeys } from "../../utils";
+import { GET_CATEGORY_TYPES } from "../../graphql/Category/query";
 
 const defaultFormValues: IUnits = {
 	name: "",
 	code: "",
 	description: "",
+	type: "",
+	project_id: "",
 };
 
 const validate = (values: IUnits) => {
@@ -44,6 +47,8 @@ function Unit(props: IUnitProps) {
 
 	const [getProjects, { data: projectsList }] = useLazyQuery(GET_PROJECTS);
 
+	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
+
 	useEffect(() => {
 		getProjects();
 	}, []);
@@ -52,10 +57,18 @@ function Unit(props: IUnitProps) {
 		if (projectsList) {
 			addUnitForm[5].optionsArray = projectsList.orgProject;
 		}
-	}, [projectsList]);
+		if (deliverableTypesList) {
+			addUnitForm[3].optionsArray = deliverableTypesList?.deliverableTypes;
+		}
+	}, [projectsList, deliverableTypesList]);
+	// }, [projectsList]);
 
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+
+	const formAction = props.formAction;
+
+	const formValues = props.initialValues;
 
 	console.log("props.formAction", initialValues);
 
@@ -68,6 +81,7 @@ function Unit(props: IUnitProps) {
 			let values = valuesSubmitted;
 			console.log("create values", values);
 			delete values.is_project;
+			if (!values.project_id) delete values.project_id;
 			// delete values.project_id;
 			await createUnit({
 				variables: {
@@ -203,6 +217,22 @@ function Unit(props: IUnitProps) {
 				title="Delete Unit"
 			/>
 		);
+	}
+
+	console.log("formValues", formValues);
+
+	if (!formValues?.project_id && formAction === "UPDATE") {
+		addUnitForm[4].hidden = true;
+		addUnitForm[5].hidden = true;
+	}
+
+	if (formValues?.project_id && formAction === "UPDATE") {
+		addUnitForm[5].disabled = true;
+		addUnitForm[4].hidden = false;
+	}
+	if (formAction === "CREATE") {
+		addUnitForm[4].hidden = false;
+		addUnitForm[5].disabled = false;
 	}
 
 	return (

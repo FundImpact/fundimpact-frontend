@@ -361,7 +361,7 @@ function GrantPeriodDialog({ open, onClose, action, dialogType, ...rest }: Grant
 				},
 			});
 			notificationDispatch(setSuccessNotification("Grant Period Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			onClose();

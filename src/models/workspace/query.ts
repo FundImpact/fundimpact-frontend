@@ -9,6 +9,7 @@ export interface IOrganisationWorkspaces {
 	name: string;
 	__typename: string;
 	organization: IOrganisation;
+	logframe_tracker: boolean;
 }
 
 export interface IUPDATE_WORKSPACE_Response {

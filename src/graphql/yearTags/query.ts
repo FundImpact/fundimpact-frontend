@@ -31,6 +31,49 @@ export const GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID = gql`
 				name
 				code
 			}
+			year_tag {
+				id
+				created_at
+				updated_at
+				type
+				name
+			}
 		}
 	}
 `;
+
+export const GET_YEAR_TAG_DONOR_FINANCIAL_YEAR = gql`
+	query yearTagDonor($id: ID!) {
+		yearTagDonor(id: $id) {
+			id
+			name
+			type
+			start_date
+			end_date
+		}
+	}
+`;
+
+export const GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR = gql`
+	query yearTagOrganization($id: ID!) {
+		yearTagOrganization(id: $id) {
+			id
+			name
+			type
+			start_date
+			end_date
+		}
+	}
+`;
+
+// export const GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID = gql`
+// 	query yearTagCountries($sort: String, $limit: Int, $start: Int, $filter: JSON) {
+// 		yearTagsCountries(sort: $sort, limit: $limit, start: $start, where: $filter) {
+// 			country {
+// 				id
+// 				name
+// 				code
+// 			}
+// 		}
+// 	}
+// `;

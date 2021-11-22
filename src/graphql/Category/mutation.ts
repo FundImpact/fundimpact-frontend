@@ -28,6 +28,10 @@ export const CREATE_CATEGORY = gql`
 				code
 				description
 				type
+				project_id {
+					id
+					name
+				}
 			}
 		}
 	}

@@ -22,7 +22,12 @@ import {
 	GET_PROJECT_BUDGET_AMOUNT,
 	GET_PROJ_DONORS,
 } from "../../../graphql/project";
-import { GET_YEARTAGS } from "../../../graphql/yearTags/query";
+import {
+	GET_YEARTAGS,
+	GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID,
+	GET_YEAR_TAG_DONOR_FINANCIAL_YEAR,
+	GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR,
+} from "../../../graphql/yearTags/query";
 import { YearTagPayload } from "../../../models/yearTags";
 import { IGetProjectDonor, IProjectDonor } from "../../../models/project/project";
 import { GET_ORG_DONOR } from "../../../graphql/donor";
@@ -52,11 +57,11 @@ import { CREATE_PROJECT_DONOR, UPDATE_PROJECT_DONOR } from "../../../graphql/don
 import { updateProjectDonorCache } from "../../Project/Project";
 import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
+import BudgetTarget from "../../../components/Budget/BudgetTarget";
 
 function getInitialValues(props: SubTargetFormProps) {
-	console.log("props", props);
-
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
+
 	return {
 		budget_targets_project: props?.target,
 		deliverable_target_project: props?.target,
@@ -119,8 +124,6 @@ function SubTarget(props: SubTargetFormProps) {
 	);
 
 	const [targetValueOptions, setTargetValueOptions] = useState(props.targetValueOptions || []);
-
-	console.log("targetValueOptions", targetValueOptions);
 
 	useEffect(() => {
 		if (isQualitativeParent) {
@@ -196,17 +199,32 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const [currentDonor, setCurrentDonor] = useState<null | string | number>(null);
 
-	const [geoRegions, setGeoRegions] = useState<null | string | number>(null);
-
-	console.log("geoRegions", geoRegions);
+	budgetSubTargetFormList[6].getInputValue = (donorId: string) => {
+		setCurrentDonor(donorId);
+	};
 
 	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
+	// const [getDonorYear, { data: fetchedDonorYear }] = useLazyQuery<any>(
+	// 	GET_YEAR_TAG_DONOR_FINANCIAL_YEAR
+	// );
+
+	const { data: fetchedDonorYear } = useQuery(GET_YEAR_TAG_DONOR_FINANCIAL_YEAR, {
+		variables: {
+			id: currentDonor,
+		},
+	});
 
 	useEffect(() => {
 		getGeoRegions();
 	}, []);
 
+	// useEffect(() => {
+	// 	getDonorYear({ variables: { id: currentDonor } });
+	// }, [getDonorYear]);
+
 	const geoResponse = geoRegionsResponse?.data?.geoRegions;
+
+	budgetSubTargetFormList[11].optionsArray = geoResponse;
 
 	// const [getGeoregions, geoResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
 
@@ -215,8 +233,6 @@ function SubTarget(props: SubTargetFormProps) {
 	// }, []);
 
 	// const getResponseData = geoResponse;
-
-	// console.log("getResponseData", getResponseData);
 
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
 		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
@@ -231,11 +247,9 @@ function SubTarget(props: SubTargetFormProps) {
 		financialYear: [],
 	});
 
-	console.log("lists", lists);
-
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
 		onError: (err) => {
-			console.log("err", err);
+			// console.log("err", err);
 		},
 	});
 
@@ -268,7 +282,15 @@ function SubTarget(props: SubTargetFormProps) {
 	let projectDonors: IGetProjectDonor | null = null;
 
 	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
+	// const [donorYearValue, setDonorYearValue] = React.useState();
 	budgetSubTargetFormList[6].addNewClick = () => setOpenDonorDialog(true);
+	// budgetSubTargetFormList[6].getInputValue = (value: any) => {
+	// 	console.log("currentValue", value);
+	// 	setDonorYearValue(value);
+	// };
+
+	const [openTargetDialog, setOpenTargetDialog] = React.useState<boolean>();
+	budgetSubTargetFormList[0].addNewClick = () => setOpenTargetDialog(true);
 
 	try {
 		projectDonors = apolloClient.readQuery<IGetProjectDonor>(
@@ -282,9 +304,11 @@ function SubTarget(props: SubTargetFormProps) {
 		console.error(error);
 	}
 
-	let orgDonors: IGET_DONOR | null = null;
+	let orgDonors: any | null = null;
+	// let orgDonors: IGET_DONOR | null = null;
 	try {
-		orgDonors = apolloClient.readQuery<IGET_DONOR>(
+		orgDonors = apolloClient.readQuery<any>(
+			// orgDonors = apolloClient.readQuery<IGET_DONOR>(
 			{
 				query: GET_ORG_DONOR,
 				variables: { filter: { organization: dashboardData?.organization?.id } },
@@ -295,10 +319,81 @@ function SubTarget(props: SubTargetFormProps) {
 		console.error(error);
 	}
 
-	// const { data: projectDonors } = useQuery(GET_PROJ_DONORS, {
-	// 	variables: { filter: { project: dashboardData?.project?.id, deleted: false }
+	const [getOrganizationYear, { data: fetchedOrganizationYear }] = useLazyQuery<any>(
+		GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR
+	);
 
-	// },
+	useEffect(() => {
+		getOrganizationYear({ variables: { id: dashboardData?.organization?.id } });
+	}, [getOrganizationYear]);
+
+	// const { data: yearTagsCountry } = useQuery(GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID);
+
+	// console.log("yearTag", yearTagsCountry);
+
+	// let filterDonorYearData: any = [];
+	// let filterOrgYearData: any = [];
+
+	// useEffect(() => {
+	// 	const yearTagData = yearTags?.yearTags;
+	// 	let filterDonorYearData: any = [];
+	// 	let filterOrgYearData: any = [];
+	// 	let arr: any = [];
+
+	// 	yearTagsCountry?.yearTagsCountries?.filter((obj: any) => {
+	// 		orgDonors?.orgDonors?.forEach((org: any) => {
+	// 			if (org.country) {
+	// 				if (obj?.country?.id === org.country.id) {
+	// 					arr.push(obj?.year_tag);
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+	// 	let newArr = arr.filter(
+	// 		(v: any, i: any, a: any) => a.findIndex((t: any) => t.id === v.id) === i
+	// 	);
+
+	// 	for (let i = 0; i < yearTagData?.length; i++) {
+	// 		// filterOrgYearData.push(...newArr.filter((obj: any) => obj.id !== yearTagData[i].id));
+	// 		filterDonorYearData.push(...newArr.filter((obj: any) => obj.id === yearTagData[i].id));
+	// 		// newArr.forEach((obj: any) => {
+	// 		// 	if (yearTagData[i].id === obj?.id) {
+	// 		// 		console.log("obj1", obj);
+	// 		// 	}
+	// 		// 	if (yearTagData[i].id !== obj?.id) {
+	// 		// 		if (yearTagData[i].type === "financial") {
+	// 		// 			console.log("obj2");
+	// 		// 		}
+	// 		// 	}
+	// 		// });
+	// 	}
+
+	// 	for (let i = 0; i < lists.financialYear?.length; i++) {
+	// 		filterOrgYearData.push(
+	// 			...newArr.filter((obj: any) => obj.id !== lists.financialYear[i].id)
+	// 		);
+	// 	}
+
+	// 	// yearTags?.yearTags?.filter((data: any) => {
+	// 	// 	// newArr.filter((data: any) => {
+	// 	// 	newArr.forEach((yearData: any) => {
+	// 	// 		// yearTags?.yearTags?.forEach((yearData: any) => {
+	// 	// 		if (data?.id === yearData?.id) {
+	// 	// 			filterDonorYearData.push(data);
+	// 	// 		}
+	// 	// 		if (data?.id !== yearData?.id && data?.type === "financial") {
+	// 	// 			// filterOrgYearData.push(data);
+	// 	// 			console.log("lkjdsf");
+	// 	// 		}
+	// 	// 	});
+	// 	// });
+	// 	console.log("org.country", filterDonorYearData, filterOrgYearData);
+	// }, [yearTags, yearTagsCountry, orgDonors]);
+
+	// console.log("yearTags?.yearTags", yearTags?.yearTags, newArr);
+
+	// const { data: projectDonors } = useQuery(GET_PROJ_DONORS, {
+	// 	variables: { filter: { project: dashboardData?.project?.id, deleted: false } },
 	// });
 
 	// const { data: orgDonors } = useQuery(GET_ORG_DONOR, {
@@ -361,20 +456,6 @@ function SubTarget(props: SubTargetFormProps) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectDonors, props]);
 
-	budgetSubTargetFormList[11].optionsArray = useMemo(() => {
-		let geoRegionsArray: any = [];
-		if (geoResponse) {
-			geoResponse.forEach((elem: any) => {
-				geoRegionsArray.push({
-					...elem,
-					id: elem.id,
-					name: elem.name,
-				});
-			});
-		}
-		return geoRegionsArray;
-	}, [geoResponse, props]);
-
 	budgetSubTargetFormList[6].secondOptionsArray = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
 		if (projectDonors && orgDonors) {
@@ -397,13 +478,8 @@ function SubTarget(props: SubTargetFormProps) {
 
 	useMemo(() => {
 		if (props.formAction === FORM_ACTIONS.UPDATE) {
-			console.log("pppp", props?.data);
-
 			if (props?.data?.donor) {
 				setCurrentDonor(props?.data?.donor || "");
-			}
-			if (props?.data?.geo_region_id) {
-				setGeoRegions(props?.data?.geo_region_id || "");
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,16 +498,15 @@ function SubTarget(props: SubTargetFormProps) {
 
 	budgetSubTargetFormList[3].optionsArray = targetValueOptions;
 
-	budgetSubTargetFormList[6].getInputValue = (donorId: string) => {
-		setCurrentDonor(donorId);
-	};
-	budgetSubTargetFormList[7].optionsArray = lists.financialYear;
-	budgetSubTargetFormList[9].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[7].optionsArray = fetchedDonorYear?.yearTagDonor;
+	// budgetSubTargetFormList[7].optionsArray = lists.financialYear;
+	budgetSubTargetFormList[9].optionsArray = fetchedOrganizationYear?.yearTagOrganization;
+	// budgetSubTargetFormList[9].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[10].optionsArray = lists.annualYear;
 	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 		grantPeriods,
 	]);
-	// budgetSubTargetFormList[11].optionsArray = geoResponse;4
+	// budgetSubTargetFormList[11].optionsArray = geoResponse;
 
 	// if (formAction === FORM_ACTIONS.UPDATE) {
 	// 	budgetSubTargetFormList[11].optionsArray = geoResponse;
@@ -550,6 +625,7 @@ function SubTarget(props: SubTargetFormProps) {
 
 	const updateSubTargetHelper = async (subTargetValues: ISubTarget) => {
 		let subTargetId = subTargetValues.id;
+
 		delete (subTargetValues as any).id;
 
 		let projectSubTargetsQueryFilter = undefined;
@@ -615,7 +691,14 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let initialValues: any = getInitialValues(props);
 
-	console.log("initialValues", initialValues);
+	// console.log("initialValues", initialValues);
+
+	// budgetSubTargetFormList[2].getInputValue = (value: number) => {
+	// 	if (value < 0) {
+	// 		alert("enter a valid Number");
+	// 		return value;
+	// 	}
+	// };
 
 	const checkValuesToDelete = (value: ISubTarget) => {
 		let values = { ...value };
@@ -749,8 +832,6 @@ function SubTarget(props: SubTargetFormProps) {
 	// 	console.log("budgetSubTargetFormList[8]: ", budgetSubTargetFormList[8].optionsArray);
 	// }, [budgetSubTargetFormList[8].optionsArray]);
 
-	console.log("budgetSubTargetFormList", budgetSubTargetFormList[11].optionsArray);
-
 	return (
 		<React.Fragment>
 			<FormDialog
@@ -793,6 +874,13 @@ function SubTarget(props: SubTargetFormProps) {
 						handleClose={() => setOpenDonorDialog(false)}
 						dialogType={DONOR_DIALOG_TYPE.PROJECT}
 						projectId={`${dashboardData?.project?.id}`}
+					/>
+				)}
+				{openTargetDialog && (
+					<BudgetTarget
+						open={openTargetDialog}
+						formAction={FORM_ACTIONS.CREATE}
+						handleClose={() => setOpenTargetDialog(false)}
 					/>
 				)}
 			</FormDialog>

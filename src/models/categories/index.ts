@@ -15,7 +15,8 @@ export interface ICategory {
 	description: string | null;
 	type: string | null;
 	is_project: boolean;
-	project_id?: ProjectId;
+	project_id?: string;
+	// project_id?: ProjectId | number;
 	deliverable_type_id?: DeliverableType | null;
 }
 

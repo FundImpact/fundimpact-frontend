@@ -3,7 +3,7 @@ import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 export interface IGeoRegions {
 	id?: string;
 	name: string;
-	project_id: any;
+	project_id: string;
 	is_project: any;
 	description?: string;
 	country_id?: string;
@@ -18,6 +18,10 @@ export type ProjectId = {
 	id: string;
 	name: string;
 };
+
+export interface IGET_GEO_REGIONS {
+	orgGeoRegions: Partial<IGeoRegions>[];
+}
 
 export type IGeoRegionsProps =
 	| {

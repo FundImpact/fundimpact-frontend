@@ -108,6 +108,7 @@ export interface IGeoregionInputField {
 	getInputValue?: any;
 	multiple?: boolean;
 	hidden?: boolean;
+	disabled?: boolean;
 }
 
 export interface IInputFields {
@@ -143,6 +144,7 @@ export interface IInputFields {
 	addNewClick?: (() => void) | null;
 	helperText?: string | React.ReactNode;
 	position?: string;
+	min?: number;
 }
 
 export interface ISelectField {

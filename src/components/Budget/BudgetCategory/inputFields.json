@@ -50,7 +50,6 @@
 			"selectLabelId": "demo-simple-select-outlined-label",
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
-			"getInputValue": {},
 			"disabled": false,
 			"required": false,
 			"hidden": true,

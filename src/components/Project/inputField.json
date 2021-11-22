@@ -6,7 +6,8 @@
 			"dataTestId": "createProjectName",
 			"testId": "createProjectNameInput",
 			"label": "Name",
-			"size": 12
+			"size": 12,
+			"required": true
 		},
 		{
 			"name": "workspace",
@@ -20,7 +21,8 @@
 			"selectId": "demo-simple-select-outlined-1",
 			"inputType": "select",
 			"disabled": false,
-			"size": 12
+			"size": 12,
+			"required": true
 		},
 		{
 			"name": "short_name",
@@ -53,7 +55,8 @@
 			"inputType": "select",
 			"multiple": true,
 			"addNewClick": {},
-			"addNew": true
+			"addNew": true,
+			"required": true
 		},
 		{
 			"name": "attachfiles",
