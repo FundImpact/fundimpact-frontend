@@ -1,5 +1,5 @@
 import { DELIVERABLE_ACTIONS } from "../../components/Deliverable/constants";
-import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 
 export enum ValueCalculations {
 	SUM = "sum",
@@ -21,17 +21,26 @@ export interface IDeliverableTarget {
 
 export type DeliverableTargetProps = {
 	open: boolean;
-	handleClose: () => void;
 	project: number | undefined;
 	formType: DELIVERABLE_TYPE;
 	dialogType?: DIALOG_TYPE;
 } & (
 	| {
+			open: boolean;
+			handleClose: () => void;
+			project: number | undefined;
 			type: DELIVERABLE_ACTIONS.CREATE;
+			formType: DELIVERABLE_TYPE;
+			dialogType?: DIALOG_TYPE;
 	  }
 	| {
+			open: boolean;
+			handleClose: () => void;
+			project: number | undefined;
 			type: DELIVERABLE_ACTIONS.UPDATE;
 			data: IDeliverableTarget;
 			value_qualitative_option: { id: string; name: string }[];
+			formType: DELIVERABLE_TYPE;
+			dialogType?: DIALOG_TYPE;
 	  }
 );

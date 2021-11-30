@@ -10,8 +10,6 @@ function GeoRegionsMasterContainer() {
 		description: "",
 	});
 
-	console.log("tableFilterList", tableFilterList);
-
 	const removeFilteListElements = (elementToDelete: keyof { [key: string]: string }) => {
 		setTableFilterList((filterListObject) => {
 			filterListObject[elementToDelete] = "";

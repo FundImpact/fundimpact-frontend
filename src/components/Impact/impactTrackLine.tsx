@@ -72,9 +72,9 @@ const FormDetailsCalculate = React.memo(
 			},
 			fetchPolicy: getFetchPolicy(),
 		});
-		const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
-			variables: { filter: { impactTargetProject: currentTargetId } },
-		});
+		// const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
+		// 	variables: { filter: { impactTargetProject: currentTargetId } },
+		// });
 
 		const intl = useIntl();
 		let impactCategoryLabel = intl.formatMessage({
@@ -104,10 +104,10 @@ const FormDetailsCalculate = React.memo(
 						label: impactTotalTargetLabel,
 						value: `${fetchedImpactTarget.target_value} ${fetchedImpactTarget?.impact_units_org?.name}`,
 					},
-					{
-						label: impactAchievedTargetLabel,
-						value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget?.impact_units_org?.name}`,
-					},
+					// {
+					// 	label: impactAchievedTargetLabel,
+					// 	value: `${achivedValue?.impactTrackingSpendValue} ${fetchedImpactTarget?.impact_units_org?.name}`,
+					// },
 			  ]
 			: [];
 
@@ -555,12 +555,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				// 		filter: { impact_target_project: value.impact_target_project },
 				// 	},
 				// },
-				{
-					query: GET_ACHIEVED_VALLUE_BY_TARGET,
-					variables: {
-						filter: { impactTargetProject: value.impact_target_project },
-					},
-				},
+				// {
+				// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+				// 	variables: {
+				// 		filter: { impactTargetProject: value.impact_target_project },
+				// 	},
+				// },
 				{
 					query: GET_ALL_IMPACT_AMOUNT_SPEND,
 					variables: {
@@ -612,12 +612,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 				// 			filter: { impact_target_project: value.impact_target_project },
 				// 		},
 				// 	},
-				{
-					query: GET_ACHIEVED_VALLUE_BY_TARGET,
-					variables: {
-						filter: { impactTargetProject: value.impact_target_project },
-					},
-				},
+				// {
+				// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+				// 	variables: {
+				// 		filter: { impactTargetProject: value.impact_target_project },
+				// 	},
+				// },
 				{
 					query: GET_ALL_IMPACT_AMOUNT_SPEND,
 					variables: {
@@ -663,12 +663,12 @@ function ImpactTrackLine(props: ImpactTargetLineProps) {
 					},
 				},
 				refetchQueries: [
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { impactTargetProject: initialValues?.impact_target_project },
-						},
-					},
+					// {
+					// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					// 	variables: {
+					// 		filter: { impactTargetProject: initialValues?.impact_target_project },
+					// 	},
+					// },
 					{
 						query: GET_ALL_IMPACT_AMOUNT_SPEND,
 						variables: {

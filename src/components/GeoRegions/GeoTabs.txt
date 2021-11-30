@@ -19,6 +19,11 @@ import { GET_BLOCK_DATA } from "../../graphql/Geographies/GeographiesBlock";
 import { GET_DISTRICT_DATA } from "../../graphql/Geographies/GeographiesDistrict";
 import { GET_GRAMPANCHAYAT_DATA } from "../../graphql/Geographies/GeographiesGrampanchayat";
 import { GET_VILLAGE_DATA } from "../../graphql/Geographies/GeographiesVillage";
+// import { DIALOG_TYPE, FORM_ACTIONS } from "../../../models/constants";
+import CountryDropDown from "./CountryDropDown";
+import { IGeoRegionDropDown } from "../../models/GeoRegions";
+import { FORM_ACTIONS } from "../../models/constants";
+import AddButton from "../Dasboard/AddButton";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -56,6 +61,10 @@ function a11yProps(index: number) {
 function GeoTabs() {
 	const [age, setAge] = React.useState("");
 	const [value, setValue] = React.useState(0);
+	const [country, setCountry] = React.useState();
+	const [state, setState] = React.useState();
+
+	console.log("ccc", state);
 
 	const { data: countries } = useQuery(GET_COUNTRY_DATA);
 	const { data: states } = useQuery(GET_STATE_DATA);
@@ -66,21 +75,60 @@ function GeoTabs() {
 
 	console.log("countries", villages?.villages);
 
+	const countrySelectChange = (event: React.ChangeEvent<any>) => {
+		const enteredCountry: any = event.target.value;
+		setCountry(enteredCountry);
+	};
+
+	const stateSelectChange = (event: React.ChangeEvent<any>) => {
+		const enteredState: any = event.target.value;
+		setState(enteredState);
+	};
+
 	let countryDropDown: any = (
-		<FormControl fullWidth>
-			<InputLabel id="country-select-label">Country</InputLabel>
-			<Select
-				labelId="country-select-label"
-				id="country-simple-select"
-				value={age}
-				label="Country"
-				// onChange={selectChange}
-			>
-				{countries?.countries.map((country: any) => (
-					<MenuItem value={country.id}>{country.name}</MenuItem>
-				))}
-			</Select>
-		</FormControl>
+		// <FormControl fullWidth>
+		// 	<InputLabel id="country-select-label">Country</InputLabel>
+		// 	<Select
+		// 		labelId="country-select-label"
+		// 		id="country-simple-select"
+		// 		value={country}
+		// 		label="Country"
+		// 		onChange={countrySelectChange}
+		// 	>
+		// 		{countries?.countries.map((country: any) => (
+		// 			<MenuItem value={country.id}>{country.name}</MenuItem>
+		// 		))}
+		// 	</Select>
+		// </FormControl>
+		<>
+			{FORM_ACTIONS.UPDATE ? (
+				<CountryDropDown
+					initialValues={{
+						country_id: "",
+					}}
+					formAction={FORM_ACTIONS.UPDATE}
+				/>
+			) : (
+				<AddButton
+					createButtons={[]}
+					buttonAction={{
+						dialog: ({
+							open,
+							handleClose,
+						}: {
+							open: boolean;
+							handleClose: () => void;
+						}) => (
+							<CountryDropDown
+								open={open}
+								handleClose={handleClose}
+								formAction={FORM_ACTIONS.CREATE}
+							/>
+						),
+					}}
+				/>
+			)}
+		</>
 	);
 
 	let StateDropDown: any = (
@@ -89,9 +137,9 @@ function GeoTabs() {
 			<Select
 				labelId="state-select-label"
 				id="state-simple-select"
-				value={age}
+				value={state}
 				label="State"
-				// onChange={selectChange}
+				onChange={stateSelectChange}
 			>
 				{states?.states.map((state: any) => (
 					<MenuItem value={state.id}>{state.name}</MenuItem>

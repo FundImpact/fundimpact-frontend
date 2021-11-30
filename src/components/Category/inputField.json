@@ -28,7 +28,7 @@
 		},
 		{
 			"name": "type",
-			"label": "Category Type",
+			"label": "Deliverable Type",
 			"size": 6,
 			"testId": "cat_typeOption",
 			"dataTestId": "cat_type",

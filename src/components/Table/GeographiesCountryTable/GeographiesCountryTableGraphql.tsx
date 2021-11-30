@@ -142,8 +142,6 @@ function GoegraphiesCountryTableGraphql({
 		refetchDeliverableCategoryOnDeliverableCategoryImport,
 	]);
 
-	console.log("geographyCountry?.countries", geographyCountry?.countries);
-
 	return (
 		<GeographiesCountryTableContainer
 			geographiesCountryList={geographyCountry?.countries || []}

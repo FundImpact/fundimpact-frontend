@@ -306,7 +306,10 @@ export const GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET = gql`
 				deliverable_target_project {
 					id
 					name
-					type
+					type {
+						id
+						name
+					}
 					is_qualitative
 					sub_target_required
 					value_calculation

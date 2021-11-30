@@ -17,12 +17,8 @@ export const CREATE_ORG_BUDGET_CATEGORY = gql`
 export const CREATE_PROJECT_BUDGET_TARGET = gql`
 	mutation createProjectBudgetTarget($input: BudgetTargetsProjectInput!) {
 		createProjectBudgetTarget(input: $input) {
-			id
 			name
 			total_target_amount
-			budget_category_organization {
-				name
-			}
 		}
 	}
 `;
@@ -100,9 +96,13 @@ export const UPDATE_PROJECT_BUDGET_TRACKING = gql`
 export const UPDATE_PROJECT_BUDGET_TARGET = gql`
 	mutation updateProjectBudgetTarget($id: ID!, $input: BudgetTargetsProjectInput!) {
 		updateProjectBudgetTarget(id: $id, input: $input) {
-			id
 			name
+			description
 			total_target_amount
+			budget_category_organization {
+				id
+				name
+			}
 			project {
 				name
 			}
@@ -215,10 +215,6 @@ export const CREATE_PROJECT_WITH_BUDGET_TARGET = gql`
 				id
 				created_at
 				updated_at
-				project {
-					id
-					name
-				}
 				budget_targets_project {
 					id
 					name

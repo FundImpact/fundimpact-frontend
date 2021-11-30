@@ -73,8 +73,6 @@ function Category(props: ICategoryProps) {
 
 	const formValues = props.initialValues;
 
-	console.log("formValues", formValues);
-
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
@@ -84,7 +82,6 @@ function Category(props: ICategoryProps) {
 			let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
 			delete values.is_project;
 			if (!values.project_id) delete values.project_id;
-			console.log("values Category", values);
 			await createCategory({
 				variables: {
 					input: { data: { ...values } },
@@ -98,7 +95,7 @@ function Category(props: ICategoryProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Year Tag Creation Success"));
+			notificationDispatch(setSuccessNotification("Category Creation Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {

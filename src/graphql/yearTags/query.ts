@@ -8,6 +8,7 @@ export const GET_YEARTAGS = gql`
 			type
 			start_date
 			end_date
+			country_id
 		}
 	}
 `;

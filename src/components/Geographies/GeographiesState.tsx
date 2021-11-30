@@ -66,8 +66,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	useEffect(() => {
 		getCountryDropdown();
 	}, []);
-	console.log("props", props);
-
 	GeographiesStateForm[2].optionsArray = countryDropdownResponse?.data?.countries;
 
 	const notificationDispatch = useNotificationDispatch();
@@ -85,8 +83,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	const [deleteGeographiesState] = useMutation(DELETE_GEOGRAPHIES_STATE);
 
 	let initialValues: IGeographiesState = getInitialValues(props);
-
-	console.log("initialValues", initialValues);
 
 	const onCreate = async (valueSubmitted: IGeographiesState) => {
 		const value = Object.assign({}, valueSubmitted);
@@ -177,7 +173,6 @@ function GeographiesState(props: GoegraphiesStateProps) {
 	};
 
 	const onUpdate = async (value: IGeographiesState) => {
-		console.log("Update", value);
 		try {
 			const id = value.id;
 

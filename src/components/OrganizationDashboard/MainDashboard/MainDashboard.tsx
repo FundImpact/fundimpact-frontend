@@ -305,7 +305,14 @@ export default function MainOrganizationDashboard() {
 
 	const [getProjects, { data: projectList, loading }] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE, {
 		fetchPolicy: "network-only",
+		// variables: {
+		// 	filter: {
+		// 		deleted: false,
+		// 	},
+		// },
 	});
+
+	console.log("main projectList", projectList);
 
 	const [redirectToDashboard, setRedirectToDashboard] = useState<boolean>(false);
 	const [showOrgOverview, setShowOrgOverview] = useState<boolean>(true);

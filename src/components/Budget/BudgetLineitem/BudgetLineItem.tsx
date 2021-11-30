@@ -11,6 +11,7 @@ import {
 	GET_PROJ_BUDGET_TRACINGS_COUNT,
 	GET_PROJECT_BUDGET_TARCKING,
 	GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
+	GET_BUDGET_TARGET_PROJECT,
 } from "../../../graphql/Budget";
 import {
 	CREATE_PROJECT_BUDGET_TRACKING,
@@ -234,9 +235,15 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		string | number | undefined
 	>("");
 
+	console.log("submittedBudgetTarget", submittedBudgetTarget);
+
 	const [selectedBudgetTarget, setSelectedBudgetTarget] = useState<
 		IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]
 	>();
+
+	const { data: budgetDataByProject } = useQuery(GET_BUDGET_TARGET_PROJECT);
+
+	console.log("budgetDataByProject", budgetDataByProject?.projectBudgetTargets);
 
 	const { refetch: budgetTrackingRefetch } = useQuery(GET_PROJECT_BUDGET_TARCKING, {
 		variables: {
@@ -476,6 +483,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	};
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
+		console.log("valuesSubmitted.budget_targets_project", valuesSubmitted);
 		let currentBudgetTarget = await getBudgetTargetBySubTarget(
 			apolloClient,
 			valuesSubmitted.budget_sub_target || ""

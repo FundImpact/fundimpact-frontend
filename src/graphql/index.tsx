@@ -67,10 +67,12 @@ export const GET_PROJECTS_BY_WORKSPACE = gql`
 			name
 			short_name
 			description
+			deleted
 			workspace {
 				id
 				name
 			}
+			logframe_tracker
 			attachments {
 				id
 				name

@@ -10,6 +10,7 @@ export const CREATE_PROJECT = gql`
 				name
 			}
 			logframe_tracker
+			description
 		}
 	}
 `;

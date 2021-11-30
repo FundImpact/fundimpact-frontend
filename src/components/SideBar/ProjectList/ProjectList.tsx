@@ -64,10 +64,6 @@ function ProjectEditButton({
 	});
 	const [projectDetails, setProjectDetails] = useState<any>();
 
-	// console.log("projectDetails", projectDetails);
-
-	// console.log("project project", project);
-
 	const [openUpdateForm, setOpenUpdateForm] = useState<boolean>(false);
 	useEffect(() => {
 		if (projDonors) {
@@ -80,7 +76,7 @@ function ProjectEditButton({
 				name: project.name,
 				short_name: project.short_name,
 				description: project.description,
-				workspace: project.workspace.id,
+				workspace: project?.workspace.id,
 				logframe_tracker: project.logframe_tracker,
 				donor: donorIds,
 				attachments: project.attachments,
@@ -131,6 +127,7 @@ export default function ProjectList({
 	};
 	const [openFormDialog, setOpenFormDialog] = React.useState<boolean>();
 	const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
+
 	let { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [isAnyActiveProject, setIsAnyActiveProject] = useState<boolean>(false);
@@ -152,8 +149,6 @@ export default function ProjectList({
 		MODULE_CODES.PEOJECT,
 		PROJECT_USER_ACCESS_ACTIONS.UPDATE_PROJECT
 	);
-
-	// console.log("daata", data);
 
 	return (
 		<>

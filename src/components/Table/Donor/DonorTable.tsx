@@ -209,8 +209,6 @@ function DonorTable({
 		getYearTags();
 	}, []);
 
-	console.log("donorCound: ", count);
-
 	const apolloClient = useApolloClient();
 
 	const refetchDonorTable = useCallback(() => {

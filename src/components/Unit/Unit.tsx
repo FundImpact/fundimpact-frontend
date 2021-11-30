@@ -70,8 +70,6 @@ function Unit(props: IUnitProps) {
 
 	const formValues = props.initialValues;
 
-	console.log("props.formAction", initialValues);
-
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
@@ -79,7 +77,6 @@ function Unit(props: IUnitProps) {
 	const onCreate = async (valuesSubmitted: IUnits) => {
 		try {
 			let values = valuesSubmitted;
-			console.log("create values", values);
 			delete values.is_project;
 			if (!values.project_id) delete values.project_id;
 			// delete values.project_id;
@@ -218,8 +215,6 @@ function Unit(props: IUnitProps) {
 			/>
 		);
 	}
-
-	console.log("formValues", formValues);
 
 	if (!formValues?.project_id && formAction === "UPDATE") {
 		addUnitForm[4].hidden = true;

@@ -32,8 +32,6 @@ const rows = [
 	{ valueAccessKey: "staus" },
 ];
 
-console.log("rows", rows);
-
 const chipArray = ({
 	arr,
 	chipName,

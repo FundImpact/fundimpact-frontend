@@ -46,9 +46,7 @@ const GeoRegionsMasterView = ({
 		BUDGET_CATEGORY_ACTIONS.FIND_BUDGET_CATEGORY
 	);
 
-	const filterObject = Object.entries(tableFilterList).map((e, i) => {
-		// console.log("eee", e);
-	});
+	const filterObject = Object.entries(tableFilterList).map((e, i) => {});
 
 	return (
 		<>

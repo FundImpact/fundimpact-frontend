@@ -81,8 +81,6 @@ const CategoriesTable = ({
 	const [openCategoryEditDialog, setOpenCategoryEditDialog] = useState<boolean>(false);
 	const [openCategoryDeleteDialog, setOpenCategoryDeleteDialog] = useState<boolean>(false);
 
-	console.log("selectedCategory", selectedCategory);
-
 	useEffect(() => {
 		let newFilterListObject: { [key: string]: string | string[] } = {};
 		for (let key in tableFilterList) {
@@ -111,8 +109,6 @@ const CategoriesTable = ({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-
-	console.log("categoryList", categoryList);
 
 	// useEffect(() => {
 	// 	if (deliverableCatCount?.aggregate?.count) {
@@ -224,7 +220,6 @@ const CategoriesTable = ({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{console.log("categories:", categoryList?.categories)}
 					{categoryList?.categories?.map((cat: ICategory, index: number) => (
 						<TableRow key={cat.id}>
 							<TableCell component="td" scope="row">

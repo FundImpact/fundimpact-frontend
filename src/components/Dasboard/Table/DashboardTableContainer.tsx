@@ -54,14 +54,13 @@ import ProjectTargets from "../../Forms/ProjectTargets";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_PROJECT_BY_ID } from "../../../graphql/project";
 import { IGetProjectById } from "../../../models/project/project";
+import { GET_CATEGORY_TYPES } from "../../../graphql/Category/query";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
 	index: any;
 	value: any;
 }
-
-console.log("DELIVERABLE_TYPE", DELIVERABLE_TYPE);
 
 function TabContent(props: TabPanelProps) {
 	const { children, value, index, ...other } = props;
@@ -153,6 +152,8 @@ const getTabToShow = (
 	return tabType.budgetTab;
 };
 
+let tabNumber: any;
+
 export default function DashboardTableContainer() {
 	// const { data, loading } = useQuery(GET_PROJECT_BY_ID);
 
@@ -175,8 +176,6 @@ export default function DashboardTableContainer() {
 	}, [dashboardData, getProject]);
 
 	const tabsShow = fetchedProject?.project?.logframe_tracker;
-
-	console.log("projectByIs", tabsShow);
 
 	const { refetchDocuments } = useDocumentTableDataRefetch({ projectDocumentRefetch: true });
 
@@ -262,8 +261,6 @@ export default function DashboardTableContainer() {
 		DELIVERABLE_TARGET_ACTIONS.FIND_DELIVERABLE_TARGET
 	);
 
-	console.log("deliverableTargetFindAccess", deliverableTargetFindAccess);
-
 	const deliverableTracklineCreateAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
@@ -306,15 +303,11 @@ export default function DashboardTableContainer() {
 
 	let orgDeliverableAccessArr = dashboardData?.organization?.deliverable_type?.types || [];
 
-	console.log("dashboardData?.organization?.deliverable_type", dashboardData?.organization);
-
 	// const organizationDeliverableAccess = orgDeliverableAccessArr.includes(
 	// 	DELIVERABLE_TYPE.DELIVERABLE
 	// );
 
 	const organizationDeliverableAccess: boolean = true;
-
-	console.log("organizationDeliverableAccess", organizationDeliverableAccess);
 
 	// const organizationImpactAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.IMPACT);
 	const organizationImpactAccess: boolean = true;
@@ -324,15 +317,42 @@ export default function DashboardTableContainer() {
 	// const organizationOutputAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.OUTPUT);
 	const organizationActivityAccess = orgDeliverableAccessArr.includes(DELIVERABLE_TYPE.ACTIVITY);
 
-	console.log(
-		"organizationImpactAccess",
-		organizationOutcomeAccess,
-		organizationImpactAccess,
-		impactTargetCreateAccess,
-		impactCategoryCreateAccess,
-		impactUnitCreateAccess,
-		impactTracklineCreateAccess
-	);
+	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
+
+	let typeVal: any;
+
+	for (let index = 0; index < deliverableTypesList?.deliverableTypes.length; index++) {
+		const elem = deliverableTypesList?.deliverableTypes[index];
+		if (elem.id == 6 && tabNumber == 1) {
+			typeVal = "deliverable";
+			// break;
+		} else if (elem.id == 5 && tabNumber == 3) {
+			typeVal = "outcome";
+			// break;
+		} else if (elem.id == 4 && tabNumber == 2) {
+			typeVal = "output";
+			// break;
+		} else if (elem.id == 3 && tabNumber == 4) {
+			typeVal = "impact";
+			// break;
+		}
+	}
+
+	// deliverableTypesList?.deliverableTypes?.map((elem: any) => {
+	// 	console.log("elemData", elem);
+	// 	debugger;
+	// 	if (elem.id == 6 && DELIVERABLE_TYPE.DELIVERABLE === "deliverable") {
+	// 		typeVal = "deliverable";
+	// 	} else if (elem.id == 5 && DELIVERABLE_TYPE.OUTCOME === "outcome") {
+	// 		typeVal = "outcome";
+	// 	} else if (elem.id == 4 && DELIVERABLE_TYPE.OUTPUT === "output") {
+	// 		typeVal = "output";
+	// 	} else if (elem.id == 3 && DELIVERABLE_TYPE.IMPACT === "impact") {
+	// 		typeVal = "impact";
+	// 	}
+	// });
+
+	// console.log("typeVal data", typeVal, DELIVERABLE_TYPE.DELIVERABLE, DELIVERABLE_TYPE.OUTCOME);
 
 	const tabs = [
 		{
@@ -439,7 +459,7 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Activities",
 				description: `This text will be show on tab for Deliverables`,
 			}),
-			table: <DeliverablesTable />,
+			table: <DeliverablesTable type={typeVal} />,
 			createButtons: [
 				{
 					text: intl.formatMessage({
@@ -450,7 +470,8 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
-							formType={DELIVERABLE_TYPE.DELIVERABLE}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.DELIVERABLE}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
@@ -469,7 +490,8 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.DELIVERABLE}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.DELIVERABLE}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -517,7 +539,8 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.DELIVERABLE}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.DELIVERABLE}
 						/>
 					),
 					createButtonAccess: deliverableTracklineCreateAccess,
@@ -533,7 +556,8 @@ export default function DashboardTableContainer() {
 							type={FORM_ACTIONS.UPDATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.DELIVERABLE}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.DELIVERABLE}
 						/>
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
@@ -554,7 +578,8 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Output",
 				description: `This text will be show on tab for output`,
 			}),
-			table: <DeliverablesTable type={DELIVERABLE_TYPE.OUTPUT} />,
+			table: <DeliverablesTable type={typeVal} />,
+			// table: <DeliverablesTable type={DELIVERABLE_TYPE.OUTPUT} />,
 			createButtons: [
 				{
 					text: intl.formatMessage({
@@ -565,7 +590,8 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
-							formType={DELIVERABLE_TYPE.OUTPUT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTPUT}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
@@ -584,7 +610,8 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.OUTPUT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTPUT}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -600,7 +627,8 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.OUTPUT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTPUT}
 						/>
 					),
 					createButtonAccess: deliverableTracklineCreateAccess,
@@ -616,7 +644,8 @@ export default function DashboardTableContainer() {
 							type={FORM_ACTIONS.UPDATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.OUTPUT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTPUT}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -638,7 +667,8 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Outcome",
 				description: `This text will be show on tab for Outcome`,
 			}),
-			table: <DeliverablesTable type={DELIVERABLE_TYPE.OUTCOME} />,
+			table: <DeliverablesTable type={typeVal} />,
+			// table: <DeliverablesTable type={DELIVERABLE_TYPE.OUTCOME} />,
 			createButtons: [
 				{
 					text: intl.formatMessage({
@@ -649,7 +679,8 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
-							formType={DELIVERABLE_TYPE.OUTCOME}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTCOME}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
@@ -668,7 +699,8 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.OUTCOME}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTCOME}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -684,7 +716,8 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.OUTCOME}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTCOME}
 						/>
 					),
 					createButtonAccess: deliverableTracklineCreateAccess,
@@ -700,7 +733,8 @@ export default function DashboardTableContainer() {
 							type={FORM_ACTIONS.UPDATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.OUTCOME}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.OUTCOME}
 						/>
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
@@ -722,7 +756,8 @@ export default function DashboardTableContainer() {
 				defaultMessage: "Goal",
 				description: `This text will be show on tab for Impact`,
 			}),
-			table: <DeliverablesTable type={DELIVERABLE_TYPE.IMPACT} />,
+			table: <DeliverablesTable type={typeVal} />,
+			// table: <DeliverablesTable type={DELIVERABLE_TYPE.IMPACT} />,
 			createButtons: [
 				{
 					text: intl.formatMessage({
@@ -733,7 +768,8 @@ export default function DashboardTableContainer() {
 					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
 						<DeliverableTarget
 							type={DELIVERABLE_ACTIONS.CREATE}
-							formType={DELIVERABLE_TYPE.IMPACT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.IMPACT}
 							open={open}
 							handleClose={handleClose}
 							project={dashboardData?.project?.id}
@@ -752,7 +788,8 @@ export default function DashboardTableContainer() {
 							formAction={FORM_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.IMPACT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.IMPACT}
 						/>
 					),
 					createButtonAccess: impactTargetCreateAccess,
@@ -800,7 +837,8 @@ export default function DashboardTableContainer() {
 							type={DELIVERABLE_ACTIONS.CREATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.IMPACT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.IMPACT}
 						/>
 					),
 					createButtonAccess: impactTracklineCreateAccess,
@@ -816,7 +854,8 @@ export default function DashboardTableContainer() {
 							type={FORM_ACTIONS.UPDATE}
 							open={open}
 							handleClose={handleClose}
-							formType={DELIVERABLE_TYPE.IMPACT}
+							formType={typeVal}
+							// formType={DELIVERABLE_TYPE.IMPACT}
 						/>
 					),
 					createButtonAccess: budgetTargetLineItemCreateAccess,
@@ -1113,6 +1152,7 @@ export default function DashboardTableContainer() {
 	// console.log("fundReceiptFindAccess", fundReceiptFindAccess);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+		tabNumber = newValue;
 		setValue(newValue);
 	};
 

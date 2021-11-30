@@ -165,12 +165,12 @@ function ImpactTarget(props: ImpactTargetProps) {
 							filter: { project: props.project },
 						},
 					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
-						variables: {
-							filter: { impactTargetProject: impactId },
-						},
-					},
+					// {
+					// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					// 	variables: {
+					// 		filter: { impactTargetProject: impactId },
+					// 	},
+					// },
 					{
 						query: GET_IMPACT_TARGET_SDG_COUNT,
 						variables: {

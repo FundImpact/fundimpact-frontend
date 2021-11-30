@@ -15,10 +15,24 @@ import { DELIVERABLE_TYPE } from "../../models/constants";
 const useRefetchOnDeliverableTargetImport = () => {
 	const apolloClient = useApolloClient();
 	const dashboardData = useDashBoardData();
+	// const refetchOnDeliverableTargetImport = (typeVal: any) => {
 	const refetchOnDeliverableTargetImport = (formType: DELIVERABLE_TYPE) => {
+		let typeVal: any;
+
+		if (formType === "deliverable") {
+			typeVal = 6;
+		} else if (formType === "outcome") {
+			typeVal = 5;
+		} else if (formType === "output") {
+			typeVal = 4;
+		} else if (formType === "impact") {
+			typeVal = 3;
+		}
+
 		apolloClient.query({
 			query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-			variables: { filter: { project: dashboardData?.project?.id, type: formType } },
+			variables: { filter: { project: dashboardData?.project?.id, type: typeVal } },
+			// variables: { filter: { project: dashboardData?.project?.id, type: formType } },
 			fetchPolicy: "network-only",
 		});
 		apolloClient.query({
@@ -27,7 +41,8 @@ const useRefetchOnDeliverableTargetImport = () => {
 				filter: {
 					project: dashboardData?.project?.id,
 					deliverable_target_project: {
-						type: formType,
+						type: typeVal,
+						// type: formType,
 					},
 				},
 			},

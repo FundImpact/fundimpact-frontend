@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
 
 import { useDashBoardData } from "../../contexts/dashboardContext";
@@ -15,12 +15,14 @@ import { useIntl } from "react-intl";
 import DeleteModal from "../DeleteModal";
 import { CREATE_YEAR_TAG, DELETE_YEAR_TAG, UPDATE_YEAR_TAG } from "../../graphql/yearTags/mutation";
 import { GET_YEARTAGS, GET_YEARTAGS_COUNT } from "../../graphql/yearTags/query";
+import { GET_COUNTRY_DATA } from "../../graphql/Geographies/GeographyCountry";
 
 const defaultFormValues: IYearTag = {
 	type: "annual",
 	name: "",
 	start_date: new Date(),
 	end_date: new Date(),
+	country_id: [],
 };
 
 const validate = (values: IYearTag) => {
@@ -32,12 +34,38 @@ const validate = (values: IYearTag) => {
 };
 
 function YearTag(props: IYearTagProps) {
+	const { data: countryList } = useQuery(GET_COUNTRY_DATA);
+
+	addYearTagForm[1].getInputValue = (value: any) => {
+		if (value === "financial") {
+			addYearTagForm[4].hidden = false;
+		} else {
+			addYearTagForm[4].hidden = true;
+		}
+	};
+
+	let dummyArray: any = [];
+
+	countryList?.countries.map((elem: any) =>
+		dummyArray.push({
+			id: elem.id,
+			name: elem.name,
+		})
+	);
+
+	addYearTagForm[4].optionsArray = dummyArray;
 	const [createYearTag, { loading: creatingYearTag }] = useMutation(CREATE_YEAR_TAG);
 	const [updateYearTag, { loading: updatingYearTag }] = useMutation(UPDATE_YEAR_TAG);
 	const [deleteYearTag, { loading: deletingYearTag }] = useMutation(DELETE_YEAR_TAG);
 
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+
+	console.log("props.initialValues", props.initialValues);
+
+	let parseValue: any = props.initialValues;
+
+	// console.log("parseValue", JSON.parse(parseValue?.country_id));
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -46,10 +74,19 @@ function YearTag(props: IYearTagProps) {
 	const onCreate = async (valuesSubmitted: IYearTag) => {
 		try {
 			let values = removeEmptyKeys<IYearTag>({ objectToCheck: valuesSubmitted });
+			// let country_id = JSON.stringify(values.country_id);
+
+			let country_id = values.country_id;
+			// let country_id = {};
+			// values.country_id?.map((value: any) => {
+			// 	Object.assign(country_id, { [value.id]: value });
+			// });
+
+			console.log("country_id", country_id);
 
 			await createYearTag({
 				variables: {
-					input: { data: { ...values } },
+					input: { data: { ...values, country_id } },
 				},
 				refetchQueries: [
 					{
@@ -92,7 +129,7 @@ function YearTag(props: IYearTagProps) {
 			});
 
 			notificationDispatch(setSuccessNotification("Year Tag Updation Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
@@ -147,7 +184,7 @@ function YearTag(props: IYearTagProps) {
 			});
 
 			notificationDispatch(setSuccessNotification("Year Tag Delete Success"));
-		} catch (err) {
+		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err.message));
 		} finally {
 			props.handleClose();

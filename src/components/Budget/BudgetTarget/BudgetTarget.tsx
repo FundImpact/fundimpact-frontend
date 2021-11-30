@@ -367,6 +367,9 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			let values = removeEmptyKeys<IBudgetTargetForm>({
 				objectToCheck: { ...valuesSubmitted },
 			});
+
+			// delete values.budget_category_organization;
+
 			await createProjectBudgetTarget({
 				variables: {
 					input: {
@@ -499,6 +502,8 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 			delete (values as any).id;
 
+			console.log("values", values);
+
 			props.formAction === FORM_ACTIONS.UPDATE &&
 				(await updateProjectBudgetTarget({
 					variables: {
@@ -508,6 +513,18 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 							...values,
 						},
 					},
+					refetchQueries: [
+						{
+							query: GET_BUDGET_TARGET_PROJECT,
+							variables: {
+								filter: {
+									project_with_budget_targets: {
+										project: dashboardData?.project?.id,
+									},
+								},
+							},
+						},
+					],
 				}));
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
 
@@ -520,10 +537,16 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 	const onDelete = async () => {
 		try {
+			// if (!initialValues.total_target_amount) {
+			// 	delete initialValues.total_target_amount;
+			// }
 			const budgetTargetValues = { ...initialValues };
-			console.log("budgetTargetValues", budgetTargetValues);
 
 			delete budgetTargetValues["id"];
+
+			if (!budgetTargetValues?.total_target_amount)
+				delete (budgetTargetValues as any).total_target_amount;
+
 			await updateProjectBudgetTarget({
 				variables: {
 					id: initialValues?.id,
