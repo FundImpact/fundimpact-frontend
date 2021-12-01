@@ -157,8 +157,6 @@ function DeliverableUnitTableGraphql({
 	// 	[deliverableCategoryUnitList]
 	// );
 
-	console.log("deliverableUnitList?.deliverableUnitOrg", deliverableUnitList?.deliverableUnitOrg);
-
 	return (
 		<DeliverableUnitTableContainer
 			deliverableUnitList={deliverableUnitList?.deliverableUnitOrg || []}

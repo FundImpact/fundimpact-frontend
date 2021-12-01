@@ -28,7 +28,7 @@
 		},
 		{
 			"name": "type",
-			"label": "Unit Type",
+			"label": "Deliverable Type",
 			"size": 6,
 			"testId": "unit_typeOption",
 			"dataTestId": "unit_type",

@@ -15,6 +15,7 @@ export interface IYearTag {
 	start_date: Date | string;
 	end_date: Date | string;
 	__typename?: string;
+	country_id?: string[];
 }
 
 export type IYearTagProps = {

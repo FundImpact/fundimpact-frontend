@@ -58,6 +58,9 @@ import { updateProjectDonorCache } from "../../Project/Project";
 import { DONOR_DIALOG_TYPE } from "../../../models/donor/constants";
 import { GET_GEOREGIONS_DATA } from "../../../graphql/GeoRegions/query";
 import BudgetTarget from "../../../components/Budget/BudgetTarget";
+import { GET_CATEGORY_TYPES } from "../../../graphql/Category/query";
+import DeliverableTarget from "../../Deliverable/DeliverableTarget";
+import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
 
 function getInitialValues(props: SubTargetFormProps) {
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
@@ -83,14 +86,34 @@ function SubTarget(props: SubTargetFormProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
 
+	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
+
+	let type = props.formType;
+
+	let typeVal: any;
+
+	deliverableTypesList?.deliverableTypes?.map((elem: any) => {
+		console.log("elem", elem, type);
+		if (elem.id == 6 && type == "deliverable") {
+			typeVal = 6;
+		} else if (elem.id == 5 && type == "outcome") {
+			typeVal = 5;
+		} else if (elem.id == 4 && type == "output") {
+			typeVal = 4;
+		} else if (elem.id == 3 && type == "impact") {
+			typeVal = 3;
+		}
+	});
+
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 		variables: {
 			filter: {
-				project_with_deliverable_targets: {
-					project: dashboardData?.project?.id,
-				},
-				type: props.formType,
-				sub_target_required: true,
+				// project_with_deliverable_targets: {
+				project: dashboardData?.project?.id,
+				// },
+				type: typeVal,
+				// type: props.formType,
+				// sub_target_required: true,
 			},
 		},
 		fetchPolicy: "network-only",
@@ -99,6 +122,8 @@ function SubTarget(props: SubTargetFormProps) {
 				? !Object.values(DELIVERABLE_TYPE).includes(props.formType)
 				: true,
 	});
+
+	// console.log("deliverableTargets nnnnn", deliverableTargets, !Object.values(DELIVERABLE_TYPE));
 
 	const { data: budgetTargets } = useQuery(GET_BUDGET_TARGET_PROJECT, {
 		variables: {
@@ -135,6 +160,8 @@ function SubTarget(props: SubTargetFormProps) {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isQualitativeParent]);
+
+	// console.log("props.formType data: ", props.formType, Object.values(DELIVERABLE_TYPE));
 
 	const getCreateSubTargetQuery = () =>
 		props.formType === "budget"
@@ -180,6 +207,8 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let budgetSubTargetFormList: any = budgetSubTargetForm;
 
+	// console.log("formAction ttttt", FORM_ACTIONS);
+
 	const getTargetId = () =>
 		props.formType === "budget"
 			? "budget_targets_project"
@@ -193,6 +222,8 @@ function SubTarget(props: SubTargetFormProps) {
 			: Object.values(DELIVERABLE_TYPE).includes(props.formType)
 			? deliverableTargets?.deliverableTargetList || []
 			: "";
+
+	console.log("Kuch bhi", Object.values(DELIVERABLE_TYPE), props.formType);
 
 	budgetSubTargetFormList[0].name = getTargetId();
 	budgetSubTargetFormList[0].optionsArray = getTargetOptions();
@@ -234,10 +265,15 @@ function SubTarget(props: SubTargetFormProps) {
 
 	// const getResponseData = geoResponse;
 
-	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
-		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
-		// skip: !currentDonor || !dashboardData?.project?.id,
-	});
+	const { data: grantPeriods } = useQuery(
+		GET_GRANT_PERIOD
+		// 	, {
+		// 	variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
+		// 	// skip: !currentDonor || !dashboardData?.project?.id,
+		// }
+	);
+
+	console.log("grantPeriods", grantPeriods);
 
 	const [lists, setList] = useState<{
 		annualYear: YearTagPayload[];
@@ -533,10 +569,13 @@ function SubTarget(props: SubTargetFormProps) {
 				props.formType !== "budget" &&
 				Object.values(DELIVERABLE_TYPE).includes(props.formType)
 			) {
-				queryFilter[getTargetId()].type = props.formType;
+				console.log("rrrrrreach", props.formType);
+				queryFilter[getTargetId()].type = typeVal;
+				// queryFilter[getTargetId()].type = props.formType;
 				projectSubTargetsQueryFilter = {
 					[getTargetId()]: {
-						type: props.formType,
+						type: typeVal,
+						// type: props.formType,
 					},
 				};
 			}
@@ -639,10 +678,13 @@ function SubTarget(props: SubTargetFormProps) {
 		) {
 			projectSubTargetsQueryFilter = {
 				[getTargetId()]: {
-					type: props.formType,
+					type: typeVal,
+					// type: props.formType,
 				},
 			};
 		}
+
+		console.log("subTargetId", subTargetId, subTargetValues);
 
 		try {
 			await updateSubTarget({
@@ -691,7 +733,7 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let initialValues: any = getInitialValues(props);
 
-	// console.log("initialValues", initialValues);
+	console.log("initialValues subtarget", initialValues);
 
 	// budgetSubTargetFormList[2].getInputValue = (value: number) => {
 	// 	if (value < 0) {
@@ -880,6 +922,15 @@ function SubTarget(props: SubTargetFormProps) {
 					<BudgetTarget
 						open={openTargetDialog}
 						formAction={FORM_ACTIONS.CREATE}
+						handleClose={() => setOpenTargetDialog(false)}
+					/>
+				)}
+				{openTargetDialog && Object.values(DELIVERABLE_TYPE).includes(props.formType) && (
+					<DeliverableTarget
+						project={undefined}
+						formType={props.formType}
+						open={openTargetDialog}
+						type={DELIVERABLE_ACTIONS.CREATE}
 						handleClose={() => setOpenTargetDialog(false)}
 					/>
 				)}

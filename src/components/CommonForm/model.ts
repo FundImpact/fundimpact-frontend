@@ -22,4 +22,5 @@ export interface ICommonForm {
 	getFormikInstance?: (formik: FormikProps<any>) => void;
 	additionalButtons?: React.ReactNode;
 	updateBtnIsDisabled?: boolean;
+	isCancel?: boolean;
 }

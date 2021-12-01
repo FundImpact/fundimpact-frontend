@@ -82,17 +82,19 @@ enum tableHeaders {
 	year = 4,
 }
 
-const getTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
+const getTargetId = (tableType: any | "budget") =>
+	// const getTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
 	tableType === "budget"
 		? "budget_targets_project"
-		: Object.values(DELIVERABLE_TYPE).includes(tableType)
+		: Object.values(DELIVERABLE_TYPE).includes(tableType.name)
 		? "deliverable_target_project"
 		: "";
 
-const getSubTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
+const getSubTargetId = (tableType: any | "budget") =>
+	// const getSubTargetId = (tableType: DELIVERABLE_TYPE | "budget") =>
 	tableType === "budget"
 		? "budget_sub_target"
-		: Object.values(DELIVERABLE_TYPE).includes(tableType)
+		: Object.values(DELIVERABLE_TYPE).includes(tableType.name)
 		? "deliverable_sub_target"
 		: "";
 
@@ -108,7 +110,8 @@ function EditSubTarget({
 				variables?: Partial<Record<string, any>> | undefined
 		  ) => Promise<ApolloQueryResult<any>>)
 		| undefined;
-	tableType: DELIVERABLE_TYPE | "budget";
+	tableType: any | "budget";
+	// tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
@@ -315,6 +318,7 @@ function EditSubTarget({
 					}}
 				/>
 			)}
+
 			{openForm && tableType === "budget" ? (
 				<BudgetLineitem
 					formAction={FORM_ACTIONS.CREATE}
@@ -325,11 +329,11 @@ function EditSubTarget({
 				/>
 			) : (
 				openDeliverableForm &&
-				(tableType === DELIVERABLE_TYPE.DELIVERABLE ||
-					tableType === DELIVERABLE_TYPE.IMPACT ||
-					tableType === DELIVERABLE_TYPE.OUTCOME ||
-					tableType === DELIVERABLE_TYPE.OUTPUT ||
-					tableType === DELIVERABLE_TYPE.ACTIVITY) && (
+				(tableType.name === DELIVERABLE_TYPE.DELIVERABLE ||
+					tableType.name === DELIVERABLE_TYPE.IMPACT ||
+					tableType.name === DELIVERABLE_TYPE.OUTCOME ||
+					tableType.name === DELIVERABLE_TYPE.OUTPUT ||
+					tableType.name === DELIVERABLE_TYPE.ACTIVITY) && (
 					<DeliverableTrackLine
 						open={openDeliverableForm}
 						formType={tableType}
@@ -438,7 +442,8 @@ const LineItemTableButton = ({
 	subTargetId,
 }: {
 	targetId: string;
-	tableType: DELIVERABLE_TYPE | "budget";
+	tableType: any | "budget";
+	// tableType: DELIVERABLE_TYPE | "budget";
 	donor?: any;
 	subTargetId?: string;
 }) => {
@@ -448,7 +453,7 @@ const LineItemTableButton = ({
 	const getLineitemCountQuery = () =>
 		tableType === "budget"
 			? GET_PROJ_BUDGET_TRACINGS_COUNT
-			: Object.values(DELIVERABLE_TYPE).includes(tableType)
+			: Object.values(DELIVERABLE_TYPE).includes(tableType.name)
 			? GET_DELIVERABLE_TRACKLINE_COUNT
 			: GET_PROJ_BUDGET_TRACINGS_COUNT;
 
@@ -494,7 +499,7 @@ const LineItemTableButton = ({
 							subTargetId={subTargetId}
 						/>
 					) : (
-						Object.values(DELIVERABLE_TYPE).includes(tableType) && (
+						Object.values(DELIVERABLE_TYPE).includes(tableType.name) && (
 							<DeliverablesTrackLineTable
 								deliverableTargetId={targetId}
 								subTargetId={subTargetId}
@@ -519,7 +524,8 @@ export default function ({
 	donor,
 }: {
 	targetId: string;
-	tableType: DELIVERABLE_TYPE | "budget";
+	tableType: any | "budget";
+	// tableType: DELIVERABLE_TYPE | "budget";
 	donor?: any;
 }) {
 	const [TracklinePage, setTracklinePage] = React.useState(0);
@@ -661,12 +667,16 @@ export default function ({
 		countRefetch,
 	} = pagination({
 		query: getSubTargetFindQuery(),
+		// query: GET_DELIVERABLE_SUB_TARGETS,
 		countQuery: getSubTargetCountQuery(),
+		// countQuery: GET_DELIVERABLE_SUB_TARGETS_COUNT,
 		countFilter: queryFilter,
 		queryFilter,
 		aggregateCount: true,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	console.log("deliverableSubtargetData", subTargetData);
 
 	const limit = 10;
 	const [rows, setRows] = useState<any>([]);
@@ -690,12 +700,16 @@ export default function ({
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_EXPORT
 	);
+
+	console.log("tttableType", tableType, Object.values(DELIVERABLE_TYPE));
 	const getListObjectKey = () =>
 		tableType === "budget"
 			? "budgetSubTargets"
-			: Object.values(DELIVERABLE_TYPE).includes(tableType)
+			: Object.values(DELIVERABLE_TYPE).includes(tableType.name)
 			? "deliverableSubTargets"
 			: "budgetSubTargets";
+
+	console.log("subTargetData?.[getListObjectKey()]", subTargetData);
 
 	useEffect(() => {
 		if (subTargetData?.[getListObjectKey()]?.length) {

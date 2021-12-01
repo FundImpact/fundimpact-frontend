@@ -112,7 +112,6 @@ const updateCachedProject = async ({
 	createdProject: ICreateProject["createOrgProject"];
 }) => {
 	try {
-		console.log("heresss", createdProject);
 		let cachedProjects = apolloClient.readQuery<{
 			orgProject: ICreateProject["createOrgProject"][];
 		}>({
@@ -185,8 +184,6 @@ function Project(props: ProjectProps) {
 
 	// projectForm[6].onClick = () => setLogFrameValue(true);
 
-	// console.log("project.tsx logFrameValue", logFrameValue);
-
 	if (projectFilesArray.length) projectForm[5].label = "View Files";
 	else projectForm[5].label = "Attach Files";
 
@@ -255,7 +252,6 @@ function Project(props: ProjectProps) {
 	if (props.type === PROJECT_ACTIONS.UPDATE) {
 		/*Disable already mapped donors*/
 		mappedDonors = props?.data?.donor;
-		console.log("mappedDonors", mappedDonors);
 		let donorList: any = [];
 		donors?.orgDonors?.forEach((fetchedDonor: any) => {
 			const isInDonorList = mappedDonors.includes(fetchedDonor?.id);
@@ -390,10 +386,19 @@ function Project(props: ProjectProps) {
 	const onCreate = async (value: IPROJECT_FORM) => {
 		const formData = { ...value };
 		let selectDonors = value.donor;
+
 		delete (formData as any).donor;
 		try {
 			const createdProject = await createNewproject({
 				variables: { input: formData },
+				refetchQueries: [
+					{
+						query: GET_PROJECTS_BY_WORKSPACE,
+					},
+					{
+						query: GET_PROJECTS,
+					},
+				],
 			});
 			await updateProjectCount({ apolloClient });
 			createdProject &&
@@ -459,11 +464,11 @@ function Project(props: ProjectProps) {
 			delete formData.attachments;
 			const updatedResponse = await updateProject({
 				variables: { id: projectId, input: formData },
-				// refetchQueries: [
-				// 	{
-				// 		query: GET_PROJECTS_BY_WORKSPACE,
-				// 	},
-				// ],
+				refetchQueries: [
+					{
+						query: GET_PROJECTS_BY_WORKSPACE,
+					},
+				],
 			});
 			if (workspaceSelected !== value.workspace) {
 				fetchProjectsInWorkspace({
@@ -500,8 +505,6 @@ function Project(props: ProjectProps) {
 		}
 		return errors;
 	};
-
-	console.log("initialValuesinitialValues", initialValues);
 
 	const formAction = props.type;
 	const formIsOpen = props.open;

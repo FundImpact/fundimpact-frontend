@@ -5,6 +5,7 @@ export const CREATE_YEAR_TAG = gql`
 		createYearTag(input: $input) {
 			yearTag {
 				id
+				country_id
 			}
 		}
 	}

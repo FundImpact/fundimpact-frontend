@@ -72,7 +72,6 @@ const InputFields = ({
 	textNextToButton,
 	helperText,
 }: IInputFields) => {
-	console.log("disabled: ", disabled);
 	const classes = useStyles();
 	const [optionsArrayHash, setOptionsArrayHash] = useState<{ [key: string]: string }>({});
 	useEffect(() => {
@@ -153,7 +152,6 @@ const InputFields = ({
 					<InputLabel required={required} id={inputLabelId}>
 						{label}
 					</InputLabel>
-
 					<Select
 						labelId={selectLabelId}
 						id={selectId}

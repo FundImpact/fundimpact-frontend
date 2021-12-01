@@ -112,11 +112,10 @@ export default function ProjectName() {
 		GET_PROJECT_BY_ID
 	);
 
-	// console.log("fetchedProject", fetchedProject);
-
 	const [getProjectsByWorkspace, { data: projectList, refetch }] = useLazyQuery(
 		GET_PROJECTS_BY_WORKSPACE
 	);
+
 	const [getWorkspaceList, { data: workspaceList }] = useLazyQuery<IGET_WORKSPACES_BY_ORG>(
 		GET_WORKSPACES_BY_ORG
 	);
@@ -126,6 +125,7 @@ export default function ProjectName() {
 				variables: {
 					filter: {
 						workspace: fetchedProject?.project?.workspace?.id,
+						deleted: false,
 					},
 				},
 			});

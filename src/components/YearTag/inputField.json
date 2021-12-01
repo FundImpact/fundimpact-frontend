@@ -24,7 +24,8 @@
 			"selectId": "demo-simple-select-outlined",
 			"inputType": "select",
 			"displayName": "country",
-			"required": true
+			"required": true,
+			"getInputValue": {}
 		},
 		{
 			"name": "start_date",
@@ -45,6 +46,25 @@
 			"type": "date",
 			"size": 6,
 			"required": true
+		},
+		{
+			"name": "country_id",
+			"id": "country_id",
+			"label": "Select Country",
+			"required": true,
+			"size": 6,
+			"dataTestId": "impactTracklineDonor",
+			"testId": "impactTracklineDateInput",
+			"optionsLabel": "Project's Donors",
+			"optionsArray": [],
+			"secondOptionsArray": [],
+			"secondOptionsLabel": "All Countries",
+			"customMenuOnClick": {},
+			"inputLabelId": "demo-mutiple-name-label",
+			"selectLabelId": "demo-mutiple-name-label",
+			"selectId": "demo-mutiple-name",
+			"inputType": "multiSelect",
+			"hidden": true
 		}
 	]
 }

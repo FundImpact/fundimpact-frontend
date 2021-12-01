@@ -28,5 +28,13 @@ export enum DELIVERABLE_TYPE {
 	OUTPUT = "output",
 }
 
+// export enum DELIVERABLE_TYPE_ID {
+// 	DELIVERABLE = 1,
+// 	IMPACT = 2,
+// 	OUTCOME = 3,
+// 	ACTIVITY = 4,
+// 	OUTPUT = 5,
+// }
+
 export const primaryColor = "#5567FF";
 export const secondaryColor = "#14BB4C";

@@ -78,8 +78,6 @@ const createChipArray = ({
 };
 let geographiesCountryTableEditMenu: string[] = [];
 
-console.log("geographiesCountryTableEditMenu", geographiesCountryTableEditMenu);
-
 function TallyMapperCostcenterTableView({
 	toggleDialogs,
 	openDialogs,
@@ -144,8 +142,6 @@ function TallyMapperCostcenterTableView({
 			geographiesCountryTableEditMenu[1] = "Delete";
 		}
 	}, [geographiesCountryDeleteAccess]);
-
-	console.log("country initials", initialValues);
 
 	const onDeliverableCategoryTableImportSuccess = () => reftechDeliverableCategoryAndUnitTable();
 

@@ -18,8 +18,6 @@ const manageMasterSubHeadings = manageMasterObject.map((item) => {
 	};
 });
 
-console.log("manageMasterSubHeadings", manageMasterSubHeadings);
-
 export const sidebarList: {
 	mainHeading: string;
 	subHeadings: { to: string; dataTestId: string; title: string; userAccess: boolean }[];

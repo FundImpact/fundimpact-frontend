@@ -137,8 +137,6 @@ function TallyMapperLedgerGroupTableGraphql({
 
 	const ledgerGroupList = ledgerGroupResponse;
 
-	console.log("ledgerGroupList", ledgerGroupList);
-
 	return (
 		<TallyMapperLedgerGroupTableContainer
 			geographiesBlocksList={geographiesBlocksList}

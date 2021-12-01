@@ -61,7 +61,7 @@ const ImportExportTableMenu = ({
 			});
 			onImportTableSuccess && onImportTableSuccess();
 			notificationDispatch(setSuccessNotification(importTableResponse.data.message));
-		} catch (error) {
+		} catch (error: any) {
 			notificationDispatch(setErrorNotification(error?.response?.data?.message));
 			console.log(`error`, error);
 		} finally {

@@ -32,7 +32,7 @@ import {
 } from "../../graphql/project";
 import Deliverable from "./Deliverable";
 import DeliverableUnit from "./DeliverableUnit";
-import { DELIVERABLE_TYPE, DIALOG_TYPE } from "../../models/constants";
+import { DELIVERABLE_TYPE, DIALOG_TYPE, FORM_ACTIONS } from "../../models/constants";
 import DeleteModal from "../DeleteModal";
 import {
 	GET_DELIVERABLE_UNIT_BY_ORG,
@@ -41,6 +41,8 @@ import {
 } from "../../graphql/Deliverable/unit";
 import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverable/projectWithDeliverableTarget";
 import { GET_CATEGORIES } from "../../graphql/Category/query";
+import Category from "../Category";
+import Unit from "../Unit";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -53,28 +55,33 @@ function getInitialValues(props: DeliverableTargetProps) {
 	};
 }
 
+let typeVal: any;
+
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
-	const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
-	const types = props.formType;
+	// const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
+	let types: any = props.formType;
 
-	console.log("types", types);
 	let deliverableId: number;
 	let outcomeId: number;
 	let outputId: number;
 	let impactId: number;
 	if (types === "deliverable") {
 		deliverableId = 6;
+		typeVal = 6;
 	}
 	if (types === "outcome") {
 		outcomeId = 5;
+		typeVal = 5;
 	}
 	if (types === "output") {
 		outputId = 4;
+		typeVal = 4;
 	}
 	if (types === "impact") {
 		impactId = 3;
+		typeVal = 3;
 	}
 
 	const { data: units } = useQuery(GET_UNIT);
@@ -93,17 +100,19 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	});
 
-	console.log("unitType", unitType);
-
 	const [getOutputsByProject, { data: outputsByProject }] = useLazyQuery(
 		GET_DELIVERABLE_TARGET_BY_PROJECT
 	); // for fetching outputs by project
+
+	console.log("outputsByProject", outputsByProject);
 
 	// const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
 	// });
 
 	const { data: categories } = useQuery(GET_CATEGORIES);
+
+	console.log("categories", categories);
 
 	let categoryType: any = [];
 	categories?.categories.forEach((elem: any) => {
@@ -119,8 +128,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		}
 	});
 
-	console.log("categoryType", categoryType);
-
 	// const [currentCategory, setcurrentCategory] = useState<any>();
 	// const [deliverbaleTarget, setDeliverableTarget] = useState<IDeliverableTarget>();
 
@@ -132,6 +139,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		CREATE_DELIVERABLE_TARGET,
 		{
 			onCompleted: async (data) => {
+				console.log("createdata", data);
 				if (data?.createDeliverableTarget) {
 					try {
 						await createProjectWithDeliverableTarget({
@@ -141,6 +149,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 										project: dashboardData?.project?.id,
 										deliverable_target_project:
 											data?.createDeliverableTarget?.id,
+										category: data?.createDeliverableTarget?.category?.id,
 									},
 								},
 							},
@@ -149,10 +158,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 									query: GET_DELIVERABLE_TARGETS_COUNT,
 									variables: {
 										filter: {
+											// project: dashboardData?.project?.id,
 											project_with_deliverable_targets: {
 												project: dashboardData?.project?.id,
 											},
-											type: props.formType,
+											type: typeVal,
+											// type: props.formType,
 										},
 									},
 								},
@@ -160,10 +171,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 									query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 									variables: {
 										filter: {
-											project_with_deliverable_targets: {
-												project: dashboardData?.project?.id,
-											},
-											type: props.formType,
+											// project_with_deliverable_targets: {
+											project: dashboardData?.project?.id,
+											// },
+											type: typeVal,
+											// type: props.formType,
 										},
 									},
 								},
@@ -223,9 +235,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				// deliverable_category_unit: deliverableCategoryUnitId,
 			};
 			delete (createInputTarget as any).id;
+
 			await createDeliverableTarget({
 				variables: {
-					input: { ...createInputTarget, type: props.formType },
+					input: { ...createInputTarget, type: typeVal },
+					// input: { ...createInputTarget, type: props.formType },
 				},
 				// update: async (store, { data: { createDeliverableTarget: targetCreated } }) => {
 				// 	try {
@@ -320,7 +334,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							filter: {
 								project: props.project,
 								deliverable_target_project: {
-									type: props.formType,
+									type: typeVal,
+									// type: props.formType,
 								},
 							},
 						},
@@ -329,11 +344,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: {
 							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
-								type: props.formType,
-								sub_target_required: true,
+								// project_with_deliverable_targets: {
+								project: props.project,
+								// },
+								type: typeVal,
+								// type: props.formType,
+								// sub_target_required: true,
 							},
 						},
 					},
@@ -364,13 +380,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			value_qualitative_option: { options },
 			// deliverable_category_unit: deliverableCategoryUnitId,
 		};
+
 		let deliverableId = createInputTarget.id;
 
 		delete (createInputTarget as any).id;
+
 		try {
 			await updateDeliverableTarget({
 				variables: {
-					id: deliverableId,
+					id: parseInt(deliverableId),
 					input: createInputTarget,
 				},
 				refetchQueries: [
@@ -381,10 +399,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							start: 0,
 							sort: "created_at:DESC",
 							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
-								type: props.formType,
+								// project_with_deliverable_targets: {
+								project: props.project,
+								// },
+								type: typeVal,
+								// type: props.formType,
 							},
 						},
 					},
@@ -392,11 +411,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: {
 							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
-								type: props.formType,
-								sub_target_required: true,
+								// project_with_deliverable_targets: {
+								project: props.project,
+								// },
+								type: typeVal,
+								// type: props.formType,
+								// sub_target_required: true,
 							},
 						},
 					},
@@ -404,10 +424,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: {
 							filter: {
-								project_with_deliverable_targets: {
-									project: props.project,
-								},
-								type: props.formType,
+								// project_with_deliverable_targets: {
+								project: props.project,
+								// },
+								type: typeVal,
+								// type: props.formType,
 							},
 						},
 					},
@@ -423,7 +444,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							filter: {
 								project: props.project,
 								deliverable_target_project: {
-									type: props.formType,
+									type: typeVal,
+									// type: props.formType,
 								},
 							},
 						},
@@ -495,26 +517,41 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// }, [unitsByOrg]);
 
 	// handling category change
-	useEffect(() => {
-		if (dashboardData?.organization?.id) {
-			getUnitsByOrg({
-				variables: { filter: { organization: dashboardData?.organization?.id } },
-			});
-		}
-	}, [dashboardData, getUnitsByOrg]);
+	// useEffect(() => {
+	// 	if (dashboardData?.organization?.id) {
+	// 		getUnitsByOrg({
+	// 			variables: { filter: { organization: dashboardData?.organization?.id } },
+	// 		});
+	// 	}
+	// }, [dashboardData, getUnitsByOrg]);
 
 	useEffect(() => {
 		if (dashboardData?.project?.id) {
 			let allowedProps = ["deliverable", "output", "outcome"];
 			let parentProps: any = { deliverable: "output", output: "outcome", outcome: "impact" };
+			let val: any;
+
+			if (props.formType == "deliverable") {
+				val = 4;
+			}
+			if (props.formType == "output") {
+				val = 5;
+			}
+			if (props.formType == "outcome") {
+				val = 3;
+			}
+
 			if (allowedProps.includes(props.formType)) {
+				// if (allowedProps.includes(props.formType)) {
 				getOutputsByProject({
 					variables: {
 						filter: {
-							project_with_deliverable_targets: {
-								project: dashboardData?.project?.id,
-							},
-							type: parentProps[props.formType],
+							// project_with_deliverable_targets: {
+							project: dashboardData?.project?.id,
+							// },
+							// type: parentProps[typeVal],
+							// type: parentProps[props.formType],
+							type: val,
 						},
 					},
 				});
@@ -531,6 +568,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	}, [dashboardData, getOutputsByProject, props.formType]);
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
+
 	const onCreate = async (value: IDeliverableTarget) => {
 		let options = value?.value_qualitative_option?.split(",") || [];
 		options = options.map((elem: string) => ({ id: uuidv4(), name: elem.trim() }));
@@ -623,7 +661,16 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const onDelete = async () => {
 		try {
 			const deliverableTargetValues = { ...initialValues };
+
+			console.log("deliverableTargetValues", deliverableTargetValues);
+
 			delete deliverableTargetValues["id"];
+			if (
+				!deliverableTargetValues.value_qualitative_option ||
+				deliverableTargetValues.value_qualitative_option === "-"
+			)
+				delete deliverableTargetValues.value_qualitative_option;
+
 			await updateDeliverableTarget({
 				variables: {
 					id: initialValues?.id,
@@ -635,17 +682,27 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 				refetchQueries: [
 					{
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
-						variables: { filter: { project: dashboardData?.project?.id } },
-					},
-					{
-						query: GET_ACHIEVED_VALLUE_BY_TARGET,
 						variables: {
-							filter: { deliverableTargetProject: initialValues.id },
+							filter: { project: dashboardData?.project?.id, type: typeVal },
 						},
 					},
+					// {
+					// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
+					// 	variables: {
+					// 		filter: { deliverableTargetProject: initialValues.id },
+					// 	},
+					// },
 					{
 						query: GET_ALL_DELIVERABLES_TARGET_AMOUNT,
-						variables: { filter: { project: dashboardData?.project?.id } },
+						variables: {
+							filter: {
+								project: dashboardData?.project?.id,
+								deliverable_target_project: {
+									type: typeVal,
+									// type: props.formType,
+								},
+							},
+						},
 					},
 					{
 						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
@@ -655,24 +712,24 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 						query: GET_DELIVERABLE_TARGETS_COUNT,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
-					{
-						query: GET_DELIVERABLE_CATEGORY_PROJECT_COUNT,
-						variables: {
-							filter: {
-								deliverable_category_org: deliverableTargetValues?.category,
-								// deliverableTargetValues?.deliverable_category_org,
-							},
-						},
-					},
-					{
-						query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
-						variables: {
-							filter: {
-								deliverable_unit_org: deliverableTargetValues?.unit,
-								// deliverable_unit_org: deliverableTargetValues?.deliverable_unit_org,
-							},
-						},
-					},
+					// {
+					// 	query: GET_DELIVERABLE_CATEGORY_PROJECT_COUNT,
+					// 	variables: {
+					// 		filter: {
+					// 			deliverable_category_org: deliverableTargetValues?.category,
+					// 			// deliverableTargetValues?.deliverable_category_org,
+					// 		},
+					// 	},
+					// },
+					// {
+					// 	query: GET_DELIVERABLE_UNIT_PROJECT_COUNT,
+					// 	variables: {
+					// 		filter: {
+					// 			deliverable_unit_org: deliverableTargetValues?.unit,
+					// 			// deliverable_unit_org: deliverableTargetValues?.deliverable_unit_org,
+					// 		},
+					// 	},
+					// },
 				],
 			});
 			notificationDispatch(setSuccessNotification("Deliverable Target Delete Success"));
@@ -755,20 +812,31 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					}}
 				/>
 				{openDeliverableCategoryDialog && (
-					<Deliverable
-						type={DELIVERABLE_ACTIONS.CREATE}
+					<Category
+						formAction={FORM_ACTIONS.CREATE}
 						open={openDeliverableCategoryDialog}
 						handleClose={() => setOpenDeliverableCategoryDialog(false)}
-						organization={dashboardData?.organization?.id}
+						// organization={dashboardData?.organization?.id}
 					/>
+					// <Deliverable
+					// 	type={DELIVERABLE_ACTIONS.CREATE}
+					// 	open={openDeliverableCategoryDialog}
+					// 	handleClose={() => setOpenDeliverableCategoryDialog(false)}
+					// 	organization={dashboardData?.organization?.id}
+					// />
 				)}
 				{openDeliverableUnitDialog && (
-					<DeliverableUnit
-						type={DELIVERABLE_ACTIONS.CREATE}
+					<Unit
+						formAction={FORM_ACTIONS.CREATE}
 						open={openDeliverableUnitDialog}
 						handleClose={() => setOpenDeliverableUnitDialog(false)}
-						organization={dashboardData?.organization?.id}
 					/>
+					// <DeliverableUnit
+					// 	type={DELIVERABLE_ACTIONS.CREATE}
+					// 	open={openDeliverableUnitDialog}
+					// 	handleClose={() => setOpenDeliverableUnitDialog(false)}
+					// 	organization={dashboardData?.organization?.id}
+					// />
 				)}
 			</FormDialog>
 			{createDeliverableTargetLoading ? <FullScreenLoader /> : null}

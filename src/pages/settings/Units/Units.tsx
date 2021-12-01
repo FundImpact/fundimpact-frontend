@@ -9,6 +9,8 @@ import { FORM_ACTIONS } from "../../../models/constants";
 import { unitInputFields } from "./inputField.json";
 import { removeFilterListObjectElements } from "../../../utils/filterList";
 import ChipArray from "../../../components/Chips";
+import { GET_CATEGORY_TYPES } from "../../../graphql/Category/query";
+import { useQuery } from "@apollo/client";
 
 const createChipArray = ({
 	tableFilterListObjectKeyValuePair,
@@ -32,6 +34,10 @@ const createChipArray = ({
 };
 
 const Units = () => {
+	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
+
+	unitInputFields[3].optionsArray = deliverableTypesList?.deliverableTypes;
+
 	const [tableFilterList, setTableFilterList] = useState<{
 		[key: string]: string | string[];
 	}>({

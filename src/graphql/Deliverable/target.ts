@@ -46,11 +46,11 @@ export const UPDATE_DELIVERABLE_TARGET = gql`
 				short_name
 				description
 			}
-			deliverable_unit_org {
+			category {
 				id
 				name
 			}
-			deliverable_category_org {
+			unit {
 				id
 				name
 			}
@@ -69,7 +69,10 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 			id
 			name
 			description
-			type
+			type {
+				id
+				name
+			}
 			deleted
 			is_qualitative
 			sub_target_required

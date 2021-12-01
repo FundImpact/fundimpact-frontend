@@ -14,6 +14,17 @@ export interface IGeoRegions {
 	village_id?: string;
 }
 
+export interface IGeoRegionDropDown {
+	id?: string;
+	name?: string;
+	country_id?: string;
+	state_id?: string;
+	district_id?: string;
+	block_id?: string;
+	gp_id?: string;
+	village_id?: string;
+}
+
 export type ProjectId = {
 	id: string;
 	name: string;

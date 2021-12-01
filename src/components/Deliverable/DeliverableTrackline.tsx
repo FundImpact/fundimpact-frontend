@@ -76,14 +76,16 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 	};
 }
 
+let typeVal: any;
 const FormDetailsCalculate = React.memo(
 	({ currentTargetId }: { currentTargetId: string | number }) => {
 		const { data: deliverableTargetResponse } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
 			variables: {
-				filter: { id: currentTargetId },
+				filter: { id: currentTargetId, type: typeVal },
 			},
 			fetchPolicy: getFetchPolicy(),
 		});
+
 		// const { data: achivedValue } = useQuery(GET_ACHIEVED_VALLUE_BY_TARGET, {
 		// 	variables: { filter: { deliverableTargetProject: currentTargetId } },
 		// });
@@ -341,12 +343,25 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		description: `This text will be show on deliverable Achievement form for subtitle`,
 	});
 
+	console.log("props.formType", props.formType);
+
+	if (props.formType === "deliverable") {
+		typeVal = 6;
+	} else if (props.formType === "output") {
+		typeVal = 5;
+	} else if (props.formType === "outcome") {
+		typeVal = 4;
+	} else if (props.formType === "impact") {
+		typeVal = 3;
+	}
+
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_SUB_TARGETS, {
 		variables: {
 			filter: {
 				project: DashBoardData?.project?.id,
 				deliverable_target_project: {
-					type: props.formType,
+					type: typeVal,
+					// type: props.formType,
 				},
 			},
 		},

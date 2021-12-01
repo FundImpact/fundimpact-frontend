@@ -50,8 +50,6 @@ function Deliverable(props: DeliverableProps) {
 	const onCancel = props.handleClose;
 	let { newOrEdit } = CommonFormTitleFormattedMessage(formAction);
 	const onCreate = async (value: IDeliverable) => {
-		console.log("createValue", value);
-
 		try {
 			await createDeliverableCategory({
 				variables: { input: value },
@@ -134,7 +132,6 @@ function Deliverable(props: DeliverableProps) {
 	};
 
 	const onUpdate = async (value: IDeliverable) => {
-		console.log("updateValue", value);
 		try {
 			const submittedValue = Object.assign({}, value);
 			const id = submittedValue.id;
@@ -195,8 +192,6 @@ function Deliverable(props: DeliverableProps) {
 		return errors;
 	};
 	const intl = useIntl();
-
-	console.log("props?.dialogType", props?.dialogType);
 
 	if (props?.dialogType === DIALOG_TYPE.DELETE) {
 		return (

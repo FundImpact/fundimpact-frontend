@@ -11,6 +11,10 @@ export interface IBudgetCategory {
 	description?: string;
 	code: string;
 	is_project: boolean;
+	// project_id: {
+	// 	id: string;
+	// 	name: string;
+	// };
 	project_id: string;
 }
 

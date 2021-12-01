@@ -24,7 +24,8 @@ export type SubTargetFormProps = {
 	open: boolean;
 	handleClose: () => void;
 	project?: number | undefined;
-	formType: "budget" | DELIVERABLE_TYPE;
+	formType: "budget" | any;
+	// formType: "budget" | DELIVERABLE_TYPE;
 	dialogType?: DIALOG_TYPE;
 	qualitativeParent?: boolean;
 	targetValueOptions?: { id: string; name: string }[];

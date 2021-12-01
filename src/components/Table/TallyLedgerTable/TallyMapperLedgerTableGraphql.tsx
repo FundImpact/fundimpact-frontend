@@ -136,8 +136,6 @@ function TallyMapperLedgerTableGraphql({
 
 	let ledgerResponseList = ledgerResponse?.data;
 
-	console.log("ledgerResponseList", ledgerResponseList);
-
 	return (
 		<TallyMapperLedgerTableContainer
 			geographiesDistrictList={geographiesDistrictList}

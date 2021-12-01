@@ -38,8 +38,6 @@ let defaultFormValues: IBudgetCategory = {
 	project_id: "",
 };
 
-console.log("inputFields", inputFields);
-
 const validate = (values: IBudgetCategory) => {
 	let errors: Partial<IBudgetCategory> = {};
 	if (!values.name) {
@@ -199,8 +197,6 @@ function BudgetCategory({
 		? (budgetCategoryFormInputFields[4].hidden = false)
 		: (budgetCategoryFormInputFields[4].hidden = true);
 
-	console.log("formValues", formValues);
-
 	if (formValues?.project_id && formAction === "UPDATE") {
 		budgetCategoryFormInputFields[4].disabled = true;
 		budgetCategoryFormInputFields[3].hidden = false;
@@ -214,7 +210,6 @@ function BudgetCategory({
 		budgetCategoryFormInputFields[3].hidden = false;
 		budgetCategoryFormInputFields[4].disabled = false;
 	}
-
 	const onUpdate = async (valuesSubmitted: IBudgetCategory) => {
 		try {
 			let values = removeEmptyKeys<IBudgetCategory>({
@@ -253,7 +248,6 @@ function BudgetCategory({
 			const budgetCategoryValues: any = { ...initialValues };
 			delete budgetCategoryValues["id"];
 			delete budgetCategoryValues.is_project;
-			console.log("budgetCategoryValues", budgetCategoryValues);
 			await updateBudgetCategory({
 				variables: {
 					id: initialValues?.id,

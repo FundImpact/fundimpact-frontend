@@ -27,7 +27,7 @@ const rows = [
 			<UnitsAndCategoriesProjectCount budgetCategoryId={budgetCategory.id} />
 		),
 	},
-	{ valueAccessKey: "" },
+	// { valueAccessKey: "" },
 ];
 
 let budgetCategoryTableEditMenu: string[] = [];

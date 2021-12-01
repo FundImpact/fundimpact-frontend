@@ -71,11 +71,13 @@ import {
 	GET_DELIVERABLE_SUB_TARGETS,
 	GET_DELIVERABLE_SUB_TARGETS_COUNT,
 } from "../../../graphql/Deliverable/subTarget";
+import { GET_CATEGORY_TYPES } from "../../../graphql/Category/query";
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 // import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import ShowChartOutlinedIcon from "@material-ui/icons/ShowChartOutlined";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import { GET_CATEGORIES } from "../../../graphql/Category/query";
+import { type } from "os";
 enum tableHeaders {
 	name = 2,
 	category = 3,
@@ -131,6 +133,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
 	};
+
 	const dialogDispatch = useDialogDispatch();
 	const deliverableTragetEditAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
@@ -153,6 +156,12 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 		fetchPolicy: getFetchPolicy(),
 	});
 
+	console.log(
+		"deliverableTarget?.type",
+		deliverableTarget?.type.name,
+		DELIVERABLE_TYPE.DELIVERABLE
+	);
+
 	useEffect(() => {
 		if (targetLineDialog)
 			dialogDispatch(
@@ -164,7 +173,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							dialogDispatch(setCloseDialog());
 						}}
 						formAction={FORM_ACTIONS.CREATE}
-						formType={deliverableTarget?.type || DELIVERABLE_TYPE.DELIVERABLE}
+						formType={deliverableTarget?.type.name || DELIVERABLE_TYPE.DELIVERABLE}
 						target={deliverableTarget.id}
 						qualitativeParent={deliverableTarget?.is_qualitative || false}
 						targetValueOptions={
@@ -344,6 +353,8 @@ function DeliverableTargetAchievementAndProgress({
 		},
 		skip: qualitativeParent,
 	});
+
+	console.log("deliverableTargetId", deliverableTargetId, project);
 
 	const { data: deliverableSubTargetCount } = useQuery(GET_DELIVERABLE_SUB_TARGETS_COUNT, {
 		variables: {
@@ -553,9 +564,11 @@ const getDefaultFilterList = () => ({
 });
 
 export default function DeliverablesTable({
-	type = DELIVERABLE_TYPE.DELIVERABLE,
-}: {
-	type?: DELIVERABLE_TYPE;
+	type,
+}: // type = DELIVERABLE_TYPE.DELIVERABLE,
+{
+	type?: any;
+	// type?: DELIVERABLE_TYPE;
 }) {
 	const dashboardData = useDashBoardData();
 	const [page, setPage] = React.useState(0);
@@ -570,6 +583,25 @@ export default function DeliverablesTable({
 	// const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
 	// });
+
+	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
+
+	let typeVal: any;
+
+	deliverableTypesList?.deliverableTypes?.map((elem: any) => {
+		console.log("elem", elem, type);
+		if (elem.id == 6 && type == "deliverable") {
+			typeVal = 6;
+		} else if (elem.id == 5 && type == "outcome") {
+			typeVal = 5;
+		} else if (elem.id == 4 && type == "output") {
+			typeVal = 4;
+		} else if (elem.id == 3 && type == "impact") {
+			typeVal = 3;
+		}
+	});
+
+	console.log("typeValue data", typeVal, type);
 
 	const deliverableTracklineFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
@@ -609,7 +641,8 @@ export default function DeliverablesTable({
 			project_with_deliverable_targets: {
 				project: dashboardData?.project?.id,
 			},
-			type,
+			// typeVal,
+			type: typeVal,
 		});
 		setFilterList(getDefaultFilterList());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -628,10 +661,11 @@ export default function DeliverablesTable({
 								| { [keyName: string]: string[] };
 					  }
 					| any = {
-					project_with_deliverable_targets: {
-						project: dashboardData?.project?.id,
-					},
-					type,
+					// project_with_deliverable_targets: {
+					project: dashboardData?.project?.id,
+					// },
+					// typeVal,
+					type: typeVal,
 				};
 				if (filterList.name) {
 					filter.name = filterList.name;
@@ -667,11 +701,14 @@ export default function DeliverablesTable({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
-	console.log("deliverableTargetData", deliverableTargetData);
+	console.log("deliverableTargetData main", deliverableTargetData, count);
+
+	console.log("tyyype", type);
 
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
-		refetchOnDeliverableTargetImport(type);
+		refetchOnDeliverableTargetImport(typeVal);
+		// refetchOnDeliverableTargetImport(type);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [refetchDeliverableTargetProjectCount, refetchDeliverableTargetProject]);
 
@@ -709,10 +746,17 @@ export default function DeliverablesTable({
 
 			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
+				console.log(
+					"deliverableTargetList[i].id",
+					deliverableTargetList[i].id,
+					deliverableTargetList[i].type
+				);
+
 				let row: { collaspeTable: any; column: any[] } = {
 					collaspeTable: null,
 					column: [],
 				};
+
 				row.collaspeTable = (
 					// <DeliverableTracklineTable deliverableTargetId={deliverableTargetList[i].id} />
 					<SubTargetTable

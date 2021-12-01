@@ -16,8 +16,6 @@ const getInitialValues = (
 	geographiesState: IGeographiesStateData | null,
 	organization: string | number
 ): IGeographiesState => {
-	console.log("geographiesState", geographiesState);
-
 	return {
 		code: geographiesState?.code || "",
 		// description: geographiesState?.description || "",

@@ -21,6 +21,8 @@ import { useRefetchOnBudgetTargetImport } from "../../../hooks/budget";
 import { useRefetchOnDeliverableTargetImport } from "../../../hooks/deliverable";
 import { DELIVERABLE_TYPE } from "../../../models/constants";
 
+let typeVal: any;
+
 function ProjectTargets(props: ProjectTargetsProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const [initialValues, setinitialValues] = useState<IProjectTargets>({
@@ -56,6 +58,16 @@ function ProjectTargets(props: ProjectTargetsProps) {
 		initiateRequest,
 	});
 
+	if (props.formType === "deliverable") {
+		typeVal = 6;
+	} else if (props.formType === "output") {
+		typeVal = 5;
+	} else if (props.formType === "outcome") {
+		typeVal = 4;
+	} else if (props.formType === "impact") {
+		typeVal = 3;
+	}
+
 	useEffect(() => {
 		if (data) {
 			notificationDispatch(setSuccessNotification("Projects Updated successfully !"));
@@ -80,7 +92,7 @@ function ProjectTargets(props: ProjectTargetsProps) {
 				project_with_deliverable_targets: {
 					project: dashboardData?.project?.id,
 				},
-				type: props.formType,
+				type: typeVal,
 			},
 		},
 		fetchPolicy: "network-only",
@@ -121,8 +133,6 @@ function ProjectTargets(props: ProjectTargetsProps) {
 	projectTargetsForm[0].optionsArray = getTargetOptions();
 	projectTargetsForm[1].optionsArray = orgProject?.orgProject || [];
 
-	console.log("orgProject?.orgProject", orgProject?.orgProject);
-
 	projectTargetsForm[0].getInputValue = (targetId: string) => {
 		let projects = [];
 		let currTarget: any = projectTargetsForm[0]?.optionsArray.find(
@@ -137,9 +147,6 @@ function ProjectTargets(props: ProjectTargetsProps) {
 				(elem: { project: { id: string; name: string } }) => elem.project.id
 			);
 		}
-
-		console.log("projects", projects);
-
 		// if (formType === "impact") {
 		// 	projects = currTarget?.project_with_impact_targets?.map(
 		// 		(elem: { project: { id: string; name: string } }) => elem.project.id

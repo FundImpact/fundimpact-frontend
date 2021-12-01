@@ -67,8 +67,6 @@ function GeographiesStateTableGraphql({
 	useEffect(() => {
 		if (tableFilterList) {
 			const newFilterListObject = removeEmptyKeys(tableFilterList);
-			console.log("Filter", newFilterListObject);
-			console.log("Filter Table List", tableFilterList);
 			setQueryFilter({
 				// organization: dashboardData?.organization?.id,
 				...newFilterListObject,
@@ -124,8 +122,6 @@ function GeographiesStateTableGraphql({
 			...item,
 			country: item.country ? item.country.name : null,
 		})) || [];
-
-	console.log("geographyState", geographyState);
 
 	return (
 		<GeographiesStateTableContainer

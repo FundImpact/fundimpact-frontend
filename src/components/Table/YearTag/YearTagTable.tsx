@@ -58,6 +58,7 @@ const getInitialValues = (yearTag: IYearTag | null): IYearTag => {
 		end_date: yearTag?.end_date || "",
 		type: yearTag?.type || "",
 		id: yearTag?.id || "",
+		country_id: yearTag?.country_id || [],
 	};
 };
 
@@ -74,6 +75,7 @@ function YearTagTable({
 	const [ytOrder, setYTOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
 	const [pageCount, setPageCount] = useState(0);
+	console.log("pageCount", pageCount);
 
 	const [openYearTagEditDialog, setOpenYearTagEditDialog] = useState(false);
 	const [openDeleteYearTagDialog, setOpenDeleteYearTagDialog] = useState(false);
@@ -99,6 +101,19 @@ function YearTagTable({
 			sort: `${ytOrderBy}:${ytOrder.toUpperCase()}`,
 		}
 	);
+
+	console.log("count", count);
+
+	const countryList = yearTagList?.yearTags.map((elem: any) => {
+		return elem.country_id;
+	});
+
+	if (countryList) {
+		console.log("countryList", [...countryList]);
+	}
+	// countryList.map((data: any) => {
+	// 	console.log("data country", data);
+	// });
 
 	useEffect(() => {
 		if (count?.aggregate?.count) {
@@ -126,7 +141,6 @@ function YearTagTable({
 			children: (
 				<MenuItem
 					onClick={() => {
-						console.log("Closed");
 						setOpenYearTagEditDialog(true);
 						handleClose();
 					}}
@@ -143,7 +157,6 @@ function YearTagTable({
 			children: (
 				<MenuItem
 					onClick={() => {
-						console.log("Closed");
 						setOpenDeleteYearTagDialog(true);
 						handleClose();
 					}}

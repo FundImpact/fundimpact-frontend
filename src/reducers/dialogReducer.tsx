@@ -18,7 +18,6 @@ const dialogReducer = (state: IDialogContext, action: Action) => {
 				component: action.payload,
 			};
 		case "CLOSE_DIALOG":
-			console.log("here", "CLOSE_DIALOG");
 			return {
 				component: undefined,
 			};

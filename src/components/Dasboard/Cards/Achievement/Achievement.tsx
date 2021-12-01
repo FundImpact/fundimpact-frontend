@@ -177,7 +177,7 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "deliverable",
+						type: 6,
 					},
 				},
 			},
@@ -187,7 +187,7 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "deliverable",
+						type: 6,
 					},
 				},
 			},
@@ -197,7 +197,8 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "impact",
+						type: 3,
+						// type: "impact",
 					},
 				},
 			},
@@ -207,7 +208,8 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "impact",
+						type: 3,
+						// type: "impact",
 					},
 				},
 			},
@@ -217,7 +219,8 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "output",
+						type: 4,
+						// type: "output",
 					},
 				},
 			},
@@ -227,7 +230,8 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "output",
+						type: 4,
+						// type: "output",
 					},
 				},
 			},
@@ -237,7 +241,8 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "outcome",
+						type: 5,
+						// type: "outcome",
 					},
 				},
 			},
@@ -247,7 +252,8 @@ export default function Achievement() {
 				filter: {
 					project: projectId,
 					deliverable_target_project: {
-						type: "outcome",
+						type: 5,
+						// type: "outcome",
 					},
 				},
 			},

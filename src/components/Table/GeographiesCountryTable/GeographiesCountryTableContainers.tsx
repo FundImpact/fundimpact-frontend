@@ -11,18 +11,11 @@ const getInitialValues = (
 	geographiesCountry: IGeographiesCountryData | null,
 	organization?: string
 ): IGeographies => {
-	console.log("getInitialValues", geographiesCountry);
 	return {
 		code: geographiesCountry?.code || "",
-		// description: geographiesCountry?.description || "",
 		id: parseInt(geographiesCountry?.id || ""),
 		name: geographiesCountry?.name || "",
 		organization,
-		// code: deliverableCategory?.code || "",
-		// description: deliverableCategory?.description || "",
-		// id: parseInt(deliverableCategory?.id || ""),
-		// name: deliverableCategory?.name || "",
-		// organization,
 	};
 };
 
@@ -71,8 +64,6 @@ function GeographiesCountryTableContainer({
 
 	const dashboardData = useDashBoardData();
 
-	console.log("dashboardData", dashboardData);
-
 	const toggleDialogs = (index: number, dialogOpenStatus: boolean) => {
 		setOpenDialogs((openStatus) =>
 			openStatus.map((element: boolean, i) => (i === index ? dialogOpenStatus : element))
@@ -106,8 +97,6 @@ function GeographiesCountryTableContainer({
 		MODULE_CODES.DELIVERABLE_UNIT,
 		DELIVERABLE_UNIT_ACTIONS.FIND_DELIVERABLE_UNIT
 	);
-
-	console.log("deliverableUnitFindAccess", deliverableUnitFindAccess);
 
 	return (
 		<GeographiesCountryTableView
