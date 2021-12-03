@@ -114,8 +114,7 @@ function DeliverableCategoryTableGraphql({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 		fireRequest: Boolean(dashboardData),
 	});
-
-	// console.log("List: ", deliverableCategoryList);
+	debugger;
 
 	// let {
 	// 	changePage: changeDeliverableCategoryUnitPage,

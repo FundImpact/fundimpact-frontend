@@ -22,7 +22,9 @@ export function ICustomDatePicker({
 	const [toDateSelected, settoDateSelected] = React.useState<Date>(to || new Date());
 
 	React.useMemo(() => {
+		// if (fromDateSelected <= toDateSelected) {
 		onChange(fromDateSelected, toDateSelected);
+		// }
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fromDateSelected, toDateSelected]);
 

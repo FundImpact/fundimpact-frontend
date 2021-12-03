@@ -467,6 +467,7 @@ export default function DeliverablesTrackLineTable({
 	useEffect(() => {
 		setQueryFilter({
 			deliverable_sub_target: subTargetId,
+			deleted: false,
 		});
 	}, [subTargetId]);
 
@@ -480,6 +481,7 @@ export default function DeliverablesTrackLineTable({
 			}
 			setQueryFilter({
 				deliverable_sub_target: subTargetId,
+				deleted: false,
 				...newFilterListObject,
 			});
 		}

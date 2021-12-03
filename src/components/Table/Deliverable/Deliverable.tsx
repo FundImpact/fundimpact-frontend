@@ -149,18 +149,12 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.CREATE_DELIVERABLE_TRACKING_LINE_ITEM
 	);
 
-	useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
-		variables: {
-			filter: { id: deliverableTarget.id },
-		},
-		fetchPolicy: getFetchPolicy(),
-	});
-
-	console.log(
-		"deliverableTarget?.type",
-		deliverableTarget?.type.name,
-		DELIVERABLE_TYPE.DELIVERABLE
-	);
+	// useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
+	// 	variables: {
+	// 		filter: { id: deliverableTarget.id },
+	// 	},
+	// 	fetchPolicy: getFetchPolicy(),
+	// });
 
 	useEffect(() => {
 		if (targetLineDialog)
@@ -229,6 +223,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
+								parent_id: deliverableTarget.parent_id,
 								description: deliverableTarget.description,
 								category: deliverableTarget?.category?.id,
 								// deliverable_category_org:
@@ -245,7 +240,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 					>
 						<FormattedMessage
 							id="editTargetMenu"
-							defaultMessage="Edit Target"
+							defaultMessage="Edit Deliverable Target"
 							description="This text will be show on deliverable or impact target table for edit target menu"
 						/>
 					</MenuItem>
@@ -286,6 +281,7 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
+								parent_id: deliverableTarget.parent_id,
 								description: deliverableTarget.description,
 								category: deliverableTarget?.ategory?.id,
 								// deliverable_category_org:
@@ -353,8 +349,6 @@ function DeliverableTargetAchievementAndProgress({
 		},
 		skip: qualitativeParent,
 	});
-
-	console.log("deliverableTargetId", deliverableTargetId, project);
 
 	const { data: deliverableSubTargetCount } = useQuery(GET_DELIVERABLE_SUB_TARGETS_COUNT, {
 		variables: {
@@ -589,7 +583,6 @@ export default function DeliverablesTable({
 	let typeVal: any;
 
 	deliverableTypesList?.deliverableTypes?.map((elem: any) => {
-		console.log("elem", elem, type);
 		if (elem.id == 6 && type == "deliverable") {
 			typeVal = 6;
 		} else if (elem.id == 5 && type == "outcome") {
@@ -600,8 +593,6 @@ export default function DeliverablesTable({
 			typeVal = 3;
 		}
 	});
-
-	console.log("typeValue data", typeVal, type);
 
 	const deliverableTracklineFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TRACKING_LINE_ITEM,
@@ -638,9 +629,9 @@ export default function DeliverablesTable({
 
 	useEffect(() => {
 		setQueryFilter({
-			project_with_deliverable_targets: {
-				project: dashboardData?.project?.id,
-			},
+			// project_with_deliverable_targets: {
+			project: dashboardData?.project?.id,
+			// },
 			// typeVal,
 			type: typeVal,
 		});
@@ -701,10 +692,6 @@ export default function DeliverablesTable({
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
 
-	console.log("deliverableTargetData main", deliverableTargetData, count);
-
-	console.log("tyyype", type);
-
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
 		refetchOnDeliverableTargetImport(typeVal);
@@ -746,12 +733,6 @@ export default function DeliverablesTable({
 
 			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
-				console.log(
-					"deliverableTargetList[i].id",
-					deliverableTargetList[i].id,
-					deliverableTargetList[i].type
-				);
-
 				let row: { collaspeTable: any; column: any[] } = {
 					collaspeTable: null,
 					column: [],

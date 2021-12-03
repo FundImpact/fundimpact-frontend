@@ -7,6 +7,7 @@ export interface IDeliverable {
 	code?: string;
 	description?: string;
 	organization?: number | string;
+	project_with_deliverable_target?: number | string;
 }
 
 export interface IDeliverableCategoryData extends Omit<IDeliverable, "id" | "organization"> {

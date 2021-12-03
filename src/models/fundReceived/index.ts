@@ -2,11 +2,13 @@ import { DIALOG_TYPE, FORM_ACTIONS } from "../constants";
 
 export interface IFundReceived {
 	amount: number;
+	// id?: number;
 	id?: string;
 	project_donor: string;
 	reporting_date: string;
 	deleted?: boolean;
-	project: string | number;
+	project: any;
+	// project: string | number;
 	donor: string | number;
 }
 

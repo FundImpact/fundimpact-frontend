@@ -110,6 +110,7 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 			is_qualitative
 			sub_target_required
 			value_calculation
+			parent_id
 			value_qualitative_option
 			project {
 				id

@@ -235,21 +235,24 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 		string | number | undefined
 	>("");
 
-	console.log("submittedBudgetTarget", submittedBudgetTarget);
-
 	const [selectedBudgetTarget, setSelectedBudgetTarget] = useState<
 		IGET_BUDGET_TARGET_PROJECT["projectBudgetTargets"][0]
 	>();
 
 	const { data: budgetDataByProject } = useQuery(GET_BUDGET_TARGET_PROJECT);
 
-	console.log("budgetDataByProject", budgetDataByProject?.projectBudgetTargets);
-
-	const { refetch: budgetTrackingRefetch } = useQuery(GET_PROJECT_BUDGET_TARCKING, {
-		variables: {
-			filter: { budget_targets_project: submittedBudgetTarget ? submittedBudgetTarget : "" },
-		},
-	});
+	const { data: budgetTrackData, refetch: budgetTrackingRefetch } = useQuery(
+		GET_PROJECT_BUDGET_TARCKING,
+		{
+			variables: {
+				filter: {
+					budget_targets_project: initialValues.budget_sub_target,
+					// budget_targets_project: submittedBudgetTarget ? submittedBudgetTarget : "",
+					deleted: false,
+				},
+			},
+		}
+	);
 
 	// const [openBudgetTargetDialog, setOpenBudgetTargetDialog] = useState<boolean>(false);
 	// const [openGrantPeriodDialog, setOpenGrantPeriodDialog] = useState<boolean>(false);
@@ -360,6 +363,10 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	const validate = useCallback(
 		(values: IBudgetTrackingLineitemForm) => {
 			let errors: Partial<IBudgetTrackingLineitemForm> = {};
+			if (values.timeperiod_end <= values.timeperiod_start) {
+				errors.timeperiod_end =
+					"Time period must be bigger than or equal to start time period";
+			}
 			if (values.budget_sub_target) {
 				setSelectedDonor(budgetTargetHash[values.budget_sub_target]);
 			}
@@ -483,13 +490,13 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	};
 
 	const onCreate = async (valuesSubmitted: IBudgetTrackingLineitemForm) => {
-		console.log("valuesSubmitted.budget_targets_project", valuesSubmitted);
 		let currentBudgetTarget = await getBudgetTargetBySubTarget(
 			apolloClient,
 			valuesSubmitted.budget_sub_target || ""
 		);
 		const reporting_date = new Date(valuesSubmitted.reporting_date);
-		setSubmittedBudgetTarget(valuesSubmitted.budget_targets_project);
+		setSubmittedBudgetTarget(valuesSubmitted.budget_sub_target);
+		// setSubmittedBudgetTarget(valuesSubmitted.budget_targets_project);
 		let values = removeEmptyKeys<IBudgetTrackingLineitemForm>({
 			objectToCheck: valuesSubmitted,
 		});
@@ -511,7 +518,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
 								filter: {
-									budget_sub_target: lineItemCreated.budgetSubTargets.id,
+									budget_sub_target: lineItemCreated.budget_sub_target.id,
+									// budget_sub_target: lineItemCreated.budgetSubTargets.id,
 								},
 							},
 						});
@@ -519,7 +527,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJ_BUDGET_TRACINGS_COUNT,
 							variables: {
 								filter: {
-									budget_sub_target: lineItemCreated.budgetSubTargets.id,
+									budget_sub_target: lineItemCreated.budget_sub_target.id,
+									// budget_sub_target: lineItemCreated.budgetSubTargets.id,
 								},
 							},
 							data: {
@@ -534,8 +543,9 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
 								filter: {
-									budget_targets_project:
-										lineItemCreated.budget_targets_project.id,
+									budget_targets_project: lineItemCreated.budget_sub_target.id,
+									deleted: false,
+									// lineItemCreated.budget_targets_project.id,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -549,8 +559,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARCKING,
 							variables: {
 								filter: {
-									budget_targets_project:
-										lineItemCreated.budget_targets_project.id,
+									budget_targets_project: lineItemCreated.budget_sub_target.id,
+									// lineItemCreated.budget_targets_project.id,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -569,7 +579,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 							variables: {
 								filter: {
-									budgetTargetsProject: lineItemCreated.budget_targets_project.id,
+									budgetTargetsProject: lineItemCreated?.budget_sub_target.id,
+									// budgetTargetsProject: lineItemCreated.budget_targets_project.id,
 								},
 							},
 						});
@@ -577,7 +588,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 							variables: {
 								filter: {
-									budgetTargetsProject: lineItemCreated.budget_targets_project.id,
+									budgetTargetsProject: lineItemCreated?.budget_sub_target.id,
+									// budgetTargetsProject: lineItemCreated.budget_targets_project.id,
 								},
 							},
 							data: {
@@ -662,7 +674,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 							variables: {
 								filter: {
-									budgetTargetsProject: lineItemCreated.budget_targets_project.id,
+									budgetTargetsProject: lineItemCreated?.budget_sub_target.id,
+									// budgetTargetsProject: lineItemCreated.budget_targets_project.id,
 								},
 							},
 						});
@@ -671,7 +684,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 							variables: {
 								filter: {
-									budgetTargetsProject: lineItemCreated.budget_targets_project.id,
+									budgetTargetsProject: lineItemCreated?.budget_sub_target.id,
+									// budgetTargetsProject: lineItemCreated.budget_targets_project.id,
 								},
 							},
 							data: {
@@ -780,7 +794,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						query: GET_PROJECT_BUDGET_TARGET_AMOUNT_SUM,
 						variables: {
 							filter: {
-								budgetTargetsProject: initialValues?.budget_targets_project,
+								budgetTargetsProject: initialValues?.budget_sub_target,
+								// budgetTargetsProject: initialValues?.budget_targets_project,
 							},
 						},
 					},
@@ -792,7 +807,18 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						query: GET_BUDGET_SUB_TARGETS_COUNT,
 						variables: {
 							filter: {
-								budget_targets_project: initialValues?.budget_targets_project,
+								budget_targets_project: initialValues?.budget_sub_target,
+								// budget_targets_project: initialValues?.budget_targets_project || "",
+							},
+						},
+					},
+					{
+						query: GET_PROJECT_BUDGET_TARCKING,
+						variables: {
+							filter: {
+								budget_targets_project: initialValues?.budget_sub_target,
+								deleted: false,
+								// lineItemCreated.budget_targets_project.id,
 							},
 						},
 					},

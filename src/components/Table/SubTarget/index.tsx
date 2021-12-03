@@ -114,11 +114,13 @@ function EditSubTarget({
 	// tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
+	console.log("tableType:", tableType);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 	const dashBoardData = useDashBoardData();
 
 	const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 	const [subTargetData, setsubTargetData] = useState<ISubTarget | null>();
+
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
 	};
@@ -144,6 +146,7 @@ function EditSubTarget({
 		amount: "",
 		note: "",
 		budget_sub_target: (subTarget?.id as any) || "",
+		budget_targets_project: "",
 		annual_year: "",
 		reporting_date: getTodaysDate(),
 		financial_year_org: "",
@@ -180,6 +183,9 @@ function EditSubTarget({
 							setsubTargetData({
 								id: subTarget?.id,
 								[getTargetId(tableType)]: subTarget?.[getTargetId(tableType)]?.id,
+								// [getTargetId(tableType.name)]: subTarget?.[
+								// 	getTargetId(tableType.name)
+								// ]?.id,
 								name: subTarget?.name,
 								timeperiod_start: getTodaysDate(subTarget?.timeperiod_start),
 								timeperiod_end: getTodaysDate(subTarget?.timeperiod_end),
@@ -282,7 +288,7 @@ function EditSubTarget({
 						setOpenDeleteDeliverableLineItem(false);
 					}}
 					formAction={FORM_ACTIONS.UPDATE}
-					formType={tableType}
+					formType={tableType.name}
 					data={subTargetData}
 					reftechOnSuccess={refetch}
 					qualitativeParent={
@@ -347,6 +353,7 @@ function EditSubTarget({
 							subTarget?.deliverable_target_project?.value_qualitative_option
 								?.options || []
 						}
+						deliverableTarget={subTarget?.deliverable_target_project?.id}
 					/>
 				)
 			)}
@@ -461,6 +468,7 @@ const LineItemTableButton = ({
 		variables: {
 			filter: {
 				[getSubTargetId(tableType)]: subTargetId,
+				deleted: false,
 			},
 		},
 	});
@@ -667,16 +675,12 @@ export default function ({
 		countRefetch,
 	} = pagination({
 		query: getSubTargetFindQuery(),
-		// query: GET_DELIVERABLE_SUB_TARGETS,
 		countQuery: getSubTargetCountQuery(),
-		// countQuery: GET_DELIVERABLE_SUB_TARGETS_COUNT,
 		countFilter: queryFilter,
 		queryFilter,
 		aggregateCount: true,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
-
-	console.log("deliverableSubtargetData", subTargetData);
 
 	const limit = 10;
 	const [rows, setRows] = useState<any>([]);
@@ -701,15 +705,12 @@ export default function ({
 		DELIVERABLE_TRACKING_LINE_ITEM_ACTIONS.DELIVERABLE_TRACKING_LINE_ITEM_EXPORT
 	);
 
-	console.log("tttableType", tableType, Object.values(DELIVERABLE_TYPE));
 	const getListObjectKey = () =>
 		tableType === "budget"
 			? "budgetSubTargets"
 			: Object.values(DELIVERABLE_TYPE).includes(tableType.name)
 			? "deliverableSubTargets"
 			: "budgetSubTargets";
-
-	console.log("subTargetData?.[getListObjectKey()]", subTargetData);
 
 	useEffect(() => {
 		if (subTargetData?.[getListObjectKey()]?.length) {
@@ -736,6 +737,10 @@ export default function ({
 								  )
 								: subTargetList[i]?.target_value}
 						</TableCell>,
+						<TableCell key={1}>{subTargetList[i]?.target_value}</TableCell>,
+						// <TableCell key={subTargetList[i]?.btlAmount + `${subTargetList[i]?.id}-1`}>
+						// 	{subTargetList[i]?.btlAmount}
+						// </TableCell>,
 						<TableCell
 							key={
 								getTodaysDate(subTargetList[i]?.timeperiod_start) +

@@ -167,7 +167,6 @@ function GeoRegions({
 
 	const onSubmit = async (valuesSubmitted: IGeoRegions) => {
 		let values = removeEmptyKeys<IGeoRegions>({ objectToCheck: valuesSubmitted });
-		console.log("geo region Values", values);
 
 		try {
 			delete values.is_project;

@@ -35,6 +35,7 @@ const getInitialValues = (
 	return {
 		amount: `${fundReceipt?.amount}` || "",
 		reporting_date: getTodaysDate(fundReceipt?.reporting_date || undefined),
+		// id: fundReceipt?.id,
 		id: fundReceipt?.id || "",
 		project_donor: fundReceipt?.donor?.id || "",
 		donor:
