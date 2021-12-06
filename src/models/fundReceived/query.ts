@@ -15,6 +15,7 @@ export interface IGet_Fund_Receipt_List {
 			project: { id: string; name: string };
 		};
 		deleted: boolean;
+		// project: { id: string; name: string };
 		project: string | number;
 		donor: {
 			id: string;
@@ -41,6 +42,7 @@ export interface ICreateFundReceiptVariables {
 }
 
 export interface IUpdateFundReceiptVariables {
+	// id: number;
 	id: string;
 	input: IFundReceived;
 }

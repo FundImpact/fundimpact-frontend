@@ -502,8 +502,6 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 
 			delete (values as any).id;
 
-			console.log("values", values);
-
 			props.formAction === FORM_ACTIONS.UPDATE &&
 				(await updateProjectBudgetTarget({
 					variables: {

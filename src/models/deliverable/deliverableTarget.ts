@@ -9,6 +9,7 @@ export enum ValueCalculations {
 export interface IDeliverableTarget {
 	id?: number;
 	name: string;
+	parent_id: string;
 	description?: string;
 	is_qualitative?: boolean;
 	sub_target_required?: boolean;

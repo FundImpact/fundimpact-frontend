@@ -119,7 +119,6 @@
 			"getInputValue": {},
 			"disabled": false,
 			"inputType": "switch",
-			"required": true,
 			"size": 6
 		},
 		{

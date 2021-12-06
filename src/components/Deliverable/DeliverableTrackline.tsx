@@ -58,6 +58,8 @@ import { YearTagPayload } from "../../models/yearTags";
 import { GET_DELIVERABLE_SUB_TARGETS } from "../../graphql/Deliverable/subTarget";
 import SubTarget from "../Forms/SubTargetForm";
 
+let typeVal: any;
+
 function getInitialValues(props: DeliverableTargetLineProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
@@ -76,7 +78,6 @@ function getInitialValues(props: DeliverableTargetLineProps) {
 	};
 }
 
-let typeVal: any;
 const FormDetailsCalculate = React.memo(
 	({ currentTargetId }: { currentTargetId: string | number }) => {
 		const { data: deliverableTargetResponse } = useQuery(GET_DELIVERABLE_TARGET_BY_PROJECT, {
@@ -184,11 +185,13 @@ const fetchDeliverableTracklineByTarget = async ({
 	}
 };
 
+// const DashBoardData = useDashBoardData();
+
 function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	const apolloClient = useApolloClient();
-	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
 	let initialValues: IDeliverableTargetLine = getInitialValues(props);
+	const DashBoardData = useDashBoardData();
 
 	const intl = useIntl();
 
@@ -343,8 +346,6 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		description: `This text will be show on deliverable Achievement form for subtitle`,
 	});
 
-	console.log("props.formType", props.formType);
-
 	if (props.formType === "deliverable") {
 		typeVal = 6;
 	} else if (props.formType === "output") {
@@ -359,10 +360,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		variables: {
 			filter: {
 				project: DashBoardData?.project?.id,
-				deliverable_target_project: {
-					type: typeVal,
-					// type: props.formType,
-				},
+				deliverable_target_project: props?.deliverableTarget,
 			},
 		},
 	});
@@ -550,11 +548,11 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// updating annaul year field with fetched annual year list
 
 	// updating annaul year field with fetched annual year list
-	useEffect(() => {
-		if (deliverableTargets) {
-			deliverableTragetLineForm[0].optionsArray = deliverableTargets.deliverableSubTargets;
-		}
-	}, [deliverableTargets]);
+	// useEffect(() => {
+	// 	if (deliverableTargets) {
+	deliverableTragetLineForm[0].optionsArray = deliverableTargets?.deliverableSubTargets;
+	// 	}
+	// }, [deliverableTargets]);
 
 	// deliverableTragetLineForm[5].optionsArray = useMemo(() => {
 	// 	let donorsArray: any = [];
@@ -738,14 +736,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				}
 			},
 			refetchQueries: [
-				// {
-				// 	query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
-				// 	variables: {
-				// 		filter: {
-				// 			deliverable_sub_target: value.deliverable_sub_target,
-				// 		},
-				// 	},
-				// },
+				{
+					query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+					variables: {
+						filter: {
+							deliverable_sub_target: value.deliverable_sub_target,
+						},
+					},
+				},
 				// {
 				// 	query: GET_ACHIEVED_VALLUE_BY_TARGET,
 				// 	variables: {
@@ -899,6 +897,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		if (isQualitativeParentTarrget && !values.value_qualitative) {
 			errors.value_qualitative = "Target value is required";
 		}
+		if (values.timeperiod_end <= values.timeperiod_start) {
+			errors.timeperiod_end = "Time period must be bigger than or equal to start time period";
+		}
 
 		return errors;
 	};
@@ -906,6 +907,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		try {
 			const reporting_date = new Date(initialValues?.reporting_date);
 			const deliverableTracklineValues = { ...initialValues, reporting_date };
+
 			delete deliverableTracklineValues["id"];
 			delete deliverableTracklineValues["donors"];
 			delete deliverableTracklineValues["donorMapValues"];
@@ -942,6 +944,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						variables: {
 							filter: {
 								deliverable_sub_target: initialValues?.deliverable_sub_target,
+							},
+						},
+					},
+					{
+						query: GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
+						variables: {
+							filter: {
+								// deliverable_target_project: currentTargetId,
+								deliverable_sub_target: initialValues?.deliverable_sub_target,
+								deleted: false,
 							},
 						},
 					},

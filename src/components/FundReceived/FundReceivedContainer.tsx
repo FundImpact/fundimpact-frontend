@@ -290,9 +290,11 @@ const updateProjectFundReceipt = async ({
 	fundReceiptToUpdate,
 }: IUpdateFundReceiptProps) => {
 	const fundReceiptId = valuesSubmitted.id;
+	let newFundId = parseInt(fundReceiptId || "");
 	delete valuesSubmitted.id;
 	await updateFundReceipt({
 		variables: {
+			// id: newFundId,
 			id: fundReceiptId || "",
 			input: {
 				amount: parseInt(valuesSubmitted.amount),
@@ -473,9 +475,11 @@ function FundReceivedContainer({
 	};
 
 	fundReceivedForm[2].addNewClick = () => setOpenDonorCreateDialog(true);
-	fundReceivedForm[3].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
-		grantPeriods,
-	]);
+	// fundReceivedForm[3].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+	// 	grantPeriods,
+	// ]);
+
+	fundReceivedForm[3].optionsArray = grantPeriods?.grantPeriodsProjectList;
 	const updateFundReceivedSubtitle = intl.formatMessage({
 		id: "FundReceivedUpdateFormSubtitle",
 		defaultMessage: "Update Fund Recevied For Project",
@@ -492,12 +496,17 @@ function FundReceivedContainer({
 		try {
 			const fundReceivedValues = { ...initialValues };
 			delete fundReceivedValues["id"];
+			let newId = initialValues?.id as string;
+			let project_id = initialValues?.project.id;
+
 			await updateFundReceipt({
 				variables: {
+					// id: parseInt(newId),
 					id: initialValues?.id as string,
 					input: {
 						deleted: true,
 						...fundReceivedValues,
+						project: project_id,
 						amount: Number(fundReceivedValues.amount),
 						project_donor: fundReceivedValues?.project_donor?.split?.("-")?.[0],
 					},

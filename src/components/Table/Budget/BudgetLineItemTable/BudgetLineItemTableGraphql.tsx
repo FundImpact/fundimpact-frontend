@@ -68,6 +68,7 @@ function BudgetLineItemTableGraphql({
 	useEffect(() => {
 		setQueryFilter({
 			budget_sub_target: subTargetId,
+			deleted: false,
 		});
 	}, [subTargetId]);
 
@@ -81,6 +82,7 @@ function BudgetLineItemTableGraphql({
 			}
 			setQueryFilter({
 				budget_sub_target: subTargetId,
+				deleted: false,
 				...newFilterListObject,
 			});
 		}

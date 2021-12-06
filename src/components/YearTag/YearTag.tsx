@@ -30,6 +30,9 @@ const validate = (values: IYearTag) => {
 	if (!values.name) {
 		errors.name = "Name is required";
 	}
+	if (values.end_date <= values.start_date) {
+		errors.end_date = "Time period must be bigger than or equal to start time period";
+	}
 	return errors;
 };
 

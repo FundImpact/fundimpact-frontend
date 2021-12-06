@@ -55,8 +55,6 @@ function Geographies(props: GeographiesProps) {
 		CREATE_GEOGRAPHIES_COUNTRY
 	);
 
-	console.log("creatingGeographiesCountry", creatingGeographiesCountry);
-
 	const [updateGeographiesCountry, { loading: updatingGeographiesCountry }] = useMutation(
 		UPDATE_GEOGRAPHIES_COUNTRY
 	);
@@ -247,8 +245,6 @@ function Geographies(props: GeographiesProps) {
 		return errors;
 	};
 	const intl = useIntl();
-
-	console.log("props?.dialogType", props?.dialogType);
 
 	if (props?.dialogType === DIALOG_TYPE.DELETE) {
 		return (

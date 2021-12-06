@@ -338,22 +338,6 @@ export default function DashboardTableContainer() {
 		}
 	}
 
-	// deliverableTypesList?.deliverableTypes?.map((elem: any) => {
-	// 	console.log("elemData", elem);
-	// 	debugger;
-	// 	if (elem.id == 6 && DELIVERABLE_TYPE.DELIVERABLE === "deliverable") {
-	// 		typeVal = "deliverable";
-	// 	} else if (elem.id == 5 && DELIVERABLE_TYPE.OUTCOME === "outcome") {
-	// 		typeVal = "outcome";
-	// 	} else if (elem.id == 4 && DELIVERABLE_TYPE.OUTPUT === "output") {
-	// 		typeVal = "output";
-	// 	} else if (elem.id == 3 && DELIVERABLE_TYPE.IMPACT === "impact") {
-	// 		typeVal = "impact";
-	// 	}
-	// });
-
-	// console.log("typeVal data", typeVal, DELIVERABLE_TYPE.DELIVERABLE, DELIVERABLE_TYPE.OUTCOME);
-
 	const tabs = [
 		{
 			label: intl.formatMessage({
@@ -528,23 +512,23 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: deliverableCategoryCreateAccess,
 				},
-				{
-					text: intl.formatMessage({
-						id: "reportAchievement",
-						defaultMessage: "Report Achievement",
-						description: `This text will be show on Add Button for Report Achievement`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<DeliverableTrackLine
-							type={DELIVERABLE_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							formType={typeVal}
-							// formType={DELIVERABLE_TYPE.DELIVERABLE}
-						/>
-					),
-					createButtonAccess: deliverableTracklineCreateAccess,
-				},
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "reportAchievement",
+				// 		defaultMessage: "Report Achievement",
+				// 		description: `This text will be show on Add Button for Report Achievement`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<DeliverableTrackLine
+				// 			type={DELIVERABLE_ACTIONS.CREATE}
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			formType={typeVal}
+				// 			// formType={DELIVERABLE_TYPE.DELIVERABLE}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: deliverableTracklineCreateAccess,
+				// },
 				{
 					text: intl.formatMessage({
 						id: "manageProjectDeliverableTargets",
@@ -616,23 +600,23 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
 				},
-				{
-					text: intl.formatMessage({
-						id: "reportAchievement",
-						defaultMessage: "Report Achievement",
-						description: `This text will be show on Add Button for Report Achievement`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<DeliverableTrackLine
-							type={DELIVERABLE_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							formType={typeVal}
-							// formType={DELIVERABLE_TYPE.OUTPUT}
-						/>
-					),
-					createButtonAccess: deliverableTracklineCreateAccess,
-				},
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "reportAchievement",
+				// 		defaultMessage: "Report Achievement",
+				// 		description: `This text will be show on Add Button for Report Achievement`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<DeliverableTrackLine
+				// 			type={DELIVERABLE_ACTIONS.CREATE}
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			formType={typeVal}
+				// 			// formType={DELIVERABLE_TYPE.OUTPUT}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: deliverableTracklineCreateAccess,
+				// },
 				{
 					text: intl.formatMessage({
 						id: "manageProjectImpactTargets",
@@ -705,23 +689,23 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: deliverableTargetCreateAccess,
 				},
-				{
-					text: intl.formatMessage({
-						id: "reportAchievement",
-						defaultMessage: "Report Achievement",
-						description: `This text will be show on Add Button for Report Achievement`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<DeliverableTrackLine
-							type={DELIVERABLE_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							formType={typeVal}
-							// formType={DELIVERABLE_TYPE.OUTCOME}
-						/>
-					),
-					createButtonAccess: deliverableTracklineCreateAccess,
-				},
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "reportAchievement",
+				// 		defaultMessage: "Report Achievement",
+				// 		description: `This text will be show on Add Button for Report Achievement`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<DeliverableTrackLine
+				// 			type={DELIVERABLE_ACTIONS.CREATE}
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			formType={typeVal}
+				// 			// formType={DELIVERABLE_TYPE.OUTCOME}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: deliverableTracklineCreateAccess,
+				// },
 				{
 					text: intl.formatMessage({
 						id: "manageProjectImpactTargets",
@@ -794,55 +778,55 @@ export default function DashboardTableContainer() {
 					),
 					createButtonAccess: impactTargetCreateAccess,
 				},
-				{
-					text: intl.formatMessage({
-						id: "createImpactUnit",
-						defaultMessage: "Create Impact Unit",
-						description: `This text will be show on Add Button for Create Impact Unit`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactUnitDialog
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							organization={dashboardData?.organization?.id}
-						/>
-					),
-					createButtonAccess: impactUnitCreateAccess,
-				},
-				{
-					text: intl.formatMessage({
-						id: "createImpactCategory",
-						defaultMessage: "Create Impact Category",
-						description: `This text will be show on Add Button for Create Impact Category`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<ImpactCategoryDialog
-							formAction={FORM_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							organization={dashboardData?.organization?.id}
-						/>
-					),
-					createButtonAccess: impactCategoryCreateAccess,
-				},
-				{
-					text: intl.formatMessage({
-						id: "reportAchievement",
-						defaultMessage: "Report Achievement",
-						description: `This text will be show on Add Button for Report Achievement`,
-					}),
-					dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
-						<DeliverableTrackLine
-							type={DELIVERABLE_ACTIONS.CREATE}
-							open={open}
-							handleClose={handleClose}
-							formType={typeVal}
-							// formType={DELIVERABLE_TYPE.IMPACT}
-						/>
-					),
-					createButtonAccess: impactTracklineCreateAccess,
-				},
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "createImpactUnit",
+				// 		defaultMessage: "Create Impact Unit",
+				// 		description: `This text will be show on Add Button for Create Impact Unit`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<ImpactUnitDialog
+				// 			formAction={FORM_ACTIONS.CREATE}
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			organization={dashboardData?.organization?.id}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: impactUnitCreateAccess,
+				// },
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "createImpactCategory",
+				// 		defaultMessage: "Create Impact Category",
+				// 		description: `This text will be show on Add Button for Create Impact Category`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<ImpactCategoryDialog
+				// 			formAction={FORM_ACTIONS.CREATE}
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			organization={dashboardData?.organization?.id}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: impactCategoryCreateAccess,
+				// },
+				// {
+				// 	text: intl.formatMessage({
+				// 		id: "reportAchievement",
+				// 		defaultMessage: "Report Achievement",
+				// 		description: `This text will be show on Add Button for Report Achievement`,
+				// 	}),
+				// 	dialog: ({ open, handleClose }: { open: boolean; handleClose: () => void }) => (
+				// 		<DeliverableTrackLine
+				// 			type={DELIVERABLE_ACTIONS.CREATE}
+				// 			open={open}
+				// 			handleClose={handleClose}
+				// 			formType={typeVal}
+				// 			// formType={DELIVERABLE_TYPE.IMPACT}
+				// 		/>
+				// 	),
+				// 	createButtonAccess: impactTracklineCreateAccess,
+				// },
 				{
 					text: intl.formatMessage({
 						id: "manageProjectImpactTargets",

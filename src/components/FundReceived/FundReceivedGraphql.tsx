@@ -131,6 +131,7 @@ function FundReceivedGraphql({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dashboardData]);
+	console.log("updateFundReceipt::", initialFormValues);
 	return (
 		<FundReceivedContainer
 			projectDonors={donorList?.projectDonors || []}

@@ -312,8 +312,6 @@ export default function MainOrganizationDashboard() {
 		// },
 	});
 
-	console.log("main projectList", projectList);
-
 	const [redirectToDashboard, setRedirectToDashboard] = useState<boolean>(false);
 	const [showOrgOverview, setShowOrgOverview] = useState<boolean>(true);
 

@@ -93,7 +93,6 @@ function SubTarget(props: SubTargetFormProps) {
 	let typeVal: any;
 
 	deliverableTypesList?.deliverableTypes?.map((elem: any) => {
-		console.log("elem", elem, type);
 		if (elem.id == 6 && type == "deliverable") {
 			typeVal = 6;
 		} else if (elem.id == 5 && type == "outcome") {
@@ -207,8 +206,6 @@ function SubTarget(props: SubTargetFormProps) {
 
 	let budgetSubTargetFormList: any = budgetSubTargetForm;
 
-	// console.log("formAction ttttt", FORM_ACTIONS);
-
 	const getTargetId = () =>
 		props.formType === "budget"
 			? "budget_targets_project"
@@ -222,8 +219,6 @@ function SubTarget(props: SubTargetFormProps) {
 			: Object.values(DELIVERABLE_TYPE).includes(props.formType)
 			? deliverableTargets?.deliverableTargetList || []
 			: "";
-
-	console.log("Kuch bhi", Object.values(DELIVERABLE_TYPE), props.formType);
 
 	budgetSubTargetFormList[0].name = getTargetId();
 	budgetSubTargetFormList[0].optionsArray = getTargetOptions();
@@ -265,13 +260,10 @@ function SubTarget(props: SubTargetFormProps) {
 
 	// const getResponseData = geoResponse;
 
-	const { data: grantPeriods } = useQuery(
-		GET_GRANT_PERIOD
-		// 	, {
-		// 	variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
-		// 	// skip: !currentDonor || !dashboardData?.project?.id,
-		// }
-	);
+	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
+		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
+		// skip: !currentDonor || !dashboardData?.project?.id,
+	});
 
 	console.log("grantPeriods", grantPeriods);
 
@@ -569,9 +561,7 @@ function SubTarget(props: SubTargetFormProps) {
 				props.formType !== "budget" &&
 				Object.values(DELIVERABLE_TYPE).includes(props.formType)
 			) {
-				console.log("rrrrrreach", props.formType);
 				queryFilter[getTargetId()].type = typeVal;
-				// queryFilter[getTargetId()].type = props.formType;
 				projectSubTargetsQueryFilter = {
 					[getTargetId()]: {
 						type: typeVal,
@@ -672,19 +662,18 @@ function SubTarget(props: SubTargetFormProps) {
 			[getTargetId()]: subTargetValues[getTargetId()],
 			project: dashboardData?.project?.id,
 		};
+
 		if (
 			props.formType !== "budget" &&
 			Object.values(DELIVERABLE_TYPE).includes(props.formType)
 		) {
 			projectSubTargetsQueryFilter = {
 				[getTargetId()]: {
+					// type: 6,
 					type: typeVal,
-					// type: props.formType,
 				},
 			};
 		}
-
-		console.log("subTargetId", subTargetId, subTargetValues);
 
 		try {
 			await updateSubTarget({
@@ -732,8 +721,6 @@ function SubTarget(props: SubTargetFormProps) {
 	};
 
 	let initialValues: any = getInitialValues(props);
-
-	console.log("initialValues subtarget", initialValues);
 
 	// budgetSubTargetFormList[2].getInputValue = (value: number) => {
 	// 	if (value < 0) {
@@ -795,6 +782,7 @@ function SubTarget(props: SubTargetFormProps) {
 	};
 
 	const validate = (values: any) => {
+		console.log("values::", values);
 		let errors: Partial<any> = {};
 		if (props.formAction === FORM_ACTIONS.CREATE) {
 			if (!isQualitativeParent && !values.target_value) {
@@ -802,6 +790,11 @@ function SubTarget(props: SubTargetFormProps) {
 			}
 			if (isQualitativeParent && !values.target_value_qualitative) {
 				errors.target_value = "Target value is required";
+			}
+
+			if (values.timeperiod_end <= values.timeperiod_start) {
+				errors.timeperiod_end =
+					"Time period must be bigger than or equal to start time period";
 			}
 		}
 
@@ -927,11 +920,11 @@ function SubTarget(props: SubTargetFormProps) {
 				)}
 				{openTargetDialog && Object.values(DELIVERABLE_TYPE).includes(props.formType) && (
 					<DeliverableTarget
-						project={undefined}
+						type={DELIVERABLE_ACTIONS.CREATE}
 						formType={props.formType}
 						open={openTargetDialog}
-						type={DELIVERABLE_ACTIONS.CREATE}
 						handleClose={() => setOpenTargetDialog(false)}
+						project={dashboardData?.project?.id}
 					/>
 				)}
 			</FormDialog>

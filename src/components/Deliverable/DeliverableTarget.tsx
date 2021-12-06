@@ -48,6 +48,7 @@ function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
+		parent_id: "",
 		description: "",
 		unit: "",
 		category: "",
@@ -104,15 +105,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		GET_DELIVERABLE_TARGET_BY_PROJECT
 	); // for fetching outputs by project
 
-	console.log("outputsByProject", outputsByProject);
-
 	// const { data: deliverableCategories } = useQuery(GET_DELIVERABLE_ORG_CATEGORY, {
 	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
 	// });
 
 	const { data: categories } = useQuery(GET_CATEGORIES);
-
-	console.log("categories", categories);
 
 	let categoryType: any = [];
 	categories?.categories.forEach((elem: any) => {
@@ -139,7 +136,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		CREATE_DELIVERABLE_TARGET,
 		{
 			onCompleted: async (data) => {
-				console.log("createdata", data);
 				if (data?.createDeliverableTarget) {
 					try {
 						await createProjectWithDeliverableTarget({
@@ -150,6 +146,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 										deliverable_target_project:
 											data?.createDeliverableTarget?.id,
 										category: data?.createDeliverableTarget?.category?.id,
+										parent: data?.createDeliverableTarget.parent_id,
 									},
 								},
 							},
@@ -232,8 +229,10 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		try {
 			let createInputTarget = {
 				...deliverableTarget,
+				parent_id: parseInt(deliverableTarget.parent_id),
 				// deliverable_category_unit: deliverableCategoryUnitId,
 			};
+
 			delete (createInputTarget as any).id;
 
 			await createDeliverableTarget({
@@ -485,11 +484,11 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// 	}
 	// }, [props.type]);
 	// updating categories field with fetched categories list
-	useEffect(() => {
-		if (outputsByProject) {
-			deliverableTargetForm[0].optionsArray = outputsByProject.deliverableTargetList;
-		}
-	}, [outputsByProject]);
+	// useEffect(() => {
+	// 	if (outputsByProject) {
+	deliverableTargetForm[0].optionsArray = outputsByProject?.deliverableTargetList;
+	// 	}
+	// }, [outputsByProject]);
 
 	// useEffect(() => {
 	// 	if (deliverableCategories) {
@@ -497,19 +496,20 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// 	}
 	// }, [deliverableCategories]);
 
-	useEffect(() => {
-		if (categories) {
-			deliverableTargetForm[2].optionsArray = categoryType;
-			// deliverableTargetForm[2].optionsArray = categories?.categories;
-		}
-	}, [categories]);
+	// useEffect(() => {
+	// 	if (categories) {
+	deliverableTargetForm[2].optionsArray = categoryType;
+	// deliverableTargetForm[2].optionsArray = categories?.categories;
+	// 	}
+	// }, [categories]);
 
-	useEffect(() => {
-		if (units) {
-			deliverableTargetForm[3].optionsArray = unitType;
-			// deliverableTargetForm[3].optionsArray = units?.units;
-		}
-	}, [units]);
+	// useEffect(() => {
+	// 	if (units) {
+	deliverableTargetForm[3].optionsArray = unitType;
+	// deliverableTargetForm[3].optionsArray = units?.units;
+	// 	}
+	// }, [units]);
+
 	// useEffect(() => {
 	// 	if (unitsByOrg) {
 	// 		deliverableTargetForm[3].optionsArray = unitsByOrg.deliverableUnitOrg;
@@ -580,6 +580,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		await createDeliverableTargetHelper({
 			id: value.id,
 			name: value.name,
+			parent_id: value.parent_id,
 			description: value.description,
 			project: value.project,
 			category: value?.category,
@@ -661,8 +662,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const onDelete = async () => {
 		try {
 			const deliverableTargetValues = { ...initialValues };
-
-			console.log("deliverableTargetValues", deliverableTargetValues);
 
 			delete deliverableTargetValues["id"];
 			if (
