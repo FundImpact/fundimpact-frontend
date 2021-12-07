@@ -64,6 +64,7 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 
 	const validate = (values: IGrantPeriod) => {
+		console.log("values::", values);
 		let errors: Partial<IGrantPeriod> = {};
 		if (!values.name) {
 			errors.name = "Name is required";
@@ -77,6 +78,16 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 		if (!values.end_date) {
 			errors.end_date = "End date is required";
 		}
+
+		if (values.start_date && values.end_date) {
+			if (values.end_date < values.start_date) {
+				errors.end_date = "End Date Must be greater then Start Date!";
+			}
+		}
+
+		// if (values?.start_date >= values?.end_date) {
+		// 	errors.end_date = "End Date Must be greater then Start Date!";
+		// }
 		return errors;
 	};
 
@@ -139,6 +150,8 @@ export function GranPeriodForm(props: GrantPeriodFormProps) {
 				}}
 			>
 				{(formik) => {
+					console.log("values: ", formik.values);
+
 					return (
 						<Form autoComplete="off" data-testid="form" onChange={clearErrors}>
 							<Grid container spacing={4}>

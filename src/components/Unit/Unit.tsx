@@ -222,7 +222,9 @@ function Unit(props: IUnitProps) {
 	}
 
 	if (formValues?.project_id && formAction === "UPDATE") {
+		formValues.is_project = true;
 		addUnitForm[5].disabled = true;
+		addUnitForm[5].hidden = false;
 		addUnitForm[4].hidden = false;
 	}
 	if (formAction === "CREATE") {

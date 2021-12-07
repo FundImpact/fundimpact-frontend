@@ -59,7 +59,7 @@ function Category(props: ICategoryProps) {
 
 	useEffect(() => {
 		if (projectsList) {
-			addCategoryForm[5].optionsArray = projectsList.orgProject;
+			addCategoryForm[5].optionsArray = projectsList?.orgProject;
 		}
 		if (deliverableTypesList) {
 			addCategoryForm[3].optionsArray = deliverableTypesList?.deliverableTypes;
@@ -68,6 +68,8 @@ function Category(props: ICategoryProps) {
 
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
+
+	console.log("props.initialValues", props.initialValues, initialValues);
 
 	const formAction = props.formAction;
 
@@ -114,7 +116,9 @@ function Category(props: ICategoryProps) {
 	}
 
 	if (formValues?.project_id && formAction === "UPDATE") {
+		formValues.is_project = true;
 		addCategoryForm[5].disabled = true;
+		addCategoryForm[5].hidden = false;
 		addCategoryForm[4].hidden = false;
 	}
 	if (formAction === "CREATE") {

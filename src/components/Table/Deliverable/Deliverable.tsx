@@ -223,7 +223,8 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
-								parent_id: deliverableTarget.parent_id,
+								parent: deliverableTarget.parent,
+								// parent_id: deliverableTarget.parent_id,
 								description: deliverableTarget.description,
 								category: deliverableTarget?.category?.id,
 								// deliverable_category_org:
@@ -281,7 +282,8 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 							setTargetData({
 								id: deliverableTarget.id,
 								name: deliverableTarget.name,
-								parent_id: deliverableTarget.parent_id,
+								parent: deliverableTarget.parent,
+								// parent_id: deliverableTarget.parent_id,
 								description: deliverableTarget.description,
 								category: deliverableTarget?.ategory?.id,
 								// deliverable_category_org:
@@ -312,7 +314,8 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 						setOpenDeleteDeliverableTarget(false);
 					}}
 					type={DELIVERABLE_ACTIONS.UPDATE}
-					formType={deliverableTarget.type}
+					formType={deliverableTarget.type.name}
+					// formType={deliverableTarget.type}
 					data={targetData}
 					project={deliverableTarget.project.id}
 					dialogType={openDeleteDeliverableTarget ? DIALOG_TYPE.DELETE : DIALOG_TYPE.FORM}

@@ -30,8 +30,8 @@
 	],
 	"deliverableTargetForm": [
 		{
-			"name": "parent_id",
-			"id": "parent_id",
+			"name": "parent",
+			"id": "parent",
 			"dataTestId": "deliverableOutputTarget",
 			"testId": "deliverableOutputTargetInput",
 			"label": "",

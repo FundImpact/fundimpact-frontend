@@ -74,6 +74,7 @@ export const GET_DELIVERABLE_TARGET_BY_PROJECT = gql`
 				name
 			}
 			deleted
+			parent
 			is_qualitative
 			sub_target_required
 			value_calculation
@@ -110,7 +111,7 @@ export const CREATE_DELIVERABLE_TARGET = gql`
 			is_qualitative
 			sub_target_required
 			value_calculation
-			parent_id
+			parent
 			value_qualitative_option
 			project {
 				id

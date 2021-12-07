@@ -122,6 +122,7 @@ function BudgetCategory({
 							variables: {
 								filter: {
 									organization: dashboardData?.organization?.id,
+									project_id: dashboardData?.project?.id,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -137,6 +138,7 @@ function BudgetCategory({
 							variables: {
 								filter: {
 									organization: dashboardData?.organization?.id,
+									project_id: dashboardData?.project?.id,
 								},
 								limit: limit > 10 ? 10 : limit,
 								start: 0,
@@ -156,6 +158,7 @@ function BudgetCategory({
 							variables: {
 								filter: {
 									organization: dashboardData?.organization?.id,
+									project_id: dashboardData?.project?.id,
 								},
 							},
 						});
@@ -167,6 +170,7 @@ function BudgetCategory({
 							variables: {
 								filter: {
 									organization: dashboardData?.organization?.id,
+									project_id: dashboardData?.project?.id,
 								},
 							},
 							data: {
@@ -198,7 +202,9 @@ function BudgetCategory({
 		: (budgetCategoryFormInputFields[4].hidden = true);
 
 	if (formValues?.project_id && formAction === "UPDATE") {
+		formValues.is_project = true;
 		budgetCategoryFormInputFields[4].disabled = true;
+		budgetCategoryFormInputFields[4].hidden = false;
 		budgetCategoryFormInputFields[3].hidden = false;
 	}
 

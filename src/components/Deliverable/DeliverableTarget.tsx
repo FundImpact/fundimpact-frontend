@@ -48,7 +48,8 @@ function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
 	return {
 		name: "",
-		parent_id: "",
+		parent: "",
+		// parent_id: "",
 		description: "",
 		unit: "",
 		category: "",
@@ -85,20 +86,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		typeVal = 3;
 	}
 
-	const { data: units } = useQuery(GET_UNIT);
-
-	let unitType: any = [];
-	units?.units?.forEach((elem: any) => {
-		if (elem.type) {
-			if (
-				deliverableId == elem.type ||
-				outcomeId == elem.type ||
-				outputId == elem.type ||
-				impactId == elem.type
-			) {
-				unitType.push(elem);
-			}
-		}
+	const { data: units } = useQuery(GET_UNIT, {
+		variables: {
+			filter: {
+				type: typeVal,
+			},
+		},
 	});
 
 	const [getOutputsByProject, { data: outputsByProject }] = useLazyQuery(
@@ -109,20 +102,12 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// 	variables: { filter: { organization: dashboardData?.organization?.id } },
 	// });
 
-	const { data: categories } = useQuery(GET_CATEGORIES);
-
-	let categoryType: any = [];
-	categories?.categories.forEach((elem: any) => {
-		if (elem.type) {
-			if (
-				deliverableId == elem.type ||
-				outcomeId == elem.type ||
-				outputId == elem.type ||
-				impactId == elem.type
-			) {
-				categoryType.push(elem);
-			}
-		}
+	const { data: categories } = useQuery(GET_CATEGORIES, {
+		variables: {
+			filter: {
+				type: typeVal,
+			},
+		},
 	});
 
 	// const [currentCategory, setcurrentCategory] = useState<any>();
@@ -146,7 +131,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 										deliverable_target_project:
 											data?.createDeliverableTarget?.id,
 										category: data?.createDeliverableTarget?.category?.id,
-										parent: data?.createDeliverableTarget.parent_id,
+										parent: data?.createDeliverableTarget.parent?.id,
+										// parent: data?.createDeliverableTarget.parent_id,
 									},
 								},
 							},
@@ -229,7 +215,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		try {
 			let createInputTarget = {
 				...deliverableTarget,
-				parent_id: parseInt(deliverableTarget.parent_id),
+				parent: parseInt(deliverableTarget.parent),
+				// parent_id: parseInt(deliverableTarget.parent_id),
 				// deliverable_category_unit: deliverableCategoryUnitId,
 			};
 
@@ -498,15 +485,16 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 	// useEffect(() => {
 	// 	if (categories) {
-	deliverableTargetForm[2].optionsArray = categoryType;
-	// deliverableTargetForm[2].optionsArray = categories?.categories;
+	// deliverableTargetForm[2].optionsArray = categoryType;
+
+	deliverableTargetForm[2].optionsArray = categories?.categories;
 	// 	}
 	// }, [categories]);
 
 	// useEffect(() => {
 	// 	if (units) {
-	deliverableTargetForm[3].optionsArray = unitType;
-	// deliverableTargetForm[3].optionsArray = units?.units;
+
+	deliverableTargetForm[3].optionsArray = units?.units;
 	// 	}
 	// }, [units]);
 
@@ -580,7 +568,8 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 		await createDeliverableTargetHelper({
 			id: value.id,
 			name: value.name,
-			parent_id: value.parent_id,
+			parent: value.parent,
+			// parent_id: value.parent_id,
 			description: value.description,
 			project: value.project,
 			category: value?.category,
