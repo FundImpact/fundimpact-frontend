@@ -390,7 +390,9 @@ function GeoRegions({
 	}
 
 	if (formValues?.project_id && formAction === "UPDATE") {
+		formValues.is_project = true;
 		inputFields[3].disabled = true;
+		inputFields[3].hidden = false;
 		inputFields[2].hidden = false;
 	}
 	if (formAction === "CREATE") {

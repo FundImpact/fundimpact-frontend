@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation, ApolloClient, useApolloClient } from "@apollo/client";
+import { useLazyQuery, useMutation, ApolloClient, useApolloClient, useQuery } from "@apollo/client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useIntl, FormattedMessage } from "react-intl";
 
@@ -296,12 +296,15 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	// 	}
 	// }, [getOrganizationDonors]);
 
+	console.log("dashboardData::", dashboardData);
+
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getBudgetCategory({
 				variables: {
 					filter: {
 						organization: dashboardData?.organization?.id,
+						project_id: dashboardData?.project?.id,
 					},
 				},
 			});
@@ -343,12 +346,13 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			label="Make org donor project donor"
 		/>
 	);
+	console.log("budgetCategory::", budgetCategory);
 
-	useEffect(() => {
-		if (budgetCategory) {
-			budgetTargetFormInputFields[3].optionsArray = budgetCategory.orgBudgetCategory;
-		}
-	}, [budgetCategory]);
+	// useEffect(() => {
+	// 	if (budgetCategory) {
+	budgetTargetFormInputFields[3].optionsArray = budgetCategory?.orgBudgetCategory;
+	// 	}
+	// }, [budgetCategory]);
 
 	const onCreate = async (valuesSubmitted: IBudgetTargetForm) => {
 		try {

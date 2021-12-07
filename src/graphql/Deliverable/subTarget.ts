@@ -43,6 +43,10 @@ export const GET_DELIVERABLE_SUB_TARGETS = gql`
 				id
 				name
 			}
+			geo_region_id {
+				id
+				name
+			}
 		}
 	}
 `;

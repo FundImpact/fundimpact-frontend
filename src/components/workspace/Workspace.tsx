@@ -55,6 +55,8 @@ const updateOrganisationWorkspaceList = ({
 		variables: { filter: { organization: organizationId } },
 	}) as NonNullable<IGET_WORKSPACES_BY_ORG>;
 
+	console.log("oldCachedData::", oldCachedData);
+
 	let updatedWorkspaces = oldCachedData
 		? {
 				...oldCachedData,
@@ -88,6 +90,7 @@ const updateOrganisationWorkspaceList = ({
 };
 
 function Workspace(props: WorkspaceProps) {
+	console.log("workspace props", props);
 	const [initialValues, setinitialValues] = useState(getInitialValues(props));
 	// const [successMessage, setsuccessMessage] = useState<string>();
 	const [errorMessage, seterrorMessage] = useState<string>();
@@ -97,6 +100,11 @@ function Workspace(props: WorkspaceProps) {
 	 * 	WORKSPACE CREATE
 	 *
 	 *********************************/
+
+	let [createNewWorkspace, { loading: creatingWorkspace, data: workspaceResponse }] = useMutation(
+		CREATE_WORKSPACE
+	);
+
 	let [CreateWorkspace, { data: response, loading, error: createError }] = useMutation<
 		ICreate_Workspace_Response,
 		{ payload: { data: Omit<IWorkspace, "id"> | null } }
@@ -106,6 +114,7 @@ function Workspace(props: WorkspaceProps) {
 			props.close();
 		},
 		onError: (err) => {
+			console.log("errorData::", err);
 			notificationDispatch(setErrorNotification(err?.message));
 		},
 		update: (cache, option) => {
@@ -120,18 +129,43 @@ function Workspace(props: WorkspaceProps) {
 		},
 	});
 
-	const onCreate = (value: IWorkspace) => {
-		CreateWorkspace({
-			variables: { payload: { data: { ...value } } },
-		});
+	const onCreate = async (value: IWorkspace) => {
+		try {
+			let values = value;
+
+			await createNewWorkspace({
+				variables: {
+					payload: {
+						data: values,
+					},
+				},
+				refetchQueries: [
+					{
+						query: GET_WORKSPACES_BY_ORG,
+						variables: { filter: { organization: props.organizationId } },
+					},
+				],
+			});
+			notificationDispatch(setSuccessNotification("workspace created successfully"));
+		} catch (err: any) {
+			notificationDispatch(setErrorNotification(err?.message));
+		} finally {
+			props.close();
+		}
+		// CreateWorkspace({
+		// 	variables: { payload: { data: value } },
+		// 	// variables: { payload: { data: { ...value } } },
+		// });
 	};
 
 	useEffect(() => {
-		if (!response) return;
+		if (!workspaceResponse) return;
+		// if (!response) return;
 		setinitialValues({ description: "", name: "", short_name: "", organization: "" });
 
 		// setsuccessMessage("Workspace Created.");
-	}, [response]);
+	}, [workspaceResponse]);
+	// }, [response]);
 
 	useEffect(() => {
 		seterrorMessage("Workspace Creation Failed.");

@@ -22,9 +22,8 @@ export function ICustomDatePicker({
 	const [toDateSelected, settoDateSelected] = React.useState<Date>(to || new Date());
 
 	React.useMemo(() => {
-		// if (fromDateSelected <= toDateSelected) {
 		onChange(fromDateSelected, toDateSelected);
-		// }
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fromDateSelected, toDateSelected]);
 
@@ -63,6 +62,7 @@ export function ICustomDatePicker({
 					fullWidth
 					required
 					variant="outlined"
+					// value={getTodaysDate(fromDateSelected)}
 					value={getTodaysDate(toDateSelected)}
 					onChange={(e) => settoDateSelected(new Date(e.target.value))}
 					InputLabelProps={{

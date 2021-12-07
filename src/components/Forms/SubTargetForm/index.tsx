@@ -234,31 +234,23 @@ function SubTarget(props: SubTargetFormProps) {
 	// 	GET_YEAR_TAG_DONOR_FINANCIAL_YEAR
 	// );
 
+	const { data: geoRegionsData } = useQuery(GET_GEOREGIONS_DATA);
+
+	console.log("geoRegionsData", geoRegionsData?.geoRegions);
+
 	const { data: fetchedDonorYear } = useQuery(GET_YEAR_TAG_DONOR_FINANCIAL_YEAR, {
 		variables: {
 			id: currentDonor,
 		},
 	});
 
-	useEffect(() => {
-		getGeoRegions();
-	}, []);
-
 	// useEffect(() => {
 	// 	getDonorYear({ variables: { id: currentDonor } });
 	// }, [getDonorYear]);
 
-	const geoResponse = geoRegionsResponse?.data?.geoRegions;
+	const geoResponse = geoRegionsData?.geoRegions;
 
 	budgetSubTargetFormList[11].optionsArray = geoResponse;
-
-	// const [getGeoregions, geoResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
-
-	// useEffect(() => {
-	// 	getGeoregions();
-	// }, []);
-
-	// const getResponseData = geoResponse;
 
 	const { data: grantPeriods } = useQuery(GET_GRANT_PERIOD, {
 		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
