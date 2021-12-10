@@ -32,7 +32,7 @@ export type DeliverableType = {
 
 export type ICategoryProps = {
 	open: boolean;
-	handleClose: () => void;
+	handleClose: (res?: any) => void;
 	formAction: FORM_ACTIONS.UPDATE | FORM_ACTIONS.CREATE;
 	initialValues?: ICategory;
 	deleteCategory?: boolean;

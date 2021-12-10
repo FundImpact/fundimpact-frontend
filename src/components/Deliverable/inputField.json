@@ -42,6 +42,7 @@
 			"inputType": "select",
 			"required": false,
 			"addNew": false,
+			"hidden": false,
 			"size": 12
 		},
 		{

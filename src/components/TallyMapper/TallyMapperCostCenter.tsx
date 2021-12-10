@@ -58,8 +58,6 @@ function TallyMapperCostCenter(props: GeographiesProps) {
 		}
 	);
 
-	console.log("creatingGeographiesCountry", creatingGeographiesCountry);
-
 	const [updateGeographiesCountry, { loading: updatingGeographiesCountry }] = useMutation(
 		UPDATE_GEOGRAPHIES_COUNTRY,
 		{
@@ -230,8 +228,6 @@ function TallyMapperCostCenter(props: GeographiesProps) {
 		return errors;
 	};
 	const intl = useIntl();
-
-	console.log("props?.dialogType", props?.dialogType);
 
 	if (props?.dialogType === DIALOG_TYPE.DELETE) {
 		return (

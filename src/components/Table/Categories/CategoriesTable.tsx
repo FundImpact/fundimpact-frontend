@@ -89,7 +89,7 @@ const CategoriesTable = ({
 			}
 		}
 		setQueryFilter({
-			// organization: dashboardData?.organization?.id,
+			organization_id: dashboardData?.organization?.id,
 			...newFilterListObject,
 		});
 	}, [tableFilterList, dashboardData]);
@@ -104,7 +104,7 @@ const CategoriesTable = ({
 		countRefetch: refetchDeliverableCatCount,
 	} = pagination({
 		countQuery: GET_CATEGORY_COUNT,
-		countFilter: {},
+		countFilter: queryFilter,
 		query: GET_CATEGORIES,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
@@ -212,11 +212,11 @@ const CategoriesTable = ({
 									)
 							  )
 							: null}
-						<TableCell>
+						{/* <TableCell>
 							<IconButton>
 								<MoreVertIcon />
 							</IconButton>
-						</TableCell>
+						</TableCell> */}
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>

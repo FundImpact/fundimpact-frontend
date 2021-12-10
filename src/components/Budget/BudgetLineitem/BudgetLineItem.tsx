@@ -311,13 +311,17 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	const [openAttachFiles, setOpenAttachFiles] = React.useState<boolean>();
 
-	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
+	const { data: geoRegionsData } = useQuery(GET_GEOREGIONS_DATA, {
+		variables: {
+			filter: {
+				organization_id: dashboardData?.organization?.id,
+				project_id: dashboardData?.project?.id,
+			},
+		},
+	});
 
-	useEffect(() => {
-		getGeoRegions();
-	}, []);
-
-	const geoResponse = geoRegionsResponse?.data?.geoRegions;
+	const geoResponse = geoRegionsData?.geoRegions;
+	// const geoResponse = geoRegionsResponse?.data?.geoRegions;
 
 	const { data: fetchedOrganizationYear } = useQuery(GET_YEAR_TAG_ORGANIZATION_FINANCIAL_YEAR, {
 		variables: { id: dashboardData?.organization?.id },

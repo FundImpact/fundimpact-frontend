@@ -11,6 +11,10 @@ export const GET_GEOREGIONS_DATA = gql`
 			}
 			description
 			is_active
+			organization_id {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -54,6 +58,10 @@ export const CREATE_GEOREGIONS = gql`
 					name
 				}
 				gp_id {
+					name
+				}
+				organization_id {
+					id
 					name
 				}
 			}

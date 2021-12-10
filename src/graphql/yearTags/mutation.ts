@@ -6,6 +6,10 @@ export const CREATE_YEAR_TAG = gql`
 			yearTag {
 				id
 				country_id
+				organization_id {
+					id
+					name
+				}
 			}
 		}
 	}

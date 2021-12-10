@@ -17,6 +17,10 @@ export const CREATE_FUND_RECEIPT = gql`
 			donor {
 				id
 			}
+			grant_periods_project {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -39,6 +43,10 @@ export const UPDATE_FUND_RECEIPT = gql`
 			}
 			donor {
 				id
+			}
+			grant_periods_project {
+				id
+				name
 			}
 		}
 	}

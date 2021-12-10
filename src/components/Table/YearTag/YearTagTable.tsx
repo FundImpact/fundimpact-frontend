@@ -30,6 +30,7 @@ import { IYearTag } from "../../../models/yearTags";
 import YearTagCountries from "./TabelsDialog";
 import YearTag from "../../YearTag";
 import { YEARTAG_ACTIONS } from "../../../utils/access/modules/yearTag/actions";
+import { useDashboard, useDashBoardData } from "../../../contexts/dashboardContext";
 
 const useStyles = makeStyles({
 	table: {
@@ -68,6 +69,7 @@ function YearTagTable({
 	tableFilterList?: { [key: string]: string | string[] };
 }) {
 	const classes = useStyles();
+	const dashboardData = useDashBoardData();
 	const tableStyles = styledTable();
 	const selectedYearTag = React.useRef<any | null>(null);
 	const [page, setPage] = useState<number>(0);
@@ -75,7 +77,6 @@ function YearTagTable({
 	const [ytOrder, setYTOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
 	const [pageCount, setPageCount] = useState(0);
-	console.log("pageCount", pageCount);
 
 	const [openYearTagEditDialog, setOpenYearTagEditDialog] = useState(false);
 	const [openDeleteYearTagDialog, setOpenDeleteYearTagDialog] = useState(false);
@@ -89,13 +90,17 @@ function YearTagTable({
 				newFilterListObject[key] = tableFilterList[key];
 			}
 		}
-		setQueryFilter(newFilterListObject);
+		setQueryFilter({
+			organization_id: dashboardData?.organization?.id,
+			...newFilterListObject,
+		});
 	}, [tableFilterList]);
 
 	let { changePage, count, queryData: yearTagList, queryLoading, countQueryLoading } = pagination(
 		{
 			countQuery: GET_YEARTAGS_COUNT,
-			countFilter: {},
+			countFilter: queryFilter,
+			// countFilter: {},
 			query: GET_YEARTAGS,
 			queryFilter,
 			sort: `${ytOrderBy}:${ytOrder.toUpperCase()}`,
@@ -248,9 +253,9 @@ function YearTagTable({
 									)
 							  )
 							: null}
-						<TableCell className={tableStyles.th} align="left">
+						{/* <TableCell className={tableStyles.th} align="left">
 							No Data found
-						</TableCell>
+						</TableCell> */}
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>

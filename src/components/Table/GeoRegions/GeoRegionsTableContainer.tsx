@@ -56,13 +56,19 @@ function GeoRegionsTableContainer({
 		);
 	};
 
+	let newGeoRegionList = geoRegionsList.map((item: any) => ({
+		...item,
+		project_id: item.project_id ? item.project_id.id : null,
+	}));
+
 	return (
 		<GeoRegionsTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
 			selectedGeoRegions={selectedGeoRegions}
 			initialValues={getInitialValues(selectedGeoRegions.current)}
-			geoRegionsList={geoRegionsList}
+			geoRegionsList={newGeoRegionList}
+			// geoRegionsList={geoRegionsList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}

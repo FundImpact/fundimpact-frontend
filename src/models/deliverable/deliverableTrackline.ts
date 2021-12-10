@@ -41,7 +41,8 @@ export interface IDeliverableTargetLine {
 export type DeliverableTargetLineProps = {
 	open: boolean;
 	handleClose: () => void;
-	deliverableSubTargetId?: number | undefined;
+	deliverableSubTargetId?: any;
+	// deliverableSubTargetId?: number | string | undefined;
 	formType: DELIVERABLE_TYPE;
 	deliverableTarget?: number | string | undefined;
 	reftechOnSuccess?: (

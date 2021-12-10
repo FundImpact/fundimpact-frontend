@@ -84,7 +84,7 @@ const UnitsTable = ({
 		countRefetch: refetchUnitCount,
 	} = pagination({
 		countQuery: GET_UNIT_COUNT,
-		countFilter: {},
+		countFilter: queryFilter,
 		query: GET_UNIT,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
@@ -98,10 +98,12 @@ const UnitsTable = ({
 			}
 		}
 		setQueryFilter({
-			// organization: dashboardData?.organization?.id,
+			organization_id: dashboardData?.organization?.id,
 			...newFilterListObject,
 		});
 	}, [tableFilterList, dashboardData]);
+
+	console.log("dashboardData::", dashboardData);
 
 	const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -198,11 +200,11 @@ const UnitsTable = ({
 									)
 							  )
 							: null}
-						<TableCell>
+						{/* <TableCell>
 							<IconButton>
 								<MoreVertIcon />
 							</IconButton>
-						</TableCell>
+						</TableCell> */}
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>

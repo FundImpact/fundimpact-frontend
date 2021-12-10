@@ -85,7 +85,7 @@ export type IBudgetLineitemProps =
 export type IBudgetCategoryProps =
 	| {
 			open: boolean;
-			handleClose: () => void;
+			handleClose: (res?: any) => void;
 			formAction: FORM_ACTIONS.UPDATE;
 			initialValues: IBudgetCategory;
 			getCreatedBudgetCategory?: (budgetCategory: IBudgetCategory) => void;
@@ -93,7 +93,7 @@ export type IBudgetCategoryProps =
 	  }
 	| {
 			open: boolean;
-			handleClose: () => void;
+			handleClose: (res?: any) => void;
 			formAction: FORM_ACTIONS.CREATE;
 			initialValues?: IBudgetCategory;
 			getCreatedBudgetCategory?: (budgetCategory: IBudgetCategory) => void;

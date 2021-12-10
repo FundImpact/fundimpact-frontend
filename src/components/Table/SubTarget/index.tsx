@@ -114,7 +114,6 @@ function EditSubTarget({
 	// tableType: DELIVERABLE_TYPE | "budget";
 	donorId?: string;
 }) {
-	console.log("tableType:", tableType);
 	const [openDeleteDeliverableLineItem, setOpenDeleteDeliverableLineItem] = useState(false);
 	const dashBoardData = useDashBoardData();
 
@@ -342,7 +341,7 @@ function EditSubTarget({
 					tableType.name === DELIVERABLE_TYPE.ACTIVITY) && (
 					<DeliverableTrackLine
 						open={openDeliverableForm}
-						formType={tableType}
+						formType={tableType?.name}
 						type={DELIVERABLE_ACTIONS.CREATE}
 						deliverableSubTargetId={subTarget?.id}
 						handleClose={() => setOpenDeliverableForm(!openDeliverableForm)}
@@ -457,11 +456,20 @@ const LineItemTableButton = ({
 	const [openLineItemTable, setOpenLineItemTable] = useState(false);
 	const classes = useStyles();
 
+	let tabType: any;
+	if (tableType === "budget") {
+		tabType = "budget";
+	} else {
+		tabType = tableType.name;
+	}
+
 	const getLineitemCountQuery = () =>
-		tableType === "budget"
-			? GET_PROJ_BUDGET_TRACINGS_COUNT
-			: Object.values(DELIVERABLE_TYPE).includes(tableType.name)
-			? GET_DELIVERABLE_TRACKLINE_COUNT
+		tabType === "budget"
+			? // tableType === "budget"
+			  GET_PROJ_BUDGET_TRACINGS_COUNT
+			: Object.values(DELIVERABLE_TYPE).includes(tabType)
+			? // : Object.values(DELIVERABLE_TYPE).includes(tableType)
+			  GET_DELIVERABLE_TRACKLINE_COUNT
 			: GET_PROJ_BUDGET_TRACINGS_COUNT;
 
 	const { data } = useQuery(getLineitemCountQuery(), {

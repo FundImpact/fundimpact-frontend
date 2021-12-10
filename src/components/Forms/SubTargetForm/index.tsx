@@ -122,8 +122,6 @@ function SubTarget(props: SubTargetFormProps) {
 				: true,
 	});
 
-	// console.log("deliverableTargets nnnnn", deliverableTargets, !Object.values(DELIVERABLE_TYPE));
-
 	const { data: budgetTargets } = useQuery(GET_BUDGET_TARGET_PROJECT, {
 		variables: {
 			filter: {
@@ -141,8 +139,6 @@ function SubTarget(props: SubTargetFormProps) {
 		budgetSubTargetForm[0].hidden = false;
 	}
 
-	// const [updateDeliverableTarget] = useMutation(UPDATE_DELIVERABLE_TARGET);
-
 	const [isQualitativeParent, setIsQualitativeParent] = useState(
 		props.qualitativeParent || false
 	);
@@ -159,8 +155,6 @@ function SubTarget(props: SubTargetFormProps) {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isQualitativeParent]);
-
-	// console.log("props.formType data: ", props.formType, Object.values(DELIVERABLE_TYPE));
 
 	const getCreateSubTargetQuery = () =>
 		props.formType === "budget"
@@ -229,25 +223,20 @@ function SubTarget(props: SubTargetFormProps) {
 		setCurrentDonor(donorId);
 	};
 
-	const [getGeoRegions, geoRegionsResponse] = useLazyQuery(GET_GEOREGIONS_DATA);
-	// const [getDonorYear, { data: fetchedDonorYear }] = useLazyQuery<any>(
-	// 	GET_YEAR_TAG_DONOR_FINANCIAL_YEAR
-	// );
-
-	const { data: geoRegionsData } = useQuery(GET_GEOREGIONS_DATA);
-
-	console.log("geoRegionsData", geoRegionsData?.geoRegions);
+	const { data: geoRegionsData } = useQuery(GET_GEOREGIONS_DATA, {
+		variables: {
+			filter: {
+				organization_id: dashboardData?.organization?.id,
+				project_id: dashboardData?.project?.id,
+			},
+		},
+	});
 
 	const { data: fetchedDonorYear } = useQuery(GET_YEAR_TAG_DONOR_FINANCIAL_YEAR, {
 		variables: {
 			id: currentDonor,
 		},
 	});
-
-	// useEffect(() => {
-	// 	getDonorYear({ variables: { id: currentDonor } });
-	// }, [getDonorYear]);
-
 	const geoResponse = geoRegionsData?.geoRegions;
 
 	budgetSubTargetFormList[11].optionsArray = geoResponse;
@@ -256,8 +245,6 @@ function SubTarget(props: SubTargetFormProps) {
 		variables: { filter: { donor: currentDonor, project: dashboardData?.project?.id } },
 		// skip: !currentDonor || !dashboardData?.project?.id,
 	});
-
-	console.log("grantPeriods", grantPeriods);
 
 	const [lists, setList] = useState<{
 		annualYear: YearTagPayload[];
@@ -523,9 +510,10 @@ function SubTarget(props: SubTargetFormProps) {
 	budgetSubTargetFormList[9].optionsArray = fetchedOrganizationYear?.yearTagOrganization;
 	// budgetSubTargetFormList[9].optionsArray = lists.financialYear;
 	budgetSubTargetFormList[10].optionsArray = lists.annualYear;
-	budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
-		grantPeriods,
-	]);
+	budgetSubTargetFormList[8].optionsArray = grantPeriods?.grantPeriodsProjectList;
+	// budgetSubTargetFormList[8].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
+	// 	grantPeriods,
+	// ]);
 	// budgetSubTargetFormList[11].optionsArray = geoResponse;
 
 	// if (formAction === FORM_ACTIONS.UPDATE) {
@@ -774,7 +762,6 @@ function SubTarget(props: SubTargetFormProps) {
 	};
 
 	const validate = (values: any) => {
-		console.log("values::", values);
 		let errors: Partial<any> = {};
 		if (props.formAction === FORM_ACTIONS.CREATE) {
 			if (!isQualitativeParent && !values.target_value) {

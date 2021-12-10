@@ -401,9 +401,9 @@ function DonorTable({
 									)
 							  )
 							: null}
-						<TableCell className={tableStyles.th} align="left">
+						{/* <TableCell className={tableStyles.th} align="left">
 							<ImportExportTableMenuHoc refetchDonorTable={refetchDonorTable} />
-						</TableCell>
+						</TableCell> */}
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>

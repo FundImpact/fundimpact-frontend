@@ -74,9 +74,14 @@ function Unit(props: IUnitProps) {
 
 	const dashboardData = useDashBoardData();
 
+	let organization_id = dashboardData?.organization?.id;
+
 	const onCreate = async (valuesSubmitted: IUnits) => {
 		try {
-			let values = valuesSubmitted;
+			let values = { ...valuesSubmitted, organization_id };
+			// let values = valuesSubmitted;
+
+			console.log("vvvv", values);
 			delete values.is_project;
 			if (!values.project_id) delete values.project_id;
 			// delete values.project_id;
@@ -89,6 +94,11 @@ function Unit(props: IUnitProps) {
 				refetchQueries: [
 					{
 						query: GET_UNIT,
+						variables: {
+							filter: {
+								organization_id: dashboardData?.organization?.id,
+							},
+						},
 					},
 					{
 						query: GET_UNIT_COUNT,

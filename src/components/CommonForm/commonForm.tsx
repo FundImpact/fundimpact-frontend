@@ -59,7 +59,6 @@ function CommonInputForm({
 		>
 			{(formik) => {
 				getFormikInstance && getFormikInstance(formik);
-				console.log("category formik", formik.values);
 				return (
 					<Form>
 						<Grid container spacing={2}>

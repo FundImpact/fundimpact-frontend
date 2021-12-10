@@ -14,14 +14,17 @@ function GeoRegionsTableGraphql({
 	const [orderBy, setOrderBy] = useState<string>("created_at");
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [queryFilter, setQueryFilter] = useState({});
+
 	const {
 		refetchBudgetCategoryOnBudgetCategoryImport,
 	} = useRefetchBudgetCategoryOnBudgetCategoryImport();
-	useEffect(() => {
-		setQueryFilter({
-			organization: dashboardData?.organization?.id,
-		});
-	}, [dashboardData]);
+
+	// useEffect(() => {
+	// 	setQueryFilter({
+	// 		organization_id: 209,
+	// 		// organization_id: dashboardData?.organization?.id,
+	// 	});
+	// }, [dashboardData]);
 
 	useEffect(() => {
 		let newFilterListObject: { [key: string]: string } = {};
@@ -30,7 +33,10 @@ function GeoRegionsTableGraphql({
 				newFilterListObject[key] = tableFilterList[key];
 			}
 		}
-		setQueryFilter(newFilterListObject);
+		setQueryFilter({
+			organization_id: dashboardData?.organization?.id,
+			...newFilterListObject,
+		});
 	}, [tableFilterList, dashboardData]);
 
 	let {
@@ -43,7 +49,7 @@ function GeoRegionsTableGraphql({
 		countRefetch,
 	} = pagination({
 		countQuery: GET_GEOREGIONS_COUNT,
-		countFilter: {},
+		countFilter: queryFilter,
 		query: GET_GEOREGIONS_DATA,
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,

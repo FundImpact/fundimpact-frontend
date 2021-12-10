@@ -37,6 +37,10 @@ export const UPDATE_PROJECT = gql`
 				created_at
 			}
 			deleted
+			organization {
+				id
+				name
+			}
 		}
 	}
 `;

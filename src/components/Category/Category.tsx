@@ -44,6 +44,7 @@ const validate = (values: ICategory) => {
 };
 
 function Category(props: ICategoryProps) {
+	console.log("props::", props);
 	const [createCategory, { loading: creatingCategory }] = useMutation(CREATE_CATEGORY);
 	const [updateCategory, { loading: updatingCategory }] = useMutation(UPDATE_CATEGORY);
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
@@ -69,8 +70,6 @@ function Category(props: ICategoryProps) {
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
-	console.log("props.initialValues", props.initialValues, initialValues);
-
 	const formAction = props.formAction;
 
 	const formValues = props.initialValues;
@@ -79,9 +78,14 @@ function Category(props: ICategoryProps) {
 
 	const dashboardData = useDashBoardData();
 
+	let organization_id = dashboardData?.organization?.id;
+
 	const onCreate = async (valuesSubmitted: ICategory) => {
 		try {
-			let values = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
+			let value = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
+
+			let values = { ...value, organization_id };
+
 			delete values.is_project;
 			if (!values.project_id) delete values.project_id;
 			await createCategory({
@@ -91,12 +95,15 @@ function Category(props: ICategoryProps) {
 				refetchQueries: [
 					{
 						query: GET_CATEGORIES,
-					},
-					{
-						query: GET_CATEGORY_COUNT,
+						variables: {
+							filter: {
+								organization_id: dashboardData?.organization?.id,
+							},
+						},
 					},
 				],
 			});
+
 			notificationDispatch(setSuccessNotification("Category Creation Success"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
@@ -105,11 +112,6 @@ function Category(props: ICategoryProps) {
 		}
 	};
 
-	// if (
-	// 	typeof formValues?.project_id === "object" &&
-	// 	Object.values(formValues?.project_id).length > 0 &&
-	// 	formAction === "UPDATE"
-	// ) {
 	if (!formValues?.project_id && formAction === "UPDATE") {
 		addCategoryForm[4].hidden = true;
 		addCategoryForm[5].hidden = true;
@@ -150,6 +152,21 @@ function Category(props: ICategoryProps) {
 				refetchQueries: [
 					{
 						query: GET_CATEGORIES,
+						variables: {
+							filter: {
+								organization_id: dashboardData?.organization?.id,
+							},
+						},
+					},
+					{
+						query: GET_CATEGORIES,
+						variables: {
+							filter: {
+								type: initialValues?.type,
+								organization_id: dashboardData?.organization?.id,
+								project_id: dashboardData?.project?.id,
+							},
+						},
 					},
 					{
 						query: GET_CATEGORY_COUNT,
@@ -211,6 +228,22 @@ function Category(props: ICategoryProps) {
 				refetchQueries: [
 					{
 						query: GET_CATEGORIES,
+						variables: {
+							filter: {
+								organization_id: dashboardData?.organization?.id,
+								project_id: dashboardData?.project?.id,
+							},
+						},
+					},
+					{
+						query: GET_CATEGORIES,
+						variables: {
+							filter: {
+								type: initialValues?.type,
+								organization_id: dashboardData?.organization?.id,
+								project_id: dashboardData?.project?.id,
+							},
+						},
 					},
 					{
 						query: GET_CATEGORY_COUNT,
