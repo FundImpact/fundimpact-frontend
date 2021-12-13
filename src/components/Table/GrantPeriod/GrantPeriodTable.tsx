@@ -140,6 +140,23 @@ function SimpleTable({
 		GRANT_PERIOD_ACTIONS.DELETE_GRANT_PERIOD
 	);
 
+	let start_date: any;
+	let end_date: any;
+	data.forEach(
+		(elem: any) => (
+			(start_date = new Date(elem?.start_date).toDateString()),
+			(end_date = new Date(elem?.end_date).toDateString())
+		)
+	);
+
+	let newData = data.map((elem: any) => ({
+		...elem,
+		start_date,
+		end_date,
+	}));
+
+	console.log("grantPeriod Data::", data, newData);
+
 	return (
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="simple table">

@@ -318,7 +318,7 @@ function EditDeliverableTrackLineIcon({
 					data={deliverableTracklineData}
 					formType={
 						deliverableTrackline?.deliverable_sub_target?.deliverable_target_project
-							?.type || DELIVERABLE_TYPE.DELIVERABLE
+							?.type?.name || DELIVERABLE_TYPE.DELIVERABLE
 					}
 					deliverableTarget={deliverableTrackline?.deliverable_sub_target}
 					alreadyMappedDonorsIds={tracklineDonors?.map((donor) => donor.id)}

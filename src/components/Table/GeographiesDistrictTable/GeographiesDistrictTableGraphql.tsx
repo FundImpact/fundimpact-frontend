@@ -109,8 +109,6 @@ function GeographiesDistrictTableGraphql({
 		fireRequest: Boolean(dashboardData),
 	});
 
-	// console.log("deliverableUnitCount", deliverableUnitCount, deliverableUnitList);
-
 	const reftechDeliverableCategoryAndUnitTable = useCallback(() => {
 		deliverableUnitCountRefetch?.().then(() => deliverableUnitRefetch?.());
 		refetchDeliverableUnitOnDeliverableUnitImport();

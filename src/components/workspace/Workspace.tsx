@@ -55,8 +55,6 @@ const updateOrganisationWorkspaceList = ({
 		variables: { filter: { organization: organizationId } },
 	}) as NonNullable<IGET_WORKSPACES_BY_ORG>;
 
-	console.log("oldCachedData::", oldCachedData);
-
 	let updatedWorkspaces = oldCachedData
 		? {
 				...oldCachedData,
@@ -90,7 +88,6 @@ const updateOrganisationWorkspaceList = ({
 };
 
 function Workspace(props: WorkspaceProps) {
-	console.log("workspace props", props);
 	const [initialValues, setinitialValues] = useState(getInitialValues(props));
 	// const [successMessage, setsuccessMessage] = useState<string>();
 	const [errorMessage, seterrorMessage] = useState<string>();
@@ -114,7 +111,6 @@ function Workspace(props: WorkspaceProps) {
 			props.close();
 		},
 		onError: (err) => {
-			console.log("errorData::", err);
 			notificationDispatch(setErrorNotification(err?.message));
 		},
 		update: (cache, option) => {

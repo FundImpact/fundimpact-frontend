@@ -164,6 +164,7 @@ export default function FundStatus() {
 	let [GetProjectTotalSpend, { data: ProjectTotalSpendAmount }] = useLazyQuery(
 		GET_PROJECT_AMOUNT_SPEND
 	);
+
 	let [GetProjectTotalReceived, { data: ProjectTotalRecievedAmount }] = useLazyQuery(
 		GET_PROJECT_AMOUNT_RECEIVED
 	);

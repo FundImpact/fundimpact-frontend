@@ -296,8 +296,6 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 	// 	}
 	// }, [getOrganizationDonors]);
 
-	console.log("dashboardData::", dashboardData);
-
 	useEffect(() => {
 		if (dashboardData?.organization) {
 			getBudgetCategory({
@@ -346,7 +344,6 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 			label="Make org donor project donor"
 		/>
 	);
-	console.log("budgetCategory::", budgetCategory);
 
 	// useEffect(() => {
 	// 	if (budgetCategory) {

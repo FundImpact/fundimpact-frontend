@@ -29,7 +29,7 @@ import { CommonFormTitleFormattedMessage } from "../../utils/commonFormattedMess
 import { useIntl } from "react-intl";
 import { setProject } from "../../reducers/dashboardReducer";
 import { GET_PROJECT_COUNT } from "../../graphql/organizationDashboard/query";
-import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS } from "../../graphql";
+import { GET_PROJECTS_BY_WORKSPACE, GET_PROJECTS, GET_WORKSPACES_BY_ORG } from "../../graphql";
 import Donor from "../Donor";
 import { FORM_ACTIONS } from "../Forms/constant";
 import { useDocumentTableDataRefetch } from "../../hooks/document";
@@ -149,6 +149,7 @@ const getProjectDonorForGivenDonorId = (
 ) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id === donorId);
 
 function Project(props: ProjectProps) {
+	console.log("Project props", props);
 	const [openDonorDialog, setOpenDonorDialog] = useState<boolean>(false);
 	const DashBoardData = useDashBoardData();
 	const notificationDispatch = useNotificationDispatch();
@@ -452,6 +453,9 @@ function Project(props: ProjectProps) {
 
 		try {
 			let formData: any = { ...value };
+
+			console.log("formData::", formData);
+
 			let projectId = formData.id;
 
 			let newDonors = formData?.donor?.filter(function (el: string) {
@@ -466,10 +470,17 @@ function Project(props: ProjectProps) {
 				variables: { id: projectId, input: formData },
 				refetchQueries: [
 					{
+						query: GET_WORKSPACES_BY_ORG,
+					},
+					{
 						query: GET_PROJECTS_BY_WORKSPACE,
+					},
+					{
+						query: GET_PROJECTS,
 					},
 				],
 			});
+			window.location.reload();
 			if (workspaceSelected !== value.workspace) {
 				fetchProjectsInWorkspace({
 					apolloClient,

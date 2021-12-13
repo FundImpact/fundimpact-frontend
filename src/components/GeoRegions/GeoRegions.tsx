@@ -162,11 +162,16 @@ function GeoRegions({
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
+	let organization_id = dashboardData?.organization?.id;
 
 	let initialValues = formAction === FORM_ACTIONS.CREATE ? defaultFormValues : formValues;
 
 	const onSubmit = async (valuesSubmitted: IGeoRegions) => {
-		let values = removeEmptyKeys<IGeoRegions>({ objectToCheck: valuesSubmitted });
+		let value = removeEmptyKeys<IGeoRegions>({ objectToCheck: valuesSubmitted });
+
+		let values = { ...value, organization_id };
+
+		console.log("newValues", values);
 
 		try {
 			delete values.is_project;
@@ -432,10 +437,10 @@ function GeoRegions({
 					formAction={formAction}
 					onUpdate={onUpdate}
 				>
-					<GeoRegionsTabsContainer
+					{/* <GeoRegionsTabsContainer
 						formActions={formAction}
 						initialValues={initialValues}
-					/>
+					/> */}
 				</CommonForm>
 			</FormDialog>
 		</>

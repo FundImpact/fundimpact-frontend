@@ -43,6 +43,7 @@ import { CREATE_PROJECT_WITH_DELIVERABLE_TARGET } from "../../graphql/Deliverabl
 import { GET_CATEGORIES } from "../../graphql/Category/query";
 import Category from "../Category";
 import Unit from "../Unit";
+import is from "date-fns/esm/locale/is/index.js";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -62,6 +63,7 @@ let typeVal: any;
 function DeliverableTarget(props: DeliverableTargetProps) {
 	const notificationDispatch = useNotificationDispatch();
 	const dashboardData = useDashBoardData();
+
 	// const [getUnitsByOrg, { data: unitsByOrg }] = useLazyQuery(GET_DELIVERABLE_UNIT_BY_ORG); // for fetching units by category
 	let types: any = props.formType;
 
@@ -89,7 +91,9 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const { data: units } = useQuery(GET_UNIT, {
 		variables: {
 			filter: {
-				type: typeVal,
+				// type: typeVal,
+				organization_id: dashboardData?.organization?.id,
+				// project_id: dashboardData?.project?.id,
 			},
 		},
 	});
@@ -105,9 +109,25 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	const { data: categories } = useQuery(GET_CATEGORIES, {
 		variables: {
 			filter: {
-				type: typeVal,
+				// type: typeVal,
+				organization_id: dashboardData?.organization?.id,
+				// project_id: dashboardData?.project?.id,
 			},
 		},
+	});
+
+	let categoryValues: any = [];
+	categories?.categories.filter((elem: any) => {
+		if (elem.type == typeVal && elem.project_id?.id == dashboardData?.project?.id) {
+			categoryValues.push(elem);
+		}
+	});
+
+	let unitValues: any = [];
+	units?.units.filter((elem: any) => {
+		if (elem.type == typeVal && elem.project_id?.id == dashboardData?.project?.id) {
+			unitValues.push(elem);
+		}
 	});
 
 	// const [currentCategory, setcurrentCategory] = useState<any>();
@@ -487,14 +507,16 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	// 	if (categories) {
 	// deliverableTargetForm[2].optionsArray = categoryType;
 
-	deliverableTargetForm[2].optionsArray = categories?.categories;
+	deliverableTargetForm[2].optionsArray = categoryValues;
+	// deliverableTargetForm[2].optionsArray = categories?.categories;
 	// 	}
 	// }, [categories]);
 
 	// useEffect(() => {
 	// 	if (units) {
 
-	deliverableTargetForm[3].optionsArray = units?.units;
+	deliverableTargetForm[3].optionsArray = unitValues;
+	// deliverableTargetForm[3].optionsArray = units?.units;
 	// 	}
 	// }, [units]);
 
@@ -554,6 +576,16 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			}
 		}
 	}, [dashboardData, getOutputsByProject, props.formType]);
+
+	if (!dashboardData?.project?.logframe_tracker) {
+		deliverableTargetForm[0].hidden = true;
+	} else {
+		deliverableTargetForm[0].hidden = false;
+	}
+
+	if (props.formType === "impact") {
+		deliverableTargetForm[0].hidden = true;
+	}
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 
@@ -616,9 +648,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 
 			if (!values.category) {
 				errors.category = "Deliverable Category is required";
-			}
-			if (!values.unit) {
-				errors.unit = "Deliverable Unit is required";
 			}
 			// if (!values.deliverable_category_org) {
 			// 	errors.deliverable_category_org = "Deliverable Category is required";
@@ -803,6 +832,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					<Category
 						formAction={FORM_ACTIONS.CREATE}
 						open={openDeliverableCategoryDialog}
+						// handleClose={(res: any) => categoryFunc(res)}
 						handleClose={() => setOpenDeliverableCategoryDialog(false)}
 						// organization={dashboardData?.organization?.id}
 					/>

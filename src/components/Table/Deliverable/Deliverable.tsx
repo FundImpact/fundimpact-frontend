@@ -391,6 +391,12 @@ function DeliverableTargetAchievementAndProgress({
 	);
 
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
+	console.log(
+		"DeliverableTargetAchieved",
+		DeliverableTargetAchieved,
+		data?.deliverableTrackingLineitemsConnection
+	);
+
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
 
 	useEffect(() => {
@@ -399,7 +405,7 @@ function DeliverableTargetAchievementAndProgress({
 				deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
 					?.target_value || 0;
 			setDeliverableTargetAchieved(
-				data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
+				data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
 			);
 			setDeliverableTargetProgess(
 				(
@@ -776,7 +782,8 @@ export default function DeliverablesTable({
 						targetValueOptions={
 							deliverableTargetList[i]?.value_qualitative_option?.options || []
 						}
-						deliverableTargetUnit={deliverableTargetList[i]?.deliverable_unit_org?.name}
+						deliverableTargetUnit={deliverableTargetList[i]?.unit?.name}
+						// deliverableTargetUnit={deliverableTargetList[i]?.deliverable_unit_org?.name}
 						project={dashboardData?.project?.id || ""}
 					/>
 				);

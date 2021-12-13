@@ -31,7 +31,7 @@ const validate = (values: IYearTag) => {
 		errors.name = "Name is required";
 	}
 	if (values.end_date <= values.start_date) {
-		errors.end_date = "Time period must be bigger than or equal to start time period";
+		errors.end_date = "Time period must be bigger than start time period";
 	}
 	return errors;
 };
@@ -42,7 +42,7 @@ function YearTag(props: IYearTagProps) {
 	addYearTagForm[1].getInputValue = (value: any) => {
 		if (value === "financial") {
 			addYearTagForm[4].hidden = false;
-		} else {
+		} else if (value === "annual") {
 			addYearTagForm[4].hidden = true;
 		}
 	};
@@ -64,8 +64,6 @@ function YearTag(props: IYearTagProps) {
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
-	console.log("props.initialValues", props.initialValues);
-
 	let parseValue: any = props.initialValues;
 
 	// console.log("parseValue", JSON.parse(parseValue?.country_id));
@@ -73,6 +71,8 @@ function YearTag(props: IYearTagProps) {
 	const notificationDispatch = useNotificationDispatch();
 
 	const dashboardData = useDashBoardData();
+
+	let organization_id = dashboardData?.organization?.id;
 
 	const onCreate = async (valuesSubmitted: IYearTag) => {
 		try {
@@ -85,11 +85,9 @@ function YearTag(props: IYearTagProps) {
 			// 	Object.assign(country_id, { [value.id]: value });
 			// });
 
-			console.log("country_id", country_id);
-
 			await createYearTag({
 				variables: {
-					input: { data: { ...values, country_id } },
+					input: { data: { ...values, country_id, organization_id } },
 				},
 				refetchQueries: [
 					{

@@ -82,11 +82,17 @@ function FundReceivedTableContainer({
 		);
 	};
 
+	let newFundReceiptList = fundReceiptList.map((item: any) => ({
+		...item,
+		grant_periods_project: item?.grant_periods_project ? item?.grant_periods_project?.id : null,
+	}));
+
 	return (
 		<FundReceivedTableView
 			openDialogs={openDialogs}
 			selectedFundReceipt={selectedFundReceipt}
 			toggleDialogs={toggleDialogs}
+			// fundReceiptList={newFundReceiptList}
 			fundReceiptList={fundReceiptList}
 			loading={loading}
 			changePage={changePage}

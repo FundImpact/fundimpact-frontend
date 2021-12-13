@@ -115,31 +115,31 @@ function BudgetCategoryTableView({
 			setOrder={setOrder}
 			orderBy={orderBy}
 			setOrderBy={setOrderBy}
-			tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
-				<ImportExportTableMenu
-					tableName="Budget Category"
-					tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
-					tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
-					onImportTableSuccess={onImportTableSuccess}
-					importButtonOnly={importButtonOnly}
-					hideImport={!budgetCategoryImportFromCsvAccess}
-					hideExport={!budgetCategoryExportAccess}
-				>
-					<Button
-						variant="outlined"
-						style={{ marginRight: theme.spacing(1), float: "right" }}
-						onClick={() =>
-							exportTable({
-								tableName: "Budget Category Template",
-								jwt: jwt as string,
-								tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
-							})
-						}
-					>
-						Budget Category Template
-					</Button>
-				</ImportExportTableMenu>
-			)}
+			// tableActionButton={({ importButtonOnly }: { importButtonOnly?: boolean }) => (
+			// 	<ImportExportTableMenu
+			// 		tableName="Budget Category"
+			// 		tableExportUrl={BUDGET_CATEGORY_TABLE_EXPORT}
+			// 		tableImportUrl={BUDGET_CATEGORY_TABLE_IMPORT}
+			// 		onImportTableSuccess={onImportTableSuccess}
+			// 		importButtonOnly={importButtonOnly}
+			// 		hideImport={!budgetCategoryImportFromCsvAccess}
+			// 		hideExport={!budgetCategoryExportAccess}
+			// 	>
+			// 		<Button
+			// 			variant="outlined"
+			// 			style={{ marginRight: theme.spacing(1), float: "right" }}
+			// 			onClick={() =>
+			// 				exportTable({
+			// 					tableName: "Budget Category Template",
+			// 					jwt: jwt as string,
+			// 					tableExportUrl: `${BUDGET_CATEGORY_TABLE_EXPORT}?header=true`,
+			// 				})
+			// 			}
+			// 		>
+			// 			Budget Category Template
+			// 		</Button>
+			// 	</ImportExportTableMenu>
+			// )}
 		>
 			<>
 				<BudgetCategory

@@ -248,8 +248,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 			: []
 	);
 
-	if (filesArray.length) deliverableTragetLineForm[9].label = "View Files";
-	else deliverableTragetLineForm[9].label = "Attach Files";
+	if (filesArray.length) deliverableTragetLineForm[10].label = "View Files";
+	else deliverableTragetLineForm[10].label = "Attach Files";
 
 	if (filesArray.length)
 		deliverableTragetLineForm[9].textNextToButton = `${filesArray.length} files attached`;
@@ -356,11 +356,14 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		typeVal = 3;
 	}
 
+	let deliverableTargetId: any = props?.deliverableTarget;
+
 	const { data: deliverableTargets } = useQuery(GET_DELIVERABLE_SUB_TARGETS, {
 		variables: {
 			filter: {
 				project: DashBoardData?.project?.id,
-				deliverable_target_project: props?.deliverableTarget,
+				deliverable_target_project: deliverableTargetId,
+				// deliverable_target_project: props?.deliverableTarget,
 			},
 		},
 	});
@@ -649,6 +652,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		// setCreateDeliverableTracklineFyId(value.financial_year);
 
 		let input = { ...value };
+
 		delete (input as any).donors;
 		if (!input.annual_year) delete (input as any).annual_year;
 		if (!input.financial_year) delete (input as any).financial_year;
@@ -679,6 +683,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						variables: {
 							filter: {
 								deliverable_sub_target: value.deliverable_sub_target,
+								deleted: false,
+								project: DashBoardData?.project?.id,
 							},
 						},
 					});
@@ -687,6 +693,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						variables: {
 							filter: {
 								deliverable_sub_target: value.deliverable_sub_target,
+								deleted: false,
+								project: DashBoardData?.project?.id,
 							},
 						},
 						data: {
@@ -774,6 +782,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						filter: {
 							deliverable_sub_target: {
 								deliverable_target_project: currentDeliverableTarget,
+								deleted: false,
 								project: DashBoardData?.project?.id,
 							},
 						},
@@ -784,6 +793,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					variables: {
 						filter: {
 							deliverable_sub_target: value.deliverable_sub_target,
+							deleted: false,
 						},
 					},
 				},
@@ -980,6 +990,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	// 		}}
 	// 	/>
 	// );
+
 	let formDetails = currentTargetId && <FormDetailsCalculate currentTargetId={currentTargetId} />;
 
 	if (props.dialogType === DIALOG_TYPE.DELETE) {

@@ -76,7 +76,7 @@ function FormDialog({
 								{formDetails && (
 									<Box mt={1}>
 										<Divider />
-										{formDetails}
+										{/* {formDetails} */}
 									</Box>
 								)}
 							</Box>

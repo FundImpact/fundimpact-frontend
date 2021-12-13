@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { useDashBoardData } from "../../../contexts/dashboardContext";
@@ -55,6 +55,7 @@ function BudgetCategory({
 	dialogType,
 }: IBudgetCategoryProps) {
 	const [currentIsProject, setCurrentIsProject] = useState<boolean>(false);
+
 	const [createNewOrgBudgetCategory, { loading: creatingBudgetCategory }] = useMutation(
 		CREATE_ORG_BUDGET_CATEGORY
 	);
@@ -187,14 +188,12 @@ function BudgetCategory({
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
+		} finally {
+			setCurrentIsProject(false);
 		}
 	};
-
 	budgetCategoryFormInputFields[3].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);
-		// value
-		// 	? (budgetCategoryFormInputFields[4].hidden = false)
-		// 	: (budgetCategoryFormInputFields[4].hidden = true);
 	};
 
 	currentIsProject

@@ -33,6 +33,7 @@ import DeleteModal from "../DeleteModal";
 import { useProjectDonorSelectInput } from "../../hooks/project";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import { GET_GRANT_PERIOD } from "../../graphql";
+import GrantPeriodDialog from "../GrantPeriod/GrantPeriod";
 
 interface IFundReceivedContainerProps {
 	formAction: FORM_ACTIONS;
@@ -433,6 +434,7 @@ function FundReceivedContainer({
 	);
 	const notificationDispatch = useNotificationDispatch();
 	const [openDonorCreateDialog, setOpenDonorCreateDialog] = useState<boolean>(false);
+	const [openGrantPeriodForm, setOpenGrantPeriodForm] = useState<boolean>(false);
 
 	const [currentDonor, setCurrentDonor] = useState<null | string | number>(null);
 
@@ -475,6 +477,7 @@ function FundReceivedContainer({
 	};
 
 	fundReceivedForm[2].addNewClick = () => setOpenDonorCreateDialog(true);
+	fundReceivedForm[3].addNewClick = () => setOpenGrantPeriodForm(true);
 	// fundReceivedForm[3].optionsArray = useMemo(() => grantPeriods?.grantPeriodsProjectList, [
 	// 	grantPeriods,
 	// ]);
@@ -550,6 +553,13 @@ function FundReceivedContainer({
 				dialogType={DONOR_DIALOG_TYPE.PROJECT}
 				projectId={`${dashboardData?.project?.id}`}
 			/>
+			{openGrantPeriodForm && (
+				<GrantPeriodDialog
+					open={openGrantPeriodForm}
+					onClose={() => setOpenGrantPeriodForm(false)}
+					action={FORM_ACTIONS.CREATE}
+				/>
+			)}
 			<FormDialog
 				handleClose={handleClose}
 				open={open}

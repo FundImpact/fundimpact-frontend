@@ -52,13 +52,19 @@ function BudgetCategoryTableContainer({
 		);
 	};
 
+	let newBudgetCategoryList = budgetCategoryList.map((item: any) => ({
+		...item,
+		project_id: item.project_id ? item.project_id.id : null,
+	}));
+
 	return (
 		<BudgetCategoryTableView
 			openDialogs={openDialogs}
 			toggleDialogs={toggleDialogs}
 			selectedBudgetCategory={selectedBudgetCategory}
 			initialValues={getInitialValues(selectedBudgetCategory.current)}
-			budgetCategoryList={budgetCategoryList}
+			budgetCategoryList={newBudgetCategoryList}
+			// budgetCategoryList={budgetCategoryList}
 			collapsableTable={collapsableTable}
 			changePage={changePage}
 			loading={loading}

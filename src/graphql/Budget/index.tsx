@@ -152,6 +152,10 @@ export const GET_ORGANIZATION_BUDGET_CATEGORY = gql`
 				id
 				name
 			}
+			organization {
+				id
+				name
+			}
 		}
 	}
 `;
