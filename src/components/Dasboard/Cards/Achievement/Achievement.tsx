@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { Box, Grid, Typography } from "@material-ui/core";
 // import { makeStyles, Theme } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -13,6 +13,7 @@ import { ChartBullet, ChartThemeColor } from "@patternfly/react-charts";
 import { MODULE_CODES, userHasAccess } from "../../../../utils/access";
 import { DELIVERABLE_TARGET_ACTIONS } from "../../../../utils/access/modules/deliverableTarget/actions";
 import { IMPACT_TARGET_ACTIONS } from "../../../../utils/access/modules/impactTarget/actions";
+import { GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE } from "../../../../graphql/Deliverable/trackline";
 
 interface IIndicatorProps_PROPS {
 	name: string;
@@ -99,27 +100,44 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 
 export default function Achievement() {
 	const dashboardData = useDashBoardData();
+
 	const projectId = dashboardData?.project?.id;
 	const deliverableTargetFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
 		DELIVERABLE_TARGET_ACTIONS.FIND_DELIVERABLE_TARGET
 	);
-	const impactTargetFindAccess = userHasAccess(
-		MODULE_CODES.IMPACT_TARGET,
-		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
-	);
-	const outputTargetFindAccess = userHasAccess(
-		MODULE_CODES.IMPACT_TARGET,
-		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
-	);
-	const outcomeTargetFindAccess = userHasAccess(
-		MODULE_CODES.IMPACT_TARGET,
-		IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
-	);
+
+	// const impactTargetFindAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_TARGET,
+	// 	IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	// );
+
+	let impactTargetFindAccess = true;
+	// const outputTargetFindAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_TARGET,
+	// 	IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	// );
+
+	const outputTargetFindAccess = true;
+
+	// const outcomeTargetFindAccess = userHasAccess(
+	// 	MODULE_CODES.IMPACT_TARGET,
+	// 	IMPACT_TARGET_ACTIONS.FIND_IMPACT_TARGET
+	// );
+
+	const outcomeTargetFindAccess = true;
 
 	let [GetDeliverableAmountTarget, { data: DeliverableAmountTarget }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+		GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE
+		// GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
+
+	// console.log(
+	// 	"DeliverableAmountTargetDeliverableAmountTarget",
+	// 	DeliverableAmountTarget,
+	// 	projectId
+	// );
+
 	let [GetDeliverableAmountSpend, { data: DeliverableAmountSpend }] = useLazyQuery(
 		GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 		{
@@ -130,7 +148,8 @@ export default function Achievement() {
 	);
 
 	let [GetImpactAmountTarget, { data: ImpactAmountTarget }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+		GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE
+		// GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 
 	let [GetImpactAmountSpend, { data: ImpactAmountSpend }] = useLazyQuery(
@@ -143,7 +162,8 @@ export default function Achievement() {
 	);
 
 	let [GetOutputAmountTarget, { data: OutputAmountTarget }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+		GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE
+		// GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 
 	let [GetOutputAmountSpend, { data: OutputAmountSpend }] = useLazyQuery(
@@ -155,7 +175,8 @@ export default function Achievement() {
 		}
 	);
 	let [GetOutcomeAmountTarget, { data: OutcomeAmountTarget }] = useLazyQuery(
-		GET_ALL_DELIVERABLES_TARGET_AMOUNT
+		GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE
+		// GET_ALL_DELIVERABLES_TARGET_AMOUNT
 	);
 
 	let [GetOutcomeAmountSpend, { data: OutcomeAmountSpend }] = useLazyQuery(
@@ -166,11 +187,9 @@ export default function Achievement() {
 			},
 		}
 	);
+
 	useEffect(() => {
 		setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS });
-		setIMPACT_STATUS({ ...IMPACT_STATUS });
-		setOUTPUT_STATUS({ ...OUTPUT_STATUS });
-		setOUTCOME_STATUS({ ...OUTCOME_STATUS });
 		if (!projectId) return;
 		GetDeliverableAmountSpend({
 			variables: {
@@ -186,20 +205,26 @@ export default function Achievement() {
 			variables: {
 				filter: {
 					project: projectId,
-					deliverable_target_project: {
-						type: 6,
-					},
+					// deliverable_target_project: {
+					// 	type: 6,
+					// },
+					type: 6,
 				},
 			},
 		});
+	}, [projectId]);
+
+	useEffect(() => {
+		setIMPACT_STATUS({ ...IMPACT_STATUS });
 		GetImpactAmountTarget({
 			variables: {
 				filter: {
 					project: projectId,
-					deliverable_target_project: {
-						type: 3,
-						// type: "impact",
-					},
+					// deliverable_target_project: {
+					// 	type: 3,
+					// 	// type: "impact",
+					// },
+					type: 3,
 				},
 			},
 		});
@@ -214,14 +239,19 @@ export default function Achievement() {
 				},
 			},
 		});
+	}, [projectId]);
+
+	useEffect(() => {
+		setOUTPUT_STATUS({ ...OUTPUT_STATUS });
 		GetOutputAmountTarget({
 			variables: {
 				filter: {
 					project: projectId,
-					deliverable_target_project: {
-						type: 4,
-						// type: "output",
-					},
+					// deliverable_target_project: {
+					// 	type: 4,
+					// 	// type: "output",
+					// },
+					type: 4,
 				},
 			},
 		});
@@ -236,14 +266,19 @@ export default function Achievement() {
 				},
 			},
 		});
+	}, [projectId]);
+
+	useEffect(() => {
+		setOUTCOME_STATUS({ ...OUTCOME_STATUS });
 		GetOutcomeAmountTarget({
 			variables: {
 				filter: {
 					project: projectId,
-					deliverable_target_project: {
-						type: 5,
-						// type: "outcome",
-					},
+					// deliverable_target_project: {
+					// 	type: 5,
+					// 	// type: "outcome",
+					// },
+					type: 5,
 				},
 			},
 		});
@@ -258,8 +293,106 @@ export default function Achievement() {
 				},
 			},
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
+
+	// useEffect(() => {
+	// setDELIVERABLE_STATUS({ ...DELIVERABLE_STATUS });
+	// setIMPACT_STATUS({ ...IMPACT_STATUS });
+	// setOUTPUT_STATUS({ ...OUTPUT_STATUS });
+	// setOUTCOME_STATUS({ ...OUTCOME_STATUS });
+	// if (!projectId) return;
+	// GetDeliverableAmountSpend({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			deliverable_target_project: {
+	// 				type: 6,
+	// 			},
+	// 		},
+	// 	},
+	// });
+	// GetDeliverableAmountTarget({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			// deliverable_target_project: {
+	// 			// 	type: 6,
+	// 			// },
+	// 			type: 6,
+	// 		},
+	// 	},
+	// });
+	// GetImpactAmountTarget({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			// deliverable_target_project: {
+	// 			// 	type: 3,
+	// 			// 	// type: "impact",
+	// 			// },
+	// 			type: 3,
+	// 		},
+	// 	},
+	// });
+	// GetImpactAmountSpend({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			deliverable_target_project: {
+	// 				type: 3,
+	// 				// type: "impact",
+	// 			},
+	// 		},
+	// 	},
+	// });
+	// GetOutputAmountTarget({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			// deliverable_target_project: {
+	// 			// 	type: 4,
+	// 			// 	// type: "output",
+	// 			// },
+	// 			type: 4,
+	// 		},
+	// 	},
+	// });
+	// GetOutputAmountSpend({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			deliverable_target_project: {
+	// 				type: 4,
+	// 				// type: "output",
+	// 			},
+	// 		},
+	// 	},
+	// });
+	// GetOutcomeAmountTarget({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			// deliverable_target_project: {
+	// 			// 	type: 5,
+	// 			// 	// type: "outcome",
+	// 			// },
+	// 			type: 5,
+	// 		},
+	// 	},
+	// });
+	// GetOutcomeAmountSpend({
+	// 	variables: {
+	// 		filter: {
+	// 			project: projectId,
+	// 			deliverable_target_project: {
+	// 				type: 5,
+	// 				// type: "outcome",
+	// 			},
+	// 		},
+	// 	},
+	// });
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [projectId]);
 
 	const intl = useIntl();
 	const [DELIVERABLE_STATUS, setDELIVERABLE_STATUS] = useState<IIndicatorProps_PROPS>({
@@ -312,76 +445,119 @@ export default function Achievement() {
 
 	useEffect(() => {
 		const TargetAmount = DeliverableAmountTarget
-			? DeliverableAmountTarget?.deliverableTargetTotalAmount
+			? // const TargetAmount = DeliverableAmountTarget
+			  DeliverableAmountTarget?.deliverableTotalAchivedValueTargetValue?.target_total
+			: // ? DeliverableAmountTarget?.deliverableTargetTotalAmount
+			  null;
+		const AmoundSpend = DeliverableAmountTarget
+			? DeliverableAmountTarget?.deliverableTotalAchivedValueTargetValue?.achieved_total
 			: null;
-		const AmoundSpend = DeliverableAmountSpend
-			? DeliverableAmountSpend.deliverableTrackingTotalSpendAmount
-			: null;
-		if (TargetAmount === undefined || TargetAmount === null) return;
-		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const AmoundSpend = DeliverableAmountSpend
+		// 	? DeliverableAmountSpend.deliverableTrackingTotalSpendAmount
+		// 	: null;
+		// if (TargetAmount === undefined || TargetAmount === null) return;
+		// if (AmoundSpend === undefined || AmoundSpend === null) return;
 
-		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setDELIVERABLE_STATUS({
-			...DELIVERABLE_STATUS,
-			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
-			target: TargetAmount ? 100 : 0,
-		});
+		if (
+			(TargetAmount !== undefined || TargetAmount !== null) &&
+			(AmoundSpend !== undefined || AmoundSpend !== null)
+		) {
+			setDELIVERABLE_STATUS({
+				...DELIVERABLE_STATUS,
+				achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+				target: TargetAmount ? 100 : 0,
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [DeliverableAmountTarget, DeliverableAmountSpend]);
+	}, [DeliverableAmountTarget]);
+	// }, [DeliverableAmountTarget, DeliverableAmountSpend]);
 
 	useEffect(() => {
 		const TargetAmount = ImpactAmountTarget
-			? ImpactAmountTarget?.deliverableTargetTotalAmount
+			? ImpactAmountTarget?.deliverableTotalAchivedValueTargetValue?.target_total
+			: // ? ImpactAmountTarget?.deliverableTargetTotalAmount
+			  null;
+		const AmoundSpend = ImpactAmountTarget
+			? ImpactAmountTarget?.deliverableTotalAchivedValueTargetValue?.achieved_total
 			: null;
-		const AmoundSpend = ImpactAmountSpend
-			? ImpactAmountSpend.deliverableTrackingTotalSpendAmount
-			: null;
-		if (TargetAmount === undefined || TargetAmount === null) return;
-		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const AmoundSpend = ImpactAmountSpend
+		// 	? ImpactAmountSpend.deliverableTrackingTotalSpendAmount
+		// 	: null;
+		// if (TargetAmount === undefined || TargetAmount === null) return;
+		// if (AmoundSpend === undefined || AmoundSpend === null) return;
 		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setIMPACT_STATUS({
-			...IMPACT_STATUS,
-			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
-			target: TargetAmount ? 100 : 0,
-		});
+
+		if (
+			(TargetAmount !== undefined || TargetAmount !== null) &&
+			(AmoundSpend !== undefined || AmoundSpend !== null)
+		) {
+			setIMPACT_STATUS({
+				...IMPACT_STATUS,
+				achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+				target: TargetAmount ? 100 : 0,
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ImpactAmountSpend, ImpactAmountTarget]);
+	}, [ImpactAmountTarget, projectId]);
+	// }, [ImpactAmountSpend, ImpactAmountTarget]);
 
 	useEffect(() => {
 		const TargetAmount = OutputAmountTarget
-			? OutputAmountTarget?.deliverableTargetTotalAmount
+			? OutputAmountTarget?.deliverableTotalAchivedValueTargetValue?.target_total
+			: // ? OutputAmountTarget?.deliverableTargetTotalAmount
+			  null;
+		const AmoundSpend = OutputAmountTarget
+			? OutputAmountTarget?.deliverableTotalAchivedValueTargetValue?.achieved_total
 			: null;
-		const AmoundSpend = OutputAmountSpend
-			? OutputAmountSpend.deliverableTrackingTotalSpendAmount
-			: null;
-		if (TargetAmount === undefined || TargetAmount === null) return;
-		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const AmoundSpend = OutputAmountSpend
+		// 	? OutputAmountSpend.deliverableTrackingTotalSpendAmount
+		// 	: null;
+		// if (TargetAmount === undefined || TargetAmount === null) return;
+		// if (AmoundSpend === undefined || AmoundSpend === null) return;
 		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setOUTPUT_STATUS({
-			...OUTPUT_STATUS,
-			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
-			target: TargetAmount ? 100 : 0,
-		});
+
+		if (
+			(TargetAmount !== undefined || TargetAmount !== null) &&
+			(AmoundSpend !== undefined || AmoundSpend !== null)
+		) {
+			setOUTPUT_STATUS({
+				...OUTPUT_STATUS,
+				achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+				target: TargetAmount ? 100 : 0,
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [OutputAmountSpend, OutputAmountTarget]);
+	}, [OutputAmountTarget, projectId]);
+	// }, [OutputAmountSpend, OutputAmountTarget]);
 
 	useEffect(() => {
 		const TargetAmount = OutcomeAmountTarget
-			? OutcomeAmountTarget?.deliverableTargetTotalAmount
+			? OutcomeAmountTarget?.deliverableTotalAchivedValueTargetValue?.target_total
+			: // ? OutcomeAmountTarget?.deliverableTargetTotalAmount
+			  null;
+		const AmoundSpend = OutcomeAmountTarget
+			? OutcomeAmountTarget?.deliverableTotalAchivedValueTargetValue?.achieved_total
 			: null;
-		const AmoundSpend = OutcomeAmountSpend
-			? OutcomeAmountSpend.deliverableTrackingTotalSpendAmount
-			: null;
-		if (TargetAmount === undefined || TargetAmount === null) return;
-		if (AmoundSpend === undefined || AmoundSpend === null) return;
+		// const AmoundSpend = OutcomeAmountSpend
+		// 	? OutcomeAmountSpend.deliverableTrackingTotalSpendAmount
+		// 	: null;
+		// if (TargetAmount === undefined || TargetAmount === null) return;
+		// if (AmoundSpend === undefined || AmoundSpend === null) return;
 		// const totalPercentageSpend = ((AmoundSpend / TargetAmount) * 100).toFixed(2);
-		setOUTCOME_STATUS({
-			...OUTCOME_STATUS,
-			achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
-			target: TargetAmount ? 100 : 0,
-		});
+
+		if (
+			(TargetAmount !== undefined || TargetAmount !== null) &&
+			(AmoundSpend !== undefined || AmoundSpend !== null)
+		) {
+			setOUTCOME_STATUS({
+				...OUTCOME_STATUS,
+				achieved: Math.floor((AmoundSpend / TargetAmount) * 100),
+				target: TargetAmount ? 100 : 0,
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [OutcomeAmountSpend, OutcomeAmountTarget]);
+	}, [OutcomeAmountTarget, projectId]);
+	// }, [OutcomeAmountSpend, OutcomeAmountTarget]);
 
 	if (
 		!DeliverableAmountTarget ||
@@ -402,14 +578,20 @@ export default function Achievement() {
 
 	return (
 		<Grid container>
-			<Grid item md={6}>
+			<Grid item md={5}>
 				<Grid container>
+					{/* <ISTATUS {...DELIVERABLE_STATUS} /> */}
 					{deliverableTargetFindAccess && <ISTATUS {...DELIVERABLE_STATUS} />}
 				</Grid>
-				<Grid container>{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}</Grid>
+				<Grid container>
+					{/* <ISTATUS {...IMPACT_STATUS} /> */}
+					{impactTargetFindAccess && <ISTATUS {...IMPACT_STATUS} />}
+				</Grid>
 			</Grid>
-			<Grid item md={6}>
+			<Grid item md={5}>
+				{/* <ISTATUS {...OUTPUT_STATUS} /> */}
 				<Grid container>{outputTargetFindAccess && <ISTATUS {...OUTPUT_STATUS} />}</Grid>
+				{/* <ISTATUS {...OUTCOME_STATUS} /> */}
 				<Grid container>{outcomeTargetFindAccess && <ISTATUS {...OUTCOME_STATUS} />}</Grid>
 			</Grid>
 		</Grid>

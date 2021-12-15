@@ -242,6 +242,11 @@ export default function SideBar({ children }: { children?: Function }) {
 					</Box>
 					<Divider />
 
+					{console.log(
+						"dashboardData?.organization?.id",
+						dashboardData?.organization?.id
+					)}
+
 					{dashboardData?.organization?.id && (
 						<WorkspaceList
 							organizationId={dashboardData?.organization?.id}

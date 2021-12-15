@@ -571,21 +571,29 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					parentProps[props.formType].slice(1);
 			}
 
-			if (props.formType === "impact") {
+			if (props.formType == "impact") {
 				deliverableTargetForm[0].hidden = true;
 			}
 		}
-	}, [dashboardData, getOutputsByProject, props.formType]);
+	}, [
+		dashboardData,
+		getOutputsByProject,
+		props.formType,
+		dashboardData?.project?.logframe_tracker,
+	]);
 
 	if (!dashboardData?.project?.logframe_tracker) {
+		console.log("reached log");
 		deliverableTargetForm[0].hidden = true;
-	} else {
+	} else if (dashboardData?.project?.logframe_tracker && props.formType !== "impact") {
 		deliverableTargetForm[0].hidden = false;
 	}
 
-	if (props.formType === "impact") {
-		deliverableTargetForm[0].hidden = true;
-	}
+	useEffect(() => {
+		if (props.formType == "impact" && dashboardData?.project?.logframe_tracker) {
+			deliverableTargetForm[0].hidden = true;
+		}
+	}, [dashboardData?.project?.logframe_tracker, props.formType]);
 
 	let initialValues: IDeliverableTarget = getInitialValues(props);
 

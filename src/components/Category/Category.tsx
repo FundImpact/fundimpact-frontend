@@ -44,7 +44,6 @@ const validate = (values: ICategory) => {
 };
 
 function Category(props: ICategoryProps) {
-	console.log("props::", props);
 	const [createCategory, { loading: creatingCategory }] = useMutation(CREATE_CATEGORY);
 	const [updateCategory, { loading: updatingCategory }] = useMutation(UPDATE_CATEGORY);
 	const [deleteCategory, { loading: deletingCategory }] = useMutation(DELETE_CATEGORY);
@@ -109,6 +108,7 @@ function Category(props: ICategoryProps) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
+			setCurrentIsProject(false);
 		}
 	};
 
@@ -182,8 +182,11 @@ function Category(props: ICategoryProps) {
 	};
 
 	addCategoryForm[4].getInputValue = (value: boolean) => {
-		value ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
+		setCurrentIsProject(value);
+		// value ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
 	};
+
+	currentIsProject ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
 
 	const intl = useIntl();
 

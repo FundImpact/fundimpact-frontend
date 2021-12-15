@@ -590,6 +590,23 @@ export const GET_DELIVERABLE_TRACKLINE_COUNT = gql`
 			aggregate {
 				count
 			}
+			values {
+				id
+				value
+				deleted
+			}
 		}
+	}
+`;
+
+export const GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE = gql`
+	query getdeliverableTrackingLineItemTotalValue($filter: JSON) {
+		deliverableTrackingLineItemTotalValue(where: $filter)
+	}
+`;
+
+export const GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE = gql`
+	query deliverableTotalAchivedValueTargetValue($filter: JSON) {
+		deliverableTotalAchivedValueTargetValue(where: $filter)
 	}
 `;

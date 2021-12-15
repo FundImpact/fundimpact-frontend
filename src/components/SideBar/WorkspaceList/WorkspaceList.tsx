@@ -139,6 +139,12 @@ export default function WorkspaceList({
 	if (!cachedWorkspaces || !cachedWorkspaces.orgWorkspaces)
 		return <WorkspaceListSkeleton></WorkspaceListSkeleton>;
 
+	console.log(
+		"cachedWorkspaces.orgWorkspaces",
+		cachedWorkspaces.orgWorkspaces,
+		projectFindAccess
+	);
+
 	return (
 		<React.Fragment>
 			<List>
