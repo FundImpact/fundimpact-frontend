@@ -142,12 +142,19 @@ function SimpleTable({
 
 	let start_date: any;
 	let end_date: any;
-	data.forEach(
-		(elem: any) => (
-			(start_date = new Date(elem?.start_date).toDateString()),
-			(end_date = new Date(elem?.end_date).toDateString())
-		)
-	);
+	// data.forEach((elem: any) => {
+	// 	start_date = new Date(elem?.start_date).toDateString();
+	// 	end_date = new Date(elem?.end_date).toDateString();
+	// 	// console.log("elem.start_date", start_date);
+	// });
+
+	for (let i = 0; i < data.length; i++) {
+		console.log("data[i]", data[i]);
+		start_date = new Date(data[i]?.start_date).toDateString();
+		end_date = new Date(data[i]?.end_date).toDateString();
+	}
+
+	console.log("hhhih", start_date, end_date);
 
 	let newData = data.map((elem: any) => ({
 		...elem,

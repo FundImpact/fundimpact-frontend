@@ -480,7 +480,7 @@ function Project(props: ProjectProps) {
 					},
 				],
 			});
-			window.location.reload();
+			// window.location.reload();
 			if (workspaceSelected !== value.workspace) {
 				fetchProjectsInWorkspace({
 					apolloClient,

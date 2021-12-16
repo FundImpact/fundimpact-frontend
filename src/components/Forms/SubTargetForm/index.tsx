@@ -235,6 +235,7 @@ function SubTarget(props: SubTargetFormProps) {
 	const { data: fetchedDonorYear } = useQuery(GET_YEAR_TAG_DONOR_FINANCIAL_YEAR, {
 		variables: {
 			id: currentDonor,
+			organization_id: dashboardData?.organization?.id,
 		},
 	});
 	const geoResponse = geoRegionsData?.geoRegions;
@@ -255,8 +256,10 @@ function SubTarget(props: SubTargetFormProps) {
 	});
 
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
-		onError: (err) => {
-			// console.log("err", err);
+		variables: {
+			filter: {
+				organization_id: dashboardData?.organization?.id,
+			},
 		},
 	});
 
@@ -549,6 +552,9 @@ function SubTarget(props: SubTargetFormProps) {
 					},
 				};
 			}
+
+			console.log("subTargetValues", subTargetValues);
+			if (!subTargetValues?.geo_region_id) delete (subTargetValues as any).geo_region_id;
 
 			await createSubTarget({
 				variables: {

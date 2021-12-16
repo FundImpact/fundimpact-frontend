@@ -335,7 +335,6 @@ const InputFields = ({
 	}
 
 	if (inputType === "switch") {
-		console.log("formik.values[name]", formik.values[name]);
 		return (
 			<FormControlLabel
 				control={

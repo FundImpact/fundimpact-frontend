@@ -39,6 +39,7 @@ const validate = (values: IUnits) => {
 };
 
 function Unit(props: IUnitProps) {
+	const [isCurrentProject, setIsCurrentProject] = useState(false);
 	const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_UNIT);
 	// const [createUnit, { loading: creatingUnit }] = useMutation(CREATE_DELIVERABLE_UNIT);
 	const [updateUnit, { loading: updatingUnit }] = useMutation(UPDATE_UNIT);
@@ -110,6 +111,7 @@ function Unit(props: IUnitProps) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
+			setIsCurrentProject(false);
 		}
 	};
 
@@ -154,8 +156,10 @@ function Unit(props: IUnitProps) {
 	};
 
 	addUnitForm[4].getInputValue = (value: boolean) => {
-		value ? (addUnitForm[5].hidden = false) : (addUnitForm[5].hidden = true);
+		setIsCurrentProject(value);
 	};
+
+	isCurrentProject ? (addUnitForm[5].hidden = false) : (addUnitForm[5].hidden = true);
 
 	const intl = useIntl();
 

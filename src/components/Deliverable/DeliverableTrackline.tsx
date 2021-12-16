@@ -10,6 +10,7 @@ import {
 } from "../../graphql/Deliverable/target";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
+	GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
 	UPDATE_DELIVERABLE_TRACKLINE,
@@ -416,8 +417,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	});
 
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
-		onError: (err) => {
-			console.log("err", err);
+		variables: {
+			filter: { organization_id: DashBoardData?.organization?.id },
 		},
 	});
 
@@ -741,6 +742,7 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					console.error(err);
 				} finally {
 					props.handleClose();
+					// window.location.reload();
 				}
 			},
 			refetchQueries: [

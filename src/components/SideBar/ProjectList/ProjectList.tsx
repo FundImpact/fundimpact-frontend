@@ -1,4 +1,4 @@
-import { ApolloQueryResult, useQuery } from "@apollo/client";
+import { ApolloQueryResult, useLazyQuery, useQuery } from "@apollo/client";
 import { List, ListItem, ListItemText, IconButton, Box, Link } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
@@ -123,10 +123,33 @@ export default function ProjectList({
 	const dispatch = useDashboardDispatch();
 	const dashboardData = useDashBoardData();
 	const filter: any = {
-		variables: { sort: `name:${sort}`, filter: { workspace: workspaceId } },
+		variables: { sort: `name:${sort}`, filter: { workspace: workspaceId, deleted: false } },
 	};
 	const [openFormDialog, setOpenFormDialog] = React.useState<boolean>();
-	const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
+	// const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, filter);
+	const { data, loading, refetch } = useQuery(GET_PROJECTS_BY_WORKSPACE, {
+		variables: {
+			filter: {
+				workspace: workspaceId,
+				deleted: false,
+			},
+		},
+	});
+
+	const [getProjectData, projectDataResponse] = useLazyQuery(GET_PROJECTS_BY_WORKSPACE);
+
+	useEffect(() => {
+		getProjectData({
+			variables: {
+				filter: {
+					workspace: workspaceId,
+					deleted: false,
+				},
+			},
+		});
+	}, [workspaceId]);
+
+	console.log("project data", data, projectDataResponse?.data, workspaceId);
 
 	let { pathname } = useLocation();
 	const navigate = useNavigate();

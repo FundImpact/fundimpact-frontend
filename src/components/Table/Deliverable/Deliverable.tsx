@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import {
 	IconButton,
 	Menu,
@@ -66,6 +66,7 @@ import SubTarget from "../../Forms/SubTargetForm";
 import {
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
+	GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE,
 } from "../../../graphql/Deliverable/trackline";
 import {
 	GET_DELIVERABLE_SUB_TARGETS,
@@ -334,13 +335,16 @@ function DeliverableTargetAchievementAndProgress({
 	project,
 	qualitativeParent,
 	targetValueOptions,
+	type,
 }: {
 	deliverableTargetId: string;
 	deliverableTargetUnit: string;
 	project: string | number;
 	qualitativeParent?: boolean;
 	targetValueOptions?: { id: string; name: string }[];
+	type?: string | number;
 }) {
+	// const [total, setTotal] = useState<any>(0);
 	const { data } = useQuery(GET_DELIVERABLE_TRACKLINE_COUNT, {
 		variables: {
 			filter: {
@@ -348,10 +352,61 @@ function DeliverableTargetAchievementAndProgress({
 					deliverable_target_project: deliverableTargetId,
 					project,
 				},
+				deleted: false,
 			},
 		},
 		skip: qualitativeParent,
 	});
+
+	const { data: totalTrackline } = useQuery(GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE, {
+		variables: {
+			filter: {
+				deliverable_target_project: deliverableTargetId,
+				project,
+				type: type,
+			},
+		},
+		skip: qualitativeParent,
+	});
+
+	console.log("totalTrackline", totalTrackline);
+
+	const [delTrackLineItem, delTrackLineItemResponse] = useLazyQuery(
+		GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE
+	);
+
+	useEffect(() => {
+		delTrackLineItem({
+			variables: {
+				filter: {
+					deliverable_target_project: deliverableTargetId,
+					project,
+					type: type,
+				},
+			},
+		});
+	}, [project]);
+
+	// const [deliverableTracklineCount, { data: deliverableTrackLineData }] = useLazyQuery(
+	// 	GET_DELIVERABLE_TRACKLINE_COUNT
+	// );
+
+	// useEffect(() => {
+	// 	deliverableTracklineCount({
+	// 		variables: {
+	// 			filter: {
+	// 				deliverable_sub_target: {
+	// 					deliverable_target_project: deliverableTargetId,
+	// 					project,
+	// 				},
+	// 				deleted: false,
+	// 			},
+	// 		},
+	// 		// skip: qualitativeParent,
+	// 	});
+	// }, [project]);
+
+	// console.log("datadata =>", data, deliverableTrackLineData);
 
 	const { data: deliverableSubTargetCount } = useQuery(GET_DELIVERABLE_SUB_TARGETS_COUNT, {
 		variables: {
@@ -390,12 +445,17 @@ function DeliverableTargetAchievementAndProgress({
 		}
 	);
 
+	let totalValue: any;
+
+	if (totalTrackline) {
+		totalValue = totalTrackline?.deliverableTrackingLineItemTotalValue;
+	}
+
+	// if (delTrackLineItemResponse?.data) {
+	// 	totalValue = delTrackLineItemResponse?.data?.deliverableTrackingLineItemTotalValue;
+	// }
+
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
-	console.log(
-		"DeliverableTargetAchieved",
-		DeliverableTargetAchieved,
-		data?.deliverableTrackingLineitemsConnection
-	);
 
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
 
@@ -405,14 +465,17 @@ function DeliverableTargetAchievementAndProgress({
 				deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
 					?.target_value || 0;
 			setDeliverableTargetAchieved(
-				data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
+				totalValue || 0
+				// totalTrackline?.deliverableTrackingLineItemTotalValue || 0
+				// data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
 			);
 			setDeliverableTargetProgess(
-				(
-					((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
-						deliverableTargetTotalAmount) *
-					100
-				).toFixed(2)
+				(((totalValue || 0) / deliverableTargetTotalAmount) * 100).toFixed(2)
+				// (
+				// 	((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
+				// 		deliverableTargetTotalAmount) *
+				// 	100
+				// ).toFixed(2)
 			);
 		}
 	}, [data, deliverableSubTargetCount]);
@@ -740,6 +803,8 @@ export default function DeliverablesTable({
 		) {
 			let deliverableTargetList = deliverableTargetData.deliverableTargetList;
 
+			console.log("deliverableTargetList", deliverableTargetList);
+
 			let array: { collaspeTable: any; column: any[] }[] = [];
 			for (let i = 0; i < deliverableTargetList.length; i++) {
 				let row: { collaspeTable: any; column: any[] } = {
@@ -785,6 +850,7 @@ export default function DeliverablesTable({
 						deliverableTargetUnit={deliverableTargetList[i]?.unit?.name}
 						// deliverableTargetUnit={deliverableTargetList[i]?.deliverable_unit_org?.name}
 						project={dashboardData?.project?.id || ""}
+						type={typeVal}
 					/>
 				);
 
