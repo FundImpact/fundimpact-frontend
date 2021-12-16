@@ -198,7 +198,7 @@ export default function SideBar({ children }: { children?: Function }) {
 										to="/organization/dashboard"
 										style={{ textDecoration: "none" }}
 									>
-										<Typography color="primary" gutterBottom variant="h6">
+										<Typography color="secondary" gutterBottom variant="h6">
 											{dashboardData?.organization?.name}
 										</Typography>
 									</Link>
