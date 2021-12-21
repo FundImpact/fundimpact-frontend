@@ -137,7 +137,10 @@ function EditSubTarget({
 	);
 
 	const [subTargetFileArray, setSubTargetFileArray] = useState<AttachFile[]>([]);
+
+	console.log("subTargetFileArray", subTargetFileArray);
 	const [openAttachFiles, setOpenAttachFiles] = useState(false);
+
 	const [openForm, setOpenForm] = useState(false);
 	const [openDeliverableForm, setOpenDeliverableForm] = useState(false);
 
@@ -263,7 +266,7 @@ function EditSubTarget({
 						</>
 					</MenuItem>
 				)}
-				{subTargetAccess && (
+				{/* {subTargetAccess && (
 					<MenuItem
 						onClick={() => {
 							setSubTargetFileArray(subTarget?.attachments);
@@ -277,7 +280,7 @@ function EditSubTarget({
 							description="This text will be show on deliverable or impact target table for view documents menu"
 						/>
 					</MenuItem>
-				)}
+				)} */}
 			</Menu>
 			{subTargetData && (
 				<SubTarget
@@ -482,6 +485,8 @@ const LineItemTableButton = ({
 	});
 	let countD: any;
 	if (data) countD = Object.values(data)[0];
+
+	console.log("countD", countD);
 
 	return (
 		<>

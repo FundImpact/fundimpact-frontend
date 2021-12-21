@@ -109,9 +109,11 @@ function YearTagTable({
 
 	console.log("count", count);
 
-	const countryList = yearTagList?.yearTags.map((elem: any) => {
-		return elem.country_id;
-	});
+	const countryList = yearTagList?.yearTags
+		.map((elem: any) => {
+			return elem.country_id;
+		})
+		.flat();
 
 	if (countryList) {
 		console.log("countryList", [...countryList]);
@@ -269,7 +271,8 @@ function YearTagTable({
 							<TableCell align="left">{yearTag.start_date}</TableCell>
 							<TableCell align="left">{yearTag.end_date}</TableCell>
 							<TableCell align="left">
-								<YearTagCountries yearTag={yearTag} />
+								<YearTagCountries yearTag={countryList} />
+								{/* <YearTagCountries yearTag={yearTag} /> */}
 							</TableCell>
 							<TableCell>
 								<IconButton

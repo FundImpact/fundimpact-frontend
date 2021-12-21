@@ -17,8 +17,14 @@ import { useLazyQuery } from "@apollo/client";
 import { ITablesDialogProps, IYearTag, IYearTagCountry } from "../../../models/yearTags";
 import { GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID } from "../../../graphql/yearTags/query";
 
-const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
+const TabelsDialog = ({ open, handleClose, yearTag }: any) => {
+	// const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
 	const [getCountries, { data }] = useLazyQuery(GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID);
+
+	console.log("tableDialog", data);
+	yearTag?.map((elem: any) => {
+		console.log("elem", elem);
+	});
 
 	useEffect(() => {
 		getCountries({
@@ -53,7 +59,8 @@ const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
 				</IconButton>
 			</Box>
 			<DialogContent>
-				{data && data.yearTagsCountries.length > 0 ? (
+				{yearTag ? (
+					// {data && data.yearTagsCountries.length > 0 ? (
 					<Table>
 						<TableHead>
 							<TableRow>
@@ -63,13 +70,13 @@ const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{data.yearTagsCountries.map((country: IYearTagCountry) => (
-								<TableRow key={country?.country?.id}>
-									<TableCell>{country?.country?.id}</TableCell>
-									<TableCell>{country?.country?.name}</TableCell>
-									<TableCell>
-										{country?.country?.code ? country?.country?.code : "-"}
-									</TableCell>
+							{/* {data?.yearTagsCountries?.map((country: IYearTagCountry) => ( */}
+							{yearTag?.map((country: any) => (
+								// console.log("innn", country)
+								<TableRow key={country?.id}>
+									{/* <TableCell>{country?.id}</TableCell> */}
+									<TableCell>{country?.name}</TableCell>
+									<TableCell>{country?.code ? country?.code : "-"}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
@@ -82,8 +89,10 @@ const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
 	);
 };
 
-const YearTagCountries = ({ yearTag }: { yearTag: IYearTag }) => {
+const YearTagCountries = ({ yearTag }: { yearTag: any }) => {
 	const [open, setOpen] = useState<boolean>(false);
+
+	console.log("countries", yearTag);
 
 	const openDialog = () => {
 		setOpen(true);

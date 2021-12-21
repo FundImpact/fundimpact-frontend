@@ -189,11 +189,17 @@ function BudgetCategory({
 			notificationDispatch(setErrorNotification(err?.message));
 			handleClose();
 		} finally {
+			// setCurrentIsProject(currentIsProject);
 			setCurrentIsProject(false);
 		}
 	};
 	budgetCategoryFormInputFields[3].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);
+		console.log("fromvalue", value);
+
+		// value
+		// 	? (budgetCategoryFormInputFields[4].hidden = false)
+		// 	: (budgetCategoryFormInputFields[4].hidden = true);
 	};
 
 	currentIsProject
@@ -201,19 +207,33 @@ function BudgetCategory({
 		: (budgetCategoryFormInputFields[4].hidden = true);
 
 	if (formValues?.project_id && formAction === "UPDATE") {
+		// setCurrentIsProject(currentIsProject);
 		formValues.is_project = true;
 		budgetCategoryFormInputFields[4].disabled = true;
 		budgetCategoryFormInputFields[4].hidden = false;
 		budgetCategoryFormInputFields[3].hidden = false;
+		// if (currentIsProject) {
+		// 	budgetCategoryFormInputFields[4].hidden = true;
+		// } else {
+		// 	budgetCategoryFormInputFields[4].hidden = false;
+		// 	budgetCategoryFormInputFields[4].disabled = true;
+		// }
+	} else if (formValues) {
+		formValues.is_project = false;
+		budgetCategoryFormInputFields[4].disabled = false;
+		budgetCategoryFormInputFields[4].hidden = true;
 	}
 
 	if (!formValues?.project_id && formAction === "UPDATE") {
 		budgetCategoryFormInputFields[3].hidden = true;
 		budgetCategoryFormInputFields[4].hidden = true;
 	}
+
 	if (formAction === "CREATE") {
+		// defaultFormValues.is_project = false;
 		budgetCategoryFormInputFields[3].hidden = false;
 		budgetCategoryFormInputFields[4].disabled = false;
+		// budgetCategoryFormInputFields[4].hidden = true;
 	}
 	const onUpdate = async (valuesSubmitted: IBudgetCategory) => {
 		try {

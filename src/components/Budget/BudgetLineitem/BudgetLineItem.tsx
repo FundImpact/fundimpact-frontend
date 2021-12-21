@@ -192,8 +192,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	});
 
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
-		onError: (err) => {
-			// console.log("err", err);
+		// onError: (err) => {
+		// 	// console.log("err", err);
+		// },
+		variables: {
+			filter: { organization_id: dashboardData?.organization?.id },
 		},
 	});
 
