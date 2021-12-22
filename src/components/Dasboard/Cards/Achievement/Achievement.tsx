@@ -101,6 +101,8 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 export default function Achievement() {
 	const dashboardData = useDashBoardData();
 
+	const logFrameTracker = dashboardData?.project?.logframe_tracker;
+
 	const projectId = dashboardData?.project?.id;
 	const deliverableTargetFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
@@ -590,9 +592,13 @@ export default function Achievement() {
 			</Grid>
 			<Grid item md={5}>
 				{/* <ISTATUS {...OUTPUT_STATUS} /> */}
-				<Grid container>{outputTargetFindAccess && <ISTATUS {...OUTPUT_STATUS} />}</Grid>
+				<Grid container>
+					{outputTargetFindAccess && logFrameTracker && <ISTATUS {...OUTPUT_STATUS} />}
+				</Grid>
 				{/* <ISTATUS {...OUTCOME_STATUS} /> */}
-				<Grid container>{outcomeTargetFindAccess && <ISTATUS {...OUTCOME_STATUS} />}</Grid>
+				<Grid container>
+					{outcomeTargetFindAccess && logFrameTracker && <ISTATUS {...OUTCOME_STATUS} />}
+				</Grid>
 			</Grid>
 		</Grid>
 	);

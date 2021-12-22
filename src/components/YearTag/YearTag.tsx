@@ -40,6 +40,7 @@ function YearTag(props: IYearTagProps) {
 	const { data: countryList } = useQuery(GET_COUNTRY_DATA);
 
 	addYearTagForm[1].getInputValue = (value: any) => {
+		console.log("value yearTag", value);
 		if (value === "financial") {
 			addYearTagForm[4].hidden = false;
 		} else if (value === "annual") {
@@ -64,9 +65,13 @@ function YearTag(props: IYearTagProps) {
 	const initialValues =
 		props.formAction === FORM_ACTIONS.CREATE ? defaultFormValues : props.initialValues;
 
-	let parseValue: any = props.initialValues;
+	console.log("props.initialValues", props.initialValues);
 
-	// console.log("parseValue", JSON.parse(parseValue?.country_id));
+	if (props.initialValues?.country_id?.length !== 0 && props.formAction === "UPDATE") {
+		addYearTagForm[4].hidden = false;
+	} else {
+		addYearTagForm[4].hidden = true;
+	}
 
 	const notificationDispatch = useNotificationDispatch();
 
@@ -103,6 +108,7 @@ function YearTag(props: IYearTagProps) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {
 			props.handleClose();
+			addYearTagForm[4].hidden = true;
 		}
 	};
 
@@ -127,6 +133,14 @@ function YearTag(props: IYearTagProps) {
 						data: values,
 					},
 				},
+				refetchQueries: [
+					{
+						query: GET_YEARTAGS,
+					},
+					{
+						query: GET_YEARTAGS_COUNT,
+					},
+				],
 			});
 
 			notificationDispatch(setSuccessNotification("Year Tag Updation Success"));

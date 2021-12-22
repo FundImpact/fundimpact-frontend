@@ -294,10 +294,6 @@ function SubTarget(props: SubTargetFormProps) {
 	const [openDonorDialog, setOpenDonorDialog] = React.useState<boolean>();
 	// const [donorYearValue, setDonorYearValue] = React.useState();
 	budgetSubTargetFormList[6].addNewClick = () => setOpenDonorDialog(true);
-	// budgetSubTargetFormList[6].getInputValue = (value: any) => {
-	// 	console.log("currentValue", value);
-	// 	setDonorYearValue(value);
-	// };
 
 	const [openTargetDialog, setOpenTargetDialog] = React.useState<boolean>();
 	budgetSubTargetFormList[0].addNewClick = () => setOpenTargetDialog(true);
@@ -555,6 +551,8 @@ function SubTarget(props: SubTargetFormProps) {
 
 			console.log("subTargetValues", subTargetValues);
 			if (!subTargetValues?.geo_region_id) delete (subTargetValues as any).geo_region_id;
+			if (!subTargetValues?.grant_periods_project)
+				delete (subTargetValues as any).grant_periods_project;
 
 			await createSubTarget({
 				variables: {

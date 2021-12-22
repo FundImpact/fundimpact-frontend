@@ -192,8 +192,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 	});
 
 	const { data: yearTags } = useQuery(GET_YEARTAGS, {
-		onError: (err) => {
-			// console.log("err", err);
+		// onError: (err) => {
+		// 	// console.log("err", err);
+		// },
+		variables: {
+			filter: { organization_id: dashboardData?.organization?.id },
 		},
 	});
 
@@ -532,6 +535,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							variables: {
 								filter: {
 									budget_sub_target: lineItemCreated.budget_sub_target.id,
+									deleted: false,
 									// budget_sub_target: lineItemCreated.budgetSubTargets.id,
 								},
 							},
@@ -618,6 +622,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 									budget_targets_project: currentBudgetTarget,
 									project: dashboardData?.project?.id,
 								},
+								deleted: false,
 							},
 						},
 					},
@@ -626,6 +631,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						variables: {
 							filter: {
 								budget_sub_target: valuesSubmitted.budget_sub_target,
+								deleted: false,
 							},
 						},
 					},

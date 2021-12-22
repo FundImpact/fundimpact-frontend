@@ -149,6 +149,7 @@ export default function FundStatus() {
 
 	const dashboardData = useDashBoardData();
 	const projectId = dashboardData?.project?.id;
+	console.log("projectId==>", projectId);
 
 	const classes = useStyles();
 	const theme = useTheme();
@@ -175,7 +176,6 @@ export default function FundStatus() {
 		if (!ProjectTotalBudgetApproved) return;
 		if (!ProjectTotalRecievedAmount) return;
 		if (!ProjectTotalSpendAmount) return;
-
 		const amountApproved = ProjectTotalBudgetApproved.projectBudgetTargetAmountSum;
 		const amountSpend = ProjectTotalSpendAmount.projBudgetTrackingsTotalSpendAmount;
 		const amountReceived = ProjectTotalRecievedAmount.fundReceiptProjectTotalAmount;
@@ -185,6 +185,8 @@ export default function FundStatus() {
 			amountReceived,
 			theme
 		);
+		console.log("details", details);
+
 		setChartData(BulletChartConfig);
 		setFUND_DETAILS(details);
 	}, [ProjectTotalBudgetApproved, ProjectTotalSpendAmount, ProjectTotalRecievedAmount]);

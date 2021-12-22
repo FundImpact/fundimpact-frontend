@@ -112,6 +112,13 @@ function Category(props: ICategoryProps) {
 		}
 	};
 
+	addCategoryForm[4].getInputValue = (value: boolean) => {
+		setCurrentIsProject(value);
+		// value ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
+	};
+
+	currentIsProject ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
+
 	if (!formValues?.project_id && formAction === "UPDATE") {
 		addCategoryForm[4].hidden = true;
 		addCategoryForm[5].hidden = true;
@@ -119,9 +126,15 @@ function Category(props: ICategoryProps) {
 
 	if (formValues?.project_id && formAction === "UPDATE") {
 		formValues.is_project = true;
-		addCategoryForm[5].disabled = true;
-		addCategoryForm[5].hidden = false;
+		// addCategoryForm[5].disabled = true;
+		// addCategoryForm[5].hidden = false;
 		addCategoryForm[4].hidden = false;
+		if (currentIsProject) {
+			addCategoryForm[5].hidden = true;
+		} else {
+			addCategoryForm[5].disabled = true;
+			addCategoryForm[5].hidden = false;
+		}
 	}
 	if (formAction === "CREATE") {
 		addCategoryForm[4].hidden = false;
@@ -180,13 +193,6 @@ function Category(props: ICategoryProps) {
 			props.handleClose();
 		}
 	};
-
-	addCategoryForm[4].getInputValue = (value: boolean) => {
-		setCurrentIsProject(value);
-		// value ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
-	};
-
-	currentIsProject ? (addCategoryForm[5].hidden = false) : (addCategoryForm[5].hidden = true);
 
 	const intl = useIntl();
 
