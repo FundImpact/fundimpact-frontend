@@ -500,7 +500,7 @@ const LineItemTableButton = ({
 				color="secondary"
 			>
 				<Avatar className={classes.primary}>
-					<IconButton onClick={() => setOpenLineItemTable(true)}>
+					<IconButton onClick={() => setOpenLineItemTable(true)} style={{ zIndex: 100 }}>
 						<VisibilityIcon className={classes.eyeIcon} />
 					</IconButton>
 				</Avatar>

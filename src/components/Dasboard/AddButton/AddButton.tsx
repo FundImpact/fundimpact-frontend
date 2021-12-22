@@ -54,6 +54,7 @@ function AddButton({
 						position: "fixed",
 						right: "10px",
 						bottom: "77px",
+						zIndex: 999,
 					}}
 					container
 					direction="column"

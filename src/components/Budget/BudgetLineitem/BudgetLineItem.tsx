@@ -535,6 +535,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 							variables: {
 								filter: {
 									budget_sub_target: lineItemCreated.budget_sub_target.id,
+									deleted: false,
 									// budget_sub_target: lineItemCreated.budgetSubTargets.id,
 								},
 							},
@@ -621,6 +622,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 									budget_targets_project: currentBudgetTarget,
 									project: dashboardData?.project?.id,
 								},
+								deleted: false,
 							},
 						},
 					},
@@ -629,6 +631,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 						variables: {
 							filter: {
 								budget_sub_target: valuesSubmitted.budget_sub_target,
+								deleted: false,
 							},
 						},
 					},
