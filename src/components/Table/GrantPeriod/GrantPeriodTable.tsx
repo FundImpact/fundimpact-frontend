@@ -140,29 +140,17 @@ function SimpleTable({
 		GRANT_PERIOD_ACTIONS.DELETE_GRANT_PERIOD
 	);
 
-	let start_date: any;
-	let end_date: any;
 	let newData: any = [];
-	data.forEach((elem: any) => {
-		start_date = new Date(elem?.start_date).toDateString();
-		end_date = new Date(elem?.end_date).toDateString();
+	newData = data.map((elem: any) => {
+		let newEl: any = {};
+		console.log("elem", elem);
+		newEl = {
+			...elem,
+			start_date: new Date(elem.start_date).toDateString(),
+			end_date: new Date(elem.end_date).toDateString(),
+		};
+		return newEl;
 	});
-
-	// for (let i = 0; i < data.length; i++) {
-	// 	console.log("data[i]", data[i]);
-	// 	start_date = new Date(data[i]?.start_date).toDateString();
-	// 	end_date = new Date(data[i]?.end_date).toDateString();
-	// }
-
-	console.log("hhhih", start_date, end_date);
-
-	newData = data.map((elem: any) => ({
-		...elem,
-		start_date,
-		end_date,
-	}));
-
-	console.log("grantPeriod Data::", data, newData);
 
 	return (
 		<TableContainer component={Paper}>
@@ -179,7 +167,8 @@ function SimpleTable({
 					</TableRow>
 				</TableHead>
 				<TableBody className={tableStyles.tbody}>
-					{data.map((row, index) => (
+					{newData.map((row: any, index: any) => (
+						// {data.map((row, index) => (
 						<TableRow key={index}>
 							<TableCell key={index}> {index + 1} </TableCell>
 							{headers.map((header, index) => (
