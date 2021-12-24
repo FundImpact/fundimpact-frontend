@@ -149,7 +149,6 @@ export default function FundStatus() {
 
 	const dashboardData = useDashBoardData();
 	const projectId = dashboardData?.project?.id;
-	console.log("projectId==>", projectId);
 
 	const classes = useStyles();
 	const theme = useTheme();
