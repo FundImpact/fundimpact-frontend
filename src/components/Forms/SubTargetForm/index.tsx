@@ -298,6 +298,8 @@ function SubTarget(props: SubTargetFormProps) {
 	const [openTargetDialog, setOpenTargetDialog] = React.useState<boolean>();
 	budgetSubTargetFormList[0].addNewClick = () => setOpenTargetDialog(true);
 
+	console.log("dashboardData?.project?.id ", dashboardData?.project?.id);
+
 	try {
 		projectDonors = apolloClient.readQuery<IGetProjectDonor>(
 			{
@@ -309,6 +311,14 @@ function SubTarget(props: SubTargetFormProps) {
 	} catch (error) {
 		console.error(error);
 	}
+
+	const { data: projectSpecificDonor } = useQuery(GET_PROJ_DONORS, {
+		variables: { filter: { project: dashboardData?.project?.id, deleted: false } },
+	});
+
+	// const { data: organizationSpecificDonor } = useQuery(GET_ORG_DONOR, {
+	// 	variables: { filter: { organization: dashboardData?.organization?.id, deleted: false } },
+	// });
 
 	let orgDonors: any | null = null;
 	// let orgDonors: IGET_DONOR | null = null;
@@ -415,13 +425,18 @@ function SubTarget(props: SubTargetFormProps) {
 	const [updateProjectDonor] = useMutation(UPDATE_PROJECT_DONOR);
 
 	const getProjectDonorIdForGivenDonorId = (
-		projectDonors: IGetProjectDonor["projectDonors"] | undefined,
+		projectSpecificDonor: IGetProjectDonor["projectDonors"] | undefined,
 		donorId: any
-	) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id === donorId)?.id;
+	) => projectSpecificDonor?.find((projectDonor) => projectDonor?.donor?.id === donorId)?.id;
+	// const getProjectDonorIdForGivenDonorId = (
+	// 	projectDonors: IGetProjectDonor["projectDonors"] | undefined,
+	// 	donorId: any
+	// ) => projectDonors?.find((projectDonor) => projectDonor?.donor?.id === donorId)?.id;
 
 	const createProjectDonorHelper = (value: any) => {
 		const projectDonorIdForGivenDonor = getProjectDonorIdForGivenDonorId(
-			projectDonors?.projectDonors,
+			projectSpecificDonor?.projectDonors,
+			// projectDonors?.projectDonors,
 			value.id
 		);
 		if (projectDonorIdForGivenDonor) {
@@ -450,8 +465,10 @@ function SubTarget(props: SubTargetFormProps) {
 
 	budgetSubTargetFormList[6].optionsArray = useMemo(() => {
 		let donorsArray: any = [];
-		if (projectDonors)
-			projectDonors?.projectDonors.forEach((elem: IProjectDonor) => {
+		// if (projectDonors)
+		// 	projectDonors?.projectDonors.forEach((elem: IProjectDonor) => {
+		if (projectSpecificDonor)
+			projectSpecificDonor?.projectDonors.forEach((elem: IProjectDonor) => {
 				donorsArray.push({
 					...elem,
 					id: elem.donor.id,
@@ -460,15 +477,18 @@ function SubTarget(props: SubTargetFormProps) {
 			});
 		return donorsArray;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectDonors, props]);
+	}, [projectSpecificDonor, props]);
+	// }, [projectDonors, props]);
 
 	budgetSubTargetFormList[6].secondOptionsArray = useMemo(() => {
 		let organizationDonorsAfterRemovingProjectDonors: any = [];
-		if (projectDonors && orgDonors) {
+		if (projectSpecificDonor && orgDonors) {
+			// if (projectDonors && orgDonors) {
 			// console.log("orgDonors --- ", projectDonors, orgDonors);
 			orgDonors.orgDonors.forEach((orgDonor: { id: string; name: string }) => {
 				let projectDonorNotContainsOrgDonor = true;
-				projectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
+				// projectDonors?.projectDonors.forEach((projectDonor: IProjectDonor) => {
+				projectSpecificDonor?.projectDonors.forEach((projectDonor: IProjectDonor) => {
 					if (orgDonor.id === projectDonor.donor.id) {
 						projectDonorNotContainsOrgDonor = false;
 					}
@@ -480,8 +500,10 @@ function SubTarget(props: SubTargetFormProps) {
 			});
 		}
 		return organizationDonorsAfterRemovingProjectDonors;
-	}, [projectDonors, orgDonors]);
+	}, [projectSpecificDonor, orgDonors]);
+	// }, [projectDonors, orgDonors]);
 
+	//
 	useMemo(() => {
 		if (props.formAction === FORM_ACTIONS.UPDATE) {
 			if (props?.data?.donor) {
