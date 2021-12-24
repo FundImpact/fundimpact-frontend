@@ -19,6 +19,7 @@ import {
 import {
 	GET_PROJECT_AMOUNT_SPEND,
 	GET_PROJECT_BUDGET_AMOUNT,
+	GET_PROJECT_AMOUNT_RECEIVED,
 	GET_PROJ_DONORS,
 } from "../../../graphql/project";
 import { IBudgetTargetProjectProps } from "../../../models/budget";
@@ -463,6 +464,14 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 						query: GET_PROJECT_BUDGET_AMOUNT,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
+					{
+						query: GET_PROJECT_AMOUNT_SPEND,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_PROJECT_AMOUNT_RECEIVED,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
 				],
 			});
 			notificationDispatch(setSuccessNotification("Budget Target Creation Success test"));
@@ -523,6 +532,18 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 								},
 							},
 						},
+						{
+							query: GET_PROJECT_BUDGET_AMOUNT,
+							variables: { filter: { project: dashboardData?.project?.id } },
+						},
+						{
+							query: GET_PROJECT_AMOUNT_SPEND,
+							variables: { filter: { project: dashboardData?.project?.id } },
+						},
+						{
+							query: GET_PROJECT_AMOUNT_RECEIVED,
+							variables: { filter: { project: dashboardData?.project?.id } },
+						},
 					],
 				}));
 			notificationDispatch(setSuccessNotification("Budget Target Updation Success"));
@@ -562,6 +583,10 @@ function BudgetTargetProjectDialog(props: IBudgetTargetProjectProps) {
 					},
 					{
 						query: GET_PROJECT_AMOUNT_SPEND,
+						variables: { filter: { project: dashboardData?.project?.id } },
+					},
+					{
+						query: GET_PROJECT_AMOUNT_RECEIVED,
 						variables: { filter: { project: dashboardData?.project?.id } },
 					},
 					{
