@@ -166,106 +166,116 @@ const UnitsTable = ({
 	}
 
 	return (
-		<TableContainer component={Paper}>
-			<Unit
-				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenUnitEditDialog(false)}
-				initialValues={getInitialValues(selectedUnit.current)}
-				open={openUnitEditDialog}
-			/>
-			<Unit
-				formAction={FORM_ACTIONS.UPDATE}
-				handleClose={() => setOpenUnitDeleteDialog(false)}
-				initialValues={getInitialValues(selectedUnit.current)}
-				open={openUnitDeleteDialog}
-				deleteUnit={true}
-			/>
+		<>
+			<TableContainer component={Paper}>
+				<Unit
+					formAction={FORM_ACTIONS.UPDATE}
+					handleClose={() => setOpenUnitEditDialog(false)}
+					initialValues={getInitialValues(selectedUnit.current)}
+					open={openUnitEditDialog}
+				/>
+				<Unit
+					formAction={FORM_ACTIONS.UPDATE}
+					handleClose={() => setOpenUnitDeleteDialog(false)}
+					initialValues={getInitialValues(selectedUnit.current)}
+					open={openUnitDeleteDialog}
+					deleteUnit={true}
+				/>
 
-			<Table className={classes.table} aria-label="simple table">
-				<TableHead>
-					<TableRow color="primary">
-						{unitsList?.units?.length
-							? unitsTableHeading.map(
-									(
-										heading: { label: string; keyMapping?: string },
-										index: number
-									) => (
-										<TableCell
-											className={tableStyles.th}
-											key={index}
-											align="left"
-										>
-											{heading.label}
-										</TableCell>
-									)
-							  )
-							: null}
-						{/* <TableCell>
+				<Table className={classes.table} aria-label="simple table">
+					<TableHead>
+						<TableRow color="primary">
+							{unitsList?.units?.length
+								? unitsTableHeading.map(
+										(
+											heading: { label: string; keyMapping?: string },
+											index: number
+										) => (
+											<TableCell
+												className={tableStyles.th}
+												key={index}
+												align="left"
+											>
+												{heading.label}
+											</TableCell>
+										)
+								  )
+								: null}
+							{/* <TableCell>
 							<IconButton>
 								<MoreVertIcon />
 							</IconButton>
 						</TableCell> */}
-					</TableRow>
-				</TableHead>
-				<TableBody className={tableStyles.tbody}>
-					{unitsList?.units?.map((unit: IUnits, index: number) => (
-						<TableRow key={unit.id}>
-							<TableCell component="td" scope="row">
-								{page * 10 + index + 1}
-							</TableCell>
-							<TableCell>{unit.name}</TableCell>
-							<TableCell>{unit.code}</TableCell>
-							<TableCell>{unit.description}</TableCell>
-							<TableCell>{unit.type}</TableCell>
-							<TableCell>
-								<IconButton
-									aria-haspopup="true"
-									onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-										selectedUnit.current = unit;
-										handleMenuClick(event);
-									}}
-									style={{
-										visibility: true ? "visible" : "hidden",
-									}}
-								>
-									<MoreVertIcon />
-								</IconButton>
-								{/* Edit Access */}
-								{true && (
-									<SimpleMenu
-										handleClose={handleMenuClose}
-										id={`organizationMenu-${unit.id}`}
-										anchorEl={
-											selectedUnit?.current?.id === unit.id ? anchorEl : null
+						</TableRow>
+					</TableHead>
+					<TableBody className={tableStyles.tbody}>
+						{unitsList?.units?.map((unit: IUnits, index: number) => (
+							<TableRow key={unit.id}>
+								<TableCell component="td" scope="row">
+									{page * 10 + index + 1}
+								</TableCell>
+								<TableCell>{unit.name}</TableCell>
+								<TableCell>{unit.code}</TableCell>
+								<TableCell>{unit.description}</TableCell>
+								<TableCell>{unit.type}</TableCell>
+								<TableCell>
+									<IconButton
+										aria-haspopup="true"
+										onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+											selectedUnit.current = unit;
+											handleMenuClick(event);
+										}}
+										style={{
+											visibility: true ? "visible" : "hidden",
+										}}
+									>
+										<MoreVertIcon />
+									</IconButton>
+									{/* Edit Access */}
+									{true && (
+										<SimpleMenu
+											handleClose={handleMenuClose}
+											id={`organizationMenu-${unit.id}`}
+											anchorEl={
+												selectedUnit?.current?.id === unit.id
+													? anchorEl
+													: null
+											}
+											menuList={menuList}
+										/>
+									)}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+					{
+						unitsList?.units?.length === 0 ? (
+							<p style={{ textAlign: "center" }}> No Data Found</p>
+						) : (
+							// {unitsList?.units?.length && unitCount && (
+							<TableFooter>
+								<TableRow>
+									<TablePagination
+										rowsPerPageOptions={[]}
+										count={unitCount?.aggregate?.count}
+										rowsPerPage={
+											unitCount?.aggregate?.count > 10
+												? 10
+												: unitCount?.aggregate?.count
 										}
-										menuList={menuList}
+										page={page}
+										onChangePage={handlePageChange}
+										onChangeRowsPerPage={() => {}}
+										style={{ paddingRight: "40px" }}
 									/>
-								)}
-							</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-				{unitsList?.units?.length && unitCount && (
-					<TableFooter>
-						<TableRow>
-							<TablePagination
-								rowsPerPageOptions={[]}
-								count={unitCount?.aggregate?.count}
-								rowsPerPage={
-									unitCount?.aggregate?.count > 10
-										? 10
-										: unitCount?.aggregate?.count
-								}
-								page={page}
-								onChangePage={handlePageChange}
-								onChangeRowsPerPage={() => {}}
-								style={{ paddingRight: "40px" }}
-							/>
-						</TableRow>
-					</TableFooter>
-				)}
-			</Table>
-		</TableContainer>
+								</TableRow>
+							</TableFooter>
+						)
+						// )}
+					}
+				</Table>
+			</TableContainer>
+		</>
 	);
 };
 

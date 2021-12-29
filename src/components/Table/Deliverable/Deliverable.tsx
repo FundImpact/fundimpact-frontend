@@ -193,6 +193,8 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 		}
 	);
 
+	console.log("targetData", targetData);
+
 	return (
 		<>
 			<TableCell>
@@ -293,7 +295,9 @@ const EditDeliverableTargetIcon = ({ deliverableTarget }: { deliverableTarget: a
 								// deliverable_unit_org: deliverableTarget?.deliverable_unit_org?.id,
 								is_qualitative: deliverableTarget?.is_qualitative,
 								value_calculation: deliverableTarget?.value_calculation,
-								value_qualitative_option: value_qualitative_option_string,
+								value_qualitative_option:
+									deliverableTarget?.value_qualitative_option,
+								// value_qualitative_option: value_qualitative_option_string,
 								project: deliverableTarget.project.id,
 							});
 							handleMenuClose();

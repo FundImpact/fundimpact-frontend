@@ -21,11 +21,6 @@ const TabelsDialog = ({ open, handleClose, yearTag }: any) => {
 	// const TabelsDialog = ({ open, handleClose, yearTag }: ITablesDialogProps) => {
 	const [getCountries, { data }] = useLazyQuery(GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID);
 
-	console.log("tableDialog", data);
-	yearTag?.map((elem: any) => {
-		console.log("elem", elem);
-	});
-
 	useEffect(() => {
 		getCountries({
 			variables: {
@@ -91,8 +86,6 @@ const TabelsDialog = ({ open, handleClose, yearTag }: any) => {
 
 const YearTagCountries = ({ yearTag }: { yearTag: any }) => {
 	const [open, setOpen] = useState<boolean>(false);
-
-	console.log("countries", yearTag);
 
 	const openDialog = () => {
 		setOpen(true);

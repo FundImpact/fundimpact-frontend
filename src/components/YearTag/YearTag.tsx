@@ -40,7 +40,6 @@ function YearTag(props: IYearTagProps) {
 	const { data: countryList } = useQuery(GET_COUNTRY_DATA);
 
 	addYearTagForm[1].getInputValue = (value: any) => {
-		console.log("value yearTag", value);
 		if (value === "financial") {
 			addYearTagForm[4].hidden = false;
 		} else if (value === "annual") {

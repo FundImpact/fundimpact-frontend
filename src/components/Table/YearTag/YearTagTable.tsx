@@ -107,17 +107,15 @@ function YearTagTable({
 		}
 	);
 
-	console.log("count", count);
-
 	const countryList = yearTagList?.yearTags
 		.map((elem: any) => {
 			return elem.country_id;
 		})
 		.flat();
 
-	if (countryList) {
-		console.log("countryList", [...countryList]);
-	}
+	// if (countryList) {
+	// 	console.log("countryList", [...countryList]);
+	// }
 	// countryList.map((data: any) => {
 	// 	console.log("data country", data);
 	// });

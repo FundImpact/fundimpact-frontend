@@ -208,7 +208,7 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	}
 	const formIsOpen = props.open;
 	const onCancel = () => {
-		// deliverableTargetForm[4].hidden = true;
+		deliverableTargetForm[4].hidden = false;
 		deliverableTargetForm[6].hidden = true;
 		props.handleClose();
 	};
@@ -583,7 +583,6 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 	]);
 
 	if (!dashboardData?.project?.logframe_tracker) {
-		console.log("reached log");
 		deliverableTargetForm[0].hidden = true;
 	} else if (dashboardData?.project?.logframe_tracker && props.formType !== "impact") {
 		deliverableTargetForm[0].hidden = false;
@@ -690,11 +689,18 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 			const deliverableTargetValues = { ...initialValues };
 
 			delete deliverableTargetValues["id"];
+			if (!deliverableTargetValues?.parent) delete (deliverableTargetValues as any).parent;
+			if (!deliverableTargetValues?.description)
+				delete (deliverableTargetValues as any).description;
+			if (!deliverableTargetValues?.category)
+				delete (deliverableTargetValues as any).category;
 			if (
 				!deliverableTargetValues.value_qualitative_option ||
 				deliverableTargetValues.value_qualitative_option === "-"
 			)
 				delete deliverableTargetValues.value_qualitative_option;
+
+			console.log("deliverableTargetValues", deliverableTargetValues);
 
 			await updateDeliverableTarget({
 				variables: {

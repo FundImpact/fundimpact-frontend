@@ -143,7 +143,6 @@ function SimpleTable({
 	let newData: any = [];
 	newData = data.map((elem: any) => {
 		let newEl: any = {};
-		console.log("elem", elem);
 		newEl = {
 			...elem,
 			start_date: new Date(elem.start_date).toDateString(),

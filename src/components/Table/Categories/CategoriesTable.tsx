@@ -261,7 +261,10 @@ const CategoriesTable = ({
 						</TableRow>
 					))}
 				</TableBody>
-				{categoryList?.categories?.length && categoryCount && (
+				{categoryList?.categories?.length === 0 ? (
+					<p style={{ textAlign: "center" }}> No Data Found</p>
+				) : (
+					// {categoryList?.categories?.length && categoryCount && (
 					<TableFooter>
 						<TableRow>
 							<TablePagination
@@ -279,6 +282,7 @@ const CategoriesTable = ({
 							/>
 						</TableRow>
 					</TableFooter>
+					// )}
 				)}
 			</Table>
 		</TableContainer>
