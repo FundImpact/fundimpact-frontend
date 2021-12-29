@@ -106,7 +106,7 @@ function Unit(props: IUnitProps) {
 					},
 				],
 			});
-			notificationDispatch(setSuccessNotification("Unite created successfully"));
+			notificationDispatch(setSuccessNotification("Unit created successfully"));
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {

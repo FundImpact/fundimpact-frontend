@@ -195,7 +195,6 @@ function BudgetCategory({
 	};
 	budgetCategoryFormInputFields[3].getInputValue = (value: boolean) => {
 		setCurrentIsProject(value);
-		console.log("fromvalue", value);
 
 		// value
 		// 	? (budgetCategoryFormInputFields[4].hidden = false)

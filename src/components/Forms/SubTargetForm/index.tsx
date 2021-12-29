@@ -343,79 +343,6 @@ function SubTarget(props: SubTargetFormProps) {
 		getOrganizationYear({ variables: { id: dashboardData?.organization?.id } });
 	}, [getOrganizationYear]);
 
-	// const { data: yearTagsCountry } = useQuery(GET_YEARTAG_COUNTRIES_BY_YEARTAG_ID);
-
-	// console.log("yearTag", yearTagsCountry);
-
-	// let filterDonorYearData: any = [];
-	// let filterOrgYearData: any = [];
-
-	// useEffect(() => {
-	// 	const yearTagData = yearTags?.yearTags;
-	// 	let filterDonorYearData: any = [];
-	// 	let filterOrgYearData: any = [];
-	// 	let arr: any = [];
-
-	// 	yearTagsCountry?.yearTagsCountries?.filter((obj: any) => {
-	// 		orgDonors?.orgDonors?.forEach((org: any) => {
-	// 			if (org.country) {
-	// 				if (obj?.country?.id === org.country.id) {
-	// 					arr.push(obj?.year_tag);
-	// 				}
-	// 			}
-	// 		});
-	// 	});
-	// 	let newArr = arr.filter(
-	// 		(v: any, i: any, a: any) => a.findIndex((t: any) => t.id === v.id) === i
-	// 	);
-
-	// 	for (let i = 0; i < yearTagData?.length; i++) {
-	// 		// filterOrgYearData.push(...newArr.filter((obj: any) => obj.id !== yearTagData[i].id));
-	// 		filterDonorYearData.push(...newArr.filter((obj: any) => obj.id === yearTagData[i].id));
-	// 		// newArr.forEach((obj: any) => {
-	// 		// 	if (yearTagData[i].id === obj?.id) {
-	// 		// 		console.log("obj1", obj);
-	// 		// 	}
-	// 		// 	if (yearTagData[i].id !== obj?.id) {
-	// 		// 		if (yearTagData[i].type === "financial") {
-	// 		// 			console.log("obj2");
-	// 		// 		}
-	// 		// 	}
-	// 		// });
-	// 	}
-
-	// 	for (let i = 0; i < lists.financialYear?.length; i++) {
-	// 		filterOrgYearData.push(
-	// 			...newArr.filter((obj: any) => obj.id !== lists.financialYear[i].id)
-	// 		);
-	// 	}
-
-	// 	// yearTags?.yearTags?.filter((data: any) => {
-	// 	// 	// newArr.filter((data: any) => {
-	// 	// 	newArr.forEach((yearData: any) => {
-	// 	// 		// yearTags?.yearTags?.forEach((yearData: any) => {
-	// 	// 		if (data?.id === yearData?.id) {
-	// 	// 			filterDonorYearData.push(data);
-	// 	// 		}
-	// 	// 		if (data?.id !== yearData?.id && data?.type === "financial") {
-	// 	// 			// filterOrgYearData.push(data);
-	// 	// 			console.log("lkjdsf");
-	// 	// 		}
-	// 	// 	});
-	// 	// });
-	// 	console.log("org.country", filterDonorYearData, filterOrgYearData);
-	// }, [yearTags, yearTagsCountry, orgDonors]);
-
-	// console.log("yearTags?.yearTags", yearTags?.yearTags, newArr);
-
-	// const { data: projectDonors } = useQuery(GET_PROJ_DONORS, {
-	// 	variables: { filter: { project: dashboardData?.project?.id, deleted: false } },
-	// });
-
-	// const { data: orgDonors } = useQuery(GET_ORG_DONOR, {
-	// 	variables: { filter: { organization: dashboardData?.organization?.id, deleted: false } },
-	// });
-
 	const [createProjectDonor] = useMutation(CREATE_PROJECT_DONOR, {
 		onCompleted: (data) => {
 			updateProjectDonorCache({ apolloClient, projecttDonorCreated: data });
@@ -571,10 +498,14 @@ function SubTarget(props: SubTargetFormProps) {
 				};
 			}
 
-			console.log("subTargetValues", subTargetValues);
 			if (!subTargetValues?.geo_region_id) delete (subTargetValues as any).geo_region_id;
+			if (!subTargetValues?.financial_year_org)
+				delete (subTargetValues as any).financial_year_org;
+			if (!subTargetValues?.financial_year_donor)
+				delete (subTargetValues as any).financial_year_donor;
 			if (!subTargetValues?.grant_periods_project)
 				delete (subTargetValues as any).grant_periods_project;
+			if (!subTargetValues?.annual_year) delete (subTargetValues as any).annual_year;
 
 			await createSubTarget({
 				variables: {
@@ -798,8 +729,7 @@ function SubTarget(props: SubTargetFormProps) {
 			}
 
 			if (values.timeperiod_end <= values.timeperiod_start) {
-				errors.timeperiod_end =
-					"Time period must be bigger than or equal to start time period";
+				errors.timeperiod_end = "end Time period must be bigger than start time period";
 			}
 		}
 

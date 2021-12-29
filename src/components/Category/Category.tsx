@@ -79,6 +79,20 @@ function Category(props: ICategoryProps) {
 
 	let organization_id = dashboardData?.organization?.id;
 
+	let onCancel: any;
+
+	console.log("props", props);
+
+	// debugger;
+	// useEffect(() => {
+	onCancel = () => {
+		addCategoryForm[4].hidden = false;
+		addCategoryForm[5].disabled = false;
+		addCategoryForm[5].hidden = true;
+		props.handleClose();
+	};
+	// }, [props.handleClose]);
+
 	const onCreate = async (valuesSubmitted: ICategory) => {
 		try {
 			let value = removeEmptyKeys<ICategory>({ objectToCheck: valuesSubmitted });
@@ -100,10 +114,14 @@ function Category(props: ICategoryProps) {
 							},
 						},
 					},
+					{
+						query: GET_CATEGORY_COUNT,
+					},
 				],
 			});
 
 			notificationDispatch(setSuccessNotification("Category Creation Success"));
+			onCancel();
 		} catch (err: any) {
 			notificationDispatch(setErrorNotification(err?.message));
 		} finally {

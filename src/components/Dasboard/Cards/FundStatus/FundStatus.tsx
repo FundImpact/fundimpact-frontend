@@ -155,8 +155,6 @@ export default function FundStatus() {
 
 	const [FUND_DETAILS, setFUND_DETAILS] = useState<IFunds[]>();
 
-	// console.log("fund card render");
-
 	let [GetProjectTotalBudget, { data: ProjectTotalBudgetApproved }] = useLazyQuery(
 		GET_PROJECT_BUDGET_AMOUNT
 	);
@@ -184,7 +182,6 @@ export default function FundStatus() {
 			amountReceived,
 			theme
 		);
-		console.log("details", details);
 
 		setChartData(BulletChartConfig);
 		setFUND_DETAILS(details);
@@ -210,7 +207,6 @@ export default function FundStatus() {
 				<Skeleton variant="text" animation="wave"></Skeleton>
 			</>
 		);
-	// console.log("FUND_DETAILS", FUND_DETAILS);
 	return (
 		<Grid className={classes.root}>
 			<ChartBullet

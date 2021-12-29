@@ -149,8 +149,6 @@ export default function ProjectList({
 		});
 	}, [workspaceId]);
 
-	console.log("project data", data, projectDataResponse?.data, workspaceId);
-
 	let { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [isAnyActiveProject, setIsAnyActiveProject] = useState<boolean>(false);

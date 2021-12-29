@@ -197,7 +197,6 @@ const useProjectDonorSelectInput = ({
 	const notificationDispatch = useNotificationDispatch();
 
 	const [selectedDonor, setSelectedDonor] = useState<string>("");
-	console.log("selectedDonor", selectedDonor);
 
 	const [createProjectDonorCheckboxVal, setCreateProjectDonorCheckboxVal] = useState<boolean>(
 		false
@@ -222,7 +221,6 @@ const useProjectDonorSelectInput = ({
 	// useEffect(() => {
 	selectedDonorGlobal = selectedDonor;
 	// }, [selectedDonor]);
-	console.log("selectedDonorGlobal", selectedDonorGlobal);
 
 	useEffect(() => {
 		showCreateProjectDonorCheckboxGlobal = !!showCreateProjectDonorCheckbox;
