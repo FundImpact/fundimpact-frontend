@@ -313,8 +313,18 @@ function SubTarget(props: SubTargetFormProps) {
 	}
 
 	const { data: projectSpecificDonor } = useQuery(GET_PROJ_DONORS, {
-		variables: { filter: { project: dashboardData?.project?.id, deleted: false } },
+		variables: {
+			filter: {
+				project: dashboardData?.project?.id,
+				deleted: false,
+				donor: {
+					deleted: false,
+				},
+			},
+		},
 	});
+
+	console.log("projectSpecificDonor", projectSpecificDonor);
 
 	// const { data: organizationSpecificDonor } = useQuery(GET_ORG_DONOR, {
 	// 	variables: { filter: { organization: dashboardData?.organization?.id, deleted: false } },
@@ -327,7 +337,9 @@ function SubTarget(props: SubTargetFormProps) {
 			// orgDonors = apolloClient.readQuery<IGET_DONOR>(
 			{
 				query: GET_ORG_DONOR,
-				variables: { filter: { organization: dashboardData?.organization?.id } },
+				variables: {
+					filter: { organization: dashboardData?.organization?.id, deleted: false },
+				},
 			},
 			true
 		);

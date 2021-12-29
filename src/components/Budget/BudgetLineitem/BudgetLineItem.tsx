@@ -304,6 +304,8 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 
 	let [getBudgetSubTarget, { data: budgetTargets }] = useLazyQuery(GET_BUDGET_SUB_TARGETS);
 
+	console.log("budgetTargets", budgetTargets);
+
 	let [getAnnualYears] = useLazyQuery(GET_ANNUAL_YEAR_LIST);
 
 	let [getGrantPeriodProject, { data: grantPeriodProject }] = useLazyQuery(GET_GRANT_PERIOD);
@@ -360,7 +362,11 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 			getBudgetSubTarget({
 				variables: {
 					filter: {
+						budget_targets_project: {
+							deleted: false,
+						},
 						project: currentProject?.id,
+						deleted: false,
 					},
 				},
 			});
@@ -486,6 +492,7 @@ function BudgetLineitem(props: IBudgetLineitemProps) {
 				variables: {
 					filter: {
 						id: budget_sub_target,
+						deleted: false,
 					},
 				},
 				fetchPolicy: "network-only",
