@@ -44,6 +44,7 @@ import { GET_CATEGORIES } from "../../graphql/Category/query";
 import Category from "../Category";
 import Unit from "../Unit";
 import is from "date-fns/esm/locale/is/index.js";
+import { GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE } from "../../graphql/Deliverable/trackline";
 
 function getInitialValues(props: DeliverableTargetProps) {
 	if (props.type === DELIVERABLE_ACTIONS.UPDATE) return { ...props.data };
@@ -359,6 +360,18 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 							},
 						},
 					},
+					{
+						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
+					},
+					{
+						query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
+					},
 				],
 			});
 			// setcurrentCategory("");
@@ -398,6 +411,18 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					input: createInputTarget,
 				},
 				refetchQueries: [
+					{
+						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
+					},
+					{
+						query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
+					},
 					{
 						query: GET_DELIVERABLE_TARGET_BY_PROJECT,
 						variables: {
@@ -737,7 +762,15 @@ function DeliverableTarget(props: DeliverableTargetProps) {
 					},
 					{
 						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
-						variables: { filter: { project: dashboardData?.project?.id } },
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
+					},
+					{
+						query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
 					},
 					{
 						query: GET_DELIVERABLE_TARGETS_COUNT,
