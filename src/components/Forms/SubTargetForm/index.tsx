@@ -18,6 +18,7 @@ import { budgetSubTargetForm } from "./inputFIelds.json";
 import { useIntl } from "react-intl";
 import { CommonFormTitleFormattedMessage } from "../../../utils/commonFormattedMessage";
 import {
+	GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 	GET_ALL_DELIVERABLES_TARGET_AMOUNT,
 	GET_PROJECT_BUDGET_AMOUNT,
 	GET_PROJ_DONORS,
@@ -61,6 +62,7 @@ import BudgetTarget from "../../../components/Budget/BudgetTarget";
 import { GET_CATEGORY_TYPES } from "../../../graphql/Category/query";
 import DeliverableTarget from "../../Deliverable/DeliverableTarget";
 import { DELIVERABLE_ACTIONS } from "../../Deliverable/constants";
+import { GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE } from "../../../graphql/Deliverable/trackline";
 
 function getInitialValues(props: SubTargetFormProps) {
 	if (props.formAction === FORM_ACTIONS.UPDATE) return { ...props.data };
@@ -658,6 +660,18 @@ function SubTarget(props: SubTargetFormProps) {
 								project: dashboardData?.project?.id,
 								...projectSubTargetsQueryFilter,
 							},
+						},
+					},
+					{
+						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
+						},
+					},
+					{
+						query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+						variables: {
+							filter: { project: dashboardData?.project?.id, type: typeVal },
 						},
 					},
 				],

@@ -10,6 +10,7 @@ import {
 } from "../../graphql/Deliverable/target";
 import {
 	CREATE_DELIVERABLE_TRACKLINE,
+	GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
 	GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE,
 	GET_DELIVERABLE_TRACKLINE_BY_DELIVERABLE_TARGET,
 	GET_DELIVERABLE_TRACKLINE_COUNT,
@@ -763,7 +764,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				{
 					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 					variables: {
-						filter: { project: DashBoardData?.project?.id },
+						filter: { project: DashBoardData?.project?.id, type: typeVal },
+					},
+				},
+				{
+					query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+					variables: {
+						filter: { project: DashBoardData?.project?.id, type: typeVal },
 					},
 				},
 				{
@@ -873,7 +880,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 				{
 					query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 					variables: {
-						filter: { project: DashBoardData?.project?.id },
+						filter: { project: DashBoardData?.project?.id, type: typeVal },
+					},
+				},
+				{
+					query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+					variables: {
+						filter: { project: DashBoardData?.project?.id, type: typeVal },
 					},
 				},
 				{
@@ -948,7 +961,13 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 					{
 						query: GET_ALL_DELIVERABLES_SPEND_AMOUNT,
 						variables: {
-							filter: { project: DashBoardData?.project?.id },
+							filter: { project: DashBoardData?.project?.id, type: typeVal },
+						},
+					},
+					{
+						query: GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE,
+						variables: {
+							filter: { project: DashBoardData?.project?.id, type: typeVal },
 						},
 					},
 					{

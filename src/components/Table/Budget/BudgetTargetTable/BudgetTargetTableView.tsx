@@ -118,6 +118,7 @@ const rows = [
 		renderComponent: (budgetTarget: IBudgetTargetProjectResponse) => (
 			<AmountSpent budgetTargetId={budgetTarget.id}>
 				{(amount: number, spent: number) => {
+					console.log("spent", spent);
 					return (
 						<Chip
 							icon={<RemoveOutlinedIcon fontSize="small" />}
@@ -415,6 +416,7 @@ function BudgetTargetView({
 					budgetTargetLineItemFindAccess
 				)}
 				valuesList={budgegtTargetList}
+				// rows={rows}
 				rows={filteredRows}
 				selectedRow={selectedBudgetTarget}
 				toggleDialogs={toggleDialogs}

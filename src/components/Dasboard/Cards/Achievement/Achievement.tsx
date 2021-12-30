@@ -85,7 +85,7 @@ const ISTATUS = (props: IIndicatorProps_PROPS) => {
 				}}
 				primarySegmentedMeasureData={[{ name : "Achieved" , y :props.percentage }]}
 				height={100}
-				themeColor={ChartThemeColor.green}	
+				themeColor={ChartThemeColor.green}
 			/>
 			</Box> */}
 

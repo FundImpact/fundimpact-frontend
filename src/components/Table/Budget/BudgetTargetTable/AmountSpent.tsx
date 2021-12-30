@@ -14,8 +14,12 @@ const AmountSpent = ({
 	children: (props: number, spent: number) => React.ReactNode;
 }) => {
 	const apolloClient = useApolloClient();
-	let [getSpentAmount] = useLazyQuery(GET_PROJ_BUDGET_TRACINGS_COUNT);
+	let [getSpentAmount, { data: spentAmountResponse }] = useLazyQuery(
+		GET_PROJ_BUDGET_TRACINGS_COUNT
+	);
 	const dashboardData = useDashBoardData();
+
+	console.log("spentAmountResponse", spentAmountResponse);
 
 	let oldCachedBudgetTargetProjectData: {
 		budgetTrackingLineitemsConnection: {
@@ -43,6 +47,8 @@ const AmountSpent = ({
 						budget_targets_project: budgetTargetId,
 						project: dashboardData?.project?.id,
 					},
+					deleted: false,
+					// budget_sub_target: budgetTargetId,
 				},
 			},
 		});
@@ -89,6 +95,7 @@ const AmountSpent = ({
 							budget_targets_project: budgetTargetId,
 							project: dashboardData?.project?.id,
 						},
+						deleted: false,
 					},
 				},
 			});
@@ -110,6 +117,8 @@ const AmountSpent = ({
 		getSpentAmount,
 		dashboardData,
 	]);
+
+	console.log("oldCachedBudgetTargetProjectData", oldCachedBudgetTargetProjectData);
 
 	return (
 		<span>
