@@ -351,9 +351,9 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 	if (props.formType === "deliverable") {
 		typeVal = 6;
 	} else if (props.formType === "output") {
-		typeVal = 5;
-	} else if (props.formType === "outcome") {
 		typeVal = 4;
+	} else if (props.formType === "outcome") {
+		typeVal = 5;
 	} else if (props.formType === "impact") {
 		typeVal = 3;
 	}
@@ -655,6 +655,8 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 
 		let input = { ...value };
 
+		console.log("input oncreate", input, currentDeliverableTarget);
+
 		delete (input as any).donors;
 		if (!input.annual_year) delete (input as any).annual_year;
 		if (!input.financial_year) delete (input as any).financial_year;
@@ -806,6 +808,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						},
 					},
 				},
+				{
+					query: GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE,
+					variables: {
+						filter: {
+							deliverable_target_project: currentDeliverableTarget,
+							project: DashBoardData?.project?.id,
+							type: typeVal,
+						},
+					},
+				},
 			],
 		});
 	};
@@ -900,6 +912,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 						},
 					},
 				},
+				{
+					query: GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE,
+					variables: {
+						filter: {
+							deliverable_target_project: currentDeliverableTarget,
+							project: DashBoardData?.project?.id,
+							type: typeVal,
+						},
+					},
+				},
 			],
 		});
 		props.handleClose();
@@ -929,6 +951,10 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 		return errors;
 	};
 	const onDelete = async () => {
+		let currentDeliverableTarget = await getDeliverableTargetBySubTarget(
+			apolloClient,
+			initialValues.deliverable_sub_target || ""
+		);
 		try {
 			const reporting_date = new Date(initialValues?.reporting_date);
 			const deliverableTracklineValues = { ...initialValues, reporting_date };
@@ -985,6 +1011,16 @@ function DeliverableTrackLine(props: DeliverableTargetLineProps) {
 								// deliverable_target_project: currentTargetId,
 								deliverable_sub_target: initialValues?.deliverable_sub_target,
 								deleted: false,
+							},
+						},
+					},
+					{
+						query: GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE,
+						variables: {
+							filter: {
+								deliverable_target_project: currentDeliverableTarget,
+								project: DashBoardData?.project?.id,
+								type: typeVal,
 							},
 						},
 					},

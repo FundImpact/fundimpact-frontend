@@ -52,9 +52,10 @@ import { useDocumentTableDataRefetch } from "../../../hooks/document";
 import SubTarget from "../../Forms/SubTargetForm";
 import ProjectTargets from "../../Forms/ProjectTargets";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { GET_PROJECT_BY_ID } from "../../../graphql/project";
+import { GET_ALL_DELIVERABLES_SPEND_AMOUNT, GET_PROJECT_BY_ID } from "../../../graphql/project";
 import { IGetProjectById } from "../../../models/project/project";
 import { GET_CATEGORY_TYPES } from "../../../graphql/Category/query";
+import { GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE } from "../../../graphql/Deliverable/trackline";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -319,21 +320,28 @@ export default function DashboardTableContainer() {
 
 	const { data: deliverableTypesList } = useQuery(GET_CATEGORY_TYPES);
 
+	console.log("deliverableTypesList", deliverableTypesList);
+
 	let typeVal: any;
+	let tabValue: any;
 
 	for (let index = 0; index < deliverableTypesList?.deliverableTypes.length; index++) {
 		const elem = deliverableTypesList?.deliverableTypes[index];
 		if (elem.id == 6 && tabNumber == 1) {
 			typeVal = "deliverable";
+			tabValue = 6;
 			// break;
 		} else if (elem.id == 5 && tabNumber == 3) {
 			typeVal = "outcome";
+			tabValue = 5;
 			// break;
 		} else if (elem.id == 4 && tabNumber == 2) {
 			typeVal = "output";
+			tabValue = 4;
 			// break;
 		} else if (elem.id == 3 && tabNumber == 4) {
 			typeVal = "impact";
+			tabValue = 3;
 			// break;
 		}
 	}
@@ -1135,10 +1143,39 @@ export default function DashboardTableContainer() {
 
 	// console.log("fundReceiptFindAccess", fundReceiptFindAccess);
 
+	const [getDeliverableSpendAmount, spendResponse] = useLazyQuery(
+		GET_ALL_DELIVERABLES_SPEND_AMOUNT
+	);
+	const [getDeliverableAcheievedAmount, targetResponse] = useLazyQuery(
+		GET_DELIVERABLE_ACHIEVED_AND_TARGET_VALUE
+	);
+
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 		tabNumber = newValue;
 		setValue(newValue);
 	};
+
+	useEffect(() => {
+		console.log("get");
+		getDeliverableSpendAmount({
+			variables: {
+				filter: {
+					project: dashboardData?.project?.id,
+					type: tabValue,
+				},
+			},
+		});
+		getDeliverableAcheievedAmount({
+			variables: {
+				filter: {
+					project: dashboardData?.project?.id,
+					type: tabValue,
+				},
+			},
+		});
+	}, [value]);
+
+	console.log("tabValue==>", spendResponse?.data, targetResponse?.data);
 
 	return (
 		<Box className={classes.root} boxShadow={0} mt={1}>
