@@ -373,9 +373,7 @@ function DeliverableTargetAchievementAndProgress({
 		skip: qualitativeParent,
 	});
 
-	console.log("totalTrackline", totalTrackline);
-
-	const [delTrackLineItem, delTrackLineItemResponse] = useLazyQuery(
+	const [delTrackLineItem, { data: delTrackLineItemResponse }] = useLazyQuery(
 		GET_DELIVERABLE_TARCKLINE_ITEM_TOTAL_VALUE
 	);
 
@@ -389,7 +387,9 @@ function DeliverableTargetAchievementAndProgress({
 				},
 			},
 		});
-	}, [project]);
+	}, [delTrackLineItemResponse]);
+
+	console.log("delTrackLineItemResponse", delTrackLineItemResponse);
 
 	// const [deliverableTracklineCount, { data: deliverableTrackLineData }] = useLazyQuery(
 	// 	GET_DELIVERABLE_TRACKLINE_COUNT
@@ -451,38 +451,43 @@ function DeliverableTargetAchievementAndProgress({
 
 	let totalValue: any;
 
-	if (totalTrackline) {
-		totalValue = totalTrackline?.deliverableTrackingLineItemTotalValue;
-	}
+	// if (delTrackLineItemResponse) {
+	totalValue = delTrackLineItemResponse?.deliverableTrackingLineItemTotalValue;
+	// }
+	// if (totalTrackline) {
+	// 	totalValue = totalTrackline?.deliverableTrackingLineItemTotalValue;
+	// }
 
 	// if (delTrackLineItemResponse?.data) {
 	// 	totalValue = delTrackLineItemResponse?.data?.deliverableTrackingLineItemTotalValue;
 	// }
 
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
+	console.log("totalValue ==>", totalValue, DeliverableTargetAchieved);
 
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
 
 	useEffect(() => {
-		if (data && deliverableSubTargetCount) {
-			let deliverableTargetTotalAmount =
-				deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
-					?.target_value || 0;
-			setDeliverableTargetAchieved(
-				totalValue || 0
-				// totalTrackline?.deliverableTrackingLineItemTotalValue || 0
-				// data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
-			);
-			setDeliverableTargetProgess(
-				(((totalValue || 0) / deliverableTargetTotalAmount) * 100).toFixed(2)
-				// (
-				// 	((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
-				// 		deliverableTargetTotalAmount) *
-				// 	100
-				// ).toFixed(2)
-			);
-		}
-	}, [data, deliverableSubTargetCount]);
+		// if (data && deliverableSubTargetCount) {
+		let deliverableTargetTotalAmount =
+			deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
+				?.target_value || 0;
+		setDeliverableTargetAchieved(
+			totalValue || 0
+			// totalTrackline?.deliverableTrackingLineItemTotalValue || 0
+			// data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
+		);
+		setDeliverableTargetProgess(
+			(((totalValue || 0) / deliverableTargetTotalAmount) * 100).toFixed(2)
+			// (
+			// 	((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
+			// 		deliverableTargetTotalAmount) *
+			// 	100
+			// ).toFixed(2)
+		);
+		// }
+	}, [totalValue]);
+	// }, [data, deliverableSubTargetCount]);
 
 	const deliverableAchievedFindAccess = userHasAccess(
 		MODULE_CODES.DELIVERABLE_TARGET,
@@ -767,6 +772,8 @@ export default function DeliverablesTable({
 		queryFilter,
 		sort: `${orderBy}:${order.toUpperCase()}`,
 	});
+
+	console.log("deliverableTargetData", deliverableTargetData);
 
 	const refetchDeliverableTargetProjectTable = useCallback(() => {
 		refetchDeliverableTargetProjectCount?.().then(() => refetchDeliverableTargetProject?.());
