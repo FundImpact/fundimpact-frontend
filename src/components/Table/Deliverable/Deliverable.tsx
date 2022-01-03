@@ -463,30 +463,37 @@ function DeliverableTargetAchievementAndProgress({
 	// }
 
 	const [DeliverableTargetAchieved, setDeliverableTargetAchieved] = useState<number>();
-	console.log("totalValue ==>", totalValue, DeliverableTargetAchieved);
 
 	const [DeliverableTargetProgess, setDeliverableTargetProgess] = useState<string>();
+	console.log(
+		"totalValue ==>",
+		totalValue,
+		DeliverableTargetAchieved,
+		deliverableSubTargetCount,
+		DeliverableTargetProgess
+	);
 
 	useEffect(() => {
-		// if (data && deliverableSubTargetCount) {
-		let deliverableTargetTotalAmount =
-			deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
-				?.target_value || 0;
-		setDeliverableTargetAchieved(
-			totalValue || 0
-			// totalTrackline?.deliverableTrackingLineItemTotalValue || 0
-			// data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
-		);
-		setDeliverableTargetProgess(
-			(((totalValue || 0) / deliverableTargetTotalAmount) * 100).toFixed(2)
-			// (
-			// 	((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
-			// 		deliverableTargetTotalAmount) *
-			// 	100
-			// ).toFixed(2)
-		);
-		// }
-	}, [totalValue]);
+		if (deliverableSubTargetCount) {
+			// if (data && deliverableSubTargetCount) {
+			let deliverableTargetTotalAmount =
+				deliverableSubTargetCount?.deliverableSubTargetsConnection?.aggregate?.sum
+					?.target_value || 0;
+			setDeliverableTargetAchieved(
+				totalValue || 0
+				// totalTrackline?.deliverableTrackingLineItemTotalValue || 0
+				// data?.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0
+			);
+			setDeliverableTargetProgess(
+				(((totalValue || 0) / deliverableTargetTotalAmount) * 100).toFixed(2)
+				// (
+				// 	((data.deliverableTrackingLineitemsConnection?.aggregate?.sum?.value || 0) /
+				// 		deliverableTargetTotalAmount) *
+				// 	100
+				// ).toFixed(2)
+			);
+		}
+	}, [deliverableSubTargetCount, totalValue]);
 	// }, [data, deliverableSubTargetCount]);
 
 	const deliverableAchievedFindAccess = userHasAccess(
